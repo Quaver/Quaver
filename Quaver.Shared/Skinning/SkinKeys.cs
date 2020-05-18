@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
@@ -36,29 +37,40 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private GameMode Mode { get; }
 
-#region SKIN.INI VALUES
+        /// <summary>
+        /// </summary>
+        private string DefaultSkin { get; }
 
-        internal int StageReceptorPadding { get; private set; }
+        #region SKIN.INI VALUES
 
-        internal int HitPosOffsetY { get; private set; }
+        [FixedScale]
+        internal float StageReceptorPadding { get; private set; }
 
-        internal int NotePadding { get; private set; }
+        [FixedScale]
+        internal float HitPosOffsetY { get; set; }
 
-        internal int TimingBarPixelSize { get; private set; }
+        [FixedScale]
+        internal float NotePadding { get; private set; }
 
+        // Not FixedScale because it's used as a factor in an expression with another, already scaled, attribute.
         internal float ColumnLightingScale { get; private set; }
 
-        internal int ColumnLightingOffsetY { get; private set; }
+        [FixedScale]
+        internal float ColumnLightingOffsetY { get; private set; }
 
-        internal int ColumnSize { get; private set; }
+        [FixedScale]
+        internal float ColumnSize { get; private set; }
 
-        internal int ReceptorPosOffsetY { get; private set; }
+        [FixedScale]
+        internal float ReceptorPosOffsetY { get; private set; }
 
-        internal int ColumnAlignment { get; private set; }
+        [FixedScale]
+        internal float ColumnAlignment { get; private set; }
 
         internal bool ColorObjectsBySnapDistance { get; private set; }
 
-        internal byte JudgementHitBurstScale { get; private set; }
+        [FixedScale]
+        internal float JudgementHitBurstScale { get; private set; }
 
         internal bool ReceptorsOverHitObjects { get; private set; }
 
@@ -81,6 +93,7 @@ namespace Quaver.Shared.Skinning
             Color.Transparent,
             Color.Transparent,
             Color.Transparent,
+            Color.Transparent,
         };
 
         internal float BgMaskAlpha { get; private set;  }
@@ -89,61 +102,88 @@ namespace Quaver.Shared.Skinning
 
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
 
-        internal int HitLightingX { get; private set; }
+        [FixedScale]
+        internal float HitLightingX { get; private set; }
 
-        internal int HitLightingY { get; private set; }
+        [FixedScale]
+        internal float HitLightingY { get; private set; }
 
         internal int HitLightingFps { get; private set; }
 
         internal int HoldLightingFps { get; private set; }
 
-        internal int HitLightingWidth { get; private set; }
+        [FixedScale]
+        internal float HitLightingWidth { get; private set; }
 
-        internal int HitLightingHeight { get; private set; }
+        [FixedScale]
+        internal float HitLightingHeight { get; private set; }
 
-        internal int ScoreDisplayPosX { get; private set; }
+        [FixedScale]
+        internal float ScoreDisplayPosX { get; private set; }
 
-        internal int ScoreDisplayPosY { get; private set; }
+        [FixedScale]
+        internal float ScoreDisplayPosY { get; private set; }
 
-        internal int ScoreDisplayScale { get; private set; }
+        [FixedScale]
+        internal float ScoreDisplayScale { get; private set; }
 
-        internal int RatingDisplayPosX { get; private set; }
+        [FixedScale]
+        internal float RatingDisplayPosX { get; private set; }
 
-        internal int RatingDisplayPosY { get; private set; }
+        [FixedScale]
+        internal float RatingDisplayPosY { get; private set; }
 
-        internal int RatingDisplayScale { get; private set; }
+        [FixedScale]
+        internal float RatingDisplayScale { get; private set; }
 
-        internal int AccuracyDisplayPosX { get; private set; }
+        [FixedScale]
+        internal float AccuracyDisplayPosX { get; private set; }
 
-        internal int AccuracyDisplayPosY { get; private set; }
+        [FixedScale]
+        internal float AccuracyDisplayPosY { get; private set; }
 
-        internal int AccuracyDisplayScale { get; private set; }
+        [FixedScale]
+        internal float AccuracyDisplayScale { get; private set; }
 
-        internal int KpsDisplayPosX { get; private set; }
+        [FixedScale]
+        internal float KpsDisplayPosX { get; private set; }
 
-        internal int KpsDisplayPosY { get; private set; }
+        [FixedScale]
+        internal float KpsDisplayPosY { get; private set; }
 
-        internal int KpsDisplayScale { get; private set; }
+        [FixedScale]
+        internal float KpsDisplayScale { get; private set; }
 
-        internal int ComboPosX { get; private set; }
+        [FixedScale]
+        internal float ComboPosX { get; private set; }
 
-        internal int ComboPosY { get; private set; }
+        [FixedScale]
+        internal float ComboPosY { get; private set; }
 
-        internal int ComboDisplayScale { get; private set; }
+        [FixedScale]
+        internal float ComboDisplayScale { get; private set; }
 
-        internal int JudgementBurstPosY { get; private set; }
+        [FixedScale]
+        internal float JudgementBurstPosY { get; private set; }
 
-        internal int HitErrorPosX { get; private set; }
+        [FixedScale]
+        internal float HitErrorPosX { get; private set; }
 
-        internal int HitErrorPosY { get; private set; }
+        [FixedScale]
+        internal float HitErrorPosY { get; private set; }
 
-        internal int HitErrorHeight { get; private set; }
+        [FixedScale]
+        internal float HitErrorHeight { get; private set; }
 
-        internal int HitErrorChevronSize { get; private set; }
+        [FixedScale]
+        internal float HitErrorChevronSize { get; private set; }
 
         internal HealthBarType HealthBarType { get; private set; }
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
+
+        [FixedScale]
+        internal float HealthBarScale{ get; private set; }
 
         internal Color TimingLineColor { get; private set; }
 
@@ -151,27 +191,45 @@ namespace Quaver.Shared.Skinning
 
         internal Color SongTimeProgressActiveColor { get; private set; }
 
-        internal int SongTimeProgressScale { get; private set; }
+        [FixedScale]
+        internal float SongTimeProgressScale { get; private set; }
 
         internal float JudgementCounterAlpha { get; private set; }
 
         internal Color JudgementCounterFontColor { get; private set; }
 
-        internal int JudgementCounterSize { get; private set; }
+        [FixedScale]
+        internal float JudgementCounterSize { get; private set; }
 
         internal bool DrawLongNoteEnd { get; private set; }
 
         internal Color DeadNoteColor { get; private set; }
 
-        internal int BattleRoyaleAlertPosX { get; private set; }
+        [FixedScale]
+        internal float BattleRoyaleAlertPosX { get; private set; }
 
-        internal int BattleRoyaleAlertPosY { get; private set; }
+        [FixedScale]
+        internal float BattleRoyaleAlertPosY { get; private set; }
 
-        internal int BattleRoyaleAlertScale { get; private set; }
+        [FixedScale]
+        internal float BattleRoyaleAlertScale { get; private set; }
 
-        internal int BattleRoyaleEliminatedPosX { get; private set; }
+        [FixedScale]
+        internal float BattleRoyaleEliminatedPosX { get; private set; }
 
-        internal int BattleRoyaleEliminatedPosY { get; private set; }
+        [FixedScale]
+        internal float BattleRoyaleEliminatedPosY { get; private set; }
+
+        [FixedScale]
+        internal float HealthBarPosOffsetX { get; private set; }
+
+        [FixedScale]
+        internal float HealthBarPosOffsetY { get; private set; }
+
+        internal bool UseAndRotateHitObjectSheet { get; private set; }
+
+        [FixedScale]
+        internal float ScratchLaneSize { get; private set; }
 
         #endregion
 
@@ -296,12 +354,42 @@ namespace Quaver.Shared.Skinning
         {
             Store = store;
             Mode = mode;
+            DefaultSkin = ConfigManager.DefaultSkin?.Value.ToString() ?? DefaultSkins.Arrow.ToString();
 
             // Set the generic config variables, and THEN try to read from
             // skin.ini.
             ReadConfig(true);
             ReadConfig(false);
+            FixScale();
+            FixValues();
             LoadTextures();
+        }
+
+        /// <summary>
+        ///     Scale all necessary skin keys to match the UI redesign coordinate system.
+        /// </summary>
+        private void FixScale()
+        {
+            var properties = GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                .Where(info => Attribute.IsDefined(info, typeof(FixedScale)));
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(this);
+                if (value is float f)
+                {
+                    property.SetValue(this, f * QuaverGame.SkinScalingFactor);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Fixes any invalid values
+        /// </summary>
+        private void FixValues()
+        {
+            if (ScratchLaneSize <= 0)
+                ScratchLaneSize = ColumnSize;
         }
 
         /// <summary>
@@ -316,7 +404,7 @@ namespace Quaver.Shared.Skinning
 
             if (loadFromResources)
             {
-                using (var stream = new StreamReader(GameBase.Game.Resources.GetStream($"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value}/skin.ini")))
+                using (var stream = new StreamReader(GameBase.Game.Resources.GetStream($"Quaver.Resources/Textures/Skins/{DefaultSkin}/skin.ini")))
                     config = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadData(stream);
             }
             else
@@ -329,17 +417,16 @@ namespace Quaver.Shared.Skinning
 
             var ini = config[ModeHelper.ToShortHand(Mode).ToUpper()];
 
-            StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
-            HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
-            NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
-            TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
+            StageReceptorPadding = ConfigHelper.ReadInt32((int) StageReceptorPadding, ini["StageReceptorPadding"]);
+            HitPosOffsetY = ConfigHelper.ReadInt32((int) HitPosOffsetY, ini["HitPosOffsetY"]);
+            NotePadding = ConfigHelper.ReadInt32((int) NotePadding, ini["NotePadding"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
-            ColumnLightingOffsetY = ConfigHelper.ReadInt32(ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
-            ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
-            ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
-            ColumnAlignment = ConfigHelper.ReadInt32(ColumnAlignment, ini["ColumnAlignment"]);
+            ColumnLightingOffsetY = ConfigHelper.ReadInt32((int) ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
+            ColumnSize = ConfigHelper.ReadInt32((int) ColumnSize, ini["ColumnSize"]);
+            ReceptorPosOffsetY = ConfigHelper.ReadInt32((int) ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
+            ColumnAlignment = ConfigHelper.ReadInt32((int) ColumnAlignment, ini["ColumnAlignment"]);
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
-            JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
+            JudgementHitBurstScale = ConfigHelper.ReadByte((byte) JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects = ConfigHelper.ReadBool(ReceptorsOverHitObjects, ini["ReceptorsOverHitObjects"]);
             JudgeColors[Judgement.Marv] = ConfigHelper.ReadColor(JudgeColors[Judgement.Marv], ini["JudgeColorMarv"]);
             JudgeColors[Judgement.Perf] = ConfigHelper.ReadColor(JudgeColors[Judgement.Perf], ini["JudgeColorPerf"]);
@@ -350,48 +437,53 @@ namespace Quaver.Shared.Skinning
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, ini["BgMaskAlpha"]);
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
             FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImagesOnUpscroll"]);
-            HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
-            HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
+            HitLightingY = ConfigHelper.ReadInt32((int) HitLightingY, ini["HitLightingY"]);
+            HitLightingX = ConfigHelper.ReadInt32((int) HitLightingX, ini["HitLightingX"]);
             HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
             HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
-            HitLightingWidth = ConfigHelper.ReadInt32(HitLightingWidth, ini["HitLightingWidth"]);
-            HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
-            ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
-            ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
-            RatingDisplayPosX = ConfigHelper.ReadInt32(RatingDisplayPosX, ini["RatingDisplayPosX"]);
-            RatingDisplayPosY = ConfigHelper.ReadInt32(RatingDisplayPosY, ini["RatingDisplayPosY"]);
-            AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);
-            AccuracyDisplayPosY = ConfigHelper.ReadInt32(AccuracyDisplayPosY, ini["AccuracyDisplayPosY"]);
-            KpsDisplayPosX = ConfigHelper.ReadInt32(KpsDisplayPosX, ini["KpsDisplayPosX"]);
-            KpsDisplayPosY = ConfigHelper.ReadInt32(KpsDisplayPosY, ini["KpsDisplayPosY"]);
-            ComboPosX = ConfigHelper.ReadInt32(ComboPosX, ini["ComboPosX"]);
-            ComboPosY = ConfigHelper.ReadInt32(ComboPosY, ini["ComboPosY"]);
-            JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
+            HitLightingWidth = ConfigHelper.ReadInt32((int) HitLightingWidth, ini["HitLightingWidth"]);
+            HitLightingHeight = ConfigHelper.ReadInt32((int) HitLightingHeight, ini["HitLightingHeight"]);
+            ScoreDisplayPosX = ConfigHelper.ReadInt32((int) ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
+            ScoreDisplayPosY = ConfigHelper.ReadInt32((int) ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
+            RatingDisplayPosX = ConfigHelper.ReadInt32((int) RatingDisplayPosX, ini["RatingDisplayPosX"]);
+            RatingDisplayPosY = ConfigHelper.ReadInt32((int) RatingDisplayPosY, ini["RatingDisplayPosY"]);
+            AccuracyDisplayPosX = ConfigHelper.ReadInt32((int) AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);
+            AccuracyDisplayPosY = ConfigHelper.ReadInt32((int) AccuracyDisplayPosY, ini["AccuracyDisplayPosY"]);
+            KpsDisplayPosX = ConfigHelper.ReadInt32((int) KpsDisplayPosX, ini["KpsDisplayPosX"]);
+            KpsDisplayPosY = ConfigHelper.ReadInt32((int) KpsDisplayPosY, ini["KpsDisplayPosY"]);
+            ComboPosX = ConfigHelper.ReadInt32((int) ComboPosX, ini["ComboPosX"]);
+            ComboPosY = ConfigHelper.ReadInt32((int) ComboPosY, ini["ComboPosY"]);
+            JudgementBurstPosY = ConfigHelper.ReadInt32((int) JudgementBurstPosY, ini["JudgementBurstPosY"]);
             HealthBarType = ConfigHelper.ReadEnum(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadEnum(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
-            HitErrorPosX = ConfigHelper.ReadInt32(HitErrorPosX, ini["HitErrorPosX"]);
-            HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
-            HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
-            HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
+            HealthBarScale = ConfigHelper.ReadInt32((int) HealthBarScale, ini["HealthBarScale"]);
+            HitErrorPosX = ConfigHelper.ReadInt32((int) HitErrorPosX, ini["HitErrorPosX"]);
+            HitErrorPosY = ConfigHelper.ReadInt32((int) HitErrorPosY, ini["HitErrorPosY"]);
+            HitErrorHeight = ConfigHelper.ReadInt32((int) HitErrorHeight, ini["HitErrorHeight"]);
+            HitErrorChevronSize = ConfigHelper.ReadInt32((int) HitErrorChevronSize, ini["HitErrorChevronSize"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
-            JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
+            JudgementCounterSize = ConfigHelper.ReadInt32((int) JudgementCounterSize, ini["JudgementCounterSize"]);
             DrawLongNoteEnd = ConfigHelper.ReadBool(DrawLongNoteEnd, ini["DrawLongNoteEnd"]);
-            ScoreDisplayScale = ConfigHelper.ReadInt32(ScoreDisplayScale, ini["ScoreDisplayScale"]);
-            RatingDisplayScale = ConfigHelper.ReadInt32(RatingDisplayScale, ini["RatingDisplayScale"]);
-            AccuracyDisplayScale = ConfigHelper.ReadInt32(AccuracyDisplayScale, ini["AccuracyDisplayScale"]);
-            ComboDisplayScale = ConfigHelper.ReadInt32(ComboDisplayScale, ini["ComboDisplayScale"]);
-            KpsDisplayScale = ConfigHelper.ReadInt32(KpsDisplayScale, ini["KpsDisplayScale"]);
-            SongTimeProgressScale = ConfigHelper.ReadInt32(SongTimeProgressScale, ini["SongTimeProgressScale"]);
+            ScoreDisplayScale = ConfigHelper.ReadInt32((int) ScoreDisplayScale, ini["ScoreDisplayScale"]);
+            RatingDisplayScale = ConfigHelper.ReadInt32((int) RatingDisplayScale, ini["RatingDisplayScale"]);
+            AccuracyDisplayScale = ConfigHelper.ReadInt32((int) AccuracyDisplayScale, ini["AccuracyDisplayScale"]);
+            ComboDisplayScale = ConfigHelper.ReadInt32((int) ComboDisplayScale, ini["ComboDisplayScale"]);
+            KpsDisplayScale = ConfigHelper.ReadInt32((int) KpsDisplayScale, ini["KpsDisplayScale"]);
+            SongTimeProgressScale = ConfigHelper.ReadInt32((int) SongTimeProgressScale, ini["SongTimeProgressScale"]);
             DeadNoteColor = ConfigHelper.ReadColor(DeadNoteColor, ini["DeadNoteColor"]);
-            BattleRoyaleAlertPosX = ConfigHelper.ReadInt32(BattleRoyaleAlertPosX, ini["BattleRoyaleAlertPosX"]);
-            BattleRoyaleAlertPosY = ConfigHelper.ReadInt32(BattleRoyaleAlertPosY, ini["BattleRoyaleAlertPosY"]);
-            BattleRoyaleAlertScale = ConfigHelper.ReadInt32(BattleRoyaleAlertScale, ini["BattleRoyaleAlertScale"]);
-            BattleRoyaleEliminatedPosX = ConfigHelper.ReadInt32(BattleRoyaleEliminatedPosX, ini["BattleRoyaleEliminatedPosX"]);
-            BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32(BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
+            BattleRoyaleAlertPosX = ConfigHelper.ReadInt32((int) BattleRoyaleAlertPosX, ini["BattleRoyaleAlertPosX"]);
+            BattleRoyaleAlertPosY = ConfigHelper.ReadInt32((int) BattleRoyaleAlertPosY, ini["BattleRoyaleAlertPosY"]);
+            BattleRoyaleAlertScale = ConfigHelper.ReadInt32((int) BattleRoyaleAlertScale, ini["BattleRoyaleAlertScale"]);
+            BattleRoyaleEliminatedPosX = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosX, ini["BattleRoyaleEliminatedPosX"]);
+            BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
+            HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
+            HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
+            UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
+            ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
         }
 
         /// <summary>
@@ -441,7 +533,7 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{Mode.ToString()}/{folder.ToString()}" +
+                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
                                $"/{GetResourcePath(element)}.png";
             }
 
@@ -468,7 +560,7 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{Mode.ToString()}/{folder.ToString()}" +
+                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
                            $"/{GetResourcePath(element)}";
             }
 
@@ -517,10 +609,8 @@ namespace Quaver.Shared.Skinning
             // So you can't have 1/48, but not have 1/3, etc.
             var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
 
-
             // If it can find the appropriate files, load them.
             objectsList.AddRange(snaps.Select(snap => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", false)));
-
             hitObjects.Insert(index, objectsList);
         }
 
@@ -536,9 +626,9 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < 8; i++)
             {
-                if (i == 4 && Mode == GameMode.Keys4)
+                if (i == 5 && Mode == GameMode.Keys4)
                     break;
 
                 // Column Colors
@@ -546,8 +636,27 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                if (!UseAndRotateHitObjectSheet)
+                {
+                    LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                }
+                else
+                {
+                    const int snapCount = 9;
+
+                    var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
+
+                    NoteHitObjects.Add(objects);
+                    NoteHoldHitObjects.Add(objects);
+
+
+                    for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
+                        NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+
+                    for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
+                        NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
+                }
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));

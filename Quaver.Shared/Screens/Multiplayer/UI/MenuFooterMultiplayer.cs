@@ -10,6 +10,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
@@ -147,7 +148,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 var game = (QuaverGame) GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
-                screen?.Exit(() => new SelectScreen(screen), 0, QuaverScreenChangeType.AddToStack);
+                screen?.Exit(() => new SelectionScreen(), 0);
             })
             {
                 DestroyIfParentIsNull = false

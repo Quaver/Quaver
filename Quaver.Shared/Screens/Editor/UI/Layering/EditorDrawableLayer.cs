@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        public JukeboxButton EditLayerNameButton { get; private set; }
+        public IconButton EditLayerNameButton { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateEditNamePencil() => EditLayerNameButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
+        private void CreateEditNamePencil() => EditLayerNameButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
             (o, e) =>
             {
                 if (Index == 0)

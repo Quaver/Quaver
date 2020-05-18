@@ -8,11 +8,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Steamworks;
 using Wobble;
 using Wobble.Logging;
+using Wobble.Platform.Linux;
 
 namespace Quaver.Shared.Online
 {
@@ -51,12 +58,22 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The avatars for steam users.
         /// </summary>
-        public static Dictionary<ulong, Texture2D> UserAvatars { get; set; }
+        public static Dictionary<ulong, Texture2D> UserAvatars { get; private set; }
+
+        /// <summary>
+        ///     Large Steam user avatars
+        /// </summary>
+        public static Dictionary<ulong, Texture2D> UserAvatarsLarge { get; private set; }
 
         /// <summary>
         ///     A user's steam avatar has loaded.
         /// </summary>
         public static EventHandler<SteamAvatarLoadedEventArgs> SteamUserAvatarLoaded;
+
+        /// <summary>
+        ///     The ids of the skins that are available in the workshop
+        /// </summary>
+        public static List<PublishedFileId_t> WorkshopItemIds { get; private set; } = new List<PublishedFileId_t>();
 
         #region Callbacks
 
@@ -69,6 +86,27 @@ namespace Quaver.Shared.Online
         ///     Called when receiving a persona state change from steam (for user avatars)
         /// </summary>
         private static Callback<PersonaStateChange_t> PersonaStateChanged { get; set; }
+
+        /// <summary>
+        ///     Called when submitting the workshop update has completed
+        /// </summary>
+        /// <returns></returns>
+        public static CallResult<SubmitItemUpdateResult_t> OnSubmitUpdateResponse { get; private set; }
+
+        /// <summary>
+        ///     Called after calling ISteamUGC::CreateItem.
+        /// </summary>
+        public static CallResult<CreateItemResult_t> OnCreateItemResponse { get; private set; }
+
+        /// <summary>
+        ///     Called after subscribing to a workshop item
+        /// </summary>
+        public static CallResult<RemoteStoragePublishedFileSubscribed_t> OnFileSubscribedResponse { get; private set; }
+
+        /// <summary>
+        ///     Called after unsubscribing to a workshop item
+        /// </summary>
+        public static CallResult<RemoteStoragePublishedFileUnsubscribed_t> OnFileUbsubscribedResponse { get; private set; }
 
         #endregion
 
@@ -88,6 +126,7 @@ namespace Quaver.Shared.Online
             IsInitialized = SteamAPI.Init();
 
             UserAvatars = new Dictionary<ulong, Texture2D>();
+            UserAvatarsLarge = new Dictionary<ulong, Texture2D>();
 
             if (!IsInitialized)
             {
@@ -115,6 +154,13 @@ namespace Quaver.Shared.Online
 
             InitializeCallbacks();
             StartAuthSession();
+
+            // Prevents a crash on OSX for the time being
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                RefreshWorkshopSkins();
+
+            // DANGEROUS: Uncomment to reset all achievements
+            // SteamUserStats.ResetAllStats(true);
         }
 
         /// <summary>
@@ -124,6 +170,10 @@ namespace Quaver.Shared.Online
         {
             GetAuthSessionTickResponse = Callback<GetAuthSessionTicketResponse_t>.Create(OnValidateAuthSessionTicketResponse);
             PersonaStateChanged = Callback<PersonaStateChange_t>.Create(OnPersonaStateChanged);
+            OnSubmitUpdateResponse = CallResult<SubmitItemUpdateResult_t>.Create(OnSubmittedItemUpdate);
+            OnCreateItemResponse = CallResult<CreateItemResult_t>.Create(OnCreateItemResultCallResponse);
+            OnFileSubscribedResponse = CallResult<RemoteStoragePublishedFileSubscribed_t>.Create(OnFileSubscribed);
+            OnFileUbsubscribedResponse = CallResult<RemoteStoragePublishedFileUnsubscribed_t>.Create(OnfileUnsubscribed);
         }
 
         /// <summary>
@@ -163,14 +213,14 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Requests to steam to retrieve a user's avatar.
         /// </summary>
-        public static void SendAvatarRetrievalRequest(ulong steamId)
+        public static void SendAvatarRetrievalRequest(ulong steamId) => ThreadScheduler.Run(() =>
         {
             var info = SteamFriends.RequestUserInformation(new CSteamID(steamId), false);
             Logger.Debug($"Requested Steam user information for user: {steamId} - {info}", LogType.Network);
 
             if (!info)
                 LoadAvatarIfNotExists(steamId);
-        }
+        });
 
         /// <summary>
         ///     Called when a requested user's persona state has changed.
@@ -180,6 +230,91 @@ namespace Quaver.Shared.Online
         {
             if (callback.m_nChangeFlags == EPersonaChange.k_EPersonaChangeAvatar)
                 LoadAvatarIfNotExists(callback.m_ulSteamID);
+        }
+
+        /// <summary>
+        ///     Called after submitting an update
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="bIOfailure"></param>
+        public static void OnSubmittedItemUpdate(SubmitItemUpdateResult_t result, bool bIOfailure)
+        {
+            SteamWorkshopSkin.Current.HasUploaded = true;
+
+            if (bIOfailure)
+            {
+                Logger.Error("Failed to Create workshop item:\n" +
+                             $"m_eResult: {result.m_eResult}\n" +
+                             $"m_nPublishedFileId: {result.m_nPublishedFileId}\n" +
+                             $"m_bUserNeedsToAcceptWorkshopLegalAgreement: {result.m_bUserNeedsToAcceptWorkshopLegalAgreement}", LogType.Network);
+
+                return;
+            }
+
+            Logger.Important($"Workshop upload result: {result.m_eResult}", LogType.Network);
+
+            if (result.m_eResult == EResult.k_EResultOK)
+            {
+                Logger.Important($"Workshop upload successful!", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Success, "You have successfully uploaded your Steam workshop skin!");
+                BrowserHelper.OpenURL($"https://steamcommunity.com/sharedfiles/filedetails/?id={result.m_nPublishedFileId.m_PublishedFileId}");
+            }
+            else
+            {
+                Logger.Important($"Workshop upload failed! - {result.m_eResult}", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, $"The Steam workshop upload has failed due to: {result.m_eResult}");
+            }
+        }
+
+        /// <summary>
+        ///     Called when after calling SteamUGC.CreateItem();
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="bIOfailure"></param>
+        public static void OnCreateItemResultCallResponse(CreateItemResult_t result, bool bIOfailure)
+        {
+            if (bIOfailure)
+            {
+                Logger.Error("Failed to Create workshop item:\n" +
+                             $"m_eResult: {result.m_eResult}\n" +
+                             $"m_nPublishedFileId: {result.m_nPublishedFileId}\n" +
+                             $"m_bUserNeedsToAcceptWorkshopLegalAgreement: {result.m_bUserNeedsToAcceptWorkshopLegalAgreement}", LogType.Network);
+
+                SteamWorkshopSkin.Current.HasUploaded = true;
+                return;
+            }
+
+            Logger.Important($"Starting Steam workshop upload....", LogType.Runtime);
+
+            // Open in Steam client to accept legal agreement for workshop
+            if (result.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+            {
+                BrowserHelper.OpenURL($"steam://url/CommunityFilePage/{result.m_nPublishedFileId}");
+                SteamWorkshopSkin.Current.HasUploaded = true;
+                return;
+            }
+
+            var publishedFileId = result.m_nPublishedFileId;
+
+            SteamWorkshopSkin.Current.Handle = SteamUGC.StartItemUpdate((AppId_t) ApplicationId, publishedFileId);
+
+            // Write a file with the workshop id
+            File.WriteAllText(SteamWorkshopSkin.Current.WorkshopIdFilePath, result.m_nPublishedFileId.m_PublishedFileId.ToString());
+
+            if (SteamWorkshopSkin.Current.ExistingWorkshopFileId == 0)
+            {
+                SteamUGC.SetItemTitle(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.Title);
+                SteamUGC.SetItemVisibility(SteamWorkshopSkin.Current.Handle, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate);
+            }
+
+            if (SteamWorkshopSkin.Current.PreviewFilePath != null && File.Exists(SteamWorkshopSkin.Current.PreviewFilePath))
+                SteamUGC.SetItemPreview(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.PreviewFilePath);
+
+            SteamUGC.SetItemContent(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.SkinFolderPath);
+
+            // Start updating to Steam
+            var call = SteamUGC.SubmitItemUpdate(SteamWorkshopSkin.Current.Handle, "");
+            OnSubmitUpdateResponse.Set(call);
         }
 
         /// <summary>
@@ -193,6 +328,8 @@ namespace Quaver.Shared.Online
             var tex = LoadAvatar(steamId) ?? UserInterface.UnknownAvatar;
 
             UserAvatars[steamId] = tex;
+            UserAvatarsLarge[steamId] = LoadAvatar(steamId, true) ?? UserInterface.UnknownAvatar;
+
             SteamUserAvatarLoaded?.Invoke(typeof(SteamManager), new SteamAvatarLoadedEventArgs(steamId, tex));
 
             Logger.Debug($"Loaded Steam Avatar for user: {steamId}", LogType.Network);
@@ -202,10 +339,10 @@ namespace Quaver.Shared.Online
         ///     Loads a user's avatar from steam
         /// </summary>
         /// <returns></returns>
-        private static Texture2D LoadAvatar(ulong steamId)
+        private static Texture2D LoadAvatar(ulong steamId, bool large = false)
         {
             // Get the icon type as a integer.
-            var icon = SteamFriends.GetMediumFriendAvatar(new CSteamID(steamId));
+            var icon = large ? SteamFriends.GetLargeFriendAvatar(new CSteamID(steamId)) : SteamFriends.GetMediumFriendAvatar(new CSteamID(steamId));
 
             // Check if we got an icon type.
             if (icon != 0)
@@ -226,6 +363,57 @@ namespace Quaver.Shared.Online
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void RefreshWorkshopSkins()
+        {
+            try
+            {
+                var numSubscribed = SteamUGC.GetNumSubscribedItems();
+
+                PublishedFileId_t[] fileIds = {};
+                var entries = SteamUGC.GetSubscribedItems(fileIds, 1);
+
+                Logger.Important($"Found {fileIds.Length} subscribed workshop items | # of subscribed: " +
+                                 $"{numSubscribed} | Entries: {entries}", LogType.Runtime);
+
+                WorkshopItemIds = new List<PublishedFileId_t>(fileIds);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="biofailure"></param>
+        private static void OnFileSubscribed(RemoteStoragePublishedFileSubscribed_t result, bool biofailure)
+        {
+            if (result.m_nAppID.m_AppId != ApplicationId)
+                return;
+
+            if (WorkshopItemIds.Any(x => x.m_PublishedFileId == result.m_nPublishedFileId.m_PublishedFileId))
+                return;
+
+            Logger.Important($"Subscribed to fule: {result.m_nPublishedFileId}", LogType.Runtime);
+            RefreshWorkshopSkins();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="biofailure"></param>
+        private static void OnfileUnsubscribed(RemoteStoragePublishedFileUnsubscribed_t result, bool biofailure)
+        {
+            if (result.m_nAppID.m_AppId != ApplicationId)
+                return;
+
+            Logger.Important($"Unsubscribed from file: {result.m_nPublishedFileId}", LogType.Runtime);
+            RefreshWorkshopSkins();
         }
     }
 }

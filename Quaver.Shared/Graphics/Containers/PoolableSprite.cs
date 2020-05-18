@@ -20,7 +20,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     The item that this sprite represents
         /// </summary>
-        public T Item { get; protected set; }
+        public T Item { get; set; }
 
         /// <summary>
         ///     The index that this sprite is in the pool
@@ -46,7 +46,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (Container != null && RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);

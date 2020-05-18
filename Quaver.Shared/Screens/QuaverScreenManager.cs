@@ -84,6 +84,7 @@ namespace Quaver.Shared.Screens
             {
                 case QuaverScreenChangeType.CompleteChange:
                     ChangeScreen(QueuedScreen);
+                    Button.IsGloballyClickable = true;
                     break;
                 case QuaverScreenChangeType.AddToStack:
                     AddScreen(QueuedScreen);
@@ -128,6 +129,7 @@ namespace Quaver.Shared.Screens
                 OnlineManager.Client?.UpdateClientStatus(status);
 
             OtherGameMapDatabaseCache.RunThread();
+            GC.Collect();
         }
 
         /// <summary>
@@ -207,7 +209,7 @@ namespace Quaver.Shared.Screens
                     QueuedScreen = newScreen();
                 }
 
-                Logger.Important($"Scheduled screen change to: '{QueuedScreen.Type}'. w/ {DelayedScreenChangeTime}ms delay", LogType.Runtime);
+                Logger.Important($"Scheduled screen change to: '{QueuedScreen.Type}'. w/ {DelayedScreenChangeTime} ms delay", LogType.Runtime);
             });
         }
 

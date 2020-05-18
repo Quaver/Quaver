@@ -10,10 +10,12 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay
 {
@@ -42,6 +44,9 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             Screen = screen;
 
+            if (Screen.IsSongSelectPreview)
+                return;
+
             try
             {
                 if (Screen.IsCalibratingOffset)
@@ -54,7 +59,15 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 if (Screen.IsPlayTesting)
                 {
-                    AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
+                    const int delay = 500;
+
+                    if (Screen.PlayTestAudioTime < StartDelay)
+                    {
+                        Time = -delay;
+                        return;
+                    }
+
+                    AudioEngine.Track.Seek(MathHelper.Clamp((int) Screen.PlayTestAudioTime - delay, 0, (int) AudioEngine.Track.Length));
                     Time = AudioEngine.Track.Time;
                     return;
                 }
@@ -75,10 +88,12 @@ namespace Quaver.Shared.Screens.Gameplay
         public void Update(GameTime gameTime)
         {
             // Don't bother updating if the game is paused or the user failed.
-            if (Screen.IsPaused || Screen.Failed)
+            if (Screen.IsPaused)
                 return;
 
-            if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted)
+            var isTournanent = Screen is TournamentGameplayScreen;
+
+            if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted && !isTournanent)
                 return;
 
             // If they audio hasn't begun yet, start counting down until the beginning of the map.

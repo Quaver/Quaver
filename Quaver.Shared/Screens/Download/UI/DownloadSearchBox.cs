@@ -27,6 +27,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Download.UI
@@ -104,13 +105,14 @@ namespace Quaver.Shared.Screens.Download.UI
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new Textbox(new ScalableVector2(Width - 30, 30), Fonts.Exo2SemiBold, 14, "", "", null, OnStoppedTyping)
+            SearchBox = new Textbox(new ScalableVector2(Width - 30, 30),
+                FontManager.GetWobbleFont(Fonts.LatoBlack), 14, "", "", null, OnStoppedTyping)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 X = TextSearch.X,
                 Y = TextSearch.Y + TextSearch.Height + 10,
-                Tint = Colors.DarkGray,
+                Tint = Colors.BlueishDarkGray,
             };
 
             SearchBox.AddBorder(Colors.MainAccent, 2);

@@ -9,7 +9,10 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Online;
+using Wobble;
+using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Download
 {
@@ -23,7 +26,12 @@ namespace Quaver.Shared.Screens.Download
         /// <summary>
         ///    The amount of mapsets able to be downloaded at once.
         /// </summary>
-        public static int MAX_CONCURRENT_DOWNLOADS { get; } = 5;
+        public static int MAX_CONCURRENT_DOWNLOADS => OnlineManager.IsDonator ? 6 : 5;
+
+        /// <summary>
+        ///     Event invoked when a download has been added to the manager
+        /// </summary>
+        public static event EventHandler<MapsetDownloadAddedEventArgs> DownloadAdded;
 
         /// <summary>
         ///     Downloads an individual mapset.
@@ -38,19 +46,18 @@ namespace Quaver.Shared.Screens.Download
                 return null;
             }
 
-            if (CurrentDownloads.Count >= MAX_CONCURRENT_DOWNLOADS)
-            {
-                NotificationManager.Show(NotificationLevel.Error, $"Slow down! You can only download {MAX_CONCURRENT_DOWNLOADS} at a time!");
-                return null;
-            }
+            var download = new MapsetDownload(mapset, mapset["artist"].ToString(), mapset["title"].ToString(),
+                CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
 
-            var download = new MapsetDownload(mapset);
             CurrentDownloads.Add(download);
+
+            DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
+            OpenOnlineHub();
 
             return download;
         }
 
-        public static MapsetDownload Download(int id)
+        public static MapsetDownload Download(int id, string artist, string title)
         {
             // Require login in order to download.
             if (!OnlineManager.Connected)
@@ -59,16 +66,51 @@ namespace Quaver.Shared.Screens.Download
                 return null;
             }
 
-            if (CurrentDownloads.Count >= MAX_CONCURRENT_DOWNLOADS)
+            var download = new MapsetDownload(id, artist, title, CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
+            CurrentDownloads.Add(download);
+
+            DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
+
+            return download;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public static MapsetDownload DownloadSharedMultiplayerMapset(string artist, string title)
+        {
+            // Require login in order to download.
+            if (!OnlineManager.Connected)
             {
-                NotificationManager.Show(NotificationLevel.Error, $"Slow down! You can only download {MAX_CONCURRENT_DOWNLOADS} at a time!");
+                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download mapsets!");
                 return null;
             }
 
-            var download = new MapsetDownload(id);
+            if (OnlineManager.CurrentGame == null)
+                return null;
+
+            var download = new MultiplayerSharedMapsetDownload(OnlineManager.CurrentGame.GameId, artist, title,
+                CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
+
             CurrentDownloads.Add(download);
 
+            DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
+
             return download;
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void OpenOnlineHub()
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
+
+            if (game.OnlineHub.IsOpen || game.CurrentScreen.Type == QuaverScreenType.Download)
+                return;
+
+            DialogManager.Show(new OnlineHubDialog());
         }
     }
 }

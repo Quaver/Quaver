@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using IniFileParser;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 
@@ -76,7 +77,9 @@ namespace Quaver.Shared.Screens.Settings.Elements
         {
             var skins = GetCustomSkinList();
             var skin = ConfigManager.Skin.Value;
-            return string.IsNullOrEmpty(skin) ? 0 : skins.FindIndex(x => x == skin);
+
+            var index = string.IsNullOrEmpty(skin) ? 0 : skins.FindIndex(x => x == skin);
+            return Math.Clamp(index, 0, int.MaxValue);
         }
     }
 }

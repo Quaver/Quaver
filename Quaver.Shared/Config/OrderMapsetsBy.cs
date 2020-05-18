@@ -12,6 +12,20 @@ namespace Quaver.Shared.Config
         Artist,
         Title,
         Creator,
-        DateAdded
+        DateAdded,
+        Status,
+        BPM,
+        TimesPlayed,
+        RecentlyPlayed,
+        Genre,
+        Game,
+        Length,
+        Source,
+        Difficulty,
+        OnlineGrade,
+        DateLastUpdated,
+        DateRanked,
+        LongNotePercentage,
+        NotesPerSecond
     }
 }

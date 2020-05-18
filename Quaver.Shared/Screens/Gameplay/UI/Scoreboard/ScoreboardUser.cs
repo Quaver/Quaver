@@ -29,6 +29,8 @@ using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
@@ -54,7 +56,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         ///    New score processor for this current user's scoreboard.
         ///    So we can calculate score on the fly.
         /// </summary>
-        internal ScoreProcessor Processor { get; }
+        internal ScoreProcessor Processor { get; set; }
 
         /// <summary>
         ///     Handles calculating rating for this individual user.
@@ -80,22 +82,22 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Text that displays the username of the player.
         /// </summary>
-        internal SpriteTextBitmap Username { get; }
+        internal SpriteTextPlus Username { get; }
 
         /// <summary>
         ///     Text that displays the current score of the user.
         /// </summary>
-        internal SpriteTextBitmap Score { get; }
+        internal SpriteTextPlus Score { get; }
 
         /// <summary>
         ///     Text that displays the user's current combo.
         /// </summary>
-        internal SpriteTextBitmap Combo { get; }
+        internal SpriteTextPlus Combo { get; }
 
         /// <summary>
         ///     Text that displays the rank for each user
         /// </summary>
-        internal SpriteTextBitmap RankText { get; }
+        internal SpriteTextPlus RankText { get; }
 
         /// <summary>
         ///     The current judgement we're on in the list of them to calculate their score.
@@ -123,7 +125,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         public bool HasQuit { get; private set; }
 
         public bool IsOneVersusOne => OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All
-                                      && MapManager.Selected.Value?.Scores?.Value?.Count == 1;
+                                      && Screen.LocalScores.Count == 1;
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
@@ -144,7 +147,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             UsernameRaw = username;
             RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
             Type = type;
-            Size = new ScalableVector2(260, 50);
+            Size = new ScalableVector2(299, 58);
 
             // Set position initially to offscreen
             X = -Width - 10;
@@ -193,11 +196,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Image = avatar,
             };
 
-            RankText = new SpriteTextBitmap(FontsBitmap.GothamRegular, "?.", false)
+            RankText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "?.", 20, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                FontSize = 19,
                 X = Avatar.X + Avatar.Width + 14,
                 Alpha = textAlpha
             };
@@ -226,34 +228,31 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             }
 
             // Create username text.
-            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, GetUsernameFormatted())
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                X = RankText.X + RankText.Width + 18,
-                Y = 6,
-                FontSize = 16
+                X = RankText.X + RankText.Width + 20,
+                Y = 8,
             };
 
             // Create score text.
-            Score = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0.00", false)
+            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, false)
             {
                 Parent = this,
-                Alignment = Alignment.TopLeft,
+                Alignment = Alignment.BotLeft,
                 Alpha = textAlpha,
-                Y = Username.Y + Username.Height + 4,
+                Y = -Username.Y,
                 X = Username.X,
-                FontSize = 15
             };
 
             // Create score text.
-            Combo = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{Processor.Combo:N0}x", false)
+            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Processor.Combo:N0}x", 18, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Alpha = textAlpha,
-                FontSize = 15,
                 X = -5
             };
         }
@@ -282,7 +281,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (setScoreboardValues && Type == ScoreboardUserType.Self)
             {
+                var oldProcessor = Processor;
+                Processor = Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor;
                 var rating = CalculateRating();
+
+                if (Screen.InReplayMode)
+                    Processor = Screen.Ruleset.ScoreProcessor;
+                else
+                    Processor = oldProcessor;
+
                 Score.Text = $"{StringHelper.RatingToString(rating)} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
@@ -421,7 +428,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <returns></returns>
         public double CalculateRating()
         {
+            var oldProcessor = Processor;
+
+            if (Type == ScoreboardUserType.Self)
+                Processor = Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor;
+
             var rating = RatingProcessor.CalculateRating(Processor.Accuracy);
+
+            Processor = oldProcessor;
 
             if (Processor.MultiplayerProcessor != null)
             {

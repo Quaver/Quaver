@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard.Selector
         public LeaderboardSelectorItem(string text, bool selected = false, EventHandler action = null)
         {
             Selected = selected;
-            Size = new ScalableVector2(145, 40);
+            Size = new ScalableVector2(155, 40);
             Tint = Color.Black;
             Alpha = Selected ? 0.25f: 0;
 

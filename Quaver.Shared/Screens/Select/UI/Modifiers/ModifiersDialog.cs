@@ -212,6 +212,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     Alignment = Alignment.TopLeft
                 },
 
+                new DrawableModifierJudgementWindows(this, new ModJudgementWindows())
+                {
+                    Alignment = Alignment.TopLeft
+                },
+
                 new DrawableModifierBool(this, new ModMirror())
                 {
                     Alignment = Alignment.TopLeft
@@ -284,7 +289,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <summary>
         ///     Closes the dialog.
         /// </summary>
-        private void Close(bool changeMods = true)
+        public void Close(bool changeMods = true)
         {
             if (isClosing)
                 return;

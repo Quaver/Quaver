@@ -16,11 +16,13 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
+using Quaver.API.Maps.Parsers.Stepmania;
 using Quaver.Server.Client;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using SQLite;
 using Wobble.Bindables;
 using Wobble.Platform;
@@ -75,9 +77,9 @@ namespace Quaver.Shared.Database.Maps
         public string DifficultyName { get; set; }
 
         /// <summary>
-        ///     The highest rank that the player has gotten on the map.
+        ///     The highest online grade that the player has gotten on the map.
         /// </summary>
-        public Grade HighestRank { get; set; }
+        public Grade OnlineGrade { get; set; }
 
         /// <summary>
         ///     The ranked status of the map.
@@ -87,7 +89,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The last time the user has played the map.
         /// </summary>
-        public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss");
+        public long LastTimePlayed { get; set; }
 
         /// <summary>
         ///     The creator of the map.
@@ -98,6 +100,11 @@ namespace Quaver.Shared.Database.Maps
         ///     The absolute path of the map's background.
         /// </summary>
         public string BackgroundPath { get; set; }
+
+        /// <summary>
+        ///     The absolute path of the map's banner
+        /// </summary>
+        public string BannerPath { get; set; }
 
         /// <summary>
         ///     The absolute path of the map's audio.
@@ -123,6 +130,11 @@ namespace Quaver.Shared.Database.Maps
         ///     Tags for the map
         /// </summary>
         public string Tags { get; set; }
+
+        /// <summary>
+        ///     The genre of the song
+        /// </summary>
+        public string Genre { get; set; }
 
         /// <summary>
         ///     The most common bpm for the map
@@ -160,6 +172,11 @@ namespace Quaver.Shared.Database.Maps
         public DateTime DateAdded { get; set; }
 
         /// <summary>
+        ///     The time the map was last updated
+        /// </summary>
+        public DateTime DateLastUpdated { get; set; }
+
+        /// <summary>
         ///     The count of regular notes.
         /// </summary>
         public int RegularNoteCount { get; set; }
@@ -181,7 +198,32 @@ namespace Quaver.Shared.Database.Maps
             }
         }
 
-#region DIFFICULTY_RATINGS
+        /// <summary>
+        ///     The amount of times the map has been played
+        /// </summary>
+        public int TimesPlayed { get; set; }
+
+        /// <summary>
+        ///     If the Qua file is using the scratch key (4K+1, 7K+1)
+        /// </summary>
+        public bool HasScratchKey { get; set; }
+
+        /// <summary>
+        ///    Returns the notes per second a map has
+        /// </summary>
+        [Ignore]
+        public float NotesPerSecond
+        {
+            get
+            {
+                var objectCount = LongNoteCount + RegularNoteCount;
+                var nps = objectCount / (SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods)));
+
+                return nps.Clamp(0, float.MaxValue);
+            }
+        }
+
+        #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
         public double Difficulty055X { get; set; }
         public double Difficulty06X { get; set; }
@@ -193,15 +235,25 @@ namespace Quaver.Shared.Database.Maps
         public double Difficulty09X { get; set; }
         public double Difficulty095X { get; set; }
         public double Difficulty10X { get; set; }
+        public double Difficulty105X { get; set; }
         public double Difficulty11X { get; set; }
+        public double Difficulty115X { get; set; }
         public double Difficulty12X { get; set; }
+        public double Difficulty125X { get; set; }
         public double Difficulty13X { get; set; }
+        public double Difficulty135X { get; set; }
         public double Difficulty14X { get; set; }
+        public double Difficulty145X { get; set; }
         public double Difficulty15X { get; set; }
+        public double Difficulty155X { get; set; }
         public double Difficulty16X { get; set; }
+        public double Difficulty165X { get; set; }
         public double Difficulty17X { get; set; }
+        public double Difficulty175X { get; set; }
         public double Difficulty18X { get; set; }
+        public double Difficulty185X { get; set; }
         public double Difficulty19X { get; set; }
+        public double Difficulty195X { get; set; }
         public double Difficulty20X { get; set; }
  #endregion
 
@@ -261,10 +313,11 @@ namespace Quaver.Shared.Database.Maps
             {
                 Artist = qua.Artist,
                 Title = qua.Title,
-                HighestRank = Grade.None,
+                OnlineGrade = Grade.None,
                 AudioPath = qua.AudioFile,
                 AudioPreviewTime = qua.SongPreviewTime,
                 BackgroundPath = qua.BackgroundFile,
+                BannerPath = qua.BannerFile,
                 Description = qua.Description,
                 MapId = qua.MapId,
                 MapSetId = qua.MapSetId,
@@ -272,10 +325,12 @@ namespace Quaver.Shared.Database.Maps
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
                 Tags = qua.Tags,
+                Genre = qua.Genre,
                 SongLength =  qua.Length,
                 Mode = qua.Mode,
                 RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),
                 LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote),
+                HasScratchKey = qua.HasScratchKey
             };
 
             if (!skipPathSetting)
@@ -313,7 +368,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public Qua LoadQua(bool checkValidity = true)
+        public virtual Qua LoadQua(bool checkValidity = false)
         {
             // Reference to the parsed .qua file
             Qua qua;
@@ -328,6 +383,10 @@ namespace Quaver.Shared.Database.Maps
                 case MapGame.Osu:
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
                     qua = osu.ToQua();
+                    break;
+                case MapGame.Etterna:
+                    var stepFile = new StepFile(Path).ToQuas();
+                    qua = stepFile.Find(x => x.DifficultyName == DifficultyName);
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
@@ -379,15 +438,25 @@ namespace Quaver.Shared.Database.Maps
             Difficulty09X = qua.SolveDifficulty(ModIdentifier.Speed09X).OverallDifficulty;
             Difficulty095X = qua.SolveDifficulty(ModIdentifier.Speed095X).OverallDifficulty;
             Difficulty10X = qua.SolveDifficulty().OverallDifficulty;
+            Difficulty105X = qua.SolveDifficulty(ModIdentifier.Speed105X).OverallDifficulty;
             Difficulty11X = qua.SolveDifficulty(ModIdentifier.Speed11X).OverallDifficulty;
+            Difficulty115X = qua.SolveDifficulty(ModIdentifier.Speed115X).OverallDifficulty;
             Difficulty12X = qua.SolveDifficulty(ModIdentifier.Speed12X).OverallDifficulty;
+            Difficulty125X = qua.SolveDifficulty(ModIdentifier.Speed125X).OverallDifficulty;
             Difficulty13X = qua.SolveDifficulty(ModIdentifier.Speed13X).OverallDifficulty;
+            Difficulty135X = qua.SolveDifficulty(ModIdentifier.Speed135X).OverallDifficulty;
             Difficulty14X = qua.SolveDifficulty(ModIdentifier.Speed14X).OverallDifficulty;
+            Difficulty145X = qua.SolveDifficulty(ModIdentifier.Speed145X).OverallDifficulty;
             Difficulty15X = qua.SolveDifficulty(ModIdentifier.Speed15X).OverallDifficulty;
+            Difficulty155X = qua.SolveDifficulty(ModIdentifier.Speed155X).OverallDifficulty;
             Difficulty16X = qua.SolveDifficulty(ModIdentifier.Speed16X).OverallDifficulty;
+            Difficulty165X = qua.SolveDifficulty(ModIdentifier.Speed165X).OverallDifficulty;
             Difficulty17X = qua.SolveDifficulty(ModIdentifier.Speed17X).OverallDifficulty;
+            Difficulty175X = qua.SolveDifficulty(ModIdentifier.Speed175X).OverallDifficulty;
             Difficulty18X = qua.SolveDifficulty(ModIdentifier.Speed18X).OverallDifficulty;
+            Difficulty185X = qua.SolveDifficulty(ModIdentifier.Speed185X).OverallDifficulty;
             Difficulty19X = qua.SolveDifficulty(ModIdentifier.Speed19X).OverallDifficulty;
+            Difficulty195X = qua.SolveDifficulty(ModIdentifier.Speed195X).OverallDifficulty;
             Difficulty20X = qua.SolveDifficulty(ModIdentifier.Speed20X).OverallDifficulty;
         }
 
@@ -417,24 +486,44 @@ namespace Quaver.Shared.Database.Maps
                 return Difficulty09X;
             if (mods.HasFlag(ModIdentifier.Speed095X))
                 return Difficulty095X;
+            if (mods.HasFlag(ModIdentifier.Speed105X))
+                return Difficulty105X;
             if (mods.HasFlag(ModIdentifier.Speed11X))
                 return Difficulty11X;
+            if (mods.HasFlag(ModIdentifier.Speed115X))
+                return Difficulty115X;
             if (mods.HasFlag(ModIdentifier.Speed12X))
                 return Difficulty12X;
+            if (mods.HasFlag(ModIdentifier.Speed125X))
+                return Difficulty125X;
             if (mods.HasFlag(ModIdentifier.Speed13X))
                 return Difficulty13X;
+            if (mods.HasFlag(ModIdentifier.Speed135X))
+                return Difficulty135X;
             if (mods.HasFlag(ModIdentifier.Speed14X))
                 return Difficulty14X;
+            if (mods.HasFlag(ModIdentifier.Speed145X))
+                return Difficulty145X;
             if (mods.HasFlag(ModIdentifier.Speed15X))
                 return Difficulty15X;
+            if (mods.HasFlag(ModIdentifier.Speed155X))
+                return Difficulty155X;
             if (mods.HasFlag(ModIdentifier.Speed16X))
                 return Difficulty16X;
+            if (mods.HasFlag(ModIdentifier.Speed165X))
+                return Difficulty165X;
             if (mods.HasFlag(ModIdentifier.Speed17X))
                 return Difficulty17X;
+            if (mods.HasFlag(ModIdentifier.Speed175X))
+                return Difficulty175X;
             if (mods.HasFlag(ModIdentifier.Speed18X))
                 return Difficulty18X;
+            if (mods.HasFlag(ModIdentifier.Speed185X))
+                return Difficulty185X;
             if (mods.HasFlag(ModIdentifier.Speed19X))
                 return Difficulty19X;
+            if (mods.HasFlag(ModIdentifier.Speed195X))
+                return Difficulty195X;
             if (mods.HasFlag(ModIdentifier.Speed20X))
                 return Difficulty20X;
 
@@ -460,7 +549,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public void OpenFolder()
         {
-            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            if (Game != MapGame.Quaver)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You cannot open a folder for a map loaded from another game.");
                 return;
@@ -545,5 +634,6 @@ namespace Quaver.Shared.Database.Maps
     {
         Quaver,
         Osu,
+        Etterna
     }
 }

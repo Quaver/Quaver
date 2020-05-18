@@ -7,9 +7,11 @@
 
 using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -27,7 +29,12 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Change the audio playback rate of the song.";
 
-        public bool Ranked { get; set; } = true;
+        /// <summary>
+        ///     Speeds that are 0.05x above 1.0x are defined after 0.95x.
+        ///     Temporarily leave this unranked.
+        /// </summary>
+        /// <returns></returns>
+        public bool Ranked() => ModIdentifier <= ModIdentifier.Speed095X;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
@@ -45,17 +52,29 @@ namespace Quaver.Shared.Modifiers.Mods
             ModIdentifier.Speed085X,
             ModIdentifier.Speed09X,
             ModIdentifier.Speed095X,
+            ModIdentifier.Speed105X,
             ModIdentifier.Speed11X,
+            ModIdentifier.Speed115X,
             ModIdentifier.Speed12X,
+            ModIdentifier.Speed125X,
             ModIdentifier.Speed13X,
+            ModIdentifier.Speed135X,
             ModIdentifier.Speed14X,
+            ModIdentifier.Speed145X,
             ModIdentifier.Speed15X,
+            ModIdentifier.Speed155X,
             ModIdentifier.Speed16X,
+            ModIdentifier.Speed165X,
             ModIdentifier.Speed17X,
+            ModIdentifier.Speed175X,
             ModIdentifier.Speed18X,
+            ModIdentifier.Speed185X,
             ModIdentifier.Speed19X,
+            ModIdentifier.Speed195X,
             ModIdentifier.Speed20X,
         };
+
+        public Color ModColor { get; } = ColorHelper.HexToColor("#A35596");
 
         /// <summary>
         /// </summary>

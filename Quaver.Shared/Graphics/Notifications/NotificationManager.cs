@@ -11,8 +11,11 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
+using Wobble.Logging;
+using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Notifications
 {
@@ -24,32 +27,39 @@ namespace Quaver.Shared.Graphics.Notifications
         public static Container Container { get; } = new Container();
 
         /// <summary>
-        ///     All of the notifications in our queue.
+        ///     Notifications that are queued to be displayed
         /// </summary>
-        private static List<Notification> Notifications { get; } = new List<Notification>();
+        public static List<DrawableNotification> QueuedNotifications { get; set; } = new List<DrawableNotification>();
 
         /// <summary>
-        ///     The x position of all notifications.
+        ///     Notifications that are currently active
         /// </summary>
-        private static int TargetX { get; } = -20;
+        public static List<DrawableNotification> ActiveNotifications { get; set; } = new List<DrawableNotification>();
 
         /// <summary>
-        ///     The initial position every queued notification.
+        ///     Event invoked when a notification has been missed by the user
         /// </summary>
-        private static Vector2 InitialPosition { get; } = new Vector2(350, 130);
+        public static event EventHandler<NotificationMissedEventArgs> NotificationMissed;
+
+        /// <summary>
+        ///     The initial/top level position for notifications
+        /// </summary>
+        private static float InitialY { get; } = 130;
 
         ///  <summary>
-        ///
         ///  </summary>
         /// <param name="gameTime"></param>
         public static void Update(GameTime gameTime)
         {
+            Container.Width = WindowManager.Width;
+            Container.Height = WindowManager.Height;
+
+            FlushNotificationQueue();
             PerformAnimations(gameTime);
             Container.Update(gameTime);
         }
 
         /// <summary>
-        ///
         /// </summary>
         internal static void Draw(GameTime gameTime) => Container.Draw(gameTime);
 
@@ -61,105 +71,87 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="onClick"></param>
         internal static void Show(NotificationLevel level, string text, EventHandler onClick = null)
         {
-            Color color;
-            var image = UserInterface.UnknownAvatar;
+            var info = new NotificationInfo(level, text, true, onClick);
+            var notification = new DrawableNotification(null, info, -1) {  Alignment = Alignment.TopRight };
 
-            switch (level)
+            QueuedNotifications.Add(notification);
+        }
+
+        /// <summary>
+        ///     Moves all of the notifications that are queued in <see cref="QueuedNotifications"/>
+        ///     and makes them active
+        /// </summary>
+        private static void FlushNotificationQueue()
+        {
+            foreach (var notification in QueuedNotifications)
             {
-                case NotificationLevel.Default:
-                    color = Colors.Swan;
-                    break;
-                case NotificationLevel.Primary:
-                    color = ColorHelper.HexToColor("#428BCA");
-                    break;
-                case NotificationLevel.Info:
-                    color = ColorHelper.HexToColor("#5BC0DE");
-                    image = UserInterface.NotificationInfoBg;
-                    break;
-                case NotificationLevel.Error:
-                    color = ColorHelper.HexToColor("#D9534F");
-                    image = UserInterface.NotificationErrorBg;
-                    break;
-                case NotificationLevel.Warning:
-                    color = Color.Yellow;
-                    image = UserInterface.NotificationWarningBg;
-                    break;
-                case NotificationLevel.Success:
-                    color = ColorHelper.HexToColor("#5CB85C");
-                    image = UserInterface.NotificationSuccessBg;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(level), level, null);
+                notification.Parent = Container;
+
+                if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
+                {
+                    notification.Alignment = Alignment.BotRight;
+                    notification.Y = -InitialY;
+                }
+                else
+                {
+                    notification.Y = InitialY;
+                }
+
+                ActiveNotifications.Add(notification);
             }
 
-            Show(image, color, text, onClick);
+            QueuedNotifications.Clear();
         }
 
         /// <summary>
-        ///     Show a completely custom notification.
         /// </summary>
-        /// <param name="image"></param>
-        /// <param name="color"></param>
-        /// <param name="text"></param>
-        /// <param name="onClick"></param>
-        internal static void Show(Texture2D image, Color color, string text, EventHandler onClick = null)
-        {
-            var notification = new Notification(image, text, color, onClick)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(InitialPosition.X, InitialPosition.Y),
-            };
-
-            notification.X = notification.Width;
-            Notifications.Add(notification);
-        }
-
-        /// <summary>
-        ///     Performs all of the animations for
-        /// </summary>
+        /// <param name="gameTime"></param>
         private static void PerformAnimations(GameTime gameTime)
         {
-            if (Notifications.Count == 0)
+            if (ActiveNotifications.Count == 0)
                 return;
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            for (var i = Notifications.Count - 1; i >= 0; i--)
+            for (var i = ActiveNotifications.Count - 1; i >= 0; i--)
             {
-                var notification = Notifications[i];
-
-                // Tween the notification to the left
-                if (Math.Abs(notification.X - TargetX) > 0.02)
-                    notification.X = MathHelper.Lerp(notification.X, TargetX, (float) Math.Min(dt / 60, 1));
+                var notification = ActiveNotifications[i];
 
                 // Get the current iteration
-                var iteration = Notifications.Count - 1 - i;
+                var iteration = ActiveNotifications.Count - 1 - i;
 
                 // Calculate the new target y position
-                var targetY = InitialPosition.Y + (Notifications.Last().Height + 20) * iteration;
-
-                if (Math.Abs(notification.Y - targetY) > 0.02)
-                    notification.Y = MathHelper.Lerp(notification.Y, targetY, (float) Math.Min(dt / 60, 1));
-                else
+                if (!notification.IsSlidingOut)
                 {
-                    // Since the notification is now in the correct x position, we can
-                    // begin counting the time it has been shown, so we'll know when to fade it out.
-                    notification.TimeElapsedSinceShown += dt;
+                    var targetY = InitialY + (ActiveNotifications.Last().Height + 20) * iteration;
 
-                    // Reset the alpha if the button is hovered over, and it hasn't already been clicked.
-                    if (notification.IsHovered && !notification.HasBeenClicked)
-                    {
-                        notification.Alpha = 1;
-                        notification.TimeElapsedSinceShown = 0;
-                    }
-                    // Begin to fade out and destroy the object after a period of time.
-                    else if (Math.Abs(notification.Alpha) < 0.02)
-                    {
-                        Notifications.Remove(notification);
-                        notification.Destroy();
-                    }
+                    if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
+                        targetY = -targetY;
+
+                    notification.Y = MathHelper.Lerp(notification.Y, targetY, (float) Math.Min(dt / 60, 1));
                 }
+
+                if (!notification.Item.WasClicked && !notification.HasSlidOut)
+                    continue;
+
+                notification.Destroy();
+                ActiveNotifications.Remove(notification);
+
+                if (notification.Item.WasClicked)
+                    continue;
+
+                // Consider a notification "missed" if it's an error OR it has a click action attached to it
+                if (notification.Item.Level != NotificationLevel.Error && notification.Item.ClickAction == null)
+                    continue;
+
+                // Notification was missed, so invoke an event with its info so the OnlineHub can add it to its queue
+                Logger.Important($"Notification Missed: {notification.Item.Level} | {notification.Item.Text}",
+                    LogType.Runtime, false);
+
+                var info = new NotificationInfo(notification.Item.Level, notification.Item.Text, false,
+                    notification.Item.ClickAction);
+
+                NotificationMissed?.Invoke(typeof(NotificationManager), new NotificationMissedEventArgs(info));
             }
         }
     }

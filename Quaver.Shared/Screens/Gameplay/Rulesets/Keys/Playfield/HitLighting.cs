@@ -7,7 +7,9 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
@@ -55,10 +57,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     When hitting an object, it'll loop through once.
         /// </summary>
-        public void PerformHitAnimation(bool isLongNote)
+        public void PerformHitAnimation(bool isLongNote, Judgement judgement = Judgement.Ghost)
         {
             var skin = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
             IsHoldingLongNote = isLongNote;
+
+            if (ConfigManager.TintHitLightingBasedOnJudgementColor.Value && judgement != Judgement.Ghost)
+                Tint = skin.JudgeColors[judgement];
+            else
+                Tint = Color.White;
 
             // First begin by replacing the frames
             ReplaceFrames(IsHoldingLongNote ? skin.HoldLighting : skin.HitLighting);
@@ -149,6 +156,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        private static float AlphaChangePerFrame(double dt) => (float)(dt / (60 * AudioEngine.Track.Rate));
+        private static float AlphaChangePerFrame(double dt) => (float)(dt / (120 * AudioEngine.Track.Rate));
     }
 }

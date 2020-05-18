@@ -1,4 +1,6 @@
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -12,13 +14,15 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Converts regular notes into long notes and long notes into gaps.";
 
-        public bool Ranked { get; set; } = false;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; } = true;
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.NoLongNotes, ModIdentifier.FullLN };
+
+        public Color ModColor { get; } = ColorHelper.HexToColor("#F2994A");
 
         public void InitializeMod() {}
     }

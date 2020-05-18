@@ -5,13 +5,15 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
     internal class ModNoSliderVelocities: IGameplayModifier
     {
-        public string Name { get; set; } = "No Slider Velocities";
+        public string Name { get; set; } = "No Scroll Velocities";
 
         public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.NoSliderVelocity;
 
@@ -19,13 +21,15 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Hate scroll speed changes? Say no more.";
 
-        public bool Ranked { get; set; } = false;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
+
+        public Color ModColor { get; } = ColorHelper.HexToColor("#EB5757");
 
         public void InitializeMod() {}
     }

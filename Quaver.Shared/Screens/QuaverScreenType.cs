@@ -20,6 +20,8 @@ namespace Quaver.Shared.Screens
         Alpha,
         Download,
         Lobby,
-        Multiplayer
+        Multiplayer,
+        Music,
+        Theatre
     }
 }

@@ -6,16 +6,21 @@
 */
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -24,24 +29,32 @@ namespace Quaver.Shared.Screens.Importing
     public class ImportingScreenView : ScreenView
     {
         /// <summary>
-        ///     The background image for the screen
         /// </summary>
         private BackgroundImage Background { get; set; }
 
         /// <summary>
-        ///     The loading wheel that shows we're currently importing maps.
         /// </summary>
-        private Sprite LoadingWheel { get; set; }
+        private Sprite Banner { get; set; }
 
         /// <summary>
-        ///     Header sprite for what's currently going on.
         /// </summary>
-        public SpriteText Header { get; private set; }
+        private SpriteTextPlus PleaseWaitText { get; set; }
 
         /// <summary>
-        ///     Information on what maps are being imported
         /// </summary>
-        public SpriteText InformationText { get; private set; }
+        public SpriteTextPlus Status { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        private LoadingWheel LoadingWheel { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private MenuAudioVisualizer VisualizerTop { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private MenuAudioVisualizer VisualizerBottom { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -51,6 +64,11 @@ namespace Quaver.Shared.Screens.Importing
         {
             CreateBackground();
             CreateBanner();
+            CreatePleaseWaitText();
+            CreateStatusText();
+            CreateLoadingWheel();
+            CreateVisualizers();
+
             MapsetImporter.ImportingMapset += OnImportingMapset;
         }
 
@@ -58,11 +76,7 @@ namespace Quaver.Shared.Screens.Importing
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            HandleLoadingWheelAnimations();
-            Container?.Update(gameTime);
-        }
+        public override void Update(GameTime gameTime) => Container?.Update(gameTime);
 
         /// <inheritdoc />
         /// <summary>
@@ -70,7 +84,7 @@ namespace Quaver.Shared.Screens.Importing
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(Color.CornflowerBlue);
+            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor($"#2F2F2F"));
             Container?.Draw(gameTime);
         }
 
@@ -84,80 +98,107 @@ namespace Quaver.Shared.Screens.Importing
         }
 
         /// <summary>
-        /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 10, false)
-        {
-            Parent = Container
-        };
-
-        /// <summary>
-        /// </summary>
-        private void CreateLoadingWheel(Sprite parent) => LoadingWheel = new Sprite
-        {
-            Parent = parent,
-            Alignment = Alignment.BotCenter,
-            Size = new ScalableVector2(60, 60),
-            Image = UserInterface.LoadingWheel,
-            Tint = Color.Yellow,
-            Y = -10
-        };
-
-        /// <summary>
-        ///     Animates the loading wheel.
-        /// </summary>
-        private void HandleLoadingWheelAnimations()
-        {
-            if (LoadingWheel.Animations.Count != 0)
-                return;
-
-            var rotation = MathHelper.ToDegrees(LoadingWheel.Rotation);
-            LoadingWheel.ClearAnimations();
-            LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
-        }
-
-        /// <summary>
         ///     This method will update the screen when a mapset is finished being imported.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnImportingMapset(object sender, ImportingMapsetEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index + 1}/{e.Queue.Count}";
+        private void OnImportingMapset(object sender, ImportingMapsetEventArgs e)
+            => Status.ScheduleUpdate(() => Status.Text = $"[{e.Index + 1}/{e.Queue.Count}] IMPORTING: \"{e.FileName}\"");
 
         /// <summary>
-        ///     Creates the banner at the top of the screen
+        ///     Creates <see cref="Background"/>
+        /// </summary>
+        private void CreateBackground()
+            => Background = new BackgroundImage(UserInterface.Triangles, 0, false) { Parent = Container };
+
+        /// <summary>
+        ///     Creates <see cref="Banner"/>
         /// </summary>
         private void CreateBanner()
         {
-            var background = new Sprite()
+            Banner = new Sprite
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(WindowManager.Width, 150),
-                Tint = Color.Black,
-                Alpha = 0.85f
+                Size = new ScalableVector2(WindowManager.Width + 4, 180),
+                Tint = ColorHelper.HexToColor($"#242424")
             };
 
-            var line = new Sprite()
-            {
-                Parent = background,
-                Size = new ScalableVector2(background.Width, 1),
-                Tint = Colors.MainAccent
-            };
+            Banner.AddBorder(ColorHelper.HexToColor("#45D6F5"), 2);
+        }
 
-            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait. Maps are being imported.", 16)
+        /// <summary>
+        /// </summary>
+        private void CreatePleaseWaitText()
+        {
+            PleaseWaitText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                "Please wait while your maps are being processed!".ToUpper(), 26)
             {
-                Parent = background,
+                Parent = Banner,
                 Alignment = Alignment.TopCenter,
-                Y = 10
+                Y = 24,
+                Tint = ColorHelper.HexToColor("#F2C94C")
             };
+        }
 
-            InformationText = new SpriteText(Fonts.Exo2SemiBold, "", 14)
+        /// <summary>
+        /// </summary>
+        private void CreateStatusText()
+        {
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                "Performing Initial Processing".ToUpper(), 24)
             {
-                Parent = background,
+                Parent = Banner,
                 Alignment = Alignment.TopCenter,
-                Y = Header.Y + Header.Height + 5
+                Y = PleaseWaitText.Y + PleaseWaitText.Height + 16
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateLoadingWheel()
+        {
+            LoadingWheel = new LoadingWheel
+            {
+                Parent = Banner,
+                Alignment = Alignment.TopCenter,
+                Y = Status.Y + Status.Height + 18,
+                Size = new ScalableVector2(50, 50)
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateVisualizers()
+        {
+            VisualizerTop = new MenuAudioVisualizer((int) WindowManager.Width, 750, 220, 3, 8)
+            {
+                Parent = Banner,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(WindowManager.Width, 2)
             };
 
-            CreateLoadingWheel(background);
+            VisualizerTop.Bars.ForEach(x =>
+            {
+                x.Alpha = 1;
+                x.Tint = Banner.Border.Tint;
+            });
+
+            VisualizerBottom = new MenuAudioVisualizer((int) WindowManager.Width, 750, 220, 3, 8)
+            {
+                Parent = Banner,
+                Alignment = Alignment.BotLeft,
+                Size = new ScalableVector2(WindowManager.Width, 2),
+                Rotation = 180
+            };
+
+            VisualizerBottom.Bars.ForEach(x =>
+            {
+                x.Alignment = Alignment.TopLeft;
+                x.Alpha = 1;
+                x.Tint = Banner.Border.Tint;
+                x.Rotation = 180;
+            });
         }
     }
 }

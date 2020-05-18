@@ -19,15 +19,50 @@ namespace Quaver.Shared.Helpers
         /// <returns></returns>
         internal static Color DifficultyToColor(float rating)
         {
+            // Beginner
+            if (rating < 1)
+                return HexToColor("#D1FFFA");
             // Easy
-            if (rating < 15)
-                return Color.Green;
-            // Medium
-            if (rating < 30)
-                return new Color(255, 255, 0);
-
+            if (rating < 3.5f)
+                return HexToColor("#5EFF75");
+            // Normal
+            if (rating < 8)
+                return HexToColor("#5EC4FF");
             // Hard
-            return new Color(255, 0, 0);
+            if (rating < 19)
+                return HexToColor("#F5B25B");
+            // Insane
+            if (rating < 28)
+                return HexToColor("#F9645D");
+            // Expert
+            return HexToColor("#D761EB");
+        }
+
+        /// <summary>
+        ///     Converts an osu! star rating to Quaver's color system
+        /// </summary>
+        /// <param name="rating"></param>
+        /// <returns></returns>
+        internal static Color OsuStarRatingToColor(float rating)
+        {
+            // Beginnner
+            if (rating < 1)
+                return DifficultyToColor(0.9f);
+            // Easy
+            if (rating < 2)
+                return DifficultyToColor(3.49f);
+            // Normal
+            if (rating < 2.70f)
+                return DifficultyToColor(7.99f);
+            // Hard
+            if (rating < 4)
+                return DifficultyToColor(18.9f);
+            // Insane
+            if (rating < 5.28)
+                return DifficultyToColor(27.9f);
+
+            // Expert
+            return DifficultyToColor(999);
         }
 
         /// <summary>
@@ -70,5 +105,40 @@ namespace Quaver.Shared.Helpers
         /// <param name="color"></param>
         /// <returns></returns>
         public static Color ToXnaColor(System.Drawing.Color color) => new Color(color.R, color.G, color.B);
+
+        public static Color BeatSnapToColor(int snap)
+        {
+            var color = Color.White;
+
+            switch (snap)
+            {
+                case 1:
+                    color = Color.White;
+                    break;
+                case 2:
+                    color = HexToColor("#E10B01");
+                    break;
+                case 3:
+                    color = HexToColor("#9B51E0");
+                    break;
+                case 4:
+                    color = HexToColor("#0587E5");
+                    break;
+                case 6:
+                    color = HexToColor("#BB6BD9");
+                    break;
+                case 8:
+                    color = HexToColor("#E9B736");
+                    break;
+                case 12:
+                    color = HexToColor("#D34B8C");
+                    break;
+                case 16:
+                    color = HexToColor("#FFE76B");
+                    break;
+            }
+
+            return color;
+        }
     }
 }

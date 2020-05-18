@@ -15,6 +15,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
@@ -22,7 +23,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
     {
         /// <summary>
         /// </summary>
-        private JukeboxButton ReturnButton { get; set; }
+        private IconButton ReturnButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -54,7 +55,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonSelectRandomColor { get; set; }
+        private IconButton ButtonSelectRandomColor { get; set; }
 
         /// <summary>
         /// </summary>
@@ -111,7 +112,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateReturnButton() => ReturnButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_long_arrow_pointing_to_the_right),
+        private void CreateReturnButton() => ReturnButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_long_arrow_pointing_to_the_right),
             (sender, args) =>
             {
                 if (string.IsNullOrWhiteSpace(NameTextbox.RawText))
@@ -152,7 +153,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             var selectedLayer = View?.LayerCompositor.ScrollContainer.AvailableItems[View.LayerCompositor.SelectedLayerIndex.Value];
 
             NameTextbox = new Textbox(new ScalableVector2(Width - 20, 26),
-                Fonts.Exo2SemiBold, 13, selectedLayer?.Name)
+                FontManager.GetWobbleFont(Fonts.LatoBlack), 13, selectedLayer?.Name)
             {
                 Parent = this,
                 X = TextLayerName.X,
@@ -185,7 +186,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
                 Tint = Color.White
             };
 
-            ButtonSelectRandomColor = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_refresh_page_option), (sender, args) =>
+            ButtonSelectRandomColor = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_refresh_page_option), (sender, args) =>
             {
                 SelectedColor.Tint = new Color(RNG.Next(255), RNG.Next(255), RNG.Next(255));
                 TextSelectedColor.Text = $"(R:{SelectedColor.Tint.R}, G:{SelectedColor.Tint.G}, B:{SelectedColor.Tint.B})";

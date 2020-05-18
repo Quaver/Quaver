@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
             for (var i = 0; i < Items.Count; i++)
             {
                 var item = Items[i];
-                AddContainedDrawable(item);
+                item.Parent = this;
                 totalHeight += item.Height;
 
                 const int spacing = 13;

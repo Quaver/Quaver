@@ -7,6 +7,7 @@
 
 using System;
 using System.IO;
+using IniFileParser;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
@@ -31,6 +32,11 @@ namespace Quaver.Shared.Skinning
         ///     If non-null, we require a skin reload.
         /// </summary>
         public static string NewQueuedSkin { get; set; }
+
+        /// <summary>
+        ///     If non-null, this is the workshop skin that'll be reloaded
+        /// </summary>
+        public static string NewWorkshopSkin { get; set; }
 
         /// <summary>
         ///     The currently selected skin
@@ -100,8 +106,33 @@ namespace Quaver.Shared.Skinning
                         var dir = $"{ConfigManager.DataDirectory.Value}/Exports";
                         Directory.CreateDirectory(dir);
 
-                        archive.AddAllFromDirectory($"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}");
-                        var path = $"{dir}/{ConfigManager.Skin.Value}.qs";
+                        var skinDir = ConfigManager.UseSteamWorkshopSkin.Value ?
+                            $"{ConfigManager.SteamWorkshopDirectory.Value}/{ConfigManager.Skin.Value}"
+                                : $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
+
+                        if (!Directory.Exists(skinDir))
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "You cannot export this skin!");
+                            return;
+                        }
+
+                        archive.AddAllFromDirectory(skinDir);
+
+                        var name = ConfigManager.Skin.Value;
+
+                        if (ConfigManager.UseSteamWorkshopSkin.Value)
+                        {
+                            if (File.Exists($"{skinDir}/skin.ini"))
+                            {
+                                var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                                    .ReadFile($"{skinDir}/skin.ini")["General"];
+
+                                if (data["Name"] != null)
+                                    name = $"{data["Name"]}";
+                            }
+                        }
+
+                        var path = $"{dir}/{name}.qs";
                         archive.SaveTo(path, new ZipWriterOptions(CompressionType.None));
 
                         Utils.NativeUtils.HighlightInFileManager(path);

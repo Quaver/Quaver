@@ -14,8 +14,13 @@ using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Graphics.Notifications;
+using SharpCompress.Archives;
+using SharpCompress.Common;
 using SQLite;
 using Wobble;
 using Wobble.Logging;
@@ -26,14 +31,28 @@ namespace Quaver.Shared.Database.Maps
     public static class MapDatabaseCache
     {
         /// <summary>
-        ///     The path of the local database
-        /// </summary>
-        public static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
-
-        /// <summary>
         ///     List of maps to force update after editing them.
         /// </summary>
         public static List<Map> MapsToUpdate { get; } = new List<Map>();
+
+        /// <summary>
+        ///     The names of the .qp files in the resources
+        /// </summary>
+        private static List<string> DefaultMapsetFiles { get; } = new List<string>()
+        {
+            "+TEK - Stars and Bunnies",
+            "HyuN - CrossOver",
+            "HyuN - Princess Of Winter",
+            "Rabbit House - Have A Party Time!",
+            "zetoban - Csikos Post",
+            "zetoban - Umami Packed Mountaineering"
+        };
+
+        /// <summary>
+        ///     The default map that will be chosen if <see cref="ImportDefaultMapsets"/> is called
+        ///     (HyuN - Princess of Winter [Beginner])
+        /// </summary>
+        private static string DefaultMapChecksum { get; } = "5004c3553cd29ccd3191e5c266f2f282";
 
         /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
@@ -41,22 +60,22 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public static void Load(bool fullSync)
         {
-            if (fullSync)
-            {
-                if (File.Exists(DatabasePath))
-                    File.Delete(DatabasePath);
-            }
-
             CreateTable();
 
             // Fetch all of the .qua files inside of the song directory
             var quaFiles = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories).ToList();
             Logger.Important($"Found {quaFiles.Count} .qua files inside the song directory", LogType.Runtime);
 
-            SyncMissingOrUpdatedFiles(quaFiles);
-            AddNonCachedFiles(quaFiles);
+            if (fullSync)
+            {
+                SyncMissingOrUpdatedFiles(quaFiles);
+                AddNonCachedFiles(quaFiles);
+            }
 
             OrderAndSetMapsets();
+
+            if (MapManager.Mapsets.Count == 0)
+                ImportDefaultMapsets();
         }
 
         /// <summary>
@@ -66,8 +85,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                conn.CreateTable<Map>();
+                DatabaseManager.Connection.CreateTable<Map>();
                 Logger.Important($"Map Database has been created", LogType.Runtime);
             }
             catch (Exception e)
@@ -85,12 +103,14 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
+            var fileHashSet = files.ToHashSet();
+
             foreach (var map in maps)
             {
                 var filePath = BackslashToForward($"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}");
 
                 // Check if the file actually exists.
-                if (files.Any(x => BackslashToForward(x) == filePath))
+                if (fileHashSet.Contains(BackslashToForward(filePath)))
                 {
                     // Check if the file was updated. In this case, we check if the last write times are different
                     // BEFORE checking Md5 checksum of the file since it's faster to check if we even need to
@@ -110,7 +130,7 @@ namespace Quaver.Shared.Database.Maps
                         {
                             Logger.Error(e, LogType.Runtime);
                             File.Delete(filePath);
-                            new SQLiteConnection(DatabasePath).Delete(map);
+                            DatabaseManager.Connection.Delete(map);
                             Logger.Important($"Removed {filePath} from the cache, as the file could not be parsed.", LogType.Runtime);
                             continue;
                         }
@@ -118,7 +138,7 @@ namespace Quaver.Shared.Database.Maps
                         newMap.CalculateDifficulties();
 
                         newMap.Id = map.Id;
-                        new SQLiteConnection(DatabasePath).Update(newMap);
+                        DatabaseManager.Connection.Update(newMap);
 
                         Logger.Important($"Updated cached map: {newMap.Id}, as the file was updated.", LogType.Runtime);
                     }
@@ -127,7 +147,7 @@ namespace Quaver.Shared.Database.Maps
                 }
 
                 // The file doesn't exist, so we can safely delete it from the cache.
-                new SQLiteConnection(DatabasePath).Delete(map);
+                DatabaseManager.Connection.Delete(map);
                 Logger.Important($"Removed {filePath} from the cache, as the file no longer exists", LogType.Runtime);
             }
         }
@@ -141,18 +161,22 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
+            var hashset = new HashSet<string>();
+            maps.ForEach(x => hashset.Add(BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")));
+
             foreach (var file in files)
             {
-                if (maps.Any(x => BackslashToForward(file) == BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")))
+                if (hashset.Contains(BackslashToForward(file)))
                     continue;
 
                 // Found map that isn't cached in the database yet.
                 try
                 {
                     var map = Map.FromQua(Qua.Parse(file, false), file);
-                    map.CalculateDifficulties();
-                    map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     InsertMap(map, file);
+
+                    if (!QuaverSettingsDatabaseCache.OutdatedMaps.Contains(map))
+                        QuaverSettingsDatabaseCache.OutdatedMaps.Add(map);
                 }
                 catch (Exception e)
                 {
@@ -165,7 +189,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Responsible for fetching all the maps from the database and returning them.
         /// </summary>
         /// <returns></returns>
-        public static List<Map> FetchAll() => new SQLiteConnection(DatabasePath).Table<Map>().ToList();
+        public static List<Map> FetchAll() => DatabaseManager.Connection.Table<Map>().ToList();
 
         /// <summary>
         ///     Converts all backslash characters to forward slashes.
@@ -184,9 +208,9 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Insert(map);
+                DatabaseManager.Connection.Insert(map);
 
-                return new SQLiteConnection(DatabasePath).Get<Map>(x => x.Md5Checksum == map.Md5Checksum).Id;
+                return DatabaseManager.Connection.Get<Map>(x => x.Md5Checksum == map.Md5Checksum).Id;
             }
             catch (Exception e)
             {
@@ -204,7 +228,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Update(map);
+                DatabaseManager.Connection.Update(map);
                 Logger.Debug($"Updated map: {map.Md5Checksum} (#{map.Id}) in the cache", LogType.Runtime);
             }
             catch (Exception e)
@@ -221,7 +245,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Delete(map);
+                DatabaseManager.Connection.Delete(map);
                 Logger.Debug($"Deleted map: {map.Md5Checksum} (#{map.Id}) in the cache", LogType.Runtime);
             }
             catch (Exception e)
@@ -238,8 +262,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-
-                return new SQLiteConnection(DatabasePath).Find<Map>(x => x.MapSetId == id);
+                return DatabaseManager.Connection.Find<Map>(x => x.MapSetId == id);
             }
             catch (Exception e)
             {
@@ -253,6 +276,8 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public static void OrderAndSetMapsets()
         {
+            OtherGameMapDatabaseCache.Initialize();
+
             var maps = FetchAll();
 
             if (ConfigManager.AutoLoadOsuBeatmaps.Value)
@@ -260,11 +285,31 @@ namespace Quaver.Shared.Database.Maps
 
             var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
+            MapManager.RecentlyPlayed = new List<Map>();
+
+            PlaylistManager.Load();
+
+            // Schedule maps that don't have difficulty ratings to recalculate.
+            // If forcing a full recalculation due to diff calc updates, then the difficulty processor version should just be bumped
+            // instead of adding things here.
+            foreach (var mapset in MapManager.Mapsets)
+            {
+                foreach (var map in mapset.Maps)
+                {
+                    // The difficulty calculator only calculates for maps with >= 2 hitobjects
+                    if (map.RegularNoteCount + map.LongNoteCount >= 2)
+                    {
+                        // ReSharper disable once CompareOfFloatsByEqualityOperator
+                        if (map.Difficulty105X == 0f && !OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Add].Contains(map))
+                            OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Update].Add(map);
+                    }
+                }
+            }
         }
 
         /// <summary>
         /// </summary>
-        public static void ForceUpdateMaps()
+        public static void ForceUpdateMaps(bool createNewMaps = true)
         {
             for (var i = 0; i < MapsToUpdate.Count; i++)
             {
@@ -275,17 +320,32 @@ namespace Quaver.Shared.Database.Maps
                     if (!File.Exists(path))
                         continue;
 
-                    var map = Map.FromQua(Qua.Parse(path, false), path);
+                    Map map;
+
+                    if (createNewMaps)
+                        map = Map.FromQua(Qua.Parse(path, false), path);
+                    else
+                        map = MapsToUpdate[i];
+
                     map.CalculateDifficulties();
                     map.Id = MapsToUpdate[i].Id;
+                    map.Directory = MapsToUpdate[i].Directory;
+                    map.Mapset = MapsToUpdate[i].Mapset;
 
                     if (map.Id == 0)
+                    {
                         map.Id = InsertMap(map, path);
+                    }
                     else
+                    {
                         UpdateMap(map);
+                        PlaylistManager.UpdateMapInPlaylists(MapsToUpdate[i], map);
+                    }
 
                     MapsToUpdate[i] = map;
-                    MapManager.Selected.Value = map;
+
+                    if (createNewMaps)
+                        MapManager.Selected.Value = map;
                 }
                 catch (Exception e)
                 {
@@ -294,10 +354,64 @@ namespace Quaver.Shared.Database.Maps
             }
 
             MapsToUpdate.Clear();
-            OrderAndSetMapsets();
 
-            var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Id == MapManager.Selected.Value.Id));
-            MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Id == MapManager.Selected.Value.Id);
+            if (createNewMaps)
+            {
+                OrderAndSetMapsets();
+                PlaylistManager.Load();
+
+                var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == MapManager.Selected.Value.Md5Checksum));
+                MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum);
+            }
+        }
+
+        /// <summary>
+        ///     Extracts the .qp files of the default maps and imports them into the game
+        /// </summary>
+        private static void ImportDefaultMapsets()
+        {
+            foreach (var map in DefaultMapsetFiles)
+            {
+                var directory = $"{ConfigManager.SongDirectory.Value}/{map}";
+
+                if (Directory.Exists(directory))
+                    continue;
+
+                Directory.CreateDirectory(directory);
+
+                try
+                {
+                    var stream = GameBase.Game.Resources.GetStream($"Quaver.Resources/DefaultMaps/{map}.qp");
+
+                    using (var archive = ArchiveFactory.Open(stream))
+                    {
+                        foreach (var entry in archive.Entries)
+                        {
+                            if (!entry.IsDirectory)
+                                entry.WriteToDirectory(directory, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                        }
+                    }
+
+                    Logger.Important($"Successfully imported default map: {map}", LogType.Runtime);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Failed to import default map: {map}", LogType.Runtime);
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
+
+            // Perform a full sync so that everything can be imported
+            Load(true);
+
+            var defaultMap = MapManager.FindMapFromMd5(DefaultMapChecksum);
+
+            // Select the default map and track (HyuN - Princess of Winter)
+            if (defaultMap != null)
+            {
+                MapManager.Selected.Value = defaultMap;
+                AudioEngine.LoadCurrentTrack();
+            }
         }
     }
 }

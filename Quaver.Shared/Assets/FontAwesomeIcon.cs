@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Assets
 {
@@ -25,21 +26,12 @@ namespace Quaver.Shared.Assets
         /// </summary>
         /// <param name="icon"></param>
         /// <returns></returns>
-        public static Texture2D Get(FontAwesomeIcon icon) => Icons[icon];
-
-        /// <summary>
-        ///     Loads all the icons andsets them in the dictionary for use.
-        /// </summary>
-        public static void Load()
+        public static Texture2D Get(FontAwesomeIcon icon)
         {
-            foreach (var icon in Enum.GetNames(typeof(FontAwesomeIcon)))
-            {
-                var name = icon.Replace("_", "-");
-                name += ".png";
+            var name = icon.ToString().Replace("_", "-");
+            name += ".png";
 
-                var enumVal = (FontAwesomeIcon) Enum.Parse(typeof(FontAwesomeIcon), icon);
-                Icons[enumVal] = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get($"Quaver.Resources/Textures/FontAwesome/{name}"));
-            }
+            return TextureManager.Load($"Quaver.Resources/Textures/FontAwesome/{name}");
         }
     }
 
@@ -104,6 +96,7 @@ namespace Quaver.Shared.Assets
         fa_check_mark,
         fa_check_sign_in_a_rounded_black_square,
         fa_check,
+        fa_check_symbol,
         fa_checked_symbol,
         fa_checkered_raised_flag,
         fa_chevron_arrow_down,

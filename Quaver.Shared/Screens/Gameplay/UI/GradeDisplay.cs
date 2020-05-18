@@ -29,20 +29,26 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                     return;
 
                 _grade = value;
-                Image = Scoring.Failed ? SkinManager.Skin.Grades[Grade.F] : SkinManager.Skin.Grades[value];
+                var img = Scoring.Failed ? SkinManager.Skin.Grades[Grade.F] : SkinManager.Skin.Grades[value];
+
+                if (img == Image)
+                    return;
+
+                Image = img;
                 UpdateWidth();
             }
         }
+
         /// <summary>
-        ///
         /// </summary>
-        private ScoreProcessor Scoring { get; }
+        private GameplayScreen Screen { get; }
+
+        private ScoreProcessor Scoring => Screen.Ruleset.ScoreProcessor;
 
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
-        ///  <param name="processor"></param>
-        public GradeDisplay(ScoreProcessor processor) => Scoring = processor;
+        public GradeDisplay(GameplayScreen screen) => Screen = screen;
 
         /// <inheritdoc />
         /// <summary>
@@ -60,7 +66,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         private void ChangeGradeImage()
         {
             Visible = Scoring.Score > 0;
-            Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
+            Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy);
         }
 
         /// <summary>

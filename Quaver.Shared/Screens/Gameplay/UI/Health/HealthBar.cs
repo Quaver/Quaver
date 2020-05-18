@@ -31,12 +31,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
         ///     The bar displayed in the foreground. This one dictates the amount
         ///     of health the user currently has.
         /// </summary>
-        protected AnimatableSprite ForegroundBar { get; set; }
+        public AnimatableSprite ForegroundBar { get; set; }
 
         /// <summary>
         ///     Reference to the current score processor.
         /// </summary>
-        private ScoreProcessor Processor { get; }
+        private ScoreProcessor Processor { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -44,12 +44,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
         /// </summary>
         /// <param name="type"></param>
         /// <param name="processor"></param>
-        internal HealthBar(HealthBarType type, ScoreProcessor processor) : base(SkinManager.Skin.HealthBarBackground)
+        internal HealthBar(HealthBarType type, ScoreProcessor processor, Vector2 scale) : base(SkinManager.Skin.HealthBarBackground)
         {
             Type = type;
             Processor = processor;
 
-            Size = new ScalableVector2(Frames.First().Width, Frames.First().Height);
+            Size = new ScalableVector2(Frames.First().Width * scale.X, Frames.First().Height * scale.Y);
 
             // Start animation
             StartLoop(Direction.Forward, 60);
@@ -75,7 +75,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
                 }
             };
 
-            ForegroundBar.Size = new ScalableVector2(ForegroundBar.Frames.First().Width, ForegroundBar.Frames.First().Height);
+            ForegroundBar.Size = new ScalableVector2(ForegroundBar.Frames.First().Width * scale.X, ForegroundBar.Frames.First().Height * scale.Y);
 
             // Start animation.
             ForegroundBar.StartLoop(Direction.Forward, 60);
@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
                     Alignment = Alignment.BotLeft;
                     ForegroundBar.Alignment = Alignment.TopLeft;
 
-                    ForegroundBar.SpriteBatchOptions.Shader.SetParameter("p_position", new Vector2(0, 0), true); 
+                    ForegroundBar.SpriteBatchOptions.Shader.SetParameter("p_position", new Vector2(0, 0), true);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -113,6 +113,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
             SetHealthBarProgress(gameTime);
             base.Update(gameTime);
         }
+
+        /// <summary>
+        ///     Changes the health bar's processor
+        /// </summary>
+        /// <param name="processor"></param>
+        public void UpdateProcessor(ScoreProcessor processor) => Processor = processor;
 
         /// <summary>
         ///        Moves the shader rect's position/size back and forth based on the user's health.

@@ -5,15 +5,21 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Linq;
 using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Listening;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Main;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
+using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
@@ -42,6 +48,18 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private Map PreviouslySelectedMap { get; set; }
 
+        /// <summary>
+        ///     IF the screen was called when coming from select in a multiplayer game.
+        ///     This will bring the user back to song select after importing
+        /// </summary>
+        private bool ComingFromSelect { get; set; }
+
+        /// <summary>
+        ///		Used to determine if the importing is a full sync of mapset.
+        ///		Usually performed from F5 in select screen.
+        ///	</summary>
+        private bool FullSync { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -50,9 +68,12 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        public ImportingScreen(MultiplayerScreen multiplayerScreen = null)
+        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false, bool fullSync = false)
         {
+            ComingFromSelect = fromSelect;
+            FullSync = fullSync;
             MultiplayerScreen = multiplayerScreen;
+
             PreviouslySelectedMap = MapManager.Selected.Value;
             View = new ImportingScreenView(this);
         }
@@ -62,20 +83,24 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public override void OnFirstUpdate()
         {
+            AudioEngine.Track?.Fade(100, 300);
+
             ThreadScheduler.Run(() =>
             {
-                MapsetImporter.ImportMapsetsInQueue();
-
                 if (MapDatabaseCache.MapsToUpdate.Count != 0)
                     MapDatabaseCache.ForceUpdateMaps();
+
+                if (FullSync)
+                    MapDatabaseCache.Load(true);
 
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {
                     var view = View as ImportingScreenView;
-                    view.Header.Text = "Please wait. Calculating difficulties for maps.";
-                    QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();;
+                    view.Status.Text = "Performing difficulty calculation for outdated maps".ToUpper();
+                    QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();
                 }
 
+                MapsetImporter.ImportMapsetsInQueue();
                 OnImportCompletion();
             });
 
@@ -89,33 +114,42 @@ namespace Quaver.Shared.Screens.Importing
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
 
-            if (SelectScreen.PreviousSearchTerm != "")
-                SelectScreen.PreviousSearchTerm = "";
-
-            if (OnlineManager.CurrentGame != null && MultiplayerScreen != null)
+            if (OnlineManager.CurrentGame != null)
             {
                 MapManager.Selected.Value = PreviouslySelectedMap;
 
-                var selectScreen = ScreenManager.Screens.ToList().Find(x => x is SelectScreen) as SelectScreen;
-                var selectScreenView = selectScreen?.View as SelectScreenView;
+                Exit(() =>
+                {
+                    if (ComingFromSelect)
+                        return new SelectionScreen();
 
-                if (selectScreen != null)
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(MapManager.Mapsets);
-
-                selectScreenView?.MapsetScrollContainer.InitializeWithNewSets();
-
-                RemoveTopScreen(MultiplayerScreen);
-
-                var view = (MultiplayerScreenView) MultiplayerScreen.View;
-                view.Map.UpdateContent();
+                    return new MultiplayerGameScreen();
+                });
             }
-            else
+            else if (OnlineManager.ListeningParty != null)
             {
                 Exit(() =>
                 {
-                    AudioEngine.Track?.Fade(10, 300);
-                    return new SelectScreen(MultiplayerScreen);
+                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track.Play();
+
+                    OnlineManager.UpdateListeningPartyState(ListeningPartyAction.ChangeSong);
+
+                    return new MusicPlayerScreen();
                 });
+            }
+            else if (OnlineManager.IsSpectatingSomeone)
+            {
+                // TODO: Whenever handling multiple spectatee's, this should be reworked, but it's fine for now.
+                var spectatee = OnlineManager.SpectatorClients.First();
+                spectatee.Value.WatchUserImmediately();
+            }
+            else
+            {
+                if (MapManager.Mapsets.Count == 0)
+                    Exit(() => new MainMenuScreen());
+                else
+                    Exit(() => new SelectionScreen());
             }
         }
     }

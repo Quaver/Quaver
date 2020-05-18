@@ -6,15 +6,26 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Structures;
+using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Loading;
 using SQLite;
+using Wobble;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Scores
 {
@@ -31,6 +42,11 @@ namespace Quaver.Shared.Database.Scores
         [PrimaryKey]
         [AutoIncrement]
         public int Id { get; set; }
+
+        /// <summary>
+        ///     The id of the user profile that the score has
+        /// </summary>
+        public int UserProfileId { get; set; }
 
         /// <summary>
         ///     The MD5 Hash of the map
@@ -140,6 +156,46 @@ namespace Quaver.Shared.Database.Scores
         public string RatingProcessorVersion { get; set; }
 
         /// <summary>
+        ///     The judgement windows used on the score
+        /// </summary>
+        public string JudgementWindowPreset { get; set; } = "Standard*";
+
+        /// <summary>
+        ///     The marv judgement window used on the score
+        /// </summary>
+        public float JudgementWindowMarv { get; set; }
+
+        /// <summary>
+        ///     The perf judgement window used on the score
+        /// </summary>
+        public float JudgementWindowPerf { get; set; }
+
+        /// <summary>
+        ///     The great judgement window used on the score
+        /// </summary>
+        public float JudgementWindowGreat { get; set; }
+
+        /// <summary>
+        ///     The good judgement window used on the score
+        /// </summary>
+        public float JudgementWindowGood { get; set; }
+
+        /// <summary>
+        ///     The okay judgement window used on the score
+        /// </summary>
+        public float JudgementWindowOkay { get; set; }
+
+        /// <summary>
+        ///     The miss judgement window used on the score
+        /// </summary>
+        public float JudgementWindowMiss { get; set; }
+
+        /// <summary>
+        ///     The score's ranked/standardized accuracy
+        /// </summary>
+        public double RankedAccuracy { get; set; }
+
+        /// <summary>
         ///     If the score is an online score.
         /// </summary>
         [Ignore]
@@ -164,6 +220,24 @@ namespace Quaver.Shared.Database.Scores
         public int PlayerId { get; set; }
 
         /// <summary>
+        ///     If the score is empty. Used in <see cref="DrawableLeaderboardScore"/>
+        /// </summary>
+        [Ignore]
+        public bool IsEmptyScore { get; set; }
+
+        /// <summary>
+        ///     The country of the player
+        /// </summary>
+        [Ignore]
+        public string Country { get; set; }
+
+        /// <summary>
+        ///     The judgements received from online for the scoreboard
+        /// </summary>
+        [Ignore]
+        public List<Judgement> OnlineJudgements { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>
@@ -172,9 +246,13 @@ namespace Quaver.Shared.Database.Scores
         /// <param name="scrollSpeed"></param>
         /// <param name="pauseCount"></param>
         /// <param name="seed"></param>
+        /// <param name="windows"></param>
         /// <returns></returns>
-        public static Score FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount, int seed)
+        public static Score FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount,
+            int seed, JudgementWindows windows = null)
         {
+            windows = windows ?? new JudgementWindows();
+
             var score = new Score()
             {
                 MapMd5 = md5,
@@ -196,6 +274,13 @@ namespace Quaver.Shared.Database.Scores
                 PauseCount =  pauseCount,
                 RandomizeModifierSeed = seed,
                 JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()),
+                JudgementWindowPreset = windows.Name,
+                JudgementWindowMarv = windows.Marvelous,
+                JudgementWindowPerf = windows.Perfect,
+                JudgementWindowGreat = windows.Great,
+                JudgementWindowGood = windows.Good,
+                JudgementWindowOkay = windows.Okay,
+                JudgementWindowMiss = windows.Miss,
             };
 
             return score;
@@ -232,8 +317,36 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = score.CountGood,
                 CountOkay = score.CountOkay,
                 CountMiss = score.CountMiss,
-                Mods = (long) score.Mods
+                Mods = (long) score.Mods,
+                Country = score.Country
             };
+
+            if (score.Hits == null)
+                return localScore;
+
+            localScore.OnlineJudgements = new List<Judgement>();
+            var processor = new ScoreProcessorKeys(new Qua(), score.Mods);
+
+            foreach (var hit in score.Hits)
+            {
+                var split = hit.Split("L");
+                var deviance = int.Parse(split[0]);
+
+                // Early miss
+                if (deviance == int.MinValue)
+                {
+                    localScore.OnlineJudgements.Add(Judgement.Miss);
+                    continue;
+                }
+
+                var judgement = processor.CalculateScore(deviance,
+                    hit.Contains("L") ? KeyPressType.Release : KeyPressType.Press);
+
+                if (judgement == Judgement.Ghost)
+                    continue;
+
+                localScore.OnlineJudgements.Add(judgement);
+            }
 
             return localScore;
         }
@@ -244,6 +357,7 @@ namespace Quaver.Shared.Database.Scores
         /// <returns></returns>
         public Replay ToReplay() => new Replay(Mode, Name, (ModIdentifier) Mods, MapMd5)
         {
+            PlayerName = Name ?? "",
             Date = Convert.ToDateTime(DateTime, CultureInfo.InvariantCulture),
             Score = TotalScore,
             Accuracy = (float)Accuracy,
@@ -256,5 +370,38 @@ namespace Quaver.Shared.Database.Scores
             CountMiss = CountMiss,
             RandomizeModifierSeed = RandomizeModifierSeed
         };
+
+        /// <summary>
+        ///     Downloads a replay from online
+        /// </summary>
+        /// <returns></returns>
+        public Replay DownloadOnlineReplay(bool delete = true)
+        {
+            if (!IsOnline || !OnlineManager.Connected)
+                return null;
+
+            Replay replay = null;
+
+            var dir = $"{ConfigManager.DataDirectory}/Downloads";
+            var path = $"{dir}/{Id}.qr";
+            Directory.CreateDirectory(dir);
+
+            try
+            {
+                OnlineManager.Client?.DownloadReplay(Id, path);
+                replay = new Replay(path);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Network);
+            }
+            finally
+            {
+                if (delete)
+                    File.Delete(path);
+            }
+
+            return replay;
+        }
     }
 }

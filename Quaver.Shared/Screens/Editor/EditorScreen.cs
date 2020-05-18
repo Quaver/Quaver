@@ -45,8 +45,10 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -154,6 +156,9 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorScreen(Qua map)
         {
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             OriginalMap = map;
             WorkingMap = ObjectHelper.DeepClone(OriginalMap);
             FixInvalidHitObjectLayers();
@@ -165,6 +170,9 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.State = "Editing";
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
             DiscordHelper.Presence.EndTimestamp = 0;
+            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+            DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
+            DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             ActiveLayerInterface = new Bindable<EditorLayerInterface>(EditorLayerInterface.Composition) { Value = EditorLayerInterface.Composition };
@@ -420,7 +428,7 @@ namespace Quaver.Shared.Screens.Editor
             catch (Exception e)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Audio track was unable to be loaded for this map.");
-                Exit(() => new MenuScreen());
+                Exit(() => new MainMenuScreen());
                 return true;
             }
         }
@@ -721,7 +729,7 @@ namespace Quaver.Shared.Screens.Editor
                 if (track is AudioTrack t)
                     t?.Fade(0, 100);
 
-                return new SelectScreen();
+                return new SelectionScreen();
             });
         }
 
@@ -928,7 +936,7 @@ namespace Quaver.Shared.Screens.Editor
                 game?.CurrentScreen.Exit(() =>
                 {
                     NotificationManager.Show(NotificationLevel.Error, "Could not create new mapset with that audio file.");
-                    return new SelectScreen();
+                    return new SelectionScreen();
                 });
             }
         }

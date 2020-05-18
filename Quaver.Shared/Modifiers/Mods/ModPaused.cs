@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 
 namespace Quaver.Shared.Modifiers.Mods
@@ -19,13 +20,15 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Player paused in gameplay";
 
-        public bool Ranked { get; set; } = false;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = {};
+
+        public Color ModColor { get; }
 
         public void InitializeMod() {}
     }

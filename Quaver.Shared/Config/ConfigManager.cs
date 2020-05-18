@@ -17,9 +17,11 @@ using IniFileParser.Model;
 using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
-using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
@@ -70,6 +72,12 @@ namespace Quaver.Shared.Config
         /// </summary>
         private static string _songDirectory;
         internal static Bindable<string> SongDirectory { get; private set; }
+
+        /// <summary>
+        ///     The directory of the Steam workshop
+        /// </summary>
+        private static string _steamWorkshopDirectory;
+        internal static Bindable<string> SteamWorkshopDirectory { get; private set; }
 
         /// <summary>
         ///     The username of the user.
@@ -132,6 +140,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> WindowFullScreen { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> WindowBorderless { get; private set; }
+
+        /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
         internal static Bindable<bool> FpsCounter { get; private set; }
@@ -188,6 +200,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> OsuDbPath { get; private set; }
 
         /// <summary>
+        ///     The path of the etterna cache.db file
+        /// </summary>
+        internal static Bindable<string> EtternaDbPath { get; private set; }
+
+        /// <summary>
         ///     Dictates where or not we should load osu! maps from osu!.db on game start
         /// </summary>
         internal static Bindable<bool> AutoLoadOsuBeatmaps { get; private set; }
@@ -198,19 +215,29 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
 
         /// <summary>
+        ///     If true, the hitlighting will be tinted to the judgement color in the skin
+        /// </summary>
+        internal static Bindable<bool> TintHitLightingBasedOnJudgementColor { get; private set; }
+
+        /// <summary>
         ///     Dictates how to order the mapsets during song select.
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
         /// <summary>
+        ///     Dictates how to group mapsets in song select
+        /// </summary>
+        internal static Bindable<GroupMapsetsBy> SelectGroupMapsetsBy { get; private set; }
+
+        /// <summary>
+        ///     Dictates how to filter song select mpas
+        /// </summary>
+        internal static Bindable<SelectFilterGameMode> SelectFilterGameModeBy { get; private set; }
+
+        /// <summary>
         ///     The currently selected game mode.
         /// </summary>
         internal static Bindable<GameMode> SelectedGameMode { get; private set; }
-
-        /// <summary>
-        ///     How the user is currently filtering their online users.
-        /// </summary>
-        internal static Bindable<OnlineUserFilterType> SelectedOnlineUserFilterType { get; private set; }
 
         /// <summary>
         ///     The type of leaderboard that is displayed during song select.
@@ -385,6 +412,128 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableBattleRoyaleAlerts { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayUnbeatableScoresDuringGameplay { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ShowSpectators { get; private set; }
+
+        /// <summary>
+        ///     The selected judgement window preset
+        /// </summary>
+        internal static Bindable<string> JudgementWindows { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<OrderMapsetsBy> MusicPlayerOrderMapsBy { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<OnlineUserListFilter> OnlineUserListFilterType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayFriendOnlineNotifications { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplaySongRequestNotifications { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyRuleset> MultiplayerLobbyRulesetType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyGameMode> MultiplayerLobbyGameModeType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyMapStatus> MultiplayerLobbyMapStatusType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyRoomVisibility> MultiplayerLobbyVisibilityType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> UseSteamWorkshopSkin { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DownloadDisplayOwnedMapsets { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DownloadReverseSort { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayNotificationsBottomToTop { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt SelectedProfileId { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorBackgroundBrightness { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorHitsoundVolume { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EditorScaleSpeedWithRate { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EditorPlaceObjectsOnNearestTick { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorLongNoteOpacity { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt GameplayNoteScale { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EditorDisplayGameplayPreview { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt VisualOffset { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> Display1v1TournamentOverlay { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> TournamentDisplay1v1PlayfieldScores { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ScratchLaneLeft4K { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ScratchLaneLeft7K { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -426,13 +575,52 @@ namespace Quaver.Shared.Config
         ///     Keybindings for 7K
         /// </summary>
         internal static Bindable<Keys> KeyMania7K1 { get; private set; }
-
         internal static Bindable<Keys> KeyMania7K2 { get; private set; }
         internal static Bindable<Keys> KeyMania7K3 { get; private set; }
         internal static Bindable<Keys> KeyMania7K4 { get; private set; }
         internal static Bindable<Keys> KeyMania7K5 { get; private set; }
         internal static Bindable<Keys> KeyMania7K6 { get; private set; }
         internal static Bindable<Keys> KeyMania7K7 { get; private set; }
+
+        /// <summary>
+        ///     Keybindings for 4K (co-op 2 player)
+        /// </summary>
+        internal static Bindable<Keys> KeyCoop2P4K1 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P4K2 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P4K3 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P4K4 { get; private set; }
+
+        /// <summary>
+        ///     Keybindings for 7K (co-op 2 player)
+        /// </summary>
+        internal static Bindable<Keys> KeyCoop2P7K1 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K2 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K3 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K4 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K5 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K6 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K7 { get; private set; }
+
+        /// <summary>
+        ///     Scratch key layout for 4K+1
+        /// </summary>
+        internal static Bindable<Keys> KeyLayout4KScratch1 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch2 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch3 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch4 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch5 { get; private set; }
+
+        /// <summary>
+        ///     Scratch key layout for 7K+1
+        /// </summary>
+        internal static Bindable<Keys> KeyLayout7KScratch1 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch2 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch3 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch4 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch5 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch6 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch7 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch8 { get; private set; }
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
@@ -492,6 +680,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<Keys> KeyScreenshot { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -535,6 +727,9 @@ namespace Quaver.Shared.Config
             _songDirectory = _gameDirectory + "/Songs";
             Directory.CreateDirectory(_songDirectory);
 
+            Directory.CreateDirectory($"{WobbleGame.WorkingDirectory}/Plugins");
+            Directory.CreateDirectory($"{WobbleGame.WorkingDirectory}/Tournament");
+
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
             Logger.Important("Config file has been successfully read.", LogType.Runtime);
@@ -566,6 +761,9 @@ namespace Quaver.Shared.Config
             LogsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"LogsDirectory", _logsDirectory, data);
             DataDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"DataDirectory", _dataDirectory, data);
             SongDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SongDirectory", _songDirectory, data);
+
+            _steamWorkshopDirectory = $"{GameDirectory.Value}/../../workshop/content/{SteamManager.ApplicationId}";
+            SteamWorkshopDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SteamWorkshopDirectory", _steamWorkshopDirectory, data);
             SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
             Username = ReadValue(@"Username", "Player", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
@@ -574,26 +772,27 @@ namespace Quaver.Shared.Config
             DevicePeriod = ReadInt(@"DevicePeriod", Bass.GetConfig(Configuration.DevicePeriod), 1, 100, data);
             DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", Bass.GetConfig(Configuration.DeviceBufferLength) / DevicePeriod.Value, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
-            WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
-            WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
+            WindowHeight = ReadInt(@"WindowHeight", 768, 360, short.MaxValue, data);
+            WindowWidth = ReadInt(@"WindowWidth", 1366, 640, short.MaxValue, data);
+            WindowBorderless = ReadValue(@"WindowBorderless", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
-            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 5, 100, data);
-            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 5, 100, data);
+            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
+            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
-            Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
+            Skin = ReadValue(@"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
-            SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
+            EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
@@ -617,6 +816,33 @@ namespace Quaver.Shared.Config
             KeyMania7K5 = ReadValue(@"KeyMania7K5", Keys.J, data);
             KeyMania7K6 = ReadValue(@"KeyMania7K6", Keys.K, data);
             KeyMania7K7 = ReadValue(@"KeyMania7K7", Keys.L, data);
+            KeyCoop2P4K1 = ReadValue(@"KeyCoop2P4K1", Keys.Z, data);
+            KeyCoop2P4K2 = ReadValue(@"KeyCoop2P4K2", Keys.X, data);
+            KeyCoop2P4K3 = ReadValue(@"KeyCoop2P4K3", Keys.OemComma, data);
+            KeyCoop2P4K4 = ReadValue(@"KeyCoop2P4K4", Keys.OemPeriod, data);
+            KeyCoop2P7K1 = ReadValue(@"KeyCoop2P7K1", Keys.Z, data);
+            KeyCoop2P7K2 = ReadValue(@"KeyCoop2P7K2", Keys.X, data);
+            KeyCoop2P7K3 = ReadValue(@"KeyCoop2P7K3", Keys.C, data);
+            KeyCoop2P7K4 = ReadValue(@"KeyCoop2P7K4", Keys.V, data);
+            KeyCoop2P7K5 = ReadValue(@"KeyCoop2P7K5", Keys.M, data);
+            KeyCoop2P7K6 = ReadValue(@"KeyCoop2P7K6", Keys.OemComma, data);
+            KeyCoop2P7K7 = ReadValue(@"KeyCoop2P7K7", Keys.OemPeriod, data);
+
+            KeyLayout4KScratch1 = ReadValue(@"KeyLayout4KScratch1", Keys.A, data);
+            KeyLayout4KScratch2 = ReadValue(@"KeyLayout4KScratch2", Keys.S, data);
+            KeyLayout4KScratch3 = ReadValue(@"KeyLayout4KScratch3", Keys.D, data);
+            KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.K, data);
+            KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.L, data);
+
+            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
+            KeyLayout7KScratch1 = ReadValue(@"KeyLayout7KScratch1", Keys.A, data);
+            KeyLayout7KScratch2 = ReadValue(@"KeyLayout7KScratch2", Keys.S, data);
+            KeyLayout7KScratch3 = ReadValue(@"KeyLayout7KScratch3", Keys.D, data);
+            KeyLayout7KScratch4 = ReadValue(@"KeyLayout7KScratch4", Keys.Space, data);
+            KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.J, data);
+            KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.K, data);
+            KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.L, data);
+
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
@@ -625,8 +851,9 @@ namespace Quaver.Shared.Config
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyDecreaseMapOffset = ReadValue(@"KeyDecreaseMapOffset", Keys.OemMinus, data);
             KeyIncreaseMapOffset = ReadValue(@"KeyIncreaseMapOffset", Keys.OemPlus, data);
-            KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
+            KeyScoreboardVisible = ReadValue(@"KeyScoreboardVisible", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
+            KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
@@ -638,7 +865,7 @@ namespace Quaver.Shared.Config
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
             EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
-            EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
+            EditorShowLaneDividerLines = ReadValue(@"EditorShowLaneDividerLines", true, data);
             EditorHitObjectsMidpointAnchored = ReadValue(@"EditorHitObjectsMidpointAnchored", false, data);
             EditorPlayMetronome = ReadValue(@"EditorPlayMetronome", true, data);
             EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
@@ -660,6 +887,39 @@ namespace Quaver.Shared.Config
             LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
             EnableBattleRoyaleBackgroundFlashing = ReadValue(@"EnableBattleRoyaleBackgroundFlashing", true, data);
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
+            SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", SelectFilterGameMode.All, data);
+            DisplayUnbeatableScoresDuringGameplay = ReadValue(@"DisplayUnbeatableScoresDuringGameplay", true, data);
+            ShowSpectators = ReadValue(@"ShowSpectators", true, data);
+            JudgementWindows = ReadValue("JudgementWindows", "", data);
+            SelectGroupMapsetsBy = ReadValue(@"SelectGroupMapsetsBy", GroupMapsetsBy.None, data);
+            MusicPlayerOrderMapsBy = ReadValue(@"MusicPlayerOrderMapsBy", OrderMapsetsBy.Artist, data);
+            OnlineUserListFilterType = ReadValue(@"OnlineUserListFilterType", OnlineUserListFilter.All, data);
+            DisplayFriendOnlineNotifications = ReadValue(@"DisplayFriendOnlineNotifications", true, data);
+            DisplaySongRequestNotifications = ReadValue(@"DisplaySongRequestNotifications", true, data);
+            MultiplayerLobbyRulesetType = ReadValue(@"MultiplayerLobbyRulesetType", MultiplayerLobbyRuleset.All, data);
+            MultiplayerLobbyGameModeType = ReadValue(@"MultiplayerLobbyGameModeType", MultiplayerLobbyGameMode.All, data);
+            MultiplayerLobbyMapStatusType = ReadValue(@"MultiplayerLobbyMapStatusType", MultiplayerLobbyMapStatus.All, data);
+            MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
+            UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
+            LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
+            DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
+            DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
+            DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomTotop", false, data);
+            SelectedProfileId = ReadInt(@"SelectedProfileId", -1, -1, int.MaxValue, data);
+            EditorBackgroundBrightness = ReadInt(@"EditorBackgroundBrightness", 40, 0, 100, data);
+            EditorHitsoundVolume = ReadInt(@"EditorHitsoundVolume", -1, -1, 100, data);
+            EditorScaleSpeedWithRate = ReadValue(@"EditorScaleSpeedWithRate", true, data);
+            EditorLongNoteOpacity = ReadInt(@"EditorLongNoteOpacity", 100, 30, 100, data);
+            GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
+            EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
+            EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
+            VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
+            TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
+            Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
+            TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
+            EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
+            ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
+            ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -679,6 +939,7 @@ namespace Quaver.Shared.Config
                     DataDirectory.ValueChanged += AutoSaveConfiguration;
                     SongDirectory.ValueChanged += AutoSaveConfiguration;
                     OsuDbPath.ValueChanged += AutoSaveConfiguration;
+                    EtternaDbPath.ValueChanged += AutoSaveConfiguration;
                     AutoLoadOsuBeatmaps.ValueChanged += AutoSaveConfiguration;
                     Username.ValueChanged += AutoSaveConfiguration;
                     VolumeGlobal.ValueChanged += AutoSaveConfiguration;
@@ -725,6 +986,17 @@ namespace Quaver.Shared.Config
                     KeyMania7K5.ValueChanged += AutoSaveConfiguration;
                     KeyMania7K6.ValueChanged += AutoSaveConfiguration;
                     KeyMania7K7.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K1.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K2.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K3.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K4.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K1.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K2.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K3.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K4.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K5.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K6.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K7.ValueChanged += AutoSaveConfiguration;
                     KeySkipIntro.ValueChanged += AutoSaveConfiguration;
                     KeyPause.ValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
@@ -737,7 +1009,6 @@ namespace Quaver.Shared.Config
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
-                    SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
                     DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
@@ -768,6 +1039,54 @@ namespace Quaver.Shared.Config
                     LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleBackgroundFlashing.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
+                    SelectFilterGameModeBy.ValueChanged += AutoSaveConfiguration;
+                    DisplayUnbeatableScoresDuringGameplay.ValueChanged += AutoSaveConfiguration;
+                    ShowSpectators.ValueChanged += AutoSaveConfiguration;
+                    JudgementWindows.ValueChanged += AutoSaveConfiguration;
+                    SelectGroupMapsetsBy.ValueChanged += AutoSaveConfiguration;
+                    MusicPlayerOrderMapsBy.ValueChanged += AutoSaveConfiguration;
+                    OnlineUserListFilterType.ValueChanged += AutoSaveConfiguration;
+                    DisplaySongRequestNotifications.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyRulesetType.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyGameModeType.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyMapStatusType.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyVisibilityType.ValueChanged += AutoSaveConfiguration;
+                    SteamWorkshopDirectory.ValueChanged += AutoSaveConfiguration;
+                    UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
+                    WindowBorderless.ValueChanged += AutoSaveConfiguration;
+                    LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
+                    KeyScreenshot.ValueChanged += AutoSaveConfiguration;
+                    DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;
+                    DownloadReverseSort.ValueChanged += AutoSaveConfiguration;
+                    DisplayNotificationsBottomToTop.ValueChanged += AutoSaveConfiguration;
+                    SelectedProfileId.ValueChanged += AutoSaveConfiguration;
+                    EditorBackgroundBrightness.ValueChanged += AutoSaveConfiguration;
+                    EditorHitsoundVolume.ValueChanged += AutoSaveConfiguration;
+                    EditorScaleSpeedWithRate.ValueChanged += AutoSaveConfiguration;
+                    EditorLongNoteOpacity.ValueChanged += AutoSaveConfiguration;
+                    GameplayNoteScale.ValueChanged += AutoSaveConfiguration;
+                    EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
+                    EditorPlaceObjectsOnNearestTick.ValueChanged += AutoSaveConfiguration;
+                    VisualOffset.ValueChanged += AutoSaveConfiguration;
+                    TintHitLightingBasedOnJudgementColor.ValueChanged += AutoSaveConfiguration;
+                    Display1v1TournamentOverlay.ValueChanged += AutoSaveConfiguration;
+                    TournamentDisplay1v1PlayfieldScores.ValueChanged += AutoSaveConfiguration;
+                    EnableRealtimeOnlineScoreboard.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch1.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch2.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch3.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch4.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch5.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch1.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch2.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch3.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch4.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch5.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch6.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch7.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
+                    ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
+                    ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
@@ -853,10 +1172,6 @@ namespace Quaver.Shared.Config
                             throw new ArgumentException();
                         break;
                     case SpecialConfigType.Skin:
-                        if (Directory.Exists(SkinDirectory + "/" + parsedVal))
-                            binded.Value = parsedVal;
-                        else
-                            throw new ArgumentException();
                         break;
                     default:
                         throw new InvalidEnumArgumentException();
@@ -891,7 +1206,7 @@ namespace Quaver.Shared.Config
             var attempts = 0;
 
             // Don't do anything if the file isn't ready.
-            while (!IsFileReady(GameDirectory + "/quaver.cfg") && !FirstWrite)
+            while (!IsFileReady(GameDirectory.Value + "/quaver.cfg") && !FirstWrite)
             {
             }
 
@@ -923,7 +1238,7 @@ namespace Quaver.Shared.Config
             try
             {
                 // Create a new stream
-                var sw = new StreamWriter(GameDirectory + "/quaver.cfg")
+                var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
                 {
                     AutoFlush = true
                 };
@@ -942,7 +1257,7 @@ namespace Quaver.Shared.Config
                     attempts++;
 
                     // Create a new stream
-                    var sw = new StreamWriter(GameDirectory + "/quaver.cfg")
+                    var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
                     {
                         AutoFlush = true
                     };
@@ -997,9 +1312,8 @@ namespace Quaver.Shared.Config
     /// </summary>
     public enum DefaultSkins
     {
-        Bar,
         Arrow,
+        Bar,
         Circle,
-        Barv2
     }
 }

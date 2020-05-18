@@ -12,6 +12,7 @@ namespace Quaver.Shared.Config
         Unlimited,
         Limited,
         Vsync,
+        WaylandVsync,
         Custom
     }
 }

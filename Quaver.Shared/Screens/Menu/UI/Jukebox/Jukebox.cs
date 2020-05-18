@@ -47,22 +47,22 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Button to select the previous track.
         /// </summary>
-        public JukeboxButton PreviousButton { get; set; }
+        public IconButton PreviousButton { get; set; }
 
         /// <summary>
         ///     The button to restart the track
         /// </summary>
-        public JukeboxButton RestartButton { get; set; }
+        public IconButton RestartButton { get; set; }
 
         /// <summary>
         ///     The button to pause/unpause the track.
         /// </summary>
-        public JukeboxButton PauseResumeButton { get; set; }
+        public IconButton PauseResumeButton { get; set; }
 
         /// <summary>
         ///     The button to select the next track.
         /// </summary>
-        public JukeboxButton NextButton { get; set; }
+        public IconButton NextButton { get; set; }
 
         /// <summary>
         ///     The container that holds the song title.
@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         ///     Started at -1 because there may not be any tracks to begin with.
         ///     Meaning... the user doesn't have any mapsets loaded.
         /// </summary>
-        private int TrackListQueuePosition { get; set; } = -1;
+        public int TrackListQueuePosition { get; set; } = -1;
 
         /// <summary>
         ///     Dictates if we're in the middle of loading the next track on a new thread.
@@ -392,7 +392,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 {
                     var percentage = (MouseManager.CurrentState.X - SongTimeProgressBar.AbsolutePosition.X) / SongTimeProgressBar.AbsoluteSize.X;
 
-                    Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)}ms ({(int)(percentage * 100)}%)", LogType.Runtime);
+                    Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)} ms ({(int)(percentage * 100)}%)", LogType.Runtime);
 
                     lock (AudioEngine.Track)
                         AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
@@ -429,7 +429,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateNextSongButton()
         {
-            NextButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
+            NextButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -450,7 +450,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePauseResumeButton()
         {
-            PauseResumeButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
+            PauseResumeButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -488,7 +488,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateRestartButton()
         {
-            RestartButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow))
+            RestartButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -524,7 +524,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePreviousSongButton()
         {
-            PreviousButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
+            PreviousButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

@@ -14,27 +14,85 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Helpers;
+using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Menu;
+using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Chatting;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
+using Quaver.Shared.Screens.Downloading;
+using Quaver.Shared.Screens.Edit;
+using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Menu.UI.Navigation.User;
+using Quaver.Shared.Screens.Multi;
+using Quaver.Shared.Screens.MultiplayerLobby;
+using Quaver.Shared.Screens.Music;
+using Quaver.Shared.Screens.Options;
+using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
+using Quaver.Shared.Screens.Tests.Border;
+using Quaver.Shared.Screens.Tests.Chat;
+using Quaver.Shared.Screens.Tests.CheckboxContainers;
+using Quaver.Shared.Screens.Tests.CreatePlaylists;
+using Quaver.Shared.Screens.Tests.DifficultyBars;
+using Quaver.Shared.Screens.Tests.DifficultyGraph;
+using Quaver.Shared.Screens.Tests.DrawableLeaderboardScores;
+using Quaver.Shared.Screens.Tests.DrawableMaps;
+using Quaver.Shared.Screens.Tests.DrawableMapsets;
+using Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple;
+using Quaver.Shared.Screens.Tests.DrawablePlaylists;
+using Quaver.Shared.Screens.Tests.Dropdowns;
+using Quaver.Shared.Screens.Tests.Editor;
+using Quaver.Shared.Screens.Tests.FilterPanel;
+using Quaver.Shared.Screens.Tests.Jukebox;
+using Quaver.Shared.Screens.Tests.Leaderboards;
+using Quaver.Shared.Screens.Tests.LeaderboardWithMaps;
+using Quaver.Shared.Screens.Tests.MapsetScrollContainers;
+using Quaver.Shared.Screens.Tests.MapScrollContainers;
+using Quaver.Shared.Screens.Tests.ModifierSelectors;
+using Quaver.Shared.Screens.Tests.YesNoDialog;
+using Quaver.Shared.Screens.Tests.Footer;
+using Quaver.Shared.Screens.Tests.ListenerLists;
+using Quaver.Shared.Screens.Tests.Luas;
+using Quaver.Shared.Screens.Tests.MenuJukebox;
+using Quaver.Shared.Screens.Tests.Notifications;
+using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
+using Quaver.Shared.Screens.Tests.OnlineHubs;
+using Quaver.Shared.Screens.Tests.Options;
+using Quaver.Shared.Screens.Tests.Profiles;
+using Quaver.Shared.Screens.Tests.ReplayControllers;
+using Quaver.Shared.Screens.Tests.Results;
+using Quaver.Shared.Screens.Tests.ResultsMulti;
+using Quaver.Shared.Screens.Tests.Tournaments;
+using Quaver.Shared.Screens.Tests.Volume;
+using Quaver.Shared.Screens.Theater;
 using Quaver.Shared.Skinning;
+using Quaver.Shared.Window;
 using Steamworks;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -42,19 +100,31 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Discord;
 using Wobble.Discord.RPC;
+using Wobble.Extended.HotReload;
+using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
+using Wobble.Platform;
 using Wobble.Window;
 using Version = YamlDotNet.Core.Version;
 
 namespace Quaver.Shared
 {
+#if VISUAL_TESTS
+    public class QuaverGame : HotLoaderGame
+#else
     public class QuaverGame : WobbleGame
+#endif
     {
+        /// <summary>
+        ///     Scaling factor for skin values and scroll speed to convert them to the UI redesign coordinate system.
+        /// </summary>
+        public const float SkinScalingFactor = 1920f / 1366;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -63,7 +133,20 @@ namespace Quaver.Shared
         /// <summary>
         ///     The volume controller for the game.
         /// </summary>
-        public VolumeController VolumeController { get; private set; }
+        public VolumeControl VolumeController { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public OnlineHub OnlineHub { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public OnlineChat OnlineChat { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public FpsCounter Fps { get; private set; }
 
         /// <summary>
         ///     The current activated screen.
@@ -102,10 +185,68 @@ namespace Quaver.Shared
         /// </summary>
         private bool WindowActiveInPreviousFrame { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Sometimes we'd like to perform actions on the first update, such as
+        ///     creating <see cref="OnlineHub"/>
+        /// </summary>
+        public bool FirstUpdateCalled { get; set; }
+
+#if VISUAL_TESTS
+        /// <summary>
+        ///     The visual screen type in the previous frame
+        /// </summary>
+        private Type LastVisualTestScreenType { get; set; }
+
         /// <summary>
         /// </summary>
+        private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
+        {
+            {"ResultsScreen (Multi)", typeof(TestResultsMultiScreen)},
+            {"ResultsScreen", typeof(TestResultsScreen)},
+            {"TournamentOverlay", typeof(TestTournamentOverlayScreen)},
+            {"Editor", typeof(TestEditorScreen)},
+            {"LuaImGui", typeof(TestLuaScriptingScreen)},
+            {"LocalProfileContainer", typeof(TestUserProfileContainerScreen)},
+            {"DifficultyGraph", typeof(TestDifficultyGraphScreen)},
+            {"DownloadingScreen", typeof(DownloadingScreen)},
+            {"Dropdown", typeof(DropdownTestScreen)},
+            {"MenuBorder", typeof(MenuBorderTestScreen)},
+            {"OptionsMenu", typeof(OptionsTestScreen)},
+            {"VolumeController", typeof(TestVolumeControlScreen)},
+            {"ReplayController", typeof(TestReplayControllerScreen)},
+            {"SelectFilterPanel", typeof(FilterPanelTestScreen)},
+            {"SelectJukebox", typeof(TestSelectJukeboxScreen)},
+            {"DrawableMapset", typeof(TestMapsetScreen)},
+            {"DrawableMapset (Multiple)", typeof(TestMapsetsMultipleScreen)},
+            {"DifficultyBarDisplay", typeof(TestScreenDifficultyBar)},
+            {"MapsetScrollContainer", typeof(TestScreenMapsetScrollContainer)},
+            {"DrawableMap", typeof(TestDrawableMapScreen)},
+            {"MapScrollContainer", typeof(TestScreenMapScrollContainer)},
+            {"Leaderboard", typeof(TestLeaderboardScreen)},
+            {"Leaderboard + Maps", typeof(TestLeaderboardWithMapsScreen)},
+            {"DrawableLeaderboardScore", typeof(TestScreenDrawableLeaderboardScore)},
+            {"ModifierSelector", typeof(TestModifierSelectorScreen)},
+            {"CreatePlaylistDialog", typeof(TestScreenCreatePlaylist)},
+            {"SelectionScreen", typeof(SelectionScreen)},
+            {"YesNoDialog", typeof(TestYesNoDialogScreen)},
+            {"DrawablePlaylist", typeof(TestScreenDrawablePlaylist)},
+            {"Main Menu", typeof(MainMenuScreen)},
+            {"MenuFooterJukebox", typeof(TestScreenMenuJukebox)},
+            {"MusicPlayerScreen", typeof(MusicPlayerScreen)},
+            {"DrawableListenerList", typeof(TestScreenListenerList)},
+            {"OnlineHub", typeof(TestScreenOnlineHub)},
+            {"OnlineHubDownloads", typeof(TestOnlineHubDownloadsScreen)},
+            {"Notifications", typeof(TestNotificationScreen)},
+            {"ChatOverlay", typeof(TestChatScreen)},
+            {"MultiplayerGameScreen", typeof(MultiplayerGameScreen)},
+            {"MultiplayerLobbyScreen", typeof(MultiplayerLobbyScreen)},
+            {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
+        };
+
+        public QuaverGame(HotLoader hl) : base(hl)
+#else
         public QuaverGame()
+#endif
         {
             Content.RootDirectory = "Content";
             InitializeFpsLimiting();
@@ -120,19 +261,21 @@ namespace Quaver.Shared
         /// </summary>
         protected override void Initialize()
         {
-            PerformGameSetup();
-
-            WindowManager.ChangeVirtualScreenSize(new Vector2(1366, 768));
-            WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+            WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
+            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+            ConfigManager.Initialize();
+            ChangeResolution();
 
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
+            Window.IsBorderless = ConfigManager.WindowBorderless.Value;
 
             // Apply all graphics changes
             Graphics.ApplyChanges();
 
             // Handle file dropped event.
             Window.FileDropped += MapsetImporter.OnFileDropped;
+            Window.ClientSizeChanged += OnClientSizeChanged;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
@@ -140,7 +283,7 @@ namespace Quaver.Shared
             base.Initialize();
         }
 
-         /// <inheritdoc />
+        /// <inheritdoc />
         /// <summary>
         ///     LoadContent will be called once per game and is the place to load
         ///     all of your content.
@@ -149,14 +292,12 @@ namespace Quaver.Shared
         {
             base.LoadContent();
 
-            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+            PerformGameSetup();
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            FontsBitmap.Load();
-            Fonts.Load();
-            FontAwesome.Load();
-            UserInterface.Load();
+            Fonts.LoadGdiFonts();
+            Fonts.LoadWobbleFonts();
 
             BackgroundHelper.Initialize();
 
@@ -165,20 +306,19 @@ namespace Quaver.Shared
 
             // Create the global FPS counter.
             CreateFpsCounter();
-            VolumeController = new VolumeController() {Parent = GlobalUserInterface};
             BackgroundManager.Initialize();
             Transitioner.Initialize();
-
-            // Make the cursor appear over the volume controller.
-            ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
-                                                            GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
 
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
 
+#if VISUAL_TESTS
+            Window.Title = $"Quaver Visual Test Runner";
+#else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new MainMenuScreen());
+#endif
         }
 
         /// <inheritdoc />
@@ -209,22 +349,41 @@ namespace Quaver.Shared
             if (SteamManager.IsInitialized)
                 SteamAPI.RunCallbacks();
 
+            if (!FirstUpdateCalled)
+            {
+                // Create the online hub on the first update, since it uses text, and we have to wait for things to
+                // be initialized
+                OnlineHub = new OnlineHub();
+                OnlineChat = new OnlineChat();
+                VolumeController = new VolumeControl();
+
+                FirstUpdateCalled = true;
+            }
+
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
 
             BackgroundManager.Update(gameTime);
             BackgroundHelper.Update(gameTime);
-            ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
 
             HandleGlobalInput(gameTime);
+            HandleOnlineHubInput();
 
             QuaverScreenManager.Update(gameTime);
             NotificationManager.Update(gameTime);
+            VolumeController?.Update(gameTime);
             Transitioner.Update(gameTime);
+
+#if VISUAL_TESTS
+            SetVisualTestingPresence();
+#endif
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
+            UpdateFpsCounterPosition();
+
+            Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
         }
 
         /// <inheritdoc />
@@ -242,11 +401,12 @@ namespace Quaver.Shared
             DialogManager.Draw(gameTime);
 
             NotificationManager.Draw(gameTime);
-
-            // Draw the global container last.
+            VolumeController?.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
+
+            ClearAlphaChannel(gameTime);
         }
 
         /// <summary>
@@ -258,9 +418,12 @@ namespace Quaver.Shared
 
             DeleteTemporaryFiles();
 
+            DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
             QuaverSettingsDatabaseCache.Initialize();
+            JudgementWindowsDatabaseCache.Load();
+            UserProfileDatabaseCache.Load();
 
             // Force garabge collection.
             GC.Collect();
@@ -280,9 +443,22 @@ namespace Quaver.Shared
             ConfigManager.VolumeMusic.ValueChanged += (sender, e) => AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value * e.Value / 100f;
 
-            ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ApplyRate(e.Value);
+            ConfigManager.Pitched.ValueChanged += (sender, e) =>
+            {
+                if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
+                    AudioEngine.Track.ApplyRate(e.Value);
+            };
+
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
+            ConfigManager.WindowBorderless.ValueChanged += (sender, e) => Window.IsBorderless = e.Value;
+            ConfigManager.SelectedGameMode.ValueChanged += (sender, args) =>
+            {
+                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(args.Value);
+                DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
+                DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            };
 
             // Handle discord rich presence.
             DiscordHelper.Initialize("376180410490552320");
@@ -293,11 +469,21 @@ namespace Quaver.Shared
                 EndTimestamp = 0
             };
 
+#if VISUAL_TESTS
+            DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+            DiscordHelper.Presence.State = "Visual Testing";
+#endif
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
-            // Create bindable for selected map.
-            if (MapManager.Mapsets.Count != 0)
-                MapManager.Selected = new Bindable<Map>(MapManager.Mapsets.First().Maps.First());
+            MapManager.Selected.ValueChanged += (sender, args) =>
+            {
+                if (MapManager.RecentlyPlayed.Contains(args.Value))
+                    MapManager.RecentlyPlayed.Remove(args.Value);
+
+                MapManager.RecentlyPlayed.Add(args.Value);
+            };
+
+            InactiveSleepTime = ConfigManager.LowerFpsOnWindowInactive.Value ? TimeSpan.FromSeconds(1d / 30) : TimeSpan.Zero;
         }
 
         /// <summary>
@@ -327,53 +513,57 @@ namespace Quaver.Shared
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(FontsBitmap.GothamRegular, 18)
+            Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
-                TextFps =
-                {
-                    Tint = Color.White
-                },
-                X = -5,
-                Y = -36,
-                Alpha = 0
+                X = -14,
+                Visible = false
             };
 
-            ShowFpsCounter(fpsCounter);
-            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(fpsCounter);
+            ShowFpsCounter(Fps);
+            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(Fps);
         }
 
         /// <summary>
-        ///     Shows the FPs counter based on the current config variable.
+        ///     Shows the FPS counter based on the current config variable.
         /// </summary>
-        private static void ShowFpsCounter(FpsCounter counter) => counter.TextFps.Alpha = ConfigManager.FpsCounter.Value ? 1 : 0;
+        private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
 
         /// <summary>
         ///    Handles limiting/unlimiting FPS based on user config
         /// </summary>
-        private void InitializeFpsLimiting()
+        public void InitializeFpsLimiting()
         {
             switch (ConfigManager.FpsLimiterType.Value)
             {
                 case FpsLimitType.Unlimited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     IsFixedTimeStep = false;
+                    WaylandVsync = false;
                     break;
                 case FpsLimitType.Limited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     IsFixedTimeStep = true;
                     TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    WaylandVsync = false;
                     break;
                 case FpsLimitType.Vsync:
                     Graphics.SynchronizeWithVerticalRetrace = true;
                     IsFixedTimeStep = true;
+                    WaylandVsync = false;
+                    break;
+                case FpsLimitType.WaylandVsync:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    IsFixedTimeStep = false;
+                    WaylandVsync = true;
                     break;
                 case FpsLimitType.Custom:
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     TargetElapsedTime = TimeSpan.FromSeconds(1d / ConfigManager.CustomFpsLimit.Value);
                     IsFixedTimeStep = true;
+                    WaylandVsync = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -391,6 +581,38 @@ namespace Quaver.Shared
             HandleKeyPressF7();
             HandleKeyPressCtrlO();
             HandleKeyPressCtrlS();
+            HandleKeyPressAltEnter();
+            HandleKeyPressScreenshot();
+            HandleKeyPressCtrlP();
+        }
+
+        private void HandleKeyPressCtrlP()
+        {
+            if (!KeyboardManager.IsCtrlDown())
+                return;
+
+            switch (CurrentScreen?.Type)
+            {
+                case QuaverScreenType.Gameplay:
+                case QuaverScreenType.Theatre:
+                    break;
+                default:
+                    // Pause/Unpause music
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    {
+                        if (AudioEngine.Track.IsPaused)
+                        {
+                            AudioEngine.Track.Play();
+                            NotificationManager.Show(NotificationLevel.Info, "Music Unpaused");
+                        }
+                        else if (AudioEngine.Track.IsPlaying)
+                        {
+                            AudioEngine.Track.Pause();
+                            NotificationManager.Show(NotificationLevel.Info, "Music Paused");
+                        }
+                    }
+                    break;
+            }
         }
 
         /// <summary>
@@ -420,6 +642,10 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Vsync:
                     NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
+                    break;
+                case FpsLimitType.WaylandVsync:
+                    NotificationManager.Show(NotificationLevel.Info,
+                        "Wayland VSync is enabled. Note: it only works on Linux under Wayland.");
                     break;
                 case FpsLimitType.Custom:
                     NotificationManager.Show(NotificationLevel.Info,
@@ -452,7 +678,9 @@ namespace Quaver.Shared
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Multiplayer:
                 case QuaverScreenType.Lobby:
-                    DialogManager.Show(new SettingsDialog());
+                case QuaverScreenType.Music:
+                case QuaverScreenType.Download:
+                    DialogManager.Show(new OptionsDialog());
                     break;
             }
         }
@@ -481,25 +709,237 @@ namespace Quaver.Shared
         }
 
         /// <summary>
+        ///    Handles when the user holds either Alt (ALT) button and presses Enter
+        /// </summary>
+        private void HandleKeyPressAltEnter()
+        {
+            // Check for modifier keys
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                return;
+
+            ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
+        }
+
+        /// <summary>
+        ///     Handles taking screenshots of the game when the user presses F12, and shift to upload.
+        /// </summary>
+        private void HandleKeyPressScreenshot()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScreenshot.Value))
+                return;
+
+            try
+            {
+                SkinManager.Skin.SoundScreenshot?.CreateChannel()?.Play();
+
+                var w = GraphicsDevice.PresentationParameters.BackBufferWidth;
+                var h = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+                var backBuffer = new int[w * h];
+
+                GraphicsDevice.GetBackBufferData(backBuffer);
+
+                //copy into a texture
+                var texture = new Texture2D(GraphicsDevice, w, h, false, GraphicsDevice.PresentationParameters.BackBufferFormat);
+                texture.SetData(backBuffer);
+
+                var now = DateTime.Now;
+
+                var path = $"{ConfigManager.ScreenshotDirectory.Value}/{now.Month}{now.Day}{now.Year} {now.Hour}-{now.Minute}-" +
+                           $"{now.Second}-{now.Millisecond}.jpg";
+
+                var stream = File.OpenWrite(path);
+
+                texture.SaveAsJpeg(stream, w, h);
+                stream.Dispose();
+
+                texture.Dispose();
+
+                NotificationManager.Show(NotificationLevel.Success, $"Screenshot saved. Click here to view!" ,
+                    (sender, args) => Utils.NativeUtils.HighlightInFileManager(path));
+
+                // Upload file to imgur
+                if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+                    return;
+
+                NotificationManager.Show(NotificationLevel.Info, "Uploading screenshot. Please wait...");
+
+                ThreadScheduler.Run(() =>
+                {
+                    try
+                    {
+                        var request = new APIRequestImgurUpload(path);
+                        var response = request.ExecuteRequest();
+
+                        if (response == null)
+                            throw new Exception("Failed to upload screenshot to imgur");
+
+                        Clipboard.NativeClipboard.SetText(response);
+                        BrowserHelper.OpenURL(response, true);
+                        NotificationManager.Show(NotificationLevel.Success, "Successfully uploaded screenshot!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, LogType.Network);
+                        NotificationManager.Show(NotificationLevel.Error, "Failed to upload screenshot!");
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        /// <summary>
         ///     Handles limiting the game's FPS when the window isn't active.
         /// </summary>
         private void LimitFpsOnInactiveWindow()
         {
-            if (CurrentScreen != null && CurrentScreen.Exiting)
+            if (!ConfigManager.LowerFpsOnWindowInactive.Value || CurrentScreen != null && CurrentScreen.Exiting)
                 return;
 
             if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen() ||
                 OtherGameMapDatabaseCache.OnSyncableScreen() && !IsActive && !WindowActiveInPreviousFrame)
             {
-                Graphics.SynchronizeWithVerticalRetrace = false;
-                TargetElapsedTime = TimeSpan.FromSeconds(1d / 30);
-                IsFixedTimeStep = true;
+                InactiveSleepTime = TimeSpan.FromSeconds(1d / 30);
             }
             // Restore user's settings
             else if (!WindowActiveInPreviousFrame && (IsActive || !OtherGameMapDatabaseCache.OnSyncableScreen()))
+            {
+                InactiveSleepTime = TimeSpan.Zero;
                 InitializeFpsLimiting();
+            }
 
             WindowActiveInPreviousFrame = IsActive;
         }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateFpsCounterPosition()
+        {
+            Fps.Y = -MenuBorder.HEIGHT - 10;
+
+            if (CurrentScreen?.Type == QuaverScreenType.Editor)
+                Fps.Y = -MenuBorder.HEIGHT - 50;
+        }
+
+        /// <summary>
+        ///     Handles input when opening the online hub
+        /// </summary>
+        private void HandleOnlineHubInput()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F8) && !KeyboardManager.IsUniqueKeyPress(Keys.F9))
+                return;
+
+            if (CloseOnlineHubDialog())
+                return;
+
+            DialogManager.Show(new OnlineHubDialog());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private bool CloseOnlineHubDialog()
+        {
+            if (DialogManager.Dialogs.Count == 0)
+                return false;
+
+            if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
+                return true;
+
+            var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
+            dialog?.Close();
+
+            return true;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ChangeResolution()
+        {
+            if (!QuaverWindowManager.CanChangeResolutionOnScene)
+                return;
+
+            if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
+                WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+
+            var ratio = (float) ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
+
+            if (ratio >= 16 / 9f)
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
+            else
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
+
+            if (CurrentScreen == null)
+                return;
+
+            switch (CurrentScreen?.Type)
+            {
+                case QuaverScreenType.Menu:
+                    CurrentScreen?.Exit(() => new MainMenuScreen());
+                    break;
+                case QuaverScreenType.Select:
+                    CurrentScreen?.Exit(() => new SelectionScreen());
+                    break;
+                case QuaverScreenType.Download:
+                    CurrentScreen?.Exit(() => new DownloadingScreen(CurrentScreen.Type));
+                    break;
+                case QuaverScreenType.Lobby:
+                    CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
+                    break;
+                case QuaverScreenType.Multiplayer:
+                    CurrentScreen?.Exit(() => new MultiplayerGameScreen());
+                    break;
+                case QuaverScreenType.Music:
+                    CurrentScreen?.Exit(() => new MusicPlayerScreen());
+                    break;
+                case QuaverScreenType.Theatre:
+                    CurrentScreen?.Exit(() => new TheaterScreen());
+                    break;
+            }
+
+            VolumeController?.Destroy();
+            VolumeController = new VolumeControl();
+        }
+
+        private void OnClientSizeChanged(object sender, EventArgs e)
+        {
+            ConfigManager.WindowWidth.Value = Window.ClientBounds.Width;
+            ConfigManager.WindowHeight.Value = Window.ClientBounds.Height;
+
+            ChangeResolution();
+        }
+
+#if VISUAL_TESTS
+        protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(VisualTests);
+
+        private void SetVisualTestingPresence()
+        {
+            var view = HotLoaderScreen.View as HotLoaderScreenView;
+
+            var screen = view.HotLoader?.Screen;
+
+            if (screen == null)
+                return;
+
+            var type = screen?.GetType();
+
+            if (LastVisualTestScreenType == null || LastVisualTestScreenType != type)
+            {
+                var val = VisualTests.FirstOrDefault(x => x.Value.ToString() == type.ToString()).Key;
+
+                DiscordHelper.Presence.Details = val;
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+
+            LastVisualTestScreenType = type;
+        }
+#endif
     }
 }

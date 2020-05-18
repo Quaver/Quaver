@@ -14,7 +14,9 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
+using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
@@ -27,15 +29,22 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
+using Quaver.Shared.Screens.Gameplay.UI.Replays;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -47,6 +56,7 @@ using Wobble.Graphics.UI;
 using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay
 {
@@ -70,37 +80,37 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The progress bar that displays the current song time.
         /// </summary>
-        private SongTimeProgressBar ProgressBar { get; set; }
+        public SongTimeProgressBar ProgressBar { get; private set; }
 
         /// <summary>
         ///     The display for the user's score.
         /// </summary>
-        private NumberDisplay ScoreDisplay { get; set; }
+        public NumberDisplay ScoreDisplay { get; private set; }
 
         /// <summary>
         ///     The display for the user's rating.
         /// </summary>
-        private NumberDisplay RatingDisplay { get; set; }
+        public NumberDisplay RatingDisplay { get; private set; }
 
         /// <summary>
         ///     The display for the user's accuracy
         /// </summary>
-        private NumberDisplay AccuracyDisplay { get; set; }
+        public NumberDisplay AccuracyDisplay { get; private set; }
 
         /// <summary>
         ///     The keys per second display.
         /// </summary>
-        public KeysPerSecond KpsDisplay { get; set; }
+        public KeysPerSecond KpsDisplay { get; private set; }
 
         /// <summary>
         ///     Displays the current judgement counts.
         /// </summary>
-        private JudgementCounter JudgementCounter { get; set; }
+        public JudgementCounter JudgementCounter { get; private set; }
 
         /// <summary>
         ///     Displays the user's current grade.
         /// </summary>
-        private GradeDisplay GradeDisplay { get; set; }
+        public GradeDisplay GradeDisplay { get; private set; }
 
         /// <summary>
         ///     The scoreboard on the left side of the screern
@@ -186,6 +196,18 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public ScoreboardUser SelfScoreboard { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        private SpectatorDialog SpectatorDialog { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private SpectatorCount SpectatorCount { get; }
+
+        /// <summary>
+        /// </summary>
+        private ReplayController ReplayController { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -235,6 +257,34 @@ namespace Quaver.Shared.Screens.Gameplay
                 };
             }
 
+            if (Screen.SpectatorClient != null)
+            {
+                SpectatorDialog = new SpectatorDialog(Screen.SpectatorClient)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidCenter,
+                    Alpha = 0
+                };
+            }
+
+            SpectatorCount = new SpectatorCount
+            {
+                Parent = Container,
+                Y = 120,
+                Alignment = Alignment.TopRight,
+                X = -10
+            };
+
+            if (Screen.InReplayMode && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview)
+            {
+                ReplayController = new ReplayController(Screen)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.BotRight,
+                    Position = new ScalableVector2(-12, -110)
+                };
+            }
+
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
             {
@@ -250,11 +300,12 @@ namespace Quaver.Shared.Screens.Gameplay
             };
 
             // Create pause screen last.
-            PauseScreen = new PauseScreen(Screen) { Parent = Container };
+            if (Screen.SpectatorClient == null)
+                PauseScreen = new PauseScreen(Screen) { Parent = Container };
 
             // Notify the user if their local offset is actually set for this map.
-            if (MapManager.Selected.Value.LocalOffset != 0)
-                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset}ms");
+            if (!Screen.IsSongSelectPreview && MapManager.Selected.Value.LocalOffset != 0)
+                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset} ms");
 
             if (Screen.IsCalibratingOffset)
             {
@@ -265,7 +316,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 };
             }
 
-            if (OnlineManager.Client != null)
+            if (OnlineManager.Client != null && !Screen.IsSongSelectPreview)
                 OnlineManager.Client.OnGameEnded += OnGameEnded;
         }
 
@@ -282,10 +333,13 @@ namespace Quaver.Shared.Screens.Gameplay
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
 
-            // Update the position and size of the grade display.
-            GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
-            GradeDisplay.Height = AccuracyDisplay.Height;
-            GradeDisplay.UpdateWidth();
+            UpdateGradeDisplay();
+
+            if (SpectatorDialog != null)
+            {
+                SpectatorDialog.Alpha = MathHelper.Lerp(SpectatorDialog.Alpha, Screen.IsPaused ? 1 : 0,
+                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 100, 1));
+            }
         }
 
         /// <inheritdoc />
@@ -321,6 +375,9 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var background = ConfigManager.BlurBackgroundInGameplay.Value ? BackgroundHelper.BlurredTexture : BackgroundHelper.RawTexture;
 
+            if (background == null)
+                background = UserInterface.MenuBackgroundRaw;
+
             // We don't set a parent here because we have to manually call draw on the background, as the
             // ScreenView's container is drawn after the ruleset.
             Background = new BackgroundImage(background, 100 - ConfigManager.BackgroundBrightness.Value, false);
@@ -340,7 +397,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 skin.SongTimeProgressInactiveColor, skin.SongTimeProgressActiveColor)
             {
                 Parent = Container,
-                Alignment = Alignment.BotLeft
+                Alignment = Alignment.BotLeft,
+                DestroyIfParentIsNull = false
             };
         }
 
@@ -402,7 +460,8 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             // Update score and accuracy displays
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
-            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.ScoreProcessor.Accuracy));
+
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
             AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 
@@ -426,7 +485,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Creates the GradeDisplay sprite
         /// </summary>
-        private void CreateGradeDisplay() => GradeDisplay = new GradeDisplay(Screen.Ruleset.ScoreProcessor)
+        private void CreateGradeDisplay() => GradeDisplay = new GradeDisplay(Screen)
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
@@ -496,21 +555,39 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Screen.IsPlayTesting || StopCheckingForScoreboardUsers)
                 return;
 
-            var mapScores = MapManager.Selected.Value.Scores.Value;
+            var mapScores = Screen.IsMultiplayerGame ? Screen.LocalScores : MapManager.Selected.Value.Scores.Value;
 
             if (mapScores == null || mapScores.Count <= 0 || (ScoreboardLeft.Users?.Count < 1 && ScoreboardRight != null && ScoreboardRight.Users.Count < 1))
                 return;
 
-            for (var i = 0; i < (OnlineManager.CurrentGame == null ? 4 : mapScores.Count) && i < mapScores.Count; i++)
+            var maxRating = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods)).CalculateRating(100);
+
+            for (var i = 0; i < mapScores.Count; i++)
             {
+                if (OnlineManager.CurrentGame == null && ScoreboardLeft?.Users?.Count == 5)
+                    break;
+
                 ScoreboardUser user;
+
+                // Hide unbeatable scores if the user specified it
+                if (OnlineManager.CurrentGame == null &&
+                    !ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value && mapScores[i].PerformanceRating > maxRating)
+                    continue;
+
+                if (OnlineManager.CurrentGame == null && mapScores[i].Grade == Grade.None)
+                    continue;
 
                 // For online scores we want to just give them their score in the processor,
                 // since we don't have access to their judgement breakdown.
                 if (mapScores[i].IsOnline)
                 {
+                    var judgements = mapScores[i].OnlineJudgements;
+
+                    if (!ConfigManager.EnableRealtimeOnlineScoreboard.Value || judgements == null || !OnlineManager.IsDonator)
+                        judgements = new List<Judgement>();
+
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
-                        new List<Judgement>(), UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
+                        judgements, UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
@@ -533,9 +610,15 @@ namespace Quaver.Shared.Screens.Gameplay
                     processor.Accuracy = (float) mapScores[i].Accuracy;
                     processor.MaxCombo = mapScores[i].MaxCombo;
                     processor.Score = mapScores[i].TotalScore;
+                    processor.PlayerName = mapScores[i].Name;
+                    processor.UserId = mapScores[i].PlayerId;
+                    processor.SteamId = (ulong) mapScores[i].SteamId;
 
-                    user.Score.Text = $"{user.RatingProcessor.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
-                    user.Combo.Text = $"{processor.MaxCombo}x";
+                    if (judgements.Count == 0)
+                    {
+                        user.Score.Text = $"{user.RatingProcessor.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
+                        user.Combo.Text = $"{processor.MaxCombo}x";
+                    }
                 }
                 // Allow the user to play against their own local scores.
                 else
@@ -596,7 +679,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 ProgressBar.Parent = Container;
 
             Transitioner.Parent = Container;
-            PauseScreen.Parent = Container;
+
+            if (PauseScreen != null)
+                PauseScreen.Parent = Container;
 
             StopCheckingForScoreboardUsers = true;
             Screen.SetRichPresence();
@@ -608,23 +693,41 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePlayCompletion(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.Exiting)
+            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.IsSongSelectPreview || Screen is TournamentGameplayScreen)
                 return;
 
             Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (Screen.Exiting && Screen.Failed)
+            {
+                if (Screen.TimeSincePlayEnded >= Screen.FailFadeTime && !AudioEngine.Track.IsDisposed)
+                {
+                    AudioEngine.Track?.Dispose();
+                    Screen.IsPaused = true;
+                }
+
+                return;
+            }
 
             // If the play was a failure, we want to immediately show
             // a red screen.
             if (Screen.Failed && !ScreenChangedToRedOnFailure)
             {
-                Transitioner.Tint = Color.Red;
-                Transitioner.Alpha = 0.65f;
-
+                var tint = Screen.HasQuit ? Color.Black : Color.Red;
+                Transitioner.FadeTo(Screen.HasQuit ? 1 : 0.75f, Easing.Linear, Screen.FailFadeTime);
+                Transitioner.Tint = tint;
                 ScreenChangedToRedOnFailure = true;
+
+                if (!Screen.HasQuit)
+                    SkinManager.Skin.SoundFailure.CreateChannel().Play();
             }
 
             if (!ResultsScreenLoadInitiated)
             {
+                // Force all replay frames on failure
+                if (OnlineManager.IsBeingSpectated)
+                    Screen.SendReplayFramesToServer(true);
+
                 if (Screen.IsPlayTesting)
                 {
                     if (AudioEngine.Track.IsPlaying)
@@ -633,7 +736,11 @@ namespace Quaver.Shared.Screens.Gameplay
                         AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
                     }
 
-                    Screen.Exit(() => new EditorScreen(Screen.OriginalEditorMap));
+                    if (Screen.IsTestPlayingInNewEditor)
+                        Screen.ExitToNewEditor();
+                    else
+                        Screen.Exit(() => new EditorScreen(Screen.OriginalEditorMap));
+
                     ResultsScreenLoadInitiated = true;
                     return;
                 }
@@ -676,12 +783,11 @@ namespace Quaver.Shared.Screens.Gameplay
                         if (ModManager.Mods.HasFlag(ModIdentifier.Paused))
                             ModManager.RemoveMod(ModIdentifier.Paused);
 
-                        return new SelectScreen();
+                        return new SelectionScreen();
                     }
 
-
-                    return new ResultScreen(Screen);
-                }, 500);
+                    return new ResultsScreen(Screen);
+                }, Screen.Failed ? Screen.FailFadeTime : 500);
 
                 ResultsScreenLoadInitiated = true;
             }
@@ -715,6 +821,16 @@ namespace Quaver.Shared.Screens.Gameplay
         }
 
         /// <summary>
+        /// Update the position and size of the grade display.
+        /// </summary>
+        public void UpdateGradeDisplay()
+        {
+            GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
+            GradeDisplay.Height = AccuracyDisplay.Height;
+            GradeDisplay.UpdateWidth();
+        }
+
+        /// <summary>
         ///     When a background is loaded in the gameplay screen (because multi-threading....),
         ///     we'll want to fade it in to the user's set dim.
         /// </summary>
@@ -744,10 +860,18 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="e"></param>
         private void OnGameEnded(object sender, GameEndedEventArgs e)
         {
+            var manager = (HitObjectManagerKeys) Screen.Ruleset.HitObjectManager;
+
+            Screen.MultiplayerMatchEndedPrematurely = !Screen.IsPlayComplete && manager.NextHitObject != null
+                                                      && (Screen.Timing.Time >= Screen.Map.Length || AudioEngine.Track.Time >= AudioEngine.Track.Length);
+
+            if (Screen is TournamentGameplayScreen)
+                return;
+
             Screen.IsPaused = true;
 
-            var screen = new MultiplayerScreen(OnlineManager.CurrentGame, true);
-            Screen.Exit(() => new ResultScreen(Screen, GetScoreboardUsers(), screen));
+            Screen.Exit(() => new ResultsScreen(Screen, OnlineManager.CurrentGame,
+                GetProcessorsFromScoreboard(ScoreboardLeft), GetProcessorsFromScoreboard(ScoreboardRight)));
         }
 
         private List<ScoreboardUser> GetScoreboardUsers()
@@ -767,6 +891,24 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             return scoreboardUsers;
+        }
+
+        public List<ScoreProcessor> GetProcessorsFromScoreboard(Scoreboard scoreboard)
+        {
+            var processors = new List<ScoreProcessor>();
+
+            if (scoreboard == null)
+                return processors;
+
+            foreach (var user in scoreboard.Users)
+            {
+                if (user.HasQuit)
+                    continue;
+
+                processors.Add(user.Processor);
+            }
+
+            return processors;
         }
 
         /// <summary>

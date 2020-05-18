@@ -88,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Bindable.Value = Screen.Timing.Time / ModHelper.GetRateFromMods(ModManager.Mods);
 
             // Only update time each second.
-            if (Screen.Timing.Time - TimeLastProgressChange < 1000)
+            if (Math.Abs(Screen.Timing.Time - TimeLastProgressChange) < 1000)
             {
                 base.Update(gameTime);
                 return;

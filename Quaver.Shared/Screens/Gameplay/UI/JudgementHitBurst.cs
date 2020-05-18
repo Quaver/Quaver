@@ -25,6 +25,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
     public class JudgementHitBurst : AnimatableSprite
     {
         /// <summary>
+        /// </summary>
+        private GameplayScreen Screen { get; }
+
+        /// <summary>
         ///     If we are currently animating the hit burst with only one frame.
         /// </summary>
         public bool IsAnimatingWithOneFrame { get; private set; }
@@ -37,16 +41,18 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     The original Y position of the hit burst.
         /// </summary>
-        private float OriginalPosY { get; }
+        public float OriginalPosY { get; set; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="screen"></param>
         /// <param name="frames"></param>
         /// <param name="size"></param>
         /// <param name="posY"></param>
-        public JudgementHitBurst(List<Texture2D> frames, Vector2 size, float posY) : base(frames)
+        public JudgementHitBurst(GameplayScreen screen, List<Texture2D> frames, Vector2 size, float posY) : base(frames)
         {
+            Screen = screen;
             OriginalPosY = posY;
             OriginalSize = size;
             Size = new ScalableVector2(OriginalSize.X, OriginalSize.Y);

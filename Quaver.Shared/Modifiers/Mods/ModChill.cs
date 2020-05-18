@@ -6,6 +6,7 @@
 */
 
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 
 namespace Quaver.Shared.Modifiers.Mods
@@ -23,13 +24,15 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Make it easier on yourself.";
 
-        public bool Ranked { get; set; } = true;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Strict };
+
+        public Color ModColor { get; }
 
         public void InitializeMod() => throw new NotImplementedException();
     }

@@ -12,6 +12,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
+using Quaver.API.Replays;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
@@ -30,6 +31,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
@@ -124,6 +126,10 @@ namespace Quaver.Shared.Screens.Select
             var game = GameBase.Game as QuaverGame;
             var cursor = game?.GlobalUserInterface.Cursor;
             cursor.Alpha = 1;
+
+            // Let spectators know that we're selecting a new song
+            if (OnlineManager.IsBeingSpectated)
+                OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.SelectingSong, -1, new List<ReplayFrame>());
 
             View = new SelectScreenView(this);
         }
@@ -336,7 +342,7 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Handles when the user wants to increase/decrease the rate of the song.
         /// </summary>
-        private static void HandleKeyPressControlRateChange()
+        public static void HandleKeyPressControlRateChange()
         {
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
@@ -462,6 +468,9 @@ namespace Quaver.Shared.Screens.Select
         {
             IsExitingToGameplay = true;
 
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             if (OnlineManager.CurrentGame != null)
             {
                 var map = MapManager.Selected.Value;
@@ -559,7 +568,7 @@ namespace Quaver.Shared.Screens.Select
                         AudioEngine.Track?.Fade(10, 300);
                 }
 
-                return new MenuScreen();
+                return new MainMenuScreen();
             });
         }
 

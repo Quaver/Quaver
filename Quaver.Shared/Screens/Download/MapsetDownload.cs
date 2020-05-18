@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -22,6 +23,10 @@ namespace Quaver.Shared.Screens.Download
     public class MapsetDownload : IDisposable
     {
         /// <summary>
+        /// </summary>
+        public bool IsDownloading { get; protected set; }
+
+        /// <summary>
         ///     Json containing the mapset.
         /// </summary>
         public JToken Mapset { get; }
@@ -29,6 +34,14 @@ namespace Quaver.Shared.Screens.Download
         /// <summary>
         /// </summary>
         public int MapsetId { get; }
+
+        /// <summary>
+        /// </summary>
+        public string Artist { get; }
+
+        /// <summary>
+        /// </summary>
+        public string Title { get; }
 
         /// <summary>
         /// </summary>
@@ -41,36 +54,60 @@ namespace Quaver.Shared.Screens.Download
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
-        public MapsetDownload(JToken mapset)
+        /// <param name="artist"></param>
+        /// <param name="title"></param>
+        public MapsetDownload(JToken mapset, string artist, string title, bool download = true)
         {
             Mapset = mapset;
             MapsetId = (int) Mapset["id"];
-            Download();
+
+            Artist = artist;
+            Title = title;
+
+            if (download)
+                Download();
         }
 
-        public MapsetDownload(int id)
+        public MapsetDownload(int id, string artist, string title, bool download = true)
         {
             MapsetId = id;
-            Download();
+            Artist = artist;
+            Title = title;
+
+            if (download)
+                Download();
         }
 
-        private void Download()
+        public virtual void Download()
         {
+            if (IsDownloading)
+                return;
+
+            IsDownloading = true;
+
             Logger.Important($"Downloading mapset {MapsetId}...", LogType.Network);
 
             var dir = $"{ConfigManager.DataDirectory.Value}/Downloads";
-            var path = $"{dir}/{MapsetId - TimeHelper.GetUnixTimestampMilliseconds()}.qp";
+            var path = $"{dir}/{MapsetId}.qp";
             Directory.CreateDirectory(dir);
 
-            OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
+            try
             {
-                Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
-                MapsetImporter.Queue.Add(path);
+                OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
+                {
+                    Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
+                    MapsetImporter.Queue.Add(path);
 
-                Completed.Value = e;
-                MapsetDownloadManager.CurrentDownloads.Remove(this);
-                Dispose();
-            });
+                    Completed.Value = e;
+                    MapsetDownloadManager.CurrentDownloads.Remove(this);
+                    Dispose();
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, $"There was an error downloading mapset: {Artist} - {Title} ({MapsetId})");
+            }
         }
 
         /// <inheritdoc />

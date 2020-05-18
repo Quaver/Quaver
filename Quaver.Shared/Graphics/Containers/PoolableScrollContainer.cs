@@ -9,9 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -27,12 +24,17 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     The size of the object pool
         /// </summary>
-        public int PoolSize { get; }
+        public int PoolSize { get; protected set; }
 
         /// <summary>
         ///     The amount of padding from the top that the scroll container will have
         /// </summary>
         protected int PaddingTop { get; set; }
+
+        /// <summary>
+        ///     The amount of padding from the bottom that the scroll container will have
+        /// </summary>
+        protected int PaddingBottom { get; set; }
 
         /// <summary>
         ///     The items that are available to use for the drawables.
@@ -43,13 +45,13 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    The index at which the object pool begins, so we'll be aware of where to scroll.
         /// </summary>
-        public int PoolStartingIndex { get; private set; }
+        public int PoolStartingIndex { get; protected set; }
 
         /// <summary>
         ///     Keeps track of the Y position of the content container in the previous frame
         ///     So we can know how to shift the pool.
         /// </summary>
-        private float PreviousContentContainerY { get; set; }
+        protected float PreviousContentContainerY { get; set; }
 
         /// <summary>
         ///    Quick way to get the drawable's height.
@@ -65,8 +67,9 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="size"></param>
         /// <param name="contentSize"></param>
         /// <param name="startFromBottom"></param>
+        /// <param name="createUponScrolling"></param>
         protected PoolableScrollContainer(List<T> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size, ScalableVector2 contentSize,
-            bool startFromBottom = false) : base(size, contentSize, startFromBottom)
+            bool startFromBottom = false) : base(size, contentSize)
         {
             AvailableItems = availableItems;
             PoolSize = poolSize;
@@ -79,20 +82,20 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (ContentContainer.Y < PreviousContentContainerY)
-                HandlePoolShifting(Direction.Forward);
-            else if (ContentContainer.Y > PreviousContentContainerY)
-                HandlePoolShifting(Direction.Backward);
+            // First make sure ContentContainer.Y is up to date.
+            base.Update(gameTime);
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (ContentContainer.Y != PreviousContentContainerY)
+                HandlePoolShifting();
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
-
-            base.Update(gameTime);
         }
 
         public override void Destroy()
         {
-            Pool.ForEach(x => x.Destroy());
+            Pool?.ForEach(x => x?.Destroy());
             base.Destroy();
         }
 
@@ -100,19 +103,23 @@ namespace Quaver.Shared.Graphics.Containers
         ///     Begins creation of the pool. This should be called last in the constructor when the pool
         ///     is ready to be created
         /// </summary>
-        protected void CreatePool()
+        protected void CreatePool(bool containDrawables = true, bool updateContent = true)
         {
             Pool = new List<PoolableSprite<T>>();
 
+            if (AvailableItems == null)
+                return;
+
             // Create enough objects to use for the pool and contain them inside the drawable.
-            for (var i = 0; i < PoolSize && i < AvailableItems.Count; i++)
+            for (var i = 0; i < PoolSize && i < AvailableItems?.Count; i++)
             {
-                var drawable = AddObject(i);
+                if (i + PoolStartingIndex >= AvailableItems.Count)
+                    break;
 
-                if (i >= AvailableItems.Count)
-                    continue;
+                var drawable = AddObject(PoolStartingIndex + i, updateContent);
 
-                AddContainedDrawable(drawable);
+                if (containDrawables)
+                    AddContainedDrawable(drawable);
             }
 
             RecalculateContainerHeight();
@@ -121,11 +128,11 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    Makes sure that the content container's height is up to date
         /// </summary>
-        protected void RecalculateContainerHeight(bool usePoolCount = false)
+        public virtual void RecalculateContainerHeight(bool usePoolCount = false)
         {
             var count = usePoolCount ? Pool.Count : AvailableItems.Count;
 
-            var totalUserHeight = DrawableHeight * count + PaddingTop;
+            var totalUserHeight = DrawableHeight * count + PaddingTop + PaddingBottom;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -134,58 +141,82 @@ namespace Quaver.Shared.Graphics.Containers
         }
 
         /// <summary>
+        ///     Returns the target PoolStartingIndex given the index of the object currently in the middle of the screen.
+        /// </summary>
+        /// <param name="middleObjectIndex"></param>
+        /// <returns></returns>
+        protected int DesiredPoolStartingIndex(int middleObjectIndex)
+        {
+            if (middleObjectIndex < PoolSize / 2)
+                return 0;
+
+            int index;
+
+            if (middleObjectIndex + PoolSize / 2 > AvailableItems.Count)
+                index = AvailableItems.Count - PoolSize;
+            else
+                index = middleObjectIndex - PoolSize / 2;
+
+            return Math.Max(index, 0);
+        }
+
+        /// <summary>
         ///     Handles the shifting of the object pool when the user scrolls up or down.
         /// </summary>
-        /// <param name="direction"></param>
-        private void HandlePoolShifting(Direction direction)
+        protected void HandlePoolShifting()
         {
-            switch (direction)
+            if (AvailableItems == null || Pool.Count != PoolSize)
+                return;
+
+            // Compute the index of the object currently in the middle of the container.
+            var middleObjectIndex = (int) ((-ContentContainer.Y + Height / 2 - PaddingTop) / DrawableHeight);
+
+            // Compute the corresponding PoolStartingIndex.
+            var desiredPoolStartingIndex = DesiredPoolStartingIndex(middleObjectIndex);
+
+            // If our PoolStartingIndex is already correct, then there's nothing to do.
+            if (PoolStartingIndex == desiredPoolStartingIndex)
+                return;
+
+            // Compute the overlap: the number of pooled objects that can be re-used from the previous position.
+            var difference = Math.Abs(PoolStartingIndex - desiredPoolStartingIndex);
+            var overlap = Math.Max(Pool.Count - difference, 0);
+            var refresh = Pool.Count - overlap;
+
+            if (PoolStartingIndex > desiredPoolStartingIndex)
             {
-                case Direction.Forward:
-                    if (PoolStartingIndex > AvailableItems.Count - 1 || PoolStartingIndex + PoolSize > AvailableItems.Count - 1)
-                        return;
+                // The container has been scrolled back. The re-usable objects are in the beginning of the buffer.
+                for (var i = 0; i < refresh; i++)
+                {
+                    var objectIndex = desiredPoolStartingIndex + Pool.Count - 1 - overlap - i;
 
-                    var firstDrawable = Pool.First();
+                    var drawable = Pool.Last();
+                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
+                    drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
-                    // Check if the object is in the rect of the ScrollContainer.
-                    // If it is, then there's no updating that needs to happen.
-                    if (!RectangleF.Intersect(firstDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
-                        return;
-
-                    // Update the mapset's information and y position.
-                    firstDrawable.Y = (PoolStartingIndex + PoolSize) * DrawableHeight;
-
-                    firstDrawable.UpdateContent(AvailableItems[PoolStartingIndex + PoolSize], PoolStartingIndex + PoolSize);
-
-                    // Circularly shift the drawable in the list so it's at the end.
-                    Pool.Remove(firstDrawable);
-                    Pool.Add(firstDrawable);
-
-                    PoolStartingIndex++;
-                    break;
-                case Direction.Backward:
-                    if (PoolStartingIndex - 1 > AvailableItems.Count - 1 || PoolStartingIndex - 1 < 0)
-                        return;
-
-                    var lastDrawable = Pool.Last();
-
-                    // Check if the object is in the rect of the ScrollContainer.
-                    // If it is, then there's no updating that needs to happen.
-                    if (!RectangleF.Intersect(lastDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
-                        return;
-
-                    lastDrawable.Y = (PoolStartingIndex - 1) * DrawableHeight;
-                    lastDrawable.UpdateContent(AvailableItems[PoolStartingIndex - 1], PoolStartingIndex - 1);
-
-                    // Circularly shift the drawable in the list so it's at the beginning
-                    Pool.Remove(lastDrawable);
-                    Pool.Insert(0, lastDrawable);
-
-                    PoolStartingIndex--;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                    // Circularly shift the list back one.
+                    Pool.RemoveAt(Pool.Count - 1);
+                    Pool.Insert(0, drawable);
+                }
             }
+            else
+            {
+                // The container has been scrolled forward. The re-usable objects are in the end of the buffer.
+                for (var i = 0; i < refresh; i++)
+                {
+                    var objectIndex = desiredPoolStartingIndex + overlap + i;
+
+                    var drawable = Pool.First();
+                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
+                    drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
+
+                    // Circularly shift the list forward one.
+                    Pool.RemoveAt(0);
+                    Pool.Add(drawable);
+                }
+            }
+
+            PoolStartingIndex = desiredPoolStartingIndex;
         }
 
         /// <summary>
@@ -193,15 +224,17 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private PoolableSprite<T> AddObject(int index)
+        protected PoolableSprite<T> AddObject(int index, bool updateContent = true)
         {
             lock (AvailableItems)
             {
                 var drawable = CreateObject(AvailableItems[index], index);
                 drawable.DestroyIfParentIsNull = false;
-                drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT + PaddingTop;
+                drawable.Y = (PoolStartingIndex + index) * drawable.Height + PaddingTop;
 
-                drawable.UpdateContent(AvailableItems[index], index);
+                if (updateContent)
+                    drawable.UpdateContent(AvailableItems[index], index);
+
                 Pool.Add(drawable);
 
                 return drawable;
@@ -218,7 +251,8 @@ namespace Quaver.Shared.Graphics.Containers
             lock (AvailableItems)
             lock (Pool)
             {
-                AvailableItems.Add(obj);
+                if (!AvailableItems.Contains(obj))
+                    AvailableItems.Add(obj);
 
                 // Need another drawable to use
                 if (Pool.Count < PoolSize)
@@ -292,5 +326,13 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         protected abstract PoolableSprite<T> CreateObject(T item, int index);
+
+        /// <summary>
+        /// </summary>
+        public void DestroyPool()
+        {
+            Pool.ForEach(x => x.Destroy());
+            Pool.Clear();
+        }
     }
 }

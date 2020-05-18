@@ -13,7 +13,9 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Skinning;
+using Wobble;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
 {
@@ -68,26 +70,71 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="gameTime"></param>
         public abstract void Update(GameTime gameTime);
 
+        public virtual void Destroy()
+        {
+        }
+
         /// <summary>
         ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
         /// </summary>
-        public static void PlayObjectHitSounds(HitObjectInfo hitObject)
+        public static void PlayObjectHitSounds(HitObjectInfo hitObject, SkinStore skin = null, int volume = -1)
         {
+            // Default to fallback skin if one wasn't provided
+            if (skin == null)
+                skin = SkinManager.Skin;
+
+            var game = GameBase.Game as QuaverGame;
+
+            // Disable hitsounds for left panel screens if the map preview isnt active
+            if (game?.CurrentScreen is IHasLeftPanel screen)
+            {
+                if (screen.ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
+                    return;
+            }
+
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHit.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHit?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitClap.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHitClap?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitWhistle.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHitWhistle?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitFinish.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHitFinish?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
         }
 
         /// <summary>
@@ -95,6 +142,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// </summary>
         public static void PlayObjectKeySounds(HitObjectInfo hitObject)
         {
+            var game = GameBase.Game as QuaverGame;
+
+            // Disable hitsounds for left panel screens if the map preview isnt active
+            if (game?.CurrentScreen is IHasLeftPanel screen)
+            {
+                if (screen.ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
+                    return;
+            }
+
             foreach (var keySound in hitObject.KeySounds)
                 CustomAudioSampleCache.Play(keySound.Sample - 1, keySound.Volume);
         }

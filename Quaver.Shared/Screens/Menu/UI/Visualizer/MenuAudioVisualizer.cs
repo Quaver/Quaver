@@ -36,7 +36,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         ///   <param name="maxHeight"></param>
         ///   <param name="numBars"></param>
         ///  <param name="barWidth"></param>
-        public MenuAudioVisualizer(int width, int maxHeight, int numBars, int barWidth)
+        public MenuAudioVisualizer(int width, int maxHeight, int numBars, int barWidth, int spacing = 5)
         {
             MaxBarHeight = maxHeight;
 
@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
                     Alignment = Alignment.BotLeft,
                     Tint = Colors.MainAccentInactive,
                     Width = barWidth,
-                    X = barWidth * i + i * 5,
+                    X = barWidth * i + i * spacing,
                     Alpha = 0.20f
                 };
 
@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+            if (ConfigManager.DisplayMenuAudioVisualizer != null && ConfigManager.DisplayMenuAudioVisualizer.Value)
                 InterpolateBars();
 
             base.Update(gameTime);
@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+            if (ConfigManager.DisplayMenuAudioVisualizer != null && ConfigManager.DisplayMenuAudioVisualizer.Value)
                 base.Draw(gameTime);
         }
 
@@ -101,6 +101,11 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
                 var bar = Bars[i];
 
                 var targetHeight = spectrumData[i] * MaxBarHeight;
+
+                bar.Visible = targetHeight > 1f;
+
+                if (!bar.Visible)
+                    continue;
 
                 // Lock the Animations to prevent any current updates.
                 lock (bar.Animations)

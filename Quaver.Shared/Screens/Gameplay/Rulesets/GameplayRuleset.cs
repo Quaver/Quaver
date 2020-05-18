@@ -5,11 +5,24 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
+using Quaver.API.Replays;
+using Quaver.API.Replays.Virtual;
+using Quaver.Shared.Config;
+using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
+using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
+using WebSocketSharp;
+using Wobble.Logging;
+using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets
 {
@@ -48,10 +61,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <summary>
         ///     Manages all the scoring for this play session and ruleset.
         /// </summary>
-        public ScoreProcessor ScoreProcessor { get; private set; }
+        public ScoreProcessor ScoreProcessor { get; set; }
 
         /// <summary>
-        /// 
+        ///    Handles the *real* scoring values with standardized judgements.
+        ///     <see cref="ScoreProcessor"/> can have custom windows. This is used
+        ///     to calculate the player's real score
+        /// </summary>
+        public VirtualReplayPlayer StandardizedReplayPlayer { get; }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="map"></param>
@@ -63,6 +83,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
             CreatePlayfield();
             InputManager = CreateInputManager();
             HitObjectManager = CreateHitObjectManager();
+
+            StandardizedReplayPlayer = new VirtualReplayPlayer(new Replay(Map.Mode,
+                ConfigManager.Username.Value, ModManager.Mods, Screen.MapHash), map, null, true);
+
+            // If in replay mode, pass all the existing replay frames to the standardized player.
+            // there's no need to manually dump frames as the play goes on.
+            if (Screen.InReplayMode && Screen.SpectatorClient == null)
+            {
+                var inputManager = (KeysInputManager) InputManager;
+
+                StandardizedReplayPlayer.Replay.Frames = inputManager.ReplayInputManager.Replay.Frames;
+                StandardizedReplayPlayer.PlayAllFrames();
+            }
         }
 
         /// <inheritdoc />
@@ -72,10 +105,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPaused)
+            if (!Screen.IsPaused)
                 HitObjectManager.Update(gameTime);
 
             Playfield.Update(gameTime);
+            UpdateStandardizedScoreProcessor();
         }
 
         /// <summary>
@@ -93,7 +127,41 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Destroy() => Playfield.Destroy();
+        public void Destroy()
+        {
+            Playfield.Destroy();
+            HitObjectManager.Destroy();
+        }
+
+        /// <summary>
+        ///     Polls <see cref="ScoreProcessor"/> and updates <see cref="StandardizedReplayPlayer"/>
+        ///     with the standardized scoring values
+        /// </summary>
+        private void UpdateStandardizedScoreProcessor()
+        {
+            // No need to update the processor in replay mode
+            if (Screen.InReplayMode && Screen.SpectatorClient == null)
+                return;
+
+            if (Screen.ReplayCapturer.Replay.Frames.Count == StandardizedReplayPlayer.Replay.Frames.Count)
+                return;
+
+            for (var i = StandardizedReplayPlayer.Replay.Frames.Count; i < Screen.ReplayCapturer.Replay.Frames.Count; i++)
+            {
+                var frame = Screen.ReplayCapturer.Replay.Frames[i];
+                StandardizedReplayPlayer.Replay.AddFrame(frame.Time, frame.Keys);
+                StandardizedReplayPlayer.PlayNextFrame();
+
+                var view = (GameplayScreenView) Screen.View;
+                view.UpdateScoreAndAccuracyDisplays();
+
+                if (view.ScoreboardLeft?.Users.Count != 0 && view.ScoreboardLeft?.Users.First().Type == ScoreboardUserType.Self)
+                    view.ScoreboardLeft.Users.First().CalculateScoreForNextObject();
+
+                if (view.ScoreboardRight?.Users.Count != 0 && view.ScoreboardRight?.Users.First().Type == ScoreboardUserType.Self)
+                    view.ScoreboardRight.Users.First().CalculateScoreForNextObject();
+            }
+        }
 
         /// <summary>
         ///     Creates the score processor for this ruleset.

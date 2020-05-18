@@ -13,6 +13,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Multiplayer;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -22,6 +23,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines;
 using Quaver.Shared.Skinning;
+using Steamworks;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 {
@@ -48,14 +50,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         {
             get
             {
-                switch (MapManager.Selected.Value.Qua.Mode)
+                switch (MapManager.Selected.Value?.Qua?.Mode)
                 {
                     case GameMode.Keys4:
                         return ConfigManager.ScrollDirection4K.Value;
                     case GameMode.Keys7:
                         return ConfigManager.ScrollDirection7K.Value;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        return ConfigManager.ScrollDirection4K.Value;
                 }
             }
         }
@@ -80,7 +82,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 
             var direction = ScrollDirection;
             var playfield = (GameplayPlayfieldKeys)Playfield;
-            var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+            var keys = MapManager.Selected.Value.Qua?.GetKeyCount() ?? 4;
 
             if (direction.Equals(ScrollDirection.Split))
             {
@@ -100,10 +102,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPaused && TimingLineManager != null)
-                foreach (var manager in TimingLineManager) manager.UpdateObjectPool();
-
             base.Update(gameTime);
+
+            // This should be _after_ base.Update, since this uses HitObjectManager.CurrentTrackPosition,
+            // which is updated in base.Update.
+            if (TimingLineManager != null)
+                foreach (var manager in TimingLineManager) manager.UpdateObjectPool();
         }
 
         /// <inheritdoc />
@@ -113,13 +117,24 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <returns></returns>
         protected override ScoreProcessor CreateScoreProcessor(Qua map)
         {
+            var windows = JudgementWindowsDatabaseCache.Selected.Value;
+            ScoreProcessor processor;
+
             if (Screen.IsMultiplayerGame)
             {
-                return new ScoreProcessorKeys(map, ModManager.Mods,
-                    new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives));
+                processor = new ScoreProcessorKeys(map, ModManager.Mods,
+                    new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives), windows);
+            }
+            else
+            {
+                processor = new ScoreProcessorKeys(map, ModManager.Mods, windows);
             }
 
-            return new ScoreProcessorKeys(map, ModManager.Mods);
+            processor.PlayerName = ConfigManager.Username.Value;
+            processor.SteamId = SteamUser.GetSteamID().m_SteamID;
+            processor.UserId = OnlineManager.Self?.OnlineUser?.Id ?? 0;
+
+            return processor;
         }
 
         /// <inheritdoc />

@@ -11,6 +11,7 @@ using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
 using System;
 using System.Collections.Generic;
+using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -264,7 +265,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (!Screen.IsPaused)
                 return;
 
-            Screen.IsPaused = false;
+            Visible = false;
             Screen.ForceFail = true;
             Screen.HasQuit = true;
 
@@ -279,10 +280,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (Screen.Failed)
+            if (Screen.Failed || Screen.SpectatorClient != null)
                 Visible = false;
 
-            if (Screen.IsPaused && DialogManager.Dialogs.Count == 0)
+            Continue.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
+            Retry.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
+            Quit.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
+
+            if (Screen.IsPaused && DialogManager.Dialogs.Count == 0 && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview)
             {
                 HandleKeyPressDown();
                 HandleKeyPressUp();
@@ -297,6 +302,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public void Activate()
         {
+            // Pausing should never be activated when spectating
+            if (Screen.SpectatorClient != null)
+                return;
+
             Background.ClearAnimations();
             Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.Alpha, 1, ANIMATION_TIME));
             Container.ClearAnimations();
@@ -310,6 +319,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public void Deactivate()
         {
+            // Pausing should never be activated when spectating
+            if (Screen.SpectatorClient != null)
+                return;
+
             Background.ClearAnimations();
             Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.Alpha, 0, ANIMATION_TIME));
             Container.ClearAnimations();

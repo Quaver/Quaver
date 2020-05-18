@@ -22,14 +22,9 @@ namespace Quaver.Shared.Database.Settings
     public static class QuaverSettingsDatabaseCache
     {
         /// <summary>
-        ///     The path of the local database
-        /// </summary>
-        private static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
-
-        /// <summary>
         ///     Current maps with outdated difficulties
         /// </summary>
-        public static List<Map> OutdatedMaps { get; private set; }
+        public static List<Map> OutdatedMaps { get; private set; } = new List<Map>();
 
         /// <summary>
         ///     Current scores with outdated ratings.
@@ -43,29 +38,27 @@ namespace Quaver.Shared.Database.Settings
         {
             CreateTable();
 
-            using (var conn = new SQLiteConnection(DatabasePath))
+            var settings = DatabaseManager.Connection.Find<QuaverSettings>(x => x.Id == 1);
+
+            // Settings need to be updated
+            if (settings == null)
             {
-                var settings = conn.Find<QuaverSettings>(x => x.Id == 1);
+                Logger.Important($"QuaverSettings could not be found previously in the database.", LogType.Runtime);
 
-                // Settings need to be updated
-                if (settings == null)
+                settings = new QuaverSettings
                 {
-                    Logger.Important($"QuaverSettings could not be found previously in the database.", LogType.Runtime);
+                    VersionDifficultyProcessorKeys = DifficultyProcessorKeys.Version,
+                    VersionScoreProcessorKeys = ScoreProcessorKeys.Version,
+                    VersionRatingProcessorKeys = RatingProcessorKeys.Version
+                };
 
-                    settings = new QuaverSettings
-                    {
-                        VersionDifficultyProcessorKeys = DifficultyProcessorKeys.Version,
-                        VersionScoreProcessorKeys = ScoreProcessorKeys.Version,
-                        VersionRatingProcessorKeys = RatingProcessorKeys.Version
-                    };
-
-                    conn.Insert(settings);
-                }
-
-                OutdatedMaps = MapDatabaseCache.FetchAll().FindAll(x => x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version);
-                Logger.Important($"Found {OutdatedMaps.Count} maps that have outdated difficulty ratings. Scheduling recalculation upon entering" +
-                                 $"select.", LogType.Runtime);
+                DatabaseManager.Connection.Insert(settings);
             }
+
+            OutdatedMaps = MapDatabaseCache.FetchAll().FindAll(x => x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version);
+
+            Logger.Important($"Found {OutdatedMaps.Count} maps that have outdated difficulty ratings. Scheduling recalculation upon entering" +
+                             $"select.", LogType.Runtime);
         }
 
         /// <summary>
@@ -75,8 +68,7 @@ namespace Quaver.Shared.Database.Settings
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                conn.CreateTable<QuaverSettings>();
+                DatabaseManager.Connection.CreateTable<QuaverSettings>();
                 Logger.Important($"QuaverSettings table has been created", LogType.Runtime);
             }
             catch (Exception e)
@@ -102,7 +94,7 @@ namespace Quaver.Shared.Database.Settings
                 }
                 catch (Exception e)
                 {
-                    new SQLiteConnection(DatabasePath).Delete(map);
+                    DatabaseManager.Connection.Delete(map);
                 }
             }
 

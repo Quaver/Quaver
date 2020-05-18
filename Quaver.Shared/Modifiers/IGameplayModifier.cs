@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 
 namespace Quaver.Shared.Modifiers
@@ -34,7 +35,7 @@ namespace Quaver.Shared.Modifiers
         /// <summary>
         ///     Is the gameplayModifier ranked?
         /// </summary>
-        bool Ranked { get; set; }
+        bool Ranked();
 
         /// <summary>
         ///     Is the modifier allowed in multiplayer?
@@ -50,6 +51,8 @@ namespace Quaver.Shared.Modifiers
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
         ModIdentifier[] IncompatibleMods { get; set; }
+
+        Color ModColor { get; }
 
         /// <summary>
         ///     All the gameplayModifier logic should go here.

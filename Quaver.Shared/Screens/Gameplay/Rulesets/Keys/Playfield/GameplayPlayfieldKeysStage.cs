@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
@@ -24,6 +25,7 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
 
@@ -50,6 +52,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The Container that holds every Timing Line object
         /// </summary>
         public Container TimingLineContainer { get; private set; }
+
+        /// <summary>
+        ///     The container that holds all hits.
+        /// </summary>
+        public Container HitContainer { get; private set; }
 
         /// <summary>
         ///     The left side of the stage.
@@ -105,7 +112,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The original value for the combo display's Y position,
         ///     so we can use this to set it back after it's done with its animation.
         /// </summary>
-        private float OriginalComboDisplayY { get; set; }
+        public float OriginalComboDisplayY { get; set; }
 
         /// <summary>
         ///     The HitError bar.
@@ -160,7 +167,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             CreateStageLeft();
             CreateStageRight();
             CreateBgMask();
-            CreateHitPositionOverlay();
 
             // Depending on what the skin.ini's value is, we'll want to either initialize
             // the receptors first, or the playfield first.
@@ -168,13 +174,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
+                CreateHitContainer();
                 CreateReceptorsAndLighting();
+                CreateHitPositionOverlay();
             }
             else
             {
                 CreateReceptorsAndLighting();
+                CreateHitPositionOverlay();
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
+                CreateHitContainer();
             }
 
             CreateDistantOverlay();
@@ -289,15 +299,42 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Create Stage HitPosition Overlay
             var sizeY = Skin.StageHitPositionOverlay.Height * Playfield.Width / Skin.StageHitPositionOverlay.Width;
             var offsetY = Playfield.LaneSize * ((float)Skin.NoteReceptorsUp[0].Height / Skin.NoteReceptorsUp[0].Width);
+            var width = Playfield.Width;
+
+            float y;
+            switch (GameplayRulesetKeys.ScrollDirection)
+            {
+                case ScrollDirection.Down:
+                    y = Playfield.ReceptorPositionY.First() - sizeY + Skin.HitPosOffsetY;
+                    break;
+                case ScrollDirection.Up:
+                    y = Playfield.ReceptorPositionY.First() + offsetY - Skin.HitPosOffsetY;
+                    break;
+                case ScrollDirection.Split:
+                    y = Playfield.ReceptorPositionY.First() - sizeY + Skin.HitPosOffsetY;
+                    width = Playfield.Width / 2;
+
+                    var splitHitPositionOverlay = new Sprite
+                    {
+                        Parent = Playfield.ForegroundContainer,
+                        Image = Skin.StageHitPositionOverlay,
+                        Rotation = 180,
+                        Size = new ScalableVector2(width, sizeY),
+                        X = width,
+                        Y = Playfield.ReceptorPositionY.Last() + offsetY - Skin.HitPosOffsetY
+                    };
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             HitPositionOverlay = new Sprite
             {
                 Parent = Playfield.ForegroundContainer,
                 Image = Skin.StageHitPositionOverlay,
-                Size = new ScalableVector2(Playfield.Width, sizeY),
-                // todo: case statement for scroll direction
-                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Playfield.ReceptorPositionY[0] + Skin.HitPosOffsetY
-                                                    : Playfield.ReceptorPositionY[0] + offsetY + sizeY - Skin.HitPosOffsetY,
+                Rotation = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Up) ? 180 : 0,
+                Size = new ScalableVector2(width, sizeY),
+                Y = y
             };
         }
 
@@ -309,20 +346,48 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Receptors = new List<Sprite>();
             ColumnLightingObjects = new List<ColumnLighting>();
 
+            var scratchLaneLeft = Screen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScratchLaneLeft4K.Value : ConfigManager.ScratchLaneLeft7K.Value;
+
             // Go through and create the receptors and column lighting objects.
-            for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
+            for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
             {
-                var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                var scale = ConfigManager.GameplayNoteScale.Value / 100f;
+                var laneSize = Playfield.LaneSize;
+                var defaultLanePos = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                var posX = defaultLanePos;
+
+                // Handle scratch key positioning
+                if (Screen.Map.HasScratchKey)
+                {
+                    if (i == Screen.Map.GetKeyCount() - 1)
+                        laneSize = Skin.ScratchLaneSize;
+
+                    if (scratchLaneLeft)
+                    {
+                        if (i == Screen.Map.GetKeyCount() - 1)
+                            posX = Playfield.Padding;
+                        else
+                            posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding +
+                                   Skin.ScratchLaneSize + Playfield.ReceptorPadding;
+                    }
+                }
+                else
+                {
+                    posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                }
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (scale != 1)
+                    posX += (Playfield.LaneSize - Playfield.LaneSize * scale) / 2f;
 
                 // Create individiaul receptor.
                 Receptors.Add(new Sprite
                 {
                     Parent = Playfield.ForegroundContainer,
-                    Size = new ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
+                    Size = new ScalableVector2(laneSize * scale, (Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
                     Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
-                    // todo: case statement for scroll direction
                     SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 });
 
@@ -357,6 +422,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     Creates the TimingLineContainer
         /// </summary>
         private void CreateTimingLineContainer() => TimingLineContainer = new Container
+        {
+            Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
+            Alignment = Alignment.TopCenter,
+            Parent = Playfield.ForegroundContainer
+        };
+
+        /// <summary>
+        ///     Creates the HitContainer
+        /// </summary>
+        private void CreateHitContainer() => HitContainer = new Container
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
             Alignment = Alignment.TopCenter,
@@ -467,7 +542,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Set size w/ scaling.
             var size = new Vector2(firstFrame.Width, firstFrame.Height) * Skin.JudgementHitBurstScale / firstFrame.Height;
 
-            JudgementHitBurst = new JudgementHitBurst(frames, size, Skin.JudgementBurstPosY)
+            JudgementHitBurst = new JudgementHitBurst(Screen, frames, size, Skin.JudgementBurstPosY)
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
@@ -481,13 +556,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             HitLightingObjects = new List<HitLighting>();
 
-            for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
+            for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
             {
                 var hl = new HitLighting()
                 {
                     Parent = Playfield.ForegroundContainer,
-                    Visible = false
+                    Visible = false,
+                    Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight),
+                    Position = new ScalableVector2(Skin.HitLightingX, Skin.HitLightingY)
                 };
+
+                var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, hl.RelativeRectangle,
+                    Receptors[i].ScreenRectangle);
+
+                hl.X = pos.X - Playfield.ForegroundContainer.ScreenRectangle.X;
+                hl.Y = pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y;
 
                 // Set the spritebatch options for the hitlighting in this case
                 // if it's the first object.
@@ -496,13 +579,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // Use the previous object's spritebatch options so all of them use the same batch.
                 else
                     hl.UsePreviousSpriteBatchOptions = true;
-
-                // If the width or height are less than 0, then we'll assume the user wants it to be the height of the texture
-                // otherwise we'll use the one from their skin config.
-                hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
-
-                hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f - hl.Width / 2f + Skin.HitLightingX,
-                    HitPositionOverlay.Y - hl.Width / 2f + Skin.HitLightingY);
 
                 HitLightingObjects.Add(hl);
             }
@@ -513,7 +589,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void CreateHealthBar()
         {
-            HealthBar = new HealthBar(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarType, Playfield.Ruleset.ScoreProcessor)
+            var scale = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarScale;
+            HealthBar = new HealthBar(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarType,
+                Playfield.Ruleset.ScoreProcessor, new Vector2(scale / 100f, scale / 100f))
             {
                 Parent = Playfield.ForegroundContainer,
             };
@@ -531,9 +609,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     HealthBar.Y = -10;
                     break;
                 case HealthBarKeysAlignment.TopLeft:
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    HealthBar.Parent = Playfield.Container;
+                    HealthBar.Alignment = Alignment.TopLeft;
+                    break;
             }
+
+            HealthBar.X += Skin.HealthBarPosOffsetX;
+            HealthBar.Y += Skin.HealthBarPosOffsetY;
         }
 
         /// <summary>
@@ -619,6 +701,51 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Alignment = Alignment.TopLeft,
                 Parent = LaneCoverContainer,
             };
+        }
+
+        public void FadeIn()
+        {
+            const int time = 400;
+            const Easing easing = Easing.Linear;
+
+            BgMask.Alpha = 0;
+            BgMask.FadeTo(1, Easing.Linear, time);
+
+            Receptors.ForEach(x =>
+            {
+                x.Alpha = 0;
+                x.FadeTo(1, Easing.Linear, time);
+            });
+
+            ComboDisplay.Digits.ForEach(x =>
+            {
+                x.Alpha = 0;
+                x.FadeTo(1, Easing.Linear, time);
+            });
+
+            HitObjectContainer.Children.ForEach(x =>
+            {
+                if (x is Sprite sprite)
+                {
+                    sprite.Alpha = 0;
+                    sprite.FadeTo(1, Easing.Linear, time - 200);
+                }
+            });
+
+            HitError.Children.ForEach(x =>
+            {
+                if (x is Sprite sprite)
+                {
+                    sprite.Alpha = 0;
+                    sprite.FadeTo(1, Easing.Linear, time);
+                }
+            });
+
+            StageLeft.Alpha = 0;
+            StageLeft.FadeTo(1, Easing.Linear, time);
+
+            StageRight.Alpha = 0;
+            StageRight.FadeTo(1, Easing.Linear, time);
         }
     }
 }

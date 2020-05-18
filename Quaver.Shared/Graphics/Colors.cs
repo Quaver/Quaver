@@ -33,12 +33,18 @@ namespace Quaver.Shared.Graphics
         public static readonly Color Negative = new Color(255, 152, 164);
         public static readonly Color NegativeInactive = new Color(119, 20, 31);
 
+        public static readonly Color MainBlue = new Color(9, 165, 200);
         #endregion
 
         /// <summary>
         ///     Dark gray color, usually used for headers.
         /// </summary>
-        public static readonly Color DarkGray = ColorHelper.HexToColor("#252a3e");
+        public static readonly Color DarkGray = ColorHelper.HexToColor("#181818");
+
+        /// <summary>
+        ///     Dark gray with blueish tint, usually used for search boxes.
+        /// </summary>
+        public static readonly Color BlueishDarkGray = ColorHelper.HexToColor("#252a3e");
 
         /// <summary>
         ///     Legend has it, a legendary legend used this color.
@@ -73,6 +79,8 @@ namespace Quaver.Shared.Graphics
                 return ColorHelper.HexToColor($"#49e6ef");
             if (userGroups.HasFlag(UserGroups.Contributor))
                 return ColorHelper.HexToColor($"#75e475");
+            if (userGroups.HasFlag(UserGroups.Donator))
+                return ColorHelper.HexToColor($"#f47fff");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 

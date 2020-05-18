@@ -14,15 +14,21 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Replays;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Converters.Malody;
 using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Results;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using SharpCompress.Archives;
 using SharpCompress.Common;
@@ -78,15 +84,24 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         internal static void OnFileDropped(object sender, string e)
         {
+            ImportFile(e);
+        }
+
+        /// <summary>
+        ///     Tries to import the given file, be it a map, a replay, a skin, etc.
+        ///     <param name="path">path to the file to import</param>
+        /// </summary>
+        public static void ImportFile(string path)
+        {
             var game = GameBase.Game as QuaverGame;
             var screen = game.CurrentScreen;
 
             // Mapset files
-            if (e.EndsWith(".qp") || e.EndsWith(".osz") || e.EndsWith(".sm"))
+            if (path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc"))
             {
-                Queue.Add(e);
+                Queue.Add(path);
 
-                var log = $"Scheduled {Path.GetFileName(e)} to be imported!";
+                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
                 NotificationManager.Show(NotificationLevel.Info, log);
 
                 if (screen.Exiting)
@@ -96,8 +111,8 @@ namespace Quaver.Shared.Database.Maps
                 {
                     if (OnlineManager.CurrentGame != null)
                     {
-                        var mpScreen = ScreenManager.Screens.ToList().Find(x => x is MultiplayerScreen);
-                        screen.Exit(() => new ImportingScreen(mpScreen as MultiplayerScreen), 0, QuaverScreenChangeType.AddToStack);
+                        var select = game.CurrentScreen as SelectionScreen;
+                        screen.Exit(() => new ImportingScreen(null, true));
                         return;
                     }
 
@@ -105,14 +120,23 @@ namespace Quaver.Shared.Database.Maps
                     return;
                 }
 
+                if (screen.Type == QuaverScreenType.Music)
+                {
+                    screen.Exit(() => new ImportingScreen());
+                    return;
+                }
+
                 if (screen.Type == QuaverScreenType.Multiplayer)
                 {
-                    screen.Exit(() => new ImportingScreen((MultiplayerScreen) screen), 0, QuaverScreenChangeType.AddToStack);
+                    var multi = (MultiplayerGameScreen) screen;
+                    multi.DontLeaveGameUponScreenSwitch = true;
+
+                    screen.Exit(() => new ImportingScreen());
                     return;
                 }
             }
             // Quaver Replay
-            else if (e.EndsWith(".qr"))
+            else if (path.EndsWith(".qr"))
             {
                 try
                 {
@@ -122,12 +146,15 @@ namespace Quaver.Shared.Database.Maps
                         case QuaverScreenType.Results:
                         case QuaverScreenType.Select:
                             break;
+                        // Replay imports are handled by the screen itself
+                        case QuaverScreenType.Theatre:
+                            return;
                         default:
                             NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before loading a replay");
                             return;
                     }
 
-                    var replay = new Replay(e);
+                    var replay = new Replay(path);
 
                     // Find the map associated with the replay.
                     var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == replay.MapMd5));
@@ -138,18 +165,21 @@ namespace Quaver.Shared.Database.Maps
                         return;
                     }
 
-                    MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == replay.MapMd5);
+                    var map = mapset.Maps.Find(x => x.Md5Checksum == replay.MapMd5);
 
-                    screen.Exit(() =>
+                    if (map == null)
                     {
-                        if (AudioEngine.Track != null)
-                        {
-                            lock (AudioEngine.Track)
-                                AudioEngine.Track.Fade(10, 300);
-                        }
+                        NotificationManager.Show(NotificationLevel.Error, "You do not have the map associated with this replay.");
+                        return;
+                    }
 
-                        return new ResultScreen(replay);
-                    });
+                    MapManager.Selected.Value = map;
+
+                    BackgroundHelper.Load(map);
+                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track?.Play();
+
+                    screen.Exit(() => new ResultsScreen(MapManager.Selected.Value, replay));
                 }
                 catch (Exception ex)
                 {
@@ -158,31 +188,60 @@ namespace Quaver.Shared.Database.Maps
                 }
             // Skins
             }
-            else if (e.EndsWith(".qs"))
+            else if (path.EndsWith(".qs"))
             {
                 switch (screen.Type)
                 {
                     case QuaverScreenType.Menu:
                     case QuaverScreenType.Results:
                     case QuaverScreenType.Select:
-                        SkinManager.Import(e);
+                        SkinManager.Import(path);
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before importing a skin");
                         return;
                 }
             }
-            else if (e.EndsWith(".mp3") || e.EndsWith(".ogg"))
+            else if (path.EndsWith(".mp3") || path.EndsWith(".ogg"))
             {
                 switch (screen.Type)
                 {
+                    case QuaverScreenType.Menu:
                     case QuaverScreenType.Select:
-                        EditorScreen.HandleNewMapsetCreation(e);
+                        EditScreen.CreateNewMapset(path);
+                        break;
+                    case QuaverScreenType.Editor:
                         break;
                     default:
-                        NotificationManager.Show(NotificationLevel.Error, "Go to the song select screen first to create a new mapset!");
+                        NotificationManager.Show(NotificationLevel.Error, "Please finish what you are doing before creating a new mapset!");
                         return;
                 }
+            }
+            // Other-game database files
+            else if (path.EndsWith(".db"))
+            {
+                var loadedDb = false;
+
+                if (path.Contains("osu!.db"))
+                {
+                    ConfigManager.OsuDbPath.Value = path;
+                    loadedDb = true;
+                }
+
+                if (path.Contains("cache.db"))
+                {
+                    ConfigManager.EtternaDbPath.Value = path;
+                    loadedDb = true;
+                }
+
+                if (!loadedDb)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, $"Unable to detect supported .db file.");
+                    return;
+                }
+
+                ConfigManager.AutoLoadOsuBeatmaps.Value = true;
+                NotificationManager.Show(NotificationLevel.Success, $"Successfully set the path for your .db file");
             }
         }
 
@@ -218,6 +277,13 @@ namespace Quaver.Shared.Database.Maps
                     }
                     else if (file.EndsWith(".sm"))
                         Stepmania.ConvertFile(file, extractDirectory);
+                    else if (file.EndsWith(".mc"))
+                        Malody.ExtractFile(file, extractDirectory);
+                    else if (file.EndsWith(".mcz"))
+                    {
+                        Malody.ExtractZip(file, extractDirectory);
+                        File.Delete(file);
+                    }
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 
@@ -231,6 +297,10 @@ namespace Quaver.Shared.Database.Maps
             }
 
             MapDatabaseCache.OrderAndSetMapsets();
+            Queue.Clear();
+
+            if (MapManager.Mapsets.Count == 0)
+                return;
 
             var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == selectedMap?.Md5Checksum));
 
@@ -241,8 +311,6 @@ namespace Quaver.Shared.Database.Maps
             }
             else
                 MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == selectedMap?.Md5Checksum);
-
-            Queue.Clear();
         }
 
         /// <summary>
@@ -285,6 +353,15 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
+
+                    var info = OnlineManager.Client?.RetrieveMapInfo(map.MapId);
+
+                    if (info != null)
+                    {
+                        map.RankedStatus = info.Map.RankedStatus;
+                        map.DateLastUpdated = info.Map.DateLastUpdated;
+                    }
+
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map, quaFile);
                     lastImported = map;

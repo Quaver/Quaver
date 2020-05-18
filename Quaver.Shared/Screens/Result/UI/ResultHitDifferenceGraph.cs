@@ -7,26 +7,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
-using Quaver.API.Replays;
-using Quaver.API.Replays.Virtual;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Config;
-using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
-using Quaver.Shared.Skinning;
-using Wobble;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Wobble.Graphics;
-using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
-using Wobble.Logging;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Result.UI
 {
@@ -79,25 +72,34 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private float LargestHitWindow { get; }
 
+        /// <summary>
+        /// </summary>
+        public List<HitDifferenceGraphLineData> LineData { get; } = new List<HitDifferenceGraphLineData>();
+
+        /// <summary>
+        /// </summary>
+        public Sprite MiddleLine { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
-        /// <param name="screen"></param>
-        public ResultHitDifferenceGraph(ScalableVector2 size, ResultScreen screen)
+        /// <param name="processor"></param>
+        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor, bool fakeStats = false)
         {
             Tint = Color.Black;
-            Alpha = 0.2f;
+            Alpha = 0f;
             Size = size;
 
-            Processor = GetScoreProcessor(screen);
+            Processor = processor;
             LargestHitWindow = Processor.JudgementWindow.Values.Max();
 
-            CreateMiddleLine();
             CreateJudgementAreas();
+            CreateMiddleLine();
 
             // Make some fake hits for debugging.
-            // CreateFakeHitStats();
+            if (fakeStats)
+                CreateFakeHitStats();
 
             // Draw the dots if there are any.
             if (Processor.Stats != null)
@@ -106,11 +108,6 @@ namespace Quaver.Shared.Screens.Result.UI
                 CreateDotsWithHitDifference();
                 CreateDotsWithoutHitDifference();
             }
-
-            CreateEarlyLateText();
-
-            AddBorder(Color.White);
-            Border.Alpha = 0.6f;
         }
 
         /// <summary>
@@ -156,76 +153,15 @@ namespace Quaver.Shared.Screens.Result.UI
         }
 
         /// <summary>
-        ///     Returns the score processor to use. Loads hit stats from a replay if needed.
-        /// </summary>
-        /// <param name="screen"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private static ScoreProcessor GetScoreProcessor(ResultScreen screen)
-        {
-            // Handles the case when watching a replay in its entirety. This uses the preprocessed
-            // ScoreProcessor/Replay from gameplay to get a 100% accurate score output.
-            // Also avoids having to process the replay again (as done below).
-            if (screen.Gameplay != null && screen.Gameplay.InReplayMode)
-            {
-                var im = screen.Gameplay.Ruleset.InputManager as KeysInputManager;
-                return im?.ReplayInputManager.VirtualPlayer.ScoreProcessor;
-            }
-
-            // If we already have stats (for example, this is a result screen right after a player finished playing a map), use them.
-            if (screen.ScoreProcessor.Stats != null)
-                return screen.ScoreProcessor;
-
-            // Otherwise, get the stats from a replay.
-            Replay replay = null;
-
-            // FIXME: unify this logic with watching a replay from a ResultScreen.
-            try
-            {
-                switch (screen.ResultsType)
-                {
-                    case ResultScreenType.Gameplay:
-                    case ResultScreenType.Replay:
-                        replay = screen.Replay;
-                        break;
-                    case ResultScreenType.Score:
-                        // Don't do anything for online replays since they aren't downloaded yet.
-                        if (!screen.Score.IsOnline)
-                            replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{screen.Score.Id}.qr");
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            catch (Exception e)
-            {
-                NotificationManager.Show(NotificationLevel.Error, "Unable to read replay file");
-                Logger.Error(e, LogType.Runtime);
-            }
-
-            // Load a replay if we got one.
-            if (replay == null)
-                return screen.ScoreProcessor;
-
-            var qua = ResultScreen.Map.LoadQua();
-            qua.ApplyMods(replay.Mods);
-
-            var player = new VirtualReplayPlayer(replay, qua);
-            player.PlayAllFrames();
-
-            return player.ScoreProcessor;
-        }
-
-        /// <summary>
         ///     Creates the middle line at 0 ms hit difference.
         /// </summary>
         // ReSharper disable once ObjectCreationAsStatement
-        private void CreateMiddleLine() => new Sprite
+        private void CreateMiddleLine() => MiddleLine = new Sprite
         {
             Parent = this,
-            Alpha = 0.7f,
+            Alpha = 0f,
             Alignment = Alignment.MidCenter,
-            Size = new ScalableVector2(Width, 1),
+            Size = new ScalableVector2(Width, 2),
         };
 
         /// <summary>
@@ -254,15 +190,17 @@ namespace Quaver.Shared.Screens.Result.UI
                 foreach (var k in new[] {-1, 1})
                 {
                     // ReSharper disable once ObjectCreationAsStatement
-                    new Sprite()
+                    var line = new Sprite()
                     {
                         Parent = this,
-                        Alpha = 0.3f,
-                        Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[judgement],
+                        Alpha = 0.5f,
+                        Tint = ResultsJudgementGraphBar.GetColor(judgement),
                         Alignment = Alignment.MidCenter,
-                        Y = k * HitDifferenceToY(difference) - k * height / 2,
-                        Size = new ScalableVector2(Width, height),
+                        Y = k * HitDifferenceToY(difference) - k * height,
+                        Size = new ScalableVector2(Width, 2),
                     };
+
+                    LineData.Add(new HitDifferenceGraphLineData(judgement, line, difference * k));
                 }
             }
         }
@@ -274,23 +212,24 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             var unscaledLargestHitWindow = LargestHitWindow / ModHelper.GetRateFromMods(Processor.Mods);
 
+            var x = 8;
+            var y = 6;
+
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Late (+{unscaledLargestHitWindow}ms)")
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Late (+{unscaledLargestHitWindow} ms)", 18, false)
             {
                 Parent = this,
-                X = 4,
-                Y = 5,
-                FontSize = 14
+                X = x,
+                Y = y
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Early (-{unscaledLargestHitWindow}ms)")
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Early (-{unscaledLargestHitWindow} ms)", 20, false)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
-                X = 4,
-                Y = -5,
-                FontSize = 14
+                X = x,
+                Y = -y,
             };
         }
 
@@ -349,7 +288,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 new Sprite
                 {
                     Parent = this,
-                    Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[breakdown.Judgement],
+                    Tint = ResultsJudgementGraphBar.GetColor(breakdown.Judgement),
                     Size = new ScalableVector2(DotSize, DotSize),
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (DotSize / 2),
@@ -374,7 +313,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 new Sprite
                 {
                     Parent = this,
-                    Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[breakdown.Judgement],
+                    Tint = ResultsJudgementGraphBar.GetColor(breakdown.Judgement),
                     Size = new ScalableVector2(MissDotSize, MissDotSize),
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (MissDotSize / 2),

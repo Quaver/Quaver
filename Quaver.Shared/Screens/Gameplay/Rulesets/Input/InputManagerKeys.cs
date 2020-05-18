@@ -16,6 +16,9 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Tournament.Gameplay;
+using Wobble;
+using Wobble.Bindables;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
@@ -25,7 +28,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     The list of button containers for these keys.
         /// </summary>
-        internal List<InputBindingKeys> BindingStore { get; }
+        internal List<InputBindingKeys> BindingStore { get; private set; }
 
         /// <summary>
         ///     Reference to the ruleset
@@ -44,36 +47,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <param name="mode"></param>
         internal KeysInputManager(GameplayRulesetKeys ruleset, GameMode mode)
         {
-            switch (mode)
-            {
-                case GameMode.Keys4:
-                    // Initialize 4K Input button container.
-                    BindingStore = new List<InputBindingKeys>
-                    {
-                        new InputBindingKeys(ConfigManager.KeyMania4K1),
-                        new InputBindingKeys(ConfigManager.KeyMania4K2),
-                        new InputBindingKeys(ConfigManager.KeyMania4K3),
-                        new InputBindingKeys(ConfigManager.KeyMania4K4)
-                    };
-                    break;
-                case GameMode.Keys7:
-                    // Initialize 7K input button container.
-                    BindingStore = new List<InputBindingKeys>
-                    {
-                        new InputBindingKeys(ConfigManager.KeyMania7K1),
-                        new InputBindingKeys(ConfigManager.KeyMania7K2),
-                        new InputBindingKeys(ConfigManager.KeyMania7K3),
-                        new InputBindingKeys(ConfigManager.KeyMania7K4),
-                        new InputBindingKeys(ConfigManager.KeyMania7K5),
-                        new InputBindingKeys(ConfigManager.KeyMania7K6),
-                        new InputBindingKeys(ConfigManager.KeyMania7K7)
-                    };
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
-
             Ruleset = ruleset;
+
+            SetInputKeybinds(mode);
 
             // Init replay
             if (Ruleset.Screen != null && Ruleset.Screen.InReplayMode)
@@ -169,10 +145,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private void HandleKeyPress(HitObjectManagerKeys manager, GameplayHitObjectKeys gameplayHitObject)
         {
             // Play the HitSounds of closest hit object.
-            if (ConfigManager.EnableHitsounds.Value)
-                HitObjectManager.PlayObjectHitSounds(gameplayHitObject.Info);
-            if (ConfigManager.EnableKeysounds.Value)
-                HitObjectManager.PlayObjectKeySounds(gameplayHitObject.Info);
+            var game = GameBase.Game as QuaverGame;
+
+            if (game?.CurrentScreen?.Type != QuaverScreenType.Editor)
+            {
+                if (ConfigManager.EnableHitsounds.Value)
+                    HitObjectManager.PlayObjectHitSounds(gameplayHitObject.Info);
+                if (ConfigManager.EnableKeysounds.Value)
+                    HitObjectManager.PlayObjectKeySounds(gameplayHitObject.Info);
+            }
 
             // Get Judgement and references
             var time = (int)manager.CurrentAudioPosition;
@@ -220,7 +201,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // Handle early miss cases here.
                 case Judgement.Miss when gameplayHitObject.Info.IsLongNote:
                     // Add another miss when hit missing LNS
-                    ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss);
+                    ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true);
                     Ruleset.ScoreProcessor.Stats.Add(
                         new HitStat(
                             HitStatType.Miss,
@@ -245,7 +226,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     break;
                 // Handle non-miss cases. Perform Hit Lighting Animation and Handle Object pooling.
                 default:
-                    playfield.Stage.HitLightingObjects[lane].PerformHitAnimation(gameplayHitObject.Info.IsLongNote);
+                    playfield.Stage.HitLightingObjects[lane].PerformHitAnimation(gameplayHitObject.Info.IsLongNote, judgement);
                     if (gameplayHitObject.Info.IsLongNote)
                     {
                         manager.ChangePoolObjectStatusToHeld(gameplayHitObject);
@@ -266,7 +247,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             var hitDifference = (int)(manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - manager.CurrentAudioPosition);
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release, ReplayInputManager == null);
+
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release,
+                ReplayInputManager == null);
 
             // Update animations
             playfield.Stage.HitLightingObjects[lane].StopHolding();
@@ -274,6 +257,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Dequeue from pool
             gameplayHitObject = manager.HeldLongNoteLanes[lane].Dequeue();
+
+            var view = (GameplayScreenView) Ruleset.Screen.View;
 
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
@@ -292,7 +277,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 ));
 
                 // Update scoreboard
-                ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
+                view.UpdateScoreboardUsers();
+                view.UpdateScoreAndAccuracyDisplays();
 
                 // Update Playfield
                 if (ReplayInputManager == null)
@@ -305,7 +291,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // If the player recieved an early miss or "okay",
                 // show the player that they were inaccurate by killing the object instead of recycling it
                 if (judgement == Judgement.Miss || judgement == Judgement.Okay)
-                    manager.KillHoldPoolObject(gameplayHitObject);
+                    manager.KillHoldPoolObject(gameplayHitObject, judgement == Judgement.Miss);
                 else
                     manager.RecyclePoolObject(gameplayHitObject);
 
@@ -330,10 +316,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             ));
 
             if (ReplayInputManager == null)
-                Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+                Ruleset.ScoreProcessor.CalculateScore(missedJudgement, true);
 
             // Update scoreboard
-            var view = (GameplayScreenView) Ruleset.Screen.View;
             view.UpdateScoreboardUsers();
             view.UpdateScoreAndAccuracyDisplays();
 
@@ -351,41 +336,147 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private void ChangeScrollSpeed()
         {
             // Only allow scroll speed changes if the map hasn't started or if we're on a break
-            if (Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.EligibleToSkip)
+            if (Ruleset.Screen.IsSongSelectPreview || Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.EligibleToSkip && !(Ruleset.Screen is TournamentGameplayScreen) && !Ruleset.Screen.InReplayMode)
                 return;
 
-            // Decrease
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
-            {
-                switch (Ruleset.Screen.Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        ConfigManager.ScrollSpeed4K.Value--;
-                        NotificationManager.Show(NotificationLevel.Success, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
-                        break;
-                    case GameMode.Keys7:
-                        ConfigManager.ScrollSpeed7K.Value--;
-                        NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
-                        break;
-                }
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value) &&
+                !KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                return;
 
-                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
-            }
-            // Increase
-            else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+            var speedIncrease = KeyboardManager.IsCtrlDown() ? 1 : 10;
+            BindableInt scrollSpeed;
+
+            switch (Ruleset.Screen.Map.Mode)
             {
-                switch (Ruleset.Screen.Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        ConfigManager.ScrollSpeed4K.Value++;
-                        NotificationManager.Show(NotificationLevel.Success, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
-                        break;
-                    case GameMode.Keys7:
-                        ConfigManager.ScrollSpeed7K.Value++;
-                        NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
-                        break;
-                }
-                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
+                case GameMode.Keys4:
+                    scrollSpeed = ConfigManager.ScrollSpeed4K;
+                    break;
+                case GameMode.Keys7:
+                    scrollSpeed = ConfigManager.ScrollSpeed7K;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+                scrollSpeed.Value += speedIncrease;
+            else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                scrollSpeed.Value -= speedIncrease;
+
+            NotificationManager.Show(NotificationLevel.Info, $"Scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}");
+            ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
+        }
+
+        /// <summary>
+        ///     Sets input keybinds based on which player is playing
+        /// </summary>
+        /// <param name="mode"></param>
+        private void SetInputKeybinds(GameMode mode)
+        {
+            if (Ruleset.Screen.TournamentOptions == null || Ruleset.Screen.TournamentOptions?.Index == 0)
+                SetPlayer1Keybinds(mode);
+            else if (Ruleset.Screen.TournamentOptions != null)
+                SetPlayer2Keybinds(mode);
+        }
+
+        /// <summary>
+        ///     Sets the keybinds for player 1
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void SetPlayer1Keybinds(GameMode mode)
+        {
+            switch (mode)
+            {
+                case GameMode.Keys4:
+                    // Initialize 4K Input button container.
+                    if (!Ruleset.Screen.Map.HasScratchKey)
+                    {
+                        BindingStore = new List<InputBindingKeys>
+                        {
+                            new InputBindingKeys(ConfigManager.KeyMania4K1),
+                            new InputBindingKeys(ConfigManager.KeyMania4K2),
+                            new InputBindingKeys(ConfigManager.KeyMania4K3),
+                            new InputBindingKeys(ConfigManager.KeyMania4K4)
+                        };
+                    }
+                    else
+                    {
+                        BindingStore = new List<InputBindingKeys>
+                        {
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch1),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch2),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch3),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch4),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch5),
+                        };
+                    }
+                    break;
+                case GameMode.Keys7:
+                    if (!Ruleset.Screen.Map.HasScratchKey)
+                    {
+                        BindingStore = new List<InputBindingKeys>
+                        {
+                            new InputBindingKeys(ConfigManager.KeyMania7K1),
+                            new InputBindingKeys(ConfigManager.KeyMania7K2),
+                            new InputBindingKeys(ConfigManager.KeyMania7K3),
+                            new InputBindingKeys(ConfigManager.KeyMania7K4),
+                            new InputBindingKeys(ConfigManager.KeyMania7K5),
+                            new InputBindingKeys(ConfigManager.KeyMania7K6),
+                            new InputBindingKeys(ConfigManager.KeyMania7K7)
+                        };
+                    }
+                    else
+                    {
+                        BindingStore = new List<InputBindingKeys>()
+                        {
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch1),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch2),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch3),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch4),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch5),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch6),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch7),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch8),
+                        };
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        /// <summary>
+        ///     Sets the keybinds for player 1
+        /// </summary>
+        /// <param name="mode"></param>
+        private void SetPlayer2Keybinds(GameMode mode)
+        {
+            switch (mode)
+            {
+                case GameMode.Keys4:
+                    BindingStore = new List<InputBindingKeys>()
+                    {
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K1),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K2),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K3),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K4),
+                    };
+                    break;
+                case GameMode.Keys7:
+                    BindingStore = new List<InputBindingKeys>()
+                    {
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K1),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K2),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K3),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K4),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K5),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K6),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K7),
+                    };
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
         }
     }

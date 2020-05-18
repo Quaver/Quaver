@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Offset
@@ -18,12 +21,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
         /// </summary>
         public OffsetCalibratorTip()
         {
-            Tint = Color.Black;
+            Tint = ColorHelper.HexToColor("#242424");
             Size = new ScalableVector2(WindowManager.Width, 100);
-            Alpha = 0;
             SetChildrenAlpha = true;
 
-            FadeTo(0.85f, Easing.Linear, 400);
             Animations.Add(new Animation(AnimationProperty.Wait, Easing.Linear, 0, 1, 2000));
 
             // ReSharper disable once ObjectCreationAsStatement
@@ -40,14 +41,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
                 Alignment = Alignment.TopCenter,
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_information_button),
                 Y = 18,
-                Size = new ScalableVector2(24, 24)
+                Size = new ScalableVector2(28, 28)
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            var text = new SpriteTextBitmap(FontsBitmap.AllerRegular, "Play through the map, and at the end, a new global audio offset will be suggested to you.")
+            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                "Play through the map. At the end, a new global audio offset will be suggested to you.", 22)
             {
                 Parent = this,
-                FontSize = 20,
                 Y = Icon.Y + Icon.Height + 15,
                 Alignment = Alignment.TopCenter
             };
@@ -67,11 +68,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
                 text.Visible = false;
                 FadeTo(0, Easing.Linear, 200);
             }, 3500);
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
         }
     }
 }

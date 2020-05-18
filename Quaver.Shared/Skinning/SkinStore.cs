@@ -8,26 +8,41 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
+using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
+using Wobble.Graphics.UI.Form;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Skinning
 {
     public class SkinStore
     {
-         /// <summary>
+        /// <summary>
         ///     The directory of the skin.
         /// </summary>
-        internal static string Dir => $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}/";
+        internal static string Dir
+        {
+            get
+            {
+                if (ConfigManager.UseSteamWorkshopSkin == null)
+                    return "";
+
+                if (!ConfigManager.UseSteamWorkshopSkin.Value)
+                    return $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
+
+                return $"{ConfigManager.SteamWorkshopDirectory.Value}/{ConfigManager.Skin.Value}";
+            }
+        }
 
         /// <summary>
         ///     The skin.ini file.
@@ -217,6 +232,7 @@ namespace Quaver.Shared.Skinning
         internal AudioSample SoundFailure { get; private set; }
         internal AudioSample SoundRetry { get; private set; }
         internal List<AudioSample> SoundComboAlerts { get; private set; }
+        internal List<AudioSample> SoundMenuKeyClick { get; private set; }
 
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
@@ -416,9 +432,6 @@ namespace Quaver.Shared.Skinning
                     case Grade.X:
                         defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-x.png";
                         break;
-                    case Grade.XX:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-xx.png";
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -561,7 +574,7 @@ namespace Quaver.Shared.Skinning
             var skipFolder = $"/Skip/";
             const string skip = "skip";
 
-            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 1, 42);
+            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 0, 0);
         }
 
         /// <summary>
@@ -643,6 +656,65 @@ namespace Quaver.Shared.Skinning
 
             for (var i = 0; i < 100 && File.Exists($"{sfxFolder}/{soundComboAlert}-{i + 1}.wav"); i++)
                 SoundComboAlerts.Add(LoadSoundEffect($"{sfxFolder}/{soundComboAlert}-{i + 1}", soundComboAlert + "-" + i + 1, "Menu"));
+
+            const string soundMenuKeyClick = "sound-menu-keyclick";
+            SoundMenuKeyClick = new List<AudioSample>();
+
+            for (var i = 0; i < 100 && File.Exists($"{sfxFolder}/{soundMenuKeyClick}-{i + 1}.wav"); i++)
+                SoundMenuKeyClick.Add(LoadSoundEffect($"{sfxFolder}/{soundMenuKeyClick}-{i + 1}", soundMenuKeyClick + "-" + i + 1, "Menu"));
+            Textbox.KeyClickSamples = SoundMenuKeyClick;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (var p in GetType().GetProperties())
+            {
+                if (p.PropertyType == typeof(Texture2D))
+                {
+                    var tex = (Texture2D) p.GetValue(this);
+
+                    if (!tex.IsDisposed)
+                        tex.Dispose();
+                }
+                else if (p.PropertyType == typeof(AudioSample))
+                {
+                    var sample = (AudioSample) p.GetValue(this);
+
+                    if (!sample.IsDisposed)
+                        sample.Dispose();
+                }
+                else if (p.PropertyType == typeof(Texture2D[]))
+                {
+                    var textureList = (Texture2D[]) p.GetValue(this);
+                    textureList.ForEach(x => x.Dispose());
+                }
+                else if (p.PropertyType == typeof(List<Texture2D>))
+                {
+                    var textureList = (List<Texture2D>) p.GetValue(this);
+                    textureList.ForEach(x => x.Dispose());
+                }
+                else if (p.PropertyType == typeof(List<AudioSample>))
+                {
+                    var textureList = (List<AudioSample>) p.GetValue(this);
+                    textureList.ForEach(x => x.Dispose());
+                }
+            }
+
+            foreach (var mode in Keys.Values)
+            {
+                foreach (var p in mode.GetType().GetProperties())
+                {
+                    if (p.PropertyType != typeof(Texture2D))
+                        continue;
+
+                    var tex = (Texture2D) p.GetValue(mode);
+
+                    if (!tex.IsDisposed)
+                        tex.Dispose();
+                }
+            }
         }
     }
 }
