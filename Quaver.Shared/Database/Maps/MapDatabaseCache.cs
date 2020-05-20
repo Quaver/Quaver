@@ -45,7 +45,9 @@ namespace Quaver.Shared.Database.Maps
             "HyuN - Princess Of Winter",
             "Rabbit House - Have A Party Time!",
             "zetoban - Csikos Post",
-            "zetoban - Umami Packed Mountaineering"
+            "zetoban - Umami Packed Mountaineering",
+            "zetoban - Flowering Night",
+            "Plum - Fantasy Collision"
         };
 
         /// <summary>
