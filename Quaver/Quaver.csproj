@@ -9,8 +9,8 @@
     <Title>Quaver</Title>
     <Product>Quaver</Product>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0</FileVersion>
+    <Version>0.0.0</Version>
+    <FileVersion>0.0.0</FileVersion>
     <Configurations>Debug;Release;Visual Tests</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
