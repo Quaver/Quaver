@@ -59,9 +59,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
             : base(map, processor, activeTab, isSubmittingScore, scoreSubmissionStats)
         {
             CreateContentContainer();
-            CreateJudgementWindowPreset();
-            CreateDateAndTime();
             CreatePlayedBy();
+            CreateDateAndTime();
+            CreateJudgementWindowPreset();
             CreateScoreContainer();
             CreateGraphContainer();
         }
@@ -77,13 +77,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
 
         /// <summary>
         /// </summary>
-        private void CreateJudgementWindowPreset() => JudgementWindows = new TextKeyValue("Judgement Preset:", Processor.Value.Windows.Name,
-            22, Color.White)
+        private void CreatePlayedBy() => PlayedBy = new TextKeyValue("Played by", $"{Processor.Value.PlayerName}", 22, Color.White)
         {
             Parent = ContentContainer,
             X = PADDING_X,
-            Key = { Tint =  TextDarkGray },
-            Value = { Tint = ColorHelper.HexToColor("#FFE76B")}
+            Key = { Tint = TextDarkGray },
+            Value = { Tint = ColorHelper.HexToColor("#00D1FF") }
         };
 
         /// <summary>
@@ -96,20 +95,20 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
                 $"on {Processor.Value.Date.ToShortDateString()} @ {time}", 22)
             {
                 Parent = ContentContainer,
-                Alignment = Alignment.TopRight,
+                X = PADDING_X + PlayedBy.Width + 4,
                 Tint = TextDarkGray
             };
         }
 
         /// <summary>
         /// </summary>
-        private void CreatePlayedBy() => PlayedBy = new TextKeyValue("Played by", $"{Processor.Value.PlayerName}", 22, Color.White)
+        private void CreateJudgementWindowPreset() => JudgementWindows = new TextKeyValue("Judgement Preset:", Processor.Value.Windows.Name,
+            22, Color.White)
         {
             Parent = ContentContainer,
             Alignment = Alignment.TopRight,
-            X = -DateAndTime.Width - 4,
-            Key = { Tint =  TextDarkGray },
-            Value = { Tint = ColorHelper.HexToColor("#00D1FF")}
+            Key = { Tint = TextDarkGray },
+            Value = { Tint = ColorHelper.HexToColor("#FFE76B") }
         };
 
         /// <summary>
