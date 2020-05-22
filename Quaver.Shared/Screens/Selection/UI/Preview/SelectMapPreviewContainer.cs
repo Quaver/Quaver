@@ -305,6 +305,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 TestPlayPrompt.Parent = null;
                 LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
                 LoadedGameplayScreen.Destroy();
+
+                SeekBar.Destroy();
             }
 
             RunLoadTask();
@@ -440,8 +442,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(56, Height), 200)
             {
                 Alignment = Alignment.BotRight,
-                Y = -playfield.Container.Y,
-                X =  stageRightWidth + 4,
+                X =  stageRightWidth - 8,
                 Tint = ColorHelper.HexToColor("#181818"),
                 SetChildrenAlpha = true,
             };
@@ -478,7 +479,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             AddScheduledUpdate(() =>
             {
                 oldSeekBar?.Destroy();
-                SeekBar.Parent = playfield.Container;
+                SeekBar.Parent = this;
 
                 if (animate)
                 {
@@ -494,12 +495,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 }
 
                 TestPlayPrompt.X = -SeekBar.Width / 2f + 2;
-
-                if (oldSeekBar != null)
-                {
-                    SeekBar.X = oldSeekBar.X;
-                    SeekBar.Y = oldSeekBar.Y;
-                }
             });
         }
 
