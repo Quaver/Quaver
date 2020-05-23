@@ -784,39 +784,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
                 return (long)(time * TrackRounding);
 
-            // Continue if SV is enabled
-            long curPos = 0;
-
-            // Time starts before the first SV point
             if (index == 0)
-                curPos = (long)(time * Map.InitialScrollVelocity * TrackRounding);
-
-            // Time starts after the first SV point and before the last SV point
-            else if (index < VelocityPositionMarkers.Count)
             {
-                // Reference the correct ScrollVelocities index by subracting 1
-                index--;
-
-                // Get position
-                curPos = VelocityPositionMarkers[index];
-                curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
+                // Time starts before the first SV point
+                return (long) (time * Map.InitialScrollVelocity * TrackRounding);
             }
 
-            // Time starts after the last SV point
-            else
-            {
-                // Throw exception if index exceeds list size for some reason
-                if (index > VelocityPositionMarkers.Count)
-                    throw new Exception("index exceeds Velocity Position Marker List Size");
+            index--;
 
-                // Reference the correct ScrollVelocities index by subracting 1
-                index--;
-
-                // Get position
-                curPos = VelocityPositionMarkers[index];
-                curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
-            }
-
+            var curPos = VelocityPositionMarkers[index];
+            curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
             return curPos;
         }
 
