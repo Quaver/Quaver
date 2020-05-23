@@ -745,30 +745,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <returns></returns>
         public long GetPositionFromTime(double time)
         {
-            long curPos = 0;
-
-            if (Map.SliderVelocities.Count == 0 || time < Map.SliderVelocities[0].StartTime)
+            int i;
+            for (i = 0; i < Map.SliderVelocities.Count; i++)
             {
-                curPos = GetPositionFromTime(time, 0);
-            }
-            else if (time >= Map.SliderVelocities[Map.SliderVelocities.Count - 1].StartTime)
-            {
-                curPos = GetPositionFromTime(time, Map.SliderVelocities.Count);
-            }
-            else
-            {
-                // Get index
-                for (var i = 0; i < Map.SliderVelocities.Count; i++)
-                {
-                    if (time < Map.SliderVelocities[i].StartTime)
-                    {
-                        curPos = GetPositionFromTime(time, i);
-                        break;
-                    }
-                }
+                if (time < Map.SliderVelocities[i].StartTime)
+                    break;
             }
 
-            return curPos;
+            return GetPositionFromTime(time, i);
         }
 
         /// <summary>
