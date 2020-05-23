@@ -382,7 +382,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // When LN end is not drawn, the LNs don't change their size as they are held.
             // So we only need to update if DrawLongNoteEnd is true.
-            if (SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
+            // The IsLongNote check is because UpdateLongNoteSize uses a property that is only initialized for LNs.
+            if (Info.IsLongNote && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
                 UpdateLongNoteSize(offset, curTime);
 
             UpdateSpritePositions(offset, curTime);
