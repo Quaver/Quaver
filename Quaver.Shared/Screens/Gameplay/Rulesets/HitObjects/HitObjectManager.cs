@@ -22,10 +22,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
     public abstract class HitObjectManager
     {
         /// <summary>
-        ///     The number of objects left in the map
-        ///     (Has to be implemented per game mode because pooling may be different.)
+        ///     If the map is complete and the results screen should show.
         /// </summary>
-        public abstract int ObjectsLeft { get; }
+        public abstract bool IsComplete { get; }
 
         /// <summary>
         ///     The next object in the pool. Used for skipping.
@@ -36,11 +35,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         ///     Used to determine if the player is currently on a break in the song.
         /// </summary>
         public abstract bool OnBreak { get; }
-
-        /// <summary>
-        ///     If there are no more objects and the map is complete.
-        /// </summary>
-        public bool IsComplete => ObjectsLeft == 0;
 
         /// <summary>
         ///     The list of possible beat snaps.
