@@ -265,6 +265,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 UpdateLongNoteSize(InitialTrackPosition);
                 InitialLongNoteSize = CurrentLongNoteSize;
                 var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
+                if (HitObjectManager.IsSVNegative(info.EndTime))
+                    // LN ends on negative SV => end should be flipped (since it's going upside down).
+                    flipNoteEnd = !flipNoteEnd;
+
                 LongNoteEndSprite.SpriteEffect = flipNoteEnd ? SpriteEffects.FlipVertically : SpriteEffects.None;
             }
 
