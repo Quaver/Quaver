@@ -143,6 +143,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public double CurrentAudioPosition { get; private set; }
 
         /// <summary>
+        ///     Current audio position with song, user and visual offset values applied.
+        /// </summary>
+        public double CurrentVisualPosition { get; private set; }
+
+        /// <summary>
         ///     A mapping from hit objects to the associated hit stats from a replay.
         ///
         ///     Set to null when not applicable (e.g. outside of a replay).
@@ -789,13 +794,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Use necessary visual offset
             CurrentAudioPosition = Ruleset.Screen.Timing.Time + ConfigManager.GlobalAudioOffset.Value * AudioEngine.Track.Rate - MapManager.Selected.Value.LocalOffset;
+            CurrentVisualPosition = CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate;
 
             // Update SV index if necessary. Afterwards update Position.
-            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate >= Map.SliderVelocities[CurrentSvIndex].StartTime)
+            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentVisualPosition >= Map.SliderVelocities[CurrentSvIndex].StartTime)
             {
                 CurrentSvIndex++;
             }
-            CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate, CurrentSvIndex);
+            CurrentTrackPosition = GetPositionFromTime(CurrentVisualPosition, CurrentSvIndex);
         }
 
         /// <summary>
