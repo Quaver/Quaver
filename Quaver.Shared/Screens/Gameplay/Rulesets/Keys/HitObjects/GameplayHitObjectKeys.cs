@@ -45,6 +45,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public long InitialTrackPosition { get; set; }
 
         /// <summary>
+        ///     Position of the LN end sprite.
+        /// </summary>
+        public long EndTrackPosition { get; set; }
+
+        /// <summary>
         ///     Latest position of this object.
         /// </summary>
         public long LatestTrackPosition { get; private set; }
@@ -264,6 +269,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LatestTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 UpdateLongNoteSize(InitialTrackPosition);
                 InitialLongNoteSize = CurrentLongNoteSize;
+                EndTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
                 if (HitObjectManager.IsSVNegative(info.EndTime))
                     // LN ends on negative SV => end should be flipped (since it's going upside down).
@@ -403,15 +409,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteBodySprite.Height = CurrentLongNoteSize;
 
             if (ScrollDirection.Equals(ScrollDirection.Down))
-            {
                 LongNoteBodySprite.Y = spritePosition + LongNoteBodyOffset - CurrentLongNoteSize;
-                LongNoteEndSprite.Y = spritePosition + LongNoteBodyOffset - CurrentLongNoteSize - LongNoteEndOffset;
-            }
             else
-            {
                 LongNoteBodySprite.Y = spritePosition + LongNoteBodyOffset;
-                LongNoteEndSprite.Y = spritePosition + LongNoteBodyOffset + CurrentLongNoteSize - LongNoteEndOffset;
-            }
+
+            LongNoteEndSprite.Y = GetSpritePosition(offset, EndTrackPosition);
         }
 
         /// <summary>
