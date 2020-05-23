@@ -787,6 +787,40 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
+        ///     Returns true if the playfield is going backwards at the given time.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public bool IsSVNegative(double time)
+        {
+            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+                return false;
+
+            // Find the SV index at time.
+            int i;
+            for (i = 0; i < Map.SliderVelocities.Count; i++)
+            {
+                if (time < Map.SliderVelocities[i].StartTime)
+                    break;
+            }
+
+            i--;
+
+            // Find index of the last non-zero SV.
+            for (; i >= 0; i--)
+            {
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (Map.SliderVelocities[i].Multiplier != 0)
+                    break;
+            }
+
+            if (i == -1)
+                return Map.InitialScrollVelocity < 0;
+
+            return Map.SliderVelocities[i].Multiplier < 0;
+        }
+
+        /// <summary>
         ///     Update Current position of the hit objects
         /// </summary>
         /// <param name="audioTime"></param>
