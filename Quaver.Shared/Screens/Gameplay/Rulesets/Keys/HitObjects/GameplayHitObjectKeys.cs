@@ -45,9 +45,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public long InitialTrackPosition { get; set; }
 
         /// <summary>
-        ///     The long note Y offset from the receptor.
+        ///     Latest position of this object.
         /// </summary>
-        public long InitialLongNoteTrackPosition { get; private set; }
+        public long LatestTrackPosition { get; private set; }
 
         /// <summary>
         ///     The initial size of this object's long note.
@@ -253,7 +253,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 LongNoteEndSprite.Visible = false;
                 LongNoteBodySprite.Visible = false;
-                InitialLongNoteTrackPosition = InitialTrackPosition;
+                LatestTrackPosition = InitialTrackPosition;
             }
             else
             {
@@ -261,7 +261,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Tint = tint;
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
-                InitialLongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
+                LatestTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 UpdateLongNoteSize(InitialTrackPosition);
                 InitialLongNoteSize = CurrentLongNoteSize;
                 var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
@@ -332,7 +332,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Updates LN size
         /// </summary>
         /// <param name="offset"></param>
-        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (InitialLongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
+        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (LatestTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
 
         /// <summary>
         ///     Will forcibly update LN on scroll speed change or specific modifier.

@@ -617,7 +617,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in DeadNoteLanes)
             {
                 while (lane.Count > 0 &&
-                    (CurrentTrackPosition - lane.Peek().InitialLongNoteTrackPosition > RecycleObjectPosition))
+                    (CurrentTrackPosition - lane.Peek().LatestTrackPosition > RecycleObjectPosition))
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
