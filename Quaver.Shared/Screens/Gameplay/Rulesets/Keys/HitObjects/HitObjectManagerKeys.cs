@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -784,6 +785,57 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var curPos = VelocityPositionMarkers[index];
             curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
             return curPos;
+        }
+
+        /// <summary>
+        ///     Get SV direction changes between startTime and endTime.
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public List<SVDirectionChange> GetSVDirectionChanges(double startTime, double endTime)
+        {
+            var changes = new List<SVDirectionChange>();
+
+            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+                return changes;
+
+            // Find the first SV index.
+            int i;
+            for (i = 0; i < Map.SliderVelocities.Count; i++)
+            {
+                if (startTime < Map.SliderVelocities[i].StartTime)
+                    break;
+            }
+
+            bool forward;
+            if (i == 0)
+                forward = Map.InitialScrollVelocity >= 0;
+            else
+                forward = Map.SliderVelocities[i - 1].Multiplier >= 0;
+
+            // Loop over SV changes between startTime and endTime.
+            for (; i < Map.SliderVelocities.Count && endTime >= Map.SliderVelocities[i].StartTime; i++)
+            {
+                var multiplier = Map.SliderVelocities[i].Multiplier;
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (multiplier == 0)
+                    // Zero speed means we're staying in the same spot.
+                    continue;
+
+                if (forward == (multiplier > 0))
+                    // The direction hasn't changed.
+                    continue;
+
+                forward = multiplier > 0;
+                changes.Add(new SVDirectionChange
+                {
+                    StartTime = Map.SliderVelocities[i].StartTime,
+                    Position = VelocityPositionMarkers[i]
+                });
+            }
+
+            return changes;
         }
 
         /// <summary>
