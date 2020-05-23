@@ -711,7 +711,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void KillHoldPoolObject(GameplayHitObjectKeys gameplayHitObject, bool setTint = true)
         {
             // Change start time and LN size.
-            gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentAudioPosition);
+            gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentVisualPosition);
             gameplayHitObject.CurrentlyBeingHeld = false;
             gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.InitialTrackPosition);
 
