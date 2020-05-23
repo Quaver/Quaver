@@ -50,11 +50,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public long InitialLongNoteTrackPosition { get; private set; }
 
         /// <summary>
-        ///     The Y position of the HitObject Sprites.
-        /// </summary>
-        private float SpritePosition { get; set; }
-
-        /// <summary>
         ///     The initial size of this object's long note.
         /// </summary>
         public float InitialLongNoteSize { get; set; }
@@ -359,26 +354,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             //
             // If the LN end is not drawn, don't move the LN start up with time since it ends up sliding above the LN in
             // the end.
+            float spritePosition;
             if (CurrentlyBeingHeld && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
                 if (offset > InitialTrackPosition)
                 {
                     UpdateLongNoteSize(offset);
-                    SpritePosition = HitPosition;
+                    spritePosition = HitPosition;
                 }
                 else
                 {
                     CurrentLongNoteSize = InitialLongNoteSize;
                 }
-                    SpritePosition = GetSpritePosition(offset, InitialTrackPosition);
+                    spritePosition = GetSpritePosition(offset, InitialTrackPosition);
             }
             else
             {
-                SpritePosition = GetSpritePosition(offset, InitialTrackPosition);
+                spritePosition = GetSpritePosition(offset, InitialTrackPosition);
             }
 
             // Update HitBody
-            HitObjectSprite.Y = SpritePosition;
+            HitObjectSprite.Y = spritePosition;
 
             PressHit.UpdateSpritePositions(offset);
             ReleaseHit.UpdateSpritePositions(offset);
@@ -404,13 +400,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             if (ScrollDirection.Equals(ScrollDirection.Down))
             {
-                LongNoteBodySprite.Y = SpritePosition + LongNoteBodyOffset - CurrentLongNoteSize;
-                LongNoteEndSprite.Y = SpritePosition + LongNoteBodyOffset - CurrentLongNoteSize - LongNoteEndOffset;
+                LongNoteBodySprite.Y = spritePosition + LongNoteBodyOffset - CurrentLongNoteSize;
+                LongNoteEndSprite.Y = spritePosition + LongNoteBodyOffset - CurrentLongNoteSize - LongNoteEndOffset;
             }
             else
             {
-                LongNoteBodySprite.Y = SpritePosition + LongNoteBodyOffset;
-                LongNoteEndSprite.Y = SpritePosition + LongNoteBodyOffset + CurrentLongNoteSize - LongNoteEndOffset;
+                LongNoteBodySprite.Y = spritePosition + LongNoteBodyOffset;
+                LongNoteEndSprite.Y = spritePosition + LongNoteBodyOffset + CurrentLongNoteSize - LongNoteEndOffset;
             }
         }
 
