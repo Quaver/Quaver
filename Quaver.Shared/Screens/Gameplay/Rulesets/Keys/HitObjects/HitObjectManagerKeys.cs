@@ -468,7 +468,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in ActiveNoteLanes)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
             }
         }
 
@@ -546,7 +546,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in HeldLongNoteLanes)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
             }
         }
 
@@ -628,7 +628,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 foreach (var hitObject in lane)
                 {
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
                 }
             }
         }
@@ -645,11 +645,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             for (var i = 0; i < ActiveNoteLanes.Count; i++)
             {
                 foreach (var hitObject in ActiveNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
                 foreach (var hitObject in DeadNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
                 foreach (var hitObject in HeldLongNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
             }
         }
 
@@ -714,7 +714,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Change start time and LN size.
             gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentVisualPosition);
             gameplayHitObject.CurrentlyBeingHeld = false;
-            gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.InitialTrackPosition);
+            gameplayHitObject.UpdateLongNoteSize(CurrentTrackPosition, CurrentVisualPosition);
 
             if (setTint)
                 gameplayHitObject.Kill();

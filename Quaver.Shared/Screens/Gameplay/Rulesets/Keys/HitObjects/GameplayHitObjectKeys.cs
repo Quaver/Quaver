@@ -267,7 +267,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
                 LatestTrackPosition = manager.GetPositionFromTime(Info.EndTime);
-                UpdateLongNoteSize(InitialTrackPosition);
+                UpdateLongNoteSize(InitialTrackPosition, Info.StartTime);
                 InitialLongNoteSize = CurrentLongNoteSize;
                 EndTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
@@ -281,7 +281,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             InitializeHits();
 
             // Update Positions
-            UpdateSpritePositions(manager.CurrentTrackPosition);
+            UpdateSpritePositions(manager.CurrentTrackPosition, manager.CurrentVisualPosition);
         }
 
         /// <summary>
@@ -337,28 +337,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Updates LN size
         /// </summary>
-        /// <param name="offset"></param>
-        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (LatestTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
+        public void UpdateLongNoteSize(long offset, double curTime) => CurrentLongNoteSize = (LatestTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
 
         /// <summary>
         ///     Will forcibly update LN on scroll speed change or specific modifier.
         /// </summary>
-        public void ForceUpdateLongnote(long offset)
+        public void ForceUpdateLongnote(long offset, double curTime)
         {
             // When LN end is not drawn, the LNs don't change their size as they are held.
             if (offset < InitialTrackPosition || !SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
-                UpdateLongNoteSize(InitialTrackPosition);
+                UpdateLongNoteSize(InitialTrackPosition, curTime);
                 InitialLongNoteSize = CurrentLongNoteSize;
             }
 
-            UpdateSpritePositions(offset);
+            UpdateSpritePositions(offset, curTime);
         }
 
         /// <summary>
         ///     Updates the HitObject sprite positions
         /// </summary>
-        public void UpdateSpritePositions(long offset)
+        public void UpdateSpritePositions(long offset, double curTime)
         {
             // Update Sprite position with regards to LN's state
             //
@@ -369,7 +368,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 if (offset > InitialTrackPosition)
                 {
-                    UpdateLongNoteSize(offset);
+                    UpdateLongNoteSize(offset, curTime);
                     spritePosition = HitPosition;
                 }
                 else
