@@ -77,6 +77,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private Qua Map;
 
         /// <summary>
+        ///     Length of the Map.
+        /// </summary>
+        private int MapLength { get; }
+
+        /// <summary>
         ///     Hit Object info used for object pool and gameplay
         ///     Every hit object in the pool is split by the hit object's lane
         /// </summary>
@@ -305,6 +310,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Ruleset = ruleset;
             Map = map.WithNormalizedSVs();
+            MapLength = Map.Length;
 
             // Initialize SV
             UpdatePoolingPositions();
