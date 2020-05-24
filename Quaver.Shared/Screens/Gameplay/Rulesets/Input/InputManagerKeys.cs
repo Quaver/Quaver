@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get judgement and references
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            var hitDifference = (int)(manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - manager.CurrentAudioPosition);
+            var hitDifference = manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - (int)manager.CurrentAudioPosition;
 
             var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release,
                 ReplayInputManager == null);
