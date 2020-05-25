@@ -281,10 +281,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
                 var oldHitpos = skin.HitPosOffsetY;
 
-                if (Ruleset.Screen.IsSongSelectPreview)
-                    skin.HitPosOffsetY = PREVIEW_PLAYFIELD_WIDTH / Ruleset.Map.GetKeyCount();
-                else
-                    skin.HitPosOffsetY *= WindowManager.BaseToVirtualRatio;
+                skin.HitPosOffsetY = LaneSize;
 
                 switch (ScrollDirections[i])
                 {
