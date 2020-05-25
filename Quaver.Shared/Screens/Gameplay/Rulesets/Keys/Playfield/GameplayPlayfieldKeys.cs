@@ -279,9 +279,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 else
                     LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
 
-                var oldHitpos = skin.HitPosOffsetY;
-
-                skin.HitPosOffsetY = LaneSize;
 
                 switch (ScrollDirections[i])
                 {
@@ -303,7 +300,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");
                 }
 
-                skin.HitPosOffsetY = oldHitpos;
             }
         }
 
