@@ -279,6 +279,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 else
                     LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
 
+                skin.HitPosOffsetY *= WindowManager.BaseToVirtualRatio;
 
                 switch (ScrollDirections[i])
                 {
