@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -141,6 +142,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Current audio position with song and user offset values applied.
         /// </summary>
         public double CurrentAudioPosition { get; private set; }
+
+        /// <summary>
+        ///     Current audio position with song, user and visual offset values applied.
+        /// </summary>
+        public double CurrentVisualPosition { get; private set; }
 
         /// <summary>
         ///     A mapping from hit objects to the associated hit stats from a replay.
@@ -462,7 +468,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in ActiveNoteLanes)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
             }
         }
 
@@ -540,7 +546,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in HeldLongNoteLanes)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
             }
         }
 
@@ -611,7 +617,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in DeadNoteLanes)
             {
                 while (lane.Count > 0 &&
-                    (CurrentTrackPosition - lane.Peek().InitialLongNoteTrackPosition > RecycleObjectPosition))
+                    (CurrentTrackPosition - lane.Peek().LatestTrackPosition > RecycleObjectPosition))
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
@@ -622,7 +628,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 foreach (var hitObject in lane)
                 {
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
                 }
             }
         }
@@ -639,11 +645,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             for (var i = 0; i < ActiveNoteLanes.Count; i++)
             {
                 foreach (var hitObject in ActiveNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
                 foreach (var hitObject in DeadNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
                 foreach (var hitObject in HeldLongNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
             }
         }
 
@@ -706,9 +712,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void KillHoldPoolObject(GameplayHitObjectKeys gameplayHitObject, bool setTint = true)
         {
             // Change start time and LN size.
-            gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentAudioPosition);
+            gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentVisualPosition);
             gameplayHitObject.CurrentlyBeingHeld = false;
-            gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.InitialTrackPosition);
+            gameplayHitObject.UpdateLongNoteSize(CurrentTrackPosition, CurrentVisualPosition);
 
             if (setTint)
                 gameplayHitObject.Kill();
@@ -745,30 +751,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <returns></returns>
         public long GetPositionFromTime(double time)
         {
-            long curPos = 0;
-
-            if (Map.SliderVelocities.Count == 0 || time < Map.SliderVelocities[0].StartTime)
+            int i;
+            for (i = 0; i < Map.SliderVelocities.Count; i++)
             {
-                curPos = GetPositionFromTime(time, 0);
-            }
-            else if (time >= Map.SliderVelocities[Map.SliderVelocities.Count - 1].StartTime)
-            {
-                curPos = GetPositionFromTime(time, Map.SliderVelocities.Count);
-            }
-            else
-            {
-                // Get index
-                for (var i = 0; i < Map.SliderVelocities.Count; i++)
-                {
-                    if (time < Map.SliderVelocities[i].StartTime)
-                    {
-                        curPos = GetPositionFromTime(time, i);
-                        break;
-                    }
-                }
+                if (time < Map.SliderVelocities[i].StartTime)
+                    break;
             }
 
-            return curPos;
+            return GetPositionFromTime(time, i);
         }
 
         /// <summary>
@@ -784,40 +774,102 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
                 return (long)(time * TrackRounding);
 
-            // Continue if SV is enabled
-            long curPos = 0;
-
-            // Time starts before the first SV point
             if (index == 0)
-                curPos = (long)(time * Map.InitialScrollVelocity * TrackRounding);
-
-            // Time starts after the first SV point and before the last SV point
-            else if (index < VelocityPositionMarkers.Count)
             {
-                // Reference the correct ScrollVelocities index by subracting 1
-                index--;
-
-                // Get position
-                curPos = VelocityPositionMarkers[index];
-                curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
+                // Time starts before the first SV point
+                return (long) (time * Map.InitialScrollVelocity * TrackRounding);
             }
 
-            // Time starts after the last SV point
-            else
-            {
-                // Throw exception if index exceeds list size for some reason
-                if (index > VelocityPositionMarkers.Count)
-                    throw new Exception("index exceeds Velocity Position Marker List Size");
+            index--;
 
-                // Reference the correct ScrollVelocities index by subracting 1
-                index--;
-
-                // Get position
-                curPos = VelocityPositionMarkers[index];
-                curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
-            }
-
+            var curPos = VelocityPositionMarkers[index];
+            curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
             return curPos;
+        }
+
+        /// <summary>
+        ///     Get SV direction changes between startTime and endTime.
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public List<SVDirectionChange> GetSVDirectionChanges(double startTime, double endTime)
+        {
+            var changes = new List<SVDirectionChange>();
+
+            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+                return changes;
+
+            // Find the first SV index.
+            int i;
+            for (i = 0; i < Map.SliderVelocities.Count; i++)
+            {
+                if (startTime < Map.SliderVelocities[i].StartTime)
+                    break;
+            }
+
+            bool forward;
+            if (i == 0)
+                forward = Map.InitialScrollVelocity >= 0;
+            else
+                forward = Map.SliderVelocities[i - 1].Multiplier >= 0;
+
+            // Loop over SV changes between startTime and endTime.
+            for (; i < Map.SliderVelocities.Count && endTime >= Map.SliderVelocities[i].StartTime; i++)
+            {
+                var multiplier = Map.SliderVelocities[i].Multiplier;
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (multiplier == 0)
+                    // Zero speed means we're staying in the same spot.
+                    continue;
+
+                if (forward == (multiplier > 0))
+                    // The direction hasn't changed.
+                    continue;
+
+                forward = multiplier > 0;
+                changes.Add(new SVDirectionChange
+                {
+                    StartTime = Map.SliderVelocities[i].StartTime,
+                    Position = VelocityPositionMarkers[i]
+                });
+            }
+
+            return changes;
+        }
+
+        /// <summary>
+        ///     Returns true if the playfield is going backwards at the given time.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public bool IsSVNegative(double time)
+        {
+            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+                return false;
+
+            // Find the SV index at time.
+            int i;
+            for (i = 0; i < Map.SliderVelocities.Count; i++)
+            {
+                if (time < Map.SliderVelocities[i].StartTime)
+                    break;
+            }
+
+            i--;
+
+            // Find index of the last non-zero SV.
+            for (; i >= 0; i--)
+            {
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (Map.SliderVelocities[i].Multiplier != 0)
+                    break;
+            }
+
+            if (i == -1)
+                return Map.InitialScrollVelocity < 0;
+
+            return Map.SliderVelocities[i].Multiplier < 0;
         }
 
         /// <summary>
@@ -828,13 +880,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Use necessary visual offset
             CurrentAudioPosition = Ruleset.Screen.Timing.Time + ConfigManager.GlobalAudioOffset.Value * AudioEngine.Track.Rate - MapManager.Selected.Value.LocalOffset;
+            CurrentVisualPosition = CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate;
 
             // Update SV index if necessary. Afterwards update Position.
-            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate >= Map.SliderVelocities[CurrentSvIndex].StartTime)
+            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentVisualPosition >= Map.SliderVelocities[CurrentSvIndex].StartTime)
             {
                 CurrentSvIndex++;
             }
-            CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate, CurrentSvIndex);
+            CurrentTrackPosition = GetPositionFromTime(CurrentVisualPosition, CurrentSvIndex);
         }
 
         /// <summary>
