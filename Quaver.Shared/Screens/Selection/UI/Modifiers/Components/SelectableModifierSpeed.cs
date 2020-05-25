@@ -14,6 +14,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 {
@@ -81,7 +82,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             var game = GameBase.Game as QuaverGame;
             var depth = game?.CurrentScreen?.Type == QuaverScreenType.Editor ? -1 : 0;
 
-            RateChanger = new HorizontalSelector(GetSpeeds(), new ScalableVector2(100, 32), Fonts.Exo2SemiBold, 16,
+            RateChanger = new HorizontalSelector(GetSpeeds(), new ScalableVector2(100, 32),
+                FontManager.GetWobbleFont(Fonts.LatoBlack), 22,
                 FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron), new ScalableVector2(20, 20), 0, OnSelected, GetSelectedIndex())
             {

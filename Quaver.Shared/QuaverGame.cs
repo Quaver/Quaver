@@ -296,7 +296,7 @@ namespace Quaver.Shared
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            Fonts.LoadGdiFonts();
+            //Fonts.LoadGdiFonts();
             Fonts.LoadWobbleFonts();
 
             BackgroundHelper.Initialize();
