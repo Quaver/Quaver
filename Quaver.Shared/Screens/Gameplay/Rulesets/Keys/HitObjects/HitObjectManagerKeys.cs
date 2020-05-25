@@ -77,6 +77,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private Qua Map;
 
         /// <summary>
+        ///     Length of the Map.
+        /// </summary>
+        private int MapLength { get; }
+
+        /// <summary>
         ///     Hit Object info used for object pool and gameplay
         ///     Every hit object in the pool is split by the hit object's lane
         /// </summary>
@@ -214,15 +219,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override int ObjectsLeft
+        public override bool IsComplete
         {
             get
             {
-                var total = 0;
-                ActiveNoteLanes.ForEach(x => total += x.Count);
-                HeldLongNoteLanes.ForEach(x => total += x.Count);
-                DeadNoteLanes.ForEach(x => total += x.Count);
-                return total;
+                // If there are objects to hit, we're not done.
+                if (ActiveNoteLanes.Any(lane => lane.Any()))
+                    return false;
+
+                // If there are held LNs, we're not done.
+                if (HeldLongNoteLanes.Any(lane => lane.Any()))
+                    return false;
+
+                // If there are dead LNs, we're done when we're past the map length.
+                if (DeadNoteLanes.Any(lane => lane.Any()))
+                    // If this is "return false;" then the game never ends if the map ends with an LN and a 0× SV
+                    // and the LN is missed. This is because it never leaves DeadNoteLanes since the playfield doesn't
+                    // move.
+                    return CurrentVisualPosition > MapLength;
+
+                // If there are no objects left, we're done.
+                return true;
             }
         }
 
@@ -305,6 +322,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Ruleset = ruleset;
             Map = map.WithNormalizedSVs();
+            MapLength = Map.Length;
 
             // Initialize SV
             UpdatePoolingPositions();
