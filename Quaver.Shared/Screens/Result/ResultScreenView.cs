@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Result
             // If we've already got the background loaded up, then use it.
             if (BackgroundHelper.Map != null && MapManager.GetBackgroundPath(BackgroundHelper.Map) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
             {
-                BackgroundHelper.Background.Image = BackgroundHelper.BlurredTexture;
+                BackgroundHelper.Background.Image = BackgroundHelper.RawTexture;
                 BackgroundHelper.FadeIn(0.5f);
                 return;
             }

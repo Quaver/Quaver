@@ -18,6 +18,7 @@ using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Select.UI.Modifiers
 {
@@ -66,7 +67,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <param name="dialog"></param>
         public DrawableModifierSpeed(ModifiersDialog dialog) : base(dialog, new ModSpeed(ModIdentifier.Speed05X))
         {
-            RateChanger = new HorizontalSelector(Speeds, new ScalableVector2(200, 32), Fonts.Exo2SemiBold, 13,
+            RateChanger = new HorizontalSelector(Speeds, new ScalableVector2(200, 32), FontManager.GetWobbleFont(Fonts.LatoBlack), 13,
                 UserInterface.HorizontalSelectorLeft,
                 UserInterface.HorizontalSelectorRight, new ScalableVector2(32, 32), 0, OnSelected, GetSelectedIndex())
             {

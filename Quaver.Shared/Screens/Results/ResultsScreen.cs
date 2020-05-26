@@ -804,20 +804,29 @@ namespace Quaver.Shared.Screens.Results
 
             var submissionMd5 = screen.MapHash;
 
-            // For non-Quaver maps, get the .qua md5 checksum of the map.
-            if (Map.Game != MapGame.Quaver)
-                submissionMd5 = Map.GetAlternativeMd5();
-
-            // For any unsubmitted maps, ask the server if it has the .qua already cached
-            // if it doesn't, then we need to provide it.
-            if (Map.RankedStatus == RankedStatus.NotSubmitted && OnlineManager.IsDonator)
+            // For un-submitted maps, ask the server if it knows about the MD5. If it doesn't and the map is non-Quaver,
+            // try the converted .qua MD5, too. If that fails and the user is a donator, upload the map.
+            if (Map.RankedStatus == RankedStatus.NotSubmitted)
             {
                 var info = OnlineManager.Client?.RetrieveMapInfo(submissionMd5);
 
-                // Map is not uploaded, so we have to provide the server with it.
+                // For non-Quaver maps, try the .qua MD5 (and use that for upload).
+                if (info == null && Map.Game != MapGame.Quaver)
+                {
+                    submissionMd5 = Map.GetAlternativeMd5();
+                    Logger.Important($"Unsubmitted map not found by original MD5. Trying .qua MD5: {submissionMd5}...", LogType.Network);
+                    info = OnlineManager.Client?.RetrieveMapInfo(submissionMd5);
+                }
+
                 if (info == null)
                 {
-                    Logger.Important($"Unsubmitted map is not cached on the server. Need to provide!", LogType.Network);
+                    Logger.Important($"Unsubmitted map was not found on the server.", LogType.Network);
+
+                    if (!OnlineManager.IsDonator)
+                        // Non-donators can't upload maps.
+                        return false;
+
+                    // Map is not uploaded, so we have to provide the server with it.
                     var success = OnlineManager.Client?.UploadUnsubmittedMap(Map.LoadQua(), submissionMd5, Map.Md5Checksum);
 
                     // The map upload wasn't successful, so we can assume that our score shouldn't be submitted

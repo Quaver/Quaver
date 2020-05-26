@@ -45,19 +45,9 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static Texture2D RawTexture { get; private set; }
 
         /// <summary>
-        ///     A cached version of the blurred texture
-        /// </summary>
-        public static Texture2D BlurredTexture { get; private set; }
-
-        /// <summary>
         ///     The individual map this background is for.
         /// </summary>
         public static Map Map { get; private set; }
-
-        /// <summary>
-        ///     Dictates if we have a cached blurred texture of the current background
-        /// </summary>
-        private static bool ShouldBlur { get; set; }
 
         /// <summary>
         ///     Cancellation token to stop the existing background load tasks
@@ -126,27 +116,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         ///     Set per screen.
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void Draw(GameTime gameTime)
-        {
-            if (ShouldBlur)
-            {
-                try
-                {
-                    GameBase.Game.SpriteBatch.End();
-                }
-                catch (Exception e)
-                {
-                    // ignored
-                }
-
-                var blur = new GaussianBlur(0.3f);
-                BlurredTexture = blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(RawTexture)));
-                ShouldBlur = false;
-                Blurred?.Invoke(typeof(BackgroundHelper), new BackgroundBlurredEventArgs(Map, BlurredTexture));
-            }
-
-            Background?.Draw(gameTime);
-        }
+        public static void Draw(GameTime gameTime) => Background?.Draw(gameTime);
 
         /// <summary>
         ///     Queues a load of the background for a map
@@ -165,7 +135,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 token.ThrowIfCancellationRequested();
 
                 var oldRawTexture = RawTexture;
-                var oldBlurredTexture = BlurredTexture;
 
                 var path = MapManager.GetBackgroundPath(map);
 
@@ -179,7 +148,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
                         if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
                         {
                             oldRawTexture?.Dispose();
-                            oldBlurredTexture?.Dispose();
                         }
                     }
                 }, 500);
@@ -187,7 +155,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 token.ThrowIfCancellationRequested();
 
                 await Task.Delay(100, token);
-                ShouldBlur = true;
                 Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
             }
             catch (OperationCanceledException e)

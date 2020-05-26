@@ -12,6 +12,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
 {
@@ -35,7 +36,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
             : base(parent, name, elements[selectedIndex], saveValue)
         {
             Selector = new HorizontalSelector(elements, new ScalableVector2(196, 26),
-                Fonts.SourceSansProSemiBold, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
+                FontManager.GetWobbleFont(Fonts.LatoBlack), 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron),
                 new ScalableVector2(18, 18), 5, onChange, selectedIndex)
             {
