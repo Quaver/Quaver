@@ -270,11 +270,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableKeysounds { get; private set; }
 
         /// <summary>
-        ///     If enabled, the user's background will be blurred in gameplay.
-        /// </summary>
-        internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
-
-        /// <summary>
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
@@ -854,7 +849,6 @@ namespace Quaver.Shared.Config
             KeyScoreboardVisible = ReadValue(@"KeyScoreboardVisible", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
-            BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
@@ -1009,7 +1003,6 @@ namespace Quaver.Shared.Config
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
-                    BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
                     DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
                     EditorScrollSpeedKeys.ValueChanged += AutoSaveConfiguration;

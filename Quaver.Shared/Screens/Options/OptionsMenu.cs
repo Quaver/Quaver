@@ -184,7 +184,6 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
                        new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),
-                       new OptionsItemCheckbox(containerRect, "Enable Background Blur", ConfigManager.BlurBackgroundInGameplay)
                     }),
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
