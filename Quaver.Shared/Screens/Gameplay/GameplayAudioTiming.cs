@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public static int StartDelay { get; } = 3000;
 
         /// <summary>
-        ///     Used to calculate when to sync Time.
+        ///     Used to determine when to sync Time when UseFrameTime is on.
         /// </summary>
         public double OldTime = 0;
 
@@ -125,7 +125,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
             }
 
-            // Use frame time if the option is enabled
+            // Use frame time if the option is enabled.
             if (ConfigManager.UseFrameTime.Value)
             {
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
@@ -139,7 +139,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
 
             }
-            // Otherwise use AudioEngine time
+            // Otherwise use AudioEngine time.
             else
             {
                 // If the audio track is playing, use that time.
