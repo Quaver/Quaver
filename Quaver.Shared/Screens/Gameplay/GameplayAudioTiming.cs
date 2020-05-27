@@ -40,12 +40,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Used to determine when to sync Time when UseFrameTime is on.
         /// </summary>
-        public double OldTime = 0;
-
-        /// <summary>
-        ///     The threshold of milliseconds that Time cannot exceed the audio time when UseFrameTime is on.
-        /// </summary>
-        private const int THRESHOLD = 16;
+        private double PreviousTime { get; set; }
 
         /// <summary>
         ///     Ctor
@@ -133,21 +128,31 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ConfigManager.SmoothAudioTimingGameplay.Value && !Screen.IsSongSelectPreview)
             {
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
-                var checkTime = AudioEngine.Track.Time - OldTime;
+                var checkTime = AudioEngine.Track.Time - PreviousTime;
 
-                // If Time falls behind or goes too far ahead of the audio track or more than a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
-                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + THRESHOLD * AudioEngine.Track.Rate || checkTime >= 1000 || checkTime <= -1000 || OldTime == 0 || Screen.Failed))
-                {
-                    Time = AudioEngine.Track.Time;
-                    OldTime = AudioEngine.Track.Time;
-                }
+                if (!AudioEngine.Track.IsPlaying)
+                    return;
+
+                // Time falls behind or goes too far ahead of the track
+                const int threshold = 16;
+                var timeOutOfThreshold = Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + threshold * AudioEngine.Track.Rate;
+
+                // More than a second passes without resyncing
+                const int routineSyncTime = 1000;
+                var needsRoutineSync = checkTime >= routineSyncTime || checkTime <= -routineSyncTime;
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (!timeOutOfThreshold && !needsRoutineSync && !Screen.Failed && PreviousTime != 0)
+                    return;
+
+                Time = AudioEngine.Track.Time;
+                PreviousTime = AudioEngine.Track.Time;
             }
             else
             {
                 // If the audio track is playing, use that time.
                 if (AudioEngine.Track.IsPlaying)
                     Time = AudioEngine.Track.Time;
-
                 // Otherwise use deltatime to calculate the proposed time.
                 else
                     Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
