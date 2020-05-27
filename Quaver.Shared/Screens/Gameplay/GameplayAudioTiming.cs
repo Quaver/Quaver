@@ -117,7 +117,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     Screen.HasStarted = true;
                     AudioEngine.Track?.Play();
-                    Time = AudioEngine.Track.Time;
                 }
                 catch (Exception e)
                 {
@@ -132,7 +131,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 var CheckTime = AudioEngine.Track.Time - OldTime;
 
                 // If Time falls behind the audio track or more than a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
-                if (Time < AudioEngine.Track.Time || CheckTime >= 1000 || CheckTime <= -1000 || Screen.Failed)
+                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || CheckTime >= 1000 || CheckTime <= -1000 || OldTime == 0 || Screen.Failed))
                 {
                     Time = AudioEngine.Track.Time;
                     OldTime = AudioEngine.Track.Time;
