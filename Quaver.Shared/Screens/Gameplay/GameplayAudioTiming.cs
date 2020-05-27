@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // Use frame time if the option is enabled.
-            if (ConfigManager.UseFrameTime.Value)
+            if (ConfigManager.SmoothAudioTimingGameplay.Value)
             {
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
                 var CheckTime = AudioEngine.Track.Time - OldTime;

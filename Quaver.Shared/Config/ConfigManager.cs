@@ -161,7 +161,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Whether to use frame time or audio time for notes.
         /// </summary>
-        internal static Bindable<bool> UseFrameTime { get; private set; }
+        internal static Bindable<bool> SmoothAudioTimingGameplay { get; private set; }
 
         /// <summary>
         ///     Determines if we should show the song time progress display in the
@@ -780,7 +780,7 @@ namespace Quaver.Shared.Config
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
-            UseFrameTime = ReadValue(@"UseFrameTime", false, data);
+            SmoothAudioTimingGameplay = ReadValue(@"UseFrameTime", false, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
@@ -954,7 +954,7 @@ namespace Quaver.Shared.Config
                     FpsCounter.ValueChanged += AutoSaveConfiguration;
                     FpsLimiterType.ValueChanged += AutoSaveConfiguration;
                     CustomFpsLimit.ValueChanged += AutoSaveConfiguration;
-                    UseFrameTime.ValueChanged += AutoSaveConfiguration;
+                    SmoothAudioTimingGameplay.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;

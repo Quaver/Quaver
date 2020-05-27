@@ -372,7 +372,7 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Experimental", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Use Frame Time Instead Of Audio Time", ConfigManager.UseFrameTime)
+                        new OptionsItemCheckbox(containerRect, "Use Frame Time Instead Of Audio Time", ConfigManager.SmoothAudioTimingGameplay)
                     }),
                 }),
             };
