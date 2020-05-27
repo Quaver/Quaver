@@ -9,6 +9,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble;
@@ -101,7 +102,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted && !isTournanent)
                 return;
 
-            // If they audio hasn't begun yet, start counting down until the beginning of the map.
+            // If the audio hasn't begun yet, start counting down until the beginning of the map.
             // This is to give a delay before the audio starts.
             if (Time < 0)
             {
@@ -124,14 +125,30 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
             }
 
-
-            Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
-
-            // If Time falls behind the audio track and once a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
-            if (Time < AudioEngine.Track.Time || Math.Floor(AudioEngine.Track.Time / 1000) - OldTime >= 1 || Screen.Failed)
+            // Use frame time if the option is enabled
+            if (ConfigManager.UseFrameTime.Value)
             {
-                Time = AudioEngine.Track.Time;
-                OldTime = Math.Floor(AudioEngine.Track.Time / 1000);
+                Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
+                var CheckTime = AudioEngine.Track.Time - OldTime;
+
+                // If Time falls behind the audio track or more than a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
+                if (Time < AudioEngine.Track.Time || CheckTime >= 1000 || CheckTime <= -1000 || Screen.Failed)
+                {
+                    Time = AudioEngine.Track.Time;
+                    OldTime = AudioEngine.Track.Time;
+                }
+
+            }
+            // Otherwise use AudioEngine time
+            else
+            {
+                // If the audio track is playing, use that time.
+                if (AudioEngine.Track.IsPlaying)
+                    Time = AudioEngine.Track.Time;
+
+                // Otherwise use deltatime to calculate the proposed time.
+                else
+                    Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
             }
         }
     }
