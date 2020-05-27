@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 try
                 {
                     Screen.HasStarted = true;
-                    AudioEngine.Track?.Play();
+                    AudioEngine.Track.Play();
                 }
                 catch (Exception e)
                 {
@@ -130,21 +130,18 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // Use frame time if the option is enabled.
-            if (ConfigManager.SmoothAudioTimingGameplay.Value)
+            if (ConfigManager.SmoothAudioTimingGameplay.Value && !Screen.IsSongSelectPreview)
             {
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
-                var CheckTime = AudioEngine.Track.Time - OldTime;
-                
+                var checkTime = AudioEngine.Track.Time - OldTime;
+
                 // If Time falls behind or goes too far ahead of the audio track or more than a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
-                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + THRESHOLD * AudioEngine.Track.Rate || CheckTime >= 1000 || CheckTime <= -1000 || OldTime == 0 || Screen.Failed))
+                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + THRESHOLD * AudioEngine.Track.Rate || checkTime >= 1000 || checkTime <= -1000 || OldTime == 0 || Screen.Failed))
                 {
                     Time = AudioEngine.Track.Time;
                     OldTime = AudioEngine.Track.Time;
                 }
-
             }
-
-            // Otherwise use AudioEngine time.
             else
             {
                 // If the audio track is playing, use that time.
