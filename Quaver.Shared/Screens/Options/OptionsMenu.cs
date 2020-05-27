@@ -166,7 +166,11 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> { "linux" }
                         },
-                    })
+                    }),
+                    new OptionsSubcategory("Experimental", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing In Gameplay", ConfigManager.SmoothAudioTimingGameplay)
+                    }),
                 }),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {
@@ -369,10 +373,6 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
-                    }),
-                    new OptionsSubcategory("Experimental", new List<OptionsItem>()
-                    {
-                        new OptionsItemCheckbox(containerRect, "Use Frame Time Instead Of Audio Time", ConfigManager.SmoothAudioTimingGameplay)
                     }),
                 }),
             };
