@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="name"></param>
         public OptionsItemScreenResolution(RectangleF containerRect, string name) : base(containerRect, name,
             new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex(),
-                0, 592))
+                0, 590))
         {
             Dropdown.ItemContainer.Scrollbar.Tint = Color.White;
             Dropdown.ItemContainer.Scrollbar.Width = 2;
@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             Dropdown.ItemContainer.Scrollbar.Visible = Dropdown.Opened;
             Dropdown.ItemContainer.InputEnabled = Dropdown.Opened;
-            
+
             base.Update(gameTime);
         }
 
