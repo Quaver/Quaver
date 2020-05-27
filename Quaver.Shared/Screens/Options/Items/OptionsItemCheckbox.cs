@@ -24,14 +24,7 @@ namespace Quaver.Shared.Screens.Options.Items
         {
             var bindedValue = bindable ?? new Bindable<bool>(false);
 
-            // ReSharper disable once ObjectCreationAsStatement
-            new ImageButton(UserInterface.BlankBox, (sender, args) => bindedValue.Value = !bindedValue.Value)
-            {
-                Parent = this,
-                Size = Size,
-                Position = Position,
-                Alpha = 0
-            };
+            Button.Clicked += (sender, args) => bindedValue.Value = !bindedValue.Value;
 
             Checkbox = new QuaverCheckbox(bindedValue)
             {
