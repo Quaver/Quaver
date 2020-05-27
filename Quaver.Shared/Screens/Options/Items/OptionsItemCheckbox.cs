@@ -1,8 +1,10 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Options.Items
@@ -20,25 +22,24 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="bindable"></param>
         public OptionsItemCheckbox(RectangleF containerRect, string name, Bindable<bool> bindable) : base(containerRect, name)
         {
-            Checkbox = new QuaverCheckbox(bindable ?? new Bindable<bool>(false))
+            var bindedValue = bindable ?? new Bindable<bool>(false);
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new ImageButton(UserInterface.BlankBox, (sender, args) => bindedValue.Value = !bindedValue.Value)
+            {
+                Parent = this,
+                Size = Size,
+                Position = Position,
+                Alpha = 0
+            };
+
+            Checkbox = new QuaverCheckbox(bindedValue)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
                 UsePreviousSpriteBatchOptions = true
             };
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            if (MouseManager.IsUniqueClick(MouseButton.Left) && IsHovered() && !Checkbox.IsHovered)
-                Checkbox.BindedValue.Value = !Checkbox.BindedValue.Value;
-
-            base.Update(gameTime);
         }
     }
 }
