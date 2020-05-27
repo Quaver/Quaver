@@ -166,7 +166,11 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> { "linux" }
                         },
-                    })
+                    }),
+                    new OptionsSubcategory("Experimental", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
+                    }),
                 }),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {

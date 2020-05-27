@@ -9,6 +9,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble;
@@ -35,6 +36,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     The time in the audio/play.
         /// </summary>
         public double Time { get; set; }
+
+        /// <summary>
+        ///     Used to determine when to sync Time when SmoothAudioTiming is on.
+        /// </summary>
+        private double PreviousTime { get; set; }
 
         /// <summary>
         ///     Ctor
@@ -96,7 +102,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted && !isTournanent)
                 return;
 
-            // If they audio hasn't begun yet, start counting down until the beginning of the map.
+            // If the audio hasn't begun yet, start counting down until the beginning of the map.
             // This is to give a delay before the audio starts.
             if (Time < 0)
             {
@@ -110,7 +116,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 try
                 {
                     Screen.HasStarted = true;
-                    AudioEngine.Track?.Play();
+                    AudioEngine.Track.Play();
                 }
                 catch (Exception e)
                 {
@@ -118,13 +124,39 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
             }
 
-            // If the audio track is playing, use that time.
-            if (AudioEngine.Track.IsPlaying)
-                Time = AudioEngine.Track.Time;
-
-            // Otherwise use deltatime to calculate the proposed time.
-            else
+            // Use frame time if the option is enabled.
+            if (ConfigManager.SmoothAudioTimingGameplay.Value)
+            {
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
+                var checkTime = AudioEngine.Track.Time - PreviousTime;
+
+                if (!AudioEngine.Track.IsPlaying)
+                    return;
+
+                // Time falls behind or goes too far ahead of the track
+                const int threshold = 16;
+                var timeOutOfThreshold = Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + threshold * AudioEngine.Track.Rate;
+
+                // More than a second passes without resyncing
+                const int routineSyncTime = 1000;
+                var needsRoutineSync = checkTime >= routineSyncTime || checkTime <= -routineSyncTime;
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (!timeOutOfThreshold && !needsRoutineSync && !Screen.Failed && PreviousTime != 0)
+                    return;
+
+                Time = AudioEngine.Track.Time;
+                PreviousTime = AudioEngine.Track.Time;
+            }
+            else
+            {
+                // If the audio track is playing, use that time.
+                if (AudioEngine.Track.IsPlaying)
+                    Time = AudioEngine.Track.Time;
+                // Otherwise use deltatime to calculate the proposed time.
+                else
+                    Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
+            }
         }
     }
 }
