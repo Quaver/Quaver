@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The threshold of milliseconds that Time cannot exceed the audio time when UseFrameTime is on.
         /// </summary>
-        const int FRAME_TIME = 16;
+        private const int THRESHOLD = 16;
 
         /// <summary>
         ///     Ctor
@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 var CheckTime = AudioEngine.Track.Time - OldTime;
                 
                 // If Time falls behind or goes too far ahead of the audio track or more than a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
-                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + FRAME_TIME * AudioEngine.Track.Rate || CheckTime >= 1000 || CheckTime <= -1000 || OldTime == 0 || Screen.Failed))
+                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + THRESHOLD * AudioEngine.Track.Rate || CheckTime >= 1000 || CheckTime <= -1000 || OldTime == 0 || Screen.Failed))
                 {
                     Time = AudioEngine.Track.Time;
                     OldTime = AudioEngine.Track.Time;
