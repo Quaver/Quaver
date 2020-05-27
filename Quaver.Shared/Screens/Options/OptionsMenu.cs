@@ -128,8 +128,7 @@ namespace Quaver.Shared.Screens.Options
                             Tags = new List<string> { "fps", "limited", "unlimited", "vsync", "wayland"}
                         },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
-                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
-                        new OptionsItemCheckbox(containerRect, "Use Frame Time Instead Of Audio Time (Experimental)", ConfigManager.UseFrameTime)
+                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive)
                     })
                 }),
                 new OptionsSection("Audio", UserInterface.OptionsAudio, new List<OptionsSubcategory>
@@ -370,6 +369,10 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
+                    }),
+                    new OptionsSubcategory("Experimental", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Use Frame Time Instead Of Audio Time", ConfigManager.UseFrameTime)
                     }),
                 }),
             };
