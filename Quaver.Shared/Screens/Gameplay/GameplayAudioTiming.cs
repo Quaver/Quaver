@@ -32,6 +32,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public static int StartDelay { get; } = 3000;
 
         /// <summary>
+        ///     Used to calculate when to sync Time.
+        /// </summary>
+        public double OldTime = 0;
+
+        /// <summary>
         ///     The time in the audio/play.
         /// </summary>
         public double Time { get; set; }
@@ -119,13 +124,15 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
             }
 
-            double PreviousTime = Math.Floor(Time / 1000);
 
             Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
 
-            // If Time falls behind the audio track and once every second, resync. If Failed, use audio track time for slowdown animation.
-            if (Time < AudioEngine.Track.Time || Math.Floor(Time / 1000) - PreviousTime == 1 || Screen.Failed)
+            // If Time falls behind the audio track and once a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
+            if (Time < AudioEngine.Track.Time || Math.Floor(AudioEngine.Track.Time / 1000) - OldTime >= 1 || Screen.Failed)
+            {
                 Time = AudioEngine.Track.Time;
+                OldTime = Math.Floor(AudioEngine.Track.Time / 1000);
+            }
         }
     }
 }
