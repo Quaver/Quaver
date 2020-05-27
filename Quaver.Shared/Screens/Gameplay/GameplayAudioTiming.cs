@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public double Time { get; set; }
 
         /// <summary>
-        ///     Used to determine when to sync Time when UseFrameTime is on.
+        ///     Used to determine when to sync Time when SmoothAudioTiming is on.
         /// </summary>
         private double PreviousTime { get; set; }
 
