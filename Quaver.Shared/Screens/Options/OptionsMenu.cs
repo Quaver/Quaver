@@ -128,7 +128,8 @@ namespace Quaver.Shared.Screens.Options
                             Tags = new List<string> { "fps", "limited", "unlimited", "vsync", "wayland"}
                         },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
-                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive)
+                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
+                        new OptionsItemCheckbox(containerRect, "Use Frame Time Instead Of Audio Time (Experimental)", ConfigManager.UseFrameTime)
                     })
                 }),
                 new OptionsSection("Audio", UserInterface.OptionsAudio, new List<OptionsSubcategory>
