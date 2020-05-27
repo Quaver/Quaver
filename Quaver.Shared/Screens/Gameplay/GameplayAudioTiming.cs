@@ -33,14 +33,19 @@ namespace Quaver.Shared.Screens.Gameplay
         public static int StartDelay { get; } = 3000;
 
         /// <summary>
+        ///     The time in the audio/play.
+        /// </summary>
+        public double Time { get; set; }
+
+        /// <summary>
         ///     Used to determine when to sync Time when UseFrameTime is on.
         /// </summary>
         public double OldTime = 0;
 
         /// <summary>
-        ///     The time in the audio/play.
+        ///     The threshold of milliseconds that Time cannot exceed the audio time when UseFrameTime is on.
         /// </summary>
-        public double Time { get; set; }
+        const int FRAME_TIME = 16;
 
         /// <summary>
         ///     Ctor
@@ -131,7 +136,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 var CheckTime = AudioEngine.Track.Time - OldTime;
                 
                 // If Time falls behind or goes too far ahead of the audio track or more than a second passes without syncing, resync. If Failed, use audio track time for slowdown animation.
-                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || CheckTime >= 1000 || CheckTime <= -1000 || OldTime == 0 || Screen.Failed || Time > AudioEngine.Track.Time + 16 * AudioEngine.Track.Rate))
+                if (AudioEngine.Track.IsPlaying && (Time < AudioEngine.Track.Time || Time > AudioEngine.Track.Time + FRAME_TIME * AudioEngine.Track.Rate || CheckTime >= 1000 || CheckTime <= -1000 || OldTime == 0 || Screen.Failed))
                 {
                     Time = AudioEngine.Track.Time;
                     OldTime = AudioEngine.Track.Time;
