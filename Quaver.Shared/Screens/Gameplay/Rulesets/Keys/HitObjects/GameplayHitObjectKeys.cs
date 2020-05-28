@@ -118,6 +118,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private float HitPosition { get; set; }
 
         /// <summary>
+        ///     Position for LN ends.
+        /// </summary>
+        private float HoldEndHitPosition { get; set; }
+
+        /// <summary>
         ///     Difference between the actual LN length and the LN body sprite length.
         ///
         ///     LN bodies are drawn from the middle of the start object to the middle of the end object, and this
@@ -232,6 +237,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
+            HoldEndHitPosition = playfield.HoldEndHitPositionY[info.Lane - 1];
             Info = info;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
@@ -348,6 +354,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public float GetSpritePosition(long offset, float initialPos) => HitPosition + ((initialPos - offset) * (ScrollDirection.Equals(ScrollDirection.Down) ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
 
         /// <summary>
+        ///     Calculates the position of the end Hit Object with a position offset.
+        /// </summary>
+        /// <returns></returns>
+        public float GetEndSpritePosition(long offset, float initialPos) => HoldEndHitPosition + ((initialPos - offset) * (ScrollDirection.Equals(ScrollDirection.Down) ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+
+        /// <summary>
         ///     Updates the earliest and latest track positions as well as the current LN body size.
         /// </summary>
         public void UpdateLongNoteSize(long offset, double curTime)
@@ -444,7 +456,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             else
                 LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset;
 
-            LongNoteEndSprite.Y = GetSpritePosition(offset, EndTrackPosition);
+            LongNoteEndSprite.Y = GetEndSpritePosition(offset, EndTrackPosition);
         }
 
         /// <summary>
