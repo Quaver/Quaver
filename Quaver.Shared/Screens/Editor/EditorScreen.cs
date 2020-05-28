@@ -745,6 +745,10 @@ namespace Quaver.Shared.Screens.Editor
         /// <param name="file"></param>
         private void OnFileDropped(object sender, string file)
         {
+            // If e is a file:// URI (for example, on Wayland), it needs to be converted to a local path. If it's
+            // already a local path, this function leaves it as is.
+            file = new Uri(file).LocalPath;
+
             if (MapManager.Selected.Value.Game != MapGame.Quaver)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You cannot change the background for a map loaded from another game.");

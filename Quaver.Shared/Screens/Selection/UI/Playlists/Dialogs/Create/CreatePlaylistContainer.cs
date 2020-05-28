@@ -345,6 +345,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             if (IsBannerLoading)
                 return;
 
+            // If e is a file:// URI (for example, on Wayland), it needs to be converted to a local path. If it's
+            // already a local path, this function leaves it as is.
+            e = new Uri(e).LocalPath;
+
             if (!e.EndsWith(".png") && !e.EndsWith(".jpg") && !e.EndsWith(".jpeg"))
                 return;
 

@@ -1393,6 +1393,10 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="e"></param>
         private void OnFileDropped(object sender, string e)
         {
+            // If e is a file:// URI (for example, on Wayland), it needs to be converted to a local path. If it's
+            // already a local path, this function leaves it as is.
+            e = new Uri(e).LocalPath;
+
             var file = e.ToLower();
 
             if (!file.EndsWith(".jpg") && !file.EndsWith(".jpeg") && !file.EndsWith(".png"))

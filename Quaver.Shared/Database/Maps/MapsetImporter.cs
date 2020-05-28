@@ -84,6 +84,10 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         internal static void OnFileDropped(object sender, string e)
         {
+            // If e is a file:// URI (for example, on Wayland), it needs to be converted to a local path. If it's
+            // already a local path, this function leaves it as is.
+            e = new Uri(e).LocalPath;
+
             ImportFile(e);
         }
 
