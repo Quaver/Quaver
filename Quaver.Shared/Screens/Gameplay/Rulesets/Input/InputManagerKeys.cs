@@ -191,7 +191,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (ReplayInputManager == null)
             {
                 playfield.Stage.ComboDisplay.MakeVisible();
-                playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - manager.CurrentAudioPosition);
+                playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - time);
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
             }
 
@@ -246,7 +246,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get judgement and references
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            var hitDifference = manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - (int)manager.CurrentAudioPosition;
+            var time = (int)manager.CurrentAudioPosition;
+            var hitDifference = manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - time;
 
             var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release,
                 ReplayInputManager == null);
@@ -269,7 +270,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                         HitStatType.Hit,
                         KeyPressType.Release,
                         gameplayHitObject.Info,
-                        (int)manager.CurrentAudioPosition,
+                        time,
                         judgement,
                         hitDifference,
                         Ruleset.ScoreProcessor.Accuracy,
@@ -284,7 +285,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 if (ReplayInputManager == null)
                 {
                     playfield.Stage.ComboDisplay.MakeVisible();
-                    playfield.Stage.HitError.AddJudgement(judgement, (int)(gameplayHitObject.Info.EndTime - manager.CurrentAudioPosition));
+                    playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.EndTime - time);
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
                 }
 
@@ -308,7 +309,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     HitStatType.Hit,
                     KeyPressType.Release,
                     gameplayHitObject.Info,
-                    (int)manager.CurrentAudioPosition,
+                    time,
                     Judgement.Miss,
                     hitDifference,
                     Ruleset.ScoreProcessor.Accuracy,
