@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
                         return;
 
                     if (activeLeftPanel.Value == SelectContainerPanel.MapPreview)
-                        activeLeftPanel.Value = SelectContainerPanel.Leaderboard;
+                        activeLeftPanel.Value = SelectContainerPanel.MatchSettings;
                     else
                         activeLeftPanel.Value = SelectContainerPanel.MapPreview;
                 })
