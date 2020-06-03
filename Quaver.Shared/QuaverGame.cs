@@ -680,6 +680,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Lobby:
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
+                case QuaverScreenType.Results:
                     DialogManager.Show(new OptionsDialog());
                     break;
             }
