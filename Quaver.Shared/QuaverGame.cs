@@ -551,7 +551,7 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Vsync:
                     Graphics.SynchronizeWithVerticalRetrace = true;
-                    IsFixedTimeStep = true;
+                    IsFixedTimeStep = false;
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.WaylandVsync:
