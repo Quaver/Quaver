@@ -105,16 +105,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         }
 
         /// <summary>
-        ///     The size of the each ane.
+        ///     The size of the each lane.
         /// </summary>
         public float LaneSize
         {
             get
             {
-                if (Screen.IsSongSelectPreview)
-                    return PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
+                // Use skin's ColumnSize if it fits inside the preview, otherwise scale down.
+                var PreviewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
+                var ColumnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;
+                if (Screen.IsSongSelectPreview && (PreviewWidth < ColumnWidth))
+                    return PreviewWidth;
 
-                return SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;;
+                return ColumnWidth;
             }
         }
 
