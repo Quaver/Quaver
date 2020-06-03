@@ -1,5 +1,7 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
+using Quaver.Shared.Screens;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Managers;
 
@@ -14,8 +16,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
                     if (activeLeftPanel == null)
                         return;
 
+                    var game = (QuaverGame)GameBase.Game;
+
                     if (activeLeftPanel.Value == SelectContainerPanel.MapPreview)
-                        activeLeftPanel.Value = SelectContainerPanel.MatchSettings;
+                    {
+                        if (game.CurrentScreen.Type == QuaverScreenType.Multiplayer)
+                            activeLeftPanel.Value = SelectContainerPanel.MatchSettings;
+
+                        else
+                            activeLeftPanel.Value = SelectContainerPanel.Leaderboard;
+                    }
                     else
                         activeLeftPanel.Value = SelectContainerPanel.MapPreview;
                 })
