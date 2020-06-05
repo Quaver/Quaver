@@ -201,6 +201,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"Main Menu", typeof(MainMenuScreen)},
             {"ResultsScreen (Multi)", typeof(TestResultsMultiScreen)},
             {"ResultsScreen", typeof(TestResultsScreen)},
             {"TournamentOverlay", typeof(TestTournamentOverlayScreen)},
@@ -230,7 +231,6 @@ namespace Quaver.Shared
             {"SelectionScreen", typeof(SelectionScreen)},
             {"YesNoDialog", typeof(TestYesNoDialogScreen)},
             {"DrawablePlaylist", typeof(TestScreenDrawablePlaylist)},
-            {"Main Menu", typeof(MainMenuScreen)},
             {"MenuFooterJukebox", typeof(TestScreenMenuJukebox)},
             {"MusicPlayerScreen", typeof(MusicPlayerScreen)},
             {"DrawableListenerList", typeof(TestScreenListenerList)},
