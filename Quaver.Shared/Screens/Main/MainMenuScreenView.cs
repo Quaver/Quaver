@@ -1,17 +1,22 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Main.UI;
-using Quaver.Shared.Screens.Main.UI.Panels;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Main.UI.Nagivation;
+using Quaver.Shared.Screens.Main.UI.News;
+using Quaver.Shared.Screens.Main.UI.Tips;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
+using Quaver.Shared.Screens.Music;
+using Quaver.Shared.Screens.Options;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
-using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
-using Wobble.Input;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -25,20 +30,39 @@ namespace Quaver.Shared.Screens.Main
 
         /// <summary>
         /// </summary>
-        private MenuBorder Header { get; set; }
+        private Sprite MenuLogoBackground { get; set; }
 
         /// <summary>
         /// </summary>
-        private MenuBorder Footer { get; set; }
+        private Sprite Logo { get; set; }
+        
+        /// <summary>
+        /// </summary>
+        private MenuTipContainer TipsContainer { get; set; }
 
         /// <summary>
         /// </summary>
-        private MenuPanelContainer PanelContainer { get; set; }
+        private NavigationButtonContainer NavigationButtonContainer { get; set; }
 
         /// <summary>
         /// </summary>
-        private MenuAudioVisualizer Visualizer { get; set; }
+        private NewsPost News { get; set; }
+        
+        /// <summary>
+        ///     The amount of padding from the top of the screen where top components are positioned
+        /// </summary>
+        private const int PADDING_TOP_Y = 150;
 
+        /// <summary>
+        ///     The amount of padding from the left of the screen
+        /// </summary>
+        private const int PADDING_X = 70;
+
+        /// <summary>
+        ///     The amount of padding from the bottom of the screen
+        /// </summary>
+        private const int PADDING_BOTTOM_Y = 90;
+        
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -46,25 +70,23 @@ namespace Quaver.Shared.Screens.Main
         public MainMenuScreenView(QuaverScreen screen) : base(screen)
         {
             CreateBackground();
+            CreateMenuLogoBackground();
+            CreateLogo();
+            CreateAudioVisualizer();
+            CreateMenuTip();
+            CreateNavigationButtons();
+            CreateNewsPost();
             CreateHeader();
             CreateFooter();
-            CreateAudioVisualizer();
-            CreatePanelContainer();
-
-            Header.Parent = Container;
-            Footer.Parent = Container;
-
+            
             screen.ScreenExiting += OnScreenExiting;
         }
-
+        
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            Container?.Update(gameTime);
-        }
+        public override void Update(GameTime gameTime) => Container?.Update(gameTime);
 
         /// <inheritdoc />
         /// <summary>
@@ -84,56 +106,138 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         ///     Creates <see cref="Background"/>
         /// </summary>
-        private void CreateBackground()
-            => Background = new BackgroundImage(UserInterface.Triangles, 0, false) { Parent = Container };
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.TrianglesWallpaper, 0, 
+            false) {Parent = Container};
 
         /// <summary>
-        ///     Creates <see cref="Header"/>
+        ///     Creates <see cref="MenuLogoBackground"/>
         /// </summary>
-        private void CreateHeader() => Header = new MenuHeaderMain() { Parent = Container };
+        private void CreateMenuLogoBackground()
+        {
+            var tex = UserInterface.MenuLogoBackground;
+
+            MenuLogoBackground = new Sprite()
+            {
+                Parent = Container,
+                Size = new ScalableVector2(tex.Width * 0.80f, tex.Height * 0.80f),
+                Y = PADDING_TOP_Y,
+                Image = tex
+            };
+        }
 
         /// <summary>
-        ///     Creates <see cref="Footer"/>
+        ///    Creates <see cref="Logo"/>
         /// </summary>
-        private void CreateFooter() => Footer = new MainMenuFooter()
+        private void CreateLogo()
+        {
+            var tex = UserInterface.MenuLogo;
+
+            Logo = new Sprite
+            {
+                Parent = MenuLogoBackground,
+                Alignment = Alignment.MidLeft,
+                Size = new ScalableVector2(tex.Width * 0.80f, tex.Height * 0.80f),
+                X = PADDING_X,
+                Image = tex
+            };
+        }
+        
+        /// <summary>
+        /// </summary>
+        private void CreateMenuTip()
+        {
+            TipsContainer = new MenuTipContainer()
+            {
+                Parent = Container,
+                Alignment = Alignment.BotRight,
+                Position = new ScalableVector2(-PADDING_X, -PADDING_BOTTOM_Y)
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateNavigationButtons()
+        {
+            var quitColor = ColorHelper.HexToColor("#F9645D");
+            var screen = Screen as MainMenuScreen;
+
+            NavigationButtonContainer = new NavigationButtonContainer(new List<NavigationButton>()
+            {
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Single Player",
+                    (o, e) => screen.ExitToSinglePlayer()),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), "Multiplayer",
+                    (o, e) => screen.ExitToMultiplayer()),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Editor",
+                    (o, e) => screen.ExitToEditor()),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), "Download Songs",
+                    (o, e) => screen.ExitToDownload()),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_heart_shape_outline), "Steam Workshop",
+                    (sender, args) => screen.Exit(() => new MusicPlayerScreen())),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), "Options",
+                    (o, e) => DialogManager.Show(new OptionsDialog())),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), "Quit Game",
+                    (o, e) => DialogManager.Show(new QuitDialog()))
+                {
+                    Icon = { Tint = quitColor },
+                    Name = { Tint = quitColor }
+                }
+            })
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                X = PADDING_X,
+                Y = 120
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateNewsPost() => News = new NewsPost
         {
             Parent = Container,
-            Alignment = Alignment.BotLeft
+            Alignment = Alignment.BotRight,
+            X = -PADDING_X,
+            Y = TipsContainer.Y - TipsContainer.Height - 26
         };
 
         /// <summary>
         /// </summary>
-        private void CreatePanelContainer()
-        {
-            PanelContainer = new MenuPanelContainer((MainMenuScreen) Screen)
-            {
-                Parent = Container,
-                Y = Header.Height
-            };
-        }
+        private void CreateHeader() => new MenuHeaderMain { Parent = Container };
 
         /// <summary>
-        ///     Creates <see cref="Visualizer"/>
+        /// </summary>
+        private void CreateFooter() => new MainMenuFooter
+        {
+            Parent = Container,
+            Alignment = Alignment.BotLeft
+        };
+        
+        /// <summary>
         /// </summary>
         private void CreateAudioVisualizer()
         {
-            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 58, 3, 8)
+            var visBottom = new MenuAudioVisualizer((int) WindowManager.Width, 750, 220, 3, 8)
             {
                 Parent = Container,
-                Alignment = Alignment.BotLeft,
-                Y = -Footer.Height
+                Y = -MenuBorder.HEIGHT,
+                Alignment = Alignment.BotRight,
             };
-
-            Visualizer.Bars.ForEach(x => x.Alpha = 0.35f);
+            
+            visBottom.Bars.ForEach(bar =>
+            {
+                bar.Alignment = Alignment.BotRight;
+                bar.X = -bar.X;
+                bar.Alpha = 0.85f;
+                bar.Tint = Colors.MainBlue;
+            });
         }
-
+        
         /// <summary>
-        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// </summary>
         private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
         {
-            PanelContainer.MoveToX(PanelContainer.Width + 400, Easing.OutQuint, 450);
         }
     }
 }
