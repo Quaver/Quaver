@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Main.UI.Visualizer
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(tex.Width * scale, tex.Height * scale),
-                Alpha = 0.40f,
+                Alpha = 0.60f,
                 Image = tex,
             };
 
