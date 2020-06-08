@@ -9,6 +9,7 @@ using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Main.UI.Nagivation;
 using Quaver.Shared.Screens.Main.UI.News;
 using Quaver.Shared.Screens.Main.UI.Tips;
+using Quaver.Shared.Screens.Main.UI.Visualizer;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Options;
@@ -53,7 +54,7 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         ///     The amount of padding from the top of the screen where top components are positioned
         /// </summary>
-        private const int PADDING_TOP_Y = 150;
+        private const int PADDING_TOP_Y = 184;
 
         /// <summary>
         ///     The amount of padding from the left of the screen
@@ -74,6 +75,7 @@ namespace Quaver.Shared.Screens.Main
             CreateBackground();
             CreateMenuLogoBackground();
             CreateLogo();
+            CreateNoteVisualizer();
             CreateAudioVisualizer();
             CreateMenuTip();
             CreateNavigationButtons();
@@ -194,7 +196,7 @@ namespace Quaver.Shared.Screens.Main
                 Parent = Container,
                 Alignment = Alignment.MidLeft,
                 X = PADDING_X,
-                Y = 120
+                Y = 144
             };
         }
 
@@ -225,6 +227,26 @@ namespace Quaver.Shared.Screens.Main
             Parent = Container,
             Alignment = Alignment.BotLeft
         };
+        
+        /// <summary>
+        /// </summary>
+        private void CreateNoteVisualizer()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new NoteVisualizer
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight
+            };
+            
+            // ReSharper disable once ObjectCreationAsStatement
+            /*new NoteVisualizer
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                X = -WindowManager.Width / 2f - 120
+            };*/
+        }
         
         /// <summary>
         /// </summary>
