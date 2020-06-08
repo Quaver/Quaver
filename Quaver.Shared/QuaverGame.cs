@@ -41,7 +41,7 @@ using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Alpha;
+using Quaver.Shared.Screens.Beta;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Importing;
@@ -317,7 +317,7 @@ namespace Quaver.Shared
             Window.Title = $"Quaver Visual Test Runner";
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new MainMenuScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new BetaScreen());
 #endif
         }
 
