@@ -112,12 +112,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             get
             {
                 // Use skin's ColumnSize if it fits inside the preview, otherwise scale down.
-                var PreviewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
-                var ColumnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;
-                if (Screen.IsSongSelectPreview && PreviewWidth < ColumnWidth)
-                    return PreviewWidth;
+                var previewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
+                
+                var columnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;
+                
+                if (Screen.IsSongSelectPreview && previewWidth < columnWidth)
+                    return previewWidth;
 
-                return ColumnWidth;
+                return columnWidth;
             }
         }
 
