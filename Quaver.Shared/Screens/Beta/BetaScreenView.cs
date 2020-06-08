@@ -139,7 +139,7 @@ namespace Quaver.Shared.Screens.Beta
         /// <summary>
         /// </summary>
         private void CreateBetaText() => DiscordJoinText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-            "This is a Beta version of Quaver for early access testing.".ToUpper(), 20)
+            "This is an early access version of Quaver for Beta testing.".ToUpper(), 20)
         {
             Parent = TextBackground,
             Alignment = Alignment.TopCenter,
