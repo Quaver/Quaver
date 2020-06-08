@@ -94,8 +94,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
                     btn.Select(true);
 
                 btn.MoveToX(0, Easing.OutQuint, 450 + 50 * (i + 1));
-
-
+                
                 if (i == 0)
                 {
                     totalY += btn.Height;
@@ -112,6 +111,15 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
             }
 
             Size = new ScalableVector2(Buttons.First().Width, totalY);
+        }
+
+        public void Exit()
+        {
+            for (var i = 0; i < Buttons.Count; i++)
+            {
+                var btn = Buttons[i];
+                btn.MoveToX(-X - btn.Width - 50, Easing.OutQuint, 450 + 50 * (i + 1));
+            }
         }
     }
 }

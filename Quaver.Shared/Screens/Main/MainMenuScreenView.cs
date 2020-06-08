@@ -4,6 +4,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Main.UI.Nagivation;
 using Quaver.Shared.Screens.Main.UI.News;
@@ -14,6 +15,7 @@ using Quaver.Shared.Screens.Options;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Dialogs;
@@ -123,6 +125,9 @@ namespace Quaver.Shared.Screens.Main
                 Y = PADDING_TOP_Y,
                 Image = tex
             };
+
+            MenuLogoBackground.X = -MenuLogoBackground.Width - 50;
+            MenuLogoBackground.MoveToX(0, Easing.OutQuint, 450);
         }
 
         /// <summary>
@@ -152,6 +157,9 @@ namespace Quaver.Shared.Screens.Main
                 Alignment = Alignment.BotRight,
                 Position = new ScalableVector2(-PADDING_X, -PADDING_BOTTOM_Y)
             };
+
+            TipsContainer.X = TipsContainer.Width + 50;
+            TipsContainer.MoveToX(-PADDING_X, Easing.OutQuint, 450);
         }
 
         /// <summary>
@@ -164,15 +172,15 @@ namespace Quaver.Shared.Screens.Main
             NavigationButtonContainer = new NavigationButtonContainer(new List<NavigationButton>()
             {
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Single Player",
-                    (o, e) => screen.ExitToSinglePlayer()),
+                    (o, e) => screen?.ExitToSinglePlayer()),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), "Multiplayer",
-                    (o, e) => screen.ExitToMultiplayer()),
+                    (o, e) => screen?.ExitToMultiplayer()),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Editor",
-                    (o, e) => screen.ExitToEditor()),
+                    (o, e) => screen?.ExitToEditor()),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), "Download Songs",
-                    (o, e) => screen.ExitToDownload()),
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_heart_shape_outline), "Steam Workshop",
-                    (sender, args) => screen.Exit(() => new MusicPlayerScreen())),
+                    (o, e) => screen?.ExitToDownload()),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), "Steam Workshop",
+                    (sender, args) => BrowserHelper.OpenURL($"https://steamcommunity.com/app/{SteamManager.ApplicationId}/workshop/")),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), "Options",
                     (o, e) => DialogManager.Show(new OptionsDialog())),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), "Quit Game",
@@ -192,13 +200,19 @@ namespace Quaver.Shared.Screens.Main
 
         /// <summary>
         /// </summary>
-        private void CreateNewsPost() => News = new NewsPost
+        private void CreateNewsPost()
         {
-            Parent = Container,
-            Alignment = Alignment.BotRight,
-            X = -PADDING_X,
-            Y = TipsContainer.Y - TipsContainer.Height - 26
-        };
+            News = new NewsPost
+            {
+                Parent = Container,
+                Alignment = Alignment.BotRight,
+                X = -PADDING_X,
+                Y = TipsContainer.Y - TipsContainer.Height - 26
+            };
+
+            News.X = News.Width + 50;
+            News.MoveToX(-PADDING_X, Easing.OutQuint, 450);
+        }
 
         /// <summary>
         /// </summary>
@@ -238,6 +252,14 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
         {
+            NavigationButtonContainer.Exit();
+
+            const int animTime = 450;
+
+            MenuLogoBackground.MoveToX(-MenuLogoBackground.Width - 50, Easing.OutQuint, animTime);
+            
+            TipsContainer.MoveToX(TipsContainer.Width + 50, Easing.OutQuint, animTime);
+            News.MoveToX(News.Width + 50, Easing.OutQuint, animTime);
         }
     }
 }
