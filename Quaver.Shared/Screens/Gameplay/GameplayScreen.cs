@@ -648,7 +648,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             // If the pause key is not pressed...
-            if (KeyboardManager.CurrentState.IsKeyUp(Keys.Escape) && KeyboardManager.CurrentState.IsKeyUp(ConfigManager.KeyPause.Value))
+            if (KeyboardManager.CurrentState.IsKeyUp(ConfigManager.KeyPause.Value))
             {
                 if (Failed || IsPlayComplete || IsPaused)
                     return;
@@ -665,7 +665,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // If the pause key was just pressed...
-            if (!IsSongSelectPreview && KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
             {
                 // Go back to editor if we're currently play testing.
                 if (IsPlayTesting)

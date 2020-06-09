@@ -551,7 +551,7 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Vsync:
                     Graphics.SynchronizeWithVerticalRetrace = true;
-                    IsFixedTimeStep = true;
+                    IsFixedTimeStep = false;
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.WaylandVsync:
@@ -680,6 +680,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Lobby:
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
+                case QuaverScreenType.Results:
                     DialogManager.Show(new OptionsDialog());
                     break;
             }
