@@ -250,5 +250,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D NewsPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/news-panel.png");
         public static Texture2D MenuTipPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/menu-tip-panel.png");
         public static Texture2D NoteVisualizer => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/notes.png");
+        public static Texture2D NoPreviewImage => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/no-preview-image.png");
     }
 }
