@@ -46,12 +46,15 @@ namespace Quaver.Shared.Online.API.News
             }
 
             var latestPost = feed.Items.First();
+
+            if (string.IsNullOrEmpty(latestPost.IngameThumbnail))
+                return;
             
             try
             {
                 using (var webClient = new WebClient())
                 {
-                    using (var mem = new MemoryStream(webClient.DownloadData(latestPost.Image)))
+                    using (var mem = new MemoryStream(webClient.DownloadData(latestPost.IngameThumbnail)))
                         feed.RecentPostBanner = AssetLoader.LoadTexture2D(mem);
                 }
             }

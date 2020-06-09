@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 Parent = Container,
                 Size = new ScalableVector2(Container.Width, 121),
                 Alpha = 0,
-                Image = banner ?? UserInterface.UnknownAvatar
+                Image = banner ?? UserInterface.NoPreviewImage
             };
 
             Banner.FadeTo(1, Easing.Linear, 450);
