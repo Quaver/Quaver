@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
             "Pressing F10 in the menu opens your playercard.",
             "Pressing F3/F4 in gameplay changes scroll speed.",
             "Your offset can be calibrated in the options menu.",
-            "Standard* is the default judgement windows.",
+            "Standard* is the default judgement window preset.",
             "CTRL+ +/- changes the playback rate of the song."
         };
 
