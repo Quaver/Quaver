@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Skinning;
@@ -117,7 +118,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public void SetPosition()
         {
-            var x = Playfield.ScreenRectangle.X + Playfield.ColumnSize * (Info.Lane - 1) + Playfield.BorderLeft.Width;
+            var lane = Info.Lane - 1;
+
+            // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
+            if (Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
+            {
+                if (Info.Lane == 8)
+                    lane = 0;
+                else
+                    lane++;
+            }
+            
+            var x = Playfield.ScreenRectangle.X + Playfield.ColumnSize * lane + Playfield.BorderLeft.Width;
             var y = Playfield.HitPositionY - Info.StartTime * Playfield.TrackSpeed - Height;
 
             if (AnchorHitObjectsAtMidpoint.Value)
