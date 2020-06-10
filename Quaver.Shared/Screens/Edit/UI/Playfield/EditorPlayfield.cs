@@ -719,12 +719,23 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        public int GetLaneFromX(float x)
+        public int GetLaneFromX(float x, bool handleScratch = false)
         {
             var percentage = (x - AbsolutePosition.X) / AbsoluteSize.X;
             var lane = Map.GetKeyCount() * percentage + 1;
 
-            return (int) MathHelper.Clamp(lane, 1, Map.GetKeyCount());
+            var val = (int) MathHelper.Clamp(lane, 1, Map.GetKeyCount());
+            
+            // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
+            if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
+            {
+                if (val == 1)
+                    val = 8;
+                else
+                    val--;
+            }
+
+            return val;
         }
 
         /// <summary>
@@ -1125,16 +1136,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
-            var lane = GetLaneFromX(MouseManager.CurrentState.X);
-            
-            // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
-            if (Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
-            {
-                if (lane == 1)
-                    lane = 8;
-                else
-                    lane--;
-            }
+            var lane = GetLaneFromX(MouseManager.CurrentState.X, true);
             
             if (GetHitObjectAtTimeAndLane(time, lane) != null)
                 return;
@@ -1283,7 +1285,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var offset = (int) Math.Round((float) (time - TimeDragStart), MidpointRounding.AwayFromZero);
 
             // ReSharper disable once PossibleInvalidOperationException
-            var laneOffset = GetLaneFromX(MouseManager.CurrentState.X) - GetLaneFromX(NoteMoveInitialMousePosition.Value.X);
+            var laneOffset = GetLaneFromX(MouseManager.CurrentState.X, true) - GetLaneFromX(NoteMoveInitialMousePosition.Value.X, true);
 
             // Prevent dragging if there is no need to
             if (LongNoteInDrag != null || time < 0)
