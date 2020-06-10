@@ -1125,9 +1125,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
-            var x = GetLaneFromX(MouseManager.CurrentState.X);
-
-            if (GetHitObjectAtTimeAndLane(time, x) != null)
+            var lane = GetLaneFromX(MouseManager.CurrentState.X);
+            
+            // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
+            if (Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
+            {
+                if (lane == 1)
+                    lane = 8;
+                else
+                    lane--;
+            }
+            
+            if (GetHitObjectAtTimeAndLane(time, lane) != null)
                 return;
 
             HitObjectInfo hitObject;
@@ -1140,10 +1149,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             switch (Tool.Value)
             {
                 case EditorCompositionTool.Note:
-                    ActionManager.PlaceHitObject(x, time, 0, layer);
+                    ActionManager.PlaceHitObject(lane, time, 0, layer);
                     break;
                 case EditorCompositionTool.LongNote:
-                    hitObject = ActionManager.PlaceHitObject(x, time, 0, layer);
+                    hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer);
 
                     var ln = HitObjects.Find(y => y.Info == hitObject);
                     LongNoteInDrag = ln;
