@@ -13,14 +13,14 @@ namespace Quaver.Shared.Screens.Main.UI
         /// </summary>
         public MainMenuFooter() : base(MenuBorderType.Footer, new List<Drawable>()
         {
-            new MenuFooterButtonQuit(),
-            new IconTextButtonOptions(),
-            new IconTextButtonWiki()
+            new IconTextButtonGithub(),
+            new IconTextButtonWiki(),
+            new IconTextButtonReportBugs(),
         }, new List<Drawable>()
         {
             new IconTextButtonTwitter(),
             new IconTextButtonDiscord(),
-            new IconTextButtonWebsite()
+            new IconTextButtonWebsite(),
         })
         {
             // ReSharper disable once ObjectCreationAsStatement

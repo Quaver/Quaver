@@ -22,6 +22,7 @@ using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
+using Wobble;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -78,6 +79,9 @@ namespace Quaver.Shared.Screens.Main
                 FirstLoadHandled = true;
             }
 
+            GameBase.Game.GlobalUserInterface.Cursor.Show(1);
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            
             base.OnFirstUpdate();
         }
 

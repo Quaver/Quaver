@@ -241,5 +241,15 @@ namespace Quaver.Shared.Assets
         public static Texture2D ResultsScoreContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/overview-score-container-panel.png");
         public static Texture2D ResultsGraphContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-overview-graph-container.png");
         public static Texture2D ResultsMultiplayerFFAPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/multiplayer-table-ffa.png");
+        public static Texture2D NotificationButtonPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/notification-button-panel.png");
+        public static Texture2D TrianglesWallpaper => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/triangles.png");
+        public static Texture2D MenuLogoBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/menu-logo-background.png");
+        public static Texture2D MenuLogo => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/logo.png");
+        public static Texture2D NavigationButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/navigation-button.png");
+        public static Texture2D NavigationButtonSelected => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/navigation-button-selected.png");
+        public static Texture2D NewsPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/news-panel.png");
+        public static Texture2D MenuTipPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/menu-tip-panel.png");
+        public static Texture2D NoteVisualizer => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/notes.png");
+        public static Texture2D NoPreviewImage => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/no-preview-image.png");
     }
 }
