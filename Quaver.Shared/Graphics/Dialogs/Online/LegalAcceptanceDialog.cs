@@ -34,6 +34,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
 
             YesButton.Image = UserInterface.AcceptButton;
             NoButton.Image = UserInterface.DeclineButton;
+            Panel.Image = UserInterface.LegalPanel;
 
             YesButton.Y += 20;
             NoButton.Y += 20;
