@@ -534,6 +534,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScratchLaneLeft7K { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> AcceptedTermsAndPrivacyPolicy { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -920,6 +924,7 @@ namespace Quaver.Shared.Config
             EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
             ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
             ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
+            AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -1087,6 +1092,7 @@ namespace Quaver.Shared.Config
                     KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
                     ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
                     ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
+                    AcceptedTermsAndPrivacyPolicy.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

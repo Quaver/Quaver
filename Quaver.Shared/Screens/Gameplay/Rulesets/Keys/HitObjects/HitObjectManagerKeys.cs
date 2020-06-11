@@ -500,7 +500,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Check to see if the player missed any active notes
             foreach (var lane in ActiveNoteLanes)
             {
-                while (lane.Count > 0 && CurrentAudioPosition > lane.Peek().Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
+                while (lane.Count > 0 && (int)CurrentAudioPosition > lane.Peek().Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
                 {
                     // Current hit object
                     var hitObject = lane.Dequeue();
@@ -581,7 +581,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Check to see if any LN releases were missed (Counts as an okay instead of a miss.)
             foreach (var lane in HeldLongNoteLanes)
             {
-                while (lane.Count > 0 && CurrentAudioPosition > lane.Peek().Info.EndTime + window)
+                while (lane.Count > 0 && (int)CurrentAudioPosition > lane.Peek().Info.EndTime + window)
                 {
                     // Current hit object
                     var hitObject = lane.Dequeue();
