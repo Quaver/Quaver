@@ -144,6 +144,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> WindowBorderless { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> PreferWayland { get; private set; }
+
+        /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
         internal static Bindable<bool> FpsCounter { get; private set; }
@@ -779,6 +783,7 @@ namespace Quaver.Shared.Config
             WindowHeight = ReadInt(@"WindowHeight", 768, 360, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 640, short.MaxValue, data);
             WindowBorderless = ReadValue(@"WindowBorderless", false, data);
+            PreferWayland = ReadValue(@"PreferWayland", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
@@ -1059,6 +1064,7 @@ namespace Quaver.Shared.Config
                     SteamWorkshopDirectory.ValueChanged += AutoSaveConfiguration;
                     UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
                     WindowBorderless.ValueChanged += AutoSaveConfiguration;
+                    PreferWayland.ValueChanged += AutoSaveConfiguration;
                     LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
                     KeyScreenshot.ValueChanged += AutoSaveConfiguration;
                     DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;

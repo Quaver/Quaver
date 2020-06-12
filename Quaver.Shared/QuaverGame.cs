@@ -243,9 +243,9 @@ namespace Quaver.Shared
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 
-        public QuaverGame(HotLoader hl) : base(hl)
+        public QuaverGame(HotLoader hl) : base(hl, ConfigManager.PreferWayland.Value)
 #else
-        public QuaverGame()
+        public QuaverGame() : base(ConfigManager.PreferWayland.Value)
 #endif
         {
             Content.RootDirectory = "Content";
