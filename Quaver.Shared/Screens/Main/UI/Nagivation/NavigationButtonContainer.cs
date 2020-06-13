@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 
         private void HandleInput(GameTime gameTime)
         {
-            if (DialogManager.Dialogs.Count != 0)
+            if (DialogManager.Dialogs.Count != 0 || KeyboardManager.IsAltDown())
                 return;
 
             HandleKeyPressUp();
@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
                     btn.Select(true);
 
                 btn.MoveToX(0, Easing.OutQuint, 450 + 50 * (i + 1));
-                
+
                 if (i == 0)
                 {
                     totalY += btn.Height;
