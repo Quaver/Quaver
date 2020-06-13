@@ -4,15 +4,17 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Main.UI.Tips
 {
-    public class MenuTipContainer : IconButton
+    public class MenuTipContainer : ImageButton
     {
         /// <summary>
         /// </summary>
@@ -25,6 +27,10 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         /// <summary>
         /// </summary>
         private SpriteTextPlus TextTip { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Sprite HoverEffect { get; set; }
 
         /// <summary>\
         /// </summary>
@@ -61,9 +67,11 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
             CreateLabel();
             CreateScrollContainer();
             CreateTextTip();
+            CreateHoverEffect();
             PickRandomTip();
 
             Clicked += (sender, args) => PickRandomTip();
+            Hovered += (sender, args) => SkinManager.Skin?.SoundHover.CreateChannel().Play();
         }
 
         /// <inheritdoc />
@@ -74,6 +82,10 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         {
             Label.Alpha = Alpha;
             TextTip.Alpha = Alpha;
+
+            HoverEffect.Size = new ScalableVector2(Width - 4, Height - 4);
+            HoverEffect.Alpha = IsHovered ? 0.35f : 0;
+
             base.Update(gameTime);
         }
 
@@ -115,6 +127,14 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
 
             ScrollingContainer.AddContainedDrawable(TextTip);
         }
+
+        private void CreateHoverEffect() => HoverEffect = new Sprite()
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(Width - 4, Height - 4),
+            Alpha = 0
+        };
 
         private void PickRandomTip() => TextTip.Text = Tips[RNG.Next(0, Tips.Length)];
     }

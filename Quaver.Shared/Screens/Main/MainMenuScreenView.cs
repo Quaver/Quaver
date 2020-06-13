@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         /// </summary>
         private Sprite Logo { get; set; }
-        
+
         /// <summary>
         /// </summary>
         private MenuTipContainer TipsContainer { get; set; }
@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         /// </summary>
         private NewsPost News { get; set; }
-        
+
         /// <summary>
         ///     The amount of padding from the top of the screen where top components are positioned
         /// </summary>
@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Main
         ///     The amount of padding from the bottom of the screen
         /// </summary>
         private const int PADDING_BOTTOM_Y = 90;
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -82,10 +82,10 @@ namespace Quaver.Shared.Screens.Main
             CreateNewsPost();
             CreateHeader();
             CreateFooter();
-            
+
             screen.ScreenExiting += OnScreenExiting;
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         ///     Creates <see cref="Background"/>
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.TrianglesWallpaper, 0, 
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.TrianglesWallpaper, 0,
             false) {Parent = Container};
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Quaver.Shared.Screens.Main
                 Image = tex
             };
         }
-        
+
         /// <summary>
         /// </summary>
         private void CreateMenuTip()
@@ -227,7 +227,7 @@ namespace Quaver.Shared.Screens.Main
             Parent = Container,
             Alignment = Alignment.BotLeft
         };
-        
+
         /// <summary>
         /// </summary>
         private void CreateNoteVisualizer()
@@ -238,7 +238,7 @@ namespace Quaver.Shared.Screens.Main
                 Parent = Container,
                 Alignment = Alignment.TopRight
             };
-            
+
             // ReSharper disable once ObjectCreationAsStatement
             /*new NoteVisualizer
             {
@@ -247,7 +247,7 @@ namespace Quaver.Shared.Screens.Main
                 X = -WindowManager.Width / 2f - 120
             };*/
         }
-        
+
         /// <summary>
         /// </summary>
         private void CreateAudioVisualizer()
@@ -258,7 +258,7 @@ namespace Quaver.Shared.Screens.Main
                 Y = -MenuBorder.HEIGHT,
                 Alignment = Alignment.BotRight,
             };
-            
+
             visBottom.Bars.ForEach(bar =>
             {
                 bar.Alignment = Alignment.BotRight;
@@ -267,7 +267,7 @@ namespace Quaver.Shared.Screens.Main
                 bar.Tint = Colors.MainBlue;
             });
         }
-        
+
         /// <summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -279,7 +279,7 @@ namespace Quaver.Shared.Screens.Main
             const int animTime = 450;
 
             MenuLogoBackground.MoveToX(-MenuLogoBackground.Width - 50, Easing.OutQuint, animTime);
-            
+
             TipsContainer.MoveToX(TipsContainer.Width + 50, Easing.OutQuint, animTime);
             News.MoveToX(News.Width + 50, Easing.OutQuint, animTime);
         }
