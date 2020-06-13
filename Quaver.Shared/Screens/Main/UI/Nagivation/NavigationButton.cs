@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -40,8 +41,11 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 
             CreateIcon(icon);
             CreateName(text);
+
+            Hovered += (sender, args) => SkinManager.Skin?.SoundHover.CreateChannel().Play();
+            Clicked += (sender, args) => SkinManager.Skin?.SoundClick.CreateChannel().Play();
         }
-        
+
         private void CreateIcon(Texture2D icon) => Icon = new Sprite
         {
             Parent = this,
@@ -68,8 +72,10 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
             if (instantWidth)
                 Width = width;
             else
+            {
                 ChangeWidthTo(width, Easing.OutQuint, 450);
-
+                SkinManager.Skin?.SoundHover.CreateChannel().Play();
+            }
 
             Image = SelectedButton;
             IsSelected = true;
