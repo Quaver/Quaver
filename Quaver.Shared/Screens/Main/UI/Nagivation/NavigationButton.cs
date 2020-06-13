@@ -9,17 +9,22 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Main.UI.Nagivation
 {
-    public class NavigationButton : IconButton
+    public class NavigationButton : ImageButton
     {
         public Sprite Icon { get; private set; }
 
         /// <summary>
         /// </summary>
         public SpriteTextPlus Name { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        private Sprite HoverEffect { get; set; }
 
         /// <summary>
         /// </summary>
@@ -41,9 +46,21 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 
             CreateIcon(icon);
             CreateName(text);
+            CreateHoverEffect();
 
             Hovered += (sender, args) => SkinManager.Skin?.SoundHover.CreateChannel().Play();
             Clicked += (sender, args) => SkinManager.Skin?.SoundClick.CreateChannel().Play();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HoverEffect.Size = new ScalableVector2(Width - 4, Height - 4);
+            HoverEffect.Alpha = IsHovered ? 0.35f : 0;
+
+            base.Update(gameTime);
         }
 
         private void CreateIcon(Texture2D icon) => Icon = new Sprite
@@ -88,5 +105,13 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
             Image = DeselectedButton;
             IsSelected = false;
         }
+
+        private void CreateHoverEffect() => HoverEffect = new Sprite()
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(Width - 4, Height - 4),
+            Alpha = 0
+        };
     }
 }
