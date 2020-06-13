@@ -117,12 +117,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Upload", "CTRL+U", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Upload", "CTRL + U", false, Screen.Map.Game == MapGame.Quaver))
             {
                 Screen.UploadMapset();
             }
 
-            if (ImGui.MenuItem("Export", "CTRL+E", false))
+            if (ImGui.MenuItem("Export", "CTRL + E", false))
             {
                 Screen.ExportToZip();
             }
@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Open Song Folder", "CTRL+W", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Open Song Folder", "CTRL + W", false, Screen.Map.Game == MapGame.Quaver))
             {
                 try
                 {
@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 }
             }
 
-            if (ImGui.MenuItem("Open .qua File", "CTRL+Q", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Open .qua File", "CTRL + Q", false, Screen.Map.Game == MapGame.Quaver))
             {
                 try
                 {
