@@ -204,11 +204,11 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 if (SelectedMapset.Value.Id != e.Download.MapsetId)
                     return;
 
-                // Select the next mapset if the selected one was downloaded
+                /*// Select the next mapset if the selected one was downloaded
                 if (index <= 0 && AvailableMapsets.Value.Count != 0)
                     SelectedMapset.Value = AvailableMapsets.Value.First();
                 else if (index > 0 && index < AvailableMapsets.Value.Count)
-                    SelectedMapset.Value = AvailableMapsets.Value[index];
+                    SelectedMapset.Value = AvailableMapsets.Value[index];*/
             };
         }
 
@@ -233,7 +233,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                     Pool[i].Index = i;
 
                     Pool[i].ClearAnimations();
-                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT + PaddingTop, Easing.OutQuint, 450);
+                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT + PaddingTop, Easing.OutQuint, 7500);
                 }
 
                 RecalculateContainerHeight();
@@ -269,7 +269,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         private void OnSelectedMapsetChanged(object sender, BindableValueChangedEventArgs<DownloadableMapset> e)
         {
             SelectedIndex.Value = AvailableMapsets.Value.IndexOf(e.Value);
-            ScrollToSelected();
+            ScrollToSelected(3000);
         }
     }
 }
