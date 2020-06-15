@@ -129,6 +129,13 @@ namespace Quaver.Shared.Screens.Options
                         },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
                         new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive)
+                    }),
+                    new OptionsSubcategory("Linux", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
+                        {
+                            Tags = new List<string> { "linux" }
+                        }
                     })
                 }),
                 new OptionsSection("Audio", UserInterface.OptionsAudio, new List<OptionsSubcategory>
