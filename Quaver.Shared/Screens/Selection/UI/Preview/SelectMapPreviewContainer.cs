@@ -273,14 +273,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     case ScrollDirection.Split:
                         playfield.Container.Alignment = Alignment.BotLeft;
                         playfield.Container.Y = -MenuBorder.HEIGHT - Y;
+
+                        if (skin.HitErrorPosY < 0)
+                            playfield.Stage.HitError.Y = skin.HitErrorPosY * 3 / 4;
+
+                        if (skin.JudgementBurstPosY < 0)
+                            playfield.Stage.JudgementHitBurst.OriginalPosY = skin.JudgementBurstPosY * 3 / 4;
+
+                        if (skin.ComboPosY < 0)
+                            playfield.Stage.OriginalComboDisplayY = skin.ComboPosY * 3 / 4;
+
+                        playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
                         break;
                     case ScrollDirection.Up:
                         playfield.Container.Alignment = Alignment.TopLeft;
-                        playfield.Stage.HitError.Y = -skin.HitErrorPosY - MenuBorder.HEIGHT;
-                        playfield.Stage.OriginalComboDisplayY = -skin.ComboPosY - MenuBorder.HEIGHT - filterPanelHeight - Y;
+                        playfield.Stage.HitError.Y = (skin.HitErrorPosY - filterPanelHeight - MenuBorder.HEIGHT) * 4 / 5;
+                        playfield.Stage.JudgementHitBurst.OriginalPosY = (skin.JudgementBurstPosY - filterPanelHeight - MenuBorder.HEIGHT) * 4 / 5;
+                        playfield.Stage.OriginalComboDisplayY = (skin.ComboPosY - filterPanelHeight - MenuBorder.HEIGHT) * 4 / 5;
                         playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
-                        playfield.Stage.JudgementHitBurst.OriginalPosY = skin.JudgementBurstPosY + MenuBorder.HEIGHT - filterPanelHeight - Y;
-                        playfield.Stage.JudgementHitBurst.Y = playfield.Stage.JudgementHitBurst.OriginalPosY;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
