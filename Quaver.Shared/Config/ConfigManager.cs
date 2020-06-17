@@ -472,7 +472,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// The percentage to scale the master volume by when the game window loses focus
         /// </summary>
-        internal static Bindable<int> VolumePercentageOnWindowInactive { get; private set; }
+        internal static BindableInt VolumePercentageOnWindowInactive { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -916,7 +916,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
-            VolumePercentageOnWindowInactive = ReadValue(@"VolumePercentageOnWindowInactive", 90, data);
+            VolumePercentageOnWindowInactive = ReadInt(@"VolumePercentageOnWindowInactive", 100, 0, 100, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
             DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
             DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomTotop", false, data);

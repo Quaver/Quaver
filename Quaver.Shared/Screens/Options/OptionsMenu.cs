@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
-using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Options.Content;
 using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Items.Custom;
@@ -148,6 +144,7 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> {"fx", "sfx"}
                         },
+                        new OptionsSlider(containerRect, "Scale Volume on Focus Loss", ConfigManager.VolumePercentageOnWindowInactive)
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
                     {
