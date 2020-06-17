@@ -290,9 +290,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                         break;
                     case ScrollDirection.Up:
                         playfield.Container.Alignment = Alignment.TopLeft;
-                        playfield.Stage.HitError.Y = skin.HitErrorPosY - filterPanelHeight - MenuBorder.HEIGHT;
-                        playfield.Stage.JudgementHitBurst.OriginalPosY = skin.JudgementBurstPosY - filterPanelHeight - MenuBorder.HEIGHT;
-                        playfield.Stage.OriginalComboDisplayY = skin.ComboPosY - filterPanelHeight - MenuBorder.HEIGHT;
+                        playfield.Stage.HitError.Y -= filterPanelHeight + MenuBorder.HEIGHT;
+                        playfield.Stage.JudgementHitBurst.OriginalPosY -= filterPanelHeight + MenuBorder.HEIGHT;
+                        playfield.Stage.OriginalComboDisplayY -= filterPanelHeight + MenuBorder.HEIGHT;
 
                         if (playfield.Stage.HitError.Y < 0)
                             playfield.Stage.HitError.Y *= previewMultiplier;
