@@ -189,6 +189,9 @@ namespace Quaver.Shared
 
         private bool windowUnfocused;
 
+        /// <summary>
+        ///     Whether the window is unfocused.
+        /// </summary>
         private bool WindowUnfocused
         {
             get => windowUnfocused;
@@ -202,6 +205,9 @@ namespace Quaver.Shared
             }
         }
 
+        /// <summary>
+        ///     The original volume of the game before it is reduced on focus loss
+        /// </summary>
         private int OriginalVolume { get; set; }
 
         /// <summary>
