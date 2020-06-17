@@ -587,11 +587,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var hitObject = lane.Dequeue();
 
                     // The judgement that is given when a user completely fails to release.
-                    var missedReleaseJudgement = Judgement.Okay;
-
-                    // Missing a release results in a good with HealthAdjust rather than an okay
-                    if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.HeatlthAdjust))
-                        missedReleaseJudgement = Judgement.Good;
+                    var missedReleaseJudgement = Judgement.Good;
 
                     // Add new hit stat data and update score
                     var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.EndTime, missedReleaseJudgement,
