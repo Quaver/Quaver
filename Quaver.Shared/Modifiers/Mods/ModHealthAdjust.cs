@@ -24,9 +24,6 @@ namespace Quaver.Shared.Modifiers.Mods
                                                   $"Good: -0.3% -> +0.1%\n" +
                                                   $"Okay: -4.5% -> -2.5%\n" +
                                                   $"Miss: -6.0% -> -5%\n\n" +
-                                                  $"Long Note Changes:\n" +
-                                                  $"* Failing to release a long note now results in a 'Good' judgement rather than an 'Okay.'\n" +
-                                                  $"* 'Okay' judgements are no longer possible on long note releases. Releasing in the 'Okay' window results in a 'Good.'\n\n" +
                                                   $"Developer Notes:\n" +
                                                   $"* You can use theater mode to view multiple replays at the same time if you would like to compare!\n";
 
