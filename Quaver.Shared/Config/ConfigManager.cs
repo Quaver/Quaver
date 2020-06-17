@@ -470,6 +470,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
 
         /// <summary>
+        /// The percentage to scale the master volume by when the game window loses focus
+        /// </summary>
+        internal static Bindable<int> VolumePercentageOnWindowInactive { get; private set; }
+
+        /// <summary>
         /// </summary>
         internal static Bindable<bool> DownloadDisplayOwnedMapsets { get; private set; }
 
@@ -911,6 +916,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
+            VolumePercentageOnWindowInactive = ReadValue(@"VolumePercentageOnWindowInactive", 90, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
             DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
             DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomTotop", false, data);
@@ -1066,6 +1072,7 @@ namespace Quaver.Shared.Config
                     WindowBorderless.ValueChanged += AutoSaveConfiguration;
                     PreferWayland.ValueChanged += AutoSaveConfiguration;
                     LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
+                    VolumePercentageOnWindowInactive.ValueChanged += AutoSaveConfiguration;
                     KeyScreenshot.ValueChanged += AutoSaveConfiguration;
                     DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;
                     DownloadReverseSort.ValueChanged += AutoSaveConfiguration;

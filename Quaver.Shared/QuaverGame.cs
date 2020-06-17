@@ -185,6 +185,25 @@ namespace Quaver.Shared
         /// </summary>
         private bool WindowActiveInPreviousFrame { get; set; }
 
+        private event EventHandler WindowFocusChanged;
+
+        private bool windowUnfocused;
+
+        private bool WindowUnfocused
+        {
+            get => windowUnfocused;
+            set
+            {
+                if (value != windowUnfocused)
+                {
+                    windowUnfocused = value;
+                    WindowFocusChanged?.Invoke(this, null);
+                }
+            }
+        }
+
+        private int OriginalVolume { get; set; }
+
         /// <summary>
         ///     Sometimes we'd like to perform actions on the first update, such as
         ///     creating <see cref="OnlineHub"/>
@@ -250,6 +269,8 @@ namespace Quaver.Shared
         {
             Content.RootDirectory = "Content";
             InitializeFpsLimiting();
+
+            WindowFocusChanged += ScaleVolumeOnFocusChange;
         }
 
         /// <inheritdoc />
@@ -381,6 +402,7 @@ namespace Quaver.Shared
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
+            CheckGameWindowFocus();
             UpdateFpsCounterPosition();
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
@@ -817,6 +839,36 @@ namespace Quaver.Shared
             }
 
             WindowActiveInPreviousFrame = IsActive;
+        }
+
+        /// <summary>
+        ///     If the value for volume percentage scaling on focus loss is not set to maximum, checks if the window is unfocused and updates the unfocused property.
+        /// </summary>
+        private void CheckGameWindowFocus()
+        {
+            if (ConfigManager.VolumePercentageOnWindowInactive.Value == 100)
+                return;
+
+            WindowUnfocused = !IsActive;
+        }
+
+        /// <summary>
+        ///     Updates the game volume when focus changes.
+        /// </summary>
+        /// <param name="sender">The object which triggered the event.</param>
+        /// <param name="e">Extra event arguments.</param>
+        private void ScaleVolumeOnFocusChange(object sender, EventArgs e)
+        {
+            if (WindowUnfocused)
+            {
+                var newVolume = (int) (ConfigManager.VolumeGlobal.Value * (ConfigManager.VolumePercentageOnWindowInactive.Value / 100.0f));
+                OriginalVolume = ConfigManager.VolumeGlobal.Value;
+                ConfigManager.VolumeGlobal.Value = newVolume;
+            }
+            else
+            {
+                ConfigManager.VolumeGlobal.Value = OriginalVolume;
+            }
         }
 
         /// <summary>
