@@ -617,7 +617,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
 
                     // Update Pooling
-                    KillHoldPoolObject(hitObject);
+                    RecyclePoolObject(hitObject);
                 }
             }
         }

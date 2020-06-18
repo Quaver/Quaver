@@ -290,7 +290,6 @@ namespace Quaver.Shared.Screens.Options
                         }),
                         new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<Keys>>()
                         {
-                            ConfigManager.KeyLayout7KScratch8,
                             ConfigManager.KeyLayout7KScratch1,
                             ConfigManager.KeyLayout7KScratch2,
                             ConfigManager.KeyLayout7KScratch3,
@@ -298,6 +297,11 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyLayout7KScratch5,
                             ConfigManager.KeyLayout7KScratch6,
                             ConfigManager.KeyLayout7KScratch7,
+                        }),
+                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Scratch Lane Keys", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyLayout7KScratch8,
+                            ConfigManager.KeyLayout7KScratch9,
                         }),
                     }),
                     new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()
