@@ -155,8 +155,10 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
 
             for (var i = 0; i < bindingStore.Count; i++)
             {
-                if (bindingStore[i].Pressed)
-                    state |= Replay.KeyLaneToPressState(i + 1);
+                var key = Replay.KeyLaneToPressState(i + 1);
+
+                if (bindingStore[i].Pressed && !state.HasFlag(key))
+                    state |= key;
             }
 
             return state;
