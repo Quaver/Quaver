@@ -629,6 +629,7 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyLayout7KScratch6 { get; private set; }
         internal static Bindable<Keys> KeyLayout7KScratch7 { get; private set; }
         internal static Bindable<Keys> KeyLayout7KScratch8 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch9 { get; private set; }
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
@@ -844,7 +845,6 @@ namespace Quaver.Shared.Config
             KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.K, data);
             KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.L, data);
 
-            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
             KeyLayout7KScratch1 = ReadValue(@"KeyLayout7KScratch1", Keys.A, data);
             KeyLayout7KScratch2 = ReadValue(@"KeyLayout7KScratch2", Keys.S, data);
             KeyLayout7KScratch3 = ReadValue(@"KeyLayout7KScratch3", Keys.D, data);
@@ -852,6 +852,8 @@ namespace Quaver.Shared.Config
             KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.J, data);
             KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.K, data);
             KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.L, data);
+            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
+            KeyLayout7KScratch9 = ReadValue(@"KeyLayout7KScratch9", Keys.OemColon, data);
 
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
@@ -1096,6 +1098,7 @@ namespace Quaver.Shared.Config
                     KeyLayout7KScratch6.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch7.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch9.ValueChanged += AutoSaveConfiguration;
                     ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
                     ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
                     AcceptedTermsAndPrivacyPolicy.ValueChanged += AutoSaveConfiguration;

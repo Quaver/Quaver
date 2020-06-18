@@ -446,7 +446,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                             new InputBindingKeys(ConfigManager.KeyLayout7KScratch6),
                             new InputBindingKeys(ConfigManager.KeyLayout7KScratch7),
                             new InputBindingKeys(ConfigManager.KeyLayout7KScratch8),
-                            new InputBindingKeys(new Bindable<Microsoft.Xna.Framework.Input.Keys>(Microsoft.Xna.Framework.Input.Keys.LeftControl))
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch9)
                         };
                     }
                     break;
