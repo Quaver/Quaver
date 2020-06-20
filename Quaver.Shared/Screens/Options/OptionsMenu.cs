@@ -385,6 +385,10 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
                     }),
+                    new OptionsSubcategory("Beta", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),
+                    }),
                 }),
             };
 

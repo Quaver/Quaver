@@ -314,6 +314,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
 
         /// <summary>
+        ///	    If enabled, automatically skip the beta splash screen.
+        /// </summary>
+        internal static Bindable<bool> SkipSplashScreen { get; private set; }
+
+        /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
 
@@ -932,6 +937,7 @@ namespace Quaver.Shared.Config
             ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
             ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
+            SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -1102,6 +1108,7 @@ namespace Quaver.Shared.Config
                     ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
                     ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
                     AcceptedTermsAndPrivacyPolicy.ValueChanged += AutoSaveConfiguration;
+                    SkipSplashScreen.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
