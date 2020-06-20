@@ -123,20 +123,10 @@ namespace Quaver.Shared.Graphics.Graphs
             // Handle dragging in the song
             if (IsHeld && MouseManager.CurrentState.LeftButton == ButtonState.Pressed)
             {
-                if (!Track.IsDisposed)
-                {
-                    var percentage = (MouseManager.CurrentState.Y - AbsolutePosition.Y) / AbsoluteSize.Y;
-                    var targetPos = (1 - percentage) * Track.Length;
+                var percentage = (MouseManager.CurrentState.Y - AbsolutePosition.Y) / AbsoluteSize.Y;
+                var targetPos = (1 - percentage) * Track.Length;
 
-                    if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= Track.Length)
-                    {
-                        if (Math.Abs(Track.Time - targetPos) < 500)
-                            return;
-
-                        Track.Seek(targetPos);
-                        AudioSeeked?.Invoke(this, new SeekBarAudioSeekedEventArgs());
-                    }
-                }
+                SeekToPos(targetPos);
             }
 
             if (SeekBarLine != null)
@@ -234,5 +224,23 @@ namespace Quaver.Shared.Graphics.Graphs
             Tint = Color.White,
             Y = (float) (Track.Time / Track.Length) * Height
         };
+
+        /// <summary>
+        ///     Seeks to the specified position, and invokes the respective event.
+        /// </summary>
+        private void SeekToPos(double targetPos)
+        {
+            if(Track.IsDisposed)
+                return;
+
+            if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= Track.Length)
+            {
+                if (Math.Abs(Track.Time - targetPos) < 500)
+                    return;
+
+                Track.Seek(targetPos);
+                AudioSeeked?.Invoke(this, new SeekBarAudioSeekedEventArgs());
+            }
+        }
     }
 }
