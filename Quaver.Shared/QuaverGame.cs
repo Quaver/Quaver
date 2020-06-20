@@ -317,7 +317,11 @@ namespace Quaver.Shared
             Window.Title = $"Quaver Visual Test Runner";
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new BetaScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => {
+                    if (ConfigManager.SkipSplashScreen.Value)
+                        return new MainMenuScreen();
+                    return new BetaScreen();
+            });
 #endif
         }
 
