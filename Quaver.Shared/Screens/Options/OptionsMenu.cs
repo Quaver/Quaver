@@ -473,8 +473,10 @@ namespace Quaver.Shared.Screens.Options
                 foreach (var section in Sections)
                 {
                     foreach (var category in section.Subcategories)
+                    {
                         items.AddRange(category.Items.FindAll(x => x.Name.Text.ToLower().Contains(e.Value.ToLower())
                                                                    || x.Tags.Any(y => y.ToLower().Contains(e.Value.ToLower()))));
+                    }
                 }
 
                 // Create a temporary section
