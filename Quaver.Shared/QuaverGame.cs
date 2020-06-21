@@ -243,9 +243,9 @@ namespace Quaver.Shared
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 
-        public QuaverGame(HotLoader hl) : base(hl)
+        public QuaverGame(HotLoader hl) : base(hl, ConfigManager.PreferWayland.Value)
 #else
-        public QuaverGame()
+        public QuaverGame() : base(ConfigManager.PreferWayland.Value)
 #endif
         {
             Content.RootDirectory = "Content";
@@ -317,7 +317,11 @@ namespace Quaver.Shared
             Window.Title = $"Quaver Visual Test Runner";
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new BetaScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => {
+                    if (ConfigManager.SkipSplashScreen.Value)
+                        return new MainMenuScreen();
+                    return new BetaScreen();
+            });
 #endif
         }
 

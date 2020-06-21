@@ -70,6 +70,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private JudgementWindows Windows { get; set; }
 
         /// <summary>
+        ///     The amount of keys in the map for the replay
+        /// </summary>
+        private int KeyCount { get; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="screen"></param>
@@ -91,7 +96,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             }
 
             // Populate unique key presses/releases.
-            for (var i = 0; i < screen.Map.GetKeyCount(); i++)
+            KeyCount = screen.Map.GetKeyCount();
+
+            // Allows two bindings to the scratch key (K9)
+            if (screen.Map.HasScratchKey)
+                KeyCount++;
+
+            for (var i = 0; i < KeyCount; i++)
             {
                 UniquePresses.Add(false);
                 UniqueReleases.Add(false);
@@ -225,7 +236,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             UniquePresses.Clear();
             UniqueReleases.Clear();
 
-            for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
+            for (var i = 0; i < KeyCount; i++)
             {
                 UniquePresses.Add(false);
                 UniqueReleases.Add(false);

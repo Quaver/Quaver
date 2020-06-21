@@ -1205,9 +1205,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
         /// <summary>
         /// </summary>
-        private void SendJudgementsToServer()
+        public void SendJudgementsToServer(bool force = false)
         {
-            if (TimeSinceLastJudgementsSentToServer < 400 || OnlineManager.CurrentGame == null)
+            if ((TimeSinceLastJudgementsSentToServer < 400 && !force) || OnlineManager.CurrentGame == null)
                 return;
 
             if (OnlineManager.IsSpectatingSomeone)

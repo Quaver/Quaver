@@ -17,6 +17,7 @@ using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Options
 {
@@ -129,6 +130,13 @@ namespace Quaver.Shared.Screens.Options
                         },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
                         new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive)
+                    }),
+                    new OptionsSubcategory("Linux", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
+                        {
+                            Tags = new List<string> { "linux" }
+                        }
                     })
                 }),
                 new OptionsSection("Audio", UserInterface.OptionsAudio, new List<OptionsSubcategory>
@@ -283,7 +291,6 @@ namespace Quaver.Shared.Screens.Options
                         }),
                         new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<Keys>>()
                         {
-                            ConfigManager.KeyLayout7KScratch8,
                             ConfigManager.KeyLayout7KScratch1,
                             ConfigManager.KeyLayout7KScratch2,
                             ConfigManager.KeyLayout7KScratch3,
@@ -291,6 +298,11 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyLayout7KScratch5,
                             ConfigManager.KeyLayout7KScratch6,
                             ConfigManager.KeyLayout7KScratch7,
+                        }),
+                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Scratch Lane Keys", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyLayout7KScratch8,
+                            ConfigManager.KeyLayout7KScratch9,
                         }),
                     }),
                     new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()
@@ -373,6 +385,10 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
+                    }),
+                    new OptionsSubcategory("Beta", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),
                     }),
                 }),
             };
@@ -511,8 +527,15 @@ namespace Quaver.Shared.Screens.Options
                     ClearSearchAndReiRenitializeSections(e.OldValue);
 
                 SetActiveContentContainer();
+
+                // Update previous and newest section to make sure button hover status is up-to-date
+                UpdateSection(e.OldValue);
+                UpdateSection(e.Value);
             });
         }
+
+        private void UpdateSection(OptionsSection section) => section?.Subcategories.ForEach(x =>
+            x.Items.ForEach(y => y.Update(new GameTime())));
 
         /// <summary>
         ///     Looks through each section and checks if any of the keybinds are currently focused.

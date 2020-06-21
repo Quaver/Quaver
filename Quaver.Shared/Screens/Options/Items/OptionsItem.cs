@@ -29,11 +29,6 @@ namespace Quaver.Shared.Screens.Options.Items
         public List<string> Tags { get; set; } = new List<string>();
 
         /// <summary>
-        ///     So that overlapping items (such as dropdowns) will have their hover/click depth maintained
-        /// </summary>
-        protected ImageButton Button { get; private set; }
-
-        /// <summary>
         /// </summary>
         /// <param name="containerRect"></param>
         /// <param name="name"></param>
@@ -46,7 +41,6 @@ namespace Quaver.Shared.Screens.Options.Items
 
             Tint = ColorHelper.HexToColor("#242424");
 
-            CreateButton();
             CreateName(name);
 
             UsePreviousSpriteBatchOptions = true;
@@ -58,7 +52,7 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var color = Button.IsHovered ? ColorHelper.HexToColor("#3F3F3F") : ColorHelper.HexToColor("#242424");
+            var color = IsHovered() ? ColorHelper.HexToColor("#3F3F3F") : ColorHelper.HexToColor("#242424");
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             FadeToColor(color, dt, 20);
@@ -72,16 +66,6 @@ namespace Quaver.Shared.Screens.Options.Items
 
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// </summary>
-        private void CreateButton() => Button = new ImageButton(UserInterface.BlankBox)
-        {
-            Parent = this,
-            Size = Size,
-            Position = Position,
-            Alpha = 0
-        };
 
         /// <summary>
         /// </summary>

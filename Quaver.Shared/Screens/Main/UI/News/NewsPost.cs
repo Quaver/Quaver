@@ -8,6 +8,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.API.News;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Skinning;
 using TimeAgo;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -19,12 +20,12 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Main.UI.News
 {
-    public class NewsPost : IconButton
+    public class NewsPost : ImageButton
     {
         /// <summary>
         /// </summary>
         private static APIResponseNewsFeed NewsPosts { get; set; }
-        
+
         private LoadingWheel Wheel { get; set; }
 
         /// <summary>
@@ -41,14 +42,16 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private SpriteTextPlus ShortText { get; set; }
 
+        private Sprite HoverEffect { get; set; }
+
         public NewsPost() : base(UserInterface.NewsPanel)
         {
             Size = new ScalableVector2(Image.Width, Image.Height);
             SetChildrenAlpha = true;
-            
+
             CreateContainer();
             CreateLoadingWheel();
-            
+
             Load();
         }
 
@@ -60,8 +63,11 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 Title.Alpha = Alpha;
                 TimeAgo.Alpha = Alpha;
                 ShortText.Alpha = Alpha;
+
+                HoverEffect.Size = new ScalableVector2(Width - 4, Height - 4);
+                HoverEffect.Alpha = IsHovered ? 0.35f : 0;
             }
-            
+
             base.Update(gameTime);
         }
 
@@ -96,7 +102,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 Initialize(NewsPosts);
                 return;
             }
-            
+
             ThreadScheduler.Run(() =>
             {
                 NewsPosts = new APIRequestNewsFeed().ExecuteRequest();
@@ -110,16 +116,18 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 return;
 
             var latestPost = newsFeed.Items.First();
-            
+
             Wheel.ClearAnimations();
             Wheel.FadeTo(0, Easing.Linear, 450);
-            
+
             CreateBanner(newsFeed.RecentPostBanner);
             CreateTitle(latestPost);
             CreateTimeAgo(latestPost);
             CreateShortText(latestPost);
+            CreateHoverEffect();
 
             Clicked += (sender, args) => BrowserHelper.OpenURL(latestPost.Url);
+            Hovered += (sender, args) => SkinManager.Skin?.SoundHover.CreateChannel().Play();
         }
 
         private void CreateBanner(Texture2D banner)
@@ -175,9 +183,17 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 MaxWidth = Container.Width - 20,
                 Alpha = 0
             };
-            
+
             ShortText.TruncateWithEllipsis((int) ShortText.MaxWidth * 2 - 100);
             ShortText.FadeTo(1, Easing.Linear, 450);
         }
+
+        private void CreateHoverEffect() => HoverEffect = new Sprite
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(Width - 4, Height - 4),
+            Alpha = 0
+        };
     }
 }

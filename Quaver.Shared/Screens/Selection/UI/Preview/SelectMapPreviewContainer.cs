@@ -267,20 +267,43 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 const int filterPanelHeight = 88;
 
+                // Multiplier for preview to move the top half of the elements downwards by 11/15, as that is the amount that is covered by UI.
+                const float previewMultiplier = 11 / 15f;
+
                 switch (scroll.Value)
                 {
                     case ScrollDirection.Down:
                     case ScrollDirection.Split:
                         playfield.Container.Alignment = Alignment.BotLeft;
                         playfield.Container.Y = -MenuBorder.HEIGHT - Y;
+                        
+                        if (playfield.Stage.HitError.Y < 0)
+                            playfield.Stage.HitError.Y *= previewMultiplier;
+
+                        if (playfield.Stage.JudgementHitBurst.OriginalPosY < 0)
+                            playfield.Stage.JudgementHitBurst.OriginalPosY *= previewMultiplier;
+
+                        if (playfield.Stage.OriginalComboDisplayY < 0)
+                            playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
+
+                        playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
                         break;
                     case ScrollDirection.Up:
                         playfield.Container.Alignment = Alignment.TopLeft;
-                        playfield.Stage.HitError.Y = -skin.HitErrorPosY - MenuBorder.HEIGHT;
-                        playfield.Stage.OriginalComboDisplayY = -skin.ComboPosY - MenuBorder.HEIGHT - filterPanelHeight - Y;
+                        playfield.Stage.HitError.Y -= filterPanelHeight + MenuBorder.HEIGHT;
+                        playfield.Stage.JudgementHitBurst.OriginalPosY -= filterPanelHeight + MenuBorder.HEIGHT;
+                        playfield.Stage.OriginalComboDisplayY -= filterPanelHeight + MenuBorder.HEIGHT;
+
+                        if (playfield.Stage.HitError.Y < 0)
+                            playfield.Stage.HitError.Y *= previewMultiplier;
+
+                        if (playfield.Stage.JudgementHitBurst.OriginalPosY < 0)
+                            playfield.Stage.JudgementHitBurst.OriginalPosY *= previewMultiplier;
+
+                        if (playfield.Stage.OriginalComboDisplayY < 0)
+                            playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
+
                         playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
-                        playfield.Stage.JudgementHitBurst.OriginalPosY = skin.JudgementBurstPosY + MenuBorder.HEIGHT - filterPanelHeight - Y;
-                        playfield.Stage.JudgementHitBurst.Y = playfield.Stage.JudgementHitBurst.OriginalPosY;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

@@ -757,16 +757,11 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     try
                     {
-                        var playingUsers = GetScoreboardUsers();
+                        Screen.Ruleset.UpdateStandardizedScoreProcessor(true);
+                        Screen.SendJudgementsToServer(true);
 
-                        var allPlayersFinished = playingUsers.All(x => x.Processor.TotalJudgementCount == Screen.Ruleset.ScoreProcessor.TotalJudgementCount);
-
-                        if (Screen.LastJudgementIndexSentToServer == Screen.Ruleset.ScoreProcessor.TotalJudgementCount - 1 && allPlayersFinished)
-                        {
-                            OnlineManager.Client.FinishMultiplayerGameSession();
-                            ResultsScreenLoadInitiated = true;
-                        }
-
+                        OnlineManager.Client.FinishMultiplayerGameSession();
+                        ResultsScreenLoadInitiated = true;
                     }
                     catch (Exception e)
                     {

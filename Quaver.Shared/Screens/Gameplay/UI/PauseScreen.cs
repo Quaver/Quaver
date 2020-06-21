@@ -208,6 +208,17 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         }
 
         /// <summary>
+        ///		Handle Restart Button
+        /// </summary>
+        private void HandleKeyPressRestart()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
+                return;
+
+            InitiateRetry();
+        }
+
+        /// <summary>
         ///     Hover over a specific button via given index.
         /// </summary>
         /// <param name="button"></param>
@@ -292,6 +303,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 HandleKeyPressDown();
                 HandleKeyPressUp();
                 HandleKeyPressSelect();
+                HandleKeyPressRestart();
             }
 
             base.Update(gameTime);

@@ -126,6 +126,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
                 KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Right)
                 || MouseManager.CurrentState.ScrollWheelValue != MouseManager.PreviousState.ScrollWheelValue)
             {
+                Animations.Clear();
                 TimeInactive = 0;
             }
 
