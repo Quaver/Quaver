@@ -17,6 +17,7 @@ using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Options
 {
@@ -473,10 +474,8 @@ namespace Quaver.Shared.Screens.Options
                 foreach (var section in Sections)
                 {
                     foreach (var category in section.Subcategories)
-                    {
                         items.AddRange(category.Items.FindAll(x => x.Name.Text.ToLower().Contains(e.Value.ToLower())
                                                                    || x.Tags.Any(y => y.ToLower().Contains(e.Value.ToLower()))));
-                    }
                 }
 
                 // Create a temporary section
@@ -528,8 +527,15 @@ namespace Quaver.Shared.Screens.Options
                     ClearSearchAndReiRenitializeSections(e.OldValue);
 
                 SetActiveContentContainer();
+
+                // Update previous and newest section to make sure button hover status is up-to-date
+                UpdateSection(e.OldValue);
+                UpdateSection(e.Value);
             });
         }
+
+        private void UpdateSection(OptionsSection section) => section?.Subcategories.ForEach(x =>
+            x.Items.ForEach(y => y.Update(new GameTime())));
 
         /// <summary>
         ///     Looks through each section and checks if any of the keybinds are currently focused.
