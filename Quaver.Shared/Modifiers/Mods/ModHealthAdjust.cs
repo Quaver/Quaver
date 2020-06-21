@@ -18,14 +18,8 @@ namespace Quaver.Shared.Modifiers.Mods
                                                   $"* The game should be more suitable for low level players.\n" +
                                                   $"* Playing the game incorrectly should now result in extremely low accuracy (<=89%) and not immediate fails.\n\n" +
                                                   $"Health Weighting Changes:\n" +
-                                                  $"Marv: +0.5% -> +0.65%\n" +
-                                                  $"Perf: +0.4% -> +0.45%\n" +
-                                                  $"Great: +0.2% -> +0.3%\n" +
-                                                  $"Good: -0.3% -> +0.1%\n" +
-                                                  $"Okay: -4.5% -> -2.5%\n" +
-                                                  $"Miss: -6.0% -> -5%\n\n" +
-                                                  $"Developer Notes:\n" +
-                                                  $"* You can use theater mode to view multiple replays at the same time if you would like to compare!\n";
+                                                  $"- Between difficulty levels 1-20, HP will scale and progressively get harder.\n" +
+                                                  $"- Any difficulty level 20 or above (Aprox. Insane+) uses the normal HP system.";
 
         public bool Ranked() => false;
 
