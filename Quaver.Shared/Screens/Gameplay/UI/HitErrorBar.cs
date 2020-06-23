@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     The size of the hit error object pool.
         /// </summary>
-        private int PoolSize { get; } = 32;
+        private int PoolSize { get; } = 64;
 
         /// <summary>
         ///     The list of lines that are currently in the hit error.
