@@ -382,6 +382,11 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
 
+        /// <summary>
+        /// The amount of time in milliseconds a hit in the hiterror takes to disappear
+        /// </summary>
+        internal static BindableInt HitErrorFadeTime { get; private set; }
+
         /// <summary></summary>
         ///     If true, the user will skip the results screen after quitting the game.
         /// </summary>
@@ -887,6 +892,7 @@ namespace Quaver.Shared.Config
             EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
             DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
+            HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
             LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
@@ -1041,6 +1047,7 @@ namespace Quaver.Shared.Config
                     EditorMetronomePlayHalfBeats.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
                     DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
+                    HitErrorFadeTime.ValueChanged += AutoSaveConfiguration;
                     SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
                     DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
                     LaneCoverTopHeight.ValueChanged += AutoSaveConfiguration;

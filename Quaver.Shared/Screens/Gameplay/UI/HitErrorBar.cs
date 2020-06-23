@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Skinning;
@@ -102,7 +103,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Gradually fade out the line.
             foreach (var line in LineObjectPool)
-                line.Alpha = MathHelper.Lerp(line.Alpha, 0, (float) Math.Min(dt / 960, 1));
+                line.Alpha = MathHelper.Lerp(line.Alpha, 0, (float) Math.Min(dt / ConfigManager.HitErrorFadeTime.Value, 1));
 
             // Tween the chevron to the last hit
             if (CurrentLinePoolIndex != -1)
