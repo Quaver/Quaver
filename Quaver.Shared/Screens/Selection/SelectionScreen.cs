@@ -440,11 +440,13 @@ namespace Quaver.Shared.Screens.Selection
                             KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift);
 
             // Increase rate.
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRateK1.Value)
+                || KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRateK2.Value))
                 ModManager.AddSpeedMods(GetNextRate(true, !shiftHeld));
 
             // Decrease Rate
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRateK1.Value)
+                || KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRateK2.Value))
                 ModManager.AddSpeedMods(GetNextRate(false, !shiftHeld));
 
             // Change from pitched to non-pitched
