@@ -657,6 +657,16 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
+        ///     The key to decrease the gameplay rate while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
+
+        /// <summary>
+        ///     The key to increase the gameplay rate while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyIncreaseGameplayAudioRate { get; private set; }
+
+        /// <summary>
         ///     The key pressed to restart the map.
         /// </summary>
         internal static Bindable<Keys> KeyRestartMap { get; private set; }
@@ -868,6 +878,8 @@ namespace Quaver.Shared.Config
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
+            KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemPlus, data);
+            KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemMinus, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
@@ -1025,6 +1037,8 @@ namespace Quaver.Shared.Config
                     KeySkipIntro.ValueChanged += AutoSaveConfiguration;
                     KeyPause.ValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
+                    KeyDecreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
+                    KeyIncreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyRestartMap.ValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
