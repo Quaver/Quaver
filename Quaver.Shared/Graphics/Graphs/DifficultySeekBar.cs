@@ -122,7 +122,7 @@ namespace Quaver.Shared.Graphics.Graphs
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var CurrentScreenType = (GameBase.Game as QuaverGame).CurrentScreen.Type;
+            var game = GameBase.Game as QuaverGame;
 
             // Handle dragging in the song
             if (IsHeld && MouseManager.CurrentState.LeftButton == ButtonState.Pressed)
@@ -132,7 +132,7 @@ namespace Quaver.Shared.Graphics.Graphs
 
                 SeekToPos(targetPos);
             }
-            else if (CurrentScreenType == QuaverScreenType.Select && IsHovered())
+            else if (game?.CurrentScreen?.Type == QuaverScreenType.Select && IsHovered)
             {
                 if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
                     SeekInDirection(Direction.Forward);
