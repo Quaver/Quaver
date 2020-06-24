@@ -47,7 +47,8 @@ namespace Quaver.Shared.Database.Maps
             "zetoban - Csikos Post",
             "zetoban - Umami Packed Mountaineering",
             "zetoban - Flowering Night",
-            "Plum - Fantasy Collision"
+            "Plum - Fantasy Collision",
+            "Lollipop - vibing oustide the supermarket at 1am"
         };
 
         /// <summary>
