@@ -12,7 +12,9 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -120,23 +122,22 @@ namespace Quaver.Shared.Graphics.Graphs
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            var game = GameBase.Game as QuaverGame;
+
             // Handle dragging in the song
             if (IsHeld && MouseManager.CurrentState.LeftButton == ButtonState.Pressed)
             {
-                if (!Track.IsDisposed)
-                {
-                    var percentage = (MouseManager.CurrentState.Y - AbsolutePosition.Y) / AbsoluteSize.Y;
-                    var targetPos = (1 - percentage) * Track.Length;
+                var percentage = (MouseManager.CurrentState.Y - AbsolutePosition.Y) / AbsoluteSize.Y;
+                var targetPos = (1 - percentage) * Track.Length;
 
-                    if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= Track.Length)
-                    {
-                        if (Math.Abs(Track.Time - targetPos) < 500)
-                            return;
-
-                        Track.Seek(targetPos);
-                        AudioSeeked?.Invoke(this, new SeekBarAudioSeekedEventArgs());
-                    }
-                }
+                SeekToPos(targetPos);
+            }
+            else if (game?.CurrentScreen?.Type == QuaverScreenType.Select && IsHovered)
+            {
+                if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
+                    SeekInDirection(Direction.Forward);
+                else if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue)
+                    SeekInDirection(Direction.Backward);
             }
 
             if (SeekBarLine != null)
@@ -234,5 +235,48 @@ namespace Quaver.Shared.Graphics.Graphs
             Tint = Color.White,
             Y = (float) (Track.Time / Track.Length) * Height
         };
+
+        /// <summary>
+        ///     Seeks to the specified position, and invokes the respective event.
+        /// </summary>
+        private void SeekToPos(double targetPos)
+        {
+            if(Track.IsDisposed)
+                return;
+
+            if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= Track.Length)
+            {
+                if (Math.Abs(Track.Time - targetPos) < 500)
+                    return;
+
+                Track.Seek(targetPos);
+                AudioSeeked?.Invoke(this, new SeekBarAudioSeekedEventArgs());
+            }
+        }
+
+        /// <summary>
+        ///     Seeks in the specified direction.
+        /// </summary>
+        private void SeekInDirection(Direction direction)
+        {
+            if (Track.IsDisposed)
+                return;
+
+            var time = Track.Time;
+
+            if (direction == Direction.Forward)
+                time += 1000;
+            else if (direction == Direction.Backward)
+                time -= 1000;
+
+            if (time < 0)
+                time = 0;
+
+            if (time > Track.Length)
+                time = Track.Length;
+
+            Track.Seek(time);
+            AudioSeeked?.Invoke(this, new SeekBarAudioSeekedEventArgs());
+        }
     }
 }
