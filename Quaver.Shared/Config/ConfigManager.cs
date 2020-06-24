@@ -657,24 +657,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
-        ///     The first key to decrease the gameplay rate while in song select
+        ///     The key to decrease the gameplay rate while in song select
         /// </summary>
-        internal static Bindable<Keys> KeyDecreaseGameplayAudioRateK1 { get; private set; }
+        internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
 
         /// <summary>
-        ///     The first key to increase the gameplay rate while in song select
+        ///     The key to increase the gameplay rate while in song select
         /// </summary>
-        internal static Bindable<Keys> KeyIncreaseGameplayAudioRateK1 { get; private set; }
-
-        /// <summary>
-        ///     The second key to decrease the gameplay rate while in song select
-        /// </summary>
-        internal static Bindable<Keys> KeyDecreaseGameplayAudioRateK2 { get; private set; }
-
-        /// <summary>
-        ///     The second key to increase the gameplay rate while in song select
-        /// </summary>
-        internal static Bindable<Keys> KeyIncreaseGameplayAudioRateK2 { get; private set; }
+        internal static Bindable<Keys> KeyIncreaseGameplayAudioRate { get; private set; }
 
         /// <summary>
         ///     The key pressed to restart the map.
@@ -888,10 +878,8 @@ namespace Quaver.Shared.Config
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
-            KeyDecreaseGameplayAudioRateK1 = ReadValue(@"KeyDecreaseGameplayAudioRateK1", Keys.OemMinus, data);
-            KeyIncreaseGameplayAudioRateK1 = ReadValue(@"KeyIncreaseGameplayAudioRateK1", Keys.OemPlus, data);
-            KeyDecreaseGameplayAudioRateK2 = ReadValue(@"KeyDecreaseGameplayAudioRateK2", Keys.Subtract, data);
-            KeyIncreaseGameplayAudioRateK2 = ReadValue(@"KeyIncreaseGameplayAudioRateK2", Keys.Add, data);
+            KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
+            KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemPlus, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
@@ -1049,10 +1037,8 @@ namespace Quaver.Shared.Config
                     KeySkipIntro.ValueChanged += AutoSaveConfiguration;
                     KeyPause.ValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
-                    KeyDecreaseGameplayAudioRateK1.ValueChanged += AutoSaveConfiguration;
-                    KeyIncreaseGameplayAudioRateK1.ValueChanged += AutoSaveConfiguration;
-                    KeyDecreaseGameplayAudioRateK2.ValueChanged += AutoSaveConfiguration;
-                    KeyIncreaseGameplayAudioRateK2.ValueChanged += AutoSaveConfiguration;
+                    KeyDecreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
+                    KeyIncreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyRestartMap.ValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;

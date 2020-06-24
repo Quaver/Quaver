@@ -347,16 +347,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Song Selection", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybindMultiple(containerRect, "Decrease Gameplay Rate", new List<Bindable<Keys>>()
-                        {
-                            ConfigManager.KeyDecreaseGameplayAudioRateK1,
-                            ConfigManager.KeyDecreaseGameplayAudioRateK2,
-                        }),
-                        new OptionsItemKeybindMultiple(containerRect, "Increase Gameplay Rate", new List<Bindable<Keys>>()
-                        {
-                            ConfigManager.KeyIncreaseGameplayAudioRateK1,
-                            ConfigManager.KeyIncreaseGameplayAudioRateK2,
-                        }),
+                        new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
+                        new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {
