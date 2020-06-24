@@ -232,7 +232,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             var percent = (float) Processor.Value.CurrentJudgements[Judgement] / Processor.Value.TotalJudgementCount;
 
-            const int animTime = 1500;
+            const int animTime = 1000;
 
             Bar.ChangeWidthTo((int) (Width * percent), Easing.OutQuint, animTime);
 
