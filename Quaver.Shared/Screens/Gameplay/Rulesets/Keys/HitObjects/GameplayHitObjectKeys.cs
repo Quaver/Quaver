@@ -244,14 +244,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var skin = SkinManager.Skin.Keys[Ruleset.Map.Mode];
             var objectWidth = playfield.LaneSize;
 
+            var laneSize = objectWidth * scale;
+            var defaultLaneSize = laneSize;
+
             if (Ruleset.Screen.Map.HasScratchKey)
             {
                 if (info.Lane == Ruleset.Screen.Map.GetKeyCount())
-                    objectWidth = skin.ScratchLaneSize;
+                {
+                    laneSize = skin.ScratchLaneSize;
+                    defaultLaneSize = playfield.LaneSize;
+                }
             }
-
-            var laneSize = objectWidth * scale;
-            var defaultLaneSize = playfield.LaneSize;
 
             Tint = Color.White;
             var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
