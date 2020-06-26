@@ -251,7 +251,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 if (info.Lane == Ruleset.Screen.Map.GetKeyCount())
                 {
-                    laneSize = skin.ScratchLaneSize;
+                    laneSize = skin.ScratchLaneSize * scale;
                     defaultLaneSize = playfield.LaneSize;
                 }
             }
