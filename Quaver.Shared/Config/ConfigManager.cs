@@ -382,6 +382,11 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
 
+        /// <summary>
+        /// The amount of time in milliseconds a hit in the hiterror takes to disappear
+        /// </summary>
+        internal static BindableInt HitErrorFadeTime { get; private set; }
+
         /// <summary></summary>
         ///     If true, the user will skip the results screen after quitting the game.
         /// </summary>
@@ -652,6 +657,16 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
+        ///     The key to decrease the gameplay rate while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
+
+        /// <summary>
+        ///     The key to increase the gameplay rate while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyIncreaseGameplayAudioRate { get; private set; }
+
+        /// <summary>
         ///     The key pressed to restart the map.
         /// </summary>
         internal static Bindable<Keys> KeyRestartMap { get; private set; }
@@ -863,6 +878,8 @@ namespace Quaver.Shared.Config
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
+            KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
+            KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemPlus, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
@@ -887,6 +904,7 @@ namespace Quaver.Shared.Config
             EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
             DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
+            HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
             LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
@@ -1019,6 +1037,8 @@ namespace Quaver.Shared.Config
                     KeySkipIntro.ValueChanged += AutoSaveConfiguration;
                     KeyPause.ValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
+                    KeyDecreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
+                    KeyIncreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyRestartMap.ValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
@@ -1041,6 +1061,7 @@ namespace Quaver.Shared.Config
                     EditorMetronomePlayHalfBeats.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
                     DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
+                    HitErrorFadeTime.ValueChanged += AutoSaveConfiguration;
                     SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
                     DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
                     LaneCoverTopHeight.ValueChanged += AutoSaveConfiguration;
