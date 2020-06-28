@@ -270,6 +270,10 @@ namespace Quaver.Shared
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
 
+            // Don't change the actual display mode. Especially considering our support for arbitrary resolutions, this
+            // can lead to completely locking up user's session (on Linux).
+            Graphics.HardwareModeSwitch = false;
+
             // Apply all graphics changes
             Graphics.ApplyChanges();
 
