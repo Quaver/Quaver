@@ -817,7 +817,6 @@ namespace Quaver.Shared
             else if (!WindowActiveInPreviousFrame && (IsActive || !OtherGameMapDatabaseCache.OnSyncableScreen()))
             {
                 InactiveSleepTime = TimeSpan.Zero;
-                InitializeFpsLimiting();
             }
 
             WindowActiveInPreviousFrame = IsActive;
