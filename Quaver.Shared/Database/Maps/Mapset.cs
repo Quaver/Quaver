@@ -57,7 +57,7 @@ namespace Quaver.Shared.Database.Maps
             var exportsDir = $"{ConfigManager.DataDirectory}/Exports/";
             System.IO.Directory.CreateDirectory(exportsDir);
 
-            var tempFolder = $"{ConfigManager.DataDirectory}/temp/{GameBase.Game.TimeRunning}/";
+            var tempFolder = $"{ConfigManager.TempDirectory}/{GameBase.Game.TimeRunning}/";
             System.IO.Directory.CreateDirectory(tempFolder);
 
             string outputPath = null;
