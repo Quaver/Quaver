@@ -73,10 +73,10 @@
     <None Update="libdiscord-rpc.dylib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="libsteam_api64.so">
+    <None Update="libsteam_api.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="steam_api64.dylib">
+    <None Update="libsteam_api.dylib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="MonoGame.Extended.Content.Pipeline.dll">
@@ -85,7 +85,10 @@
     <None Update="MonoGame.Extended.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Steamworks.NET.dll">
+    <None Update="Steamworks.NET.Windows-x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Steamworks.NET.OSX-Linux-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="steam_api64.dll">
