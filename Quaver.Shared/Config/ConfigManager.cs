@@ -68,6 +68,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> DataDirectory { get; private set; }
 
         /// <summary>
+        ///     The temp directory
+        /// </summary>
+        internal static string TempDirectory => Path.Join(DataDirectory.Value, "Temp");
+
+        /// <summary>
         ///     The song directory
         /// </summary>
         private static string _songDirectory;

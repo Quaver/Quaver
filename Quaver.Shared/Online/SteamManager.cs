@@ -262,7 +262,14 @@ namespace Quaver.Shared.Online
             else
             {
                 Logger.Important($"Workshop upload failed! - {result.m_eResult}", LogType.Network);
-                NotificationManager.Show(NotificationLevel.Error, $"The Steam workshop upload has failed due to: {result.m_eResult}");
+
+                string text;
+                if (result.m_eResult == EResult.k_EResultLimitExceeded)
+                    text = "Workshop upload failed. Check that your steam_preview_image.png is below 1 MB and that you have enough free space on the Steam Cloud.";
+                else
+                    text = $"The Steam workshop upload has failed due to: {result.m_eResult}";
+
+                NotificationManager.Show(NotificationLevel.Error, text);
             }
         }
 
