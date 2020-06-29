@@ -256,34 +256,15 @@ namespace Quaver.Shared.Screens.Multi
                 return;
 
             // Increase rate.
-            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id ||
-                Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
+            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
             {
-                if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus) || KeyboardManager.IsUniqueKeyPress(Keys.Add))
-                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(true));
+                // Increase rate.
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
+                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(true, KeyboardManager.IsShiftDown()));
 
                 // Decrease Rate
-                if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus) || KeyboardManager.IsUniqueKeyPress(Keys.Subtract))
-                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(false));
-            }
-
-            // Change from pitched to non-pitched
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
-                ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
-
-            // Pause/Unpause music
-            if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
-            {
-                if (AudioEngine.Track.IsPaused)
-                {
-                    AudioEngine.Track.Play();
-                    NotificationManager.Show(NotificationLevel.Info, "Music Unpaused");
-                }
-                else if (AudioEngine.Track.IsPlaying)
-                {
-                    AudioEngine.Track.Pause();
-                    NotificationManager.Show(NotificationLevel.Info, "Music Paused");
-                }
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
+                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(false, KeyboardManager.IsShiftDown()));
             }
         }
 
