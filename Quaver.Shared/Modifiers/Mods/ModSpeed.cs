@@ -34,7 +34,7 @@ namespace Quaver.Shared.Modifiers.Mods
         ///     Temporarily leave this unranked.
         /// </summary>
         /// <returns></returns>
-        public bool Ranked() => ModIdentifier <= ModIdentifier.Speed095X;
+        public bool Ranked() => true;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
