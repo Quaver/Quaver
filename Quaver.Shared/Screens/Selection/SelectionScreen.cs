@@ -436,8 +436,7 @@ namespace Quaver.Shared.Screens.Selection
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
 
-            var shiftHeld = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) ||
-                            KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift);
+            var shiftHeld = KeyboardManager.IsShiftDown();
 
             // Increase rate.
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
@@ -502,7 +501,7 @@ namespace Quaver.Shared.Screens.Selection
             var adjustment = 0.1f;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (current < 1.0f || OnlineManager.CurrentGame == null && forceHalfRate || current == 1.0f && !faster)
+            if (current < 1.0f || forceHalfRate || current == 1.0f && !faster)
                 adjustment = 0.05f;
 
             var next = current + adjustment * (faster ? 1f : -1f);
