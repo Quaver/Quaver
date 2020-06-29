@@ -436,16 +436,16 @@ namespace Quaver.Shared.Screens.Selection
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
 
-            var shiftHeld = KeyboardManager.CurrentState.IsKeyUp(Keys.LeftShift) ||
+            var shiftHeld = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) ||
                             KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift);
 
             // Increase rate.
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
-                ModManager.AddSpeedMods(GetNextRate(true, !shiftHeld));
+                ModManager.AddSpeedMods(GetNextRate(true, shiftHeld));
 
             // Decrease Rate
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
-                ModManager.AddSpeedMods(GetNextRate(false, !shiftHeld));
+                ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
 
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))

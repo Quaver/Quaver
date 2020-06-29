@@ -75,7 +75,7 @@ namespace Quaver.Shared.Database.Playlists
         {
             var mapsetsAdded = new List<Mapset>();
 
-            var tempFolder = $"{ConfigManager.DataDirectory}/temp/{GameBase.Game.TimeRunning}/";
+            var tempFolder = $"{ConfigManager.TempDirectory}/{GameBase.Game.TimeRunning}/";
             Directory.CreateDirectory(tempFolder);
             var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.zip";
 

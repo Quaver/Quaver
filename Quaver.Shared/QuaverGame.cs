@@ -270,6 +270,10 @@ namespace Quaver.Shared
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
 
+            // Don't change the actual display mode. Especially considering our support for arbitrary resolutions, this
+            // can lead to completely locking up user's session (on Linux).
+            Graphics.HardwareModeSwitch = false;
+
             // Apply all graphics changes
             Graphics.ApplyChanges();
 
@@ -497,10 +501,10 @@ namespace Quaver.Shared
         {
             try
             {
-                foreach (var file in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetFiles("*", SearchOption.AllDirectories))
+                foreach (var file in new DirectoryInfo(ConfigManager.TempDirectory).GetFiles("*", SearchOption.AllDirectories))
                     file.Delete();
 
-                foreach (var dir in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
+                foreach (var dir in new DirectoryInfo(ConfigManager.TempDirectory).GetDirectories("*", SearchOption.AllDirectories))
                     dir.Delete(true);
             }
             catch (Exception)
@@ -509,7 +513,7 @@ namespace Quaver.Shared
             }
 
             // Create a directory that displays the "Now playing" song.
-            Directory.CreateDirectory($"{ConfigManager.DataDirectory}/temp/Now Playing");
+            Directory.CreateDirectory($"{ConfigManager.TempDirectory}/Now Playing");
         }
 
         /// <summary>
@@ -817,7 +821,6 @@ namespace Quaver.Shared
             else if (!WindowActiveInPreviousFrame && (IsActive || !OtherGameMapDatabaseCache.OnSyncableScreen()))
             {
                 InactiveSleepTime = TimeSpan.Zero;
-                InitializeFpsLimiting();
             }
 
             WindowActiveInPreviousFrame = IsActive;
