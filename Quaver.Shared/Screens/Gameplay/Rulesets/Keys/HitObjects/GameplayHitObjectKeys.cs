@@ -181,7 +181,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ScrollDirection = direction;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
-            var laneSize = playfield.LaneSize * scale;
+            var laneSize = playfield.LaneSize(lane) * scale;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
@@ -242,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
             var skin = SkinManager.Skin.Keys[Ruleset.Map.Mode];
-            var objectWidth = playfield.LaneSize;
+            var objectWidth = playfield.LaneSize(info.Lane);
 
             var laneSize = objectWidth * scale;
             var defaultLaneSize = laneSize;
@@ -252,7 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 if (info.Lane == Ruleset.Screen.Map.GetKeyCount())
                 {
                     laneSize = skin.ScratchLaneSize * scale;
-                    defaultLaneSize = playfield.LaneSize;
+                    defaultLaneSize = playfield.LaneSize(info.Lane);
                 }
             }
 

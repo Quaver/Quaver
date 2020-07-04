@@ -298,7 +298,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             // Create Stage HitPosition Overlay
             var sizeY = Skin.StageHitPositionOverlay.Height * Playfield.Width / Skin.StageHitPositionOverlay.Width;
-            var offsetY = Playfield.LaneSize * ((float)Skin.NoteReceptorsUp[0].Height / Skin.NoteReceptorsUp[0].Width);
+            var offsetY = Playfield.LaneSize(0) * ((float)Skin.NoteReceptorsUp[0].Height / Skin.NoteReceptorsUp[0].Width);
             var width = Playfield.Width;
 
             float y;
@@ -352,8 +352,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
             {
                 var scale = ConfigManager.GameplayNoteScale.Value / 100f;
-                var laneSize = Playfield.LaneSize;
-                var defaultLanePos = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                var laneSize = Playfield.LaneSize(i);
+                var defaultLanePos = (Playfield.LaneSize(i) + Playfield.ReceptorPadding) * i + Playfield.Padding;
                 var posX = defaultLanePos;
 
                 // Handle scratch key positioning
@@ -367,24 +367,24 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         if (i == Screen.Map.GetKeyCount() - 1)
                             posX = Playfield.Padding;
                         else
-                            posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding +
+                            posX = (Playfield.LaneSize(i) + Playfield.ReceptorPadding) * i + Playfield.Padding +
                                    Skin.ScratchLaneSize + Playfield.ReceptorPadding;
                     }
                 }
                 else
                 {
-                    posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                    posX = (Playfield.LaneSize(i) + Playfield.ReceptorPadding) * i + Playfield.Padding;
                 }
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (scale != 1)
-                    posX += (Playfield.LaneSize - Playfield.LaneSize * scale) / 2f;
+                    posX += (Playfield.LaneSize(i) - Playfield.LaneSize(i) * scale) / 2f;
 
                 // Create individiaul receptor.
                 Receptors.Add(new Sprite
                 {
                     Parent = Playfield.ForegroundContainer,
-                    Size = new ScalableVector2(laneSize * scale, (Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
+                    Size = new ScalableVector2(laneSize * scale, (Playfield.LaneSize(i) * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
                     Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
@@ -392,12 +392,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 });
 
                 // Create the column lighting sprite.
-                var size = Skin.ColumnLightingScale * Playfield.LaneSize * ((float)Skin.ColumnLighting.Height / Skin.ColumnLighting.Width);
+                var size = Skin.ColumnLightingScale * Playfield.LaneSize(i) * ((float)Skin.ColumnLighting.Height / Skin.ColumnLighting.Width);
                 ColumnLightingObjects.Add(new ColumnLighting
                 {
                     Parent = Playfield.BackgroundContainer,
                     Image = Skin.ColumnLighting,
-                    Size = new ScalableVector2(Playfield.LaneSize, size),
+                    Size = new ScalableVector2(Playfield.LaneSize(i), size),
                     Tint = Skin.ColumnColors[i],
                     X = posX,
                     Y = Playfield.ColumnLightingPositionY[i],

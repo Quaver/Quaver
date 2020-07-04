@@ -59,7 +59,7 @@ namespace Quaver.Shared.Skinning
         internal float ColumnLightingOffsetY { get; private set; }
 
         [FixedScale]
-        internal float ColumnSize { get; private set; }
+        internal List<float> ColumnSize { get; private set; }
 
         [FixedScale]
         internal float ReceptorPosOffsetY { get; private set; }
@@ -389,7 +389,7 @@ namespace Quaver.Shared.Skinning
         private void FixValues()
         {
             if (ScratchLaneSize <= 0)
-                ScratchLaneSize = ColumnSize;
+                ScratchLaneSize = ColumnSize[0];
         }
 
         /// <summary>
@@ -422,7 +422,7 @@ namespace Quaver.Shared.Skinning
             NotePadding = ConfigHelper.ReadInt32((int) NotePadding, ini["NotePadding"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
             ColumnLightingOffsetY = ConfigHelper.ReadInt32((int) ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
-            ColumnSize = ConfigHelper.ReadInt32((int) ColumnSize, ini["ColumnSize"]);
+            ColumnSize = new List<float>(Array.ConvertAll(ConfigHelper.ReadString(ColumnSize != null ? String.Join(',',ColumnSize) : "", ini["ColumnSize"]).Split(','), float.Parse));
             ReceptorPosOffsetY = ConfigHelper.ReadInt32((int) ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
             ColumnAlignment = ConfigHelper.ReadInt32((int) ColumnAlignment, ini["ColumnAlignment"]);
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);

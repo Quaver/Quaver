@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             LineToPerfect = new Sprite
             {
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(laneX + 0.5f * playfield.LaneSize, 0),
+                Position = new ScalableVector2(laneX + 0.5f * playfield.LaneSize(lane), 0),
                 Size = new ScalableVector2(2, 0),
                 Alpha = Manager.ShowHits ? 1 : 0,
                 Visible = false,
@@ -134,8 +134,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             Indicator = new Sprite
             {
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(laneX + 0.125f * playfield.LaneSize, 0),
-                Size = new ScalableVector2(playfield.LaneSize * 0.75f, 2),
+                Position = new ScalableVector2(laneX + 0.125f * playfield.LaneSize(lane), 0),
+                Size = new ScalableVector2(playfield.LaneSize(lane) * 0.75f, 2),
                 Alpha = Manager.ShowHits ? 1 : 0,
                 Visible = false,
                 Parent = playfield.Stage.HitContainer,

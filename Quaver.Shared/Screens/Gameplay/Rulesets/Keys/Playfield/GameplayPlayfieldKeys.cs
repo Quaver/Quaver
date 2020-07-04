@@ -62,11 +62,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
                 var padding = Padding * 2 - ReceptorPadding;
-                var width = (LaneSize + ReceptorPadding) * Screen.Map.GetKeyCount(false) + padding;
+                var width = padding;
+                
+                for(int lane = 0; lane < Screen.Map.GetKeyCount(false); lane++) {
+                    width += (LaneSize(lane) + ReceptorPadding);
+                }
 
                 if (Screen.Map.HasScratchKey)
                 {
-                    var size = skin.ScratchLaneSize <= 0 ? LaneSize : skin.ScratchLaneSize;
+                    var size = skin.ScratchLaneSize <= 0 ? LaneSize(0) : skin.ScratchLaneSize; // Is scratch lane always first ?
                     width += size + ReceptorPadding;
                 }
 
@@ -107,20 +111,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     The size of the each lane.
         /// </summary>
-        public float LaneSize
+        public float LaneSize(int lane)
         {
-            get
-            {
-                // Use skin's ColumnSize if it fits inside the preview, otherwise scale down.
-                var previewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
-                
-                var columnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;
-                
-                if (Screen.IsSongSelectPreview && previewWidth < columnWidth)
-                    return previewWidth;
+            // Use skin's ColumnSize if it fits inside the preview, otherwise scale down.
+            var previewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
+            
+            var columnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize[lane] * WindowManager.BaseToVirtualRatio;
+            
+            if (Screen.IsSongSelectPreview && previewWidth < columnWidth)
+                return previewWidth;
 
-                return columnWidth;
-            }
+            return columnWidth;
         }
 
         /// <summary>
@@ -278,10 +279,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             for (var i = 0; i < ScrollDirections.Length; i++)
             {
-                var hitObOffset = LaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
-                var holdHitObOffset = LaneSize * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
-                var holdEndOffset = LaneSize * skin.NoteHoldEnds[i].Height / skin.NoteHoldEnds[i].Width;
-                var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
+                var hitObOffset = LaneSize(0) * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
+                var holdHitObOffset = LaneSize(0) * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
+                var holdEndOffset = LaneSize(0) * skin.NoteHoldEnds[i].Height / skin.NoteHoldEnds[i].Width;
+                var receptorOffset = LaneSize(0) * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
 
                 if (SkinManager.Skin.Keys[Screen.Map.Mode].DrawLongNoteEnd)
                     LongNoteSizeAdjustment[i] = (holdHitObOffset - holdEndOffset) / 2;
@@ -291,7 +292,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var oldHitpos = skin.HitPosOffsetY;
 
                 if (Ruleset.Screen.IsSongSelectPreview)
-                    skin.HitPosOffsetY *= LaneSize / skin.ColumnSize;
+                    skin.HitPosOffsetY *= LaneSize(0) / skin.ColumnSize[0];
                 else
                     skin.HitPosOffsetY *= WindowManager.BaseToVirtualRatio;
 
@@ -299,7 +300,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     case ScrollDirection.Down:
                         ReceptorPositionY[i] = WindowManager.Height - skin.ReceptorPosOffsetY - receptorOffset;
-                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.ColumnLightingOffsetY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.ColumnLightingOffsetY - skin.ColumnLightingScale * LaneSize(0) * skin.ColumnLighting.Height / skin.ColumnLighting.Width;
                         HitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
                         HoldHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
                         HoldEndHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdEndOffset;
