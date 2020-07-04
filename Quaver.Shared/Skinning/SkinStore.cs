@@ -465,10 +465,9 @@ namespace Quaver.Shared.Skinning
                     continue;
 
                 var element = $"judge-{j.ToString().ToLower()}";
-               Judgements[j] = new List<Texture2D>()
-               {
-                   LoadSingleTexture( $"{Dir}/{folder}/{element}", $"Quaver.Resources/Textures/Skins/Shared/Judgements/{element}.png")
-               };
+
+                Judgements[j] = LoadSpritesheet($"/{folder}/", element,
+                    $"Quaver.Resources/Textures/Skins/Shared/Judgements/{element}", 0, 0);
             }
 
             // Load judgement overlay
