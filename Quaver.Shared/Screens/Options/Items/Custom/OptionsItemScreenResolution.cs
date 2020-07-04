@@ -26,8 +26,11 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="containerWidth"></param>
         /// <param name="name"></param>
         public OptionsItemScreenResolution(RectangleF containerRect, string name) : base(containerRect, name,
-            new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex()))
+            new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex(),
+                0, 590))
         {
+            Dropdown.ItemContainer.Scrollbar.Tint = Color.White;
+            Dropdown.ItemContainer.Scrollbar.Width = 2;
             Dropdown.SelectedText.Text = Resolution;
 
             Dropdown.ItemSelected += (sender, args) =>
@@ -52,6 +55,18 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 var game = GameBase.Game as QuaverGame;
                 game?.ChangeResolution();
             };
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            Dropdown.ItemContainer.Scrollbar.Visible = Dropdown.Opened;
+            Dropdown.ItemContainer.InputEnabled = Dropdown.Opened;
+
+            base.Update(gameTime);
         }
 
         /// <summary>

@@ -373,10 +373,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void CreateBackground()
         {
-            var background = ConfigManager.BlurBackgroundInGameplay.Value ? BackgroundHelper.BlurredTexture : BackgroundHelper.RawTexture;
+            var background = BackgroundHelper.RawTexture;
 
             if (background == null)
-                background = UserInterface.MenuBackgroundRaw;
+                background = UserInterface.MenuBackgroundClear;
 
             // We don't set a parent here because we have to manually call draw on the background, as the
             // ScreenView's container is drawn after the ruleset.
@@ -757,16 +757,11 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     try
                     {
-                        var playingUsers = GetScoreboardUsers();
+                        Screen.Ruleset.UpdateStandardizedScoreProcessor(true);
+                        Screen.SendJudgementsToServer(true);
 
-                        var allPlayersFinished = playingUsers.All(x => x.Processor.TotalJudgementCount == Screen.Ruleset.ScoreProcessor.TotalJudgementCount);
-
-                        if (Screen.LastJudgementIndexSentToServer == Screen.Ruleset.ScoreProcessor.TotalJudgementCount - 1 && allPlayersFinished)
-                        {
-                            OnlineManager.Client.FinishMultiplayerGameSession();
-                            ResultsScreenLoadInitiated = true;
-                        }
-
+                        OnlineManager.Client.FinishMultiplayerGameSession();
+                        ResultsScreenLoadInitiated = true;
                     }
                     catch (Exception e)
                     {

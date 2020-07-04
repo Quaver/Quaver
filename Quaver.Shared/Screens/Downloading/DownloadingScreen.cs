@@ -517,7 +517,7 @@ namespace Quaver.Shared.Screens.Downloading
 
                 mapsets = SortMapsets(mapsets);
 
-                PreviousPageMapsets = result?.Mapsets ?? new List<DownloadableMapset>();
+                PreviousPageMapsets = new List<DownloadableMapset>(result?.Mapsets);
 
                 if (mapsets == null)
                 {

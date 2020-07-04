@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.DesktopGL", "Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj", "{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Tests", "Quaver.Tests\Quaver.Tests.csproj", "{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble.Extended", "Wobble\Wobble.Extended\Wobble.Extended.csproj", "{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteFontPlus", "Wobble\SpriteFontPlus\src\SpriteFontPlus\SpriteFontPlus.csproj", "{E6D4B576-2E45-40BF-9906-32FAD89BC2E1}"
@@ -116,16 +114,6 @@ Global
 		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Test Server|Any CPU.Build.0 = Debug|Any CPU
 		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
 		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Public|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Public|Any CPU.Build.0 = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Test Server|Any CPU.Build.0 = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB51B2C2-5E69-4D72-BFBF-0D3E9B822E95}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
 		{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}.Public|Any CPU.ActiveCfg = Debug|Any CPU

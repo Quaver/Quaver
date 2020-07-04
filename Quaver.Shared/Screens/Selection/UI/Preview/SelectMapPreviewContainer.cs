@@ -267,20 +267,43 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 const int filterPanelHeight = 88;
 
+                // Multiplier for preview to move the top half of the elements downwards by 11/15, as that is the amount that is covered by UI.
+                const float previewMultiplier = 11 / 15f;
+
                 switch (scroll.Value)
                 {
                     case ScrollDirection.Down:
                     case ScrollDirection.Split:
                         playfield.Container.Alignment = Alignment.BotLeft;
                         playfield.Container.Y = -MenuBorder.HEIGHT - Y;
+
+                        if (playfield.Stage.HitError.Y < 0)
+                            playfield.Stage.HitError.Y *= previewMultiplier;
+
+                        if (playfield.Stage.JudgementHitBurst.OriginalPosY < 0)
+                            playfield.Stage.JudgementHitBurst.OriginalPosY *= previewMultiplier;
+
+                        if (playfield.Stage.OriginalComboDisplayY < 0)
+                            playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
+
+                        playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
                         break;
                     case ScrollDirection.Up:
                         playfield.Container.Alignment = Alignment.TopLeft;
-                        playfield.Stage.HitError.Y = -skin.HitErrorPosY - MenuBorder.HEIGHT;
-                        playfield.Stage.OriginalComboDisplayY = -skin.ComboPosY - MenuBorder.HEIGHT - filterPanelHeight - Y;
+                        playfield.Stage.HitError.Y -= filterPanelHeight + MenuBorder.HEIGHT;
+                        playfield.Stage.JudgementHitBurst.OriginalPosY -= filterPanelHeight + MenuBorder.HEIGHT;
+                        playfield.Stage.OriginalComboDisplayY -= filterPanelHeight + MenuBorder.HEIGHT;
+
+                        if (playfield.Stage.HitError.Y < 0)
+                            playfield.Stage.HitError.Y *= previewMultiplier;
+
+                        if (playfield.Stage.JudgementHitBurst.OriginalPosY < 0)
+                            playfield.Stage.JudgementHitBurst.OriginalPosY *= previewMultiplier;
+
+                        if (playfield.Stage.OriginalComboDisplayY < 0)
+                            playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
+
                         playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
-                        playfield.Stage.JudgementHitBurst.OriginalPosY = skin.JudgementBurstPosY + MenuBorder.HEIGHT - filterPanelHeight - Y;
-                        playfield.Stage.JudgementHitBurst.Y = playfield.Stage.JudgementHitBurst.OriginalPosY;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -304,7 +327,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 TestPlayPrompt.Parent = null;
                 LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-                LoadedGameplayScreen.Destroy();
+                LoadedGameplayScreen?.Destroy();
+
+                SeekBar?.Destroy();
             }
 
             RunLoadTask();
@@ -440,8 +465,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(56, Height), 200)
             {
                 Alignment = Alignment.BotRight,
-                Y = -playfield.Container.Y,
-                X =  stageRightWidth + 4,
+                X =  stageRightWidth - 8,
                 Tint = ColorHelper.HexToColor("#181818"),
                 SetChildrenAlpha = true,
             };
@@ -478,7 +502,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             AddScheduledUpdate(() =>
             {
                 oldSeekBar?.Destroy();
-                SeekBar.Parent = playfield.Container;
+                SeekBar.Parent = this;
 
                 if (animate)
                 {
@@ -494,12 +518,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 }
 
                 TestPlayPrompt.X = -SeekBar.Width / 2f + 2;
-
-                if (oldSeekBar != null)
-                {
-                    SeekBar.X = oldSeekBar.X;
-                    SeekBar.Y = oldSeekBar.Y;
-                }
             });
         }
 

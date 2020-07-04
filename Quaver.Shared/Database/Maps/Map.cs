@@ -404,7 +404,7 @@ namespace Quaver.Shared.Database.Maps
 
             Task.Run(async () =>
             {
-                using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/map.txt"))
+                using (var writer = File.CreateText(ConfigManager.TempDirectory + "/Now Playing/map.txt"))
                 {
                     await writer.WriteAsync($"{Artist} - {Title} [{DifficultyName}]");
                 }

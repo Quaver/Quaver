@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Position = new ScalableVector2(10, 0),
-                Tint = ColorHelper.HexToColor("##0FBAE5"),
+                Tint = Color.White,
                 Alpha = 0
             };
 

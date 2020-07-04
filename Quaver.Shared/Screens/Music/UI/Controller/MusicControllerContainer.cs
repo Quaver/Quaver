@@ -72,6 +72,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
 
             Alpha = 0;
             Size = new ScalableVector2(WindowManager.Width - 310, 220);
+            Depth = 1;
 
             CreateBackground();
             CreateTitle();
@@ -147,7 +148,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                 Color.LightGray, ColorHelper.HexToColor("#57D6FF"))
             {
                 Parent = this,
-                Alignment = Alignment.BotLeft
+                Alignment = Alignment.BotLeft,
             };
         }
 

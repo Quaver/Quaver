@@ -88,6 +88,10 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
             {
                 var mod = modsList[i];
 
+                // HealthAdjust doesn't have a proper icon
+                if (mod == ModIdentifier.HeatlthAdjust)
+                    continue;
+
                 var texture = ModManager.GetTexture(mod);
                 const float width = 72f;
 

@@ -68,6 +68,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> DataDirectory { get; private set; }
 
         /// <summary>
+        ///     The temp directory
+        /// </summary>
+        internal static string TempDirectory => Path.Join(DataDirectory.Value, "Temp");
+
+        /// <summary>
         ///     The song directory
         /// </summary>
         private static string _songDirectory;
@@ -144,6 +149,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> WindowBorderless { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> PreferWayland { get; private set; }
+
+        /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
         internal static Bindable<bool> FpsCounter { get; private set; }
@@ -157,6 +166,11 @@ namespace Quaver.Shared.Config
         ///     The custom value for FPS limiting
         /// </summary>
         internal static BindableInt CustomFpsLimit { get; private set; }
+
+        /// <summary>
+        ///     Whether to use frame time or audio time for notes.
+        /// </summary>
+        internal static Bindable<bool> SmoothAudioTimingGameplay { get; private set; }
 
         /// <summary>
         ///     Determines if we should show the song time progress display in the
@@ -270,11 +284,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableKeysounds { get; private set; }
 
         /// <summary>
-        ///     If enabled, the user's background will be blurred in gameplay.
-        /// </summary>
-        internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
-
-        /// <summary>
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
@@ -308,6 +317,11 @@ namespace Quaver.Shared.Config
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
+
+        /// <summary>
+        ///	    If enabled, automatically skip the beta splash screen.
+        /// </summary>
+        internal static Bindable<bool> SkipSplashScreen { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -372,6 +386,11 @@ namespace Quaver.Shared.Config
         ///
         /// </summary>
         internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
+
+        /// <summary>
+        /// The amount of time in milliseconds a hit in the hiterror takes to disappear
+        /// </summary>
+        internal static BindableInt HitErrorFadeTime { get; private set; }
 
         /// <summary></summary>
         ///     If true, the user will skip the results screen after quitting the game.
@@ -534,6 +553,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScratchLaneLeft7K { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> AcceptedTermsAndPrivacyPolicy { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -621,6 +644,7 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyLayout7KScratch6 { get; private set; }
         internal static Bindable<Keys> KeyLayout7KScratch7 { get; private set; }
         internal static Bindable<Keys> KeyLayout7KScratch8 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch9 { get; private set; }
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
@@ -636,6 +660,16 @@ namespace Quaver.Shared.Config
         ///     The key to toggle the overlay
         /// </summary>
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
+
+        /// <summary>
+        ///     The key to decrease the gameplay rate while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
+
+        /// <summary>
+        ///     The key to increase the gameplay rate while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyIncreaseGameplayAudioRate { get; private set; }
 
         /// <summary>
         ///     The key pressed to restart the map.
@@ -775,11 +809,13 @@ namespace Quaver.Shared.Config
             WindowHeight = ReadInt(@"WindowHeight", 768, 360, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 640, short.MaxValue, data);
             WindowBorderless = ReadValue(@"WindowBorderless", false, data);
+            PreferWayland = ReadValue(@"PreferWayland", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
+            SmoothAudioTimingGameplay = ReadValue(@"SmoothAudioTimingGameplay", false, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
@@ -834,7 +870,6 @@ namespace Quaver.Shared.Config
             KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.K, data);
             KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.L, data);
 
-            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
             KeyLayout7KScratch1 = ReadValue(@"KeyLayout7KScratch1", Keys.A, data);
             KeyLayout7KScratch2 = ReadValue(@"KeyLayout7KScratch2", Keys.S, data);
             KeyLayout7KScratch3 = ReadValue(@"KeyLayout7KScratch3", Keys.D, data);
@@ -842,10 +877,14 @@ namespace Quaver.Shared.Config
             KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.J, data);
             KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.K, data);
             KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.L, data);
+            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
+            KeyLayout7KScratch9 = ReadValue(@"KeyLayout7KScratch9", Keys.OemColon, data);
 
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
+            KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
+            KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemPlus, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
@@ -854,7 +893,6 @@ namespace Quaver.Shared.Config
             KeyScoreboardVisible = ReadValue(@"KeyScoreboardVisible", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
-            BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
@@ -871,6 +909,7 @@ namespace Quaver.Shared.Config
             EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
             DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
+            HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
             LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
@@ -920,6 +959,8 @@ namespace Quaver.Shared.Config
             EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
             ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
             ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
+            AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
+            SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -954,6 +995,7 @@ namespace Quaver.Shared.Config
                     FpsCounter.ValueChanged += AutoSaveConfiguration;
                     FpsLimiterType.ValueChanged += AutoSaveConfiguration;
                     CustomFpsLimit.ValueChanged += AutoSaveConfiguration;
+                    SmoothAudioTimingGameplay.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
@@ -1000,6 +1042,8 @@ namespace Quaver.Shared.Config
                     KeySkipIntro.ValueChanged += AutoSaveConfiguration;
                     KeyPause.ValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
+                    KeyDecreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
+                    KeyIncreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyRestartMap.ValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
@@ -1009,7 +1053,6 @@ namespace Quaver.Shared.Config
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
-                    BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
                     DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
                     EditorScrollSpeedKeys.ValueChanged += AutoSaveConfiguration;
@@ -1023,6 +1066,7 @@ namespace Quaver.Shared.Config
                     EditorMetronomePlayHalfBeats.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
                     DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
+                    HitErrorFadeTime.ValueChanged += AutoSaveConfiguration;
                     SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
                     DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
                     LaneCoverTopHeight.ValueChanged += AutoSaveConfiguration;
@@ -1054,6 +1098,7 @@ namespace Quaver.Shared.Config
                     SteamWorkshopDirectory.ValueChanged += AutoSaveConfiguration;
                     UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
                     WindowBorderless.ValueChanged += AutoSaveConfiguration;
+                    PreferWayland.ValueChanged += AutoSaveConfiguration;
                     LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
                     KeyScreenshot.ValueChanged += AutoSaveConfiguration;
                     DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;
@@ -1085,8 +1130,11 @@ namespace Quaver.Shared.Config
                     KeyLayout7KScratch6.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch7.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch9.ValueChanged += AutoSaveConfiguration;
                     ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
                     ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
+                    AcceptedTermsAndPrivacyPolicy.ValueChanged += AutoSaveConfiguration;
+                    SkipSplashScreen.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

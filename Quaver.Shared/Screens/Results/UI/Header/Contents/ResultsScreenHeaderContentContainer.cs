@@ -126,9 +126,9 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         private void CreateSongTitle() => SongTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
             $"{Map.Artist} - {Map.Title}", 32)
         {
-              Parent = this,
-              X = Avatar.X + Avatar.Width + 32,
-              Y = 20,
+            Parent = this,
+            X = Avatar.X + Avatar.Width + 32,
+            Y = 20,
         };
 
         /// <summary>
@@ -139,20 +139,20 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
             var rate = ModHelper.GetRateFromMods(Processor.Value.Mods);
 
             var rateStr = rate != 1.0f ? $" {rate}x" : "";
-            
+
             Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
                 $"[{Map.DifficultyName}{rateStr}] ({StringHelper.RatingToString(difficulty)})", 26)
             {
                 Parent = this,
                 X = SongTitle.X,
                 Y = SongTitle.Y + SongTitle.Height + TEXT_SPACING,
-                Tint = ColorHelper.DifficultyToColor((float) difficulty)
+                Tint = ColorHelper.DifficultyToColor((float)difficulty)
             };
         }
 
         /// <summary>
         /// </summary>
-        private void CreateCreator() => Creator = new TextKeyValue("By: ", Map.Creator, 23,
+        private void CreateCreator() => Creator = new TextKeyValue("Mapped by: ", Map.Creator, 23,
             ColorHelper.HexToColor("#CACACA"))
         {
             Parent = this,

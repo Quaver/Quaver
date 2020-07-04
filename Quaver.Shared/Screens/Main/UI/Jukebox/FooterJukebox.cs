@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
@@ -65,6 +66,10 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         private List<Map> TrackListQueue { get; } = new List<Map>();
 
         /// <summary>
+        /// </summary>
+        public Qua Qua { get; private set; } = new Qua();
+
+        /// <summary>
         ///     The current track in the queue we're currently on.
         ///     Basically the index of <see cref="TrackListQueue"/>
         ///
@@ -93,7 +98,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         {
             Depth = 1;
             Size = new ScalableVector2(500, 54);
-            Tint = ColorHelper.HexToColor("#292929");
+            Alpha = 0;
 
             // If a track is already playing, add it to the queue.
             if (MapManager.Selected != null && MapManager.Selected.Value != null)
@@ -126,7 +131,11 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
 
         /// <summary>
         /// </summary>
-        private void CreateBackgrouund() => Background = new FooterJukeboxMapBackground(this) { Parent = this };
+        private void CreateBackgrouund() => Background = new FooterJukeboxMapBackground(this)
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter
+        };
 
         /// <summary>
         /// </summary>
@@ -136,7 +145,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(40, 40),
+                Size = new ScalableVector2(34, 34),
                 Y = -1,
             };
         }
@@ -150,7 +159,6 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
                 Parent = PlayPauseButton,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(24, 22),
-                Y = -2,
                 X = -50
             };
         }
@@ -222,11 +230,11 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// </summary>
         private void CreateProgressBar()
         {
-            ProgressBar = new JukeboxProgressBar(new Vector2(Width, 4), 0, int.MaxValue,
+            ProgressBar = new JukeboxProgressBar(new Vector2(Width - 4, 2), 0, int.MaxValue,
                 0, Color.Gray,Colors.SecondaryAccent)
             {
                 Parent = this,
-                Alignment = Alignment.BotLeft
+                Alignment = Alignment.BotCenter,
             };
         }
 
@@ -305,6 +313,9 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
 
                         if (AudioEngine.Track != null)
                         {
+                            lock (Qua)
+                                Qua  = MapManager.Selected.Value.LoadQua();
+
                             lock (AudioEngine.Track)
                                 AudioEngine.Track.Play();
                         }

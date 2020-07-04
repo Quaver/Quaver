@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 
@@ -14,6 +16,9 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
                 new IconTextButtonOptions(),
             }, new List<Drawable>())
         {
+            if (screen.Processor.Value.Mods.HasFlag(ModIdentifier.Coop))
+                return;
+
             if (OnlineManager.CurrentGame == null)
             {
                 RightAlignedItems.Add(new ResultsFooterRetryButton(screen));

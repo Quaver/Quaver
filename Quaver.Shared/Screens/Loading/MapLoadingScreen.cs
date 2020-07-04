@@ -158,10 +158,10 @@ namespace Quaver.Shared.Screens.Loading
             }
 
             // Asynchronously write to a file for livestreamers the difficulty rating
-            using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
+            using (var writer = File.CreateText(ConfigManager.TempDirectory + "/Now Playing/difficulty.txt"))
                 writer.Write($"{MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods):0.00}");
 
-            using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/map.txt"))
+            using (var writer = File.CreateText(ConfigManager.TempDirectory + "/Now Playing/map.txt"))
                 writer.Write($"{MapManager.Selected.Value.Qua.Artist} - {MapManager.Selected.Value.Qua.Title} [{MapManager.Selected.Value.Qua.DifficultyName}] ");
         }
 

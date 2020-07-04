@@ -14,6 +14,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 {
@@ -23,11 +24,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         ///     Horizontal selector to change the rate of the audio
         /// </summary>
         private HorizontalSelector RateChanger { get; }
-
-        /// <summary>
-        ///     Displays if the current speed isn't eligible for ranked play
-        /// </summary>
-        private IconButton UnrankedAlert { get; }
 
         /// <summary>
         ///     All of the available speeds to play
@@ -81,7 +77,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             var game = GameBase.Game as QuaverGame;
             var depth = game?.CurrentScreen?.Type == QuaverScreenType.Editor ? -1 : 0;
 
-            RateChanger = new HorizontalSelector(GetSpeeds(), new ScalableVector2(100, 32), Fonts.Exo2SemiBold, 16,
+            RateChanger = new HorizontalSelector(Speeds, new ScalableVector2(100, 32),
+                FontManager.GetWobbleFont(Fonts.LatoBlack), 22,
                 FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron), new ScalableVector2(20, 20), 0, OnSelected, GetSelectedIndex())
             {
@@ -108,46 +105,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 SetChildrenAlpha = true
             };
 
-            UnrankedAlert = new IconButton(UserInterface.WarningRed)
-            {
-                Parent = this,
-                Alignment = Alignment.MidRight,
-                X = RateChanger.X - RateChanger.Width - 34,
-                Size = new ScalableVector2(20, 20)
-            };
-
-            UnrankedAlert.Hovered += (sender, args) =>
-            {
-                var tooltip =new Tooltip("This speed is only available on the new UI and cannot\n" +
-                                         "be used for ranked or multiplayer plays just yet!", Color.Crimson);
-
-                game?.CurrentScreen?.ActivateTooltip(tooltip);
-            };
-
-            UnrankedAlert.LeftHover += (sender, args) =>
-            {
-                game?.CurrentScreen?.DeactivateTooltip();
-            };
-
             ModManager.ModsChanged += OnModsChanged;
             Clicked += OnClicked;
-        }
-
-        private List<string> GetSpeeds()
-        {
-            var speeds = Speeds;
-
-            if (OnlineManager.CurrentGame == null)
-                return speeds;
-
-            speeds.RemoveAll(x =>
-            {
-                var val = float.Parse(x.Replace("x", ""));
-
-                return val > 1 && x.EndsWith("5x") && x != "1.5x";
-            });
-
-            return speeds;
         }
 
         /// <inheritdoc />
@@ -159,9 +118,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             RateChanger.SelectedItemText.Alpha = Name.Alpha;
             RateChanger.ButtonSelectLeft.Alpha = Name.Alpha;
             RateChanger.ButtonSelectRight.Alpha = Name.Alpha;
-
-            UnrankedAlert.IsClickable = !ModManager.CurrentModifiersList.Find(x => x.Type == ModType.Speed)?.Ranked() ?? false;
-            UnrankedAlert.Visible = UnrankedAlert.IsClickable;
 
             base.Update(gameTime);
         }

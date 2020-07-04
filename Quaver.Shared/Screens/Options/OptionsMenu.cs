@@ -17,6 +17,7 @@ using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Options
 {
@@ -129,6 +130,13 @@ namespace Quaver.Shared.Screens.Options
                         },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
                         new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive)
+                    }),
+                    new OptionsSubcategory("Linux", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
+                        {
+                            Tags = new List<string> { "linux" }
+                        }
                     })
                 }),
                 new OptionsSection("Audio", UserInterface.OptionsAudio, new List<OptionsSubcategory>
@@ -166,7 +174,11 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> { "linux" }
                         },
-                    })
+                    }),
+                    new OptionsSubcategory("Experimental", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
+                    }),
                 }),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {
@@ -184,7 +196,6 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
                        new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),
-                       new OptionsItemCheckbox(containerRect, "Enable Background Blur", ConfigManager.BlurBackgroundInGameplay)
                     }),
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
@@ -201,6 +212,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
                         new OptionsItemCheckbox(containerRect, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                         new OptionsItemCheckbox(containerRect, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
+                        new OptionsSlider(containerRect, "Hit Error Fade Time", ConfigManager.HitErrorFadeTime, i => $"{i / 1000f:0.0} sec"),
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                         new OptionsItemCheckbox(containerRect, "Enable Accuracy Display Animations", ConfigManager.SmoothAccuracyChanges),
                     }),
@@ -280,7 +292,6 @@ namespace Quaver.Shared.Screens.Options
                         }),
                         new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<Keys>>()
                         {
-                            ConfigManager.KeyLayout7KScratch8,
                             ConfigManager.KeyLayout7KScratch1,
                             ConfigManager.KeyLayout7KScratch2,
                             ConfigManager.KeyLayout7KScratch3,
@@ -288,6 +299,11 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyLayout7KScratch5,
                             ConfigManager.KeyLayout7KScratch6,
                             ConfigManager.KeyLayout7KScratch7,
+                        }),
+                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Scratch Lane Keys", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyLayout7KScratch8,
+                            ConfigManager.KeyLayout7KScratch9,
                         }),
                     }),
                     new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()
@@ -328,6 +344,11 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {
                         new OptionsItemKeybind(containerRect, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay)
+                    }),
+                    new OptionsSubcategory("Song Selection", new List<OptionsItem>()
+                    {
+                        new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
+                        new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {
@@ -370,6 +391,10 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
+                    }),
+                    new OptionsSubcategory("Beta", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),
                     }),
                 }),
             };
@@ -508,8 +533,15 @@ namespace Quaver.Shared.Screens.Options
                     ClearSearchAndReiRenitializeSections(e.OldValue);
 
                 SetActiveContentContainer();
+
+                // Update previous and newest section to make sure button hover status is up-to-date
+                UpdateSection(e.OldValue);
+                UpdateSection(e.Value);
             });
         }
+
+        private void UpdateSection(OptionsSection section) => section?.Subcategories.ForEach(x =>
+            x.Items.ForEach(y => y.Update(new GameTime())));
 
         /// <summary>
         ///     Looks through each section and checks if any of the keybinds are currently focused.

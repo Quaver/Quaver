@@ -137,13 +137,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         ///     Polls <see cref="ScoreProcessor"/> and updates <see cref="StandardizedReplayPlayer"/>
         ///     with the standardized scoring values
         /// </summary>
-        private void UpdateStandardizedScoreProcessor()
+        public void UpdateStandardizedScoreProcessor(bool force = false)
         {
             // No need to update the processor in replay mode
             if (Screen.InReplayMode && Screen.SpectatorClient == null)
                 return;
 
-            if (Screen.ReplayCapturer.Replay.Frames.Count == StandardizedReplayPlayer.Replay.Frames.Count)
+            if (StandardizedReplayPlayer.CurrentFrame >= Screen.ReplayCapturer.Replay.Frames.Count - 1 && !force)
                 return;
 
             for (var i = StandardizedReplayPlayer.Replay.Frames.Count; i < Screen.ReplayCapturer.Replay.Frames.Count; i++)

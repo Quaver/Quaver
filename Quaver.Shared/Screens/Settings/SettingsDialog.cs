@@ -350,7 +350,6 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
                     new SettingsScrollDirection(this, "Scroll Direction 4K", ConfigManager.ScrollDirection4K),
                     new SettingsScrollDirection(this, "Scroll Direction 7K", ConfigManager.ScrollDirection7K),
-                    new SettingsBool(this, "Blur Background In Gameplay", ConfigManager.BlurBackgroundInGameplay),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
                     new SettingsBool(this, "Display Song Time Progress Numbers", ConfigManager.DisplaySongTimeProgressNumbers),

@@ -17,7 +17,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public IconTextButtonReportBugs() : base(FontAwesome.Get(FontAwesomeIcon.fa_bug),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Report Bugs", (sender, args) =>
             {
-                BrowserHelper.OpenURL($"https://github.com/Quaver/Quaver/issues", true);
+                BrowserHelper.OpenURL($"https://github.com/Quaver/Quaver/issues");
             })
         {
         }

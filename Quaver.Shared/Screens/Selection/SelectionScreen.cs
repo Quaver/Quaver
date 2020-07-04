@@ -436,16 +436,15 @@ namespace Quaver.Shared.Screens.Selection
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
 
-            var shiftHeld = KeyboardManager.CurrentState.IsKeyUp(Keys.LeftShift) ||
-                            KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift);
+            var shiftHeld = KeyboardManager.IsShiftDown();
 
             // Increase rate.
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus) || KeyboardManager.IsUniqueKeyPress(Keys.Add))
-                ModManager.AddSpeedMods(GetNextRate(true, !shiftHeld));
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
+                ModManager.AddSpeedMods(GetNextRate(true, shiftHeld));
 
             // Decrease Rate
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus) || KeyboardManager.IsUniqueKeyPress(Keys.Subtract))
-                ModManager.AddSpeedMods(GetNextRate(false, !shiftHeld));
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
+                ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
 
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
@@ -502,7 +501,7 @@ namespace Quaver.Shared.Screens.Selection
             var adjustment = 0.1f;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (current < 1.0f || OnlineManager.CurrentGame == null && forceHalfRate || current == 1.0f && !faster)
+            if (current < 1.0f || forceHalfRate || current == 1.0f && !faster)
                 adjustment = 0.05f;
 
             var next = current + adjustment * (faster ? 1f : -1f);

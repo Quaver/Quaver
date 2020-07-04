@@ -32,6 +32,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Online;
 using Quaver.Shared.Graphics.Notifications;
@@ -210,6 +211,28 @@ namespace Quaver.Shared.Online
             {
                 Client = new OnlineClient();
                 SubscribeToEvents();
+            }
+
+            // TODO: Replace with some backend request to check if users have accepted both.
+            if (!ConfigManager.AcceptedTermsAndPrivacyPolicy.Value)
+            {
+                Logger.Important($"Player needs to accept TOS & Privacy Policy...", LogType.Runtime);
+
+                DialogManager.Show(new LoadingDialog("PLEASE WAIT", "Loading Terms of Service. Please wait...", () =>
+                {
+                    try
+                    {
+                        var dialog = new TermsOfServiceDialog();
+                        DialogManager.Show(dialog);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error, "There was an issue while fetching the Terms of Service document.");
+                    }
+                }));
+
+                return;
             }
 
             // Initiate the connection to the game server.

@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Download.UI.Filter
 {
@@ -28,7 +29,7 @@ namespace Quaver.Shared.Screens.Download.UI.Filter
         /// <param name="onChange"></param>
         /// <param name="selectedIndex"></param>
         public QuaverHorizontalSelector(List<string> options, ScalableVector2 selectorSize, string selectorFont, int fontSize,  ScalableVector2 buttonSize,
-            Action<string, int> onChange, int selectedIndex = 0) : base(options, selectorSize, selectorFont, fontSize,
+            Action<string, int> onChange, int selectedIndex = 0) : base(options, selectorSize, FontManager.GetWobbleFont(Fonts.LatoBlack), fontSize,
             FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron), buttonSize,
                 5, onChange, selectedIndex)

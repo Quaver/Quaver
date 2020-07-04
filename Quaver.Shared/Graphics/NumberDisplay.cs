@@ -113,6 +113,8 @@ namespace Quaver.Shared.Graphics
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            const float animTime = 100f;
+
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (CurrentValue != TargetValue)
             {
@@ -120,7 +122,7 @@ namespace Quaver.Shared.Graphics
                 {
                     case NumberDisplayType.Score:
                         CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
-                            (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
+                            (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
                         break;
                     case NumberDisplayType.Combo:
                     case NumberDisplayType.Rating:
@@ -130,7 +132,7 @@ namespace Quaver.Shared.Graphics
                         if (ConfigManager.SmoothAccuracyChanges.Value)
                         {
                             CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
-                                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
+                                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
                         }
                         else
                         {

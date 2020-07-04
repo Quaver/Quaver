@@ -92,6 +92,15 @@ namespace Quaver.Shared.Graphics
 
             // ReSharper disable once VirtualMemberCallInConstructor
             CreateContent();
+
+            Clicked += (sender, args) =>
+            {
+                if (Panel.IsHovered()) 
+                    return;
+                
+                NoAction?.Invoke();
+                Close();
+            };
         }
 
         /// <inheritdoc />
@@ -138,13 +147,6 @@ namespace Quaver.Shared.Graphics
 
                     return;
                 }
-            }
-
-            if (MouseManager.IsUniqueClick(MouseButton.Left) && !Panel.IsHovered())
-            {
-                NoAction?.Invoke();
-                Close();
-                return;
             }
         }
 

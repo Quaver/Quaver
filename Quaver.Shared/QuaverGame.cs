@@ -41,7 +41,7 @@ using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Alpha;
+using Quaver.Shared.Screens.Beta;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Importing;
@@ -201,6 +201,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"Main Menu", typeof(MainMenuScreen)},
             {"ResultsScreen (Multi)", typeof(TestResultsMultiScreen)},
             {"ResultsScreen", typeof(TestResultsScreen)},
             {"TournamentOverlay", typeof(TestTournamentOverlayScreen)},
@@ -230,7 +231,6 @@ namespace Quaver.Shared
             {"SelectionScreen", typeof(SelectionScreen)},
             {"YesNoDialog", typeof(TestYesNoDialogScreen)},
             {"DrawablePlaylist", typeof(TestScreenDrawablePlaylist)},
-            {"Main Menu", typeof(MainMenuScreen)},
             {"MenuFooterJukebox", typeof(TestScreenMenuJukebox)},
             {"MusicPlayerScreen", typeof(MusicPlayerScreen)},
             {"DrawableListenerList", typeof(TestScreenListenerList)},
@@ -243,9 +243,9 @@ namespace Quaver.Shared
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 
-        public QuaverGame(HotLoader hl) : base(hl)
+        public QuaverGame(HotLoader hl) : base(hl, ConfigManager.PreferWayland.Value)
 #else
-        public QuaverGame()
+        public QuaverGame() : base(ConfigManager.PreferWayland.Value)
 #endif
         {
             Content.RootDirectory = "Content";
@@ -269,6 +269,10 @@ namespace Quaver.Shared
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
+
+            // Don't change the actual display mode. Especially considering our support for arbitrary resolutions, this
+            // can lead to completely locking up user's session (on Linux).
+            Graphics.HardwareModeSwitch = false;
 
             // Apply all graphics changes
             Graphics.ApplyChanges();
@@ -296,7 +300,7 @@ namespace Quaver.Shared
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            Fonts.LoadGdiFonts();
+            //Fonts.LoadGdiFonts();
             Fonts.LoadWobbleFonts();
 
             BackgroundHelper.Initialize();
@@ -317,7 +321,11 @@ namespace Quaver.Shared
             Window.Title = $"Quaver Visual Test Runner";
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new MainMenuScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => {
+                    if (ConfigManager.SkipSplashScreen.Value)
+                        return new MainMenuScreen();
+                    return new BetaScreen();
+            });
 #endif
         }
 
@@ -493,10 +501,10 @@ namespace Quaver.Shared
         {
             try
             {
-                foreach (var file in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetFiles("*", SearchOption.AllDirectories))
+                foreach (var file in new DirectoryInfo(ConfigManager.TempDirectory).GetFiles("*", SearchOption.AllDirectories))
                     file.Delete();
 
-                foreach (var dir in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
+                foreach (var dir in new DirectoryInfo(ConfigManager.TempDirectory).GetDirectories("*", SearchOption.AllDirectories))
                     dir.Delete(true);
             }
             catch (Exception)
@@ -505,7 +513,7 @@ namespace Quaver.Shared
             }
 
             // Create a directory that displays the "Now playing" song.
-            Directory.CreateDirectory($"{ConfigManager.DataDirectory}/temp/Now Playing");
+            Directory.CreateDirectory($"{ConfigManager.TempDirectory}/Now Playing");
         }
 
         /// <summary>
@@ -551,7 +559,7 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Vsync:
                     Graphics.SynchronizeWithVerticalRetrace = true;
-                    IsFixedTimeStep = true;
+                    IsFixedTimeStep = false;
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.WaylandVsync:
@@ -680,6 +688,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Lobby:
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
+                case QuaverScreenType.Results:
                     DialogManager.Show(new OptionsDialog());
                     break;
             }
@@ -812,7 +821,6 @@ namespace Quaver.Shared
             else if (!WindowActiveInPreviousFrame && (IsActive || !OtherGameMapDatabaseCache.OnSyncableScreen()))
             {
                 InactiveSleepTime = TimeSpan.Zero;
-                InitializeFpsLimiting();
             }
 
             WindowActiveInPreviousFrame = IsActive;

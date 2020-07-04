@@ -129,20 +129,23 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             var keys = KeyboardManager.CurrentState.GetPressedKeys();
 
-            if (keys.Length != 0 && !PreviousPressedKeys.Contains(keys[0]) && !QueuedKeys.Contains(keys[0]))
+            foreach (var key in keys)
             {
-                QueuedKeys.Add(keys[0]);
-                InitializeText(QueuedKeys);
-                Text.Tint = Color.Crimson;
-
-                if (QueuedKeys.Count == BindedKeys.Count)
+                if (keys.Length != 0 && !PreviousPressedKeys.Contains(key) && !QueuedKeys.Contains(key))
                 {
-                    for (var i = 0; i < QueuedKeys.Count; i++)
-                        BindedKeys[i].Value = QueuedKeys[i];
+                    QueuedKeys.Add(key);
+                    InitializeText(QueuedKeys);
+                    Text.Tint = Color.Crimson;
 
-                    Focused = false;
-                    InitializeText(BindedKeys.Select(x => x.Value).ToList());
-                    Text.Tint = Colors.MainAccent;
+                    if (QueuedKeys.Count == BindedKeys.Count)
+                    {
+                        for (var i = 0; i < QueuedKeys.Count; i++)
+                            BindedKeys[i].Value = QueuedKeys[i];
+
+                        Focused = false;
+                        InitializeText(BindedKeys.Select(x => x.Value).ToList());
+                        Text.Tint = Colors.MainAccent;
+                    }
                 }
             }
 

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -24,10 +25,13 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// <summary>
         /// </summary>
         /// <param name="jukebox"></param>
-        public FooterJukeboxMapBackground(FooterJukebox jukebox) : base(jukebox.Size, new ScalableVector2(jukebox.Width - 5, jukebox.Height))
+        public FooterJukeboxMapBackground(FooterJukebox jukebox) : base(jukebox.Size, jukebox.Size)
         {
             Alpha = 0;
-
+            
+            Size = new ScalableVector2(Width, Height);
+            ContentContainer.Size = new ScalableVector2(Width, Height);
+            
             CreateBackground();
             CreateFade();
 
@@ -77,7 +81,8 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             {
                 X = -2,
                 Size = new ScalableVector2(Width + 10, Height),
-                Image = UserInterface.JukeboxFade
+                Image = UserInterface.JukeboxFade,
+                Alpha = 1
             };
 
             AddContainedDrawable(Fade);

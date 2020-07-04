@@ -40,6 +40,7 @@ namespace Quaver.Shared.Screens.Options.Items
             Size = new ScalableVector2(containerRect.Width * 0.96f, 54);
 
             Tint = ColorHelper.HexToColor("#242424");
+
             CreateName(name);
 
             UsePreviousSpriteBatchOptions = true;
@@ -51,7 +52,7 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var color = IsHovered() ? ColorHelper.HexToColor("#3F3F3F") : ColorHelper.HexToColor("#242424");;
+            var color = IsHovered() ? ColorHelper.HexToColor("#3F3F3F") : ColorHelper.HexToColor("#242424");
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             FadeToColor(color, dt, 20);
@@ -64,15 +65,6 @@ namespace Quaver.Shared.Screens.Options.Items
                 Visible = true;
 
             base.Update(gameTime);
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
         }
 
         /// <summary>

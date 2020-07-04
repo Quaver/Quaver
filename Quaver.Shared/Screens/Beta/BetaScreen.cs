@@ -9,12 +9,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
 using Wobble.Input;
 
-namespace Quaver.Shared.Screens.Alpha
+namespace Quaver.Shared.Screens.Beta
 {
-    public sealed class AlphaScreen : QuaverScreen
+    public sealed class BetaScreen : QuaverScreen
     {
         /// <inheritdoc />
         /// <summary>
@@ -28,7 +27,7 @@ namespace Quaver.Shared.Screens.Alpha
 
         /// <summary>
         /// </summary>
-        public AlphaScreen() => View = new AlphaScreenView(this);
+        public BetaScreen() => View = new BetaScreenView(this);
 
         /// <inheritdoc />
         /// <summary>

@@ -1,8 +1,12 @@
+using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Options.Items
@@ -20,7 +24,9 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="bindable"></param>
         public OptionsItemCheckbox(RectangleF containerRect, string name, Bindable<bool> bindable) : base(containerRect, name)
         {
-            Checkbox = new QuaverCheckbox(bindable ?? new Bindable<bool>(false))
+            var bindedValue = bindable ?? new Bindable<bool>(false);
+
+            Checkbox = new QuaverCheckbox(bindedValue)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -29,14 +35,19 @@ namespace Quaver.Shared.Screens.Options.Items
             };
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (MouseManager.IsUniqueClick(MouseButton.Left) && IsHovered() && !Checkbox.IsHovered)
-                Checkbox.BindedValue.Value = !Checkbox.BindedValue.Value;
+            if (IsHovered() && MouseManager.IsUniqueClick(MouseButton.Left))
+            {
+                var hoveredButtons = ButtonManager.Buttons.FindAll(x => x.IsHovered);
+
+                // Only the "dialog" button (transparent black part) should be hovered
+                if (hoveredButtons.Count != 0 && hoveredButtons.First() is OptionsDialog)
+                    Checkbox.BindedValue.Value = !Checkbox.BindedValue.Value;
+            }
 
             base.Update(gameTime);
         }
