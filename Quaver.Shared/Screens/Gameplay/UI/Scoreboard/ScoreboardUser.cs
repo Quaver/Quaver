@@ -331,6 +331,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public void SetTintBasedOnHealth()
         {
+            if (Processor == null || Username == null)
+                return;
+
             if (Processor.MultiplayerProcessor != null)
             {
                 if (Processor.MultiplayerProcessor.IsEliminated || Processor.MultiplayerProcessor.IsRegeneratingHealth)
