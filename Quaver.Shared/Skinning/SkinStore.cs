@@ -327,41 +327,52 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal static List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, string extension = ".png")
+        internal static List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
+            string extension = ".png")
         {
-            var dir = $"{Dir}/{folder}";
-
-            if (Directory.Exists(dir))
+            try
             {
-                var files = Directory.GetFiles(dir);
+                var dir = $"{Dir}/{folder}";
 
-                foreach (var f in files)
+                if (Directory.Exists(dir))
                 {
-                    var regex = new Regex(SpritesheetRegex($"{element}"));
-                    var match = regex.Match(Path.GetFileName(f));
+                    var files = Directory.GetFiles(dir);
 
-                    // See if the file matches the regex.
-                    if (match.Success)
+                    foreach (var f in files)
                     {
-                        // Load it up if so.
-                        var texture = AssetLoader.LoadTexture2DFromFile(f);
-                        return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                        var regex = new Regex(SpritesheetRegex($"{element}"));
+                        var match = regex.Match(Path.GetFileName(f));
+
+                        // See if the file matches the regex.
+                        if (match.Success)
+                        {
+                            // Load it up if so.
+                            var texture = AssetLoader.LoadTexture2DFromFile(f);
+
+                            return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value),
+                                int.Parse(match.Groups[2].Value));
+                        }
+
+                        // Otherwise check to see if that base element (without animations) actually exists.
+                        // if so, load it singularly into a list.
+                        if (Path.GetFileNameWithoutExtension(f) == element)
+                            return new List<Texture2D> { AssetLoader.LoadTexture2DFromFile(f) };
                     }
-
-                    // Otherwise check to see if that base element (without animations) actually exists.
-                    // if so, load it singularly into a list.
-                    if (Path.GetFileNameWithoutExtension(f) == element)
-                        return new List<Texture2D> { AssetLoader.LoadTexture2DFromFile(f) };
                 }
+
+                // If we end up getting down here, that means we need to load the spritesheet from our resources.
+                // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
+                if (rows == 0 && columns == 0)
+                    return new List<Texture2D> { LoadSingleTexture( $"{dir}/{element}", resource + ".png")};
+
+                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
+                    GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
             }
-
-            // If we end up getting down here, that means we need to load the spritesheet from our resources.
-            // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
-            if (rows == 0 && columns == 0)
-                return new List<Texture2D> { LoadSingleTexture( $"{dir}/{element}", resource + ".png")};
-
-            return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
-                GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                return new List<Texture2D> { UserInterface.BlankBox };
+            }
         }
 
         /// <summary>
