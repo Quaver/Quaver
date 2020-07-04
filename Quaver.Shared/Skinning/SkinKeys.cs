@@ -422,7 +422,6 @@ namespace Quaver.Shared.Skinning
             NotePadding = ConfigHelper.ReadInt32((int) NotePadding, ini["NotePadding"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
             ColumnLightingOffsetY = ConfigHelper.ReadInt32((int) ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
-            ColumnSize = new List<float>(Array.ConvertAll(ConfigHelper.ReadString(ColumnSize != null ? String.Join(',',ColumnSize) : "", ini["ColumnSize"]).Split(','), float.Parse));
             ReceptorPosOffsetY = ConfigHelper.ReadInt32((int) ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
             ColumnAlignment = ConfigHelper.ReadInt32((int) ColumnAlignment, ini["ColumnAlignment"]);
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
@@ -484,6 +483,49 @@ namespace Quaver.Shared.Skinning
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
             UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
+
+            String ColumnSizeValue = ConfigHelper.ReadString(ColumnSize != null ? String.Join(',',ColumnSize) : "", ini["ColumnSize"]);
+
+            List<float> ColumnSizeInput = new List<float>(Array.ConvertAll(ColumnSizeValue.Split(','), float.Parse)); // TODO : handle incorrect values
+            ColumnSize = new List<float>(ColumnSizeInput);
+            // Can be :
+            // 1- a single value (applied to all keys) 
+            // 2- two values for 4k (alternating)
+            // 3- as many as there are columns (4 or 7)
+            // TODO: scratch lane ?
+
+            if(ColumnSizeInput.Count <= 0 
+            || (ColumnSizeInput.Count > 2 && (ColumnSizeInput.Count != 4 && ColumnSizeInput.Count != 7))) {} // error ??
+
+            switch(Mode) {
+                case GameMode.Keys4:
+                    switch(ColumnSizeInput.Count) {
+                        case 1: // 1-
+                            for(int i = 1; i<4; i++) ColumnSize.Add(ColumnSizeInput[0]);
+                            break;
+                        case 2: // 2-
+                            ColumnSize.Add(ColumnSizeInput[0]);
+                            ColumnSize.Add(ColumnSizeInput[1]);
+                            break;
+                        default:
+                            // error??
+                            break;
+                    }
+                    break;
+                case GameMode.Keys7:
+                    switch(ColumnSizeInput.Count) {
+                        case 1: // 3-
+                            for(int i = 1; i<7; i++) ColumnSize.Add(ColumnSizeInput[0]);
+                            break;
+                        default:
+                            // error??
+                            break;
+                    }
+                    break;
+                default:
+                    // error??
+                    break;
+            }
         }
 
         /// <summary>
