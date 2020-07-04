@@ -347,13 +347,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             ColumnLightingObjects = new List<ColumnLighting>();
 
             var scratchLaneLeft = Screen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScratchLaneLeft4K.Value : ConfigManager.ScratchLaneLeft7K.Value;
+            float addedX = 0;
 
             // Go through and create the receptors and column lighting objects.
             for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
             {
                 var scale = ConfigManager.GameplayNoteScale.Value / 100f;
                 var laneSize = Playfield.LaneSize(i);
-                var defaultLanePos = (Playfield.LaneSize(i) + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                var defaultLanePos = addedX + Playfield.Padding;
                 var posX = defaultLanePos;
 
                 // Handle scratch key positioning
@@ -367,18 +368,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         if (i == Screen.Map.GetKeyCount() - 1)
                             posX = Playfield.Padding;
                         else
-                            posX = (Playfield.LaneSize(i) + Playfield.ReceptorPadding) * i + Playfield.Padding +
+                            posX = addedX + Playfield.Padding +
                                    Skin.ScratchLaneSize + Playfield.ReceptorPadding;
                     }
                 }
                 else
                 {
-                    posX = (Playfield.LaneSize(i) + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                    posX = addedX + Playfield.Padding;
                 }
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (scale != 1)
-                    posX += (Playfield.LaneSize(i) - Playfield.LaneSize(i) * scale) / 2f;
+                    posX += addedX / 2f;
+
+                addedX += Playfield.LaneSize(i) + Playfield.ReceptorPadding;
 
                 // Create individiaul receptor.
                 Receptors.Add(new Sprite
