@@ -242,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
             var skin = SkinManager.Skin.Keys[Ruleset.Map.Mode];
-            var objectWidth = playfield.LaneSize(info.Lane);
+            var objectWidth = playfield.LaneSize(info.Lane - 1);
 
             var laneSize = objectWidth * scale;
             var defaultLaneSize = laneSize;
