@@ -115,6 +115,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             // Use skin's ColumnSize if it fits inside the preview, otherwise scale down.
             var previewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
+
+            if(lane >= SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize.Count) return 0; // Should not be asking for this. But it does !
             
             var columnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize[lane] * WindowManager.BaseToVirtualRatio;
             
