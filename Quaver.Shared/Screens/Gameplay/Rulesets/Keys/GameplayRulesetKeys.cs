@@ -24,6 +24,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines;
 using Quaver.Shared.Skinning;
 using Steamworks;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 {
@@ -133,6 +134,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             processor.PlayerName = ConfigManager.Username.Value;
             processor.SteamId = SteamUser.GetSteamID().m_SteamID;
             processor.UserId = OnlineManager.Self?.OnlineUser?.Id ?? 0;
+
+            Logger.Important($"---- Health Weighting ----", LogType.Runtime);
+
+            foreach (var weight in processor.JudgementHealthWeighting)
+                Logger.Important($"{weight.Key}: {weight.Value}", LogType.Runtime);
 
             return processor;
         }
