@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics.Sprites;
 
@@ -66,7 +67,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         private void ChangeGradeImage()
         {
             Visible = Scoring.Score > 0;
-            Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy);
+
+            if (ConfigManager.DisplayRankedAccuracy.Value)
+                Grade = GradeHelper.GetGradeFromAccuracy(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
+            else
+                Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy);
         }
 
         /// <summary>
