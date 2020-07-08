@@ -48,7 +48,8 @@ namespace Quaver.Shared.Database.Maps
             "zetoban - Umami Packed Mountaineering",
             "zetoban - Flowering Night",
             "Plum - Fantasy Collision",
-            "Lollipop - vibing oustide the supermarket at 1am"
+            "Lollipop - vibing oustide the supermarket at 1am",
+            "HyuN feat. Yuri - Disorder"
         };
 
         /// <summary>

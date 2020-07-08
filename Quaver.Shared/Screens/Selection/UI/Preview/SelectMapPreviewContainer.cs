@@ -276,7 +276,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     case ScrollDirection.Split:
                         playfield.Container.Alignment = Alignment.BotLeft;
                         playfield.Container.Y = -MenuBorder.HEIGHT - Y;
-                        
+
                         if (playfield.Stage.HitError.Y < 0)
                             playfield.Stage.HitError.Y *= previewMultiplier;
 
@@ -327,9 +327,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 TestPlayPrompt.Parent = null;
                 LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-                LoadedGameplayScreen.Destroy();
+                LoadedGameplayScreen?.Destroy();
 
-                SeekBar.Destroy();
+                SeekBar?.Destroy();
             }
 
             RunLoadTask();
