@@ -770,7 +770,6 @@ namespace Quaver.Shared.Config
             Directory.CreateDirectory($"{WobbleGame.WorkingDirectory}/Tournament");
 
             // If we already have a config file, we'll just want to read that.
-            Logger.Important("Loading config file ...", LogType.Runtime);
             ReadConfigFile();
             Logger.Important("Config file has been successfully read.", LogType.Runtime);
         }
@@ -1328,8 +1327,7 @@ namespace Quaver.Shared.Config
                     Logger.Error("Too many write attempts to the config file have been made.", LogType.Runtime);
             }
 
-            if (GameBase.Game != null)
-                LastWrite = GameBase.Game.TimeRunning;
+            LastWrite = GameBase.Game.TimeRunning;
         }
 
         /// <summary>
