@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -272,7 +273,7 @@ namespace Quaver.Shared
 
             // Don't change the actual display mode. Especially considering our support for arbitrary resolutions, this
             // can lead to completely locking up user's session (on Linux).
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 Graphics.HardwareModeSwitch = false;
 
             // Apply all graphics changes
