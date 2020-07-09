@@ -438,18 +438,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (!Info.IsLongNote)
                 return;
 
-            // Don't draw the body if the length is <= 0. Note that this does not mean that the LN should be hidden
-            // altogether: very short LNs, including zero-size on some SV maps after SV adjustment, have this below zero
-            // because CurrentLongNoteSize does not include half of the HitObjectSprite and half of the
-            // LongNoteEndSprite.
-            if (CurrentLongNoteBodySize <= 0)
-                LongNoteBodySprite.Visible = false;
-
-            // However, if the LN end is drawn and the actual LN size is <= 0, we can stop drawing the LN end as it has
-            // probably been completely overlapped by the LN start at this point (and is sliding below the receptors).
-            if (CurrentLongNoteBodySize + LongNoteSizeDifference <= 0)
-                LongNoteEndSprite.Visible = false;
-
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteBodySize;
 
@@ -460,6 +448,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset;
 
             LongNoteEndSprite.Y = GetEndSpritePosition(offset, EndTrackPosition);
+
+            // Stop drawing LN body + end if the ln reaches half the height of the hitobject
+            // (prevents body + end extending below this point)
+            if (CurrentLongNoteBodySize + LongNoteSizeDifference <= HitObjectSprite.Height / 2f || CurrentLongNoteBodySize <= 0)
+            {
+                LongNoteEndSprite.Visible = false;
+                LongNoteBodySprite.Visible = false;
+            }
         }
 
         /// <summary>
