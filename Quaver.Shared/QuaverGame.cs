@@ -272,7 +272,8 @@ namespace Quaver.Shared
 
             // Don't change the actual display mode. Especially considering our support for arbitrary resolutions, this
             // can lead to completely locking up user's session (on Linux).
-            Graphics.HardwareModeSwitch = false;
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+                Graphics.HardwareModeSwitch = false;
 
             // Apply all graphics changes
             Graphics.ApplyChanges();
