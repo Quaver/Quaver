@@ -74,17 +74,17 @@ namespace Quaver.Shared.Screens.Main
             if (!FirstLoadHandled)
             {
                 if (ConfigManager.AutoLoginToServer.Value)
-				{
-					try
-					{
-						OnlineManager.Login();
-					}
-					catch (Exception ex)
-					{
-						Logger.Error(ex, LogType.Runtime);
-						NotificationManager.Show(NotificationLevel.Error, "Failed to automatically login!");
-					}
-				}
+                {
+                    try
+                    {
+                        OnlineManager.Login();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error, "Failed to automatically login!");
+                    }
+                }
 
                 FirstLoadHandled = true;
             }
