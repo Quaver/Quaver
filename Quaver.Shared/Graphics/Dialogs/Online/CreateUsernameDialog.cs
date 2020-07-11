@@ -44,7 +44,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
                 MaxCharacters = 15,
-                AllowedCharacters = new Regex(@"^[a-zA-Z\s]*$")
+                AllowedCharacters = new Regex(@"^[a-zA-Z0-9_ ]*$")
             };
 
             Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
