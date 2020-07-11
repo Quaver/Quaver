@@ -13,6 +13,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
@@ -421,15 +422,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
-                || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
+            var isNone = e.ChangedMods.HasFlag(ModIdentifier.None);
+            if (!isNone)
             {
-                return;
+                if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
+                    || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
+                {
+                    return;
+                }
             }
 
             var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
                              e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X ||
-                             e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X;
+                             e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X || isNone;
 
             if (isSpeedMod)
             {
