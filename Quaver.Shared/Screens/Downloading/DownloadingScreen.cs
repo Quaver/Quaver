@@ -754,7 +754,9 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectedMapsetChanged(object sender, BindableValueChangedEventArgs<DownloadableMapset> e)
-            => LoadAudioPreview();
+        {
+
+        }
 
         /// <summary>
         ///     Loads an plays the audio preview for the selected map
