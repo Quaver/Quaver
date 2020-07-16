@@ -886,7 +886,7 @@ namespace Quaver.Shared.Config
             KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
             KeyLayout7KScratch9 = ReadValue(@"KeyLayout7KScratch9", Keys.OemColon, data);
 
-            KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
+            KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.Space, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
             KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
