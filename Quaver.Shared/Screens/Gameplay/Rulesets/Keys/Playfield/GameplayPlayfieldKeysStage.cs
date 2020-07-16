@@ -13,10 +13,13 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
@@ -27,6 +30,8 @@ using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
@@ -228,6 +233,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             }
 
             CreateHealthBar();
+            CreateKeybindOverlay();
         }
 
         /// <summary>
@@ -701,6 +707,36 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Alignment = Alignment.TopLeft,
                 Parent = LaneCoverContainer,
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateKeybindOverlay()
+        {
+            for (var i = 0; i < Receptors.Count; i++)
+            {
+                var input = (KeysInputManager) Playfield.Ruleset.InputManager;
+
+                if (input.ReplayInputManager != null)
+                    continue;
+
+                var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                    XnaKeyHelper.GetStringFromKey(input.BindingStore[i].Key.Value), 32)
+                {
+                    Parent = Receptors[i],
+                    Alignment = Playfield.ScrollDirections[i] == ScrollDirection.Down ? Alignment.TopCenter : Alignment.BotCenter,
+                    Y = Playfield.ScrollDirections[i] == ScrollDirection.Down ? - 20 : 20,
+                    Alpha = 1
+                };
+
+                if (Playfield.ScrollDirections[i] == ScrollDirection.Down)
+                    keybind.Y -= keybind.Height;
+                else
+                    keybind.Y += keybind.Height;
+
+                keybind.Wait(2000);
+                keybind.FadeTo(0, Easing.Linear, 500);
+            }
         }
 
         public void FadeIn()

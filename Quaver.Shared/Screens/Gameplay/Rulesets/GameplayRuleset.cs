@@ -80,8 +80,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
             Screen = screen;
             Map = map;
             ScoreProcessor = CreateScoreProcessor(Map);
-            CreatePlayfield();
             InputManager = CreateInputManager();
+            CreatePlayfield();
             HitObjectManager = CreateHitObjectManager();
 
             StandardizedReplayPlayer = new VirtualReplayPlayer(new Replay(Map.Mode,
