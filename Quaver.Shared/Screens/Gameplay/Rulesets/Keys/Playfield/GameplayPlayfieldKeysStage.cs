@@ -233,6 +233,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             }
 
             CreateHealthBar();
+            CreateKeybindOverlay();
         }
 
         /// <summary>
@@ -410,28 +411,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Alignment = Alignment.TopLeft,
                 });
-
-                var input = (KeysInputManager) Playfield.Ruleset.InputManager;
-
-                if (input.ReplayInputManager != null)
-                    continue;
-
-                var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                    XnaKeyHelper.GetStringFromKey(input.BindingStore[i].Key.Value), 32)
-                {
-                    Parent = Receptors[i],
-                    Alignment = Playfield.ScrollDirections[i] == ScrollDirection.Down ? Alignment.TopCenter : Alignment.BotCenter,
-                    Y = Playfield.ScrollDirections[i] == ScrollDirection.Down ? - 16 : 16,
-                    Alpha = 1
-                };
-
-                if (Playfield.ScrollDirections[i] == ScrollDirection.Down)
-                    keybind.Y -= keybind.Height;
-                else
-                    keybind.Y += keybind.Height;
-
-                keybind.Wait(2000);
-                keybind.FadeTo(0, Easing.Linear, 500);
             }
         }
 
@@ -728,6 +707,36 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Alignment = Alignment.TopLeft,
                 Parent = LaneCoverContainer,
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateKeybindOverlay()
+        {
+            for (var i = 0; i < Receptors.Count; i++)
+            {
+                var input = (KeysInputManager) Playfield.Ruleset.InputManager;
+
+                if (input.ReplayInputManager != null)
+                    continue;
+
+                var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                    XnaKeyHelper.GetStringFromKey(input.BindingStore[i].Key.Value), 32)
+                {
+                    Parent = Receptors[i],
+                    Alignment = Playfield.ScrollDirections[i] == ScrollDirection.Down ? Alignment.TopCenter : Alignment.BotCenter,
+                    Y = Playfield.ScrollDirections[i] == ScrollDirection.Down ? - 20 : 20,
+                    Alpha = 1
+                };
+
+                if (Playfield.ScrollDirections[i] == ScrollDirection.Down)
+                    keybind.Y -= keybind.Height;
+                else
+                    keybind.Y += keybind.Height;
+
+                keybind.Wait(2000);
+                keybind.FadeTo(0, Easing.Linear, 500);
+            }
         }
 
         public void FadeIn()
