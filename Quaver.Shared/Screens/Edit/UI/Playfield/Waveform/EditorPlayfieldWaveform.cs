@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private float[] TrackData { get; set; }
         private long TrackByteLength { get; set; }
-        private double TrackLengthMillieSeconds { get; set; }
+        private double TrackLengthMilliSeconds { get; set; }
         private int SliceSize { get; set; }
 
         private int Stream { get; set; }
@@ -37,8 +37,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             SliceSize = (int)playfield.Height;
 
-            var size = (int)TrackLengthMillieSeconds / SliceSize;
-            for (var t = 0; t < TrackLengthMillieSeconds; t += SliceSize)
+            for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
             {
                 var TrackSliceData = new float[SliceSize, 2];
 
@@ -57,15 +56,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, TrackSliceData, t);
                 Slices.Add(slice);
             }
-
-            Bass.StreamFree(Stream);
         }
 
 
         public override void Draw(GameTime gameTime)
         {
 
-            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMillieSeconds * (double)Slices.Count);
+            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * (double)Slices.Count);
 
             var amount = Math.Max(3, (int)(2.5f / Playfield.TrackSpeed + 0.5f));
 
@@ -92,7 +89,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             TrackByteLength = Bass.ChannelGetData(Stream, TrackData, (int)TrackByteLength);
 
-            TrackLengthMillieSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
+            TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
         }
 
         private void TryDrawSlice(int index, GameTime gameTime)
@@ -107,6 +104,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 slice.Destroy();
 
             Slices.Clear();
+
+            Bass.StreamFree(Stream);
 
             base.Destroy();
         }

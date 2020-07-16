@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         private float[,] SliceData { get; }
         private int SliceSize { get; }
 
-        private double SliceTimeMillieSeconds { get; }
+        private double SliceTimeMilliSeconds { get; }
         private double SliceTimeOffset { get; }
 
         public EditorPlayfieldWaveformSlice(EditorPlayfield playfield, int sliceSize, float[,] sliceData, double sliceTime)
@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             Playfield = playfield;
             SliceSize = sliceSize;
             SliceData = sliceData;
-            SliceTimeMillieSeconds = sliceTime + SliceTimeOffset;
+            SliceTimeMilliSeconds = sliceTime + SliceTimeOffset;
 
             var (pixelWidth, pixelHeight) = new Vector2((int)playfield.Width, (int)SliceSize) * Wobble.Window.WindowManager.ScreenScale;
 
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         public override void Draw(GameTime gameTime)
         {
             SliceSprite.X = Playfield.ScreenRectangle.X;
-            SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMillieSeconds + SliceSize) * Playfield.TrackSpeed - Height;
+            SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMilliSeconds + SliceSize) * Playfield.TrackSpeed - Height;
 
             SliceSprite.Height = SliceSize * Playfield.TrackSpeed;
 
