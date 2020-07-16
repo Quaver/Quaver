@@ -36,6 +36,7 @@ using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Skinning;
@@ -104,6 +105,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<bool> PlaceObjectsOnNearestTick { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<bool> ShowWaveform { get; }
 
         /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
@@ -194,6 +199,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         private EditorPlayfieldTimeline Timeline { get; set; }
 
+        private EditorPlayfieldWaveform Waveform { get; set; }
+
         /// <summary>
         /// </summary>
         private EditorPlayfieldLineContainer LineContainer { get; set; }
@@ -281,7 +288,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, bool isUneditable = false)
+            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform, bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -300,6 +307,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
             PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
+            ShowWaveform = showWaveform;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -309,6 +317,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateDividerLines();
             CreateHitPositionLine();
             CreateTimeline();
+            CreateWaveform();
             CreateLineContainer();
             CreateHitObjects();
             CreateButton();
@@ -374,7 +383,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
+
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
+
+            if (ShowWaveform.Value == true)
+                Waveform.Draw(gameTime);
+
             Timeline.Draw(gameTime);
             LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
@@ -390,6 +404,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public override void Destroy()
         {
             Button.Destroy();
+            Waveform.Destroy();
 
             ThreadScheduler.Run(() =>
             {
@@ -491,6 +506,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             HitObjects = new List<EditorHitObjectKeys>();
             Map.HitObjects.ForEach(x => CreateHitObject(x));
+        }
+
+        private void CreateWaveform()
+        {
+            Waveform = new EditorPlayfieldWaveform();
+            Waveform.GenerateWaveform(this);
         }
 
         /// <summary>
