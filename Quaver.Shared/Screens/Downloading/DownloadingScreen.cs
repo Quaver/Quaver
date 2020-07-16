@@ -653,7 +653,11 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSearchQueryChanged(object sender, BindableValueChangedEventArgs<string> e) => Page.Value = 0;
+        private void OnSearchQueryChanged(object sender, BindableValueChangedEventArgs<string> e)
+        {
+            PreviousSearchQuery = e.Value;
+            Page.Value = 0;
+        }
 
         /// <summary>
         /// </summary>
