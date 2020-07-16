@@ -42,6 +42,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
                 new IconTextButtonMusicPlayer(),
                 new IconTextButtonTheater(),
                 new IconTextButtonSkins(),
+                new IconTextButtonDonate()
             },
             new List<Drawable>
             {

@@ -229,6 +229,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
 
         /// <summary>
+        ///     Display the ranked accuracy in gameplay instead of the custom judgement windows accuracy
+        /// </summary>
+        internal static Bindable<bool> DisplayRankedAccuracy { get; private set; }
+
+        /// <summary>
         ///     If true, the hitlighting will be tinted to the judgement color in the skin
         /// </summary>
         internal static Bindable<bool> TintHitLightingBasedOnJudgementColor { get; private set; }
@@ -825,6 +830,7 @@ namespace Quaver.Shared.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
+            DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
@@ -880,7 +886,7 @@ namespace Quaver.Shared.Config
             KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
             KeyLayout7KScratch9 = ReadValue(@"KeyLayout7KScratch9", Keys.OemColon, data);
 
-            KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
+            KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.Space, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
             KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
@@ -1006,6 +1012,7 @@ namespace Quaver.Shared.Config
                     DefaultSkin.ValueChanged += AutoSaveConfiguration;
                     Pitched.ValueChanged += AutoSaveConfiguration;
                     ScoreboardVisible.ValueChanged += AutoSaveConfiguration;
+                    DisplayRankedAccuracy.ValueChanged += AutoSaveConfiguration;
                     AutoLoginToServer.ValueChanged += AutoSaveConfiguration;
                     DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
                     DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;

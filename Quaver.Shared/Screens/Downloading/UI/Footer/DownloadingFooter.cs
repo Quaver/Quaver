@@ -14,6 +14,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Footer
             new IconTextButtonOptions()
         }, new List<Drawable>
         {
+            new DownloadRecommendDifficultyButton()
         })
         {
         }

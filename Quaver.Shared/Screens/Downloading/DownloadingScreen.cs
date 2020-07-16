@@ -11,7 +11,9 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.MapsetSearch;
 using Quaver.Shared.Scheduling;
@@ -185,6 +187,16 @@ namespace Quaver.Shared.Screens.Downloading
         private bool ShouldPreviewPlay { get; set; } = true;
 
         /// <summary>
+        ///     The previous search query for the screen
+        /// </summary>
+        public static string PreviousSearchQuery { get; set; }
+
+        /// <summary>
+        ///     If the download screen has recommended difficulty before
+        /// </summary>
+        private static bool HasRecommendedDifficulty { get; set; }
+
+        /// <summary>
         /// </summary>
         public DownloadingScreen()
         {
@@ -238,7 +250,22 @@ namespace Quaver.Shared.Screens.Downloading
            // SetRichPresence();
 #endif
             View = new DownloadingScreenView(this);
+
+            if (PreviousSearchQuery != null)
+                CurrentSearchQuery.Value = PreviousSearchQuery;
+            else if (OnlineManager.Connected && OnlineManager.Self?.Stats[ConfigManager.SelectedGameMode.Value]?.OverallPerformanceRating < 150)
+                CurrentSearchQuery.Value = "Easy";
+
             StartSearchTask();
+        }
+
+        public override void OnFirstUpdate()
+        {
+            if (!HasRecommendedDifficulty)
+            {
+                ShowRecommendedDifficultyDialog();
+                HasRecommendedDifficulty = true;
+            }
         }
 
         /// <inheritdoc />
@@ -626,7 +653,11 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSearchQueryChanged(object sender, BindableValueChangedEventArgs<string> e) => Page.Value = 0;
+        private void OnSearchQueryChanged(object sender, BindableValueChangedEventArgs<string> e)
+        {
+            PreviousSearchQuery = e.Value;
+            Page.Value = 0;
+        }
 
         /// <summary>
         /// </summary>
@@ -839,6 +870,37 @@ namespace Quaver.Shared.Screens.Downloading
             }
 
             AudioPreviews = null;
+        }
+
+        /// <summary>
+        ///     Shows a dialog to where the game can recommend a difficulty for them
+        /// </summary>
+        public void ShowRecommendedDifficultyDialog()
+        {
+            DialogManager.Show(new YesNoDialog("RECOMMEND DIFFICULTY",
+                "Would you like to find recommended maps around your skill level\nfor the selected game mode?", () =>
+                {
+                    if (!OnlineManager.Connected || OnlineManager.Self == null)
+                    {
+                        CurrentSearchQuery.Value = "Easy";
+                        return;
+                    }
+
+                    var rating = OnlineManager.Self.Stats[ConfigManager.SelectedGameMode.Value].OverallPerformanceRating;
+
+                    var aproxLevel = rating / 20f;
+
+                    if (rating == 0 || aproxLevel < 5)
+                        CurrentSearchQuery.Value = "Easy";
+                    else if (aproxLevel < 10)
+                        CurrentSearchQuery.Value = "Normal";
+                    else if (aproxLevel < 20)
+                        CurrentSearchQuery.Value = "Hard";
+                    else if (aproxLevel < 28)
+                        CurrentSearchQuery.Value = "Insane";
+                    else
+                        CurrentSearchQuery.Value = "";
+                }));
         }
 
         /// <inheritdoc />
