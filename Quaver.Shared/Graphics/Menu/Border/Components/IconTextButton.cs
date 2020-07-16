@@ -36,7 +36,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// <summary>
         ///     The color when the button is hovered
         /// </summary>
-        private Color HoveredColor { get; }
+        protected Color HoveredColor { get; }
 
         /// <summary>
         ///     If the text tint should be set to the icon's
