@@ -40,7 +40,22 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             CreateSearchIcon();
 
             StoppedTypingActionCalltime = 250;
-            OnStoppedTyping += s => SearchQuery.Value = s;
+            OnStoppedTyping += s =>
+            {
+                SearchQuery.Value = s;
+                DownloadingScreen.PreviousSearchQuery = s;
+            };
+
+            SearchQuery.ValueChanged += (sender, args) =>
+            {
+                RawText = args.Value;
+
+                ScheduleUpdate(() =>
+                {
+                    InputText.Text = args.Value;
+                    InputText.Tint = Color.White;
+                });
+            };
         }
 
         /// <inheritdoc />
@@ -51,7 +66,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         {
             if (DialogManager.Dialogs.Count != 0)
                 Focused = false;
-            
+
             HandleSearchIconAnimations(gameTime);
             base.Update(gameTime);
         }
