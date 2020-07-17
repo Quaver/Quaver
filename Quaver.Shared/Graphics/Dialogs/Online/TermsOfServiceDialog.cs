@@ -25,8 +25,6 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
                         dialog.YesButton.Clicked += (o, eventArgs) =>
                         {
                             ConfigManager.AcceptedTermsAndPrivacyPolicy.Value = true;
-                            ConfigManager.WriteConfigFileAsync().Wait();
-
                             Logger.Important("User accepted terms of service & privacy policy. Logging in!", LogType.Runtime);
 
                             OnlineManager.Login();
