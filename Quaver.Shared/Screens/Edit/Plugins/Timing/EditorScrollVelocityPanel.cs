@@ -99,6 +99,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
 
+            DrawSelectCurrentSVButton();
+
             DrawAddButton();
             ImGui.SameLine();
             DrawRemoveButton();
@@ -146,13 +148,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 var sv = new SliderVelocityInfo()
                 {
-                    StartTime = (float) Screen.Track.Time,
+                    StartTime = (float)Screen.Track.Time,
                     Multiplier = multiplier
                 };
 
                 Screen.ActionManager.PlaceScrollVelocity(sv);
                 SelectedScrollVelocities.Add(sv);
                 NeedsToScroll = true;
+                ImGui.SetKeyboardFocusHere(3); // Focus second input after the button, which is the multiplier
             }
         }
 
@@ -190,6 +193,19 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             }
         }
 
+        private void DrawSelectCurrentSVButton()
+        {
+            if (ImGui.Button("Select current SV"))
+            {
+                var currentPoint = Screen.WorkingMap.GetScrollVelocityAt(Screen.Track.Time);
+                if (currentPoint != null)
+                {
+                    SelectedScrollVelocities.Clear();
+                    SelectedScrollVelocities.Add(currentPoint);
+                }
+            }
+        }
+
         /// <summary>
         /// </summary>
         private void DrawTimeTextbox()
@@ -207,13 +223,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped("Time");
 
-            if (ImGui.InputFloat("", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputFloat("", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
                 if (SelectedScrollVelocities.Count == 1)
                 {
                     var sv = SelectedScrollVelocities.First();
 
-                    Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> {sv},
+                    Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> { sv },
                         time - sv.StartTime);
                 }
             }
@@ -255,7 +271,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped("Multiplier");
 
-            if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
                 Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities), multiplier);
         }
 
@@ -276,8 +292,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.TextWrapped("Time");
             ImGui.NextColumn();
             ImGui.TextWrapped("Multiplier");
-            ImGui.Columns();
             ImGui.Separator();
+            ImGui.Columns();
         }
 
         /// <summary>
@@ -288,7 +304,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 160);
 
-            if (NeedsToScroll && SelectedScrollVelocities.Count != 0  && Screen.WorkingMap.TimingPoints.Count == 0)
+            if (NeedsToScroll && SelectedScrollVelocities.Count != 0 && Screen.WorkingMap.TimingPoints.Count == 0)
             {
                 ImGui.SetScrollHereY(-0.05f);
                 NeedsToScroll = false;
@@ -375,6 +391,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.V))
                 PasteClipboard();
+
         }
 
         /// <summary>
@@ -403,7 +420,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             var clonedObjects = new List<SliderVelocityInfo>();
 
-            var difference = (int) Math.Round(Screen.Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
+            var difference = (int)Math.Round(Screen.Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
 
             foreach (var obj in Clipboard)
             {
