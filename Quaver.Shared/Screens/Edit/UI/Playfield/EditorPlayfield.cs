@@ -357,6 +357,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
             UpdateHitObjectPool();
+            Waveform.Update(gameTime);
             Timeline.Update(gameTime);
             LineContainer.Update(gameTime);
             HandleInput();

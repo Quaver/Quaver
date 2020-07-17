@@ -19,7 +19,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         private long TrackByteLength { get; set; }
         private double TrackLengthMilliSeconds { get; set; }
         private int SliceSize { get; set; }
-
         private int Stream { get; set; }
 
 
@@ -76,6 +75,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             //TryDrawSlice(index + 1, gameTime);
             //TryDrawSlice(index + 2, gameTime);
             //TryDrawSlice(index + 3, gameTime);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (var slice in Slices)
+                slice.Update(gameTime);
+
+            base.Update(gameTime);
         }
 
         private void GenerateTrackData()
