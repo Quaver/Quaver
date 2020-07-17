@@ -92,9 +92,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            ImGui.SetNextWindowSize(new Vector2(356, 480));
+            ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(356, float.MaxValue));
             ImGui.PushFont(Options.Fonts.First().Context);
-            ImGui.Begin(Name, ImGuiWindowFlags.NoResize);
+            ImGui.Begin(Name);
 
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
