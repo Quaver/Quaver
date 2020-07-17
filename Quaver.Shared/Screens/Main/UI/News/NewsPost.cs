@@ -109,8 +109,6 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 try
                 {
                     NewsPosts = new APIRequestNewsFeed().ExecuteRequest();
-                    throw new Exception();
-
                     ScheduleUpdate(() => Initialize(NewsPosts));
                 }
                 catch (Exception e)
