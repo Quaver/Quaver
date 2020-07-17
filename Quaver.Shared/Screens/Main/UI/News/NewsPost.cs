@@ -16,6 +16,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Main.UI.News
@@ -105,8 +106,20 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
             ThreadScheduler.Run(() =>
             {
-                NewsPosts = new APIRequestNewsFeed().ExecuteRequest();
-                ScheduleUpdate(() => Initialize(NewsPosts));
+                try
+                {
+                    NewsPosts = new APIRequestNewsFeed().ExecuteRequest();
+                    throw new Exception();
+
+                    ScheduleUpdate(() => Initialize(NewsPosts));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+
+                    Wheel.ClearAnimations();
+                    Wheel.FadeTo(0, Easing.Linear, 450);
+                }
             });
         }
 
