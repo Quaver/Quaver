@@ -202,6 +202,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 {
                     SelectedScrollVelocities.Clear();
                     SelectedScrollVelocities.Add(currentPoint);
+                    NeedsToScroll = true;
                 }
             }
         }
