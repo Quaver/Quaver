@@ -336,6 +336,21 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                                 SelectedScrollVelocities.Add(sv);
                         }
                     }
+                    else if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+                    {
+                        if (SelectedScrollVelocities.Count > 0)
+                        {
+                            var min = SelectedScrollVelocities.OrderBy(v => v.StartTime).First().StartTime;
+                            var max = SelectedScrollVelocities.OrderBy(v => v.StartTime).Last().StartTime;
+                            if (sv.StartTime < min || sv.StartTime > max)
+                            {
+                                min = Math.Min(min, sv.StartTime);
+                                max = Math.Max(max, sv.StartTime);
+                                var svsInRange = Screen.WorkingMap.SliderVelocities.Where(v => v.StartTime >= min && v.StartTime <= max);
+                                SelectedScrollVelocities.AddRange(svsInRange);
+                            }
+                        }
+                    }
                     else
                     {
                         if (isSelected)
