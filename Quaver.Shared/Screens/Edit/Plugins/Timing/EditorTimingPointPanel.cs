@@ -412,10 +412,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
             {
+                // Select all
                 if (KeyboardManager.IsUniqueKeyPress(Keys.A))
                 {
                     SelectedTimingPoints.Clear();
                     SelectedTimingPoints.AddRange(Screen.WorkingMap.TimingPoints);
+                }
+                // Deselect
+                else if (KeyboardManager.IsUniqueKeyPress(Keys.D))
+                {
+                    SelectedTimingPoints.Clear();
                 }
             }
 
