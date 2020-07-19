@@ -53,6 +53,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         /// <summary>
         /// </summary>
+        private SliderVelocityInfo SvToScrollTo { get; set; }
+
+        /// <summary>
+        /// </summary>
         private List<SliderVelocityInfo> SelectedScrollVelocities { get; } = new List<SliderVelocityInfo>();
 
         /// <summary>
@@ -99,7 +103,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
 
-            DrawSelectCurrentSVButton();
+            DrawGoToCurrentSVButton();
 
             DrawAddButton();
             ImGui.SameLine();
@@ -154,8 +158,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 Screen.ActionManager.PlaceScrollVelocity(sv);
                 SelectedScrollVelocities.Add(sv);
+                SvToScrollTo = sv;
                 NeedsToScroll = true;
-                ImGui.SetKeyboardFocusHere(3); // Focus second input after the button, which is the multiplier
+                ImGui.SetKeyboardFocusHere(3); // Focus third input after the button, which is the multiplier
             }
         }
 
@@ -179,29 +184,36 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (newPoint != null)
                 {
                     if (!SelectedScrollVelocities.Contains(newPoint))
+                    {
                         SelectedScrollVelocities.Add(newPoint);
+                        SvToScrollTo = newPoint;
+                    }
                 }
                 else if (Screen.WorkingMap.SliderVelocities.Count > 0)
                 {
                     var point = Screen.WorkingMap.SliderVelocities.First();
 
                     if (!SelectedScrollVelocities.Contains(point))
+                    {
                         SelectedScrollVelocities.Add(point);
+                        SvToScrollTo = point;
+                    }
                 }
 
                 NeedsToScroll = true;
             }
         }
 
-        private void DrawSelectCurrentSVButton()
+        /// <summary>
+        /// </summary>
+        private void DrawGoToCurrentSVButton()
         {
-            if (ImGui.Button("Select current SV"))
+            if (ImGui.Button("Go to current SV"))
             {
                 var currentPoint = Screen.WorkingMap.GetScrollVelocityAt(Screen.Track.Time);
                 if (currentPoint != null)
                 {
-                    SelectedScrollVelocities.Clear();
-                    SelectedScrollVelocities.Add(currentPoint);
+                    SvToScrollTo = currentPoint;
                     NeedsToScroll = true;
                 }
             }
@@ -307,7 +319,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             if (NeedsToScroll && SelectedScrollVelocities.Count != 0 && Screen.WorkingMap.TimingPoints.Count == 0)
             {
-                ImGui.SetScrollHereY(-0.05f);
+                ImGui.SetScrollHereY(-0.025f);
                 NeedsToScroll = false;
             }
 
@@ -318,9 +330,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (!isSelected)
                     ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
 
-                if (NeedsToScroll && SelectedScrollVelocities.Count != 0 && SelectedScrollVelocities.First() == sv)
+                if (NeedsToScroll && SelectedScrollVelocities.Count != 0 && SvToScrollTo == sv)
                 {
-                    ImGui.SetScrollHereY(-0.05f);
+                    ImGui.SetScrollHereY(-0.025f);
                     NeedsToScroll = false;
                 }
 
@@ -454,6 +466,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             Screen.ActionManager.PlaceScrollVelocityBatch(clonedObjects);
             SelectedScrollVelocities.Clear();
             SelectedScrollVelocities.AddRange(clonedObjects);
+
+            SvToScrollTo = clonedObjects.First();
             NeedsToScroll = true;
         }
 
