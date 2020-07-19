@@ -649,19 +649,23 @@ namespace Quaver.Shared.Database.Maps
                                 switch (map.RankedStatus)
                                 {
                                     case RankedStatus.DanCourse:
-                                        if (!CompareValues("dan", searchQuery.Value, searchQuery.Operator))
+                                        if (!CompareValues("dan", searchQuery.Value, searchQuery.Operator) &&
+                                            !CompareValues("d", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     case RankedStatus.NotSubmitted:
-                                        if (!CompareValues("notsubmitted", searchQuery.Value, searchQuery.Operator))
+                                        if (!CompareValues("notsubmitted", searchQuery.Value, searchQuery.Operator) &&
+                                            !CompareValues("n", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     case RankedStatus.Ranked:
-                                        if (!CompareValues("ranked", searchQuery.Value, searchQuery.Operator))
+                                        if (!CompareValues("ranked", searchQuery.Value, searchQuery.Operator) &&
+                                            !CompareValues("r", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     case RankedStatus.Unranked:
-                                        if (!CompareValues("unranked", searchQuery.Value, searchQuery.Operator))
+                                        if (!CompareValues("unranked", searchQuery.Value, searchQuery.Operator) &&
+                                            !CompareValues("u", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     default:
