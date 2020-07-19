@@ -374,8 +374,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                             var max = SelectedScrollVelocities.OrderBy(v => v.StartTime).Last().StartTime;
                             if (sv.StartTime < min || sv.StartTime > max)
                             {
-                                min = Math.Min(min, sv.StartTime);
-                                max = Math.Max(max, sv.StartTime);
+                                min = Math.Min(max, sv.StartTime);
+                                max = Math.Max(min, sv.StartTime);
                                 var svsInRange = Screen.WorkingMap.SliderVelocities.Where(v => v.StartTime >= min && v.StartTime <= max);
                                 SelectedScrollVelocities.AddRange(svsInRange);
                             }

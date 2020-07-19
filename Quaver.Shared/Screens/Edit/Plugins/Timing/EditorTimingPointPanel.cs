@@ -372,8 +372,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                             var max = SelectedTimingPoints.OrderBy(v => v.StartTime).Last().StartTime;
                             if (point.StartTime < min || point.StartTime > max)
                             {
-                                min = Math.Min(min, point.StartTime);
-                                max = Math.Max(max, point.StartTime);
+                                min = Math.Min(max, point.StartTime);
+                                max = Math.Max(min, point.StartTime);
                                 var pointsInRange = Screen.WorkingMap.TimingPoints.Where(v => v.StartTime >= min && v.StartTime <= max);
                                 SelectedTimingPoints.AddRange(pointsInRange);
                             }
