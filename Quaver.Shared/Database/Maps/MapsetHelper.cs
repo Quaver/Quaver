@@ -60,7 +60,7 @@ namespace Quaver.Shared.Database.Maps
                 searched = SeparateMapsIntoOwnMapsets(searched);
 
             var separateMapsets = ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists;
-            var gameModes = musicPlayer ? new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) {Value = SelectFilterGameMode.All} : null;
+            var gameModes = musicPlayer ? new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) { Value = SelectFilterGameMode.All } : null;
             var orderMapsetsBy = musicPlayer ? ConfigManager.MusicPlayerOrderMapsBy : null;
 
             return OrderMapsetsByConfigValue(searched, separateMapsets, gameModes, orderMapsetsBy);
@@ -472,7 +472,7 @@ namespace Quaver.Shared.Database.Maps
                 var mapset = new Mapset
                 {
                     Directory = map?.Mapset?.Directory ?? "",
-                    Maps = new List<Map> {map}
+                    Maps = new List<Map> { map }
                 };
 
                 mapsets.Add(mapset);
@@ -485,7 +485,7 @@ namespace Quaver.Shared.Database.Maps
         /// Searches and returns mapsets given a query
         /// </summary>
         /// <param name="mapsets"></param>
-        /// <param name="query></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         internal static List<Mapset> SearchMapsets(IEnumerable<Mapset> mapsets, string query)
         {
@@ -642,7 +642,8 @@ namespace Quaver.Shared.Database.Maps
                                 break;
                             case SearchFilterOption.Status:
                                 if (!(searchQuery.Operator.Equals(operators[2]) ||
-                                    searchQuery.Operator.Equals(operators[6])))
+                                      searchQuery.Operator.Equals(operators[3]) ||
+                                      searchQuery.Operator.Equals(operators[6])))
                                     exitLoop = true;
 
                                 switch (map.RankedStatus)
@@ -669,6 +670,7 @@ namespace Quaver.Shared.Database.Maps
                                 break;
                             case SearchFilterOption.Game:
                                 if (!(searchQuery.Operator.Equals(operators[2]) ||
+                                      searchQuery.Operator.Equals(operators[3]) ||
                                       searchQuery.Operator.Equals(operators[6])))
                                     exitLoop = true;
 
@@ -699,7 +701,7 @@ namespace Quaver.Shared.Database.Maps
                                 if (searchQuery.Value.Last() == '%')
                                 {
                                     stringToParse = searchQuery.Value.Substring(0, searchQuery.Value.Length - 1);
-                                    valueToCompareTo = (int) map.LNPercentage;
+                                    valueToCompareTo = (int)map.LNPercentage;
                                 }
                                 else
                                 {
@@ -757,7 +759,7 @@ namespace Quaver.Shared.Database.Maps
                         var set = new Mapset()
                         {
                             Directory = map.Directory,
-                            Maps = new List<Map>() {map}
+                            Maps = new List<Map>() { map }
                         };
 
                         sets.Add(set);
