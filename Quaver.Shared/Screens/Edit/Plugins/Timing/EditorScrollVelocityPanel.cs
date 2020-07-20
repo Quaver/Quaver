@@ -123,7 +123,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
             ImGui.Dummy(new Vector2(0, 10));
+            DrawSelectedCountLabel();
 
+            ImGui.Dummy(new Vector2(0, 10));
             DrawTable();
 
             IsWindowHovered = IsWindowHovered || isHovered;
@@ -289,6 +291,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
                 Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities), multiplier);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DrawSelectedCountLabel()
+        {
+            var count = SelectedScrollVelocities.Count;
+            if (count > 1)
+            {
+                ImGui.Text($"{count} scroll velocities selected");
+            }
         }
 
         /// <summary>

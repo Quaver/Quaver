@@ -124,6 +124,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
             ImGui.Dummy(new Vector2(0, 10));
+            DrawSelectedCountLabel();
+
+            ImGui.Dummy(new Vector2(0, 10));
             DrawTable();
 
             IsWindowHovered = IsWindowHovered || isHovered;
@@ -285,6 +288,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     Screen.ActionManager.ChangeTimingPointBpm(SelectedTimingPoints.First(), bpm);
                 else
                     Screen.ActionManager.ChangeTimingPointBpmBatch(SelectedTimingPoints, bpm);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DrawSelectedCountLabel()
+        {
+            var count = SelectedTimingPoints.Count;
+            if (count > 1)
+            {
+                ImGui.Text($"{count} timing points selected");
             }
         }
 
