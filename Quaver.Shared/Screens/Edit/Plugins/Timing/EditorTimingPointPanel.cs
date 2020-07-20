@@ -105,6 +105,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawGoToCurrentTimingPointButton();
+            ImGui.Dummy(new Vector2(0, 10));
 
             DrawAddButton();
             ImGui.SameLine();
