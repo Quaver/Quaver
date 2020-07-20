@@ -14,13 +14,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
     public class EditorPlayfieldWaveformSlice : Sprite
     {
         private EditorPlayfield Playfield { get; }
+
         private RenderTarget2D Slice { get; set; }
+
         private Sprite SliceSprite { get; set; }
 
         private float[,] SliceData { get; }
+
         private int SliceSize { get; }
 
         private double SliceTimeMilliSeconds { get; }
+
         private double SliceTimeOffset { get; }
 
         //private Shader SliceShader { get;  }
@@ -132,7 +136,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
                 SliceSprite.Image = Slice;
                 SliceSprite.Width = (int)playfield.Width;
-                SliceSprite.Height = (int)SliceSize;
+                SliceSprite.Height = SliceSize;
 
                 SliceSprite.SpriteBatchOptions.Shader = new Shader(GameBase.Game.Resources.Get("Quaver.Resources/Shaders/waveform-slice.mgfxo"), new Dictionary<string, object>() { });
 
@@ -154,6 +158,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             SliceSprite.Draw(gameTime);
         }
+
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             Slice = null;

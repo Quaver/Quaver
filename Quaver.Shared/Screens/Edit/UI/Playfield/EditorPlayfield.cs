@@ -199,6 +199,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         private EditorPlayfieldTimeline Timeline { get; set; }
 
+        /// <summary>
+        /// </summary>
         private EditorPlayfieldWaveform Waveform { get; set; }
 
         /// <summary>
@@ -509,6 +511,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Map.HitObjects.ForEach(x => CreateHitObject(x));
         }
 
+        /// <summary>
+        /// </summary>
         private void CreateWaveform()
         {
             Waveform = new EditorPlayfieldWaveform();
@@ -747,7 +751,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var lane = Map.GetKeyCount() * percentage + 1;
 
             var val = (int) MathHelper.Clamp(lane, 1, Map.GetKeyCount());
-            
+
             // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
             if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
             {
@@ -1159,7 +1163,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
             var lane = GetLaneFromX(MouseManager.CurrentState.X, true);
-            
+
             if (GetHitObjectAtTimeAndLane(time, lane) != null)
                 return;
 
