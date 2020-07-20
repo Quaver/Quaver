@@ -423,13 +423,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
             var isNone = e.ChangedMods.HasFlag(ModIdentifier.None);
+
             if (!isNone)
             {
-                if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
-                    || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
-                {
+                if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop) || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
                     return;
-                }
             }
 
             var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
