@@ -6,6 +6,8 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble;
 using Quaver.Shared.Scheduling;
+using Wobble.Graphics.Shaders;
+using System.Collections.Generic;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
@@ -21,6 +23,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         private double SliceTimeMilliSeconds { get; }
         private double SliceTimeOffset { get; }
 
+        //private Shader SliceShader { get;  }
+
         public EditorPlayfieldWaveformSlice(EditorPlayfield playfield, int sliceSize, float[,] sliceData, double sliceTime)
         {
             SliceSprite = new Sprite();
@@ -32,39 +36,61 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             SliceData = sliceData;
             SliceTimeMilliSeconds = sliceTime + SliceTimeOffset;
 
-            var (pixelWidth, pixelHeight) = new Vector2((int)playfield.Width, (int)SliceSize) * Wobble.Window.WindowManager.ScreenScale;
+            //var (pixelWidth, pixelHeight) = new Vector2((int)playfield.Width, (int)SliceSize) * Wobble.Window.WindowManager.ScreenScale;
 
-            Slice = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int)pixelWidth, (int)pixelHeight, false,
-                                       GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
+            //Slice = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int)pixelWidth, (int)pixelHeight, false,
+            //                           GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
 
             //multi threaded do not remove
-            /*ThreadScheduler.Run(() =>
+            ThreadScheduler.Run(() =>
             {
                 var sliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, (int)playfield.Width, (int)SliceSize);
 
-                for (var i = 0; i < SliceSize; i += 2)
+                var dataColors = new Color[(int)playfield.Width * (int)SliceSize];
+
+                //double for-loop ouch
+                for (var y = 0; y < SliceSize; y += 2)
                 {
-                    var lengthRight = (int)Math.Abs(SliceData[i, 0] * 127);
-                    var lengthLeft = (int)Math.Abs(SliceData[i, 1] * 127);
+                    var lengthRight = (int)Math.Abs(SliceData[y, 0] * 127);
+                    var lengthLeft = (int)Math.Abs(SliceData[y, 1] * 127);
 
-                    if (lengthRight != 0 || lengthLeft != 0)
+                    var pivotPoint = (int)playfield.Width / 2 - lengthLeft;
+
+                    for (var x = 0; x < playfield.Width; x++)
                     {
-                        var dataSize = lengthRight * 2 + lengthLeft * 2;
+                        var index  = (SliceSize - y - 1) * (int)playfield.Width + x;
+                        var index2 = (SliceSize - y - 2) * (int)playfield.Width + x;
 
-                        var dataColors = new Color[dataSize];
-                        for (var c = 0; c < dataSize; c++)
+                        switch (x >= pivotPoint && x <= pivotPoint + lengthRight + lengthLeft)
                         {
-                            dataColors[c] = new Color(0, 105, 155);
+                            case true:
+                            dataColors[index].R = 0;
+                            dataColors[index].G = 200;
+                            dataColors[index].B = 255;
+                            dataColors[index].A = 128;
+
+                            dataColors[index2].R = 0;
+                            dataColors[index2].G = 200;
+                            dataColors[index2].B = 255;
+                            dataColors[index2].A = 128;
+                                break;
+
+                            default:
+                            dataColors[index].R = 0;
+                            dataColors[index].G = 0;
+                            dataColors[index].B = 0;
+                            dataColors[index].A = 0;
+
+                            dataColors[index2].R = 0;
+                            dataColors[index2].G = 0;
+                            dataColors[index2].B = 0;
+                            dataColors[index2].A = 0;
+                                break;
                         }
-
-                        var y = SliceSize - i;
-                        if (y < 2) y = 2;
-                        if (y > SliceSize - 3) y = SliceSize - 3;
-
-                        sliceTexture.SetData(0, new Rectangle((int)playfield.Width / 2 - lengthLeft, y, lengthLeft + lengthRight, 2), dataColors, 0, dataSize);
                     }
                 }
+
+                sliceTexture.SetData(dataColors);
 
                 ScheduleUpdate(() =>
                 {
@@ -72,10 +98,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                     SliceSprite.Width = (int)playfield.Width;
                     SliceSprite.Height = SliceSize;
                 });
-            });*/
+            });
 
             //single threaded do not remove
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            /*GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
             {
                 var container = new Container { Size = new ScalableVector2(playfield.Width, SliceSize) };
 
@@ -108,8 +134,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 SliceSprite.Width = (int)playfield.Width;
                 SliceSprite.Height = (int)SliceSize;
 
+                SliceSprite.SpriteBatchOptions.Shader = new Shader(GameBase.Game.Resources.Get("Quaver.Resources/Shaders/waveform-slice.mgfxo"), new Dictionary<string, object>() { });
+
                 gb.SetRenderTarget(null);
-            });
+            });*/
         }
 
         public override void Update(GameTime gameTime)
@@ -117,14 +145,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             SliceSprite.X = Playfield.ScreenRectangle.X;
             SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMilliSeconds + SliceSize) * Playfield.TrackSpeed - Height;
 
             SliceSprite.Height = SliceSize * Playfield.TrackSpeed;
 
-            SliceSprite?.Draw(gameTime);
+            SliceSprite.Draw(gameTime);
         }
         public override void Destroy()
         {

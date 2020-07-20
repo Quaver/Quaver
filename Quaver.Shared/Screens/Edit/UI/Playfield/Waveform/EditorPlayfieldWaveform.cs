@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         }
 
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
 
             var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * (double)Slices.Count);

@@ -384,13 +384,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
-
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
+
+            Timeline.Draw(gameTime);
 
             if (ShowWaveform.Value == true)
                 Waveform.Draw(gameTime);
 
-            Timeline.Draw(gameTime);
             LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
             GameBase.Game.SpriteBatch.End();
