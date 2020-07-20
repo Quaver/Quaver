@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using ManagedBass;
+using Quaver.Shared.Scheduling;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
@@ -13,7 +14,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private List<EditorPlayfieldWaveformSlice> VisibleSlices { get; }
 
-        private EditorPlayfield Playfield { get; set; }
+        private EditorPlayfield Playfield { get; }
 
         private float[] TrackData { get; set; }
 
@@ -25,19 +26,62 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private int Stream { get; set; }
 
-        public EditorPlayfieldWaveform()
+        private bool HasGenerated { get; set; }
+
+        public EditorPlayfieldWaveform(EditorPlayfield playfield)
         {
+            Playfield = playfield;
+
             Slices = new List<EditorPlayfieldWaveformSlice>();
             VisibleSlices = new List<EditorPlayfieldWaveformSlice>();
         }
 
-        public void GenerateWaveform(EditorPlayfield playfield)
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
         {
-            Playfield = playfield;
+            if (!HasGenerated)
+            {
+                HasGenerated = true;
+                ThreadScheduler.Run(GenerateWaveform);
+            }
 
+            foreach (var slice in Slices)
+                slice.Update(gameTime);
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * Slices.Count);
+
+            var amount = Math.Max(3, (int)(2.5f / Playfield.TrackSpeed + 0.5f));
+
+            for (var i = 0; i < amount; i++)
+                TryDrawSlice(index + (i - amount / 2), gameTime);
+
+            //keeping this if the thing above fails for some reason you never know lol (but it should work I promise)
+            //TryDrawSlice(index - 2, gameTime);
+            //TryDrawSlice(index - 1, gameTime);
+            //TryDrawSlice(index,     gameTime);
+            //TryDrawSlice(index + 1, gameTime);
+            //TryDrawSlice(index + 2, gameTime);
+            //TryDrawSlice(index + 3, gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="playfield"></param>
+        public void GenerateWaveform()
+        {
             GenerateTrackData();
 
-            SliceSize = (int)playfield.Height;
+            SliceSize = (int) Playfield.Height;
 
             for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
             {
@@ -61,33 +105,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             }
         }
 
-
-        public void Draw(GameTime gameTime)
-        {
-            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * Slices.Count);
-
-            var amount = Math.Max(3, (int)(2.5f / Playfield.TrackSpeed + 0.5f));
-
-            for (var i = 0; i < amount; i++)
-                TryDrawSlice(index + (i - amount / 2), gameTime);
-
-            //keeping this if the thing above fails for some reason you never know lol (but it should work I promise)
-            //TryDrawSlice(index - 2, gameTime);
-            //TryDrawSlice(index - 1, gameTime);
-            //TryDrawSlice(index,     gameTime);
-            //TryDrawSlice(index + 1, gameTime);
-            //TryDrawSlice(index + 2, gameTime);
-            //TryDrawSlice(index + 3, gameTime);
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            foreach (var slice in Slices)
-                slice.Update(gameTime);
-
-            base.Update(gameTime);
-        }
-
+        /// <summary>
+        /// </summary>
         private void GenerateTrackData()
         {
             const BassFlags flags = BassFlags.Decode | BassFlags.Float;
@@ -102,12 +121,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="gameTime"></param>
         private void TryDrawSlice(int index, GameTime gameTime)
         {
             if (index >= 0 && index < Slices.Count)
                 Slices[index]?.Draw(gameTime);
         }
 
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             foreach (var slice in Slices)

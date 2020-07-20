@@ -40,19 +40,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             SliceData = sliceData;
             SliceTimeMilliSeconds = sliceTime + SliceTimeOffset;
 
-            //var (pixelWidth, pixelHeight) = new Vector2((int)playfield.Width, (int)SliceSize) * Wobble.Window.WindowManager.ScreenScale;
-
-            //Slice = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int)pixelWidth, (int)pixelHeight, false,
-            //                           GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
-            //multi threaded do not remove
             ThreadScheduler.Run(() =>
             {
-                var sliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, (int)playfield.Width, (int)SliceSize);
+                var sliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, (int)playfield.Width, SliceSize);
 
-                var dataColors = new Color[(int)playfield.Width * (int)SliceSize];
+                var dataColors = new Color[(int)playfield.Width * SliceSize];
 
-                //double for-loop ouch
+                // double for-loop ouch
                 for (var y = 0; y < SliceSize; y += 2)
                 {
                     var lengthRight = (int)Math.Abs(SliceData[y, 0] * 127);
@@ -103,53 +97,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                     SliceSprite.Height = SliceSize;
                 });
             });
-
-            //single threaded do not remove
-            /*GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
-            {
-                var container = new Container { Size = new ScalableVector2(playfield.Width, SliceSize) };
-
-                var gb = GameBase.Game.GraphicsDevice;
-
-                gb.SetRenderTarget(Slice);
-                gb.Clear(Color.TransparentBlack);
-
-                for (var i = 0; i < SliceSize; i += 2)
-                {
-                    var lengthRight = Math.Abs(SliceData[i, 0] * 128f);
-                    var lengthLeft = Math.Abs(SliceData[i, 1] * 128f);
-
-                    var line = new Sprite
-                    {
-                        Parent = container,
-                        Alignment = Alignment.TopLeft,
-                        Image = UserInterface.BlankBox,
-                        Size = new ScalableVector2(lengthLeft + lengthRight, 2),
-                        Position = new ScalableVector2(playfield.Width / 2 - lengthLeft, SliceSize - i),
-                        Tint = new Color(0.0f, 0.81f, 1f, 0.75f)
-                    };
-                }
-
-                container.Draw(new GameTime());
-
-                GameBase.Game.SpriteBatch.End();
-
-                SliceSprite.Image = Slice;
-                SliceSprite.Width = (int)playfield.Width;
-                SliceSprite.Height = SliceSize;
-
-                SliceSprite.SpriteBatchOptions.Shader = new Shader(GameBase.Game.Resources.Get("Quaver.Resources/Shaders/waveform-slice.mgfxo"), new Dictionary<string, object>() { });
-
-                gb.SetRenderTarget(null);
-            });*/
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             SliceSprite.X = Playfield.ScreenRectangle.X;
             SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMilliSeconds + SliceSize) * Playfield.TrackSpeed - Height;

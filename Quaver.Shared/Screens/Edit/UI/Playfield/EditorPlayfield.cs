@@ -513,11 +513,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateWaveform()
-        {
-            Waveform = new EditorPlayfieldWaveform();
-            Waveform.GenerateWaveform(this);
-        }
+        private void CreateWaveform() => Waveform = new EditorPlayfieldWaveform(this);
 
         /// <summary>
         /// </summary>
