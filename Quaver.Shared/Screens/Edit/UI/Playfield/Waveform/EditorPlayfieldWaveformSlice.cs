@@ -12,13 +12,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
     public class EditorPlayfieldWaveformSlice : Sprite
     {
         private EditorPlayfield Playfield { get; }
+
         private RenderTarget2D Slice { get; set; }
+
         private Sprite SliceSprite { get; set; }
 
         private float[,] SliceData { get; }
+
         private int SliceSize { get; }
 
         private double SliceTimeMilliSeconds { get; }
+
         private double SliceTimeOffset { get; }
 
         public EditorPlayfieldWaveformSlice(EditorPlayfield playfield, int sliceSize, float[,] sliceData, double sliceTime)
@@ -36,8 +40,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             Slice = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int)pixelWidth, (int)pixelHeight, false,
                                        GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
-
+            
             //multi threaded do not remove
             /*ThreadScheduler.Run(() =>
             {
@@ -106,17 +109,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
                 SliceSprite.Image = Slice;
                 SliceSprite.Width = (int)playfield.Width;
-                SliceSprite.Height = (int)SliceSize;
+                SliceSprite.Height = SliceSize;
 
                 gb.SetRenderTarget(null);
             });
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
             SliceSprite.X = Playfield.ScreenRectangle.X;
@@ -126,6 +127,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             SliceSprite?.Draw(gameTime);
         }
+
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             Slice = null;

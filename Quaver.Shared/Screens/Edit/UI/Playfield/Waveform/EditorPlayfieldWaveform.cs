@@ -5,22 +5,25 @@ using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using ManagedBass;
 
-
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
     public class EditorPlayfieldWaveform : Container
     {
         private List<EditorPlayfieldWaveformSlice> Slices { get; }
+
         private List<EditorPlayfieldWaveformSlice> VisibleSlices { get; }
 
         private EditorPlayfield Playfield { get; set; }
 
         private float[] TrackData { get; set; }
-        private long TrackByteLength { get; set; }
-        private double TrackLengthMilliSeconds { get; set; }
-        private int SliceSize { get; set; }
-        private int Stream { get; set; }
 
+        private long TrackByteLength { get; set; }
+
+        private double TrackLengthMilliSeconds { get; set; }
+
+        private int SliceSize { get; set; }
+
+        private int Stream { get; set; }
 
         public EditorPlayfieldWaveform()
         {
@@ -38,21 +41,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
             {
-                var TrackSliceData = new float[SliceSize, 2];
+                var trackSliceData = new float[SliceSize, 2];
 
                 for (var y = 0; y < SliceSize; y++)
                 {
                     var timePoint = t + y;
 
-                    var index = Bass.ChannelSeconds2Bytes(Stream, (double)timePoint / 1000.0) / 4;
-                    if (index < TrackByteLength / sizeof(float))
-                    {
-                        TrackSliceData[y, 0] = TrackData[index];
-                        TrackSliceData[y, 1] = TrackData[index + 1];
-                    }
+                    var index = Bass.ChannelSeconds2Bytes(Stream, timePoint / 1000.0) / 4;
+
+                    if (index >= TrackByteLength / sizeof(float))
+                        continue;
+
+                    trackSliceData[y, 0] = TrackData[index];
+                    trackSliceData[y, 1] = TrackData[index + 1];
                 }
 
-                var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, TrackSliceData, t);
+                var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, trackSliceData, t);
                 Slices.Add(slice);
             }
         }
@@ -60,8 +64,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         public override void Draw(GameTime gameTime)
         {
-
-            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * (double)Slices.Count);
+            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * Slices.Count);
 
             var amount = Math.Max(3, (int)(2.5f / Playfield.TrackSpeed + 0.5f));
 
@@ -91,7 +94,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             Stream = Bass.CreateStream(((AudioTrack)Audio.AudioEngine.Track).OriginalFilePath, 0, 0, flags);
 
-            TrackByteLength = Bass.ChannelGetLength(Stream, PositionFlags.Bytes);
+            TrackByteLength = Bass.ChannelGetLength(Stream);
             TrackData = new float[TrackByteLength / sizeof(float)];
 
             TrackByteLength = Bass.ChannelGetData(Stream, TrackData, (int)TrackByteLength);
