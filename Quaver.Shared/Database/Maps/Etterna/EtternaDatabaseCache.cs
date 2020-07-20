@@ -52,7 +52,7 @@ namespace Quaver.Shared.Database.Maps.Etterna
                 
                 // Etterna handles additional song folders by replacing "AdditionalSongs/" by a custom set song folder.
                 // That is replicated here by using a regex.
-                var additionalSongFoldersReplaceString = "";
+                string[] additionalSongFolders = {};
                 
                 if (!File.Exists(preferencesFilePath))
                 {
@@ -62,7 +62,7 @@ namespace Quaver.Shared.Database.Maps.Etterna
                     // Open up the Preferences.ini file and retrieve the additional song folder.
                     var parser = new IniFileParser.IniFileParser();
                     IniData preferencesIniData = parser.ReadFile(preferencesFilePath);
-                    additionalSongFoldersReplaceString = preferencesIniData["Options"]["AdditionalSongFolders"];
+                    additionalSongFolders = preferencesIniData["Options"]["AdditionalSongFolders"].Split(',');
                 }
 
                 foreach (var step in steps)
@@ -78,12 +78,30 @@ namespace Quaver.Shared.Database.Maps.Etterna
                         continue;
 
                     var song = songDictionary[step.StepFileName];
+                    
+                    var mapPath = etternaDirectory + "/" + step.StepFileName;
+                    
+                    foreach (var possibleSongfolder in additionalSongFolders)
+                    {
+                        var possiblePath = Regex.Replace(etternaDirectory + "/" + step.StepFileName, ".*AdditionalSongs", possibleSongfolder);
+                        if (File.Exists(possiblePath))
+                        {
+                            mapPath = possiblePath;
+                            break;
+                        }
+                    }
+                    
+                    if (!File.Exists(mapPath))
+                    {
+                        Logger.Warning($"Skipping load on file: {step.StepFileName} because the file could not be found at: {mapPath}", LogType.Runtime);
+                        continue;
+                    }
 
                     var map = new OtherGameMap()
                     {
                         Md5Checksum = step.ChartKey,
                         Directory = etternaDirectory + "/" + Path.GetDirectoryName(step.StepFileName),
-                        Path = Regex.Replace(etternaDirectory + "/" + step.StepFileName, ".*AdditionalSongs", additionalSongFoldersReplaceString),
+                        Path = mapPath,
                         MapSetId = -1,
                         MapId = -1,
                         Mode = GameMode.Keys4,
@@ -99,13 +117,6 @@ namespace Quaver.Shared.Database.Maps.Etterna
                         AudioPreviewTime = (int) (song.SampleStart * 1000),
                         SongLength = (int) (song.MusicLength * 1000)
                     };
-
-                    if (!File.Exists(map.Path))
-                    {
-                        Logger.Warning($"Skipping load on file: {step.StepFileName} because the file could not be found " +
-                                       $"at: {map.Path}", LogType.Runtime);
-                        continue;
-                    }
 
                     // Try and fetch the creator name from the directory name
                     // Example /Songs/Pack/Artist - Title (Creator)
