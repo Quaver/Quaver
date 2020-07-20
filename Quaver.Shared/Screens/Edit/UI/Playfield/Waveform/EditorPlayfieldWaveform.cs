@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
     public class EditorPlayfieldWaveform : Container
     {
-        private List<EditorPlayfieldWaveformSlice> Slices { get; }
+        private List<EditorPlayfieldWaveformSlice> Slices { get; set; }
 
         private List<EditorPlayfieldWaveformSlice> VisibleSlices { get; }
 
@@ -47,8 +47,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 ThreadScheduler.Run(GenerateWaveform);
             }
 
-            foreach (var slice in Slices)
-                slice.Update(gameTime);
+            if (Slices.Count > 0)
+            {
+                foreach (var slice in Slices)
+                    slice.Update(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -83,6 +86,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             SliceSize = (int) Playfield.Height;
 
+            var tempSlices = new List<EditorPlayfieldWaveformSlice>();
+
             for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
             {
                 var trackSliceData = new float[SliceSize, 2];
@@ -101,8 +106,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 }
 
                 var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, trackSliceData, t);
-                Slices.Add(slice);
+                tempSlices.Add(slice);
             }
+
+            Slices = tempSlices;
         }
 
         /// <summary>
