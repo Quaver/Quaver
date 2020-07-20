@@ -80,12 +80,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             });
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             SliceSprite.X = Playfield.ScreenRectangle.X;
             SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMilliSeconds + SliceSize) * Playfield.TrackSpeed - Height;

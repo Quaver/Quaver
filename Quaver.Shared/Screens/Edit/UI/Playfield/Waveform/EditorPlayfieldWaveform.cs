@@ -4,16 +4,17 @@ using Microsoft.Xna.Framework;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using ManagedBass;
+using Quaver.Shared.Scheduling;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
     public class EditorPlayfieldWaveform : Container
     {
-        private List<EditorPlayfieldWaveformSlice> Slices { get; }
+        private List<EditorPlayfieldWaveformSlice> Slices { get; set; }
 
         private List<EditorPlayfieldWaveformSlice> VisibleSlices { get; }
 
-        private EditorPlayfield Playfield { get; set; }
+        private EditorPlayfield Playfield { get; }
 
         private float[] TrackData { get; set; }
 
@@ -25,45 +26,40 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private int Stream { get; set; }
 
-        public EditorPlayfieldWaveform()
+        private bool HasGenerated { get; set; }
+
+        public EditorPlayfieldWaveform(EditorPlayfield playfield)
         {
+            Playfield = playfield;
+
             Slices = new List<EditorPlayfieldWaveformSlice>();
             VisibleSlices = new List<EditorPlayfieldWaveformSlice>();
         }
 
-        public void GenerateWaveform(EditorPlayfield playfield)
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
         {
-            Playfield = playfield;
-
-            GenerateTrackData();
-
-            SliceSize = (int)playfield.Height;
-
-            for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
+            if (!HasGenerated)
             {
-                var trackSliceData = new float[SliceSize, 2];
-
-                for (var y = 0; y < SliceSize; y++)
-                {
-                    var timePoint = t + y;
-                    var index = Bass.ChannelSeconds2Bytes(Stream, timePoint / 1000.0) / 4;
-
-                    if (index >= TrackByteLength / sizeof(float))
-                        continue;
-
-                    trackSliceData[y, 0] = TrackData[index];
-                    trackSliceData[y, 1] = TrackData[index + 1];
-                }
-
-                var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, trackSliceData, t);
-                Slices.Add(slice);
+                HasGenerated = true;
+                ThreadScheduler.Run(GenerateWaveform);
             }
 
-            Bass.StreamFree(Stream);
+            if (Slices.Count > 0)
+            {
+                foreach (var slice in Slices)
+                    slice.Update(gameTime);
+            }           
+
+            base.Update(gameTime);
         }
 
-
-        public void Draw(GameTime gameTime)
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
         {
             var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * Slices.Count);
 
@@ -81,14 +77,45 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             //TryDrawSlice(index + 3, gameTime);
         }
 
-        public override void Update(GameTime gameTime)
+        /// <summary>
+        /// </summary>
+        /// <param name="playfield"></param>
+        public void GenerateWaveform()
         {
-            foreach (var slice in Slices)
-                slice.Update(gameTime);
+            GenerateTrackData();
 
-            base.Update(gameTime);
+            SliceSize = (int) Playfield.Height;
+
+            var tempSlices = new List<EditorPlayfieldWaveformSlice>();
+
+            for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
+            {
+                var trackSliceData = new float[SliceSize, 2];
+
+                for (var y = 0; y < SliceSize; y++)
+                {
+                    var timePoint = t + y;
+
+                    var index = Bass.ChannelSeconds2Bytes(Stream, timePoint / 1000.0) / 4;
+
+                    if (index >= TrackByteLength / sizeof(float))
+                        continue;
+
+                    trackSliceData[y, 0] = TrackData[index];
+                    trackSliceData[y, 1] = TrackData[index + 1];
+                }
+
+                var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, trackSliceData, t);
+                tempSlices.Add(slice);
+            }
+
+            Slices = tempSlices;
+
+            Bass.StreamFree(Stream);
         }
 
+        /// <summary>
+        /// </summary>
         private void GenerateTrackData()
         {
             const BassFlags flags = BassFlags.Decode | BassFlags.Float;
@@ -103,12 +130,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="gameTime"></param>
         private void TryDrawSlice(int index, GameTime gameTime)
         {
             if (index >= 0 && index < Slices.Count)
                 Slices[index]?.Draw(gameTime);
         }
 
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             foreach (var slice in Slices)
