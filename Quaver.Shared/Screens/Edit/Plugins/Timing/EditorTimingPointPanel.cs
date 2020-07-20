@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
 
-            DrawGoToCurrentTimingPointButton();
+            DrawSelectCurrentTimingPointButton();
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawAddButton();
@@ -199,9 +199,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         /// <summary>
         /// </summary>
-        private void DrawGoToCurrentTimingPointButton()
+        private void DrawSelectCurrentTimingPointButton()
         {
-            if (ImGui.Button("Go to current timing point"))
+            if (ImGui.Button("Select current timing point"))
             {
                 var currentPoint = Screen.WorkingMap.GetTimingPointAt(Screen.Track.Time);
                 if (currentPoint != null)

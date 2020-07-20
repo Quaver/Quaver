@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
 
-            DrawGoToCurrentSVButton();
+            DrawSelectCurrentSVButton();
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawAddButton();
@@ -200,9 +200,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         /// <summary>
         /// </summary>
-        private void DrawGoToCurrentSVButton()
+        private void DrawSelectCurrentSVButton()
         {
-            if (ImGui.Button("Go to current SV"))
+            if (ImGui.Button("Select current SV"))
             {
                 var currentPoint = Screen.WorkingMap.GetScrollVelocityAt(Screen.Track.Time);
                 if (currentPoint != null)
