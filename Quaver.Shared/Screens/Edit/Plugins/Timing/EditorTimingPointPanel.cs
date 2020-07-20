@@ -296,10 +296,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawSelectedCountLabel()
         {
             var count = SelectedTimingPoints.Count;
-            if (count > 1)
-            {
-                ImGui.Text($"{count} timing points selected");
-            }
+            var labelText = count > 1 ? $"{count} timing points selected" : "";
+            ImGui.Text(labelText);
         }
 
         /// <summary>

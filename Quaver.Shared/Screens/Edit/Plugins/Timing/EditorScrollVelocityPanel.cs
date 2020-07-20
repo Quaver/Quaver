@@ -298,10 +298,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawSelectedCountLabel()
         {
             var count = SelectedScrollVelocities.Count;
-            if (count > 1)
-            {
-                ImGui.Text($"{count} scroll velocities selected");
-            }
+            var labelText = count > 1 ? $"{count} scroll velocities selected" : "";
+            ImGui.Text(labelText);
         }
 
         /// <summary>
