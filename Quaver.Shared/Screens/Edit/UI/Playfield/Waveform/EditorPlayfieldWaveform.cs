@@ -46,7 +46,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 for (var y = 0; y < SliceSize; y++)
                 {
                     var timePoint = t + y;
-
                     var index = Bass.ChannelSeconds2Bytes(Stream, timePoint / 1000.0) / 4;
 
                     if (index >= TrackByteLength / sizeof(float))
@@ -59,6 +58,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, trackSliceData, t);
                 Slices.Add(slice);
             }
+
+            Bass.StreamFree(Stream);
         }
 
 
@@ -114,8 +115,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 slice.Destroy();
 
             Slices.Clear();
-
-            Bass.StreamFree(Stream);
 
             base.Destroy();
         }
