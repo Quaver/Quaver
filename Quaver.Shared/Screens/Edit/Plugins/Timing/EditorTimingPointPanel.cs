@@ -379,19 +379,22 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         }
                     }
                     // User holds down shift, so range select if the clicked element is outside of the bounds of the currently selected points
-                    else if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+                    else if ((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift)) && SelectedTimingPoints.Count > 0)
                     {
-                        if (SelectedTimingPoints.Count > 0)
+                        var sorted = SelectedTimingPoints.OrderBy(tp => tp.StartTime);
+                        var min = sorted.First().StartTime;
+                        var max = sorted.Last().StartTime;
+                        if (point.StartTime < min)
                         {
-                            var min = SelectedTimingPoints.OrderBy(v => v.StartTime).First().StartTime;
-                            var max = SelectedTimingPoints.OrderBy(v => v.StartTime).Last().StartTime;
-                            if (point.StartTime < min || point.StartTime > max)
-                            {
-                                min = Math.Min(max, point.StartTime);
-                                max = Math.Max(min, point.StartTime);
-                                var pointsInRange = Screen.WorkingMap.TimingPoints.Where(v => v.StartTime >= min && v.StartTime <= max);
-                                SelectedTimingPoints.AddRange(pointsInRange);
-                            }
+                            var pointsInRange = Screen.WorkingMap.TimingPoints
+                                .Where(v => v.StartTime >= point.StartTime && v.StartTime <= min);
+                            SelectedTimingPoints.AddRange(pointsInRange);
+                        }
+                        else if (point.StartTime > max)
+                        {
+                            var pointsInRange = Screen.WorkingMap.TimingPoints
+                                .Where(v => v.StartTime >= min && v.StartTime <= point.StartTime);
+                            SelectedTimingPoints.AddRange(pointsInRange);
                         }
                     }
                     else

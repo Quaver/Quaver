@@ -382,17 +382,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     // User holds down shift, so range select if the clicked element is outside of the bounds of the currently selected points
                     else if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                     {
-                        if (SelectedScrollVelocities.Count > 0)
+                        var sorted = SelectedScrollVelocities.OrderBy(tp => tp.StartTime);
+                        var min = sorted.First().StartTime;
+                        var max = sorted.Last().StartTime;
+                        if (sv.StartTime < min)
                         {
-                            var min = SelectedScrollVelocities.OrderBy(v => v.StartTime).First().StartTime;
-                            var max = SelectedScrollVelocities.OrderBy(v => v.StartTime).Last().StartTime;
-                            if (sv.StartTime < min || sv.StartTime > max)
-                            {
-                                min = Math.Min(max, sv.StartTime);
-                                max = Math.Max(min, sv.StartTime);
-                                var svsInRange = Screen.WorkingMap.SliderVelocities.Where(v => v.StartTime >= min && v.StartTime <= max);
-                                SelectedScrollVelocities.AddRange(svsInRange);
-                            }
+                            var svsInRange = Screen.WorkingMap.SliderVelocities
+                                .Where(v => v.StartTime >= sv.StartTime && v.StartTime <= min);
+                            SelectedScrollVelocities.AddRange(svsInRange);
+                        }
+                        else if (sv.StartTime > max)
+                        {
+                            var svsInRange = Screen.WorkingMap.SliderVelocities
+                                .Where(v => v.StartTime >= max && v.StartTime <= sv.StartTime);
+                            SelectedScrollVelocities.AddRange(svsInRange);
                         }
                     }
                     else
