@@ -209,8 +209,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var currentPoint = Screen.WorkingMap.GetTimingPointAt(Screen.Track.Time);
                 if (currentPoint != null)
                 {
-                    SelectedTimingPoints.Add(currentPoint);
                     NeedsToScrollToLastSelectedPoint = true;
+                    if (!SelectedTimingPoints.Contains(currentPoint))
+                        SelectedTimingPoints.Add(currentPoint);
                 }
 
             }

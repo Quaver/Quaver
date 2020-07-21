@@ -209,8 +209,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var currentPoint = Screen.WorkingMap.GetScrollVelocityAt(Screen.Track.Time);
                 if (currentPoint != null)
                 {
-                    SelectedScrollVelocities.Add(currentPoint);
                     NeedsToScrollToLastSelectedSv = true;
+                    if (!SelectedScrollVelocities.Contains(currentPoint))
+                        SelectedScrollVelocities.Add(currentPoint);
                 }
             }
 
