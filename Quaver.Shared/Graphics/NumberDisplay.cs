@@ -129,15 +129,8 @@ namespace Quaver.Shared.Graphics
                         CurrentValue = TargetValue;
                         break;
                     case NumberDisplayType.Accuracy:
-                        if (ConfigManager.SmoothAccuracyChanges.Value)
-                        {
-                            CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
-                                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
-                        }
-                        else
-                        {
-                            CurrentValue = TargetValue;
-                        }
+                        CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
+                            (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
                         break;
                     case NumberDisplayType.SongTime:
                         break;

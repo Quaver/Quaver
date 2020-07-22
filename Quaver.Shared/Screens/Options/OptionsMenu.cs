@@ -215,7 +215,6 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Ranked Accuracy With Custom Judgements", ConfigManager.DisplayRankedAccuracy),
                         new OptionsSlider(containerRect, "Hit Error Fade Time", ConfigManager.HitErrorFadeTime, i => $"{i / 1000f:0.0} sec"),
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
-                        new OptionsItemCheckbox(containerRect, "Enable Accuracy Display Animations", ConfigManager.SmoothAccuracyChanges),
                     }),
                     new OptionsSubcategory("Scoreboard", new List<OptionsItem>()
                     {
