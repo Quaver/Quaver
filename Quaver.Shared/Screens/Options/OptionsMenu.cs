@@ -163,18 +163,6 @@ namespace Quaver.Shared.Screens.Options
                            Tags = new List<string> { "speed" }
                        }
                     }),
-                    new OptionsSubcategory("Linux", new List<OptionsItem>()
-                    {
-                        new OptionsSlider(containerRect, "Audio Device Period", ConfigManager.DevicePeriod, i => $"{i} ms")
-                        {
-                            Tags = new List<string> { "linux" }
-                        },
-                        new OptionsItemAudioBufferLength(containerRect, "Audio Device Buffer Length", ConfigManager.DeviceBufferLengthMultiplier,
-                            ConfigManager.DevicePeriod, (multiplier, period) => $"{multiplier * period} ms")
-                        {
-                            Tags = new List<string> { "linux" }
-                        },
-                    }),
                     new OptionsSubcategory("Experimental", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
