@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Database.Maps;
@@ -68,6 +69,9 @@ namespace Quaver.Shared.Screens.Edit.AutoMod
 
                 previousColumnNote[laneIndex] = hitObject;
             }
+
+            if (previousColumnNote.Any(x => x == null))
+                Logger.Debug($"Not all columns have an object placed.", LogType.Runtime, false);
         }
     }
 }
