@@ -163,18 +163,6 @@ namespace Quaver.Shared.Screens.Options
                            Tags = new List<string> { "speed" }
                        }
                     }),
-                    new OptionsSubcategory("Linux", new List<OptionsItem>()
-                    {
-                        new OptionsSlider(containerRect, "Audio Device Period", ConfigManager.DevicePeriod, i => $"{i} ms")
-                        {
-                            Tags = new List<string> { "linux" }
-                        },
-                        new OptionsItemAudioBufferLength(containerRect, "Audio Device Buffer Length", ConfigManager.DeviceBufferLengthMultiplier,
-                            ConfigManager.DevicePeriod, (multiplier, period) => $"{multiplier * period} ms")
-                        {
-                            Tags = new List<string> { "linux" }
-                        },
-                    }),
                     new OptionsSubcategory("Experimental", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
@@ -215,7 +203,6 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Ranked Accuracy With Custom Judgements", ConfigManager.DisplayRankedAccuracy),
                         new OptionsSlider(containerRect, "Hit Error Fade Time", ConfigManager.HitErrorFadeTime, i => $"{i / 1000f:0.0} sec"),
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
-                        new OptionsItemCheckbox(containerRect, "Enable Accuracy Display Animations", ConfigManager.SmoothAccuracyChanges),
                     }),
                     new OptionsSubcategory("Scoreboard", new List<OptionsItem>()
                     {
