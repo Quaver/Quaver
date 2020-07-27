@@ -359,7 +359,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
             UpdateHitObjectPool();
-            Waveform.Update(gameTime);
+            Waveform?.Update(gameTime);
             Timeline.Update(gameTime);
             LineContainer.Update(gameTime);
             HandleInput();
@@ -390,8 +390,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             Timeline.Draw(gameTime);
 
-            if (ShowWaveform.Value == true)
-                Waveform.Draw(gameTime);
+            if (ShowWaveform.Value)
+                Waveform?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
@@ -407,7 +407,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public override void Destroy()
         {
             Button.Destroy();
-            Waveform.Destroy();
+            Waveform?.Destroy();
 
             ThreadScheduler.Run(() =>
             {
@@ -513,7 +513,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateWaveform() => Waveform = new EditorPlayfieldWaveform(this);
+        private void CreateWaveform()
+        {
+            if (IsUneditable)
+                return;
+
+            Waveform = new EditorPlayfieldWaveform(this);
+        }
 
         /// <summary>
         /// </summary>
