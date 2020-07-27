@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble;
+using Wobble.Graphics.Animations;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
@@ -25,6 +26,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             SliceTimeMilliSeconds = sliceTime;
 
             CreateSlice(sliceData);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            SliceSprite.PerformTransformations(gameTime);
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -50,7 +57,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private void CreateSlice(float[,] sliceData)
         {
-            SliceSprite = new Sprite();
+            SliceSprite = new Sprite { Alpha = 0 };
 
             var textureHeight = SliceSize / 2;
 
@@ -92,6 +99,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             SliceSprite.Image = SliceTexture;
             SliceSprite.Width = (int)Playfield.Width;
             SliceSprite.Height = SliceSize;
+            SliceSprite.FadeTo(1, Easing.Linear, 250);
         }
     }
 }
