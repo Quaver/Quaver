@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,6 +12,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -48,6 +50,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Scheduling;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield
@@ -198,6 +201,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private EditorPlayfieldTimeline Timeline { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private TaskHandler<int, int> WaveformLoadTask { get; set; }
 
         /// <summary>
         /// </summary>
@@ -407,6 +414,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public override void Destroy()
         {
             Button.Destroy();
+
+            WaveformLoadTask?.Dispose();
             Waveform?.Destroy();
 
             ThreadScheduler.Run(() =>
@@ -518,7 +527,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            Waveform = new EditorPlayfieldWaveform(this);
+            WaveformLoadTask = new TaskHandler<int, int>(CreateWaveform);
+            WaveformLoadTask.OnCancelled += (sender, args) => Waveform?.Destroy();
+            WaveformLoadTask.Run(0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int CreateWaveform(int arg1, CancellationToken token)
+        {
+            Waveform = new EditorPlayfieldWaveform(this, token);
+            return 0;
         }
 
         /// <summary>

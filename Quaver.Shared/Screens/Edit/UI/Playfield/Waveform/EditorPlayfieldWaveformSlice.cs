@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         {
             SliceSprite?.Destroy();
             SliceSprite = null;
-            SliceTexture.Dispose();
+            SliceTexture?.Dispose();
 
             base.Destroy();
         }

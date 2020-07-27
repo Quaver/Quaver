@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using ManagedBass;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Scheduling;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
     public class EditorPlayfieldWaveform : Container
     {
-        /// <summary>
-        ///     The currently cached waveform (if one exists)
-        ///     Used to speed up load times when exiting, re-etnering editor (like play testing)
-        /// </summary>
-        private static Tuple<string, List<EditorPlayfieldWaveformSlice>> CachedWaveform { get; set; }
-
         private List<EditorPlayfieldWaveformSlice> Slices { get; set; }
 
         private List<EditorPlayfieldWaveformSlice> VisibleSlices { get; }
@@ -33,14 +29,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private int Stream { get; set; }
 
-        public EditorPlayfieldWaveform(EditorPlayfield playfield)
+        private CancellationToken Token { get;  }
+
+        public EditorPlayfieldWaveform(EditorPlayfield playfield, CancellationToken token)
         {
             Playfield = playfield;
+            Token = token;
 
             Slices = new List<EditorPlayfieldWaveformSlice>();
             VisibleSlices = new List<EditorPlayfieldWaveformSlice>();
 
             GenerateWaveform();
+            CheckCancellationToken();
         }
 
         /// <summary>
@@ -77,21 +77,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             SliceSize = (int) Playfield.Height;
             GenerateTrackData();
 
-            if (CachedWaveform != null)
-            {
-                // Used the cached waveform because it is the same map as the last editor session
-                if (CachedWaveform.Item1 == MapManager.GetAudioPath(MapManager.Selected?.Value))
-                {
-                    Slices = CachedWaveform.Item2;
-                    Slices.ForEach(x => x.UpdatePlayfield(Playfield));
-                    Bass.StreamFree(Stream);
-                    return;
-                }
-
-                // Destroy the cached waveform
-                CachedWaveform.Item2.ForEach(x =>x.Destroy());
-            }
-
             var tempSlices = new List<EditorPlayfieldWaveformSlice>();
 
             for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
@@ -116,8 +101,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             }
 
             Slices = tempSlices;
-            CachedWaveform = new Tuple<string, List<EditorPlayfieldWaveformSlice>>(MapManager.GetAudioPath(MapManager.Selected?.Value), Slices);
-
             Bass.StreamFree(Stream);
         }
 
@@ -147,16 +130,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 Slices[index]?.Draw(gameTime);
         }
 
+        private void CheckCancellationToken()
+        {
+            if (!Token.IsCancellationRequested)
+                return;
+
+            Destroy();
+        }
+
         /// <summary>
         /// </summary>
-        public override void Destroy()
-        {
-            if (CachedWaveform.Item2 == Slices)
-            {
-                base.Destroy();
-                return;
-            }
+        public override void Destroy() => DisposeWaveform();
 
+        /// <summary>
+        /// </summary>
+        public void DisposeWaveform()
+        {
+            DisposeSlices();
+            base.Destroy();
+        }
+
+        private void DisposeSlices()
+        {
             foreach (var slice in Slices)
                 slice.Destroy();
 
