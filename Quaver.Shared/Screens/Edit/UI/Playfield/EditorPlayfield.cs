@@ -41,6 +41,7 @@ using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -212,6 +213,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private LoadingWheelText LoadingWaveform { get; set; }
+
+        /// <summary>
+        /// </summary>
         private EditorPlayfieldLineContainer LineContainer { get; set; }
 
         /// <summary>
@@ -365,6 +370,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Alignment = Alignment;
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
+
+            if (LoadingWaveform != null)
+            {
+                LoadingWaveform.Alignment = Alignment;
+                LoadingWaveform.Position = new ScalableVector2(X + BorderLeft.Width / 2f, 200);
+                LoadingWaveform.Update(gameTime);
+            }
+
             UpdateHitObjectPool();
             Waveform?.Update(gameTime);
             Timeline.Update(gameTime);
@@ -406,6 +419,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             // Draw the button on top of the hitobjects because it serves as a dimming
             Button.Draw(gameTime);
+
+            if (ShowWaveform.Value)
+                LoadingWaveform?.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -527,8 +543,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
+            LoadingWaveform = new LoadingWheelText(20, "Loading Waveform...")
+            {
+                Alignment = Alignment.TopCenter,
+                Y = 200,
+            };
+
             WaveformLoadTask = new TaskHandler<int, int>(CreateWaveform);
-            WaveformLoadTask.OnCancelled += (sender, args) => Waveform?.Destroy();
+
+            WaveformLoadTask.OnCompleted += (sender, args) => LoadingWaveform.FadeOut();
+            WaveformLoadTask.OnCancelled += (sender, args) =>
+            {
+                Waveform?.Destroy();
+                LoadingWaveform.Destroy();
+            };
+
             WaveformLoadTask.Run(0);
         }
 
