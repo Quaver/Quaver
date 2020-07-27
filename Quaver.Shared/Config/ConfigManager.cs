@@ -514,6 +514,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorShowWaveform { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<bool> EditorPlaceObjectsOnNearestTick { get; private set; }
 
         /// <summary>
@@ -952,6 +956,7 @@ namespace Quaver.Shared.Config
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
+            EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
@@ -1112,6 +1117,7 @@ namespace Quaver.Shared.Config
                     GameplayNoteScale.ValueChanged += AutoSaveConfiguration;
                     EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
                     EditorPlaceObjectsOnNearestTick.ValueChanged += AutoSaveConfiguration;
+                    EditorShowWaveform.ValueChanged += AutoSaveConfiguration;
                     VisualOffset.ValueChanged += AutoSaveConfiguration;
                     TintHitLightingBasedOnJudgementColor.ValueChanged += AutoSaveConfiguration;
                     Display1v1TournamentOverlay.ValueChanged += AutoSaveConfiguration;

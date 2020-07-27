@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 
         /// <summary>
         /// </summary>
-        private ResultsSubmittingScore SubmittingScore { get; set; }
+        private LoadingWheelText SubmittingScore { get; set; }
 
         /// <summary>
         /// </summary>
@@ -75,7 +75,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 
         /// <summary>
         /// </summary>
-        private void CreateSubmittingScore() => SubmittingScore = new ResultsSubmittingScore(21)
+        private void CreateSubmittingScore() => SubmittingScore = new LoadingWheelText(21, "SUBMITTING SCORE...")
         {
             Parent = this,
             Alignment = Alignment.MidCenter

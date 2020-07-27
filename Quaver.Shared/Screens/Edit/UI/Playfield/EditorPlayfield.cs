@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,6 +12,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -36,8 +38,10 @@ using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -47,6 +51,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Scheduling;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield
@@ -104,6 +109,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<bool> PlaceObjectsOnNearestTick { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<bool> ShowWaveform { get; }
 
         /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
@@ -196,6 +205,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private TaskHandler<int, int> WaveformLoadTask { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private EditorPlayfieldWaveform Waveform { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private LoadingWheelText LoadingWaveform { get; set; }
+
+        /// <summary>
+        /// </summary>
         private EditorPlayfieldLineContainer LineContainer { get; set; }
 
         /// <summary>
@@ -281,7 +302,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, bool isUneditable = false)
+            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform, bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -300,6 +321,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
             PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
+            ShowWaveform = showWaveform;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -309,6 +331,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateDividerLines();
             CreateHitPositionLine();
             CreateTimeline();
+            CreateWaveform();
             CreateLineContainer();
             CreateHitObjects();
             CreateButton();
@@ -347,7 +370,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Alignment = Alignment;
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
+
+            if (LoadingWaveform != null)
+            {
+                LoadingWaveform.Alignment = Alignment;
+                LoadingWaveform.Position = new ScalableVector2(X + BorderLeft.Width / 2f, 200);
+                LoadingWaveform.Update(gameTime);
+            }
+
             UpdateHitObjectPool();
+            Waveform?.Update(gameTime);
             Timeline.Update(gameTime);
             LineContainer.Update(gameTime);
             HandleInput();
@@ -375,13 +407,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
+
             Timeline.Draw(gameTime);
+
+            if (ShowWaveform.Value)
+                Waveform?.Draw(gameTime);
+
             LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
             GameBase.Game.SpriteBatch.End();
 
             // Draw the button on top of the hitobjects because it serves as a dimming
             Button.Draw(gameTime);
+
+            if (ShowWaveform.Value)
+                LoadingWaveform?.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -390,6 +430,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public override void Destroy()
         {
             Button.Destroy();
+
+            WaveformLoadTask?.Dispose();
+            Waveform?.Destroy();
 
             ThreadScheduler.Run(() =>
             {
@@ -491,6 +534,42 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             HitObjects = new List<EditorHitObjectKeys>();
             Map.HitObjects.ForEach(x => CreateHitObject(x));
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateWaveform()
+        {
+            if (IsUneditable)
+                return;
+
+            LoadingWaveform = new LoadingWheelText(20, "Loading Waveform...")
+            {
+                Alignment = Alignment.TopCenter,
+                Y = 200,
+            };
+
+            WaveformLoadTask = new TaskHandler<int, int>(CreateWaveform);
+
+            WaveformLoadTask.OnCompleted += (sender, args) => LoadingWaveform.FadeOut();
+            WaveformLoadTask.OnCancelled += (sender, args) =>
+            {
+                Waveform?.Destroy();
+                LoadingWaveform.Destroy();
+            };
+
+            WaveformLoadTask.Run(0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int CreateWaveform(int arg1, CancellationToken token)
+        {
+            Waveform = new EditorPlayfieldWaveform(this, token);
+            return 0;
         }
 
         /// <summary>
@@ -725,7 +804,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var lane = Map.GetKeyCount() * percentage + 1;
 
             var val = (int) MathHelper.Clamp(lane, 1, Map.GetKeyCount());
-            
+
             // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
             if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
             {
@@ -1137,7 +1216,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
             var lane = GetLaneFromX(MouseManager.CurrentState.X, true);
-            
+
             if (GetHitObjectAtTimeAndLane(time, lane) != null)
                 return;
 

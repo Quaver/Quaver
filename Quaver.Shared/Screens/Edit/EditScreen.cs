@@ -150,6 +150,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) {Value = true};
+
+        /// <summary>
+        /// </summary>
         public Bindable<EditorBeatSnapColor> BeatSnapColor { get; } = ConfigManager.EditorBeatSnapColorType ?? new Bindable<EditorBeatSnapColor>(EditorBeatSnapColor.Default);
 
         /// <summary>
@@ -349,6 +353,9 @@ namespace Quaver.Shared.Screens.Edit
             if (PlaceObjectsOnNearestTick != ConfigManager.EditorPlaceObjectsOnNearestTick)
                 PlaceObjectsOnNearestTick.Dispose();
 
+            if (ShowWaveform != ConfigManager.EditorShowWaveform)
+                ShowWaveform.Dispose();
+
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
 
@@ -374,13 +381,16 @@ namespace Quaver.Shared.Screens.Edit
                 Track = track;
                 Track.ApplyRate(ConfigManager.Pitched?.Value ?? true);
 
-                lock (AudioEngine.Track)
+                if (AudioEngine.Track != null)
                 {
-                    if (!AudioEngine.Track.IsDisposed)
-                        AudioEngine.Track.Dispose();
+                    lock (AudioEngine.Track)
+                    {
+                        if (!AudioEngine.Track.IsDisposed)
+                            AudioEngine.Track.Dispose();
 
-                    AudioEngine.Track = Track;
-                    AudioEngine.Map = Map;
+                        AudioEngine.Track = Track;
+                        AudioEngine.Map = Map;
+                    }
                 }
             }
 
