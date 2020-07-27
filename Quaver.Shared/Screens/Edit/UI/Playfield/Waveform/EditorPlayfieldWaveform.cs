@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private int Stream { get; set; }
 
-        private CancellationToken Token { get;  }
+        private CancellationToken Token { get; }
 
         public EditorPlayfieldWaveform(EditorPlayfield playfield, CancellationToken token)
         {
