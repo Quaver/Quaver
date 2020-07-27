@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
     public class EditorPlayfieldWaveformSlice : Sprite
     {
-        private EditorPlayfield Playfield { get; }
+        private EditorPlayfield Playfield { get; set; }
 
         private Sprite SliceSprite { get; set; }
 
@@ -45,6 +45,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             base.Destroy();
         }
+
+        public void UpdatePlayfield(EditorPlayfield playfield) => Playfield = playfield;
 
         private void CreateSlice(float[,] sliceData)
         {
