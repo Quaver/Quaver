@@ -8,16 +8,16 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 {
-    public class ResultsSubmittingScore : Container
+    public class LoadingWheelText : Container
     {
         private SpriteTextPlus TextSubmitting { get; }
 
         private LoadingWheel Wheel { get; }
 
-        public ResultsSubmittingScore(int fontSize)
+        public LoadingWheelText(int fontSize, string text)
         {
             TextSubmitting = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "SUBMITTING SCORE...", fontSize)
+                text, fontSize)
             {
                 Parent = this
             };

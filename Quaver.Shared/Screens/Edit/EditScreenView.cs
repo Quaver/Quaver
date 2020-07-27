@@ -182,7 +182,7 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
             EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer,
-            EditScreen.PlaceObjectsOnNearestTick) { Parent = Container};
+            EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform) { Parent = Container};
 
         /// <summary>
         /// </summary>
@@ -251,7 +251,7 @@ namespace Quaver.Shared.Screens.Edit
                 EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity,
-                EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer, EditScreen.PlaceObjectsOnNearestTick,
+                EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer, EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform,
                 true)
             {
                 Parent = Container,
