@@ -25,15 +25,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         private int SliceSize { get; set; }
 
         private int Stream { get; set; }
-
-        private bool HasGenerated { get; set; }
-
+        
         public EditorPlayfieldWaveform(EditorPlayfield playfield)
         {
             Playfield = playfield;
 
             Slices = new List<EditorPlayfieldWaveformSlice>();
             VisibleSlices = new List<EditorPlayfieldWaveformSlice>();
+
+            GenerateWaveform();
         }
 
         /// <summary>
@@ -41,17 +41,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (!HasGenerated)
-            {
-                HasGenerated = true;
-                ThreadScheduler.Run(GenerateWaveform);
-            }
-
             if (Slices.Count > 0)
             {
                 foreach (var slice in Slices)
                     slice.Update(gameTime);
-            }           
+            }
 
             base.Update(gameTime);
         }
@@ -67,19 +61,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             for (var i = 0; i < amount; i++)
                 TryDrawSlice(index + (i - amount / 2), gameTime);
-
-            //keeping this if the thing above fails for some reason you never know lol (but it should work I promise)
-            //TryDrawSlice(index - 2, gameTime);
-            //TryDrawSlice(index - 1, gameTime);
-            //TryDrawSlice(index,     gameTime);
-            //TryDrawSlice(index + 1, gameTime);
-            //TryDrawSlice(index + 2, gameTime);
-            //TryDrawSlice(index + 3, gameTime);
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="playfield"></param>
         public void GenerateWaveform()
         {
             GenerateTrackData();
