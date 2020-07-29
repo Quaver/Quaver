@@ -13,7 +13,7 @@ using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Gameplay.UI
 {
-    public class KeysPerSecond : NumberDisplay
+    public class KeysPerSecond : GameplayNumberDisplay
     {
         /// <summary>
         ///     The list of all the click times.

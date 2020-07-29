@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private void ChangeGradeImage()
         {
-            Visible = Scoring.Score > 0;
+            Visible = Scoring.Score > 0 && (ConfigManager.DisplayGameplayOverlay?.Value ?? true);
 
             if (ConfigManager.DisplayRankedAccuracy.Value)
                 Grade = GradeHelper.GetGradeFromAccuracy(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);

@@ -561,6 +561,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> AcceptedTermsAndPrivacyPolicy { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayGameplayOverlay { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -966,6 +970,7 @@ namespace Quaver.Shared.Config
             ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
             SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
+            DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -1141,6 +1146,7 @@ namespace Quaver.Shared.Config
                     ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
                     AcceptedTermsAndPrivacyPolicy.ValueChanged += AutoSaveConfiguration;
                     SkipSplashScreen.ValueChanged += AutoSaveConfiguration;
+                    DisplayGameplayOverlay.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
