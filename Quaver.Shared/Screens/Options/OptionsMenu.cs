@@ -351,6 +351,10 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Navigation", new List<OptionsItem>()
+                    {
+                        new OptionsItemOpenGameFolder(containerRect, "Open Game Folder")
+                    }),
                     new OptionsSubcategory("Installed Games", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
