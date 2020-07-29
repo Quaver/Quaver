@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -443,6 +445,8 @@ namespace Quaver.Shared
                 DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
                 DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
             };
+
+            ConfigManager.EnableHighProcessPriority.ValueChanged += (sender, args) => SetProcessPriority();
 
             // Handle discord rich presence.
             DiscordHelper.Initialize("376180410490552320");
@@ -901,6 +905,21 @@ namespace Quaver.Shared
             ConfigManager.WindowHeight.Value = Window.ClientBounds.Height;
 
             ChangeResolution();
+        }
+
+        public void SetProcessPriority()
+        {
+            var priority = ProcessPriorityClass.Normal;
+
+            if (ConfigManager.EnableHighProcessPriority.Value)
+                priority = ProcessPriorityClass.High;
+
+            try
+            {
+                using (var p = Process.GetCurrentProcess())
+                    p.PriorityClass = priority;
+            }
+            catch (Win32Exception) { /* do nothing */ }
         }
 
 #if VISUAL_TESTS

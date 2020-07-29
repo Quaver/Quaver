@@ -565,6 +565,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayGameplayOverlay { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EnableHighProcessPriority { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -971,6 +975,7 @@ namespace Quaver.Shared.Config
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
             SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
             DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
+            EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
