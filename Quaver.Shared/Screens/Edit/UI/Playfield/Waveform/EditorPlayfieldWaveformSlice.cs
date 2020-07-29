@@ -61,20 +61,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             var textureHeight = SliceSize / 2;
 
-            SliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, (int) Playfield.Width, textureHeight);
+            SliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, (int)Playfield.Width, textureHeight);
 
-            var dataColors = new Color[(int) Playfield.Width * textureHeight];
+            var dataColors = new Color[(int)Playfield.Width * textureHeight];
 
             for (var y = 0; y < textureHeight; y += 1)
             {
                 var lengthRight = (int)Math.Abs(sliceData[y * 2, 0] * 127);
                 var lengthLeft = (int)Math.Abs(sliceData[y * 2, 1] * 127);
 
-                var pivotPoint = (int) Playfield.Width / 2 - lengthLeft;
+                var pivotPoint = (int)Playfield.Width / 2 - lengthLeft;
 
                 for (var x = 0; x < Playfield.Width; x++)
                 {
-                    var index  = (textureHeight - y - 1) * (int)Playfield.Width + x;
+                    var index = (textureHeight - y - 1) * (int)Playfield.Width + x;
 
                     switch (x >= pivotPoint && x <= pivotPoint + lengthRight + lengthLeft)
                     {
