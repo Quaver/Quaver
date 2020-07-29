@@ -67,8 +67,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             for (var y = 0; y < textureHeight; y += 1)
             {
-                var lengthRight = (int)Math.Abs(sliceData[y * 2, 0] * 127);
-                var lengthLeft = (int)Math.Abs(sliceData[y * 2, 1] * 127);
+                var lengthLeft = (int)Math.Abs(sliceData[y * 2, 0] * 127);
+                var lengthRight = (int)Math.Abs(sliceData[y * 2, 1] * 127);
 
                 var pivotPoint = (int)Playfield.Width / 2 - lengthLeft;
 
