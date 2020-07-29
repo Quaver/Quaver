@@ -46,6 +46,7 @@ using Quaver.Shared.Screens.Beta;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Initialization;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -190,7 +191,7 @@ namespace Quaver.Shared
         ///     Sometimes we'd like to perform actions on the first update, such as
         ///     creating <see cref="OnlineHub"/>
         /// </summary>
-        public bool FirstUpdateCalled { get; set; }
+        public bool FirstUpdateCalled { get; private set; }
 
 #if VISUAL_TESTS
         /// <summary>
@@ -250,7 +251,6 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
-            InitializeFpsLimiting();
         }
 
         /// <inheritdoc />
@@ -264,10 +264,8 @@ namespace Quaver.Shared
         {
             WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
-            ConfigManager.Initialize();
-            ChangeResolution();
 
-            // Full-screen
+            ChangeResolution();
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
 
@@ -298,36 +296,14 @@ namespace Quaver.Shared
         {
             base.LoadContent();
 
-            PerformGameSetup();
-            SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
-
-            // Load all game assets.
-            //Fonts.LoadGdiFonts();
-            Fonts.LoadWobbleFonts();
-
-            BackgroundHelper.Initialize();
-
-            // Load the user's skin
-            SkinManager.Load();
-
-            // Create the global FPS counter.
-            CreateFpsCounter();
-            BackgroundManager.Initialize();
-            Transitioner.Initialize();
-
-            IsReadyToUpdate = true;
-
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
+            IsReadyToUpdate = true;
 
 #if VISUAL_TESTS
             Window.Title = $"Quaver Visual Test Runner";
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => {
-                    if (ConfigManager.SkipSplashScreen.Value)
-                        return new MainMenuScreen();
-                    return new BetaScreen();
-            });
+            QuaverScreenManager.ChangeScreen(new InitializationScreen());
 #endif
         }
 
@@ -361,19 +337,19 @@ namespace Quaver.Shared
 
             if (!FirstUpdateCalled)
             {
+                InitializeFpsLimiting();
+
                 // Create the online hub on the first update, since it uses text, and we have to wait for things to
                 // be initialized
                 OnlineHub = new OnlineHub();
                 OnlineChat = new OnlineChat();
                 VolumeController = new VolumeControl();
-
                 FirstUpdateCalled = true;
             }
 
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
 
-            BackgroundManager.Update(gameTime);
             BackgroundHelper.Update(gameTime);
             DialogManager.Update(gameTime);
 
@@ -422,10 +398,8 @@ namespace Quaver.Shared
         /// <summary>
         ///     Performs any initial setup the game needs to run.
         /// </summary>
-        private void PerformGameSetup()
+        public void PerformGameSetup()
         {
-            ConfigManager.Initialize();
-
             DeleteTemporaryFiles();
 
             DatabaseManager.Initialize();
@@ -521,7 +495,7 @@ namespace Quaver.Shared
         /// <summary>
         ///     Creates the FPS counter to display on a global state.
         /// </summary>
-        private void CreateFpsCounter()
+        public void CreateFpsCounter()
         {
             Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
             {
@@ -832,6 +806,9 @@ namespace Quaver.Shared
         /// </summary>
         private void UpdateFpsCounterPosition()
         {
+            if (Fps == null)
+                return;
+
             Fps.Y = -MenuBorder.HEIGHT - 10;
 
             if (CurrentScreen?.Type == QuaverScreenType.Editor)

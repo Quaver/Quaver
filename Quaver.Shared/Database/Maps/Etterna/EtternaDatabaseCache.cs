@@ -94,10 +94,7 @@ namespace Quaver.Shared.Database.Maps.Etterna
                     }
 
                     if (!File.Exists(mapPath))
-                    {
-                        Logger.Warning($"Skipping load on file: {step.StepFileName} because the file could not be found at: {mapPath}", LogType.Runtime);
                         continue;
-                    }
 
                     var directory = Path.GetDirectoryName(mapPath);
 
