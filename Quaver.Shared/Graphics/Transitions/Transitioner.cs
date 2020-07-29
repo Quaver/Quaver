@@ -39,20 +39,26 @@ namespace Quaver.Shared.Graphics.Transitions
 
         public static void Update(GameTime gameTime)
         {
+            if (Blackness == null)
+                return;
+
             Blackness.Width = WindowManager.Width;
             Blackness.Height = WindowManager.Height;
             Blackness.Update(gameTime);
         }
 
-        public static void Draw(GameTime gameTime) => Blackness.Draw(gameTime);
+        public static void Draw(GameTime gameTime) => Blackness?.Draw(gameTime);
 
         /// <summary>
         ///     Disposes of the the transitioner.
         /// </summary>
         public static void Dispose()
         {
-            Blackness.Destroy();
-            Blackness = null;
+            if (Blackness != null)
+            {
+                Blackness.Destroy();
+                Blackness = null;
+            }
 
             WindowManager.ResolutionChanged -= OnResolutionChanged;
         }
