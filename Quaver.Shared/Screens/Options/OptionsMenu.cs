@@ -129,7 +129,8 @@ namespace Quaver.Shared.Screens.Options
                             Tags = new List<string> { "fps", "limited", "unlimited", "vsync", "wayland"}
                         },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
-                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive)
+                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
+                        new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority)
                     }),
                     new OptionsSubcategory("Linux", new List<OptionsItem>()
                     {

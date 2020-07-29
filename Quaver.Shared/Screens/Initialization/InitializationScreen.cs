@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Initialization
         public override QuaverScreenType Type { get; } = QuaverScreenType.Initialization;
 
         private TaskHandler<int, int> InitializationTask { get; }
-        
+
         public InitializationScreen()
         {
             InitializationTask = new TaskHandler<int, int>(RunInitializationTask);
@@ -62,6 +62,8 @@ namespace Quaver.Shared.Screens.Initialization
             Logger.Important($"Performing game initialization task... ", LogType.Runtime);
 
             var game = (QuaverGame) GameBase.Game;
+
+            game.SetProcessPriority();
             game.PerformGameSetup();
 
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
