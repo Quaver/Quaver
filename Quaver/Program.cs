@@ -44,29 +44,7 @@ namespace Quaver
         private static int IpcPort { get; } = 43596;
 
         [STAThread]
-        public static void Main(string[] args)
-        {
-            // Prevents more than one instance of Quaver to run at a time
-            using(var mutex = new Mutex(false, "Global\\" + Guid))
-            {
-                if(!mutex.WaitOne(0, false))
-                {
-                    Console.WriteLine("Quaver is already running");
-
-                    // Send to running instance only if we have actual data to send
-                    if (args.Length > 0)
-                        SendToRunningInstanceIpc(args);
-
-                    return;
-                }
-
-                Run();
-            }
-
-            // Uncomment this and comment the above mutex to allow multiple instances of Quaver
-            // to be run
-            // Run();
-        }
+        public static void Main(string[] args) => Run();
 
         /// <summary>
         ///     Starts the game
@@ -82,25 +60,18 @@ namespace Quaver
                 Logger.Error(exception, LogType.Runtime);
             };
 
+            ConfigManager.Initialize();
             StartIpcServer();
 
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
 
-            /*try
-            {
-                using (var p = Process.GetCurrentProcess())
-                    p.PriorityClass = ProcessPriorityClass.High;
-            }
-            catch (Win32Exception) { /* do nothing  }*/
-
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
             NativeAssemblies.Copy();
-            ConfigManager.Initialize();
             SteamManager.Initialize();
 
             try
