@@ -646,31 +646,17 @@ namespace Quaver.Shared.Database.Maps
                                       searchQuery.Operator.Equals(operators[6])))
                                     exitLoop = true;
 
-                                switch (map.RankedStatus)
-                                {
-                                    case RankedStatus.DanCourse:
-                                        if (!CompareValues("dan", searchQuery.Value, searchQuery.Operator) &&
-                                            !CompareValues("d", searchQuery.Value, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    case RankedStatus.NotSubmitted:
-                                        if (!CompareValues("notsubmitted", searchQuery.Value, searchQuery.Operator) &&
-                                            !CompareValues("n", searchQuery.Value, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    case RankedStatus.Ranked:
-                                        if (!CompareValues("ranked", searchQuery.Value, searchQuery.Operator) &&
-                                            !CompareValues("r", searchQuery.Value, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    case RankedStatus.Unranked:
-                                        if (!CompareValues("unranked", searchQuery.Value, searchQuery.Operator) &&
-                                            !CompareValues("u", searchQuery.Value, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
+                                var gate = searchQuery.Operator.Equals(operators[3]) ? "and" : "or";
+
+                                var statusKeywords = new Dictionary<RankedStatus, string[]>{
+                                    {RankedStatus.DanCourse, new string[] {"dan", "d"}},
+                                    {RankedStatus.NotSubmitted, new string[] { "notsubmitted", "n" }},
+                                    {RankedStatus.Ranked, new string[] { "ranked", "r" }},
+                                    {RankedStatus.Unranked, new string[] { "unranked", "u" }},
+                                };
+
+                                if (!CompareToMultipleValues(searchQuery.Value, statusKeywords[map.RankedStatus], searchQuery.Operator, gate))
+                                    exitLoop = true;
                                 break;
                             case SearchFilterOption.Game:
                                 if (!(searchQuery.Operator.Equals(operators[2]) ||
@@ -678,25 +664,15 @@ namespace Quaver.Shared.Database.Maps
                                       searchQuery.Operator.Equals(operators[6])))
                                     exitLoop = true;
 
-                                switch (map.Game)
+                                gate = searchQuery.Operator.Equals(operators[3]) ? "and" : "or";
+                                var gameKeywords = new Dictionary<MapGame, string[]>
                                 {
-                                    case MapGame.Quaver:
-                                        if (!CompareValues("quaver", searchQuery.Value, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    case MapGame.Osu:
-                                        if (!CompareValues("osu", searchQuery.Value, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    case MapGame.Etterna:
-                                        if (!CompareValues("etterna", searchQuery.Value, searchQuery.Operator) &&
-                                            !CompareValues("sm", searchQuery.Value, searchQuery.Operator) &&
-                                            !CompareValues("stepmania", searchQuery.Value, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
+                                    {MapGame.Quaver, new string[] { "quaver", "q" }},
+                                    {MapGame.Osu, new string[] { "osu", "o" }},
+                                    {MapGame.Etterna, new string[] { "etterna", "sm", "stepmania", "e", "s" }}
+                                };
+                                if (!CompareToMultipleValues(searchQuery.Value, gameKeywords[map.Game], searchQuery.Operator, gate))
+                                    exitLoop = true;
                                 break;
                             case SearchFilterOption.LNs:
                                 var valueToCompareTo = 0;
@@ -808,6 +784,27 @@ namespace Quaver.Shared.Database.Maps
                     return compared >= 0;
                 case "!=":
                     return compared != 0;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        ///     Compares a value once for each value in a given list and returns according to a given logic operator
+        /// </summary>
+        /// <param name="val1">The initial value to compare to the others</param>
+        /// <param name="values">The values to compare to</param>
+        /// <param name="operation">The operation used to compare</param>
+        /// <param name="mode">Logic gate used to return, either "and" or "or</param>
+        private static bool CompareToMultipleValues<T>(T val1, T[] values, string operation, string mode) where T : IComparable<T>
+        {
+            var comparisons = values.Select(valToCompare => CompareValues(val1, valToCompare, operation));
+            switch (mode.ToLower())
+            {
+                case "and":
+                    return values.All(valToCompare => CompareValues(val1, valToCompare, operation));
+                case "or":
+                    return values.Any(valToCompare => CompareValues(val1, valToCompare, operation));
                 default:
                     return false;
             }
