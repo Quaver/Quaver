@@ -106,7 +106,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Sprite that displays the current combo.
         /// </summary>
-        public NumberDisplay ComboDisplay { get; private set; }
+        public GameplayNumberDisplay ComboDisplay { get; private set; }
 
         /// <summary>
         ///     The combo in the previous frame. Used to determine if we should update it.
@@ -487,7 +487,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             // Create the combo display.
-            ComboDisplay = new NumberDisplay(NumberDisplayType.Combo, "0", new Vector2(skin.ComboDisplayScale / 100f, skin.ComboDisplayScale / 100f))
+            ComboDisplay = new GameplayNumberDisplay(NumberDisplayType.Combo, "0",
+                new Vector2(skin.ComboDisplayScale / 100f, skin.ComboDisplayScale / 100f))
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
