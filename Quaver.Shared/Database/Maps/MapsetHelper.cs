@@ -798,7 +798,6 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="mode">Logic gate used to return, either "and" or "or</param>
         private static bool CompareToMultipleValues<T>(T val1, T[] values, string operation, string mode) where T : IComparable<T>
         {
-            var comparisons = values.Select(valToCompare => CompareValues(val1, valToCompare, operation));
             switch (mode.ToLower())
             {
                 case "and":
