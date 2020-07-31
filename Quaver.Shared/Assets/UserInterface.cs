@@ -196,6 +196,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D ReplayControllerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-panel.png");
         public static Texture2D ReplayControllerSpeedPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-speed-panel.png");
         public static Texture2D OptionsCalibrateOffsetButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/calibrate-offset-button.png");
+        public static Texture2D OptionsUpdateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-update-button.png");
         public static Texture2D OptionsExportSkinButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/export-skin-button.png");
         public static Texture2D OptionsOpenSkinFolderButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/open-skin-folder-button.png");
         public static Texture2D OptionsContentBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-content-bg.png");
