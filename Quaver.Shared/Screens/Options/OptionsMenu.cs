@@ -353,9 +353,10 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
                 {
-                    new OptionsSubcategory("Navigation", new List<OptionsItem>()
+                    new OptionsSubcategory("Navigation & Maintenance", new List<OptionsItem>()
                     {
-                        new OptionsItemOpenGameFolder(containerRect, "Open Game Folder")
+                        new OptionsItemOpenGameFolder(containerRect, "Open Game Folder"),
+                        new OptionsItemUpdateRankedStatuses(containerRect, "Update Map Ranked Statuses")
                     }),
                     new OptionsSubcategory("Installed Games", new List<OptionsItem>()
                     {
