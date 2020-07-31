@@ -44,7 +44,29 @@ namespace Quaver
         private static int IpcPort { get; } = 43596;
 
         [STAThread]
-        public static void Main(string[] args) => Run();
+        public static void Main(string[] args)
+        {
+            // Prevents more than one instance of Quaver to run at a time
+            using(var mutex = new Mutex(false, "Global\\" + Guid))
+            {
+                if(!mutex.WaitOne(0, false))
+                {
+                    Console.WriteLine("Quaver is already running");
+
+                    // Send to running instance only if we have actual data to send
+                    if (args.Length > 0)
+                        SendToRunningInstanceIpc(args);
+
+                    return;
+                }
+
+                Run();
+                return;
+            }
+
+            // Uncomment this and comment the above mutex to allow multiple instances of Quaver to be run
+            Run();
+        }
 
         /// <summary>
         ///     Starts the game
