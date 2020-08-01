@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     The display for the time left.
         /// </summary>
-        public NumberDisplay TimeLeft { get; }
+        public GameplayNumberDisplay TimeLeft { get; }
 
         /// <summary>
         ///    The time the number display was last updated.
@@ -58,8 +58,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             var skin = SkinManager.Skin.Keys[screen.Map.Mode];
             if (ConfigManager.DisplaySongTimeProgressNumbers.Value)
             {
-                CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(skin.SongTimeProgressScale / 100f,
-                    skin.SongTimeProgressScale / 100f))
+                CurrentTime = new GameplayNumberDisplay(NumberDisplayType.SongTime, "00:00",
+                    new Vector2(skin.SongTimeProgressScale / 100f, skin.SongTimeProgressScale / 100f))
                 {
                     Parent = this,
                     Alignment = Alignment.TopLeft,
@@ -68,8 +68,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 };
 
                 var startText = (new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.MaxValue)).ToString("mm:ss");
-                TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-" + startText, new Vector2(skin.SongTimeProgressScale / 100f,
-                    skin.SongTimeProgressScale / 100f))
+
+                TimeLeft = new GameplayNumberDisplay(NumberDisplayType.SongTime, "-" + startText,
+                    new Vector2(skin.SongTimeProgressScale / 100f, skin.SongTimeProgressScale / 100f))
                 {
                     Parent = this,
                     Alignment = Alignment.TopRight,
@@ -85,6 +86,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            Visible = ConfigManager.DisplayGameplayOverlay?.Value ?? true;
+
             Bindable.Value = Screen.Timing.Time / ModHelper.GetRateFromMods(ModManager.Mods);
 
             // Only update time each second.

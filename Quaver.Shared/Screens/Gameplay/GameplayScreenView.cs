@@ -85,17 +85,17 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The display for the user's score.
         /// </summary>
-        public NumberDisplay ScoreDisplay { get; private set; }
+        public GameplayNumberDisplay ScoreDisplay { get; private set; }
 
         /// <summary>
         ///     The display for the user's rating.
         /// </summary>
-        public NumberDisplay RatingDisplay { get; private set; }
+        public GameplayNumberDisplay RatingDisplay { get; private set; }
 
         /// <summary>
         ///     The display for the user's accuracy
         /// </summary>
-        public NumberDisplay AccuracyDisplay { get; private set; }
+        public GameplayNumberDisplay AccuracyDisplay { get; private set; }
 
         /// <summary>
         ///     The keys per second display.
@@ -409,7 +409,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
-            ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0),
+            ScoreDisplay = new GameplayNumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0),
                 new Vector2(skin.ScoreDisplayScale / 100f, skin.ScoreDisplayScale / 100f))
             {
                 Parent = Container,
@@ -426,7 +426,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
-            RatingDisplay = new NumberDisplay(NumberDisplayType.Rating, StringHelper.RatingToString(0),
+            RatingDisplay = new GameplayNumberDisplay(NumberDisplayType.Rating, StringHelper.RatingToString(0),
                 new Vector2(skin.RatingDisplayScale / 100f, skin.RatingDisplayScale / 100f))
             {
                 Parent = Container,
@@ -443,7 +443,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
-            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0),
+            AccuracyDisplay = new GameplayNumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0),
                 new Vector2(skin.AccuracyDisplayScale / 100f, skin.AccuracyDisplayScale / 100f))
             {
                 Parent = Container,
@@ -462,7 +462,7 @@ namespace Quaver.Shared.Screens.Gameplay
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
 
             RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
-            
+
             if (ConfigManager.DisplayRankedAccuracy.Value)
                 AccuracyDisplay.UpdateValue(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
             else

@@ -34,6 +34,9 @@ namespace Quaver.Shared.Database.Maps
         {
             get
             {
+                if (MapsToCache == null)
+                    return false;
+
                 try
                 {
                     return MapsToCache[OtherGameCacheAction.Delete]?.Count > 0 ||

@@ -561,6 +561,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> AcceptedTermsAndPrivacyPolicy { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayGameplayOverlay { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EnableHighProcessPriority { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -966,182 +974,14 @@ namespace Quaver.Shared.Config
             ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
             SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
+            DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
+            EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
 
-            // Write the config file with all of the changed/invalidated data.
-            Task.Run(async () => await WriteConfigFileAsync())
-                .ContinueWith(t =>
-                {
-                    // SET AUTO-SAVE FUNCTIONALITY FOR EACH BINDED VALUE.
-                    // This is so shit tbcfh, lol.
-                    GameDirectory.ValueChanged += AutoSaveConfiguration;
-                    SkinDirectory.ValueChanged += AutoSaveConfiguration;
-                    ScreenshotDirectory.ValueChanged += AutoSaveConfiguration;
-                    ReplayDirectory.ValueChanged += AutoSaveConfiguration;
-                    LogsDirectory.ValueChanged += AutoSaveConfiguration;
-                    DataDirectory.ValueChanged += AutoSaveConfiguration;
-                    SongDirectory.ValueChanged += AutoSaveConfiguration;
-                    OsuDbPath.ValueChanged += AutoSaveConfiguration;
-                    EtternaDbPath.ValueChanged += AutoSaveConfiguration;
-                    AutoLoadOsuBeatmaps.ValueChanged += AutoSaveConfiguration;
-                    Username.ValueChanged += AutoSaveConfiguration;
-                    VolumeGlobal.ValueChanged += AutoSaveConfiguration;
-                    VolumeEffect.ValueChanged += AutoSaveConfiguration;
-                    VolumeMusic.ValueChanged += AutoSaveConfiguration;
-                    DevicePeriod.ValueChanged += AutoSaveConfiguration;
-                    DeviceBufferLengthMultiplier.ValueChanged += AutoSaveConfiguration;
-                    BackgroundBrightness.ValueChanged += AutoSaveConfiguration;
-                    WindowHeight.ValueChanged += AutoSaveConfiguration;
-                    WindowWidth.ValueChanged += AutoSaveConfiguration;
-                    WindowFullScreen.ValueChanged += AutoSaveConfiguration;
-                    FpsCounter.ValueChanged += AutoSaveConfiguration;
-                    FpsLimiterType.ValueChanged += AutoSaveConfiguration;
-                    CustomFpsLimit.ValueChanged += AutoSaveConfiguration;
-                    SmoothAudioTimingGameplay.ValueChanged += AutoSaveConfiguration;
-                    DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
-                    ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
-                    ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
-                    ScrollDirection4K.ValueChanged += AutoSaveConfiguration;
-                    ScrollDirection7K.ValueChanged += AutoSaveConfiguration;
-                    GlobalAudioOffset.ValueChanged += AutoSaveConfiguration;
-                    Skin.ValueChanged += AutoSaveConfiguration;
-                    DefaultSkin.ValueChanged += AutoSaveConfiguration;
-                    Pitched.ValueChanged += AutoSaveConfiguration;
-                    ScoreboardVisible.ValueChanged += AutoSaveConfiguration;
-                    DisplayRankedAccuracy.ValueChanged += AutoSaveConfiguration;
-                    AutoLoginToServer.ValueChanged += AutoSaveConfiguration;
-                    DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
-                    DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
-                    EnableHitsounds.ValueChanged += AutoSaveConfiguration;
-                    EnableKeysounds.ValueChanged += AutoSaveConfiguration;
-                    KeyNavigateLeft.ValueChanged += AutoSaveConfiguration;
-                    KeyNavigateRight.ValueChanged += AutoSaveConfiguration;
-                    KeyNavigateUp.ValueChanged += AutoSaveConfiguration;
-                    KeyNavigateDown.ValueChanged += AutoSaveConfiguration;
-                    KeyNavigateBack.ValueChanged += AutoSaveConfiguration;
-                    KeyNavigateSelect.ValueChanged += AutoSaveConfiguration;
-                    KeyMania4K1.ValueChanged += AutoSaveConfiguration;
-                    KeyMania4K2.ValueChanged += AutoSaveConfiguration;
-                    KeyMania4K3.ValueChanged += AutoSaveConfiguration;
-                    KeyMania4K4.ValueChanged += AutoSaveConfiguration;
-                    KeyMania7K1.ValueChanged += AutoSaveConfiguration;
-                    KeyMania7K2.ValueChanged += AutoSaveConfiguration;
-                    KeyMania7K3.ValueChanged += AutoSaveConfiguration;
-                    KeyMania7K4.ValueChanged += AutoSaveConfiguration;
-                    KeyMania7K5.ValueChanged += AutoSaveConfiguration;
-                    KeyMania7K6.ValueChanged += AutoSaveConfiguration;
-                    KeyMania7K7.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P4K1.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P4K2.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P4K3.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P4K4.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P7K1.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P7K2.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P7K3.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P7K4.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P7K5.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P7K6.ValueChanged += AutoSaveConfiguration;
-                    KeyCoop2P7K7.ValueChanged += AutoSaveConfiguration;
-                    KeySkipIntro.ValueChanged += AutoSaveConfiguration;
-                    KeyPause.ValueChanged += AutoSaveConfiguration;
-                    KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
-                    KeyDecreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
-                    KeyIncreaseGameplayAudioRate.ValueChanged += AutoSaveConfiguration;
-                    KeyRestartMap.ValueChanged += AutoSaveConfiguration;
-                    KeyIncreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
-                    KeyDecreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
-                    KeyIncreaseMapOffset.ValueChanged += AutoSaveConfiguration;
-                    KeyDecreaseMapOffset.ValueChanged += AutoSaveConfiguration;
-                    KeyScoreboardVisible.ValueChanged += AutoSaveConfiguration;
-                    SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
-                    KeyQuickExit.ValueChanged += AutoSaveConfiguration;
-                    SelectedGameMode.ValueChanged += AutoSaveConfiguration;
-                    TapToPause.ValueChanged += AutoSaveConfiguration;
-                    DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
-                    EditorScrollSpeedKeys.ValueChanged += AutoSaveConfiguration;
-                    KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
-                    KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
-                    KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
-                    EditorBeatSnapColorType.ValueChanged += AutoSaveConfiguration;
-                    EditorShowLaneDividerLines.ValueChanged += AutoSaveConfiguration;
-                    EditorHitObjectsMidpointAnchored.ValueChanged += AutoSaveConfiguration;
-                    EditorPlayMetronome.ValueChanged += AutoSaveConfiguration;
-                    EditorMetronomePlayHalfBeats.ValueChanged += AutoSaveConfiguration;
-                    DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
-                    DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
-                    HitErrorFadeTime.ValueChanged += AutoSaveConfiguration;
-                    SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
-                    DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
-                    LaneCoverTopHeight.ValueChanged += AutoSaveConfiguration;
-                    LaneCoverBottomHeight.ValueChanged += AutoSaveConfiguration;
-                    LaneCoverTop.ValueChanged += AutoSaveConfiguration;
-                    LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
-                    EditorViewLayers.ValueChanged += AutoSaveConfiguration;
-                    UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
-                    EditorVisualizationGraph.ValueChanged += AutoSaveConfiguration;
-                    LobbyFilterHasPassword.ValueChanged += AutoSaveConfiguration;
-                    LobbyFilterFullGame.ValueChanged += AutoSaveConfiguration;
-                    LobbyFilterOwnsMap.ValueChanged += AutoSaveConfiguration;
-                    LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
-                    EnableBattleRoyaleBackgroundFlashing.ValueChanged += AutoSaveConfiguration;
-                    EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
-                    SelectFilterGameModeBy.ValueChanged += AutoSaveConfiguration;
-                    DisplayUnbeatableScoresDuringGameplay.ValueChanged += AutoSaveConfiguration;
-                    ShowSpectators.ValueChanged += AutoSaveConfiguration;
-                    JudgementWindows.ValueChanged += AutoSaveConfiguration;
-                    SelectGroupMapsetsBy.ValueChanged += AutoSaveConfiguration;
-                    MusicPlayerOrderMapsBy.ValueChanged += AutoSaveConfiguration;
-                    OnlineUserListFilterType.ValueChanged += AutoSaveConfiguration;
-                    DisplaySongRequestNotifications.ValueChanged += AutoSaveConfiguration;
-                    MultiplayerLobbyRulesetType.ValueChanged += AutoSaveConfiguration;
-                    MultiplayerLobbyGameModeType.ValueChanged += AutoSaveConfiguration;
-                    MultiplayerLobbyMapStatusType.ValueChanged += AutoSaveConfiguration;
-                    MultiplayerLobbyVisibilityType.ValueChanged += AutoSaveConfiguration;
-                    SteamWorkshopDirectory.ValueChanged += AutoSaveConfiguration;
-                    UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
-                    WindowBorderless.ValueChanged += AutoSaveConfiguration;
-                    PreferWayland.ValueChanged += AutoSaveConfiguration;
-                    LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
-                    KeyScreenshot.ValueChanged += AutoSaveConfiguration;
-                    DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;
-                    DownloadReverseSort.ValueChanged += AutoSaveConfiguration;
-                    DisplayNotificationsBottomToTop.ValueChanged += AutoSaveConfiguration;
-                    SelectedProfileId.ValueChanged += AutoSaveConfiguration;
-                    EditorBackgroundBrightness.ValueChanged += AutoSaveConfiguration;
-                    EditorHitsoundVolume.ValueChanged += AutoSaveConfiguration;
-                    EditorScaleSpeedWithRate.ValueChanged += AutoSaveConfiguration;
-                    EditorLongNoteOpacity.ValueChanged += AutoSaveConfiguration;
-                    GameplayNoteScale.ValueChanged += AutoSaveConfiguration;
-                    EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
-                    EditorPlaceObjectsOnNearestTick.ValueChanged += AutoSaveConfiguration;
-                    EditorShowWaveform.ValueChanged += AutoSaveConfiguration;
-                    VisualOffset.ValueChanged += AutoSaveConfiguration;
-                    TintHitLightingBasedOnJudgementColor.ValueChanged += AutoSaveConfiguration;
-                    Display1v1TournamentOverlay.ValueChanged += AutoSaveConfiguration;
-                    TournamentDisplay1v1PlayfieldScores.ValueChanged += AutoSaveConfiguration;
-                    EnableRealtimeOnlineScoreboard.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout4KScratch1.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout4KScratch2.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout4KScratch3.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout4KScratch4.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout4KScratch5.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch1.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch2.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch3.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch4.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch5.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch6.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch7.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
-                    KeyLayout7KScratch9.ValueChanged += AutoSaveConfiguration;
-                    ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
-                    ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
-                    AcceptedTermsAndPrivacyPolicy.ValueChanged += AutoSaveConfiguration;
-                    SkipSplashScreen.ValueChanged += AutoSaveConfiguration;
-                });
+            WriteConfigFileAsync().Wait();
         }
 
         /// <summary>
@@ -1163,6 +1003,7 @@ namespace Quaver.Shared.Config
                 binded.Value = defaultVal;
             }
 
+            binded.ValueChanged += AutoSaveConfiguration;
             return binded;
         }
 
@@ -1189,6 +1030,7 @@ namespace Quaver.Shared.Config
                 binded.Value = defaultVal;
             }
 
+            binded.ValueChanged += AutoSaveConfiguration;
             return binded;
         }
 
@@ -1236,6 +1078,7 @@ namespace Quaver.Shared.Config
                 binded.Value = defaultVal;
             }
 
+            binded.ValueChanged += AutoSaveConfiguration;
             return binded;
         }
 
@@ -1326,7 +1169,7 @@ namespace Quaver.Shared.Config
                     Logger.Error("Too many write attempts to the config file have been made.", LogType.Runtime);
             }
 
-            LastWrite = GameBase.Game.TimeRunning;
+            LastWrite = GameBase.Game?.TimeRunning ?? -1;
         }
 
         /// <summary>

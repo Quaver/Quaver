@@ -61,11 +61,11 @@ namespace Quaver
                 }
 
                 Run();
+                return;
             }
 
-            // Uncomment this and comment the above mutex to allow multiple instances of Quaver
-            // to be run
-            // Run();
+            // Uncomment this and comment the above mutex to allow multiple instances of Quaver to be run
+            Run();
         }
 
         /// <summary>
@@ -82,25 +82,18 @@ namespace Quaver
                 Logger.Error(exception, LogType.Runtime);
             };
 
+            ConfigManager.Initialize();
             StartIpcServer();
 
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
 
-            /*try
-            {
-                using (var p = Process.GetCurrentProcess())
-                    p.PriorityClass = ProcessPriorityClass.High;
-            }
-            catch (Win32Exception) { /* do nothing  }*/
-
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
             NativeAssemblies.Copy();
-            ConfigManager.Initialize();
             SteamManager.Initialize();
 
             try

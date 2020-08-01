@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
@@ -785,9 +786,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectedMapsetChanged(object sender, BindableValueChangedEventArgs<DownloadableMapset> e)
-        {
-
-        }
+            => LoadAudioPreview();
 
         /// <summary>
         ///     Loads an plays the audio preview for the selected map
@@ -802,8 +801,16 @@ namespace Quaver.Shared.Screens.Downloading
 
             var mapset = SelectedMapset.Value;
 
-            ThreadScheduler.Run(() =>
+            ThreadScheduler.Run(async () =>
             {
+                await Task.Delay(250);
+
+                if (SelectedMapset.Value != mapset)
+                {
+                    Logger.Debug($"Skipped preview load on: {mapset.Artist} - {mapset.Title}", LogType.Runtime, false);
+                    return;
+                }
+
                 lock (CurrentPreview)
                 lock (AudioPreviews)
                 {

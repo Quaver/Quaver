@@ -615,7 +615,10 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
 
                 if (!IsSongSelectPreview)
+                {
                     HandleAutoplayTabInput(gameTime);
+                    HandleOverlayToggleInput(gameTime);
+                }
             }
 
             // Handle input per game mode.
@@ -1446,7 +1449,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown())
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
 
@@ -1540,6 +1543,20 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
                 }
             }
+        }
+
+        private void HandleOverlayToggleInput(GameTime gameTime)
+        {
+            if (!KeyboardManager.IsShiftDown())
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+                return;
+
+            ConfigManager.DisplayGameplayOverlay.Value = !ConfigManager.DisplayGameplayOverlay.Value;
+            var on = ConfigManager.DisplayGameplayOverlay.Value ? "on" : "off";
+
+            NotificationManager.Show(NotificationLevel.Info, $"Gameplay overlay is now {on}. Press Shift+Tab to toggle the display.");
         }
     }
 }

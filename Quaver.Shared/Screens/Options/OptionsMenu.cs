@@ -129,7 +129,8 @@ namespace Quaver.Shared.Screens.Options
                             Tags = new List<string> { "fps", "limited", "unlimited", "vsync", "wayland"}
                         },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
-                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive)
+                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
+                        new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority)
                     }),
                     new OptionsSubcategory("Linux", new List<OptionsItem>()
                     {
@@ -197,6 +198,7 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {
+                        new OptionsItemCheckbox(containerRect, "Display Gameplay Overlay (Shift + Tab)", ConfigManager.DisplayGameplayOverlay),
                         new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
                         new OptionsItemCheckbox(containerRect, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                         new OptionsItemCheckbox(containerRect, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
@@ -351,6 +353,11 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Navigation & Maintenance", new List<OptionsItem>()
+                    {
+                        new OptionsItemOpenGameFolder(containerRect, "Open Game Folder"),
+                        new OptionsItemUpdateRankedStatuses(containerRect, "Update Map Ranked Statuses")
+                    }),
                     new OptionsSubcategory("Installed Games", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
