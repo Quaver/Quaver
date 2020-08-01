@@ -305,7 +305,7 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     The index of the last replay frame that was sent to the server
         ///     while being spectated
         /// </summary>
-        private int LastReplayFrameIndexSentToServer { get; set; } = -1;
+        public int LastReplayFrameIndexSentToServer { get; set; } = -1;
 
         /// <summary>
         ///     The client that is currently being spectated if any
@@ -531,9 +531,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.OnAllPlayersLoaded -= OnAllPlayersLoaded;
                 OnlineManager.Client.OnAllPlayersSkipped -= OnAllPlayersSkipped;
             }
-
-            if (OnlineManager.IsBeingSpectated && !InReplayMode)
-                OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.SelectingSong, 0, new List<ReplayFrame>());
 
             Metronome?.Dispose();
             IsDisposed = true;
@@ -1311,7 +1308,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (status == SpectatorClientStatus.Playing && frames.Count == 0)
                 return;
 
-            ThreadScheduler.Run(() => OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames));
+            OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
         }
 
         /// <summary>

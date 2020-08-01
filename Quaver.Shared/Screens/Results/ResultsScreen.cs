@@ -231,6 +231,8 @@ namespace Quaver.Shared.Screens.Results
         public override void OnFirstUpdate()
         {
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            Gameplay?.SendReplayFramesToServer(true);
+
             base.OnFirstUpdate();
         }
 
