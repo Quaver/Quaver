@@ -165,17 +165,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             var isTournament = Screen is TournamentGameplayScreen;
 
-            if (CurrentFrame >= Replay.Frames.Count && !isTournament)
+            VirtualPlayer.PlayAllFrames();
+
+            if (CurrentFrame >= Replay.Frames.Count && !isTournament && VirtualPlayer.CurrentFrame >= VirtualPlayer.Replay.Frames.Count)
             {
                 if (AudioEngine.Track.IsPlaying)
                     AudioEngine.Track.Pause();
 
                 if (!Screen.IsPaused)
                     Screen.IsPaused = true;
+
                 return;
             }
-
-            VirtualPlayer.PlayAllFrames();
 
             if (Screen.IsPaused && !isTournament)
                 Screen.IsPaused = false;

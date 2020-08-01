@@ -143,6 +143,9 @@ namespace Quaver.Shared.Screens.Importing
                 // TODO: Whenever handling multiple spectatee's, this should be reworked, but it's fine for now.
                 var spectatee = OnlineManager.SpectatorClients.First();
                 spectatee.Value.WatchUserImmediately();
+
+                if (!Exiting)
+                    Exit(() => new SelectionScreen());
             }
             else
             {
