@@ -149,15 +149,15 @@ namespace Quaver.Shared.Online
 
             // A second null check is required in this case
             // because PlayNewMap() may not create a new replay instance depending on what the player is doing.
-            if (Replay == null || (MapManager.Selected.Value.Md5Checksum != Player.CurrentStatus.MapMd5 && OnlineManager.CurrentGame == null))
+            if (Replay == null)
                 return;
 
             lock (Replay.Frames)
             {
                 switch (e.Status)
                 {
+                    // Do nothing for now
                     case SpectatorClientStatus.SelectingSong:
-                        Replay.Frames.Clear();
                         break;
                     case SpectatorClientStatus.NewSong:
                         Replay.Frames.Clear();
@@ -165,7 +165,7 @@ namespace Quaver.Shared.Online
                     case SpectatorClientStatus.Playing:
                     case SpectatorClientStatus.Paused:
                         // Add frames to the replay
-                        foreach (var f in e.Frames.OrderBy(x => x.Time))
+                        foreach (var f in e.Frames)
                             AddFrame(f);
                         break;
                     default:
