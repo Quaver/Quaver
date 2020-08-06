@@ -1547,13 +1547,13 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!KeyboardManager.IsShiftDown())
                 return;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F6))
                 return;
 
             ConfigManager.DisplayGameplayOverlay.Value = !ConfigManager.DisplayGameplayOverlay.Value;
             var on = ConfigManager.DisplayGameplayOverlay.Value ? "on" : "off";
 
-            NotificationManager.Show(NotificationLevel.Info, $"Gameplay overlay is now {on}. Press Shift+Tab to toggle the display.");
+            NotificationManager.Show(NotificationLevel.Info, $"Gameplay overlay is now {on}. Press Shift+F6 to toggle the display.");
         }
     }
 }
