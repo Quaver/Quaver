@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 
@@ -74,6 +75,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (ConfigManager.DisplayGameplayOverlay.Value)
+                Visible = ConfigManager.DisplayJudgementCounter.Value;
+            else
+                Visible = false;
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Update the judgement counts of each one.
