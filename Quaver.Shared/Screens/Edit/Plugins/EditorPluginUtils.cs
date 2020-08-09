@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="bpm"></param>
         /// <param name="signature"></param>
         /// <returns></returns>
-        public static TimingPointInfo CreateTimingPoint(float startTime, int bpm, TimeSignature signature = TimeSignature.Quadruple)
+        public static TimingPointInfo CreateTimingPoint(float startTime, float bpm, TimeSignature signature = TimeSignature.Quadruple)
         {
             var tp = new TimingPointInfo()
             {
