@@ -480,6 +480,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Help"))
                 return;
 
+            if (ImGui.MenuItem("Wiki"))
+                BrowserHelper.OpenURL($"https://wiki.quavergame.com/docs/editor");
+
+            if (ImGui.MenuItem("Getting Started"))
+                BrowserHelper.OpenURL($"https://wiki.quavergame.com/docs/editor/getting_started");
+
+            if (ImGui.MenuItem("Editor Functions"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/editor_functions");
+
             ImGui.EndMenu();
         }
 
