@@ -101,7 +101,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = Panel,
                 Y = Artist.Y + Artist.Height + Spacing,
                 Alignment = Alignment.TopCenter,
-                Textbox = {AllowSubmission = false},
+                Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
             };
         }
@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = Panel,
                 Y = Title.Y + Title.Height + Spacing,
                 Alignment = Alignment.TopCenter,
-                Textbox = {AllowSubmission = false},
+                Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
             };
         }
@@ -127,7 +127,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = Panel,
                 Y = Creator.Y + Creator.Height + Spacing,
                 Alignment = Alignment.TopCenter,
-                Textbox = {AllowSubmission = false},
+                Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
             };
         }
@@ -141,7 +141,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = Panel,
                 Y = DifficultyName.Y + DifficultyName.Height + Spacing,
                 Alignment = Alignment.TopCenter,
-                Textbox = {AllowSubmission = false},
+                Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
             };
         }
@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = Panel,
                 Y = Source.Y + Source.Height + Spacing,
                 Alignment = Alignment.TopCenter,
-                Textbox = {AllowSubmission = false},
+                Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
             };
         }
@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         private void CreateBpmAffectsSvCheckbox()
         {
             BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 20,
-                new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true})
+                new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
                 Y = GameMode.Y + 6,
@@ -212,7 +212,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             WorkingMap.Source = Source.Textbox.RawText;
             WorkingMap.Tags = Tags.Textbox.RawText;
 
-            if (WorkingMap.SliderVelocities.Count > 0 && WorkingMap.TimingPoints.Count > 0)
+            if (WorkingMap.TimingPoints.Count > 0)
             {
                 if (BpmAffectsScrollVelocity.Checkbox.BindedValue.Value)
                     WorkingMap.DenormalizeSVs();
@@ -232,7 +232,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             // Remove any objects that are in the scratch lane (8) if going from scratch to no-scratch
             if (!WorkingMap.HasScratchKey)
                 WorkingMap.HitObjects.RemoveAll(x => x.Lane > 7);
-            
+
             Screen.Exit(() =>
             {
                 Screen.Save(true, true);
