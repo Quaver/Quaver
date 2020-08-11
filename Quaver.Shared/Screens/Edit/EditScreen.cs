@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     All of the available beat snaps to use in the editor.
         /// </summary>
-        public List<int> AvailableBeatSnaps { get; } = new List<int> {1, 2, 3, 4, 6, 8, 12, 16};
+        public List<int> AvailableBeatSnaps { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
 
         /// <summary>
         /// </summary>
@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableMetronome { get; } = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) {Value = true};
+        public Bindable<bool> EnableMetronome { get; } = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableHitsounds { get; } = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) {Value = true};
+        public Bindable<bool> EnableHitsounds { get; } = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
@@ -146,11 +146,11 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ScaleScrollSpeedWithRate { get; } = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) {Value = true};
+        public Bindable<bool> ScaleScrollSpeedWithRate { get; } = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) {Value = true};
+        public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public BindableList<HitObjectInfo> SelectedHitObjects { get; } = new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
+        public BindableList<HitObjectInfo> SelectedHitObjects { get; set; } = new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
 
         /// <summary>
         /// </summary>
@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Edit
 
             ActionManager = new EditorActionManager(this, WorkingMap);
             UneditableMap = new Bindable<Qua>(null);
-            Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
+            Metronome = new Metronome(WorkingMap, Track, ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             LoadSkin();
             SetHitSoundObjectIndex();
@@ -416,7 +416,7 @@ namespace Quaver.Shared.Screens.Edit
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
-            var view = (EditScreenView) View;
+            var view = (EditScreenView)View;
 
             if (view.IsImGuiHovered)
                 return;
@@ -498,10 +498,10 @@ namespace Quaver.Shared.Screens.Edit
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
                 return;
 
-            var index = (int) CompositionTool.Value;
+            var index = (int)CompositionTool.Value;
 
             if (index - 1 >= 0)
-                CompositionTool.Value = (EditorCompositionTool) index - 1;
+                CompositionTool.Value = (EditorCompositionTool)index - 1;
         }
 
         /// <summary>
@@ -511,11 +511,11 @@ namespace Quaver.Shared.Screens.Edit
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
                 return;
 
-            var index = (int) CompositionTool.Value;
+            var index = (int)CompositionTool.Value;
 
             // - 1 because mines aren't implemented yet
             if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
-                CompositionTool.Value = (EditorCompositionTool) index + 1;
+                CompositionTool.Value = (EditorCompositionTool)index + 1;
         }
 
         /// <summary>
@@ -697,7 +697,7 @@ namespace Quaver.Shared.Screens.Edit
                 if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
                     continue;
 
-                var time = (int) Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+                var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
                 ActionManager.PlaceHitObject(i + 1, time);
             }
         }
@@ -893,7 +893,7 @@ namespace Quaver.Shared.Screens.Edit
             // If no objects are selected, just select the time in the track instead
             if (SelectedHitObjects.Value.Count == 0)
             {
-                cb.SetText($"{(int) Math.Round(Track.Time, MidpointRounding.AwayFromZero)}");
+                cb.SetText($"{(int)Math.Round(Track.Time, MidpointRounding.AwayFromZero)}");
                 return;
             }
 
@@ -922,7 +922,7 @@ namespace Quaver.Shared.Screens.Edit
 
             var clonedObjects = new List<HitObjectInfo>();
 
-            var difference = (int) Math.Round(Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
+            var difference = (int)Math.Round(Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
 
             foreach (var h in Clipboard)
             {
@@ -1218,7 +1218,7 @@ namespace Quaver.Shared.Screens.Edit
                 map.NewlyCreated = true;
 
                 // Create a new mapset from the map
-                var mapset = MapsetHelper.ConvertMapsToMapsets(new List<Map> {map}).First();
+                var mapset = MapsetHelper.ConvertMapsToMapsets(new List<Map> { map }).First();
                 map.Mapset = mapset;
 
                 // Make sure the mapset is loaded
@@ -1343,7 +1343,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, Map.MapId, "",
-            (byte) WorkingMap.Mode, $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", 0);
+            (byte)WorkingMap.Mode, $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", 0);
 
         /// <summary>
         ///     Returns if the user is able to seek through the track
@@ -1352,7 +1352,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <returns></returns>
         private bool CanSeek()
         {
-            var view = (EditScreenView) View;
+            var view = (EditScreenView)View;
             return !view.Layers.IsHovered();
         }
 
@@ -1364,7 +1364,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 DiscordHelper.Presence.Details = WorkingMap.ToString();
                 DiscordHelper.Presence.State = "Editing";
-                DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+                DiscordHelper.Presence.StartTimestamp = (long)(TimeHelper.GetUnixTimestampMilliseconds() / 1000);
                 DiscordHelper.Presence.EndTimestamp = 0;
                 DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
                 DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
