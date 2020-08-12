@@ -87,17 +87,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Visible = true;
             Alpha = 1;
 
-            var scale = skin.HitLightingScale / 100;
+            var skinScale = IsHoldingLongNote ? skin.HoldLightingScale : skin.HitLightingScale;
+            var scale = skinScale / 100f;
+
             Size = new ScalableVector2(Image.Width * scale, Image.Height * scale);
 
-            var relativeRect = new RectangleF(skin.HitLightingX, skin.HitLightingY,
-                RelativeRectangle.Width, RelativeRectangle.Height);
+            var relativeRect = new RectangleF(0, 0, RelativeRectangle.Width, RelativeRectangle.Height);
+            var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, relativeRect, Playfield.Stage.Receptors[ColumnIndex].ScreenRectangle);
 
-            var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, relativeRect,
-                Playfield.Stage.Receptors[ColumnIndex].ScreenRectangle);
-
-            Position = new ScalableVector2(pos.X - Playfield.ForegroundContainer.ScreenRectangle.X,
-                pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y);
+            Position = new ScalableVector2(pos.X - Playfield.ForegroundContainer.ScreenRectangle.X + skin.HitLightingX,
+                pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y + skin.HitLightingY);
 
             // If we are performing a one frame animation however, we don't want to handle it
             // through standard looping, but rather through our own rolled out animation.
