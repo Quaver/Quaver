@@ -7,6 +7,7 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
@@ -19,6 +20,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 {
     public class HitLighting : AnimatableSprite
     {
+        private GameplayPlayfieldKeys Playfield { get; }
+
+        private int ColumnIndex { get; }
+
         /// <summary>
         ///     If we're curerntly holding a long note.
         ///     It'll loop through the animation until we aren't anymore.
@@ -39,7 +44,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public HitLighting() : base(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting) => FinishedLooping += OnLoopCompletion;
+        public HitLighting(GameplayPlayfieldKeys playfield, int columnIndex)
+            : base(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting)
+        {
+            Playfield = playfield;
+            ColumnIndex = columnIndex;
+
+            FinishedLooping += OnLoopCompletion;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -75,9 +87,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Visible = true;
             Alpha = 1;
 
+            var scale = skin.HitLightingScale / 100;
+            Size = new ScalableVector2(Image.Width * scale, Image.Height * scale);
+
+            var relativeRect = new RectangleF(skin.HitLightingX, skin.HitLightingY,
+                RelativeRectangle.Width, RelativeRectangle.Height);
+
+            var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, relativeRect,
+                Playfield.Stage.Receptors[ColumnIndex].ScreenRectangle);
+
+            Position = new ScalableVector2(pos.X - Playfield.ForegroundContainer.ScreenRectangle.X,
+                pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y);
+
             // If we are performing a one frame animation however, we don't want to handle it
             // through standard looping, but rather through our own rolled out animation.
             PerformingOneFrameAnimation = Frames.Count == 1;
+
             if (PerformingOneFrameAnimation)
                 return;
 
