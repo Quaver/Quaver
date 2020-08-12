@@ -138,6 +138,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="hitObjects"></param>
+        public void SetHitObjectSelection(List<HitObjectInfo> hitObjects) => ActionManager.SetHitObjectSelection(hitObjects);
+
+        /// <summary>
+        /// </summary>
         /// <returns></returns>
         public EditorBpmDetector DetectBpm() => ActionManager.DetectBpm();
 

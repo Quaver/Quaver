@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
@@ -36,6 +37,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Components;
+using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -67,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         ///    Detects if the user has made changes to the map before saving.
         /// </summary>
-        public bool HasUnsavedChanges => UndoStack.Count != 0  && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
+        public bool HasUnsavedChanges => UndoStack.Count != 0 && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
 
         /// <summary>
         ///     An action manager dedicated for lua plugins
@@ -414,6 +416,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void GoToObjects(string input) => EditScreen.GoToObjects(input);
 
         /// <summary>
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        public void SetHitObjectSelection(List<HitObjectInfo> hitObjects)
+        {
+            EditScreen.SelectedHitObjects.Clear();
+
+            // Only select objects that exist in the map
+            var existingHitObjects = EditScreen.WorkingMap.HitObjects.Where(
+                a => hitObjects.Any(
+                    b => a.StartTime == b.StartTime && a.Lane == b.Lane
+                )
+            ).ToList();
+
+            if (existingHitObjects.Count == 0)
+                return;
+
+            EditScreen.SelectedHitObjects.AddRange(existingHitObjects);
+        }
+
+        /// <summary>
         ///     Detects the BPM of the map and returns the object instance
         /// </summary>
         /// <returns></returns>
@@ -434,88 +456,88 @@ namespace Quaver.Shared.Screens.Edit.Actions
             switch (type)
             {
                 case EditorActionType.PlaceHitObject:
-                    HitObjectPlaced?.Invoke(this, (EditorHitObjectPlacedEventArgs) args);
+                    HitObjectPlaced?.Invoke(this, (EditorHitObjectPlacedEventArgs)args);
                     break;
                 case EditorActionType.RemoveHitObject:
-                    HitObjectRemoved?.Invoke(this, (EditorHitObjectRemovedEventArgs) args);
+                    HitObjectRemoved?.Invoke(this, (EditorHitObjectRemovedEventArgs)args);
                     break;
                 case EditorActionType.ResizeLongNote:
-                    LongNoteResized?.Invoke(this, (EditorLongNoteResizedEventArgs) args);
+                    LongNoteResized?.Invoke(this, (EditorLongNoteResizedEventArgs)args);
                     break;
                 case EditorActionType.RemoveHitObjectBatch:
-                    HitObjectBatchRemoved?.Invoke(this, (EditorHitObjectBatchRemovedEventArgs) args);
+                    HitObjectBatchRemoved?.Invoke(this, (EditorHitObjectBatchRemovedEventArgs)args);
                     break;
                 case EditorActionType.PlaceHitObjectBatch:
-                    HitObjectBatchPlaced?.Invoke(this, (EditorHitObjectBatchPlacedEventArgs) args);
+                    HitObjectBatchPlaced?.Invoke(this, (EditorHitObjectBatchPlacedEventArgs)args);
                     break;
                 case EditorActionType.FlipHitObjects:
-                    HitObjectsFlipped?.Invoke(this, (EditorHitObjectsFlippedEventArgs) args);
+                    HitObjectsFlipped?.Invoke(this, (EditorHitObjectsFlippedEventArgs)args);
                     break;
                 case EditorActionType.MoveHitObjects:
-                    HitObjectsMoved?.Invoke(this, (EditorHitObjectsMovedEventArgs) args);
+                    HitObjectsMoved?.Invoke(this, (EditorHitObjectsMovedEventArgs)args);
                     break;
                 case EditorActionType.AddHitsound:
-                    HitsoundAdded?.Invoke(this, (EditorHitsoundAddedEventArgs) args);
+                    HitsoundAdded?.Invoke(this, (EditorHitsoundAddedEventArgs)args);
                     break;
                 case EditorActionType.RemoveHitsound:
-                    HitsoundRemoved?.Invoke(this, (EditorHitSoundRemovedEventArgs) args);
+                    HitsoundRemoved?.Invoke(this, (EditorHitSoundRemovedEventArgs)args);
                     break;
                 case EditorActionType.CreateLayer:
-                    LayerCreated?.Invoke(this, (EditorLayerCreatedEventArgs) args);
+                    LayerCreated?.Invoke(this, (EditorLayerCreatedEventArgs)args);
                     break;
                 case EditorActionType.RemoveLayer:
-                    LayerDeleted?.Invoke(this, (EditorLayerRemovedEventArgs) args);
+                    LayerDeleted?.Invoke(this, (EditorLayerRemovedEventArgs)args);
                     break;
                 case EditorActionType.RenameLayer:
-                    LayerRenamed?.Invoke(this, (EditorLayerRenamedEventArgs) args);
+                    LayerRenamed?.Invoke(this, (EditorLayerRenamedEventArgs)args);
                     break;
                 case EditorActionType.ColorLayer:
-                    LayerColorChanged?.Invoke(this, (EditorLayerColorChangedEventArgs) args);
+                    LayerColorChanged?.Invoke(this, (EditorLayerColorChangedEventArgs)args);
                     break;
                 case EditorActionType.AddScrollVelocity:
-                    ScrollVelocityAdded?.Invoke(this, (EditorScrollVelocityAddedEventArgs) args);
+                    ScrollVelocityAdded?.Invoke(this, (EditorScrollVelocityAddedEventArgs)args);
                     break;
                 case EditorActionType.RemoveScrollVelocity:
-                    ScrollVelocityRemoved?.Invoke(this, (EditorScrollVelocityRemovedEventArgs) args);
+                    ScrollVelocityRemoved?.Invoke(this, (EditorScrollVelocityRemovedEventArgs)args);
                     break;
                 case EditorActionType.AddScrollVelocityBatch:
-                    ScrollVelocityBatchAdded?.Invoke(this, (EditorScrollVelocityBatchAddedEventArgs) args);
+                    ScrollVelocityBatchAdded?.Invoke(this, (EditorScrollVelocityBatchAddedEventArgs)args);
                     break;
                 case EditorActionType.RemoveScrollVelocityBatch:
-                    ScrollVelocityBatchRemoved?.Invoke(this, (EditorScrollVelocityBatchRemovedEventArgs) args);
+                    ScrollVelocityBatchRemoved?.Invoke(this, (EditorScrollVelocityBatchRemovedEventArgs)args);
                     break;
                 case EditorActionType.AddTimingPoint:
-                    TimingPointAdded?.Invoke(this, (EditorTimingPointAddedEventArgs) args);
+                    TimingPointAdded?.Invoke(this, (EditorTimingPointAddedEventArgs)args);
                     break;
                 case EditorActionType.RemoveTimingPoint:
-                    TimingPointRemoved?.Invoke(this, (EditorTimingPointRemovedEventArgs) args);
+                    TimingPointRemoved?.Invoke(this, (EditorTimingPointRemovedEventArgs)args);
                     break;
                 case EditorActionType.AddTimingPointBatch:
-                    TimingPointBatchAdded?.Invoke(this, (EditorTimingPointBatchAddedEventArgs) args);
+                    TimingPointBatchAdded?.Invoke(this, (EditorTimingPointBatchAddedEventArgs)args);
                     break;
                 case EditorActionType.RemoveTimingPointBatch:
-                    TimingPointBatchRemoved?.Invoke(this, (EditorTimingPointBatchRemovedEventArgs) args);
+                    TimingPointBatchRemoved?.Invoke(this, (EditorTimingPointBatchRemovedEventArgs)args);
                     break;
                 case EditorActionType.ChangePreviewTime:
-                    PreviewTimeChanged?.Invoke(this, (EditorChangedPreviewTimeEventArgs) args);
+                    PreviewTimeChanged?.Invoke(this, (EditorChangedPreviewTimeEventArgs)args);
                     break;
                 case EditorActionType.ChangeTimingPointOffset:
-                    TimingPointOffsetChanged?.Invoke(this, (EditorTimingPointOffsetChangedEventArgs) args);
+                    TimingPointOffsetChanged?.Invoke(this, (EditorTimingPointOffsetChangedEventArgs)args);
                     break;
                 case EditorActionType.ChangeTimingPointBpm:
-                    TimingPointBpmChanged?.Invoke(this, (EditorTimingPointBpmChangedEventArgs) args);
+                    TimingPointBpmChanged?.Invoke(this, (EditorTimingPointBpmChangedEventArgs)args);
                     break;
                 case EditorActionType.ChangeTimingPointBpmBatch:
-                    TimingPointBpmBatchChanged?.Invoke(this, (EditorChangedTimingPointBpmBatchEventArgs) args);
+                    TimingPointBpmBatchChanged?.Invoke(this, (EditorChangedTimingPointBpmBatchEventArgs)args);
                     break;
                 case EditorActionType.ChangeTimingPointOffsetBatch:
-                    TimingPointOffsetBatchChanged?.Invoke(this, (EditorChangedTimingPointOffsetBatchEventArgs) args);
+                    TimingPointOffsetBatchChanged?.Invoke(this, (EditorChangedTimingPointOffsetBatchEventArgs)args);
                     break;
                 case EditorActionType.ChangeScrollVelocityOffsetBatch:
-                    ScrollVelocityOffsetBatchChanged?.Invoke(this, (EditorChangedScrollVelocityOffsetBatchEventArgs) args);
+                    ScrollVelocityOffsetBatchChanged?.Invoke(this, (EditorChangedScrollVelocityOffsetBatchEventArgs)args);
                     break;
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
-                    ScrollVelocityMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollVelocityMultiplierBatchEventArgs) args);
+                    ScrollVelocityMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollVelocityMultiplierBatchEventArgs)args);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
