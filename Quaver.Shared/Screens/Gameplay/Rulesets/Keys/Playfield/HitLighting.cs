@@ -12,6 +12,7 @@ using Quaver.API.Enums;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -97,6 +98,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             Position = new ScalableVector2(pos.X - Playfield.ForegroundContainer.ScreenRectangle.X + skin.HitLightingX,
                 pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y + skin.HitLightingY);
+
+            // Rotation
+            var rotate = IsHoldingLongNote ? skin.HoldLightingColumnRotation : skin.HitLightingColumnRotation;
+
+            if (rotate)
+                Rotation = GameplayHitObjectKeys.GetObjectRotation(Playfield.Ruleset.Map.Mode, ColumnIndex);
+            else
+                Rotation = 0;
 
             // If we are performing a one frame animation however, we don't want to handle it
             // through standard looping, but rather through our own rolled out animation.
