@@ -71,6 +71,9 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiColorEditFlags>();
             UserData.RegisterType<ImGuiKey>();
             UserData.RegisterType<ImGuiCol>();
+            UserData.RegisterType<ImGuiComboFlags>();
+            UserData.RegisterType<ImGuiFocusedFlags>();
+            UserData.RegisterType<ImGuiHoveredFlags>();
 
             // MonoGame
             UserData.RegisterType<Keys>();
