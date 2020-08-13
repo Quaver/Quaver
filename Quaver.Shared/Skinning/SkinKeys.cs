@@ -228,10 +228,12 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float HealthBarPosOffsetY { get; private set; }
 
-        internal bool UseAndRotateHitObjectSheet { get; private set; }
+        internal bool UseHitObjectSheet { get; private set; }
 
         [FixedScale]
         internal float ScratchLaneSize { get; private set; }
+
+        internal bool RotateHitObjectsByColumn { get; private set; }
 
         #endregion
 
@@ -488,8 +490,9 @@ namespace Quaver.Shared.Skinning
             BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
             HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
-            UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
+            UseHitObjectSheet = ConfigHelper.ReadBool(UseHitObjectSheet, ini["UseHitObjectSheet"]);
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
+            RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
 
             var defaultSkin = ini["DefaultSkin"];
 
@@ -647,7 +650,7 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                if (!UseAndRotateHitObjectSheet)
+                if (!UseHitObjectSheet)
                 {
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
                     LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
