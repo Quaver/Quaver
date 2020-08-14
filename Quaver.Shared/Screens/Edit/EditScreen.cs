@@ -437,6 +437,7 @@ namespace Quaver.Shared.Screens.Edit
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
+            HandleTemporaryHitObjectPlacement();
             HandleCtrlInput();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
@@ -688,6 +689,9 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Places a note if a note at the current editor time and the given number key
+        ///     lane doesn't exist, otherwise removes all instances of notes at that time and lane
+        ///     (possible with overlaps).
         /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
@@ -697,8 +701,17 @@ namespace Quaver.Shared.Screens.Edit
                 if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
                     continue;
 
-                var time = (int) Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-                ActionManager.PlaceHitObject(i + 1, time);
+                var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+                var lane = i + 1;
+
+                // Can be multiple if overlap
+                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time);
+
+                if (hitObjectsAtTime.Count() > 0)
+                    foreach (var note in hitObjectsAtTime.ToList())
+                        ActionManager.RemoveHitObject(note);
+                else
+                    ActionManager.PlaceHitObject(lane, time);
             }
         }
 
