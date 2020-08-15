@@ -424,6 +424,8 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressSpace();
             HandleKeyPressPageUp();
             HandleKeyPressPageDown();
+            HandleKeyPressHome();
+            HandleKeyPressEnd();
 
             // To not conflict with the volume controller
             if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
@@ -827,6 +829,29 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
                 PlayfieldScrollSpeed.Value--;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressHome()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Home))
+                return;
+
+            var time = WorkingMap.HitObjects.Count() == 0 ? 0.0d : WorkingMap.HitObjects.First().StartTime;
+            Track.Seek(time);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEnd()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.End))
+                return;
+
+            // Using the actual track length won't work (might be out of bounds?)
+            var time = WorkingMap.HitObjects.Count() == 0 ? Track.Length - 1 : WorkingMap.HitObjects.Last().StartTime;
+            Track.Seek(time);
         }
 
         /// <summary>
