@@ -432,6 +432,7 @@ namespace Quaver.Shared.Screens.Edit
                 HandleSeekingForwards();
                 HandleKeyPressUp();
                 HandleKeyPressDown();
+                HandleKeyPressShiftUpDown();
             }
 
             HandleBeatSnapChanges();
@@ -516,6 +517,25 @@ namespace Quaver.Shared.Screens.Edit
             // - 1 because mines aren't implemented yet
             if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
                 CompositionTool.Value = (EditorCompositionTool) index + 1;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressShiftUpDown()
+        {
+            if ((!KeyboardManager.IsUniqueKeyPress(Keys.Up) && !KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                || !KeyboardManager.IsShiftDown())
+                return;
+
+            // Pressing Up and Down at the same time will give Down precedence
+            var step = KeyboardManager.IsUniqueKeyPress(Keys.Down) ? 1 : -1;
+
+            // Default layer will be handled as index -1
+            var currentLayerIndex = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value);
+            var nextLayerIndex = Math.Min(currentLayerIndex + step, WorkingMap.EditorLayers.Count() - 1);
+            var nextLayer = nextLayerIndex < 0 ? DefaultLayer : WorkingMap.EditorLayers[nextLayerIndex];
+
+            SelectedLayer.Value = nextLayer;
         }
 
         /// <summary>
