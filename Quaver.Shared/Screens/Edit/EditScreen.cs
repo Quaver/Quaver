@@ -426,8 +426,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressPageDown();
 
             // To not conflict with the volume controller
-            if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftAlt) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightAlt) &&
-                KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightControl))
+            if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
             {
                 HandleSeekingBackwards();
                 HandleSeekingForwards();
@@ -496,7 +495,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleKeyPressUp()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up) || KeyboardManager.IsShiftDown())
                 return;
 
             var index = (int) CompositionTool.Value;
@@ -509,7 +508,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleKeyPressDown()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down) || KeyboardManager.IsShiftDown())
                 return;
 
             var index = (int) CompositionTool.Value;
@@ -598,16 +597,13 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleBeatSnapChanges()
         {
-            var ctrlPressed = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                              KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl);
-
             var scrolledForward = MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue;
             var scrolledBackward = MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue;
 
-            if (ctrlPressed && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
+            if (KeyboardManager.IsCtrlDown() && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
                 ChangeBeatSnap(Direction.Forward);
 
-            if (ctrlPressed && (scrolledBackward || KeyboardManager.IsUniqueKeyPress(Keys.Up)))
+            if (KeyboardManager.IsCtrlDown() && (scrolledBackward || KeyboardManager.IsUniqueKeyPress(Keys.Up)))
                 ChangeBeatSnap(Direction.Backward);
         }
 
@@ -615,7 +611,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandlePlaybackRateChanges()
         {
-            if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
@@ -629,8 +625,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleCtrlInput()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
@@ -662,7 +657,7 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.A))
             {
-                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                if (KeyboardManager.IsAltDown())
                     SelectAllObjectsInLayer();
                 else
                     SelectAllObjects();
