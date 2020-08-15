@@ -704,11 +704,11 @@ namespace Quaver.Shared.Screens.Edit
 
                 else
                     if (WorkingMap.TimingPoints.Count() != 0)
-                    ActionManager.PlaceTimingPoint(new TimingPointInfo()
-                    {
-                        StartTime = (float)Track.Time,
-                        Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
-                    });
+                        ActionManager.PlaceTimingPoint(new TimingPointInfo()
+                        {
+                            StartTime = (float)Track.Time,
+                            Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
+                        });
 
         }
 
