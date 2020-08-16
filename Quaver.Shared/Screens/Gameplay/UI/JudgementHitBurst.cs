@@ -95,15 +95,25 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             ChangeJudgementFrames(j);
             Visible = true;
 
+            Alpha = 1;
+
             if (Frames.Count != 1)
+            {
+                ChangeTo(0);
                 StartLoop(Direction.Forward, 30, 1);
+                IsAnimatingWithOneFrame = false;
+            }
             else
             {
-                // Set the position to slightly above, so we can tween it back down in the animation.
                 Y = OriginalPosY - 5;
-                Alpha = 1;
                 IsAnimatingWithOneFrame = true;
             }
+
+            var firstFrame = Frames[0];
+            var scale = SkinManager.Skin.Keys[Screen.Map.Mode].JudgementHitBurstScale / firstFrame.Height;
+
+            var (x, y) = new Vector2(firstFrame.Width, firstFrame.Height) * scale;
+            Size = new ScalableVector2(x, y);
         }
 
         /// <summary>
