@@ -72,7 +72,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (!ConfigManager.EditorViewLayers.Value && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseAndRotateHitObjectSheet)
+            if (!ConfigManager.EditorViewLayers.Value && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].RotateHitObjectsByColumn)
                 Rotation = GameplayHitObjectKeys.GetObjectRotation(MapManager.Selected.Value.Mode, Info.Lane - 1);
             else
                 Rotation = 0;

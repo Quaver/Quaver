@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             };
 
             // Handle rotating the objects automatically
-            if (SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseAndRotateHitObjectSheet)
+            if (SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].RotateHitObjectsByColumn)
                 HitObjectSprite.Rotation = GetObjectRotation(MapManager.Selected.Value.Mode, lane);
 
             // Create Hold Body
