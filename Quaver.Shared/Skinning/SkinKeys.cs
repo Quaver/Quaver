@@ -235,6 +235,8 @@ namespace Quaver.Shared.Skinning
 
         internal bool RotateHitObjectsByColumn { get; private set; }
 
+        internal int JudgementHitBurstFps { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -493,6 +495,7 @@ namespace Quaver.Shared.Skinning
             UseHitObjectSheet = ConfigHelper.ReadBool(UseHitObjectSheet, ini["UseHitObjectSheet"]);
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
             RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
+            JudgementHitBurstFps = ConfigHelper.ReadInt32(JudgementHitBurstFps, ini["JudgementHitBurstFps"]);
 
             var defaultSkin = ini["DefaultSkin"];
 
