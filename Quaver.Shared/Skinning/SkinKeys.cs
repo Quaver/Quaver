@@ -237,6 +237,9 @@ namespace Quaver.Shared.Skinning
 
         internal int JudgementHitBurstFps { get; private set; }
 
+        [FixedScale]
+        internal int WidthForNoteHeightScale { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -496,6 +499,7 @@ namespace Quaver.Shared.Skinning
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
             RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
             JudgementHitBurstFps = ConfigHelper.ReadInt32(JudgementHitBurstFps, ini["JudgementHitBurstFps"]);
+            WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
 
             var defaultSkin = ini["DefaultSkin"];
 
