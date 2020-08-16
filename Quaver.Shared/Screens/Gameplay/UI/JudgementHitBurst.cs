@@ -43,6 +43,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public float OriginalPosY { get; set; }
 
+        private SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -100,7 +102,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Frames.Count != 1)
             {
                 ChangeTo(0);
-                StartLoop(Direction.Forward, 30, 1);
+                StartLoop(Direction.Forward, Skin.JudgementHitBurstFps, 1);
                 IsAnimatingWithOneFrame = false;
             }
             else
