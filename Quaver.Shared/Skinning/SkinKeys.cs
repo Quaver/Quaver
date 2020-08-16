@@ -112,11 +112,13 @@ namespace Quaver.Shared.Skinning
 
         internal int HoldLightingFps { get; private set; }
 
-        [FixedScale]
-        internal float HitLightingWidth { get; private set; }
+        internal int HitLightingScale { get; private set; } = 100;
 
-        [FixedScale]
-        internal float HitLightingHeight { get; private set; }
+        internal int HoldLightingScale { get; private set; } = 100;
+
+        internal bool HitLightingColumnRotation { get; private set; }
+
+        internal bool HoldLightingColumnRotation { get; private set; }
 
         [FixedScale]
         internal float ScoreDisplayPosX { get; private set; }
@@ -441,8 +443,10 @@ namespace Quaver.Shared.Skinning
             HitLightingX = ConfigHelper.ReadInt32((int) HitLightingX, ini["HitLightingX"]);
             HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
             HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
-            HitLightingWidth = ConfigHelper.ReadInt32((int) HitLightingWidth, ini["HitLightingWidth"]);
-            HitLightingHeight = ConfigHelper.ReadInt32((int) HitLightingHeight, ini["HitLightingHeight"]);
+            HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
+            HoldLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HoldLightingScale"]);
+            HitLightingColumnRotation = ConfigHelper.ReadBool(HitLightingColumnRotation, ini["HitLightingColumnRotation"]);
+            HoldLightingColumnRotation = ConfigHelper.ReadBool(HoldLightingColumnRotation, ini["HoldLightingColumnRotation"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32((int) ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
             ScoreDisplayPosY = ConfigHelper.ReadInt32((int) ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
             RatingDisplayPosX = ConfigHelper.ReadInt32((int) RatingDisplayPosX, ini["RatingDisplayPosX"]);
