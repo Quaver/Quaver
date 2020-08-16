@@ -39,7 +39,7 @@ namespace Quaver.Shared.Skinning
 
         /// <summary>
         /// </summary>
-        private string DefaultSkin { get; }
+        private string DefaultSkin { get; set; }
 
         #region SKIN.INI VALUES
 
@@ -360,8 +360,10 @@ namespace Quaver.Shared.Skinning
 
             // Set the generic config variables, and THEN try to read from
             // skin.ini.
+            ReadConfig(false);
             ReadConfig(true);
             ReadConfig(false);
+
             FixScale();
             FixValues();
             LoadTextures();
@@ -488,6 +490,11 @@ namespace Quaver.Shared.Skinning
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
             UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
+
+            var defaultSkin = ini["DefaultSkin"];
+
+            if (!string.IsNullOrEmpty(defaultSkin) && Enum.IsDefined(typeof(DefaultSkins), defaultSkin))
+                DefaultSkin = defaultSkin;
         }
 
         /// <summary>
