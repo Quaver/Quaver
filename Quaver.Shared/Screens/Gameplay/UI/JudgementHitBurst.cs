@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Visible = true;
 
             if (Frames.Count != 1)
-                StartLoop(Direction.Forward, (int)(30 * AudioEngine.Track.Rate), 1);
+                StartLoop(Direction.Forward, 30, 1);
             else
             {
                 // Set the position to slightly above, so we can tween it back down in the animation.
@@ -119,11 +119,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Tween the position if need be
             if (Math.Abs(Y - OriginalPosY) > 0.01)
-                Y = MathHelper.Lerp(Y, OriginalPosY, (float) Math.Min(dt / (30 / AudioEngine.Track.Rate), 1));
+                Y = MathHelper.Lerp(Y, OriginalPosY, (float) Math.Min(dt / 30, 1));
             // If we've already tweened it, then we can begin to fade it out.
             else
             {
-                Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(dt / ( 240 / AudioEngine.Track.Rate ), 1));
+                Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(dt / 240, 1));
 
                 if (Alpha <= 0)
                     IsAnimatingWithOneFrame = false;

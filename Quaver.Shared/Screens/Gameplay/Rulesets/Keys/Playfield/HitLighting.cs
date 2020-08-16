@@ -116,9 +116,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             // Standard looping animations.
             if (!IsHoldingLongNote)
-                StartLoop(Direction.Forward, (int)(skin.HitLightingFps * AudioEngine.Track.Rate), 1);
+                StartLoop(Direction.Forward, skin.HitLightingFps, 1);
             else
-                StartLoop(Direction.Forward, (int)(skin.HoldLightingFps * AudioEngine.Track.Rate));
+                StartLoop(Direction.Forward, skin.HoldLightingFps);
         }
 
         /// <summary>
