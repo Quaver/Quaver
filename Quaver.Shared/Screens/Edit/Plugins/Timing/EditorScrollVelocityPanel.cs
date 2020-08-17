@@ -210,8 +210,33 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (currentPoint != null)
                 {
                     NeedsToScrollToLastSelectedSv = true;
-                    if (!SelectedScrollVelocities.Contains(currentPoint))
-                        SelectedScrollVelocities.Add(currentPoint);
+
+                    var newSelection = new List<SliderVelocityInfo>() { currentPoint };
+
+                    if (KeyboardManager.IsCtrlDown() || KeyboardManager.IsShiftDown())
+                        newSelection.AddRange(SelectedScrollVelocities);
+
+                    if (KeyboardManager.IsShiftDown() && SelectedScrollVelocities.Count > 0)
+                    {
+                        var sorted = SelectedScrollVelocities.OrderBy(x => x.StartTime);
+                        var min = sorted.First().StartTime;
+                        var max = sorted.Last().StartTime;
+                        if (currentPoint.StartTime < min)
+                        {
+                            var svsInRange = Screen.WorkingMap.SliderVelocities
+                                .Where(v => v.StartTime >= currentPoint.StartTime && v.StartTime <= min);
+                            newSelection.AddRange(svsInRange);
+                        }
+                        else if (currentPoint.StartTime > max)
+                        {
+                            var svsInRange = Screen.WorkingMap.SliderVelocities
+                                .Where(v => v.StartTime >= max && v.StartTime <= currentPoint.StartTime);
+                            newSelection.AddRange(svsInRange);
+                        }
+                    }
+
+                    SelectedScrollVelocities.Clear();
+                    SelectedScrollVelocities.AddRange(newSelection.Distinct());
                 }
             }
 
@@ -219,7 +244,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25);
-                ImGui.Text("This will add the SV at the current editor timestamp to your current scroll velocity selection.");
+                ImGui.Text("This will select the SV at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SVs up to that range, if one is selected already.");
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
