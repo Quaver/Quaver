@@ -487,7 +487,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             var clonedObjects = new List<SliderVelocityInfo>();
 
-            var difference = (int)Math.Round(Screen.Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
+            var pasteTime = Clipboard.Select(x => x.StartTime).Min();
+            var difference = (int)Math.Round(Screen.Track.Time - pasteTime, MidpointRounding.AwayFromZero);
 
             foreach (var obj in Clipboard)
             {
