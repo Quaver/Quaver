@@ -6,6 +6,8 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -38,6 +40,8 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Components;
 using Wobble.Bindables;
+using Wobble.Graphics;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -110,6 +114,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of hitobjects have been moved
         /// </summary>
         public event EventHandler<EditorHitObjectsMovedEventArgs> HitObjectsMoved;
+
+        /// <summary>
+        ///     Event invoked when hitobjects have been resnapped
+        /// </summary>
+        public event EventHandler<EditorActionHitObjectsResnappedEventArgs> HitObjectsResnapped;
 
         /// <summary>
         ///     Event invoked when a hitsound has been added to a group of objects
@@ -436,6 +445,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
         }
 
         /// <summary>
+        ///     Resnaps all notes in a given map to the closest of the specified snaps in the list.
+        /// </summary>
+        /// <remarks>
+        ///     The reason for working with multiple snaps is because using the first common multiple
+        ///     might not be accurate enough in terms of milliseconds. An example for this would be to
+        ///     resnap to 1/12 and 1/16 in a 200BPM map, which would result in a common multiple of 1/192.
+        ///     This results in a time of 1.56ms per snap, which is not accurate enough for our purposes.
+        /// </remarks>
+        /// <param name="snaps">List of snaps to snap to</param>
+        public void ResnapAllNotes(List<int> snaps) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps));
+
+        /// <summary>
         ///     Detects the BPM of the map and returns the object instance
         /// </summary>
         /// <returns></returns>
@@ -538,6 +559,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     ScrollVelocityMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollVelocityMultiplierBatchEventArgs)args);
+                    break;
+                case EditorActionType.ResnapHitObjects:
+                    HitObjectsResnapped?.Invoke(this, (EditorActionHitObjectsResnappedEventArgs)args);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
