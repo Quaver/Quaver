@@ -199,7 +199,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
                 Y = GraphDropdown.Y + GraphDropdown.Dropdown.Height / 2f,
-                Key = { Tint = ColorHelper.HexToColor("#808080")  },
+                Key = { Tint = ColorHelper.HexToColor("#808080") },
                 Value = { Tint = ColorHelper.HexToColor("#45D6F5") }
             };
 
@@ -229,8 +229,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             var ratio = "0:0";
 
-            if (judgements[Judgement.Perf] != 0)
-                ratio = $"{(float) judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
+            if (judgements[Judgement.Marv] == 0)
+                ratio = "0";
+            else if (judgements[Judgement.Marv] > 0 && judgements[Judgement.Perf] == 0)
+                ratio = "∞";
+            else
+                ratio = $"{(float)judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
 
             Ratio = new TextKeyValue("Ratio:", ratio, Mean.Key.FontSize, Color.White)
             {

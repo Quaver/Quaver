@@ -265,13 +265,20 @@ namespace Quaver.Shared.Skinning
             if (!File.Exists($"{Dir}/{name}"))
                 return;
 
-            Config = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile($"{Dir}/{name}");
+            try
+            {
+                Config = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile($"{Dir}/{name}");
 
-            // Parse very general things in config.
-            Name = ConfigHelper.ReadString(Name, Config["General"]["Name"]);
-            Author = ConfigHelper.ReadString(Author, Config["General"]["Author"]);
-            Version = ConfigHelper.ReadString(Version, Config["General"]["Version"]);
-            CenterCursor = ConfigHelper.ReadBool(false, Config["General"]["CenterCursor"]);
+                // Parse very general things in config.
+                Name = ConfigHelper.ReadString(Name, Config["General"]["Name"]);
+                Author = ConfigHelper.ReadString(Author, Config["General"]["Author"]);
+                Version = ConfigHelper.ReadString(Version, Config["General"]["Version"]);
+                CenterCursor = ConfigHelper.ReadBool(false, Config["General"]["CenterCursor"]);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>

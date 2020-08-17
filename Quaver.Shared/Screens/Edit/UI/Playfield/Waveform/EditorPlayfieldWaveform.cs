@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         /// </summary>
         public void GenerateWaveform()
         {
-            SliceSize = (int) Playfield.Height;
+            SliceSize = (int)Playfield.Height;
             GenerateTrackData();
 
             var tempSlices = new List<EditorPlayfieldWaveformSlice>();

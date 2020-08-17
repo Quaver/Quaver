@@ -43,6 +43,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public float OriginalPosY { get; set; }
 
+        private SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -95,15 +97,25 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             ChangeJudgementFrames(j);
             Visible = true;
 
+            Alpha = 1;
+
             if (Frames.Count != 1)
-                StartLoop(Direction.Forward, (int)(30 * AudioEngine.Track.Rate), 1);
+            {
+                ChangeTo(0);
+                StartLoop(Direction.Forward, Skin.JudgementHitBurstFps, 1);
+                IsAnimatingWithOneFrame = false;
+            }
             else
             {
-                // Set the position to slightly above, so we can tween it back down in the animation.
                 Y = OriginalPosY - 5;
-                Alpha = 1;
                 IsAnimatingWithOneFrame = true;
             }
+
+            var firstFrame = Frames[0];
+            var scale = SkinManager.Skin.Keys[Screen.Map.Mode].JudgementHitBurstScale / firstFrame.Height;
+
+            var (x, y) = new Vector2(firstFrame.Width, firstFrame.Height) * scale;
+            Size = new ScalableVector2(x, y);
         }
 
         /// <summary>
@@ -119,11 +131,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Tween the position if need be
             if (Math.Abs(Y - OriginalPosY) > 0.01)
-                Y = MathHelper.Lerp(Y, OriginalPosY, (float) Math.Min(dt / (30 / AudioEngine.Track.Rate), 1));
+                Y = MathHelper.Lerp(Y, OriginalPosY, (float) Math.Min(dt / 30, 1));
             // If we've already tweened it, then we can begin to fade it out.
             else
             {
-                Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(dt / ( 240 / AudioEngine.Track.Rate ), 1));
+                Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(dt / 240, 1));
 
                 if (Alpha <= 0)
                     IsAnimatingWithOneFrame = false;

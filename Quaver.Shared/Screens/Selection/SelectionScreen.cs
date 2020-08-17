@@ -17,6 +17,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Download;
@@ -191,7 +192,7 @@ namespace Quaver.Shared.Screens.Selection
         ///     Initializes the bindable which stores the available mapsets for the screen <see cref="AvailableMapsets"/>
         /// </summary>
         private void InitializeAvailableMapsetsBindable()
-            => AvailableMapsets = new Bindable<List<Mapset>>(null) { Value = new List<Mapset>()};
+            => AvailableMapsets = new Bindable<List<Mapset>>(null) { Value = new List<Mapset>() };
 
         /// <summary>
         ///     Initializes the bindable which keeps track of which panel on the left side of the screen is active
@@ -227,7 +228,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         private void InitializeTestPlayingBindable()
-            => IsPlayTestingInPreview = new Bindable<bool>(false) {Value = false};
+            => IsPlayTestingInPreview = new Bindable<bool>(false) { Value = false };
 
         /// <summary>
         ///     If the initial playlist is null this will set it apporpriately
@@ -405,7 +406,7 @@ namespace Quaver.Shared.Screens.Selection
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
                 return;
 
-            var index = (int) ConfigManager.LeaderboardSection.Value;
+            var index = (int)ConfigManager.LeaderboardSection.Value;
             var length = Enum.GetNames(typeof(LeaderboardType)).Length;
 
             int newIndex;
@@ -424,7 +425,7 @@ namespace Quaver.Shared.Screens.Selection
                     newIndex = 0;
             }
 
-            ConfigManager.LeaderboardSection.Value = (LeaderboardType) newIndex;
+            ConfigManager.LeaderboardSection.Value = (LeaderboardType)newIndex;
         }
 
         /// <summary>
@@ -462,7 +463,7 @@ namespace Quaver.Shared.Screens.Selection
             if (!MouseManager.IsUniqueClick(MouseButton.Thumb1))
                 return;
 
-            var view = (SelectionScreenView) View;
+            var view = (SelectionScreenView)View;
 
             switch (ActiveScrollContainer.Value)
             {
@@ -505,7 +506,8 @@ namespace Quaver.Shared.Screens.Selection
                 adjustment = 0.05f;
 
             var next = current + adjustment * (faster ? 1f : -1f);
-            return (float) Math.Round(next, 2);
+            next = Math.Clamp(next, ModSpeed.MinSpeed, ModSpeed.MaxSpeed);
+            return (float)Math.Round(next, 2);
         }
 
         /// <summary>
@@ -692,7 +694,7 @@ namespace Quaver.Shared.Screens.Selection
             ThreadScheduler.Run(() =>
             {
                 OnlineManager.Client.ChangeMultiplayerGameMap(map.Md5Checksum, map.MapId,
-                    map.MapSetId, map.ToString(), (byte) map.Mode,map.DifficultyFromMods(ModManager.Mods),
+                    map.MapSetId, map.ToString(), (byte)map.Mode, map.DifficultyFromMods(ModManager.Mods),
                     map.GetDifficultyRatings(), map.GetJudgementCount(), MapManager.Selected.Value.GetAlternativeMd5());
 
                 OnlineManager.Client.SetGameCurrentlySelectingMap(false);
@@ -748,7 +750,7 @@ namespace Quaver.Shared.Screens.Selection
         private bool CheckMultiplayerGameMode()
         {
             // Prevent disallowed game modes from being selected
-            if (!OnlineManager.CurrentGame.AllowedGameModes.Contains((byte) MapManager.Selected.Value.Mode))
+            if (!OnlineManager.CurrentGame.AllowedGameModes.Contains((byte)MapManager.Selected.Value.Mode))
             {
                 NotificationManager.Show(NotificationLevel.Error, "You cannot pick maps of this game mode in this multiplayer match!");
                 return false;
@@ -839,7 +841,7 @@ namespace Quaver.Shared.Screens.Selection
 
                 if (e.Index - 1 >= 0)
                     index = e.Index - 1;
-;
+                ;
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 

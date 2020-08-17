@@ -153,7 +153,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Make a quicker and shorter reference to the game skin
         /// </summary>
-        private SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
+        public SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
 
         /// <summary>
         /// </summary>
@@ -565,13 +565,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
             {
-                var hl = new HitLighting()
+                var hl = new HitLighting(Playfield, i)
                 {
                     Parent = Playfield.ForegroundContainer,
                     Visible = false,
-                    Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight),
                     Position = new ScalableVector2(Skin.HitLightingX, Skin.HitLightingY)
                 };
+
+                var scale = Skin.HitLightingScale / 100;
+
+                hl.Image = Skin.HitLighting.First();
+                hl.Size = new ScalableVector2(hl.Image.Width * scale, hl.Image.Height * scale);
 
                 var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, hl.RelativeRectangle,
                     Receptors[i].ScreenRectangle);
