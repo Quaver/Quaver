@@ -446,6 +446,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressF1();
             HandleKeyPressF5();
             HandleKeyPressF6();
+            HandleKeyPressShiftH();
         }
 
         /// <summary>
@@ -498,6 +499,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleKeyPressUp()
         {
+            // Shift+Up is switching layers
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Up) || KeyboardManager.IsShiftDown())
                 return;
 
@@ -511,6 +513,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleKeyPressDown()
         {
+            // Shift+Down is switching layers
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Down) || KeyboardManager.IsShiftDown())
                 return;
 
@@ -538,6 +541,19 @@ namespace Quaver.Shared.Screens.Edit
             var nextLayer = nextLayerIndex < 0 ? DefaultLayer : WorkingMap.EditorLayers[nextLayerIndex];
 
             SelectedLayer.Value = nextLayer;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressShiftH()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.H) || !KeyboardManager.IsShiftDown())
+                return;
+
+            if (SelectedLayer.Value == null)
+                SelectedLayer.Value = DefaultLayer;
+
+            SelectedLayer.Value.Hidden = !SelectedLayer.Value.Hidden;
         }
 
         /// <summary>
