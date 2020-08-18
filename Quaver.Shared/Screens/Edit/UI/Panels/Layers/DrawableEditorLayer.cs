@@ -96,6 +96,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             BorderLine.Alpha = Button.Alpha;
 
+            if (Visibility.BindedValue.Value == Item.Hidden)
+            {
+                Visibility.BindedValue.ChangeWithoutTrigger(!Item.Hidden);
+
+                var tex = Visibility.BindedValue.Value ? Visibility.ActiveImage : Visibility.InactiveImage;
+
+                if (Visibility.Image != tex)
+                    Visibility.Image = tex;
+            }
+
             base.Update(gameTime);
         }
 
