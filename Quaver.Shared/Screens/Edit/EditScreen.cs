@@ -755,11 +755,13 @@ namespace Quaver.Shared.Screens.Edit
                 var lane = i + 1;
 
                 // Can be multiple if overlap
-                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time);
+                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
 
-                if (hitObjectsAtTime.Count() > 0)
-                    foreach (var note in hitObjectsAtTime.ToList())
+                if (hitObjectsAtTime.Count > 0)
+                {
+                    foreach (var note in hitObjectsAtTime)
                         ActionManager.RemoveHitObject(note);
+                }
                 else
                     ActionManager.PlaceHitObject(lane, time);
             }
