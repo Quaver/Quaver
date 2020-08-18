@@ -711,21 +711,7 @@ namespace Quaver.Shared.Screens.Edit
                 DialogManager.Show(new EditorNewSongDialog());
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.I))
-                if (!KeyboardManager.IsShiftDown())
-                    ActionManager.PlaceScrollVelocity(new SliderVelocityInfo()
-                    {
-                        StartTime = (float)Track.Time,
-                        Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
-                    });
-
-                else
-                    if (WorkingMap.TimingPoints.Count() != 0)
-                        ActionManager.PlaceTimingPoint(new TimingPointInfo()
-                        {
-                            StartTime = (float)Track.Time,
-                            Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
-                        });
-
+                PlaceTimingPointOrScrollVelocity();
         }
 
         /// <summary>
@@ -1418,6 +1404,32 @@ namespace Quaver.Shared.Screens.Edit
                 MapManager.Selected.Value.Mapset.ExportToZip();
                 NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
             });
+        }
+
+        /// <summary>
+        ///     Places a timing point or scroll velocity at the current point in time.
+        /// </summary>
+        private void PlaceTimingPointOrScrollVelocity()
+        {
+            if (!KeyboardManager.IsShiftDown())
+            {
+                ActionManager.PlaceScrollVelocity(new SliderVelocityInfo
+                {
+                    StartTime = (float)Track.Time,
+                    Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
+                });
+            }
+            else
+            {
+                if (WorkingMap.TimingPoints.Count != 0)
+                {
+                    ActionManager.PlaceTimingPoint(new TimingPointInfo
+                    {
+                        StartTime = (float)Track.Time,
+                        Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
+                    });
+                }
+            }
         }
 
         /// <summary>
