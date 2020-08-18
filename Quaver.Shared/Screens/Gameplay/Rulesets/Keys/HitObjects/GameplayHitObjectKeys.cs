@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             };
 
             // Handle rotating the objects automatically
-            if (SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseAndRotateHitObjectSheet)
+            if (SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].RotateHitObjectsByColumn)
                 HitObjectSprite.Rotation = GetObjectRotation(MapManager.Selected.Value.Mode, lane);
 
             // Create Hold Body
@@ -245,14 +245,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var objectWidth = playfield.LaneSize;
 
             var laneSize = objectWidth * scale;
-            var defaultLaneSize = laneSize;
+            var defaultLaneSize = skin.WidthForNoteHeightScale > 0 ? skin.WidthForNoteHeightScale : laneSize;
 
             if (Ruleset.Screen.Map.HasScratchKey)
             {
                 if (info.Lane == Ruleset.Screen.Map.GetKeyCount())
                 {
                     laneSize = skin.ScratchLaneSize * scale;
-                    defaultLaneSize = playfield.LaneSize;
+                    defaultLaneSize = skin.WidthForNoteHeightScale > 0 ? skin.WidthForNoteHeightScale : playfield.LaneSize;
                 }
             }
 

@@ -7,10 +7,12 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -19,6 +21,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 {
     public class HitLighting : AnimatableSprite
     {
+        private GameplayPlayfieldKeys Playfield { get; }
+
+        private int ColumnIndex { get; }
+
         /// <summary>
         ///     If we're curerntly holding a long note.
         ///     It'll loop through the animation until we aren't anymore.
@@ -39,7 +45,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public HitLighting() : base(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting) => FinishedLooping += OnLoopCompletion;
+        public HitLighting(GameplayPlayfieldKeys playfield, int columnIndex)
+            : base(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting)
+        {
+            Playfield = playfield;
+            ColumnIndex = columnIndex;
+
+            FinishedLooping += OnLoopCompletion;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -75,17 +88,37 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Visible = true;
             Alpha = 1;
 
+            var skinScale = IsHoldingLongNote ? skin.HoldLightingScale : skin.HitLightingScale;
+            var scale = skinScale / 100f;
+
+            Size = new ScalableVector2(Image.Width * scale, Image.Height * scale);
+
+            var relativeRect = new RectangleF(0, 0, RelativeRectangle.Width, RelativeRectangle.Height);
+            var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, relativeRect, Playfield.Stage.Receptors[ColumnIndex].ScreenRectangle);
+
+            Position = new ScalableVector2(pos.X - Playfield.ForegroundContainer.ScreenRectangle.X + skin.HitLightingX,
+                pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y + skin.HitLightingY);
+
+            // Rotation
+            var rotate = IsHoldingLongNote ? skin.HoldLightingColumnRotation : skin.HitLightingColumnRotation;
+
+            if (rotate)
+                Rotation = GameplayHitObjectKeys.GetObjectRotation(Playfield.Ruleset.Map.Mode, ColumnIndex);
+            else
+                Rotation = 0;
+
             // If we are performing a one frame animation however, we don't want to handle it
             // through standard looping, but rather through our own rolled out animation.
             PerformingOneFrameAnimation = Frames.Count == 1;
+
             if (PerformingOneFrameAnimation)
                 return;
 
             // Standard looping animations.
             if (!IsHoldingLongNote)
-                StartLoop(Direction.Forward, (int)(skin.HitLightingFps * AudioEngine.Track.Rate), 1);
+                StartLoop(Direction.Forward, skin.HitLightingFps, 1);
             else
-                StartLoop(Direction.Forward, (int)(skin.HoldLightingFps * AudioEngine.Track.Rate));
+                StartLoop(Direction.Forward, skin.HoldLightingFps);
         }
 
         /// <summary>

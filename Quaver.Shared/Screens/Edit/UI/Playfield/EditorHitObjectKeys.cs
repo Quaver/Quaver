@@ -293,7 +293,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Body.Image = TextureBody;
             Tail.Image = TextureTail;
 
-            if (SkinMode.UseAndRotateHitObjectSheet && !ViewLayers.Value)
+            if (SkinMode.RotateHitObjectsByColumn && !ViewLayers.Value)
                 Rotation = GameplayHitObjectKeys.GetObjectRotation(Map.Mode, Info.Lane - 1);
             else
                 Rotation = 0;

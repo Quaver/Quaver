@@ -36,6 +36,16 @@ namespace Quaver.Shared.Modifiers.Mods
         /// <returns></returns>
         public bool Ranked() => true;
 
+        /// <summary>
+        ///     Defines the smallest currently possible speed mod value
+        /// </summary>
+        public static float MinSpeed = 0.5f;
+
+        /// <summary>
+        ///     Defines the largest currently possible speed mod value
+        /// </summary>
+        public static float MaxSpeed = 2.0f;
+
         public bool AllowedInMultiplayer { get; set; } = true;
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; }

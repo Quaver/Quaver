@@ -26,10 +26,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                 if (mods == ModIdentifier.None)
                     mods = 0;
 
-                // .05x rates not supported for ranked play yet
-                if (mods >= ModIdentifier.Speed105X)
-                    return new FetchedScoreStore(new List<Score>());
-
                 var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(map.MapId, map.Md5Checksum, ModIdentifier.None,
                     false, mods, false, OnlineManager.ShouldFetchRealtimeLeaderboard);
 

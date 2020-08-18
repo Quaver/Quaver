@@ -39,7 +39,7 @@ namespace Quaver.Shared.Skinning
 
         /// <summary>
         /// </summary>
-        private string DefaultSkin { get; }
+        private string DefaultSkin { get; set; }
 
         #region SKIN.INI VALUES
 
@@ -112,11 +112,13 @@ namespace Quaver.Shared.Skinning
 
         internal int HoldLightingFps { get; private set; }
 
-        [FixedScale]
-        internal float HitLightingWidth { get; private set; }
+        internal int HitLightingScale { get; private set; } = 100;
 
-        [FixedScale]
-        internal float HitLightingHeight { get; private set; }
+        internal int HoldLightingScale { get; private set; } = 100;
+
+        internal bool HitLightingColumnRotation { get; private set; }
+
+        internal bool HoldLightingColumnRotation { get; private set; }
 
         [FixedScale]
         internal float ScoreDisplayPosX { get; private set; }
@@ -226,10 +228,17 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float HealthBarPosOffsetY { get; private set; }
 
-        internal bool UseAndRotateHitObjectSheet { get; private set; }
+        internal bool UseHitObjectSheet { get; private set; }
 
         [FixedScale]
         internal float ScratchLaneSize { get; private set; }
+
+        internal bool RotateHitObjectsByColumn { get; private set; }
+
+        internal int JudgementHitBurstFps { get; private set; }
+
+        [FixedScale]
+        internal int WidthForNoteHeightScale { get; private set; }
 
         #endregion
 
@@ -358,8 +367,10 @@ namespace Quaver.Shared.Skinning
 
             // Set the generic config variables, and THEN try to read from
             // skin.ini.
+            ReadConfig(false);
             ReadConfig(true);
             ReadConfig(false);
+
             FixScale();
             FixValues();
             LoadTextures();
@@ -441,8 +452,10 @@ namespace Quaver.Shared.Skinning
             HitLightingX = ConfigHelper.ReadInt32((int) HitLightingX, ini["HitLightingX"]);
             HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
             HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
-            HitLightingWidth = ConfigHelper.ReadInt32((int) HitLightingWidth, ini["HitLightingWidth"]);
-            HitLightingHeight = ConfigHelper.ReadInt32((int) HitLightingHeight, ini["HitLightingHeight"]);
+            HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
+            HoldLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HoldLightingScale"]);
+            HitLightingColumnRotation = ConfigHelper.ReadBool(HitLightingColumnRotation, ini["HitLightingColumnRotation"]);
+            HoldLightingColumnRotation = ConfigHelper.ReadBool(HoldLightingColumnRotation, ini["HoldLightingColumnRotation"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32((int) ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
             ScoreDisplayPosY = ConfigHelper.ReadInt32((int) ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
             RatingDisplayPosX = ConfigHelper.ReadInt32((int) RatingDisplayPosX, ini["RatingDisplayPosX"]);
@@ -482,8 +495,16 @@ namespace Quaver.Shared.Skinning
             BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
             HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
-            UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
+            UseHitObjectSheet = ConfigHelper.ReadBool(UseHitObjectSheet, ini["UseHitObjectSheet"]);
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
+            RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
+            JudgementHitBurstFps = ConfigHelper.ReadInt32(JudgementHitBurstFps, ini["JudgementHitBurstFps"]);
+            WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
+
+            var defaultSkin = ini["DefaultSkin"];
+
+            if (!string.IsNullOrEmpty(defaultSkin) && Enum.IsDefined(typeof(DefaultSkins), defaultSkin))
+                DefaultSkin = defaultSkin;
         }
 
         /// <summary>
@@ -636,7 +657,7 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                if (!UseAndRotateHitObjectSheet)
+                if (!UseHitObjectSheet)
                 {
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
                     LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
