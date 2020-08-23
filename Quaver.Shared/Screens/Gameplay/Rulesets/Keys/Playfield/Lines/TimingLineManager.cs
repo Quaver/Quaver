@@ -133,7 +133,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             while (Info.Count > 0)
             {
-                if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.CreateObjectPosition)
+                if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.RecycleObjectPosition && Info.Peek().StartTime < HitObjectManager.CurrentAudioPosition)
+                    Info.Dequeue();
+                else if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.CreateObjectPosition)
                     CreatePoolObject(Info.Dequeue());
                 else
                     break;
