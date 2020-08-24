@@ -111,7 +111,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
                 // Initialize timing lines between current timing point and target position
                 for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
-                    temp.Add(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
+                {
+                    var offset = HitObjectManager.GetPositionFromTime(songPos);
+
+                    // Do not initialize any timing lines that do not appear in gameplay
+                    if (!(HitObjectManager.CurrentTrackPosition - offset > HitObjectManager.RecycleObjectPosition && songPos < HitObjectManager.CurrentAudioPosition))
+                        temp.Add(new TimingLineInfo(songPos, offset));
+                }
             }
 
             // Sort timing lines by position instead of time
@@ -133,9 +139,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             while (Info.Count > 0)
             {
-                if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.RecycleObjectPosition && Info.Peek().StartTime < HitObjectManager.CurrentAudioPosition)
-                    Info.Dequeue();
-                else if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.CreateObjectPosition)
+                if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.CreateObjectPosition)
                     CreatePoolObject(Info.Dequeue());
                 else
                     break;
