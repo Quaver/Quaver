@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
@@ -687,6 +688,7 @@ namespace Quaver.Shared.Screens.Results
                 screen.PauseCount, screen.Map.RandomizeModifierSeed, JudgementWindowsDatabaseCache.Selected.Value);
 
             // Calculate performance rating
+            score.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
             score.RatingProcessorVersion = RatingProcessorKeys.Version;
             score.PerformanceRating = processor.Failed ? 0 : new RatingProcessorKeys(Map.DifficultyFromMods(processor.Mods)).CalculateRating(rankedAccuracy);
             score.RankedAccuracy = rankedAccuracy;
