@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -85,7 +86,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="map"></param>
         public void GenerateTimingLineInfo(Qua map)
         {
-            Info = new Queue<TimingLineInfo>();
+            List<TimingLineInfo> temp = new List<TimingLineInfo>();
 
             for (var i = 0; i < map.TimingPoints.Count; i++)
             {
@@ -110,8 +111,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
                 // Initialize timing lines between current timing point and target position
                 for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
-                    Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
+                {
+                    var offset = HitObjectManager.GetPositionFromTime(songPos);
+
+                    // Do not initialize any timing lines that do not appear in gameplay
+                    if (!(HitObjectManager.CurrentTrackPosition - offset > HitObjectManager.RecycleObjectPosition && songPos < HitObjectManager.CurrentAudioPosition))
+                        temp.Add(new TimingLineInfo(songPos, offset));
+                }
             }
+
+            // Sort timing lines by position instead of time
+            Info = new Queue<TimingLineInfo>(temp.OrderBy(line => line.TrackOffset));
         }
 
         /// <summary>
@@ -149,7 +159,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             }
 
             // Recycle necessary pool objects
-            while (Pool.Count > 0 && Pool.Peek().CurrentTrackPosition > HitObjectManager.RecycleObjectPosition)
+            while (Pool.Count > 0 && Pool.Peek().CurrentTrackPosition > HitObjectManager.RecycleObjectPosition && Pool.Peek().Info.StartTime < HitObjectManager.CurrentAudioPosition)
             {
                 var line = Pool.Dequeue();
                 if (Info.Count > 0)
