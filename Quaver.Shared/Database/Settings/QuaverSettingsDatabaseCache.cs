@@ -55,8 +55,6 @@ namespace Quaver.Shared.Database.Settings
                 DatabaseManager.Connection.Insert(settings);
             }
 
-            OutdatedMaps = MapDatabaseCache.FetchAll().FindAll(x => x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version);
-
             Logger.Important($"Found {OutdatedMaps.Count} maps that have outdated difficulty ratings. Scheduling recalculation upon entering" +
                              $"select.", LogType.Runtime);
         }
