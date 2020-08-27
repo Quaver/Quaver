@@ -94,6 +94,22 @@ namespace Quaver.Shared.Database.Scores
         }
 
         /// <summary>
+        ///     Updates an individual map in the database.
+        /// </summary>
+        public static void UpdateScore(Score score)
+        {
+            try
+            {
+                DatabaseManager.Connection.Update(score);
+                Logger.Debug($"Updated score: {score.Id} in the cache", LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
         ///     Responsible for removing a score from the database
         /// </summary>
         /// <param name="score"></param>

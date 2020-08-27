@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
@@ -18,6 +21,29 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
             try
             {
                 var scores = ScoreDatabaseCache.FetchMapScores(map.Md5Checksum);
+
+                if (map.DifficultyProcessorVersion == DifficultyProcessorKeys.Version)
+                {
+                    foreach (var score in scores)
+                    {
+                        if (score.DifficultyProcessorVersion == DifficultyProcessorKeys.Version)
+                            continue;
+
+                        score.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
+                        score.RatingProcessorVersion = RatingProcessorKeys.Version;
+                        var oldRating = score.PerformanceRating;
+
+                        var diff = map.DifficultyFromMods((ModIdentifier) score.Mods);
+                        var rating = new RatingProcessorKeys(diff).CalculateRating(score.Accuracy, score.Grade == Grade.F);
+
+                        score.PerformanceRating = rating;
+                        ScoreDatabaseCache.UpdateScore(score);
+
+                        Logger.Important($"Rating of score: {score.Id} recalculated to {score.PerformanceRating} from {oldRating}",
+                            LogType.Runtime);
+                    }
+                }
+
                 return new FetchedScoreStore(scores, scores?.Count != 0 ? scores?.First() : null);
             }
             catch (Exception e)
