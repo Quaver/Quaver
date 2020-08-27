@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                         ScoreDatabaseCache.UpdateScore(score);
 
                         Logger.Important($"Rating of score: {score.Id} recalculated to {score.PerformanceRating} from {oldRating}",
-                            LogType.Runtime);
+                            LogType.Runtime, false);
                     }
                 }
 
