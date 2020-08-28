@@ -424,25 +424,29 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressSpace();
             HandleKeyPressPageUp();
             HandleKeyPressPageDown();
+            HandleKeyPressHome();
+            HandleKeyPressEnd();
 
             // To not conflict with the volume controller
-            if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftAlt) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightAlt) &&
-                KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightControl))
+            if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
             {
                 HandleSeekingBackwards();
                 HandleSeekingForwards();
                 HandleKeyPressUp();
                 HandleKeyPressDown();
+                HandleKeyPressShiftUpDown();
             }
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
+            HandleTemporaryHitObjectPlacement();
             HandleCtrlInput();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
             HandleKeyPressF5();
             HandleKeyPressF6();
+            HandleKeyPressShiftH();
         }
 
         /// <summary>
@@ -495,7 +499,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleKeyPressUp()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
+            // Shift+Up is switching layers
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up) || KeyboardManager.IsShiftDown())
                 return;
 
             var index = (int)CompositionTool.Value;
@@ -508,7 +513,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleKeyPressDown()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
+            // Shift+Down is switching layers
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down) || KeyboardManager.IsShiftDown())
                 return;
 
             var index = (int)CompositionTool.Value;
@@ -516,6 +522,38 @@ namespace Quaver.Shared.Screens.Edit
             // - 1 because mines aren't implemented yet
             if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
                 CompositionTool.Value = (EditorCompositionTool)index + 1;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressShiftUpDown()
+        {
+            if ((!KeyboardManager.IsUniqueKeyPress(Keys.Up) && !KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                || !KeyboardManager.IsShiftDown())
+                return;
+
+            // Pressing Up and Down at the same time will give Down precedence
+            var step = KeyboardManager.IsUniqueKeyPress(Keys.Down) ? 1 : -1;
+
+            // Default layer will be handled as index -1
+            var currentLayerIndex = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value);
+            var nextLayerIndex = Math.Min(currentLayerIndex + step, WorkingMap.EditorLayers.Count() - 1);
+            var nextLayer = nextLayerIndex < 0 ? DefaultLayer : WorkingMap.EditorLayers[nextLayerIndex];
+
+            SelectedLayer.Value = nextLayer;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressShiftH()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.H) || !KeyboardManager.IsShiftDown())
+                return;
+
+            if (SelectedLayer.Value == null)
+                SelectedLayer.Value = DefaultLayer;
+
+            SelectedLayer.Value.Hidden = !SelectedLayer.Value.Hidden;
         }
 
         /// <summary>
@@ -597,16 +635,13 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleBeatSnapChanges()
         {
-            var ctrlPressed = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                              KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl);
-
             var scrolledForward = MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue;
             var scrolledBackward = MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue;
 
-            if (ctrlPressed && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
+            if (KeyboardManager.IsCtrlDown() && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
                 ChangeBeatSnap(Direction.Forward);
 
-            if (ctrlPressed && (scrolledBackward || KeyboardManager.IsUniqueKeyPress(Keys.Up)))
+            if (KeyboardManager.IsCtrlDown() && (scrolledBackward || KeyboardManager.IsUniqueKeyPress(Keys.Up)))
                 ChangeBeatSnap(Direction.Backward);
         }
 
@@ -614,7 +649,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandlePlaybackRateChanges()
         {
-            if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
@@ -628,8 +663,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleCtrlInput()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
@@ -661,7 +695,7 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.A))
             {
-                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                if (KeyboardManager.IsAltDown())
                     SelectAllObjectsInLayer();
                 else
                     SelectAllObjects();
@@ -675,6 +709,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.N))
                 DialogManager.Show(new EditorNewSongDialog());
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.I))
+                PlaceTimingPointOrScrollVelocity();
         }
 
         /// <summary>
@@ -688,6 +725,9 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Places a note if a note at the current editor time and the given number key
+        ///     lane doesn't exist, otherwise removes all instances of notes at that time and lane
+        ///     (possible with overlaps).
         /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
@@ -698,7 +738,19 @@ namespace Quaver.Shared.Screens.Edit
                     continue;
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-                ActionManager.PlaceHitObject(i + 1, time);
+
+                var lane = i + 1;
+
+                // Can be multiple if overlap
+                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
+
+                if (hitObjectsAtTime.Count > 0)
+                {
+                    foreach (var note in hitObjectsAtTime)
+                        ActionManager.RemoveHitObject(note);
+                }
+                else
+                    ActionManager.PlaceHitObject(lane, time);
             }
         }
 
@@ -782,6 +834,29 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
                 PlayfieldScrollSpeed.Value--;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressHome()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Home))
+                return;
+
+            var time = WorkingMap.HitObjects.Count() == 0 ? 0.0d : WorkingMap.HitObjects.First().StartTime;
+            Track.Seek(time);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEnd()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.End))
+                return;
+
+            // Using the actual track length won't work (might be out of bounds?)
+            var time = WorkingMap.HitObjects.Count() == 0 ? Track.Length - 1 : WorkingMap.HitObjects.Last().StartTime;
+            Track.Seek(time);
         }
 
         /// <summary>
@@ -1330,6 +1405,32 @@ namespace Quaver.Shared.Screens.Edit
                 MapManager.Selected.Value.Mapset.ExportToZip();
                 NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
             });
+        }
+
+        /// <summary>
+        ///     Places a timing point or scroll velocity at the current point in time.
+        /// </summary>
+        private void PlaceTimingPointOrScrollVelocity()
+        {
+            if (!KeyboardManager.IsShiftDown())
+            {
+                ActionManager.PlaceScrollVelocity(new SliderVelocityInfo
+                {
+                    StartTime = (float)Track.Time,
+                    Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
+                });
+            }
+            else
+            {
+                if (WorkingMap.TimingPoints.Count != 0)
+                {
+                    ActionManager.PlaceTimingPoint(new TimingPointInfo
+                    {
+                        StartTime = (float)Track.Time,
+                        Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
+                    });
+                }
+            }
         }
 
         /// <summary>
