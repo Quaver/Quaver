@@ -601,6 +601,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             TimingPointOffsetBatchChanged = null;
             ScrollVelocityOffsetBatchChanged = null;
             ScrollVelocityMultiplierBatchChanged = null;
+            HitObjectsResnapped = null;
         }
     }
 }
