@@ -825,6 +825,24 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsSongSelectPreview || InReplayMode && !Failed && !IsPlayComplete || Exiting)
                 return;
 
+            // Go back to editor if we're currently play testing.
+            // Copied from HandlePauseInput()
+            if (IsPlayTesting)
+            {
+                if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
+
+                CustomAudioSampleCache.StopAll();
+
+                if (IsTestPlayingInNewEditor)
+                    ExitToNewEditor();
+                else
+                    Exit(() => new EditorScreen(OriginalEditorMap));
+            }
+
             TimesRequestedToPause++;
 
             // Force fail the user if they request to quit more than once.
