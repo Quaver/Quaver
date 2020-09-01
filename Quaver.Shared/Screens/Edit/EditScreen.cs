@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Edit
         public EditorVisualTestBackground BackgroundStore { get; }
 
         /// <summary>
-        ///     The cvrrently active skin
+        ///     The currently active skin
         /// </summary>
         public Bindable<SkinStore> Skin { get; private set; }
 
