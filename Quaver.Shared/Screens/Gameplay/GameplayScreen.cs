@@ -1025,7 +1025,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public void SkipToNextObject(bool force = false)
         {
-            if (!EligibleToSkip || IsPaused || IsResumeInProgress)
+            if (!EligibleToSkip || IsPaused || IsResumeInProgress || IsSongSelectPreview)
                 return;
 
             if (IsMultiplayerGame && !force)
@@ -1213,6 +1213,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (OnlineManager.IsSpectatingSomeone)
                 return;
 
+            if (IsSongSelectPreview)
+                return;
+
             TimeSinceLastJudgementsSentToServer = 0;
 
             if (Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count == 0)
@@ -1275,7 +1278,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public void SendReplayFramesToServer(bool force = false)
         {
-            if (!OnlineManager.IsBeingSpectated || InReplayMode)
+            if (!OnlineManager.IsBeingSpectated || InReplayMode || IsSongSelectPreview)
                 return;
 
             if (TimeSinceSpectatorFramesLastSent < 750 && !force)
