@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Edit
         public EditorVisualTestBackground BackgroundStore { get; }
 
         /// <summary>
-        ///     The cvrrently active skin
+        ///     The currently active skin
         /// </summary>
         public Bindable<SkinStore> Skin { get; private set; }
 
@@ -1221,8 +1221,6 @@ namespace Quaver.Shared.Screens.Edit
             if (Exiting)
                 return;
 
-            GameBase.Game.IsMouseVisible = false;
-
             if (WorkingMap.HitObjects.Count(x => x.StartTime >= Track.Time) == 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "There aren't any hitobjects to play past this point!");
@@ -1234,6 +1232,8 @@ namespace Quaver.Shared.Screens.Edit
                 NotificationManager.Show(NotificationLevel.Warning, "Finish what you're doing before test playing!");
                 return;
             }
+
+            GameBase.Game.IsMouseVisible = false;
 
             Exit(() =>
             {
