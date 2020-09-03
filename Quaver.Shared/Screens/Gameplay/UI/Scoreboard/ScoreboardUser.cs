@@ -30,6 +30,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
 
@@ -331,26 +332,33 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public void SetTintBasedOnHealth()
         {
-            if (Processor == null || Username == null)
-                return;
-
-            if (Processor.MultiplayerProcessor != null)
+            try
             {
-                if (Processor.MultiplayerProcessor.IsEliminated || Processor.MultiplayerProcessor.IsRegeneratingHealth)
-                {
-                    Username.Tint = Color.Red;
+                if (Processor == null || Username == null)
                     return;
-                }
-            }
 
-            if (Processor.Health >= 60)
-                Username.Tint = Color.White;
-            else if (Processor.Health >= 40)
-                Username.Tint = Color.Yellow;
-            else if (Processor.Health >= 1)
-                Username.Tint = Color.Orange;
-            else
-                Username.Tint = Color.Red;
+                if (Processor.MultiplayerProcessor != null)
+                {
+                    if (Processor.MultiplayerProcessor.IsEliminated || Processor.MultiplayerProcessor.IsRegeneratingHealth)
+                    {
+                        Username.Tint = Color.Red;
+                        return;
+                    }
+                }
+
+                if (Processor.Health >= 60)
+                    Username.Tint = Color.White;
+                else if (Processor.Health >= 40)
+                    Username.Tint = Color.Yellow;
+                else if (Processor.Health >= 1)
+                    Username.Tint = Color.Orange;
+                else
+                    Username.Tint = Color.Red;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>

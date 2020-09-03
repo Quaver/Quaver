@@ -70,6 +70,8 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// </summary>
         private Sprite HostCrown { get; set; }
 
+        private bool AvatarRequested { get; set; }
+
         /// <summary>
         /// </summary>
         public MultiplayerPlayer(Bindable<MultiplayerGame> game, Drawable container, User user)
@@ -230,7 +232,12 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             else
             {
                 Avatar.Image = UserInterface.UnknownAvatar;
-                SteamManager.SendAvatarRetrievalRequest((ulong) User.OnlineUser.SteamId);
+
+                if (!AvatarRequested && User.HasUserInfo)
+                {
+                    SteamManager.SendAvatarRetrievalRequest((ulong) User.OnlineUser.SteamId);
+                    AvatarRequested = true;
+                }
             }
         });
 

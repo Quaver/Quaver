@@ -43,13 +43,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components
         /// <summary>
         ///     Updates the text content and color with the updated state
         /// </summary>
-        public void UpdateText()
+        public void UpdateText() => ScheduleUpdate(() =>
         {
             var difficulty = Map.DifficultyFromMods(ModManager.Mods);
 
             Text = StringHelper.RatingToString(difficulty);
             Tint = ColorHelper.DifficultyToColor((float) difficulty);
-        }
+        });
 
         /// <inheritdoc />
         /// <summary>
