@@ -94,6 +94,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             state.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
             EditorPluginMap.Map = Editor.WorkingMap;
+            EditorPluginMap.Track = Editor.Track;
             EditorPluginMap.SetFrameState();
             WorkingScript.Globals["map"] = EditorPluginMap;
 

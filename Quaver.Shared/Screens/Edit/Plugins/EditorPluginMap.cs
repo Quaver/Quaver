@@ -7,6 +7,7 @@ using Quaver.Shared.Audio;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -16,6 +17,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
     {
         [MoonSharpVisible(false)]
         public Qua Map;
+
+        [MoonSharpVisible(false)]
+        public IAudioTrack Track;
 
         /// <summary>
         ///     The game mode of the map
@@ -37,6 +41,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public List<TimingPointInfo> TimingPoints { get; [MoonSharpVisible(false)] set; }
 
+        /// <summary>
+        ///     Total mp3 length
+        /// </summary>
+        public double TrackLength { get; [MoonSharpVisible(false)] set; }
+
         [MoonSharpVisible(false)]
         public void SetFrameState()
         {
@@ -44,6 +53,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             TimingPoints = Map.TimingPoints;
             ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
             HitObjects = Map.HitObjects;
+            TrackLength = Track.Length;
         }
 
         /// <summary>
