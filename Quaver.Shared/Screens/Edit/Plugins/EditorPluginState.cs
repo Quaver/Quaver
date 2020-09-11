@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The current time in the song
         /// </summary>
-        public int SongTime { get; [MoonSharpVisible(false)] set; }
+        public double SongTime { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     The objects that are currently selected by the user

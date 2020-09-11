@@ -73,6 +73,9 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiCol>();
             UserData.RegisterType<ImGuiStyleVar>();
             UserData.RegisterType<ImDrawListPtr>();
+            UserData.RegisterType<ImGuiComboFlags>();
+            UserData.RegisterType<ImGuiFocusedFlags>();
+            UserData.RegisterType<ImGuiHoveredFlags>();
 
             // MonoGame
             UserData.RegisterType<Keys>();
@@ -149,6 +152,9 @@ namespace Quaver.Shared.Scripting
             WorkingScript.Globals["imgui_key"] = typeof(ImGuiKey);
             WorkingScript.Globals["imgui_col"] = typeof(ImGuiCol);
             WorkingScript.Globals["imgui_style_var"] = typeof(ImGuiStyleVar);
+            WorkingScript.Globals["imgui_combo_flags"] = typeof(ImGuiComboFlags);
+            WorkingScript.Globals["imgui_focused_flags"] = typeof(ImGuiFocusedFlags);
+            WorkingScript.Globals["imgui_hovered_flags"] = typeof(ImGuiHoveredFlags);
 
             WorkingScript.Globals["keys"] = typeof(Keys);
         }
