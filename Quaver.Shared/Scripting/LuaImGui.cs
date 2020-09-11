@@ -71,6 +71,7 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiColorEditFlags>();
             UserData.RegisterType<ImGuiKey>();
             UserData.RegisterType<ImGuiCol>();
+            UserData.RegisterType<ImGuiStyleVar>();
 
             // MonoGame
             UserData.RegisterType<Keys>();
@@ -146,6 +147,7 @@ namespace Quaver.Shared.Scripting
             WorkingScript.Globals["imgui_color_edit_flags"] = typeof(ImGuiColorEditFlags);
             WorkingScript.Globals["imgui_key"] = typeof(ImGuiKey);
             WorkingScript.Globals["imgui_col"] = typeof(ImGuiCol);
+            WorkingScript.Globals["imgui_style_var"] = typeof(ImGuiStyleVar);
 
             WorkingScript.Globals["keys"] = typeof(Keys);
         }
