@@ -72,6 +72,7 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiKey>();
             UserData.RegisterType<ImGuiCol>();
             UserData.RegisterType<ImGuiStyleVar>();
+            UserData.RegisterType<ImDrawListPtr>();
 
             // MonoGame
             UserData.RegisterType<Keys>();
