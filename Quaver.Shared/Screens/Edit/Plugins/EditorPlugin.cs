@@ -90,6 +90,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
             state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
+            state.CurrentSnap = Editor.BeatSnap.Value;
             state.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
             EditorPluginMap.Map = Editor.WorkingMap;

@@ -29,6 +29,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public TimingPointInfo CurrentTimingPoint { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     The currently selected beat snap
+        /// </summary>
+        public int CurrentSnap { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     ImGui options used to set styles/fonts for the window
         /// </summary>
         [MoonSharpVisible(false)]
