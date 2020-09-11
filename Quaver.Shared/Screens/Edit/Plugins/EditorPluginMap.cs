@@ -3,9 +3,11 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
 {
@@ -70,6 +72,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="point"></param>
         /// <returns></returns>
         public double GetTimingPointLength(TimingPointInfo point) => Map.GetTimingPointLength(point);
+
+        /// <summary>
+        ///     Gets the nearest snap time at a time to a given direction.
+        /// </summary>
+        /// <param name="forwards"></param>
+        /// <param name="snap"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public double GetNearestSnapTimeFromTime(bool forwards, int snap, float time) => AudioEngine.GetNearestSnapTimeFromTime(Map, forwards ? Direction.Forward : Direction.Backward, snap, time);
 
     }
 }
