@@ -56,6 +56,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             TrackLength = Track.Length;
         }
 
+        public override string ToString() => Map.ToString();
+
+        /// <summary>
+        ///    In Quaver, the key count is defined by the game mode.
+        ///    This translates mode to key count.
+        /// </summary>
+        /// <returns></returns>
+        public int GetKeyCount(bool includeScratch = true) => Map.GetKeyCount(includeScratch);
+
         /// <summary>
         ///     Finds the most common BPM in the current map
         /// </summary>
