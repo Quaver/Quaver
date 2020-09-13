@@ -372,6 +372,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects On Nearest Tick", "", Screen.PlaceObjectsOnNearestTick.Value))
                 Screen.PlaceObjectsOnNearestTick.Value = !Screen.PlaceObjectsOnNearestTick.Value;
 
+            if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
+                Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
+
             if (ImGui.MenuItem("Show Waveform", "", Screen.ShowWaveform.Value))
                 Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
 

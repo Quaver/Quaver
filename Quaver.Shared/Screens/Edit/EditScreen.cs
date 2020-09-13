@@ -178,6 +178,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> LiveMapping { get; } = ConfigManager.EditorLiveMapping ?? new Bindable<bool>(true);
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -352,6 +356,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (PlaceObjectsOnNearestTick != ConfigManager.EditorPlaceObjectsOnNearestTick)
                 PlaceObjectsOnNearestTick.Dispose();
+
+            if (LiveMapping != ConfigManager.EditorLiveMapping)
+                LiveMapping.Dispose();
 
             if (ShowWaveform != ConfigManager.EditorShowWaveform)
                 ShowWaveform.Dispose();
@@ -731,26 +738,29 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
-            // Clever way of handing key input with num keys since the enum values are 1 after each other.
-            for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
+            if (LiveMapping.Value)
             {
-                if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
-                    continue;
-
-                var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-
-                var lane = i + 1;
-
-                // Can be multiple if overlap
-                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
-
-                if (hitObjectsAtTime.Count > 0)
+                // Clever way of handing key input with num keys since the enum values are 1 after each other.
+                for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
                 {
-                    foreach (var note in hitObjectsAtTime)
-                        ActionManager.RemoveHitObject(note);
+                    if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                        continue;
+
+                    var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+
+                    var lane = i + 1;
+
+                    // Can be multiple if overlap
+                    var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
+
+                    if (hitObjectsAtTime.Count > 0)
+                    {
+                        foreach (var note in hitObjectsAtTime)
+                            ActionManager.RemoveHitObject(note);
+                    }
+                    else
+                        ActionManager.PlaceHitObject(lane, time);
                 }
-                else
-                    ActionManager.PlaceHitObject(lane, time);
             }
         }
 
