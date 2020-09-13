@@ -46,8 +46,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public double TrackLength { get; [MoonSharpVisible(false)] set; }
 
+        /// <summary>
+        ///     The multiplier used before the first scroll velocity
+        /// </summary>
         public float InitialScrollVelocity { get; set; }
 
+        /// <summary>
+        ///     Used to Round TrackPosition from Long to Float
+        /// </summary>
         [MoonSharpVisible(false)]
         public static float TrackRounding { get; } = 100;
 
@@ -107,6 +113,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <returns></returns>
         public double GetNearestSnapTimeFromTime(bool forwards, int snap, float time) => AudioEngine.GetNearestSnapTimeFromTime(Map, forwards ? Direction.Forward : Direction.Backward, snap, time);
 
+        /// <summary>
+        ///     Gets the track position at a given time.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
         public long GetPositionFromTime(double time)
         {
             int i;
