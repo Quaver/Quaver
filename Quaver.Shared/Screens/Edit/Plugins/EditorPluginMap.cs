@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The multiplier used before the first scroll velocity
         /// </summary>
-        public float InitialScrollVelocity { get; set; }
+        public float InitialScrollVelocity { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     Used to Round TrackPosition from Long to Float
