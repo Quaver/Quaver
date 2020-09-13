@@ -46,6 +46,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public double TrackLength { get; [MoonSharpVisible(false)] set; }
 
+        public float InitialScrollVelocity { get; set; }
+
+        [MoonSharpVisible(false)]
+        public static float TrackRounding { get; } = 100;
+
         [MoonSharpVisible(false)]
         public void SetFrameState()
         {
@@ -54,6 +59,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
             HitObjects = Map.HitObjects;
             TrackLength = Track.Length;
+            InitialScrollVelocity = Map.InitialScrollVelocity;
         }
 
         public override string ToString() => Map.ToString();
@@ -101,5 +107,29 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <returns></returns>
         public double GetNearestSnapTimeFromTime(bool forwards, int snap, float time) => AudioEngine.GetNearestSnapTimeFromTime(Map, forwards ? Direction.Forward : Direction.Backward, snap, time);
 
+        public long GetPositionFromTime(double time)
+        {
+            int i;
+            var position = 0L;
+            for (i = 0; i < Map.SliderVelocities.Count; i++)
+            {
+                if (time < Map.SliderVelocities[i].StartTime)
+                    break;
+                else
+                    position += (long)((Map.SliderVelocities[i].StartTime - ((i > 0) ? Map.SliderVelocities[i - 1].StartTime : 0.0))
+                                       * ((i > 0) ? Map.SliderVelocities[i - 1].Multiplier : Map.InitialScrollVelocity) * TrackRounding);
+            }
+
+            if (i == 0)
+            {
+                // Time starts before the first SV point
+                return (long) (time * Map.InitialScrollVelocity * TrackRounding);
+            }
+
+            i--;
+
+            position += (long)((time - Map.SliderVelocities[i].StartTime) * Map.SliderVelocities[i].Multiplier * TrackRounding);
+            return position;
+        }
     }
 }
