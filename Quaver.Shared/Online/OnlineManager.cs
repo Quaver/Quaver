@@ -1389,7 +1389,8 @@ namespace Quaver.Shared.Online
 
             SpectatorClients.Remove(e.UserId);
 
-            NotificationManager.Show(NotificationLevel.Info, $"You are no longer spectating anymore!");
+            if (CurrentGame == null)
+                NotificationManager.Show(NotificationLevel.Info, $"You are no longer spectating anymore!");
 
             var game = (QuaverGame) GameBase.Game;
 

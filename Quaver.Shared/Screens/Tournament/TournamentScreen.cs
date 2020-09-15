@@ -108,16 +108,10 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 var qua = MapManager.Selected.Value.LoadQua();
 
-                var mods = OnlineManager.GetUserActivatedMods(spectatees[i].Player.OnlineUser.Id, game);
-                qua.ApplyMods(mods);
+                spectatees[i].PlayNewMap(new List<ReplayFrame>());
+                qua.ApplyMods(spectatees[i].Replay.Mods);
 
                 MapManager.Selected.Value.Qua = qua;
-
-                if (spectatees[i].Replay == null)
-                {
-                    spectatees[i].Replay = new Replay(qua.Mode, spectatees[i].Player.OnlineUser.Username, mods,
-                        MapManager.Selected.Value.Md5Checksum);
-                }
 
                 var screen = new TournamentGameplayScreen(qua, MapManager.Selected.Value.GetAlternativeMd5(), spectatees[i]);
 
@@ -286,8 +280,6 @@ namespace Quaver.Shared.Screens.Tournament
             var hasNoFrames = false;
             var gameStarted = GameplayScreens.Last().HasStarted;
             var track = AudioEngine.Track;
-            var donePlaying = GameplayScreens.Any(x => x.IsPlayComplete);
-            var matchEndedPrematurely = GameplayScreens.Last().MultiplayerMatchEndedPrematurely;
 
             foreach (var screen in GameplayScreens)
             {
@@ -297,12 +289,15 @@ namespace Quaver.Shared.Screens.Tournament
 
                 if (replay.Frames.Count > 0)
                 {
-                    if (replay.Frames[replay.Frames.Count - 1].Time < track.Time)
+                    if (replay.Frames[replay.Frames.Count - 1].Time < track.Time && GameplayScreens.All(x => !x.IsPlayComplete))
                     {
-                        hasNoFrames = true;
+                        if (track.Length - track.Time > 2000)
+                        {
+                            hasNoFrames = true;
 
-                        if (gameStarted && !track.IsDisposed && track.IsPlaying)
-                            track.Pause();
+                            if (gameStarted && !track.IsDisposed && track.IsPlaying)
+                                track.Pause();
+                        }
 
                         break;
                     }
@@ -315,7 +310,7 @@ namespace Quaver.Shared.Screens.Tournament
                 }
             }
 
-            if (gameStarted && !donePlaying && !hasNoFrames && !track.IsStopped && !track.IsPlaying && !matchEndedPrematurely)
+            if (gameStarted && !hasNoFrames && !track.IsStopped && !track.IsPlaying)
                 track.Play();
 
             foreach (var screen in GameplayScreens)
@@ -329,13 +324,12 @@ namespace Quaver.Shared.Screens.Tournament
 
             try
             {
-                var view = (GameplayScreenView) MainGameplayScreen.View;
+                var processors = GameplayScreens.Select(x => x.Ruleset.ScoreProcessor).ToList();
 
-                if (!Exiting && (GameplayScreens.All(x => x.IsPlayComplete) ||
-                                 !OnlineManager.CurrentGame.InProgress && hasNoFrames || matchEndedPrematurely))
+                if (!Exiting && (GameplayScreens.All(x => x.IsPlayComplete) && !OnlineManager.CurrentGame.InProgress))
                 {
                     Exit(() => new ResultsScreen(MainGameplayScreen, OnlineManager.CurrentGame,
-                        view.GetProcessorsFromScoreboard(view.ScoreboardLeft), view.GetProcessorsFromScoreboard(view.ScoreboardRight)));
+                        processors, new List<ScoreProcessor>()));
                 }
             }
             catch (Exception e)
