@@ -65,7 +65,7 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Handles when the client is beginning to play a new map
         /// </summary>
-        private void PlayNewMap(List<ReplayFrame> frames, bool createNewReplay = true, bool forceIfImporting = false)
+        public void PlayNewMap(List<ReplayFrame> frames, bool createNewReplay = true, bool forceIfImporting = false)
         {
             var game = (QuaverGame) GameBase.Game;
 
