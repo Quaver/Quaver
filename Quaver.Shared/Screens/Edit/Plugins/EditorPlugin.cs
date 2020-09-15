@@ -4,6 +4,7 @@ using System.Numerics;
 using ImGuiNET;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
+using Quaver.Shared.Config;
 using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -85,12 +86,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
             var state = (EditorPluginState)State;
 
-            state.SongTime = (int)Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
+            state.SongTime = Editor.Track.Time;
             state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
             state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
+            state.CurrentSnap = Editor.BeatSnap.Value;
+            state.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
             EditorPluginMap.Map = Editor.WorkingMap;
+            EditorPluginMap.Track = Editor.Track;
             EditorPluginMap.SetFrameState();
             WorkingScript.Globals["map"] = EditorPluginMap;
 

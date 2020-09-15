@@ -35,14 +35,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="endTime"></param>
         /// <param name="hitsounds"></param>
         /// <returns></returns>
-        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitsounds = 0)
+        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitsounds = 0, int editorLayer = 0)
         {
             var ho = new HitObjectInfo()
             {
                 StartTime = startTime,
                 Lane = lane,
                 EndTime = endTime,
-                HitSound = hitsounds
+                HitSound = hitsounds,
+                EditorLayer = editorLayer
             };
 
             return ho;
