@@ -29,23 +29,26 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         private List<int> Snaps { get; }
 
         /// <summary>
-        ///     Unmodified notes, kept for undoing
         /// </summary>
-        private List<HitObjectInfo> OldNotes { get; } = new List<HitObjectInfo>();
+        private List<HitObjectInfo> HitObjectsToResnap { get; }
 
         /// <summary>
-        ///     Modified notes, kept for undoing
+        ///  The distance of note start/end to the closest snap
         /// </summary>
-        private List<HitObjectInfo> NewNotes { get; } = new List<HitObjectInfo>();
+        /// <typeparam name="HitObjectInfo">Note</typeparam>
+        /// <typeparam name="(int">Distance of StartTime to closest snap</typeparam>
+        /// <typeparam name="int)">Distance of EndTime to closest snap</typeparam>
+        private readonly Dictionary<HitObjectInfo, (int, int)> noteTimeAdjustments = new Dictionary<HitObjectInfo, (int, int)>();
 
         /// <summary>
         /// </summary>
         /// <param name="actionManager"></param>
         /// <param name="workingMap"></param>
         /// <param name="hitObjects"></param>
-        public EditorActionResnapHitObjects(EditorActionManager actionManager, Qua workingMap, List<int> snaps)
+        public EditorActionResnapHitObjects(EditorActionManager actionManager, Qua workingMap, List<int> snaps, List<HitObjectInfo> hitObjectsToResnap)
         {
             ActionManager = actionManager;
+            HitObjectsToResnap = hitObjectsToResnap;
             WorkingMap = workingMap;
             Snaps = snaps;
         }
@@ -55,50 +58,44 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         /// </summary>
         public void Perform()
         {
-
-            // Using AudioEngine.GetNearestSnapTimeFromTime is unreliable since it might not return the current snap
-            foreach (var note in WorkingMap.HitObjects)
+            foreach (var note in HitObjectsToResnap)
             {
+                // Using AudioEngine.GetNearestSnapTimeFromTime is unreliable since it might not return the current snap
                 var startTimeDelta = DiffToClosestSnap(note.StartTime);
-                var endTimeDelta = DiffToClosestSnap(note.EndTime);
-                var startTimeNotSnapped = Math.Abs(startTimeDelta) >= 1;
-                var endTimeNotSnapped = Math.Abs(endTimeDelta) >= 1 && note.IsLongNote;
+                if (startTimeDelta != 0)
+                    note.StartTime -= startTimeDelta;
 
-                if (!startTimeNotSnapped && !endTimeNotSnapped)
-                    continue;
-
-                var resnappedNote = Helpers.ObjectHelper.DeepClone(note);
-
-                if (startTimeNotSnapped)
+                var endTimeDelta = 0;
+                if (note.IsLongNote)
                 {
-                    resnappedNote.StartTime = (int)(resnappedNote.StartTime - startTimeDelta);
-                    Logger.Debug($"Resnapped {note.StartTime}|{note.Lane} to {resnappedNote.StartTime}", LogType.Runtime, false);
+                    endTimeDelta = DiffToClosestSnap(note.EndTime);
+                    if (endTimeDelta != 0f)
+                        note.EndTime -= endTimeDelta;
                 }
 
-                if (endTimeNotSnapped)
-                {
-                    resnappedNote.EndTime = (int)(resnappedNote.EndTime - endTimeDelta);
-                    Logger.Debug($"Resnapped {note.EndTime}|{note.Lane} to {resnappedNote.EndTime} (Long Note End)", LogType.Runtime, false);
-                }
-
-                OldNotes.Add(note);
-                NewNotes.Add(resnappedNote);
+                noteTimeAdjustments.Add(note, (startTimeDelta, endTimeDelta));
             }
 
-            if (OldNotes.Count() > 0)
+            var offsnapCount = noteTimeAdjustments.Values.Count(x => x.Item1 != 0 || x.Item2 != 0);
+
+            if (offsnapCount > 0)
             {
-                OldNotes.ForEach(n => WorkingMap.HitObjects.Remove(n));
-                WorkingMap.HitObjects.AddRange(NewNotes);
-                WorkingMap.Sort();
-                NotificationManager.Show(NotificationLevel.Info, $"Resnapped {NewNotes.Count} notes");
-                ActionManager.TriggerEvent(EditorActionType.ResnapHitObjects, new EditorActionHitObjectsResnappedEventArgs(Snaps));
+                var notifMessage = $"Resnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
+                NotificationManager.Show(NotificationLevel.Info, notifMessage);
+                ActionManager.TriggerEvent(EditorActionType.ResnapHitObjects, new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap));
             }
             else
                 NotificationManager.Show(NotificationLevel.Info, $"No notes to resnap");
 
         }
 
-        private float DiffToClosestSnap(int time) {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private int DiffToClosestSnap(int time)
+        {
             var timingPoint = WorkingMap.GetTimingPointAt(time);
             var msPerSnaps = Snaps.Select(s => timingPoint.MillisecondsPerBeat / s).ToList();
 
@@ -112,7 +109,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
                     smallestDelta = delta;
             }
 
-            return smallestDelta;
+            return (int)Math.Round(smallestDelta);
         }
 
         /// <inheritdoc />
@@ -120,9 +117,18 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         /// </summary>
         public void Undo()
         {
-            NewNotes.ForEach(n => WorkingMap.HitObjects.Remove(n));
-            WorkingMap.HitObjects.AddRange(OldNotes);
-            WorkingMap.Sort();
+            foreach (var adjustment in noteTimeAdjustments)
+            {
+                var note = adjustment.Key;
+                note.StartTime += adjustment.Value.Item1;
+                note.EndTime += adjustment.Value.Item2;
+            }
+
+            var offsnapCount = noteTimeAdjustments.Values.Count(x => x.Item1 != 0 || x.Item2 != 0);
+            var notifMessage = $"Unsnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
+            NotificationManager.Show(NotificationLevel.Info, notifMessage);
+
+            noteTimeAdjustments.Clear();
         }
     }
 }

@@ -10,6 +10,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         /// </summary>
         public List<int> Snaps { get; }
 
-        public EditorActionHitObjectsResnappedEventArgs(List<int> snaps) => Snaps = snaps;
+        /// <summary>
+        /// </summary>
+        public List<HitObjectInfo> HitObjectsToResnap { get; }
+
+        public EditorActionHitObjectsResnappedEventArgs(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap)
+        {
+            Snaps = snaps;
+            HitObjectsToResnap = hitObjectsToResnap;
+        }
     }
 }
