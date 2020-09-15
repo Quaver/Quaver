@@ -522,6 +522,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorLiveMapping { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static BindableInt EditorLongNoteOpacity { get; private set; }
 
         /// <summary>
@@ -964,6 +968,7 @@ namespace Quaver.Shared.Config
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
+            EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
