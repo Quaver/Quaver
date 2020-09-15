@@ -738,29 +738,29 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
-            if (LiveMapping.Value)
+            if (!LiveMapping.Value)
+                return;
+
+            // Clever way of handing key input with num keys since the enum values are 1 after each other.
+            for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
-                // Clever way of handing key input with num keys since the enum values are 1 after each other.
-                for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
+                if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                    continue;
+
+                var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+
+                var lane = i + 1;
+
+                // Can be multiple if overlap
+                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
+
+                if (hitObjectsAtTime.Count > 0)
                 {
-                    if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
-                        continue;
-
-                    var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-
-                    var lane = i + 1;
-
-                    // Can be multiple if overlap
-                    var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
-
-                    if (hitObjectsAtTime.Count > 0)
-                    {
-                        foreach (var note in hitObjectsAtTime)
-                            ActionManager.RemoveHitObject(note);
-                    }
-                    else
-                        ActionManager.PlaceHitObject(lane, time);
+                    foreach (var note in hitObjectsAtTime)
+                        ActionManager.RemoveHitObject(note);
                 }
+                else
+                    ActionManager.PlaceHitObject(lane, time);
             }
         }
 
