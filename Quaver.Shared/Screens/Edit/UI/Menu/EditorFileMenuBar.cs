@@ -270,6 +270,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+            if (ImGui.BeginMenu("Resnap Selected Notes"))
+            {
+                if (ImGui.MenuItem("Resnap to current selected snap"))
+                    Screen.ActionManager.ResnapAllNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
+                if (ImGui.MenuItem("Resnap to 1/16 and 1/12 snaps"))
+                    Screen.ActionManager.ResnapAllNotes(new List<int> { 16, 12 }, Screen.SelectedHitObjects.Value);
+                ImGui.EndMenu();
+            }
+
             if (ImGui.BeginMenu($"Apply Modifier To Map", Screen.Map.Game == MapGame.Quaver))
             {
                 if (ImGui.MenuItem("Mirror"))
