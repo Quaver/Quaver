@@ -36,6 +36,10 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Components;
 using Wobble.Bindables;
 
@@ -405,10 +409,36 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset) => Perform(new EditorActionChangeTimingPointOffsetBatch(this, WorkingMap, tps, offset));
 
         /// <summary>
-        /// Resets a timing point back to zero
+        ///     Resets a timing point back to zero
         /// </summary>
         /// <param name="tp"></param>
         public void ResetTimingPoint(TimingPointInfo tp) => Perform(new EditorActionResetTimingPoint(this, WorkingMap, tp));
+
+        /// <summary>
+        ///     Adds an editor layer to the map
+        /// </summary>
+        /// <param name="layer"></param>
+        public void CreateLayer(EditorLayerInfo layer) => Perform(new EditorActionCreateLayer(WorkingMap, this, EditScreen.SelectedHitObjects, layer));
+
+        /// <summary>
+        ///     Removes an editor layer from the map
+        /// </summary>
+        /// <param name="layer"></param>
+        public void RemoveLayer(EditorLayerInfo layer) => Perform(new EditorActionRemoveLayer(this, WorkingMap, EditScreen.SelectedHitObjects, layer));
+
+        /// <summary>
+        ///     Changes the name of an existing editor layer
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="name"></param>
+        public void RenameLayer(EditorLayerInfo layer, string name) => Perform(new EditorActionRenameLayer(this, WorkingMap, layer, name));
+
+        /// <summary>
+        ///     Changes the editor layer of existing hitobjects
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="hitObjects"></param>
+        public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects));
 
         /// <summary>
         /// </summary>

@@ -150,5 +150,27 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="time"></param>
         public void SetPreviewTime(int time) => ActionManager.SetPreviewTime(time);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
+        public void CreateLayer(EditorLayerInfo layer) => ActionManager.CreateLayer(layer);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
+        public void RemoveLayer(EditorLayerInfo layer) => ActionManager.RemoveLayer(layer);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="name"></param>
+        public void RenameLayer(EditorLayerInfo layer, string name) => ActionManager.RenameLayer(layer, name);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="hitObjects"></param>
+        public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => ActionManager.MoveHitObjectsToLayer(layer, hitObjects);
     }
 }
