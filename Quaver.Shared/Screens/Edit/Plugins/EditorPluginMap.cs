@@ -126,21 +126,19 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <returns></returns>
         public long GetPositionFromTime(double time)
         {
+            if (time < Map.SliderVelocities[0].StartTime)
+                return (long) (time * Map.InitialScrollVelocity * TrackRounding);
+
+            var position = (long)(Map.SliderVelocities[0].StartTime * Map.InitialScrollVelocity * TrackRounding);
+            
             int i;
-            var position = 0L;
-            for (i = 0; i < Map.SliderVelocities.Count; i++)
+            for (i = 1; i < Map.SliderVelocities.Count; i++)
             {
                 if (time < Map.SliderVelocities[i].StartTime)
                     break;
                 else
-                    position += (long)((Map.SliderVelocities[i].StartTime - ((i > 0) ? Map.SliderVelocities[i - 1].StartTime : 0.0))
-                                       * ((i > 0) ? Map.SliderVelocities[i - 1].Multiplier : Map.InitialScrollVelocity) * TrackRounding);
-            }
-
-            if (i == 0)
-            {
-                // Time starts before the first SV point
-                return (long) (time * Map.InitialScrollVelocity * TrackRounding);
+                    position += (long)((Map.SliderVelocities[i].StartTime - Map.SliderVelocities[i - 1].StartTime)
+                                       * Map.SliderVelocities[i - 1].Multiplier * TrackRounding);
             }
 
             i--;
