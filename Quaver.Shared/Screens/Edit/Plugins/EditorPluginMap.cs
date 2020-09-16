@@ -42,6 +42,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<TimingPointInfo> TimingPoints { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     The editor layers that are currently in the map
+        /// </summary>
+        public List<EditorLayerInfo> EditorLayers { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     Total mp3 length
         /// </summary>
         public double TrackLength { get; [MoonSharpVisible(false)] set; }
@@ -64,6 +69,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             TimingPoints = Map.TimingPoints;
             ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
             HitObjects = Map.HitObjects;
+            EditorLayers = Map.EditorLayers;
             TrackLength = Track.Length;
             InitialScrollVelocity = Map.InitialScrollVelocity;
         }
