@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
@@ -172,5 +173,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="layer"></param>
         /// <param name="hitObjects"></param>
         public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => ActionManager.MoveHitObjectsToLayer(layer, hitObjects);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="color"></param>
+        public void ChangeLayerColor(EditorLayerInfo layer, int r, int g, int b) => ActionManager.ChangeLayerColor(layer, new Color(r, g, b));
     }
 }

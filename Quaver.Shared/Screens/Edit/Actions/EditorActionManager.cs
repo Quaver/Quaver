@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
@@ -18,6 +19,7 @@ using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
@@ -36,10 +38,6 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
-using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
-using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
-using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
-using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Components;
 using Wobble.Bindables;
 
@@ -439,6 +437,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="layer"></param>
         /// <param name="hitObjects"></param>
         public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects));
+
+        /// <summary>
+        ///     Changes the color of an existing editor layer
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="color"></param>
+        public void ChangeLayerColor(EditorLayerInfo layer, Color color) => Perform(new EditorActionChangeLayerColor(this, WorkingMap, layer, color));
 
         /// <summary>
         /// </summary>
