@@ -420,17 +420,25 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void CreateLayer(EditorLayerInfo layer) => Perform(new EditorActionCreateLayer(WorkingMap, this, EditScreen.SelectedHitObjects, layer));
 
         /// <summary>
-        ///     Removes an editor layer from the map
+        ///     Removes a non-default editor layer from the map
         /// </summary>
         /// <param name="layer"></param>
-        public void RemoveLayer(EditorLayerInfo layer) => Perform(new EditorActionRemoveLayer(this, WorkingMap, EditScreen.SelectedHitObjects, layer));
+        public void RemoveLayer(EditorLayerInfo layer)
+        {
+            if (layer != EditScreen.DefaultLayer)
+                Perform(new EditorActionRemoveLayer(this, WorkingMap, EditScreen.SelectedHitObjects, layer));
+        }
 
         /// <summary>
-        ///     Changes the name of an existing editor layer
+        ///     Changes the name of a non-default editor layer
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="name"></param>
-        public void RenameLayer(EditorLayerInfo layer, string name) => Perform(new EditorActionRenameLayer(this, WorkingMap, layer, name));
+        public void RenameLayer(EditorLayerInfo layer, string name)
+        {
+            if (layer != EditScreen.DefaultLayer)
+                Perform(new EditorActionRenameLayer(this, WorkingMap, layer, name));
+        }
 
         /// <summary>
         ///     Changes the editor layer of existing hitobjects
@@ -440,11 +448,15 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects));
 
         /// <summary>
-        ///     Changes the color of an existing editor layer
+        ///     Changes the color of a non-default editor layer
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="color"></param>
-        public void ChangeLayerColor(EditorLayerInfo layer, Color color) => Perform(new EditorActionChangeLayerColor(this, WorkingMap, layer, color));
+        public void ChangeLayerColor(EditorLayerInfo layer, Color color)
+        {
+            if (layer != EditScreen.DefaultLayer)
+                Perform(new EditorActionChangeLayerColor(this, WorkingMap, layer, color));
+        }
 
         /// <summary>
         ///     Toggles the visibility of an existing editor layer
