@@ -56,17 +56,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public double TrackLength { get; [MoonSharpVisible(false)] set; }
 
-        /// <summary>
-        ///     The multiplier used before the first scroll velocity
-        /// </summary>
-        public float InitialScrollVelocity { get; [MoonSharpVisible(false)] set; }
-
-        /// <summary>
-        ///     Used to Round TrackPosition from Long to Float
-        /// </summary>
-        [MoonSharpVisible(false)]
-        public static float TrackRounding { get; } = 100;
-
         [MoonSharpVisible(false)]
         public void SetFrameState()
         {
@@ -76,7 +65,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             HitObjects = Map.HitObjects;
             EditorLayers = Map.EditorLayers;
             TrackLength = Track.Length;
-            InitialScrollVelocity = Map.InitialScrollVelocity;
             Normalized = Map.BPMDoesNotAffectScrollVelocity;
         }
 
