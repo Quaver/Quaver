@@ -124,33 +124,5 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="time"></param>
         /// <returns></returns>
         public double GetNearestSnapTimeFromTime(bool forwards, int snap, float time) => AudioEngine.GetNearestSnapTimeFromTime(Map, forwards ? Direction.Forward : Direction.Backward, snap, time);
-
-        /// <summary>
-        ///     Gets the track position at a given time.
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public long GetPositionFromTime(double time)
-        {
-            if (time < Map.SliderVelocities[0].StartTime)
-                return (long) (time * Map.InitialScrollVelocity * TrackRounding);
-
-            var position = (long)(Map.SliderVelocities[0].StartTime * Map.InitialScrollVelocity * TrackRounding);
-
-            int i;
-            for (i = 1; i < Map.SliderVelocities.Count; i++)
-            {
-                if (time < Map.SliderVelocities[i].StartTime)
-                    break;
-                else
-                    position += (long)((Map.SliderVelocities[i].StartTime - Map.SliderVelocities[i - 1].StartTime)
-                                       * Map.SliderVelocities[i - 1].Multiplier * TrackRounding);
-            }
-
-            i--;
-
-            position += (long)((time - Map.SliderVelocities[i].StartTime) * Map.SliderVelocities[i].Multiplier * TrackRounding);
-            return position;
-        }
     }
 }
