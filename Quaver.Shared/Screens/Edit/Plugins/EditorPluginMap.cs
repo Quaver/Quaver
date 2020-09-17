@@ -27,6 +27,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public GameMode Mode { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     If the scroll velocities are in normalized format (BPM does not affect scroll velocity).
+        /// </summary>
+        public bool Normalized { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     The slider velocities present in the map
         /// </summary>
         public List<SliderVelocityInfo> ScrollVelocities { get; [MoonSharpVisible(false)] set; }
@@ -72,6 +77,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             EditorLayers = Map.EditorLayers;
             TrackLength = Track.Length;
             InitialScrollVelocity = Map.InitialScrollVelocity;
+            Normalized = Map.BPMDoesNotAffectScrollVelocity;
         }
 
         public override string ToString() => Map.ToString();
@@ -130,7 +136,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 return (long) (time * Map.InitialScrollVelocity * TrackRounding);
 
             var position = (long)(Map.SliderVelocities[0].StartTime * Map.InitialScrollVelocity * TrackRounding);
-            
+
             int i;
             for (i = 1; i < Map.SliderVelocities.Count; i++)
             {
