@@ -179,5 +179,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="layer"></param>
         /// <param name="color"></param>
         public void ChangeLayerColor(EditorLayerInfo layer, int r, int g, int b) => ActionManager.ChangeLayerColor(layer, new Color(r, g, b));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
+        public void ToggleLayerVisibility(EditorLayerInfo layer) => ActionManager.ToggleLayerVisibility(layer);
     }
 }

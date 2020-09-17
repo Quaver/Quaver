@@ -22,6 +22,7 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
@@ -444,6 +445,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="layer"></param>
         /// <param name="color"></param>
         public void ChangeLayerColor(EditorLayerInfo layer, Color color) => Perform(new EditorActionChangeLayerColor(this, WorkingMap, layer, color));
+
+        /// <summary>
+        ///     Toggles the visibility of an existing editor layer
+        /// </summary>
+        /// <param name="layer"></param>
+        public void ToggleLayerVisibility(EditorLayerInfo layer) => Perform(new EditorActionToggleLayerVisibility(this, WorkingMap, layer));
 
         /// <summary>
         /// </summary>
