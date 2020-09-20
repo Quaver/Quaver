@@ -59,6 +59,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             Description = description;
             IsBuiltIn = isResource;
 
+            EditorPluginUtils.EditScreen = editScreen;
+
             EditorPluginMap = new EditorPluginMap();
 
             UserData.RegisterType<GameMode>();

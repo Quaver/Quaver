@@ -1,9 +1,41 @@
 using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit;
+using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
+using Quaver.Shared.Screens.Edit.Actions.SV.Add;
+using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
+using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -11,6 +43,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
     [MoonSharpUserData]
     public static class EditorPluginUtils
     {
+        [MoonSharpVisible(false)]
+        public static EditScreen EditScreen;
+
         /// <summary>
         /// </summary>
         /// <param name="time"></param>
@@ -83,6 +118,67 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             };
 
             return layer;
+        }
+
+        public static IEditorAction CreateEditorAction(EditorActionType type, object arg1 = null, object arg2 = null, object arg3 = null, object arg4 = null)
+        {
+            switch (type)
+            {
+                case EditorActionType.PlaceHitObject:
+                    return new EditorActionPlaceHitObject(EditScreen.ActionManager, EditScreen.WorkingMap, (HitObjectInfo)arg1);
+                case EditorActionType.RemoveHitObject:
+                    return new EditorActionRemoveHitObject(EditScreen.ActionManager, EditScreen.WorkingMap, (HitObjectInfo)arg1);
+                case EditorActionType.ResizeLongNote:
+                    return new EditorActionResizeLongNote(EditScreen.ActionManager, EditScreen.WorkingMap, (HitObjectInfo)arg1, (int)arg2, (int)arg3);
+                case EditorActionType.RemoveHitObjectBatch:
+                    return new EditorActionRemoveHitObjectBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<HitObjectInfo>)arg1);
+                case EditorActionType.PlaceHitObjectBatch:
+                    return new EditorActionPlaceHitObjectBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<HitObjectInfo>)arg1);
+                case EditorActionType.CreateLayer:
+                    return new EditorActionCreateLayer(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.SelectedHitObjects, (EditorLayerInfo)arg1);
+                case EditorActionType.RemoveLayer:
+                    return new EditorActionRemoveLayer(EditScreen.ActionManager, EditScreen.WorkingMap, EditScreen.SelectedHitObjects, (EditorLayerInfo)arg1);
+                case EditorActionType.RenameLayer:
+                    return new EditorActionRenameLayer(EditScreen.ActionManager, EditScreen.WorkingMap, (EditorLayerInfo)arg1, (string)arg2);
+                case EditorActionType.MoveToLayer:
+                    return new EditorActionMoveObjectsToLayer(EditScreen.ActionManager, EditScreen.WorkingMap, (EditorLayerInfo)arg1, (List<HitObjectInfo>)arg2);
+                case EditorActionType.ColorLayer:
+                    return new EditorActionChangeLayerColor(EditScreen.ActionManager, EditScreen.WorkingMap, (EditorLayerInfo)arg1, new Color((int)arg2, (int)arg3, (int)arg4));
+                case EditorActionType.ToggleLayerVisibility:
+                    return new EditorActionToggleLayerVisibility(EditScreen.ActionManager, EditScreen.WorkingMap, (EditorLayerInfo)arg1);
+                case EditorActionType.AddScrollVelocity:
+                    return new EditorActionAddScrollVelocity(EditScreen.ActionManager, EditScreen.WorkingMap, (SliderVelocityInfo)arg1);
+                case EditorActionType.RemoveScrollVelocity:
+                    return new EditorActionRemoveScrollVelocity(EditScreen.ActionManager, EditScreen.WorkingMap, (SliderVelocityInfo)arg1);
+                case EditorActionType.AddScrollVelocityBatch:
+                    return new EditorActionAddScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<SliderVelocityInfo>)arg1);
+                case EditorActionType.RemoveScrollVelocityBatch:
+                    return new EditorActionRemoveScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<SliderVelocityInfo>)arg1);
+                case EditorActionType.AddTimingPoint:
+                    return new EditorActionAddTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, (TimingPointInfo)arg1);
+                case EditorActionType.RemoveTimingPoint:
+                    return new EditorActionRemoveTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, (TimingPointInfo)arg1);
+                case EditorActionType.AddTimingPointBatch:
+                    return new EditorActionAddTimingPointBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<TimingPointInfo>)arg1);
+                case EditorActionType.RemoveTimingPointBatch:
+                    return new EditorActionRemoveTimingPointBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<TimingPointInfo>)arg1);
+                case EditorActionType.ChangeTimingPointOffset:
+                    return new EditorActionChangeTimingPointOffset(EditScreen.ActionManager, EditScreen.WorkingMap, (TimingPointInfo)arg1, (float)arg2);
+                case EditorActionType.ChangeTimingPointBpm:
+                    return new EditorActionChangeTimingPointBpm(EditScreen.ActionManager, EditScreen.WorkingMap, (TimingPointInfo)arg1, (float)arg2);
+                case EditorActionType.ResetTimingPoint:
+                    return new EditorActionResetTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, (TimingPointInfo)arg1);
+                case EditorActionType.ChangeTimingPointBpmBatch:
+                    return new EditorActionChangeTimingPointBpmBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<TimingPointInfo>)arg1, (float)arg2);
+                case EditorActionType.ChangeTimingPointOffsetBatch:
+                    return new EditorActionChangeTimingPointOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<TimingPointInfo>)arg1, (float)arg2);
+                case EditorActionType.ChangeScrollVelocityOffsetBatch:
+                    return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<SliderVelocityInfo>)arg1, (float)arg2);
+                case EditorActionType.ChangeScrollVelocityMultiplierBatch:
+                    return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, (List<SliderVelocityInfo>)arg1, (float)arg2);
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
