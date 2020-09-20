@@ -7,6 +7,7 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Edit.Actions.Batch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -240,6 +241,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             UndoStack.Push(action);
             RedoStack.Clear();
         }
+
+        public void PerformBatch(List<IEditorAction> actions) => Perform(new EditorActionBatch(this, actions));
 
         /// <summary>
         ///     Undos the first action in the stack
