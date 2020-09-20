@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch
 {
+    [MoonSharpUserData]
     public class EditorActionChangeScrollVelocityOffsetBatch : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangeScrollVelocityOffsetBatch;
@@ -16,6 +19,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch
 
         private float Offset { get; }
 
+        [MoonSharpVisible(false)]
         public EditorActionChangeScrollVelocityOffsetBatch(EditorActionManager manager, Qua workingMap, List<SliderVelocityInfo> svs,
             float offset)
         {
@@ -25,6 +29,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch
             Offset = offset;
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             foreach (var tp in ScrollVelocities)
@@ -34,6 +39,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch
             ActionManager.TriggerEvent(Type, new EditorChangedScrollVelocityOffsetBatchEventArgs(ScrollVelocities, Offset));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionChangeScrollVelocityOffsetBatch(ActionManager, WorkingMap, ScrollVelocities, -Offset).Perform();
     }
 }

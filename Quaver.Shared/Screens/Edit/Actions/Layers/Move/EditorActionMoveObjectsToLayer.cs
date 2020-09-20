@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Layers.Move
 {
+    [MoonSharpUserData]
     public class EditorActionMoveObjectsToLayer : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.MoveToLayer;
@@ -24,6 +27,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Move
         /// <param name="workingMap"></param>
         /// <param name="layer"></param>
         /// <param name="hitObjects"></param>
+        [MoonSharpVisible(false)]
         public EditorActionMoveObjectsToLayer(EditorActionManager manager, Qua workingMap, EditorLayerInfo layer,
             List<HitObjectInfo> hitObjects)
         {
@@ -33,6 +37,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Move
             HitObjects = hitObjects;
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             OriginalLayers = new List<int>();
@@ -51,6 +56,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Move
             });
         }
 
+        [MoonSharpVisible(false)]
         public void Undo()
         {
             for (var i = 0; i < HitObjects.Count; i++)

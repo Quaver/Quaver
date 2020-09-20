@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch
 {
+    [MoonSharpUserData]
     public class EditorActionChangeTimingPointBpmBatch : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangeTimingPointBpmBatch;
@@ -19,6 +22,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch
 
         private float NewBpm { get; }
 
+        [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointBpmBatch(EditorActionManager manager, Qua workingMap, List<TimingPointInfo> tps,
             float newBpm)
         {
@@ -31,12 +35,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch
             NewBpm = newBpm;
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             TimingPoints.ForEach(x => x.Bpm = NewBpm);
             ActionManager.TriggerEvent(EditorActionType.ChangeTimingPointBpmBatch, new EditorChangedTimingPointBpmBatchEventArgs(TimingPoints));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo()
         {
             for (var i = 0; i < TimingPoints.Count; i++)

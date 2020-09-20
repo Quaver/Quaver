@@ -6,9 +6,12 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Wobble.Bindables;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
 {
+    [MoonSharpUserData]
     public class EditorActionRemoveLayer : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.RemoveLayer;
@@ -32,6 +35,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
         /// <param name="workingMap"></param>
         /// <param name="selectedHitObjects"></param>
         /// <param name="layer"></param>
+        [MoonSharpVisible(false)]
         public EditorActionRemoveLayer(EditorActionManager manager, Qua workingMap, BindableList<HitObjectInfo> selectedHitObjects,
             EditorLayerInfo layer)
         {
@@ -41,6 +45,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
             SelectedHitObjects = selectedHitObjects;
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             var index = WorkingMap.EditorLayers.IndexOf(Layer) + 1;
@@ -61,6 +66,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
             ActionManager.TriggerEvent(EditorActionType.RemoveLayer, new EditorLayerRemovedEventArgs(Layer));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo()
         {
             new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, HitObjectsInLayer).Perform();
