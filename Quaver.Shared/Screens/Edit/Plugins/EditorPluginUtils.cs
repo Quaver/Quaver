@@ -35,14 +35,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="endTime"></param>
         /// <param name="hitsounds"></param>
         /// <returns></returns>
-        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitsounds = 0)
+        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitsounds = 0, int editorLayer = 0)
         {
             var ho = new HitObjectInfo()
             {
                 StartTime = startTime,
                 Lane = lane,
                 EndTime = endTime,
-                HitSound = hitsounds
+                HitSound = hitsounds,
+                EditorLayer = editorLayer
             };
 
             return ho;
@@ -64,6 +65,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             };
 
             return tp;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="hidden"></param>
+        /// <param name="colorRgb"></param>
+        /// <returns></returns>
+        public static EditorLayerInfo CreateEditorLayer(string name, bool hidden = false, string colorRgb = null)
+        {
+            var layer = new EditorLayerInfo()
+            {
+                Name = name,
+                Hidden = hidden,
+                ColorRgb = colorRgb
+            };
+
+            return layer;
         }
 
         /// <summary>

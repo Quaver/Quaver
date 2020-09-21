@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Edit
         public EditorVisualTestBackground BackgroundStore { get; }
 
         /// <summary>
-        ///     The cvrrently active skin
+        ///     The currently active skin
         /// </summary>
         public Bindable<SkinStore> Skin { get; private set; }
 
@@ -175,6 +175,10 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public Bindable<bool> PlaceObjectsOnNearestTick { get; } = ConfigManager.EditorPlaceObjectsOnNearestTick ?? new Bindable<bool>(true);
+
+        /// <summary>
+        /// </summary>
+        public Bindable<bool> LiveMapping { get; } = ConfigManager.EditorLiveMapping ?? new Bindable<bool>(true);
 
         /// <summary>
         /// </summary>
@@ -352,6 +356,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (PlaceObjectsOnNearestTick != ConfigManager.EditorPlaceObjectsOnNearestTick)
                 PlaceObjectsOnNearestTick.Dispose();
+
+            if (LiveMapping != ConfigManager.EditorLiveMapping)
+                LiveMapping.Dispose();
 
             if (ShowWaveform != ConfigManager.EditorShowWaveform)
                 ShowWaveform.Dispose();
@@ -731,6 +738,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
+            if (!LiveMapping.Value)
+                return;
+
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
@@ -1221,8 +1231,6 @@ namespace Quaver.Shared.Screens.Edit
             if (Exiting)
                 return;
 
-            GameBase.Game.IsMouseVisible = false;
-
             if (WorkingMap.HitObjects.Count(x => x.StartTime >= Track.Time) == 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "There aren't any hitobjects to play past this point!");
@@ -1234,6 +1242,8 @@ namespace Quaver.Shared.Screens.Edit
                 NotificationManager.Show(NotificationLevel.Warning, "Finish what you're doing before test playing!");
                 return;
             }
+
+            GameBase.Game.IsMouseVisible = false;
 
             Exit(() =>
             {

@@ -72,7 +72,7 @@ namespace Quaver.Shared.Graphics
             if (userGroups.HasFlag(UserGroups.Bot))
                 return ColorHelper.HexToColor($"#f8ff97");
             if (userGroups.HasFlag(UserGroups.Admin))
-                return ColorHelper.HexToColor($"#708df9");
+                return ColorHelper.HexToColor($"#ef2828");
             if (userGroups.HasFlag(UserGroups.Moderator))
                 return ColorHelper.HexToColor($"#4cb0f7");
             if (userGroups.HasFlag(UserGroups.RankingSupervisor))

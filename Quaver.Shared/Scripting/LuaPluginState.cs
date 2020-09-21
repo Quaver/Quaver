@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Numerics;
 using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Scripting
@@ -45,5 +46,10 @@ namespace Quaver.Shared.Scripting
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void SetValue(string key, object value) => Values[key] = value;
+
+        /// <summary>
+        ///     Width and height of the current Quaver window
+        /// </summary>
+        public Vector2 WindowSize { get; set; }
     }
 }

@@ -309,6 +309,9 @@ namespace Quaver.Shared.Database.Maps
                     }
                 }
             }
+
+            var outdated = FetchAll().FindAll(x => x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version);
+            OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Update].AddRange(outdated);
         }
 
         /// <summary>

@@ -196,6 +196,11 @@ namespace Quaver.Shared.Database.Scores
         public double RankedAccuracy { get; set; }
 
         /// <summary>
+        ///     The version of the difficulty calculator used for this score
+        /// </summary>
+        public string DifficultyProcessorVersion { get; set; }
+
+        /// <summary>
         ///     If the score is an online score.
         /// </summary>
         [Ignore]

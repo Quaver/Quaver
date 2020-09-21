@@ -210,16 +210,40 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (currentPoint != null)
                 {
                     NeedsToScrollToLastSelectedPoint = true;
-                    if (!SelectedTimingPoints.Contains(currentPoint))
-                        SelectedTimingPoints.Add(currentPoint);
-                }
 
+                    var newSelection = new List<TimingPointInfo> { currentPoint };
+
+                    if (KeyboardManager.IsCtrlDown() || KeyboardManager.IsShiftDown())
+                        newSelection.AddRange(SelectedTimingPoints);
+
+                    if (KeyboardManager.IsShiftDown() && SelectedTimingPoints.Count > 0)
+                    {
+                        var sorted = SelectedTimingPoints.OrderBy(x => x.StartTime);
+                        var min = sorted.First().StartTime;
+                        var max = sorted.Last().StartTime;
+                        if (currentPoint.StartTime < min)
+                        {
+                            var tpsInRange = Screen.WorkingMap.TimingPoints
+                                .Where(tp => tp.StartTime >= currentPoint.StartTime && tp.StartTime <= min);
+                            newSelection.AddRange(tpsInRange);
+                        }
+                        else if (currentPoint.StartTime > max)
+                        {
+                            var tpsInRange = Screen.WorkingMap.TimingPoints
+                                .Where(tp => tp.StartTime >= max && tp.StartTime <= currentPoint.StartTime);
+                            newSelection.AddRange(tpsInRange);
+                        }
+                    }
+
+                    SelectedTimingPoints.Clear();
+                    SelectedTimingPoints.AddRange(newSelection.Distinct());
+                }
             }
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25);
-                ImGui.Text("This will add the timing point at the current editor timestamp to your current timing point selection.");
+                ImGui.Text("This will select the timing point at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all timing points up to that range, if one is selected already.");
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
@@ -487,7 +511,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             var clonedObjects = new List<TimingPointInfo>();
 
-            var difference = (int)Math.Round(Screen.Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
+            var pasteTime = Clipboard.Select(x => x.StartTime).Min();
+            var difference = (int)Math.Round(Screen.Track.Time - pasteTime, MidpointRounding.AwayFromZero);
 
             foreach (var obj in Clipboard)
             {

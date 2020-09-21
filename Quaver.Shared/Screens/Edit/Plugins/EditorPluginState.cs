@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The current time in the song
         /// </summary>
-        public int SongTime { get; [MoonSharpVisible(false)] set; }
+        public double SongTime { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     The objects that are currently selected by the user
@@ -27,6 +27,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     The current timing point in the map
         /// </summary>
         public TimingPointInfo CurrentTimingPoint { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
+        ///     The currently selected editor layer
+        /// </summary>
+        public EditorLayerInfo CurrentLayer { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
+        ///     The currently selected beat snap
+        /// </summary>
+        public int CurrentSnap { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     ImGui options used to set styles/fonts for the window
