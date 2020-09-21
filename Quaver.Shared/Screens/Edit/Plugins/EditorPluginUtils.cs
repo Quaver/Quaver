@@ -91,9 +91,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="time"></param>
         /// <returns></returns>
         public static string MillisecondsToTime(float time) => TimeSpan.FromMilliseconds(time).ToString(@"mm\:ss\.fff");
-
-        public static void OpenUrl(string url, bool forceNormalBrowser = false) => BrowserHelper.OpenURL(url, forceNormalBrowser);
-
+        
         public static bool IsKeyPressed(Keys k) => KeyboardManager.IsUniqueKeyPress(k);
 
         public static bool IsKeyReleased(Keys k) => KeyboardManager.IsUniqueKeyRelease(k);
