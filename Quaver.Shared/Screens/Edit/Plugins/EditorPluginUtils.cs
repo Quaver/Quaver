@@ -68,6 +68,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         }
 
         /// <summary>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="hidden"></param>
+        /// <param name="colorRgb"></param>
+        /// <returns></returns>
+        public static EditorLayerInfo CreateEditorLayer(string name, bool hidden = false, string colorRgb = null)
+        {
+            var layer = new EditorLayerInfo()
+            {
+                Name = name,
+                Hidden = hidden,
+                ColorRgb = colorRgb
+            };
+
+            return layer;
+        }
+
+        /// <summary>
         ///     Converts milliseconds to the appropriate mm:ss:ms time
         /// </summary>
         /// <param name="time"></param>

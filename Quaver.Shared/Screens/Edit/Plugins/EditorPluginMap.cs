@@ -27,6 +27,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public GameMode Mode { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     If the scroll velocities are in normalized format (BPM does not affect scroll velocity).
+        /// </summary>
+        public bool Normalized { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     The slider velocities present in the map
         /// </summary>
         public List<SliderVelocityInfo> ScrollVelocities { get; [MoonSharpVisible(false)] set; }
@@ -42,6 +47,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<TimingPointInfo> TimingPoints { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     The editor layers that are currently in the map
+        /// </summary>
+        public List<EditorLayerInfo> EditorLayers { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     Total mp3 length
         /// </summary>
         public double TrackLength { get; [MoonSharpVisible(false)] set; }
@@ -53,7 +63,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             TimingPoints = Map.TimingPoints;
             ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
             HitObjects = Map.HitObjects;
+            EditorLayers = Map.EditorLayers;
             TrackLength = Track.Length;
+            Normalized = Map.BPMDoesNotAffectScrollVelocity;
         }
 
         public override string ToString() => Map.ToString();
@@ -100,6 +112,5 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="time"></param>
         /// <returns></returns>
         public double GetNearestSnapTimeFromTime(bool forwards, int snap, float time) => AudioEngine.GetNearestSnapTimeFromTime(Map, forwards ? Direction.Forward : Direction.Backward, snap, time);
-
     }
 }

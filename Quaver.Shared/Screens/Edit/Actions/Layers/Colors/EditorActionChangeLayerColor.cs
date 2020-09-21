@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Colors
         public void Perform()
         {
             Layer.ColorRgb = $"{NewColor.R},{NewColor.G},{NewColor.B}";
-            ActionManager.TriggerEvent(Type, new  EditorLayerColorChangedEventArgs(Layer, OriginalColor, NewColor));
+            ActionManager.TriggerEvent(Type, new EditorLayerColorChangedEventArgs(Layer, OriginalColor, NewColor));
         }
 
         public void Undo() => new EditorActionChangeLayerColor(ActionManager, WorkingMap, Layer, OriginalColor).Perform();

@@ -29,6 +29,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public TimingPointInfo CurrentTimingPoint { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     The currently selected editor layer
+        /// </summary>
+        public EditorLayerInfo CurrentLayer { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     The currently selected beat snap
         /// </summary>
         public int CurrentSnap { get; [MoonSharpVisible(false)] set; }
