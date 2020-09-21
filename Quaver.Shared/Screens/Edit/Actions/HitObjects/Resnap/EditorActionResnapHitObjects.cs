@@ -62,13 +62,16 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
             {
                 // Using AudioEngine.GetNearestSnapTimeFromTime is unreliable since it might not return the current snap
                 var startTimeDelta = DiffToClosestSnap(note.StartTime);
+                
                 if (startTimeDelta != 0)
                     note.StartTime -= startTimeDelta;
 
                 var endTimeDelta = 0;
+
                 if (note.IsLongNote)
                 {
                     endTimeDelta = DiffToClosestSnap(note.EndTime);
+
                     if (endTimeDelta != 0f)
                         note.EndTime -= endTimeDelta;
                 }
@@ -82,6 +85,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
             {
                 var notifMessage = $"Resnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
                 NotificationManager.Show(NotificationLevel.Info, notifMessage);
+
                 ActionManager.TriggerEvent(EditorActionType.ResnapHitObjects, new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap));
             }
             else
@@ -100,11 +104,13 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
             var msPerSnaps = Snaps.Select(s => timingPoint.MillisecondsPerBeat / s).ToList();
 
             var smallestDelta = float.MaxValue;
+
             foreach (var msPerSnap in msPerSnaps)
             {
                 var deltaForward = (time - timingPoint.StartTime) % msPerSnap;
                 var deltaBackward = deltaForward - msPerSnap;
                 var delta = deltaForward < -deltaBackward ? deltaForward : deltaBackward;
+
                 if (Math.Abs(delta) < Math.Abs(smallestDelta))
                     smallestDelta = delta;
             }
@@ -125,7 +131,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
             }
 
             ActionManager.TriggerEvent(EditorActionType.ResnapHitObjects, new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap));
-            
+
             var offsnapCount = noteTimeAdjustments.Values.Count(x => x.Item1 != 0 || x.Item2 != 0);
             var notifMessage = $"Unsnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
             NotificationManager.Show(NotificationLevel.Info, notifMessage);
