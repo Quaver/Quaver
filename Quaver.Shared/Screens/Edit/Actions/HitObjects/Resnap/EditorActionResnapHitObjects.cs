@@ -124,6 +124,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
                 note.EndTime += adjustment.Value.Item2;
             }
 
+            ActionManager.TriggerEvent(EditorActionType.ResnapHitObjects, new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap));
+            
             var offsnapCount = noteTimeAdjustments.Values.Count(x => x.Item1 != 0 || x.Item2 != 0);
             var notifMessage = $"Unsnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
             NotificationManager.Show(NotificationLevel.Info, notifMessage);
