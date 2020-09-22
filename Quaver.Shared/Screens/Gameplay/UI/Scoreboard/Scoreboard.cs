@@ -155,6 +155,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <exception cref="NotImplementedException"></exception>
         private void OnGameJudgements(object sender, GameJudgementsEventArgs e)
         {
+            if (OnlineManager.CurrentGame != null && OnlineManager.IsSpectatingSomeone)
+                return;
+
             ScoreboardUser user = null;
 
             foreach (var u in Users)

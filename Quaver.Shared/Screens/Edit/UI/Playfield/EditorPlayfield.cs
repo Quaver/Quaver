@@ -350,6 +350,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
+            ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
@@ -453,6 +454,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
+            ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
@@ -989,6 +991,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             RefreshHitObjectBatch(e.HitObjects);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectsResnapped(object sender, EditorActionHitObjectsResnappedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            ResetObjectPositions();
+            InitializeHitObjectPool();
         }
 
         /// <summary>

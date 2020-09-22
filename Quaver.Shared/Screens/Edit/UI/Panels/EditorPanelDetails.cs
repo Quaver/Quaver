@@ -98,6 +98,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
+            ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
             ActionManager.LongNoteResized += OnLongNoteResized;
         }
 
@@ -117,6 +118,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
+            ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
             ActionManager.LongNoteResized -= OnLongNoteResized;
 
             base.Destroy();
@@ -297,6 +299,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectsResnapped(object sender, EditorActionHitObjectsResnappedEventArgs e) => UpdateObjects();
 
         /// <summary>
         /// </summary>

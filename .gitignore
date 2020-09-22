@@ -302,6 +302,9 @@ __pycache__/
 # OpenCover UI analysis results
 OpenCover/
 
-# Content 
+# Content
 Quaver/Content/*
 *.mgcb
+
+# Custom user VSCode settings
+.vscode/settings.json
