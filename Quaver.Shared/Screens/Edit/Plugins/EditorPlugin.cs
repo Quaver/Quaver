@@ -96,6 +96,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
             EditorPluginMap.Map = Editor.WorkingMap;
             EditorPluginMap.Track = Editor.Track;
+            EditorPluginMap.DefaultLayer = Editor.DefaultLayer;
             EditorPluginMap.SetFrameState();
             WorkingScript.Globals["map"] = EditorPluginMap;
 
