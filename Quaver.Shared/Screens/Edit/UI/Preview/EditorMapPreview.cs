@@ -58,6 +58,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
+            ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
             ActionManager.LongNoteResized += OnLongNoteResized;
             ActionManager.ScrollVelocityAdded += OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
@@ -86,6 +87,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
+            ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
             ActionManager.LongNoteResized -= OnLongNoteResized;
             ActionManager.ScrollVelocityAdded -= OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
@@ -127,6 +129,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnHitObjectBatchPlaced(object sender, EditorHitObjectBatchPlacedEventArgs e) => Refresh();
 
         private void OnHitObjectBatchRemoved(object sender, EditorHitObjectBatchRemovedEventArgs e) => Refresh();
+
+        private void OnHitObjectsResnapped(object sender, EditorActionHitObjectsResnappedEventArgs e) => Refresh();
 
         private void OnLongNoteResized(object sender, EditorLongNoteResizedEventArgs e) => Refresh();
 

@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -18,8 +21,10 @@ using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
@@ -38,6 +43,8 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Components;
 using Wobble.Bindables;
+using Wobble.Graphics;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -110,6 +117,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of hitobjects have been moved
         /// </summary>
         public event EventHandler<EditorHitObjectsMovedEventArgs> HitObjectsMoved;
+
+        /// <summary>
+        ///     Event invoked when hitobjects have been resnapped
+        /// </summary>
+        public event EventHandler<EditorActionHitObjectsResnappedEventArgs> HitObjectsResnapped;
 
         /// <summary>
         ///     Event invoked when a hitsound has been added to a group of objects
@@ -405,10 +417,61 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset) => Perform(new EditorActionChangeTimingPointOffsetBatch(this, WorkingMap, tps, offset));
 
         /// <summary>
-        /// Resets a timing point back to zero
+        ///     Resets a timing point back to zero
         /// </summary>
         /// <param name="tp"></param>
         public void ResetTimingPoint(TimingPointInfo tp) => Perform(new EditorActionResetTimingPoint(this, WorkingMap, tp));
+
+        /// <summary>
+        ///     Adds an editor layer to the map
+        /// </summary>
+        /// <param name="layer"></param>
+        public void CreateLayer(EditorLayerInfo layer) => Perform(new EditorActionCreateLayer(WorkingMap, this, EditScreen.SelectedHitObjects, layer));
+
+        /// <summary>
+        ///     Removes a non-default editor layer from the map
+        /// </summary>
+        /// <param name="layer"></param>
+        public void RemoveLayer(EditorLayerInfo layer)
+        {
+            if (layer != EditScreen.DefaultLayer)
+                Perform(new EditorActionRemoveLayer(this, WorkingMap, EditScreen.SelectedHitObjects, layer));
+        }
+
+        /// <summary>
+        ///     Changes the name of a non-default editor layer
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="name"></param>
+        public void RenameLayer(EditorLayerInfo layer, string name)
+        {
+            if (layer != EditScreen.DefaultLayer)
+                Perform(new EditorActionRenameLayer(this, WorkingMap, layer, name));
+        }
+
+        /// <summary>
+        ///     Changes the editor layer of existing hitobjects
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="hitObjects"></param>
+        public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects));
+
+        /// <summary>
+        ///     Changes the color of a non-default editor layer
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="color"></param>
+        public void ChangeLayerColor(EditorLayerInfo layer, Color color)
+        {
+            if (layer != EditScreen.DefaultLayer)
+                Perform(new EditorActionChangeLayerColor(this, WorkingMap, layer, color));
+        }
+
+        /// <summary>
+        ///     Toggles the visibility of an existing editor layer
+        /// </summary>
+        /// <param name="layer"></param>
+        public void ToggleLayerVisibility(EditorLayerInfo layer) => Perform(new EditorActionToggleLayerVisibility(this, WorkingMap, layer));
 
         /// <summary>
         /// </summary>
@@ -434,6 +497,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
             EditScreen.SelectedHitObjects.AddRange(existingHitObjects);
         }
+
+        /// <summary>
+        ///     Resnaps all notes in a given map to the closest of the specified snaps in the list.
+        /// </summary>
+        /// <remarks>
+        ///     The reason for working with multiple snaps is because using the first common multiple
+        ///     might not be accurate enough in terms of milliseconds. An example for this would be to
+        ///     resnap to 1/12 and 1/16 in a 200BPM map, which would result in a common multiple of 1/192.
+        ///     This results in a time of 1.56ms per snap, which is not accurate enough for our purposes.
+        /// </remarks>
+        /// <param name="snaps">List of snaps to snap to</param>
+        public void ResnapAllNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps, hitObjectsToResnap));
 
         /// <summary>
         ///     Detects the BPM of the map and returns the object instance
@@ -539,6 +614,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     ScrollVelocityMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollVelocityMultiplierBatchEventArgs)args);
                     break;
+                case EditorActionType.ResnapHitObjects:
+                    HitObjectsResnapped?.Invoke(this, (EditorActionHitObjectsResnappedEventArgs)args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -577,6 +655,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             TimingPointOffsetBatchChanged = null;
             ScrollVelocityOffsetBatchChanged = null;
             ScrollVelocityMultiplierBatchChanged = null;
+            HitObjectsResnapped = null;
         }
     }
 }

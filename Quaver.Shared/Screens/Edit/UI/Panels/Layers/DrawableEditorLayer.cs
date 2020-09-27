@@ -205,7 +205,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Tint = GetColor()
             };
 
-            Visibility.BindedValue.ValueChanged += (sender, args) => Item.Hidden = !Item.Hidden;
+            Visibility.BindedValue.ValueChanged += (sender, args) => LayerContainer.ActionManager.ToggleLayerVisibility(Item);
         }
 
         /// <summary>
