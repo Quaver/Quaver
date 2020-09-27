@@ -47,9 +47,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<TimingPointInfo> TimingPoints { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
-        ///     The editor layers that are currently in the map
+        ///     The non-default editor layers that are currently in the map
         /// </summary>
         public List<EditorLayerInfo> EditorLayers { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
+        ///     The default editor layer
+        /// </summary>
+        public EditorLayerInfo DefaultLayer { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     Total mp3 length
