@@ -510,6 +510,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Editor Functions"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/editor_functions");
 
+            if (ImGui.MenuItem("Plugins"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/plugins");
+
             ImGui.EndMenu();
         }
 
