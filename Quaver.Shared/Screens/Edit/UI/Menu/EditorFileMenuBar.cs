@@ -264,18 +264,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.BeginMenu("Resnap All Notes"))
             {
                 if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
-                    Screen.ActionManager.ResnapAllNotes(new List<int> { Screen.BeatSnap.Value }, Screen.WorkingMap.HitObjects);
+                    Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.WorkingMap.HitObjects);
                 if (ImGui.MenuItem("Resnap to 1/16 and 1/12 snaps"))
-                    Screen.ActionManager.ResnapAllNotes(new List<int> { 16, 12 }, Screen.WorkingMap.HitObjects);
+                    Screen.ActionManager.ResnapNotes(new List<int> { 16, 12 }, Screen.WorkingMap.HitObjects);
                 ImGui.EndMenu();
             }
 
             if (ImGui.BeginMenu("Resnap Selected Notes"))
             {
                 if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
-                    Screen.ActionManager.ResnapAllNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
+                    Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
                 if (ImGui.MenuItem("Resnap to 1/16 and 1/12 snaps"))
-                    Screen.ActionManager.ResnapAllNotes(new List<int> { 16, 12 }, Screen.SelectedHitObjects.Value);
+                    Screen.ActionManager.ResnapNotes(new List<int> { 16, 12 }, Screen.SelectedHitObjects.Value);
                 ImGui.EndMenu();
             }
 
