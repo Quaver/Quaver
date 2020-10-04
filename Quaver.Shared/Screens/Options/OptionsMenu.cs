@@ -199,6 +199,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Gameplay Overlay (Shift + F6)", ConfigManager.DisplayGameplayOverlay),
+                        new OptionsItemCheckbox(containerRect, "Display Notifications During Gameplay", ConfigManager.DisplayNotificationsInGameplay),
                         new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
                         new OptionsItemCheckbox(containerRect, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                         new OptionsItemCheckbox(containerRect, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),

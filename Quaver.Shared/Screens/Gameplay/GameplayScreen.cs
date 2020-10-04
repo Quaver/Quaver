@@ -760,7 +760,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
 
                 // Show notification to the user that their score is invalid.
-                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "WARNING! Your score will not be submitted due to pausing during gameplay!", null, true);
 
                 // Add the pause mod to their score.
                 if (!ModManager.IsActivated(ModIdentifier.Paused))
@@ -849,7 +850,7 @@ namespace Quaver.Shared.Screens.Gameplay
             switch (TimesRequestedToPause)
             {
                 case 1:
-                    NotificationManager.Show(NotificationLevel.Warning, "Press the exit button once more to quit.");
+                    NotificationManager.Show(NotificationLevel.Warning, "Press the exit button once more to quit.", null, true);
                     break;
                 default:
                     var game = GameBase.Game as QuaverGame;
@@ -1053,7 +1054,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 OnlineManager.Client?.RequestToSkipSong();
                 RequestedToSkipSong = true;
-                NotificationManager.Show(NotificationLevel.Info, "Requested to skip song. Waiting for all other players to skip!");
+                NotificationManager.Show(NotificationLevel.Info, "Requested to skip song. Waiting for all other players to skip!", null, true);
                 return;
             }
 
@@ -1217,7 +1218,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Exiting)
                 return;
 
-            NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!");
+            NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!", null, true);
             OffsetConfirmDialog.Exit(this);
         }
 
@@ -1516,7 +1517,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
                 }
 
-                NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.");
+                NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.", null, true);
             }
 
             // Only allow offset changes if the map hasn't started or if we're on a break
@@ -1535,12 +1536,15 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value += change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset += change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
                 }
@@ -1551,12 +1555,15 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value -= change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset -= change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
                 }
@@ -1574,7 +1581,8 @@ namespace Quaver.Shared.Screens.Gameplay
             ConfigManager.DisplayGameplayOverlay.Value = !ConfigManager.DisplayGameplayOverlay.Value;
             var on = ConfigManager.DisplayGameplayOverlay.Value ? "on" : "off";
 
-            NotificationManager.Show(NotificationLevel.Info, $"Gameplay overlay is now {on}. Press Shift+F6 to toggle the display.");
+            NotificationManager.Show(NotificationLevel.Info,
+                $"Gameplay overlay is now {on}. Press Shift+F6 to toggle the display.", null, true);
         }
     }
 }
