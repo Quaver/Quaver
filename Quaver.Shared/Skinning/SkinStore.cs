@@ -28,9 +28,14 @@ namespace Quaver.Shared.Skinning
     public class SkinStore
     {
         /// <summary>
+        ///     The folder name of the skin
+        /// </summary>
+        public string Skin { get; }
+
+        /// <summary>
         ///     The directory of the skin.
         /// </summary>
-        internal static string Dir
+        public string Dir
         {
             get
             {
@@ -38,9 +43,9 @@ namespace Quaver.Shared.Skinning
                     return "";
 
                 if (!ConfigManager.UseSteamWorkshopSkin.Value)
-                    return $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
+                    return $"{ConfigManager.SkinDirectory.Value}/{Skin}";
 
-                return $"{ConfigManager.SteamWorkshopDirectory.Value}/{ConfigManager.Skin.Value}";
+                return $"{ConfigManager.SteamWorkshopDirectory.Value}/{Skin}";
             }
         }
 
@@ -237,8 +242,9 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
         /// </summary>
-        internal SkinStore()
+        internal SkinStore(string skin = null)
         {
+            Skin = string.IsNullOrEmpty(skin) ? ConfigManager.Skin.Value : skin;
             LoadConfig();
 
             // Load up Keys game mode skins.
@@ -334,7 +340,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal static List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
+        internal  List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
             string extension = ".png")
         {
             try

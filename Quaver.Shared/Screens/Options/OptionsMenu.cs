@@ -237,6 +237,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Selection", new List<OptionsItem>()
                     {
                         new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin),
+                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin),
                         new OptionsItemDefaultSkin(containerRect, "Default Skin", ConfigManager.DefaultSkin)
                     }),
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()
