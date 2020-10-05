@@ -41,12 +41,29 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The currently selected skin
         /// </summary>
-        public static SkinStore Skin { get; private set; }
+        public static SkinStore Skin { get; set; }
+
+        /// <summary>
+        ///     The skin for player 2 in the tournament screen
+        /// </summary>
+        public static SkinStore TournamentPlayer2Skin { get; set; }
 
         /// <summary>
         ///     Loads the currently selected skin
         /// </summary>
-        public static void Load() => Skin = new SkinStore();
+        public static void Load()
+        {
+            Skin = new SkinStore();
+
+            if (ConfigManager.TournamentPlayer2Skin.Value == null ||
+                ConfigManager.TournamentPlayer2Skin.Value == ConfigManager.Skin.Value)
+            {
+                TournamentPlayer2Skin = Skin;
+                return;
+            }
+
+            TournamentPlayer2Skin = new SkinStore(ConfigManager.TournamentPlayer2Skin.Value);
+        }
 
         /// <summary>
         /// </summary>

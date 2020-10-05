@@ -559,7 +559,7 @@ namespace Quaver.Shared.Skinning
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode).ToLower()}/{folder.ToString()}";
-            return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
+            return SkinStore.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource);
         }
 
         /// <summary>
@@ -586,7 +586,7 @@ namespace Quaver.Shared.Skinning
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode).ToLower()}/{folder.ToString()}/";
-            return SkinStore.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
+            return Store.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
         }
 
         /// <summary>
