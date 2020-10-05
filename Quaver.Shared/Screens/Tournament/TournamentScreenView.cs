@@ -89,9 +89,9 @@ namespace Quaver.Shared.Screens.Tournament
 
             Background?.Draw(gameTime);
             DrawPlayfields(gameTime);
-            DrawProgressBar(gameTime);
             DrawSkipDisplay(gameTime);
             Container?.Draw(gameTime);
+            DrawProgressBar(gameTime);
         }
 
         /// <inheritdoc />
