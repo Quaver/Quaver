@@ -22,6 +22,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Settings.Inverted.ValueChanged += (sender, args) => SetText();
             Settings.DimWhenLosing.ValueChanged += (sender, args) => SetText();
             Settings.FontSizeWhenLosing.ValueChanged += (sender, args) => SetText();
+            Settings.MaxWidth.ValueChanged += (sender, args) => SetText();
         }
 
         public virtual void SetText() => ScheduleUpdate(UpdateState);
@@ -38,6 +39,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Position = new ScalableVector2(Settings.Position.Value.X, Settings.Position.Value.Y);
             Alignment = Settings.Alignment.Value;
             Tint = Settings.Tint.Value;
+            TruncateWithEllipsis(Settings.MaxWidth.Value);
         }
     }
 }

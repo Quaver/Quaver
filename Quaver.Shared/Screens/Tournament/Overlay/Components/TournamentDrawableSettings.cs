@@ -61,6 +61,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         public BindableInt FontSizeWhenLosing { get; } = new BindableInt(20, 1, int.MaxValue);
 
         /// <summary>
+        ///     The max width the text will have until it truncates with an ellipsis.
+        /// </summary>
+        public BindableInt MaxWidth { get; } = new BindableInt(int.MaxValue, 1, int.MaxValue);
+
+        /// <summary>
         /// </summary>
         /// <param name="name"></param>
         public TournamentDrawableSettings(string name)
@@ -79,6 +84,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Inverted.Value = ConfigHelper.ReadBool(Inverted.Default, ini[$"{Name}Inverted"]);
             DimWhenLosing.Value = ConfigHelper.ReadBool(DimWhenLosing.Default, ini[$"{Name}DimWhenLosing"]);
             FontSizeWhenLosing.Value = ConfigHelper.ReadInt32(FontSizeWhenLosing.Default, ini[$"{Name}FontSizeWhenLosing"]);
+            MaxWidth.Value = ConfigHelper.ReadInt32(MaxWidth.Value, ini[$"{Name}MaxWidth"]);
         }
 
         /// <inheritdoc />
@@ -95,6 +101,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Font.Dispose();
             DimWhenLosing.Dispose();
             FontSizeWhenLosing.Dispose();
+            MaxWidth.Dispose();
         }
     }
 }
