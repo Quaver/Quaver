@@ -42,11 +42,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
                 }
                 else
                 {
-                    if (Settings.DimWhenLosing.Value)
-                        Tint = new Color(color.R / 2, color.G / 2, color.B / 2);
-                    else
-                        Tint = color;
-
+                    Tint = Settings.ColorWhenLosing.Value;
                     FontSize = Settings.FontSizeWhenLosing.Value;
                 }
 
