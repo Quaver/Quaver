@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         /// <summary>
         /// </summary>
-        public TournamentDrawableSettings DifficultyNameSettings { get; } = new TournamentDrawableSettings("DifficultyName");
+        public TournamentSettingsDifficultyRating DifficultyNameSettings { get; } = new TournamentSettingsDifficultyRating("DifficultyName");
 
         /// <summary>
         /// </summary>
