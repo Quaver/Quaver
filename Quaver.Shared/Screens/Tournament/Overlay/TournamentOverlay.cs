@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         /// <summary>
         /// </summary>
-        private string Directory => $"{WobbleGame.WorkingDirectory}/Tournament";
+        public static string Directory => $"{WobbleGame.WorkingDirectory}/Tournament";
 
         /// <summary>
         /// </summary>
@@ -128,6 +128,14 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public TournamentSettingsPlayerModifiers Player2ModifierSettings { get; } = new TournamentSettingsPlayerModifiers("Player2Modifiers");
 
         /// <summary>
+        /// </summary>
+        public TournamentPlayerWinnerDisplaySettings Player1WinnerDisplaySettings { get; } = new TournamentPlayerWinnerDisplaySettings("Player1WinnerDisplay");
+
+        /// <summary>
+        /// </summary>
+        public TournamentPlayerWinnerDisplaySettings Player2WinnerDisplaySettings { get; } = new TournamentPlayerWinnerDisplaySettings("Player2WinnerDisplay");
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -136,6 +144,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         ///     Displays the win counts of each player
         /// </summary>
         private List<TournamentPlayerWinCount> WinCounts { get; set; }
+
+        /// <summary>
+        ///     Displays which player is winning the match
+        /// </summary>
+        private List<TournamentPlayerWinnerDisplay> WinnerDisplays { get; set; }
 
         /// <summary>
         ///     Displays the name of the song being played
@@ -175,6 +188,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateMatchRound();
             CreateBestOf();
             CreatePlayerModifiers();
+            CreateWinnerDisplays();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -211,6 +225,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Watcher.Dispose();
             Player1ModifierSettings.Dispose();
             Player2ModifierSettings.Dispose();
+            Player1WinnerDisplaySettings.Dispose();
+            Player2WinnerDisplaySettings.Dispose();
 
             base.Destroy();
         }
@@ -264,6 +280,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 var modifiers = data["Modifiers"];
                 Player1ModifierSettings.Load(modifiers);
                 Player2ModifierSettings.Load(modifiers);
+
+                var winners = data["WinnerDisplays"];
+                Player1WinnerDisplaySettings.Load(winners);
+                Player2WinnerDisplaySettings.Load(winners);
 
                 SongTitleSettings.Load(data["Song"]);
                 DifficultyNameSettings.Load(data["DifficultyName"]);
@@ -375,6 +395,17 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             {
                 var settings = player == Players.First() ? Player1ModifierSettings : Player2ModifierSettings;
                 new TournamentPlayerModifiers(settings, player) {Parent = this};
+            }
+        }
+
+        private void CreateWinnerDisplays()
+        {
+            WinnerDisplays = new List<TournamentPlayerWinnerDisplay>();
+
+            foreach (var player in Players)
+            {
+                var settings = player == Players.First() ? Player1WinnerDisplaySettings : Player2WinnerDisplaySettings;
+                WinnerDisplays.Add(new TournamentPlayerWinnerDisplay(settings, player, Players) { Parent = this });
             }
         }
 
