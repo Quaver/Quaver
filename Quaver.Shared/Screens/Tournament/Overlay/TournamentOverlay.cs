@@ -115,7 +115,17 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         /// </summary>
         public TournamentSettingsCustomText MatchRoundSettings { get; } = new TournamentSettingsCustomText("MatchRound");
 
+        /// <summary>
+        /// </summary>
         public TournamentSettingsCustomText BestOfSettings { get; } = new TournamentSettingsCustomText("BestOf");
+
+        /// <summary>
+        /// </summary>
+        public TournamentSettingsPlayerModifiers Player1ModifierSettings { get; } = new TournamentSettingsPlayerModifiers("Player1Modifiers");
+
+        /// <summary>
+        /// </summary>
+        public TournamentSettingsPlayerModifiers Player2ModifierSettings { get; } = new TournamentSettingsPlayerModifiers("Player2Modifiers");
 
         /// <summary>
         ///     Displays the usernames of the users
@@ -164,6 +174,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateMapCreator();
             CreateMatchRound();
             CreateBestOf();
+            CreatePlayerModifiers();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -198,6 +209,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             MatchRoundSettings.Dispose();
             BestOfSettings.Dispose();
             Watcher.Dispose();
+            Player1ModifierSettings.Dispose();
+            Player2ModifierSettings.Dispose();
 
             base.Destroy();
         }
@@ -247,6 +260,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 var wins = data["Wins"];
                 Player1WinCountSettings.Load(wins);
                 Player2WinCountSettings.Load(wins);
+
+                var modifiers = data["Modifiers"];
+                Player1ModifierSettings.Load(modifiers);
+                Player2ModifierSettings.Load(modifiers);
 
                 SongTitleSettings.Load(data["Song"]);
                 DifficultyNameSettings.Load(data["DifficultyName"]);
@@ -349,6 +366,15 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             {
                 var settings = player == Players.First() ? Player1RatingSettings : Player2RatingSettings;
                 new TournamentPlayerRating(settings, player, Players) {Parent = this};
+            }
+        }
+
+        private void CreatePlayerModifiers()
+        {
+            foreach (var player in Players)
+            {
+                var settings = player == Players.First() ? Player1ModifierSettings : Player2ModifierSettings;
+                new TournamentPlayerModifiers(settings, player) {Parent = this};
             }
         }
 
