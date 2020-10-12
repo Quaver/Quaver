@@ -80,14 +80,14 @@ namespace Quaver.Shared.Screens.Tests.Tournaments
                     CountryFlag = "US",
                     Id = 1,
                     UserGroups = UserGroups.Normal
-                }), new ScoreProcessorKeys(map, 0), diffculty.OverallDifficulty),
+                }), new ScoreProcessorKeys(map, ModIdentifier.Mirror | ModIdentifier.Autoplay | ModIdentifier.Paused), diffculty.OverallDifficulty),
                 new TournamentPlayer(new User(new OnlineUser()
                 {
                     Username = "Player2",
                     CountryFlag = "CA",
                     Id = 2,
                     UserGroups = UserGroups.Normal
-                }), new ScoreProcessorKeys(map, 0), diffculty.OverallDifficulty),
+                }), new ScoreProcessorKeys(map, ModIdentifier.Speed12X | ModIdentifier.Autoplay), diffculty.OverallDifficulty),
             };
 
             var game = new MultiplayerGame()
