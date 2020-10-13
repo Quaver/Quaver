@@ -4,10 +4,12 @@ using System.Linq;
 using IniFileParser.Model;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Modifiers;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Form;
 
 namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 {
@@ -32,6 +34,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Settings.Alignment.ValueChanged += (sender, args) => UpdateState();
             Settings.Scale.ValueChanged += (sender, args) => UpdateState();
             Settings.Spacing.ValueChanged += (sender, args) => UpdateState();
+            Settings.SpacingLayout.ValueChanged += (sender, args) => UpdateState();
         }
 
         private void UpdateState()
@@ -49,16 +52,26 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             {
                 var icon = Icons[i];
 
-                icon.Y = totalSpacing;
+                switch (Settings.SpacingLayout.Value)
+                {
+                    case Layout.Horizontal:
+                        icon.Y = 0;
+                        icon.X = totalSpacing;
+                        break;
+                    case Layout.Vertical:
+                        icon.X = 0;
+                        icon.Y = totalSpacing;
+                        break;
+                }
 
                 icon.Size = new ScalableVector2(icon.Image.Width * scale, icon.Image.Height * scale);
-                totalSpacing += icon.Height;
+                totalSpacing += Settings.SpacingLayout.Value == Layout.Vertical ? icon.Height : icon.Width;
 
                 if (i != Icons.Count - 1)
                     totalSpacing += Settings.Spacing.Value;
             }
 
-            Size = new ScalableVector2(Icons.Count != 0 ? Icons.First().Width : 0, totalSpacing);
+            SetContainerSize(totalSpacing);
         }
 
         private void InitializeIcons()
@@ -85,6 +98,19 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
                 });
             }
         }
+
+        private void SetContainerSize(float totalSpacing)
+        {
+            switch (Settings.SpacingLayout.Value)
+            {
+                case Layout.Horizontal:
+                    Size = new ScalableVector2(totalSpacing, Icons.Count != 0 ? Icons.First().Height : 0);
+                    break;
+                case Layout.Vertical:
+                    Size = new ScalableVector2(Icons.Count != 0 ? Icons.First().Width : 0, totalSpacing);
+                    break;
+            }
+        }
     }
 
     public class TournamentSettingsPlayerModifiers : TournamentDrawableSettings
@@ -92,6 +118,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         public BindableInt Scale { get; } = new BindableInt(100, 0, int.MaxValue);
 
         public BindableInt Spacing { get; } = new BindableInt(20, int.MinValue, int.MaxValue);
+
+        public Bindable<Layout> SpacingLayout { get; } = new Bindable<Layout>(Layout.Vertical);
 
         public TournamentSettingsPlayerModifiers(string name) : base(name)
         {
@@ -101,6 +129,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         {
             Scale.Value = ConfigHelper.ReadInt32(Scale.Default, ini[$"{Name}Scale"]);
             Spacing.Value = ConfigHelper.ReadInt32(Spacing.Default, ini[$"{Name}Spacing"]);
+            SpacingLayout.Value = ConfigHelper.ReadEnum(Layout.Vertical, ini[$"{Name}Layout"]);
 
             base.Load(ini);
         }
@@ -109,6 +138,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         {
             Scale.Dispose();
             Spacing.Dispose();
+            SpacingLayout.Dispose();
 
             base.Dispose();
         }
