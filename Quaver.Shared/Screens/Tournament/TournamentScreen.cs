@@ -321,7 +321,9 @@ namespace Quaver.Shared.Screens.Tournament
 
                 if (replay.Frames.Count > 0)
                 {
-                    if (replay.Frames[replay.Frames.Count - 1].Time < track.Time && GameplayScreens.All(x => !x.IsPlayComplete))
+                    if (replay.Frames[replay.Frames.Count - 1].Time < track.Time
+                        && GameplayScreens.All(x => !x.IsPlayComplete)
+                        && OnlineManager.SpectatorClients.All(x => !x.Value.FinishedPlayingMap))
                     {
                         if (track.Length - track.Time > 2000)
                         {
@@ -356,10 +358,18 @@ namespace Quaver.Shared.Screens.Tournament
 
             try
             {
-                var processors = GameplayScreens.Select(x => x.Ruleset.ScoreProcessor).ToList();
-
-                if (!Exiting && (GameplayScreens.All(x => x.IsPlayComplete) && !OnlineManager.CurrentGame.InProgress))
+                if (!Exiting && (GameplayScreens.All(x => x.IsPlayComplete)
+                                 && OnlineManager.SpectatorClients.All(x => x.Value.FinishedPlayingMap)))
                 {
+                    var processors = new List<ScoreProcessor>();
+
+                    foreach (var screen in GameplayScreens)
+                    {
+                        screen.Ruleset.ScoreProcessor.PlayerName = screen.SpectatorClient.Player.OnlineUser.Username;
+                        screen.Ruleset.ScoreProcessor.SteamId = (ulong) screen.SpectatorClient.Player.OnlineUser.SteamId;
+                        processors.Add(screen.Ruleset.ScoreProcessor);
+                    }
+
                     Exit(() => new ResultsScreen(MainGameplayScreen, OnlineManager.CurrentGame,
                         processors, new List<ScoreProcessor>()));
                 }
