@@ -733,7 +733,16 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 // Force all replay frames on failure
                 if (OnlineManager.IsBeingSpectated)
+                {
                     Screen.SendReplayFramesToServer(true);
+
+                    // Send final replay frame to let spectators know the song is complete
+                    if (OnlineManager.IsBeingSpectated)
+                    {
+                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                            new List<ReplayFrame>());
+                    }
+                }
 
                 if (Screen.IsPlayTesting)
                 {
