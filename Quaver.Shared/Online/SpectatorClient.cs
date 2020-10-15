@@ -53,6 +53,11 @@ namespace Quaver.Shared.Online
         private bool HasNotifiedForThisMap { get; set; }
 
         /// <summary>
+        ///     If the user has finished playing the map that they were playing
+        /// </summary>
+        public bool FinishedPlayingMap { get; private set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="player"></param>
         public SpectatorClient(User player) => Player = player;
@@ -71,6 +76,8 @@ namespace Quaver.Shared.Online
 
             if (createNewReplay)
             {
+                FinishedPlayingMap = false;
+
                 // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
                 Replay = new Replay((GameMode) Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
                     (ModIdentifier) Player.CurrentStatus.Modifiers, Player.CurrentStatus.MapMd5);
@@ -158,6 +165,9 @@ namespace Quaver.Shared.Online
                 {
                     // Do nothing for now
                     case SpectatorClientStatus.SelectingSong:
+                        break;
+                    case SpectatorClientStatus.FinishedSong:
+                        FinishedPlayingMap = true;
                         break;
                     case SpectatorClientStatus.NewSong:
                         Replay.Frames.Clear();
