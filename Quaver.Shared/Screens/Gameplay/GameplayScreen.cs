@@ -1311,26 +1311,29 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer.Replay.Frames.Count == LastReplayFrameIndexSentToServer + 1 && !force)
                 return;
 
-            var frames = new List<ReplayFrame>();
+            OnlineManager.Client?.PerformActionOnThread(() =>
+            {
+                var frames = new List<ReplayFrame>();
 
-            for (var i = LastReplayFrameIndexSentToServer + 1; i < ReplayCapturer.Replay.Frames.Count; i++)
-                frames.Add(ReplayCapturer.Replay.Frames[i]);
+                for (var i = LastReplayFrameIndexSentToServer + 1; i < ReplayCapturer.Replay.Frames.Count; i++)
+                    frames.Add(ReplayCapturer.Replay.Frames[i]);
 
-            LastReplayFrameIndexSentToServer = ReplayCapturer.Replay.Frames.Count - 1;
+                LastReplayFrameIndexSentToServer = ReplayCapturer.Replay.Frames.Count - 1;
 
-            SpectatorClientStatus status;
+                SpectatorClientStatus status;
 
-            if (LastReplayFrameIndexSentToServer == -1)
-                status = SpectatorClientStatus.NewSong;
-            else if (IsPaused)
-                status = SpectatorClientStatus.Paused;
-            else
-                status = SpectatorClientStatus.Playing;
+                if (LastReplayFrameIndexSentToServer == -1)
+                    status = SpectatorClientStatus.NewSong;
+                else if (IsPaused)
+                    status = SpectatorClientStatus.Paused;
+                else
+                    status = SpectatorClientStatus.Playing;
 
-            if (status == SpectatorClientStatus.Playing && frames.Count == 0)
-                return;
+                if (status == SpectatorClientStatus.Playing && frames.Count == 0)
+                    return;
 
-            OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+                OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+            });
         }
 
         /// <summary>
