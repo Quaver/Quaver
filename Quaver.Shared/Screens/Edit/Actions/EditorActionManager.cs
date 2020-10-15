@@ -508,7 +508,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     This results in a time of 1.56ms per snap, which is not accurate enough for our purposes.
         /// </remarks>
         /// <param name="snaps">List of snaps to snap to</param>
-        public void ResnapAllNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps, hitObjectsToResnap));
+        /// <param name="hitObjectsToResnap">List of hitobjects to resnap</param>
+        public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps, hitObjectsToResnap));
 
         /// <summary>
         ///     Detects the BPM of the map and returns the object instance

@@ -51,14 +51,19 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         public Bindable<string> Font { get; } = new Bindable<string>(Fonts.LatoBlack);
 
         /// <summary>
-        ///     If true, the value will dim when the individual player is losing
+        ///     The color of the text when the player is losing
         /// </summary>
-        public Bindable<bool> DimWhenLosing { get; } = new Bindable<bool>(false);
+        public Bindable<Color> ColorWhenLosing { get; } = new Bindable<Color>(new Color(150, 150, 150));
 
         /// <summary>
-        ///     The font size when the user is losing if <see cref="DimWhenLosing"/> is true
+        ///     The font size when the user is losing if <see cref="ColorWhenLosing"/> is true
         /// </summary>
         public BindableInt FontSizeWhenLosing { get; } = new BindableInt(20, 1, int.MaxValue);
+
+        /// <summary>
+        ///     The max width the text will have until it truncates with an ellipsis.
+        /// </summary>
+        public BindableInt MaxWidth { get; } = new BindableInt(int.MaxValue, 1, int.MaxValue);
 
         /// <summary>
         /// </summary>
@@ -77,8 +82,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Alignment.Value = ConfigHelper.ReadEnum(Alignment.Default, ini[$"{Name}Alignment"]);
             Tint.Value = ConfigHelper.ReadColor(Tint.Default, ini[$"{Name}Color"]);
             Inverted.Value = ConfigHelper.ReadBool(Inverted.Default, ini[$"{Name}Inverted"]);
-            DimWhenLosing.Value = ConfigHelper.ReadBool(DimWhenLosing.Default, ini[$"{Name}DimWhenLosing"]);
+            ColorWhenLosing.Value = ConfigHelper.ReadColor(ColorWhenLosing.Default, ini[$"{Name}ColorWhenLosing"]);
             FontSizeWhenLosing.Value = ConfigHelper.ReadInt32(FontSizeWhenLosing.Default, ini[$"{Name}FontSizeWhenLosing"]);
+            MaxWidth.Value = ConfigHelper.ReadInt32(MaxWidth.Value, ini[$"{Name}MaxWidth"]);
         }
 
         /// <inheritdoc />
@@ -93,8 +99,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Tint.Dispose();
             Inverted.Dispose();
             Font.Dispose();
-            DimWhenLosing.Dispose();
+            ColorWhenLosing.Dispose();
             FontSizeWhenLosing.Dispose();
+            MaxWidth.Dispose();
         }
     }
 }

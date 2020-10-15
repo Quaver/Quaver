@@ -39,21 +39,27 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
                 {
                     Tint = color;
                     FontSize = Settings.FontSize.Value;
+                    OnWinning();
                 }
                 else
                 {
-                    if (Settings.DimWhenLosing.Value)
-                        Tint = new Color(color.R / 2, color.G / 2, color.B / 2);
-                    else
-                        Tint = color;
-
+                    Tint = Settings.ColorWhenLosing.Value;
                     FontSize = Settings.FontSizeWhenLosing.Value;
+                    OnLosing();
                 }
 
                 PreviousJudgementCount = judgeCount;
             }
 
             base.Update(gameTime);
+        }
+
+        protected virtual void OnWinning()
+        {
+        }
+
+        protected virtual void OnLosing()
+        {
         }
 
         protected abstract void SetValue();

@@ -199,6 +199,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Gameplay Overlay (Shift + F6)", ConfigManager.DisplayGameplayOverlay),
+                        new OptionsItemCheckbox(containerRect, "Display Notifications During Gameplay", ConfigManager.DisplayNotificationsInGameplay),
                         new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
                         new OptionsItemCheckbox(containerRect, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                         new OptionsItemCheckbox(containerRect, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
@@ -236,6 +237,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Selection", new List<OptionsItem>()
                     {
                         new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin),
+                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin),
                         new OptionsItemDefaultSkin(containerRect, "Default Skin", ConfigManager.DefaultSkin)
                     }),
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()

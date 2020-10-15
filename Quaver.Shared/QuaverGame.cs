@@ -303,6 +303,7 @@ namespace Quaver.Shared
 
 #if VISUAL_TESTS
             Window.Title = $"Quaver Visual Test Runner";
+            new InitializationScreen().OnFirstUpdate();
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
             QuaverScreenManager.ChangeScreen(new InitializationScreen());

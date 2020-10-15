@@ -573,6 +573,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableHighProcessPriority { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayNotificationsInGameplay { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<string> TournamentPlayer2Skin { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -981,6 +989,8 @@ namespace Quaver.Shared.Config
             SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
             DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
             EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
+            DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
+            TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
