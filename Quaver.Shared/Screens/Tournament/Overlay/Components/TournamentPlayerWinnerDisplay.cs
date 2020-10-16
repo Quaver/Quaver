@@ -101,6 +101,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 
         protected override void OnWinning()
         {
+            if (Icon == null)
+                return;
+
             Icon.Parent = this;
 
             if (!IsWinning)
@@ -114,6 +117,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 
         protected override void OnLosing()
         {
+            if (Icon == null)
+                return;
+
             Icon.Parent = this;
 
             if (IsWinning)
