@@ -317,6 +317,7 @@ namespace Quaver.Shared.Online
             Client.OnGameMapsetShared += OnGameMapsetShared;
             Client.OnGameCountdownStart += OnGameCountdownStarted;
             Client.OnGameCountdownStop += OnGameCountdownStopped;
+            Client.OnTournamentModeChanged += OnTournamentModeChanged;
         }
 
         /// <summary>
@@ -1739,6 +1740,15 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.CountdownStartTime = e.TimeStarted;
+        }
+
+        private static void OnTournamentModeChanged(object sender, TournamentModeEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.TournamentMode = e.TournamentMode;
+            Logger.Debug($"Tournament Mode Updated: {CurrentGame.TournamentMode}", LogType.Network, false);
         }
 
         /// <summary>
