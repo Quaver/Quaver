@@ -78,9 +78,15 @@ namespace Quaver.Shared.Online
             {
                 FinishedPlayingMap = false;
 
+                var mods = (ModIdentifier) Player.CurrentStatus.Modifiers;
+
+                // Get correct modifiers if in the tournament viewer
+                if (OnlineManager.CurrentGame != null)
+                    mods = OnlineManager.GetUserActivatedMods(Player.OnlineUser.Id, OnlineManager.CurrentGame);
+
                 // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
                 Replay = new Replay((GameMode) Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
-                    (ModIdentifier) Player.CurrentStatus.Modifiers, Player.CurrentStatus.MapMd5);
+                    mods, Player.CurrentStatus.MapMd5);
 
                 // Add all existing frames
                 if (frames != null)
