@@ -313,6 +313,10 @@ namespace Quaver.Shared.Modifiers
             if (game == null)
                 return;
 
+            // Tournament viewer, ignore updating mods
+            if (OnlineManager.IsSpectatingSomeone)
+                return;
+
             var isHost = game.HostId == OnlineManager.Self.OnlineUser.Id;
 
             // Check if the user is allowed to update mods based on the current match settings
