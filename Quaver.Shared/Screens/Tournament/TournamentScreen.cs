@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MoreLinq;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
@@ -131,6 +132,7 @@ namespace Quaver.Shared.Screens.Tournament
                 qua.ApplyMods(spectatees[i].Replay.Mods);
 
                 MapManager.Selected.Value.Qua = qua;
+                MapLoadingScreen.AddModsFromIdentifiers(spectatees[i].Replay.Mods);
 
                 SetSkin(spectatees.Count, i);
 
@@ -142,6 +144,10 @@ namespace Quaver.Shared.Screens.Tournament
                 GameplayScreens.Add(screen);
             }
 
+            ModManager.RemoveAllMods();
+            ModManager.AddSpeedMods(ModHelper.GetRateFromMods(spectatees.First().Replay.Mods));
+
+            SetRichPresenceForTournamentViewer();
             View = new TournamentScreenView(this);
         }
 
@@ -211,14 +217,32 @@ namespace Quaver.Shared.Screens.Tournament
                         MainGameplayScreen.Pause(gameTime);
                 }
 
+                // Add skipping
+                if (MainGameplayScreen.EligibleToSkip && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                {
+                    GameplayScreens.ForEach(x =>
+                    {
+                        x.SkipToNextObject();
+                        x.IsPaused = true;
+
+                        var view = (TournamentScreenView) View;
+
+                        var player = view.TournamentPlayers.Find(y => y.User == x.SpectatorClient?.Player);
+
+                        if (player != null)
+                            player.Scoring = x.Ruleset.ScoreProcessor;
+                    });
+
+                    if (AudioEngine.Track.IsPlaying)
+                        AudioEngine.Track.Pause();
+                }
+
                 switch (MainGameplayScreen.Type)
                 {
                     case TournamentScreenType.Spectator:
                         break;
                     case TournamentScreenType.Coop:
                     case TournamentScreenType.Replay:
-                        if (MainGameplayScreen.EligibleToSkip && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
-                            MainGameplayScreen.SkipToNextObject();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

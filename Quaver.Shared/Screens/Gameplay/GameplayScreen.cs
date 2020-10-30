@@ -595,7 +595,10 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!IsPlayComplete && !IsCalibratingOffset)
             {
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                {
                     SkipToNextObject();
+                }
+
 
                 // Go back to editor at the same time
                 if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
@@ -1047,7 +1050,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!EligibleToSkip || IsPaused || IsResumeInProgress || IsSongSelectPreview)
                 return;
 
-            if (IsMultiplayerGame && !force)
+            if (IsMultiplayerGame && !force && !OnlineManager.IsSpectatingSomeone)
             {
                 if (RequestedToSkipSong)
                     return;
