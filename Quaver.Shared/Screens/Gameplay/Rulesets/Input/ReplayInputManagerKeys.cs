@@ -250,7 +250,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             CurrentVirtualReplayStat = -1;
 
             // Create a fresh scrore processor, so the score can be recalculated
-            Screen.Ruleset.ScoreProcessor = new ScoreProcessorKeys(Screen.Map, ModManager.Mods, Windows);
+            Screen.Ruleset.ScoreProcessor = new ScoreProcessorKeys(Screen.Map, Screen.Ruleset.ScoreProcessor.Mods, Windows);
 
             // Update the processor for the health bar, so it doesn't get stuck
             if (Screen.Ruleset is GameplayRulesetKeys ruleset)

@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         /// <summary>
         /// </summary>
-        public ScoreProcessor Scoring { get; }
+        public ScoreProcessor Scoring { get; set; }
 
         /// <summary>
         /// </summary>
