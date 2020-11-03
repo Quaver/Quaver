@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
@@ -17,7 +18,10 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         /// <summary>
         /// </summary>
         public IconTextButtonOnlineHub() : base(FontAwesome.Get(FontAwesomeIcon.fa_reorder_option), OnClicked)
-            => Size = new ScalableVector2(44, 44);
+        {
+            Size = new ScalableVector2(44, 44);
+            Tint = SkinManager.Skin?.MenuBorder?.ButtonTextColor ?? Color.White;
+        }
 
         /// <inheritdoc />
         /// <summary>

@@ -65,7 +65,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Y = 1
+                Y = 1,
             };
 
             Tooltip = new Tooltip($"This displays how long the game has been running. Be sure to take breaks often!",
