@@ -21,7 +21,9 @@ namespace Quaver.Shared.Skinning.Menus
 
         private void LoadAll()
         {
-            ReadConfig();
+            if (Config != null)
+                ReadConfig();
+
             LoadElements();
         }
 

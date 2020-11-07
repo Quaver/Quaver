@@ -13,6 +13,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D NavigationButtonSelected { get; private set; }
 
+        public Texture2D TipPanel { get; private set; }
+
         public float? NoteVisualizerOpacity { get; private set; }
 
         public Color? AudioVisualizerColor { get; private set; }
@@ -22,6 +24,10 @@ namespace Quaver.Shared.Skinning.Menus
         public Color? NavigationButtonTextColor { get; private set; }
 
         public Color? NavigationQuitButtonTextColor { get; private set; }
+
+        public Color? TipTitleColor { get; private set; }
+
+        public Color? TipTextColor { get; private set; }
 
         public SkinMenuMain(SkinStore store, IniData config) : base(store, config)
         {
@@ -45,6 +51,12 @@ namespace Quaver.Shared.Skinning.Menus
 
             var navQuitBtnTextColor = ini["NavigationQuitButtonTextColor"];
             ReadIndividualConfig(navQuitBtnTextColor, () => NavigationQuitButtonTextColor = ConfigHelper.ReadColor(Color.Transparent, navQuitBtnTextColor));
+
+            var tipTitleColor = ini["TipTitleColor"];
+            ReadIndividualConfig(tipTitleColor, () => TipTitleColor = ConfigHelper.ReadColor(Color.Transparent, tipTitleColor));
+
+            var tipTextColor = ini["TipTextColor"];
+            ReadIndividualConfig(tipTextColor, () => TipTextColor = ConfigHelper.ReadColor(Color.Transparent, tipTextColor));
         }
 
         protected override void LoadElements()
@@ -54,6 +66,7 @@ namespace Quaver.Shared.Skinning.Menus
             Background = LoadSkinElement(folder, "menu-background.png");
             NavigationButton = LoadSkinElement(folder, "navigation-button.png");
             NavigationButtonSelected = LoadSkinElement(folder, "navigation-button-selected.png");
+            TipPanel = LoadSkinElement(folder, "tip-panel.png");
         }
     }
 }
