@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Music.Components;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -231,7 +232,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         private void CreateProgressBar()
         {
             ProgressBar = new JukeboxProgressBar(new Vector2(Width - 4, 2), 0, int.MaxValue,
-                0, Color.Gray,Colors.SecondaryAccent)
+                0, Color.Gray, SkinManager.Skin?.MainMenu?.JukeboxProgressBarColor ?? Colors.SecondaryAccent)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,

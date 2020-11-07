@@ -17,6 +17,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D NewsPanel { get; private set; }
 
+        public Texture2D JukeboxOverlay { get; private set; }
+
         public float? NoteVisualizerOpacity { get; private set; }
 
         public Color? AudioVisualizerColor { get; private set; }
@@ -36,6 +38,8 @@ namespace Quaver.Shared.Skinning.Menus
         public Color? NewsDateColor { get; private set; }
 
         public Color? NewsTextColor { get; private set; }
+
+        public Color? JukeboxProgressBarColor { get; private set; }
 
         public SkinMenuMain(SkinStore store, IniData config) : base(store, config)
         {
@@ -74,6 +78,9 @@ namespace Quaver.Shared.Skinning.Menus
 
             var newsTextColor = ini["NewsTextColor"];
             ReadIndividualConfig(newsTextColor, () => NewsTextColor = ConfigHelper.ReadColor(Color.Transparent, newsTextColor));
+
+            var jukeboxProgressBarColor = ini["JukeboxProgressBarColor"];
+            ReadIndividualConfig(jukeboxProgressBarColor, () => JukeboxProgressBarColor = ConfigHelper.ReadColor(Color.Transparent, jukeboxProgressBarColor));
         }
 
         protected override void LoadElements()
@@ -85,6 +92,7 @@ namespace Quaver.Shared.Skinning.Menus
             NavigationButtonSelected = LoadSkinElement(folder, "navigation-button-selected.png");
             TipPanel = LoadSkinElement(folder, "tip-panel.png");
             NewsPanel = LoadSkinElement(folder, "news-panel.png");
+            JukeboxOverlay = LoadSkinElement(folder, "jukebox-overlay.png");
         }
     }
 }
