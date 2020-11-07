@@ -66,6 +66,11 @@ namespace Quaver.Shared.Skinning
         internal SkinMenuBorder MenuBorder { get; }
 
         /// <summary>
+        ///     Skinning for the main menu
+        /// </summary>
+        internal SkinMenuMain MainMenu { get; }
+
+        /// <summary>
         ///     The name of the skin.
         /// </summary>
         internal string Name { get; private set; } = "Default Quaver Skin";
@@ -261,6 +266,7 @@ namespace Quaver.Shared.Skinning
             };
 
             MenuBorder = new SkinMenuBorder(this, Config);
+            MainMenu = new SkinMenuMain(this, Config);
 
             LoadUniversalElements();
 
