@@ -55,8 +55,8 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         public IconTextButton(Texture2D icon, WobbleFontStore font, string text, EventHandler onClick = null, Color? baseColor = null, Color? hoveredColor = null)
             : base(WobbleAssets.WhiteBox, onClick)
         {
-            BaseColor = baseColor ?? Color.White;
-            HoveredColor = hoveredColor ?? Colors.MainAccent;
+            BaseColor = SkinManager.Skin?.MenuBorder?.ButtonTextColor ?? baseColor ?? Color.White;
+            HoveredColor = SkinManager.Skin?.MenuBorder?.ButtonTextHoveredColor ?? hoveredColor ?? Colors.MainAccent;
 
             Icon = new Sprite
             {

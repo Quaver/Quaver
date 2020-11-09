@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
@@ -30,7 +31,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             }
             else
             {
-                Text.Tint = Color.White;
+                Text.Tint = SkinManager.Skin?.MenuBorder?.ButtonTextColor ?? Color.White;
                 Icon.Tint = Color.Crimson;
             }
         }

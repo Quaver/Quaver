@@ -45,9 +45,12 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private Sprite HoverEffect { get; set; }
 
-        public NewsPost() : base(UserInterface.NewsPanel)
+        public NewsPost() : base(UserInterface.BlankBox)
         {
-            Size = new ScalableVector2(Image.Width, Image.Height);
+            Image = SkinManager.Skin?.MainMenu?.NewsPanel ?? UserInterface.NewsPanel;
+
+            Size = new ScalableVector2(484, 261);
+
             SetChildrenAlpha = true;
 
             CreateContainer();
@@ -161,7 +164,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 Parent = Container,
                 X = 14,
                 Y = Banner.Y + Banner.Height + 16,
-                Tint = ColorHelper.HexToColor("#45D6F5"),
+                Tint = SkinManager.Skin?.MainMenu?.NewsTitleColor ?? ColorHelper.HexToColor("#45D6F5"),
                 Alpha = 0
             };
 
@@ -177,7 +180,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 Parent = Container,
                 X = Title.X,
                 Y = Title.Y + Title.Height + 12,
-                Tint = ColorHelper.HexToColor("#808080"),
+                Tint = SkinManager.Skin?.MainMenu?.NewsDateColor ?? ColorHelper.HexToColor("#808080"),
                 Alpha = 0
             };
 
@@ -192,7 +195,8 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 X = Title.X,
                 Y = TimeAgo.Y + TimeAgo.Height + 12,
                 MaxWidth = Container.Width - 20,
-                Alpha = 0
+                Alpha = 0,
+                Tint = SkinManager.Skin?.MainMenu?.NewsTextColor ?? Color.White
             };
 
             ShortText.TruncateWithEllipsis((int) ShortText.MaxWidth * 2 - 100);

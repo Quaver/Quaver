@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -28,10 +29,10 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         public FooterJukeboxMapBackground(FooterJukebox jukebox) : base(jukebox.Size, jukebox.Size)
         {
             Alpha = 0;
-            
+
             Size = new ScalableVector2(Width, Height);
             ContentContainer.Size = new ScalableVector2(Width, Height);
-            
+
             CreateBackground();
             CreateFade();
 
@@ -81,7 +82,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             {
                 X = -2,
                 Size = new ScalableVector2(Width + 10, Height),
-                Image = UserInterface.JukeboxFade,
+                Image = SkinManager.Skin?.MainMenu?.JukeboxOverlay ?? UserInterface.JukeboxFade,
                 Alpha = 1
             };
 

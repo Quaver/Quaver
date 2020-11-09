@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.Main.UI.Visualizer;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Options;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -110,8 +111,11 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         ///     Creates <see cref="Background"/>
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.TrianglesWallpaper, 0,
-            false) {Parent = Container};
+        private void CreateBackground()
+        {
+            Background = new BackgroundImage(SkinManager.Skin?.MainMenu?.Background ?? UserInterface.TrianglesWallpaper, 0,
+                false) {Parent = Container};
+        }
 
         /// <summary>
         ///     Creates <see cref="MenuLogoBackground"/>
@@ -188,8 +192,8 @@ namespace Quaver.Shared.Screens.Main
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), "Quit Game",
                     (o, e) => DialogManager.Show(new QuitDialog()))
                 {
-                    Icon = { Tint = quitColor },
-                    Name = { Tint = quitColor }
+                    Icon = { Tint = SkinManager.Skin?.MainMenu?.NavigationQuitButtonTextColor ?? quitColor },
+                    Name = { Tint = SkinManager.Skin?.MainMenu?.NavigationQuitButtonTextColor ?? quitColor }
                 }
             })
             {
@@ -263,8 +267,8 @@ namespace Quaver.Shared.Screens.Main
             {
                 bar.Alignment = Alignment.BotRight;
                 bar.X = -bar.X;
-                bar.Alpha = 0.85f;
-                bar.Tint = Colors.MainBlue;
+                bar.Alpha =  SkinManager.Skin?.MainMenu?.AudioVisualizerOpacity ?? 0.85f;
+                bar.Tint = SkinManager.Skin?.MainMenu?.AudioVisualizerColor ?? Colors.MainBlue;
             });
         }
 
