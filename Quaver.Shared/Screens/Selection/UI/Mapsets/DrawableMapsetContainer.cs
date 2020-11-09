@@ -269,7 +269,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelSongTitleColor ?? Color.White
             };
         }
 
@@ -282,7 +283,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
-                Tint = ColorHelper.HexToColor("#0587e5"),
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelSongArtistColor ?? ColorHelper.HexToColor("#0587e5"),
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -310,7 +311,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX, Artist.Y),
-                Tint = ColorHelper.HexToColor("#757575"),
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#757575"),
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -318,8 +319,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(ByText.X + ByText.Width + ArtistCreatorSpacingX, Artist.Y),
-                Tint = Artist.Tint,
-                UsePreviousSpriteBatchOptions = true
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelCreatorColor ?? Artist.Tint,
+                UsePreviousSpriteBatchOptions = true,
             };
         }
 
@@ -462,7 +463,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public void Select(bool instantSizeChange = false)
         {
-            Image = UserInterface.SelectedMapset;
+            Image = SkinManager.Skin?.SongSelect?.SelectedMapset ?? UserInterface.SelectedMapset;
 
             var fade = 1f;
             var time = 200;
@@ -512,7 +513,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.DeselectedMapset;
+            Image = SkinManager.Skin?.SongSelect.DeselectedMapset ?? UserInterface.DeselectedMapset;
 
             var fade = 0.85f;
             var time = 200;
