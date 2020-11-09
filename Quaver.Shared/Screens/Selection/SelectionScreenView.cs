@@ -184,7 +184,7 @@ namespace Quaver.Shared.Screens.Selection
         ///     Creates <see cref="Background"/>
         /// </summary>
         private void CreateBackground()
-            => Background = new BackgroundImage(UserInterface.Triangles, 0, false) { Parent = Container };
+            => Background = new BackgroundImage(UserInterface.TrianglesWallpaper, 0, false) { Parent = Container };
 
         /// <summary>
         ///     Creates <see cref="Header"/>
