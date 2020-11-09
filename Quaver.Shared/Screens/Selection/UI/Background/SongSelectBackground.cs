@@ -3,6 +3,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
@@ -28,7 +29,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Background
 
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            if (ConfigManager.DisplayMapBackgroundInSelect == null || !ConfigManager.DisplayMapBackgroundInSelect.Value)
+            if (SkinManager.Skin == null || !SkinManager.Skin.SongSelect.DisplayMapBackground)
             {
                 Image = UserInterface.TrianglesWallpaper;
                 BrightnessSprite.ClearAnimations();
@@ -45,7 +46,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Background
 
         private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
         {
-            if (ConfigManager.DisplayMapBackgroundInSelect == null || !ConfigManager.DisplayMapBackgroundInSelect.Value)
+            if (SkinManager.Skin == null || !SkinManager.Skin.SongSelect.DisplayMapBackground)
                 return;
 
             if (e.Map != MapManager.Selected.Value)

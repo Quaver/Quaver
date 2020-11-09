@@ -71,6 +71,11 @@ namespace Quaver.Shared.Skinning
         internal SkinMenuMain MainMenu { get; }
 
         /// <summary>
+        ///     Skinning for the song select menu
+        /// </summary>
+        internal SkinMenuSongSelect SongSelect { get; }
+
+        /// <summary>
         ///     The name of the skin.
         /// </summary>
         internal string Name { get; private set; } = "Default Quaver Skin";
@@ -267,6 +272,7 @@ namespace Quaver.Shared.Skinning
 
             MenuBorder = new SkinMenuBorder(this, Config);
             MainMenu = new SkinMenuMain(this, Config);
+            SongSelect = new SkinMenuSongSelect(this, Config);
 
             LoadUniversalElements();
 
