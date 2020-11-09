@@ -387,7 +387,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
+                        new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
+                        new OptionsItemCheckbox(containerRect, "Display Map Background In Song Select", ConfigManager.DisplayMapBackgroundInSelect)
                     }),
                     new OptionsSubcategory("Beta", new List<OptionsItem>()
                     {
