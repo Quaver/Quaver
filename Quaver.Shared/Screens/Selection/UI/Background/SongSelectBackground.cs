@@ -54,7 +54,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Background
 
             Image = e.Texture;
             BrightnessSprite.ClearAnimations();
-            BrightnessSprite.FadeTo(0.80f, Easing.Linear, 250);
+
+            var brightness = SkinManager.Skin?.SongSelect?.MapBackgroundBrightness ?? 15;
+            BrightnessSprite.FadeTo((100 - brightness) / 100f, Easing.Linear, 250);
         }
     }
 }
