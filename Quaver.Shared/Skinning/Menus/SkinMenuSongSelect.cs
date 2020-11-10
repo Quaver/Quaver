@@ -22,17 +22,41 @@ namespace Quaver.Shared.Skinning.Menus
 
         public ScalableVector2? MapsetPanelBannerSize { get; private set; }
 
+        public Color? LeaderboardScoreColorEven { get; private set; }
+
+        public Color? LeaderboardScoreColorOdd { get; private set; }
+
+        public Color? LeaderboardScoreRankColor { get; private set; }
+
+        public Color? LeaderboardScoreRatingColor { get; private set; }
+
+        public Color? LeaderboardScoreAccuracyColor { get; private set; }
+
+        public Color? LeaderboardScoreUsernameSelfColor { get; private set; }
+
+        public Color? LeaderboardScoreUsernameOtherColor { get; private set; }
+
+#region MAPSET
+
         public Texture2D MapsetSelected { get; private set; }
 
         public Texture2D MapsetDeselected { get; private set; }
 
         public Texture2D MapsetHovered { get; private set; }
 
+#endregion
+
+#region GAME_MODE
+
         public Texture2D GameMode4K { get; private set; }
 
         public Texture2D GameMode7K { get; private set; }
 
         public Texture2D GameMode4K7K { get; private set; }
+
+#endregion
+
+#region  RANKED_STATUS
 
         public Texture2D StatusNotSubmitted { get; private set; }
 
@@ -43,6 +67,16 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D StatusOsu { get; private set; }
 
         public Texture2D StatusStepmania { get; private set; }
+
+ #endregion
+
+#region LEADERBOARD
+
+        public Texture2D LeaderboardPanel { get; private set; }
+
+        public Texture2D PersonalBestPanel { get; private set; }
+
+#endregion
 
         public SkinMenuSongSelect(SkinStore store, IniData config) : base(store, config)
         {
@@ -72,6 +106,27 @@ namespace Quaver.Shared.Skinning.Menus
 
             var mapsetPanelBannerSize = ini["MapsetPanelBannerSize"];
             ReadIndividualConfig(mapsetPanelBannerSize, () => MapsetPanelBannerSize = ConfigHelper.ReadVector2(new ScalableVector2(0, 0), mapsetPanelBannerSize));
+
+            var leaderboardScoreColorEven = ini["LeaderboardScoreColorEven"];
+            ReadIndividualConfig(leaderboardScoreColorEven, () => LeaderboardScoreColorEven = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreColorEven));
+
+            var leaderboardScoreColorOdd = ini["LeaderboardScoreColorOdd"];
+            ReadIndividualConfig(leaderboardScoreColorOdd, () => LeaderboardScoreColorOdd = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreColorOdd));
+
+            var leaderboardScoreRankColor = ini["LeaderboardScoreRankColor"];
+            ReadIndividualConfig(leaderboardScoreRankColor, () => LeaderboardScoreRankColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreRankColor));
+
+            var leaderboardScoreRatingColor = ini["LeaderboardScoreRatingColor"];
+            ReadIndividualConfig(leaderboardScoreRatingColor, () => LeaderboardScoreRatingColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreRatingColor));
+
+            var leaderboardScoreAccuracyColor = ini["LeaderboardScoreAccuracyColor"];
+            ReadIndividualConfig(leaderboardScoreAccuracyColor, () => LeaderboardScoreAccuracyColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreAccuracyColor));
+
+            var leaderboardScoreUsernameSelfColor = ini["LeaderboardScoreUsernameSelfColor"];
+            ReadIndividualConfig(leaderboardScoreUsernameSelfColor, () => LeaderboardScoreUsernameSelfColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreUsernameSelfColor));
+
+            var leaderboardScoreUsernameOtherColor = ini["LeaderboardScoreUsernameOtherColor"];
+            ReadIndividualConfig(leaderboardScoreUsernameOtherColor, () => LeaderboardScoreUsernameOtherColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreUsernameOtherColor));
         }
 
         protected override void LoadElements()
@@ -89,6 +144,8 @@ namespace Quaver.Shared.Skinning.Menus
             StatusRanked = LoadSkinElement(folder, "status-ranked.png");
             StatusOsu = LoadSkinElement(folder, "status-osu.png");
             StatusStepmania = LoadSkinElement(folder, "status-sm.png");
+            LeaderboardPanel = LoadSkinElement(folder, "leaderboard-panel.png");
+            PersonalBestPanel = LoadSkinElement(folder, "personalbest-panel.png");
         }
     }
 }

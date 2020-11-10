@@ -15,6 +15,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
+using Quaver.Shared.Skinning;
 using WebSocketSharp;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -180,7 +181,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Alignment = Alignment.TopLeft,
                 Y = Header.Y + Header.Height + 8,
                 Size = new ScalableVector2(Width,664),
-                Image = UserInterface.LeaderboardScoresPanel,
+                Image = SkinManager.Skin?.SongSelect?.LeaderboardPanel ?? UserInterface.LeaderboardScoresPanel,
                 AutoScaleHeight = true
             };
 

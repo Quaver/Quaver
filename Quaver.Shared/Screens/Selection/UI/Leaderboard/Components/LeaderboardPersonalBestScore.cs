@@ -3,6 +3,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -40,7 +41,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             Container = container;
             Size = new ScalableVector2(Container.Width, 70);
 
-            Image = UserInterface.PersonalBestScorePanel;
+            Image = SkinManager.Skin?.SongSelect?.PersonalBestPanel ?? UserInterface.PersonalBestScorePanel;
 
             CreateLoadingWheel();
             CreateNoPersonalBestScoreText();
