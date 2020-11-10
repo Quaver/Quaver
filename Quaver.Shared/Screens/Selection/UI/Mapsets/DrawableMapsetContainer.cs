@@ -394,9 +394,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 switch (ParentMapset.Item.Maps.First().Game)
                 {
                     case MapGame.Osu:
-                        return UserInterface.StatusOtherGameOsu;
+                        return SkinManager.Skin?.SongSelect?.StatusOsu ?? UserInterface.StatusOtherGameOsu;
                     case MapGame.Etterna:
-                        return UserInterface.StatusOtherGameEtterna;
+                        return SkinManager.Skin?.SongSelect?.StatusStepmania ?? UserInterface.StatusOtherGameEtterna;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -405,13 +405,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             switch (ParentMapset.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
-                    return UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ??  UserInterface.StatusNotSubmitted;
                 case RankedStatus.Unranked:
-                    return UserInterface.StatusUnranked;
+                    return SkinManager.Skin?.SongSelect?.StatusUnranked ?? UserInterface.StatusUnranked;
                 case RankedStatus.Ranked:
-                    return UserInterface.StatusRanked;
+                    return SkinManager.Skin?.SongSelect?.StatusRanked ?? UserInterface.StatusRanked;
                 case RankedStatus.DanCourse:
-                    return UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

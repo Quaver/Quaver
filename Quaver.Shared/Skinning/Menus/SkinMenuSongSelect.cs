@@ -29,6 +29,16 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D GameMode4K7K { get; private set; }
 
+        public Texture2D StatusNotSubmitted { get; private set; }
+
+        public Texture2D StatusUnranked { get; private set; }
+
+        public Texture2D StatusRanked { get; private set; }
+
+        public Texture2D StatusOsu { get; private set; }
+
+        public Texture2D StatusStepmania { get; private set; }
+
         public SkinMenuSongSelect(SkinStore store, IniData config) : base(store, config)
         {
         }
@@ -65,6 +75,11 @@ namespace Quaver.Shared.Skinning.Menus
             GameMode4K = LoadSkinElement(folder, "game-mode-4k.png");
             GameMode7K = LoadSkinElement(folder, "game-mode-7k.png");
             GameMode4K7K = LoadSkinElement(folder, "game-mode-4k7k.png");
+            StatusNotSubmitted = LoadSkinElement(folder, "status-notsubmitted.png");
+            StatusUnranked = LoadSkinElement(folder, "status-unranked.png");
+            StatusRanked = LoadSkinElement(folder, "status-ranked.png");
+            StatusOsu = LoadSkinElement(folder, "status-osu.png");
+            StatusStepmania = LoadSkinElement(folder, "status-sm.png");
         }
     }
 }
