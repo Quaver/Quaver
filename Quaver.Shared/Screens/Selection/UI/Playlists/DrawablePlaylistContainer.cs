@@ -419,11 +419,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             }
 
             if (has4k && !has7K)
-                return UserInterface.Keys4Panel;
+                return SkinManager.Skin?.SongSelect?.GameMode4K ?? UserInterface.Keys4Panel;
             if (has7K && !has4k)
-                return UserInterface.Keys7Panel;
+                return SkinManager.Skin?.SongSelect?.GameMode7K ?? UserInterface.Keys7Panel;
 
-            return UserInterface.BothModesPanel;
+            return SkinManager.Skin?.SongSelect?.GameMode4K7K ?? UserInterface.BothModesPanel;
         }
 
         /// <summary>
