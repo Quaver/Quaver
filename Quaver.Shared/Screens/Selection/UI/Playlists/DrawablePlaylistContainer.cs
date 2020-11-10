@@ -12,6 +12,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -209,7 +210,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         public void Select(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.SelectedMapset;
+            Image = SkinManager.Skin?.SongSelect?.SelectedMapset ?? UserInterface.SelectedMapset;
 
             const int time = 200;
             AnimateSprites(1, 200);
@@ -224,7 +225,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.DeselectedMapset;
+            Image = SkinManager.Skin?.SongSelect.DeselectedMapset ?? UserInterface.DeselectedMapset;
 
             const int time = 200;
             AnimateSprites(0.85f, 200);
@@ -272,6 +273,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
+                Key = { Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#808080") }
             };
         }
 
@@ -279,11 +281,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new PlaylistKeyValueDisplay("By:", "Me", ColorHelper.HexToColor("#0587E5"))
+            Creator = new PlaylistKeyValueDisplay("By:", "Me",
+                SkinManager.Skin?.SongSelect?.MapsetPanelCreatorColor ?? ColorHelper.HexToColor("#0587E5"))
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, MapCount.Y),
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Key = { Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#808080") }
             };
         }
 
@@ -296,7 +300,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Y = MapCount.Y
+                Y = MapCount.Y,
+                Key = { Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#808080") }
             };
         }
 
