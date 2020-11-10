@@ -254,7 +254,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(421, 82),
+                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
                 X = -2,
                 UsePreviousSpriteBatchOptions = true
             };

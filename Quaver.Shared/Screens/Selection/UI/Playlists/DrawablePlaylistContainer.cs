@@ -245,7 +245,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelSongTitleColor ?? Color.White
             };
         }
 
@@ -258,7 +259,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(421, 82),
+                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
                 Image = UserInterface.DefaultBanner,
                 X = -2,
                 UsePreviousSpriteBatchOptions = true

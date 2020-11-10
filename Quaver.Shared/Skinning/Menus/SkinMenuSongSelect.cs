@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Config;
+using Wobble.Graphics;
 
 namespace Quaver.Shared.Skinning.Menus
 {
@@ -18,6 +19,8 @@ namespace Quaver.Shared.Skinning.Menus
         public Color? MapsetPanelCreatorColor { get; private set; }
 
         public Color? MapsetPanelByColor { get; private set; }
+
+        public ScalableVector2? MapsetPanelBannerSize { get; private set; }
 
         public Texture2D SelectedMapset { get; private set; }
 
@@ -64,6 +67,9 @@ namespace Quaver.Shared.Skinning.Menus
 
             var mapsetPanelByColor = ini["MapsetPanelByColor"];
             ReadIndividualConfig(mapsetPanelByColor, () => MapsetPanelByColor = ConfigHelper.ReadColor(Color.Transparent, mapsetPanelByColor));
+
+            var mapsetPanelBannerSize = ini["MapsetPanelBannerSize"];
+            ReadIndividualConfig(mapsetPanelBannerSize, () => MapsetPanelBannerSize = ConfigHelper.ReadVector2(new ScalableVector2(0, 0), mapsetPanelBannerSize));
         }
 
         protected override void LoadElements()
