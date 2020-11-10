@@ -153,7 +153,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         {
             var container = (PlaylistContainer) Playlist.Container;
 
-            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHover ?? WobbleAssets.WhiteBox, container.ClickableArea)
+            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHovered ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,
@@ -210,7 +210,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         public void Select(bool changeWidthInstantly = false)
         {
-            Image = SkinManager.Skin?.SongSelect?.SelectedMapset ?? UserInterface.SelectedMapset;
+            Image = SkinManager.Skin?.SongSelect?.MapsetSelected ?? UserInterface.SelectedMapset;
 
             const int time = 200;
             AnimateSprites(1, 200);
@@ -225,7 +225,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            Image = SkinManager.Skin?.SongSelect.DeselectedMapset ?? UserInterface.DeselectedMapset;
+            Image = SkinManager.Skin?.SongSelect.MapsetDeselected ?? UserInterface.DeselectedMapset;
 
             const int time = 200;
             AnimateSprites(0.85f, 200);

@@ -222,7 +222,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             var container = (SongSelectContainer<Mapset>) ParentMapset.Container;
 
-            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHover ?? WobbleAssets.WhiteBox, container.ClickableArea)
+            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHovered ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,
@@ -463,7 +463,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public void Select(bool instantSizeChange = false)
         {
-            Image = SkinManager.Skin?.SongSelect?.SelectedMapset ?? UserInterface.SelectedMapset;
+            Image = SkinManager.Skin?.SongSelect?.MapsetSelected ?? UserInterface.SelectedMapset;
 
             var fade = 1f;
             var time = 200;
@@ -513,7 +513,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            Image = SkinManager.Skin?.SongSelect.DeselectedMapset ?? UserInterface.DeselectedMapset;
+            Image = SkinManager.Skin?.SongSelect.MapsetDeselected ?? UserInterface.DeselectedMapset;
 
             var fade = 0.85f;
             var time = 200;

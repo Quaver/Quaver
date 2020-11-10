@@ -22,11 +22,11 @@ namespace Quaver.Shared.Skinning.Menus
 
         public ScalableVector2? MapsetPanelBannerSize { get; private set; }
 
-        public Texture2D SelectedMapset { get; private set; }
+        public Texture2D MapsetSelected { get; private set; }
 
-        public Texture2D DeselectedMapset { get; private set; }
+        public Texture2D MapsetDeselected { get; private set; }
 
-        public Texture2D MapsetHover { get; private set; }
+        public Texture2D MapsetHovered { get; private set; }
 
         public Texture2D GameMode4K { get; private set; }
 
@@ -78,9 +78,9 @@ namespace Quaver.Shared.Skinning.Menus
         {
             const string folder = "SongSelect";
 
-            SelectedMapset = LoadSkinElement(folder, "selected-mapset.png");
-            DeselectedMapset = LoadSkinElement(folder, "deselected-mapset.png");
-            MapsetHover = LoadSkinElement(folder, "mapset-hover.png");
+            MapsetSelected = LoadSkinElement(folder, "mapset-selected.png");
+            MapsetDeselected = LoadSkinElement(folder, "mapset-deselected.png");
+            MapsetHovered = LoadSkinElement(folder, "mapset-hovered.png");
             GameMode4K = LoadSkinElement(folder, "game-mode-4k.png");
             GameMode7K = LoadSkinElement(folder, "game-mode-7k.png");
             GameMode4K7K = LoadSkinElement(folder, "game-mode-4k7k.png");
