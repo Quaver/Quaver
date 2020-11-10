@@ -222,7 +222,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             var container = (SongSelectContainer<Mapset>) ParentMapset.Container;
 
-            Button = new SongSelectContainerButton(WobbleAssets.WhiteBox, container.ClickableArea)
+            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHover ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,

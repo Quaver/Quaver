@@ -26,6 +26,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D DeselectedMapset { get; private set; }
 
+        public Texture2D MapsetHover { get; private set; }
+
         public Texture2D GameMode4K { get; private set; }
 
         public Texture2D GameMode7K { get; private set; }
@@ -78,6 +80,7 @@ namespace Quaver.Shared.Skinning.Menus
 
             SelectedMapset = LoadSkinElement(folder, "selected-mapset.png");
             DeselectedMapset = LoadSkinElement(folder, "deselected-mapset.png");
+            MapsetHover = LoadSkinElement(folder, "mapset-hover.png");
             GameMode4K = LoadSkinElement(folder, "game-mode-4k.png");
             GameMode7K = LoadSkinElement(folder, "game-mode-7k.png");
             GameMode4K7K = LoadSkinElement(folder, "game-mode-4k7k.png");

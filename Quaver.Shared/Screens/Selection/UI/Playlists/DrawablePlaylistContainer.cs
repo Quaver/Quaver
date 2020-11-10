@@ -153,7 +153,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         {
             var container = (PlaylistContainer) Playlist.Container;
 
-            Button = new SongSelectContainerButton(WobbleAssets.WhiteBox, container.ClickableArea)
+            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHover ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,
