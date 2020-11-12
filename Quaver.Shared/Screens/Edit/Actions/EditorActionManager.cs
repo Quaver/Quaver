@@ -426,7 +426,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Adds an editor layer to the map
         /// </summary>
         /// <param name="layer"></param>
-        public void CreateLayer(EditorLayerInfo layer) => Perform(new EditorActionCreateLayer(WorkingMap, this, EditScreen.SelectedHitObjects, layer));
+        public void CreateLayer(EditorLayerInfo layer, int index = -1) => Perform(new EditorActionCreateLayer(WorkingMap, this, EditScreen.SelectedHitObjects, layer, index));
 
         /// <summary>
         ///     Removes a non-default editor layer from the map
