@@ -1,12 +1,12 @@
+using System;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
 {
-    public class EditorLayerRemovedEventArgs : EditorLayerCreatedEventArgs
+    public class EditorLayerRemovedEventArgs : EventArgs
     {
-        public EditorLayerRemovedEventArgs(EditorLayerInfo l) : base(l)
-        {
-        }
+        public EditorLayerInfo Layer { get; }
+
+        public EditorLayerRemovedEventArgs(EditorLayerInfo l) => Layer = l;
     }
 }

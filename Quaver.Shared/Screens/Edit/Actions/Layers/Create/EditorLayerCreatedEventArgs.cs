@@ -7,6 +7,12 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
     {
         public EditorLayerInfo Layer { get; }
 
-        public EditorLayerCreatedEventArgs(EditorLayerInfo l) => Layer = l;
+        public int Index { get; }
+
+        public EditorLayerCreatedEventArgs(EditorLayerInfo l, int index)
+        {
+            Layer = l;
+            Index = index;
+        }
     }
 }
