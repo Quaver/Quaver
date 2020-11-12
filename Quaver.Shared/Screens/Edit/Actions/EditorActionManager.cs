@@ -469,9 +469,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         ///     Toggles the visibility of an existing editor layer
+        ///     Does not get added to the undo stack
         /// </summary>
         /// <param name="layer"></param>
-        public void ToggleLayerVisibility(EditorLayerInfo layer) => Perform(new EditorActionToggleLayerVisibility(this, WorkingMap, layer));
+        public void ToggleLayerVisibility(EditorLayerInfo layer) => new EditorActionToggleLayerVisibility(this, WorkingMap, layer).Perform();
 
         /// <summary>
         /// </summary>
