@@ -719,6 +719,14 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.I))
                 PlaceTimingPointOrScrollVelocity();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.M))
+            {
+                if (KeyboardManager.IsAltDown())
+                    MergeOntoDefault();
+                else
+                    MergeUp();
+            }
         }
 
         /// <summary>
@@ -1443,6 +1451,37 @@ namespace Quaver.Shared.Screens.Edit
                     });
                 }
             }
+        }
+
+        /// <summary>
+        ///     Merges the currently selected layer onto the default layer.
+        /// </summary>
+        private void MergeOntoDefault()
+        {
+            if (SelectedLayer.Value == DefaultLayer)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                return;
+            }
+
+            ActionManager.MergeLayers(SelectedLayer.Value, DefaultLayer);
+        }
+
+        /// <summary>
+        ///     Merges the currently selected layer onto the layer above it.
+        /// </summary>
+        private void MergeUp()
+        {
+            if (SelectedLayer.Value == DefaultLayer)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                return;
+            }
+
+            var index = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value);
+            var destLayer = index == 0 ? DefaultLayer :WorkingMap.EditorLayers[index - 1];
+
+            ActionManager.MergeLayers(SelectedLayer.Value, destLayer);
         }
 
         /// <summary>
