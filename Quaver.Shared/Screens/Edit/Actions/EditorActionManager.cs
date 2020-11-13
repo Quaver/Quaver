@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
     {
         /// <summary>
         /// </summary>
-        private EditScreen EditScreen { get; }
+        public EditScreen EditScreen { get; }
 
         /// <summary>
         /// </summary>
@@ -464,8 +464,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="destinationLayer"></param>
         public void MergeLayers(EditorLayerInfo originLayer, EditorLayerInfo destinationLayer)
         {
-            if (originLayer != EditScreen.DefaultLayer)
-                Perform(new EditorActionMergeLayers(this, WorkingMap, originLayer, destinationLayer, EditScreen.SelectedHitObjects));
+            if (originLayer == destinationLayer)
+                return;
+
+            if (originLayer == EditScreen.DefaultLayer)
+                return;
+
+            Perform(new EditorActionMergeLayers(this, WorkingMap, originLayer, destinationLayer, EditScreen.SelectedHitObjects));
         }
 
         /// <summary>
