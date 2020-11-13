@@ -34,7 +34,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
             if (!WorkingMap.EditorLayers.Contains(Layer))
             {
                 if (Index >= 0)
+                {
                     WorkingMap.EditorLayers.Insert(Index, Layer);
+                    var hitObjects = WorkingMap.HitObjects.FindAll(x => x.EditorLayer > Index);
+                    hitObjects.ForEach(x => x.EditorLayer++);
+                }
                 else
                     WorkingMap.EditorLayers.Add(Layer);
             }
