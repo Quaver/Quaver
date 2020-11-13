@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
@@ -18,6 +19,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private const string ChangeColor = "Change Color";
 
+        private const string Merge = "Merge";
+
         public DrawableEditorLayerRightClickOptions(EditorLayerInfo layer, EditorActionManager manager, Qua workingMap)
             : base(GetOptions(), new ScalableVector2(200, 40), 22)
         {
@@ -31,6 +34,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     case ChangeColor:
                         DialogManager.Show(new DialogChangeLayerColor(layer, manager, workingMap));
                         break;
+                    case Merge:
+                        var destLayer = manager.EditScreen.SelectedLayer.Value;
+                        if (layer == destLayer)
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "You cannot merge a layer onto itself!");
+                            break;
+                        }
+                        manager.MergeLayers(layer, destLayer);
+                        break;
                 }
             };
         }
@@ -39,6 +51,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         {
             {EditName, ColorHelper.HexToColor("#0787E3")},
             {ChangeColor, ColorHelper.HexToColor("#27B06E")},
+            {Merge, ColorHelper.HexToColor("#8622e3")},
         };
     }
 }
