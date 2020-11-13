@@ -176,6 +176,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="originLayer"></param>
+        /// <param name="destinationLayer"></param>
+        public void MergeLayers(EditorLayerInfo originLayer, EditorLayerInfo destinationLayer) => ActionManager.MergeLayers(originLayer, destinationLayer);
+
+        /// <summary>
+        /// </summary>
         /// <param name="layer"></param>
         /// <param name="color"></param>
         public void ChangeLayerColor(EditorLayerInfo layer, int r, int g, int b) => ActionManager.ChangeLayerColor(layer, new Color(r, g, b));
