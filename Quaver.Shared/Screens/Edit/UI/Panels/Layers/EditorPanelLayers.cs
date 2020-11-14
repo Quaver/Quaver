@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     ColorRgb = "255,255,255"
                 };
 
-                int index = SelectedLayer.Value == DefaultLayer ? 0 : WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
+                int index = SelectedLayer.Value == DefaultLayer ? 0 : WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 2;
 
                 ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer, index));
             };

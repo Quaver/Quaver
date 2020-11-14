@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
         public void Undo()
         {
             new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, HitObjectsInLayer).Perform();
-            new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, Layer, Index - 1).Perform();
+            new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, Layer, Index).Perform();
             HitObjectsInLayer.ForEach(x => x.EditorLayer = Index);
         }
     }
