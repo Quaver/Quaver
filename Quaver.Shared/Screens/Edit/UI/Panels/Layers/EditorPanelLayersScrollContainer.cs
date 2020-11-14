@@ -141,10 +141,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             if (Pool.Any(x => x.Item == e.Layer))
                 return;
 
-            if (e.Index >= 0)
+            if (e.Index >= 1)
             {
-                AddObjectAtIndex(e.Index + 1, e.Layer, true);
-                var item = Pool[e.Index + 1] as DrawableEditorLayer;
+                AddObjectAtIndex(e.Index, e.Layer, true);
+                var item = Pool[e.Index] as DrawableEditorLayer;
                 SelectedLayer.Value = item?.Item;
             }
             else
