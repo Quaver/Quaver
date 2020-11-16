@@ -7,6 +7,7 @@ using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -15,8 +16,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
     public class LeaderboardTypeDropdown : LabelledDropdown
     {
         public LeaderboardTypeDropdown() : base("RANKING: ", 24, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(125, 30), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
+            new ScalableVector2(125, 30), 22, SkinManager.Skin?.SongSelect?.LeaderboardDropdownColor ?? ColorHelper.HexToColor($"#10C8F6"),
+            GetSelectedIndex()))
         {
+            Label.Tint = SkinManager.Skin.SongSelect?.LeaderboardRankingTitleColor ?? Color.White;
+
             Dropdown.ItemSelected += OnItemSelected;
             ConfigManager.LeaderboardSection.ValueChanged += OnLeaderboardSectionChanged;
         }

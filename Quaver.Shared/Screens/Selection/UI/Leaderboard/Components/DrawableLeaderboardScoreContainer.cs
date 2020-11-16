@@ -116,7 +116,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <summary>
         ///     Returns the background color of the table
         /// </summary>
-        private Color BackgroundColor => Score.Index % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
+        private Color BackgroundColor
+        {
+            get
+            {
+                if (Score.Index % 2 == 0)
+                    return SkinManager.Skin?.SongSelect?.LeaderboardScoreColorEven ?? ColorHelper.HexToColor("#363636");
+
+                return SkinManager.Skin?.SongSelect?.LeaderboardScoreColorOdd ?? ColorHelper.HexToColor("#242424");
+            }
+        }
 
         /// <summary>
         ///     Tooltip that displays when hovering over <see cref="CantBeatAlert"/>
@@ -214,7 +223,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     Rank.Text = $"{Score.Index + 1}.";
 
                 Username.Text = $"{score.Item.Name}";
-                Username.Tint = score.Item.Name == ConfigManager.Username.Value ? Colors.MainAccent : ColorHelper.HexToColor("#FBFFB6");
+
+                if (score.Item.Name == ConfigManager.Username.Value)
+                    Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameSelfColor ?? Colors.MainAccent;
+                else
+                    Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6");
 
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
                 AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float) score.Item.Accuracy)}";
@@ -290,7 +303,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.MidLeft,
                 X = PaddingLeft,
                 UsePreviousSpriteBatchOptions = true,
-                Alpha = 0
+                Alpha = 0,
+                Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreRankColor ?? Color.White
             };
         }
 
@@ -369,7 +383,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.TopRight,
                 Y = 6,
                 X = PerformanceRatingX,
-                Tint = ColorHelper.HexToColor("#E9B736"),
+                Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreRatingColor ?? ColorHelper.HexToColor("#E9B736"),
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -385,7 +399,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.BotRight,
                 X = PerformanceRating.X,
                 Y = -PerformanceRating.Y,
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreAccuracyColor ?? Color.White
             };
         }
 
@@ -475,7 +490,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.TopLeft,
                 UsePreviousSpriteBatchOptions = true,
                 Image = UserInterface.Clock,
-                Size = new ScalableVector2(12, 12)
+                Size = new ScalableVector2(12, 12),
             };
 
             Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 18)
