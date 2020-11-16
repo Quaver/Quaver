@@ -44,6 +44,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Color? PersonalBestTitleColor { get; private set; }
 
+        public Color? NoPersonalBestColor { get; private set; }
+
         #region MAPSET
 
         public Texture2D MapsetSelected { get; private set; }
@@ -147,6 +149,9 @@ namespace Quaver.Shared.Skinning.Menus
 
             var personalBestTitleColor = ini["PersonalBestTitleColor"];
             ReadIndividualConfig(personalBestTitleColor, () => PersonalBestTitleColor = ConfigHelper.ReadColor(Color.Transparent, personalBestTitleColor));
+
+            var noPersonalBestColor = ini["NoPersonalBestColor"];
+            ReadIndividualConfig(noPersonalBestColor, () => NoPersonalBestColor = ConfigHelper.ReadColor(Color.Transparent, noPersonalBestColor));
         }
 
         protected override void LoadElements()

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
@@ -117,7 +118,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Alpha = 0
+                Alpha = 0,
+                Tint = SkinManager.Skin?.SongSelect?.NoPersonalBestColor ?? Color.White
             };
         }
 
