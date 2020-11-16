@@ -1118,7 +1118,7 @@ namespace Quaver.Shared.Config
             var attempts = 0;
 
             // Don't do anything if the file isn't ready.
-            while (!IsFileReady(GameDirectory.Value + "/quaver.cfg") && !FirstWrite)
+            while (!IsFileReady(_gameDirectory + "/quaver.cfg") && !FirstWrite)
             {
             }
 
@@ -1150,7 +1150,7 @@ namespace Quaver.Shared.Config
             try
             {
                 // Create a new stream
-                var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
+                var sw = new StreamWriter(_gameDirectory + "/quaver.cfg")
                 {
                     AutoFlush = true
                 };
@@ -1169,7 +1169,7 @@ namespace Quaver.Shared.Config
                     attempts++;
 
                     // Create a new stream
-                    var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
+                    var sw = new StreamWriter(_gameDirectory + "/quaver.cfg")
                     {
                         AutoFlush = true
                     };
