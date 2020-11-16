@@ -147,7 +147,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         public void Select(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.SelectedMapset;
+            Image = SkinManager.Skin?.SongSelect?.MapsetSelected ?? UserInterface.SelectedMapset;
 
             var fade = 1f;
             var time = 200;
@@ -182,7 +182,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.DeselectedMapset;
+            Image = SkinManager.Skin?.SongSelect.MapsetDeselected ?? UserInterface.DeselectedMapset;
 
             var fade = 0.85f;
             var time = 200;
@@ -220,7 +220,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         {
             var container = (SongSelectContainer<Map>) ParentMap.Container;
 
-            Button = new SongSelectContainerButton(WobbleAssets.WhiteBox, container.ClickableArea)
+            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHovered ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,
@@ -296,7 +296,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
             {
                 Parent = this,
                 Position = new ScalableVector2(Name.X, Name.Y + Name.Height + 5),
-                Tint = ColorHelper.HexToColor("#757575"),
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#757575"),
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -304,7 +304,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
             {
                 Parent = this,
                 Position = new ScalableVector2(ByText.X + ByText.Width + 4, ByText.Y),
-                Tint = ColorHelper.HexToColor("#0587e5"),
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelCreatorColor ?? ColorHelper.HexToColor("#0587e5"),
                 UsePreviousSpriteBatchOptions = true
             };
         }

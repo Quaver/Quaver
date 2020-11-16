@@ -12,6 +12,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -152,7 +153,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         {
             var container = (PlaylistContainer) Playlist.Container;
 
-            Button = new SongSelectContainerButton(WobbleAssets.WhiteBox, container.ClickableArea)
+            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHovered ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,
@@ -209,7 +210,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         public void Select(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.SelectedMapset;
+            Image = SkinManager.Skin?.SongSelect?.MapsetSelected ?? UserInterface.SelectedMapset;
 
             const int time = 200;
             AnimateSprites(1, 200);
@@ -224,7 +225,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.DeselectedMapset;
+            Image = SkinManager.Skin?.SongSelect.MapsetDeselected ?? UserInterface.DeselectedMapset;
 
             const int time = 200;
             AnimateSprites(0.85f, 200);
@@ -244,7 +245,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelSongTitleColor ?? Color.White
             };
         }
 
@@ -257,7 +259,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(421, 82),
+                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
                 Image = UserInterface.DefaultBanner,
                 X = -2,
                 UsePreviousSpriteBatchOptions = true
@@ -272,6 +274,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
+                Key = { Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#808080") }
             };
         }
 
@@ -279,11 +282,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new PlaylistKeyValueDisplay("By:", "Me", ColorHelper.HexToColor("#0587E5"))
+            Creator = new PlaylistKeyValueDisplay("By:", "Me",
+                SkinManager.Skin?.SongSelect?.MapsetPanelCreatorColor ?? ColorHelper.HexToColor("#0587E5"))
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, MapCount.Y),
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Key = { Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#808080") }
             };
         }
 
@@ -296,7 +301,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Y = MapCount.Y
+                Y = MapCount.Y,
+                Key = { Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#808080") }
             };
         }
 
@@ -362,9 +368,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 switch (Playlist.Item.PlaylistGame)
                 {
                     case MapGame.Osu:
-                        return UserInterface.StatusOtherGameOsu;
+                        return SkinManager.Skin?.SongSelect?.StatusOsu ?? UserInterface.StatusOtherGameOsu;
                     case MapGame.Etterna:
-                        return UserInterface.StatusOtherGameEtterna;
+                        return SkinManager.Skin?.SongSelect?.StatusStepmania ?? UserInterface.StatusOtherGameEtterna;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -376,13 +382,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             switch (Playlist.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
-                    return UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ??  UserInterface.StatusNotSubmitted;
                 case RankedStatus.Unranked:
-                    return UserInterface.StatusUnranked;
+                    return SkinManager.Skin?.SongSelect?.StatusUnranked ?? UserInterface.StatusUnranked;
                 case RankedStatus.Ranked:
-                    return UserInterface.StatusRanked;
+                    return SkinManager.Skin?.SongSelect?.StatusRanked ?? UserInterface.StatusRanked;
                 case RankedStatus.DanCourse:
-                    return UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -414,11 +420,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             }
 
             if (has4k && !has7K)
-                return UserInterface.Keys4Panel;
+                return SkinManager.Skin?.SongSelect?.GameMode4K ?? UserInterface.Keys4Panel;
             if (has7K && !has4k)
-                return UserInterface.Keys7Panel;
+                return SkinManager.Skin?.SongSelect?.GameMode7K ?? UserInterface.Keys7Panel;
 
-            return UserInterface.BothModesPanel;
+            return SkinManager.Skin?.SongSelect?.GameMode4K7K ?? UserInterface.BothModesPanel;
         }
 
         /// <summary>
