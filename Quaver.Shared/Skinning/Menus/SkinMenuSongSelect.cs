@@ -40,6 +40,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Color? LeaderboardRankingTitleColor { get; private set; }
 
+        public Color? LeaderboardDropdownColor { get; private set; }
+
         #region MAPSET
 
         public Texture2D MapsetSelected { get; private set; }
@@ -137,6 +139,9 @@ namespace Quaver.Shared.Skinning.Menus
 
             var leaderboardRankingTitleColor = ini["LeaderboardRankingTitleColor"];
             ReadIndividualConfig(leaderboardRankingTitleColor, () => LeaderboardRankingTitleColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardRankingTitleColor));
+
+            var leaderboardDropdownColor = ini["LeaderboardDropdownColor"];
+            ReadIndividualConfig(leaderboardDropdownColor, () => LeaderboardDropdownColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardDropdownColor));
         }
 
         protected override void LoadElements()
