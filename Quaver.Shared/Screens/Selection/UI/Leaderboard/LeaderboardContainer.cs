@@ -201,7 +201,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             PersonalBestHeader = new SpriteTextPlus(Header.Font, "PERSONAL BEST", Header.FontSize)
             {
                 Parent = this,
-                Y = ScoresContainerBackground.Y + ScoresContainerBackground.Height + 28
+                Y = ScoresContainerBackground.Y + ScoresContainerBackground.Height + 28,
+                Tint = SkinManager.Skin?.SongSelect?.PersonalBestTitleColor ?? Color.White
             };
         }
 
