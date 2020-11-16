@@ -217,7 +217,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(25, 25),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_trophy),
-                Tint = ColorHelper.HexToColor("#E9B736"),
+                Tint = SkinManager.Skin?.SongSelect?.PersonalBestTrophyColor ?? ColorHelper.HexToColor("#E9B736"),
                 Alpha = 0
             };
         }
@@ -231,7 +231,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Parent = this,
                 Y = PersonalBestTrophy.Y - 3,
                 Alignment = Alignment.TopRight,
-                Alpha = 0
+                Alpha = 0,
             };
         }
 
