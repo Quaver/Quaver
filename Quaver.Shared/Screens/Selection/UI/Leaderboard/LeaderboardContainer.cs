@@ -154,6 +154,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
+                Tint = SkinManager.Skin?.SongSelect?.LeaderboardTitleColor ?? Color.White
             };
         }
 
