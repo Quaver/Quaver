@@ -232,6 +232,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Y = PersonalBestTrophy.Y - 3,
                 Alignment = Alignment.TopRight,
                 Alpha = 0,
+                Tint = SkinManager.Skin?.SongSelect?.PersonalBestRankColor ?? Color.White
             };
         }
 

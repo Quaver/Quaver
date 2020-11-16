@@ -50,6 +50,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Color? PersonalBestTrophyColor { get; private set; }
 
+        public Color? PersonalBestRankColor { get; private set; }
+
         #region MAPSET
 
         public Texture2D MapsetSelected { get; private set; }
@@ -162,6 +164,9 @@ namespace Quaver.Shared.Skinning.Menus
 
             var personalBestTrophyColor = ini["PersonalBestTrophyColor"];
             ReadIndividualConfig(personalBestTrophyColor, () => PersonalBestTrophyColor = ConfigHelper.ReadColor(Color.Transparent, personalBestTrophyColor));
+
+            var personalBestRankColor = ini["PersonalBestRankColor"];
+            ReadIndividualConfig(personalBestRankColor, () => PersonalBestRankColor = ConfigHelper.ReadColor(Color.Transparent, personalBestRankColor));
         }
 
         protected override void LoadElements()
