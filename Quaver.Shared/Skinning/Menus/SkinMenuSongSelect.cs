@@ -42,6 +42,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Color? LeaderboardDropdownColor { get; private set; }
 
+        public Color? LeaderboardStatusTextColor { get; private set; }
+
         public Color? PersonalBestTitleColor { get; private set; }
 
         public Color? NoPersonalBestColor { get; private set; }
@@ -152,6 +154,9 @@ namespace Quaver.Shared.Skinning.Menus
 
             var noPersonalBestColor = ini["NoPersonalBestColor"];
             ReadIndividualConfig(noPersonalBestColor, () => NoPersonalBestColor = ConfigHelper.ReadColor(Color.Transparent, noPersonalBestColor));
+
+            var leaderboardStatusTextColor = ini["LeaderboardStatusTextColor"];
+            ReadIndividualConfig(leaderboardStatusTextColor, () => LeaderboardStatusTextColor = ConfigHelper.ReadColor(Color.Transparent, leaderboardStatusTextColor));
         }
 
         protected override void LoadElements()
