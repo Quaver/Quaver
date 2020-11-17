@@ -16,6 +16,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
@@ -185,6 +186,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>(), arg2.ToObject<float>());
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>(), arg2.ToObject<float>());
+                case EditorActionType.ResnapHitObjects:
+                    return new EditorActionResnapHitObjects(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<int>>(), arg2.Toobject<List<HitObjectInfo>>());
                 case EditorActionType.Batch:
                     return new EditorActionBatch(EditScreen.ActionManager, arg1.ToObject<List<IEditorAction>>());
                 default:
