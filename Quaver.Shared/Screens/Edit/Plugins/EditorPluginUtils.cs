@@ -9,6 +9,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Batch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
@@ -176,6 +177,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>(), arg2.ToObject<float>());
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>(), arg2.ToObject<float>());
+                case EditorActionType.Batch:
+                    return new EditorActionBatch(EditScreen.ActionManager, arg1.ToObject<List<IEditorAction>>());
                 default:
                     return null;
             }
