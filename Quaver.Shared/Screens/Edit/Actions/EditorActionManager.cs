@@ -251,6 +251,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
             RedoStack.Clear();
         }
 
+        /// <summary>
+        ///     Performs a list of actions as a single action.
+        /// </summary>
+        /// <param name="actions"></param>
         public void PerformBatch(List<IEditorAction> actions) => Perform(new EditorActionBatch(this, actions));
 
         /// <summary>

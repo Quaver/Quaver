@@ -121,6 +121,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             return layer;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        /// <param name="arg3"></param>
+        /// <param name="arg4"></param>
+        /// <returns></returns>
         public static IEditorAction CreateEditorAction(EditorActionType type, DynValue arg1 = null, DynValue arg2 = null, DynValue arg3 = null, DynValue arg4 = null)
         {
             switch (type)

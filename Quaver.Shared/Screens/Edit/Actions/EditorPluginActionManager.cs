@@ -25,8 +25,14 @@ namespace Quaver.Shared.Screens.Edit.Actions
         [MoonSharpVisible(false)]
         public EditorPluginActionManager(EditorActionManager manager) => ActionManager = manager;
 
+        /// <summary>
+        /// </summary>
+        /// <param name="action"></param>
         public void Perform(IEditorAction action) => ActionManager.Perform(action);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="actions"></param>
         public void PerformBatch(List<IEditorAction> actions) => ActionManager.PerformBatch(actions);
 
         /// <summary>
