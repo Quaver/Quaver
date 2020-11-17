@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Quaver.API.Maps.Structures;
 
-namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
+namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
 {
     public class EditorActionHitObjectsResnappedEventArgs : EventArgs
     {

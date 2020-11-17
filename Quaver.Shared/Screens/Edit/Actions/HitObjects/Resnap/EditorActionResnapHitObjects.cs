@@ -9,7 +9,7 @@ using Wobble.Logging;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 
-namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
+namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
 {
     [MoonSharpUserData]
     public class EditorActionResnapHitObjects : IEditorAction
