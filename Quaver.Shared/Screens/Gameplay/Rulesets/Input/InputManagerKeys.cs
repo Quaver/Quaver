@@ -371,7 +371,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
                 scrollSpeed.Value -= speedIncrease;
 
-            NotificationManager.Show(NotificationLevel.Info, $"Scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}");
+            NotificationManager.Show(NotificationLevel.Info, $"Scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}",
+                null, true);
+
             ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
         }
 

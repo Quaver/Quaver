@@ -595,7 +595,10 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!IsPlayComplete && !IsCalibratingOffset)
             {
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                {
                     SkipToNextObject();
+                }
+
 
                 // Go back to editor at the same time
                 if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
@@ -760,7 +763,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
 
                 // Show notification to the user that their score is invalid.
-                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "WARNING! Your score will not be submitted due to pausing during gameplay!", null, true);
 
                 // Add the pause mod to their score.
                 if (!ModManager.IsActivated(ModIdentifier.Paused))
@@ -849,7 +853,7 @@ namespace Quaver.Shared.Screens.Gameplay
             switch (TimesRequestedToPause)
             {
                 case 1:
-                    NotificationManager.Show(NotificationLevel.Warning, "Press the exit button once more to quit.");
+                    NotificationManager.Show(NotificationLevel.Warning, "Press the exit button once more to quit.", null, true);
                     break;
                 default:
                     var game = GameBase.Game as QuaverGame;
@@ -1046,14 +1050,14 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!EligibleToSkip || IsPaused || IsResumeInProgress || IsSongSelectPreview)
                 return;
 
-            if (IsMultiplayerGame && !force)
+            if (IsMultiplayerGame && !force && !OnlineManager.IsSpectatingSomeone)
             {
                 if (RequestedToSkipSong)
                     return;
 
                 OnlineManager.Client?.RequestToSkipSong();
                 RequestedToSkipSong = true;
-                NotificationManager.Show(NotificationLevel.Info, "Requested to skip song. Waiting for all other players to skip!");
+                NotificationManager.Show(NotificationLevel.Info, "Requested to skip song. Waiting for all other players to skip!", null, true);
                 return;
             }
 
@@ -1217,7 +1221,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Exiting)
                 return;
 
-            NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!");
+            NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!", null, true);
             OffsetConfirmDialog.Exit(this);
         }
 
@@ -1310,26 +1314,29 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer.Replay.Frames.Count == LastReplayFrameIndexSentToServer + 1 && !force)
                 return;
 
-            var frames = new List<ReplayFrame>();
+            OnlineManager.Client?.PerformActionOnThread(() =>
+            {
+                var frames = new List<ReplayFrame>();
 
-            for (var i = LastReplayFrameIndexSentToServer + 1; i < ReplayCapturer.Replay.Frames.Count; i++)
-                frames.Add(ReplayCapturer.Replay.Frames[i]);
+                for (var i = LastReplayFrameIndexSentToServer + 1; i < ReplayCapturer.Replay.Frames.Count; i++)
+                    frames.Add(ReplayCapturer.Replay.Frames[i]);
 
-            LastReplayFrameIndexSentToServer = ReplayCapturer.Replay.Frames.Count - 1;
+                LastReplayFrameIndexSentToServer = ReplayCapturer.Replay.Frames.Count - 1;
 
-            SpectatorClientStatus status;
+                SpectatorClientStatus status;
 
-            if (LastReplayFrameIndexSentToServer == -1)
-                status = SpectatorClientStatus.NewSong;
-            else if (IsPaused)
-                status = SpectatorClientStatus.Paused;
-            else
-                status = SpectatorClientStatus.Playing;
+                if (LastReplayFrameIndexSentToServer == -1)
+                    status = SpectatorClientStatus.NewSong;
+                else if (IsPaused)
+                    status = SpectatorClientStatus.Paused;
+                else
+                    status = SpectatorClientStatus.Playing;
 
-            if (status == SpectatorClientStatus.Playing && frames.Count == 0)
-                return;
+                if (status == SpectatorClientStatus.Playing && frames.Count == 0)
+                    return;
 
-            OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+                OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+            });
         }
 
         /// <summary>
@@ -1516,7 +1523,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
                 }
 
-                NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.");
+                NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.", null, true);
             }
 
             // Only allow offset changes if the map hasn't started or if we're on a break
@@ -1535,12 +1542,15 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value += change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset += change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
                 }
@@ -1551,12 +1561,15 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value -= change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset -= change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
                 }
@@ -1574,7 +1587,8 @@ namespace Quaver.Shared.Screens.Gameplay
             ConfigManager.DisplayGameplayOverlay.Value = !ConfigManager.DisplayGameplayOverlay.Value;
             var on = ConfigManager.DisplayGameplayOverlay.Value ? "on" : "off";
 
-            NotificationManager.Show(NotificationLevel.Info, $"Gameplay overlay is now {on}. Press Shift+F6 to toggle the display.");
+            NotificationManager.Show(NotificationLevel.Info,
+                $"Gameplay overlay is now {on}. Press Shift+F6 to toggle the display.", null, true);
         }
     }
 }

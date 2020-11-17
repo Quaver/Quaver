@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         /// <summary>
         /// </summary>
-        private string Directory => $"{WobbleGame.WorkingDirectory}/Tournament";
+        public static string Directory => $"{WobbleGame.WorkingDirectory}/Tournament";
 
         /// <summary>
         /// </summary>
@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         /// <summary>
         /// </summary>
-        public TournamentDrawableSettings DifficultyNameSettings { get; } = new TournamentDrawableSettings("DifficultyName");
+        public TournamentSettingsDifficultyRating DifficultyNameSettings { get; } = new TournamentSettingsDifficultyRating("DifficultyName");
 
         /// <summary>
         /// </summary>
@@ -115,7 +115,25 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         /// </summary>
         public TournamentSettingsCustomText MatchRoundSettings { get; } = new TournamentSettingsCustomText("MatchRound");
 
+        /// <summary>
+        /// </summary>
         public TournamentSettingsCustomText BestOfSettings { get; } = new TournamentSettingsCustomText("BestOf");
+
+        /// <summary>
+        /// </summary>
+        public TournamentSettingsPlayerModifiers Player1ModifierSettings { get; } = new TournamentSettingsPlayerModifiers("Player1Modifiers");
+
+        /// <summary>
+        /// </summary>
+        public TournamentSettingsPlayerModifiers Player2ModifierSettings { get; } = new TournamentSettingsPlayerModifiers("Player2Modifiers");
+
+        /// <summary>
+        /// </summary>
+        public TournamentPlayerWinnerDisplaySettings Player1WinnerDisplaySettings { get; } = new TournamentPlayerWinnerDisplaySettings("Player1WinnerDisplay");
+
+        /// <summary>
+        /// </summary>
+        public TournamentPlayerWinnerDisplaySettings Player2WinnerDisplaySettings { get; } = new TournamentPlayerWinnerDisplaySettings("Player2WinnerDisplay");
 
         /// <summary>
         ///     Displays the usernames of the users
@@ -126,6 +144,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         ///     Displays the win counts of each player
         /// </summary>
         private List<TournamentPlayerWinCount> WinCounts { get; set; }
+
+        /// <summary>
+        ///     Displays which player is winning the match
+        /// </summary>
+        private List<TournamentPlayerWinnerDisplay> WinnerDisplays { get; set; }
 
         /// <summary>
         ///     Displays the name of the song being played
@@ -164,6 +187,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateMapCreator();
             CreateMatchRound();
             CreateBestOf();
+            CreatePlayerModifiers();
+            CreateWinnerDisplays();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -198,6 +223,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             MatchRoundSettings.Dispose();
             BestOfSettings.Dispose();
             Watcher.Dispose();
+            Player1ModifierSettings.Dispose();
+            Player2ModifierSettings.Dispose();
+            Player1WinnerDisplaySettings.Dispose();
+            Player2WinnerDisplaySettings.Dispose();
 
             base.Destroy();
         }
@@ -247,6 +276,14 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 var wins = data["Wins"];
                 Player1WinCountSettings.Load(wins);
                 Player2WinCountSettings.Load(wins);
+
+                var modifiers = data["Modifiers"];
+                Player1ModifierSettings.Load(modifiers);
+                Player2ModifierSettings.Load(modifiers);
+
+                var winners = data["WinnerDisplays"];
+                Player1WinnerDisplaySettings.Load(winners);
+                Player2WinnerDisplaySettings.Load(winners);
 
                 SongTitleSettings.Load(data["Song"]);
                 DifficultyNameSettings.Load(data["DifficultyName"]);
@@ -349,6 +386,26 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             {
                 var settings = player == Players.First() ? Player1RatingSettings : Player2RatingSettings;
                 new TournamentPlayerRating(settings, player, Players) {Parent = this};
+            }
+        }
+
+        private void CreatePlayerModifiers()
+        {
+            foreach (var player in Players)
+            {
+                var settings = player == Players.First() ? Player1ModifierSettings : Player2ModifierSettings;
+                new TournamentPlayerModifiers(settings, player) {Parent = this};
+            }
+        }
+
+        private void CreateWinnerDisplays()
+        {
+            WinnerDisplays = new List<TournamentPlayerWinnerDisplay>();
+
+            foreach (var player in Players)
+            {
+                var settings = player == Players.First() ? Player1WinnerDisplaySettings : Player2WinnerDisplaySettings;
+                WinnerDisplays.Add(new TournamentPlayerWinnerDisplay(settings, player, Players) { Parent = this });
             }
         }
 

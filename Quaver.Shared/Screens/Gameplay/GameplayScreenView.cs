@@ -305,7 +305,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Notify the user if their local offset is actually set for this map.
             if (!Screen.IsSongSelectPreview && MapManager.Selected.Value.LocalOffset != 0)
-                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset} ms");
+            {
+                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset} ms",
+                    null, true);
+            }
 
             if (Screen.IsCalibratingOffset)
             {
@@ -730,7 +733,16 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 // Force all replay frames on failure
                 if (OnlineManager.IsBeingSpectated)
+                {
                     Screen.SendReplayFramesToServer(true);
+
+                    // Send final replay frame to let spectators know the song is complete
+                    if (OnlineManager.IsBeingSpectated)
+                    {
+                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                            new List<ReplayFrame>());
+                    }
+                }
 
                 if (Screen.IsPlayTesting)
                 {

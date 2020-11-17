@@ -194,5 +194,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="layer"></param>
         public void ToggleLayerVisibility(EditorLayerInfo layer) => ActionManager.ToggleLayerVisibility(layer);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="snaps"></param>
+        /// <param name="hitObjectsToResnap"></param>
+        public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) =>
+            ActionManager.ResnapNotes(snaps, hitObjectsToResnap);
     }
 }

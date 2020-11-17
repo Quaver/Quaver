@@ -50,6 +50,10 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private TournamentOverlay Overlay { get; set; }
 
+        /// <summary>
+        /// </summary>
+        public List<TournamentPlayer> TournamentPlayers { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -89,9 +93,9 @@ namespace Quaver.Shared.Screens.Tournament
 
             Background?.Draw(gameTime);
             DrawPlayfields(gameTime);
-            DrawProgressBar(gameTime);
             DrawSkipDisplay(gameTime);
             Container?.Draw(gameTime);
+            DrawProgressBar(gameTime);
         }
 
         /// <inheritdoc />
@@ -244,7 +248,7 @@ namespace Quaver.Shared.Screens.Tournament
             if (TournamentScreen.GameplayScreens.Count > 2 || !ConfigManager.Display1v1TournamentOverlay.Value)
                 return;
 
-            var players = new List<TournamentPlayer>();
+            TournamentPlayers = new List<TournamentPlayer>();
 
             // Create overlay for spectator
             if (OnlineManager.CurrentGame != null)
@@ -253,15 +257,15 @@ namespace Quaver.Shared.Screens.Tournament
                 {
                     var difficulty = screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty;
 
-                    players.Add(new TournamentPlayer(screen.SpectatorClient.Player, screen.Ruleset.ScoreProcessor, difficulty));
+                    TournamentPlayers.Add(new TournamentPlayer(screen.SpectatorClient.Player, screen.Ruleset.ScoreProcessor, difficulty));
                 }
 
-                Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, OnlineManager.CurrentGame, players) { Parent = Container };
+                Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, OnlineManager.CurrentGame, TournamentPlayers) { Parent = Container };
                 return;
             }
 
             // Create players for "local multiplayer game"
-            players.AddRange(TournamentScreen.GameplayScreens.Select((screen, i) => new TournamentPlayer(new User(new OnlineUser
+            TournamentPlayers.AddRange(TournamentScreen.GameplayScreens.Select((screen, i) => new TournamentPlayer(new User(new OnlineUser
             {
                 Username = screen.LoadedReplay?.PlayerName ?? $"Player {i + 1}",
                 CountryFlag = "US",
@@ -275,7 +279,7 @@ namespace Quaver.Shared.Screens.Tournament
                 Ruleset = MultiplayerGameRuleset.Free_For_All,
             };
 
-            Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, game, players) { Parent = Container };
+            Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, game, TournamentPlayers) { Parent = Container };
         }
 
         /// <summary>

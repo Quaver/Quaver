@@ -849,7 +849,7 @@ namespace Quaver.Shared.Screens.Results
             // Submit score to the server...
             OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, replay, processor, scrollSpeed,
                 ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
-                SteamManager.PTicket));
+                SteamManager.PTicket, OnlineManager.CurrentGame));
 
             return true;
         }

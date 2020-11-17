@@ -64,7 +64,7 @@ namespace Quaver.Shared.Online
 
             Current = this;
             Title = skin;
-            SkinFolderPath = SkinStore.Dir.Replace("\\", "/");
+            SkinFolderPath = SkinManager.Skin.Dir.Replace("\\", "/");
             PreviewFilePath = $"{SkinFolderPath}/steam_workshop_preview.png";
 
             if (!File.Exists(PreviewFilePath))
