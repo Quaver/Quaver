@@ -6,6 +6,7 @@ namespace Quaver.Shared.Database.Maps.Etterna
         Easy,
         Medium,
         Hard,
-        Challenge
+        Challenge,
+        Edit
     }
 }
