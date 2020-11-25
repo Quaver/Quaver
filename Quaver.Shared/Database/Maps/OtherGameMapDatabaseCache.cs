@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using IniFileParser;
 using Microsoft.Win32;
 using osu.Shared;
 using osu_database_reader.BinaryFiles;
@@ -273,7 +274,35 @@ namespace Quaver.Shared.Database.Maps
             try
             {
                 var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
-                MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
+
+                var osuFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value);
+
+                // Default songs path
+                MapManager.OsuSongsFolder = osuFolder + "/Songs/";
+
+                // Read the config file and set the appropriate path
+                var configFile = $"{osuFolder}/osu!.{Environment.UserName}.cfg";
+
+                if (File.Exists(configFile))
+                {
+                    try
+                    {
+                        foreach (var line in File.ReadAllLines(configFile))
+                        {
+                            if (!line.StartsWith("BeatmapDirectory"))
+                                continue;
+
+                            var dir = line.Split("=")[1].Trim();
+
+                            MapManager.OsuSongsFolder = Directory.Exists(dir) ? dir + "/" : $"{osuFolder}/{dir}/";
+                            break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, LogType.Runtime);
+                    }
+                }
 
                 // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
                 var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7  || x.CircleSize == 8)).ToList();
