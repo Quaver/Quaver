@@ -454,6 +454,7 @@ namespace Quaver.Shared.Screens.Results
 
             HandleKeyPressEscape();
             HandleKeyPressTab();
+            HandleKeyPressRetry();
         }
 
         /// <summary>
@@ -498,6 +499,30 @@ namespace Quaver.Shared.Screens.Results
                 return;
 
             ActiveTab.Value = val;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressRetry()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap?.Value ?? Keys.OemTilde))
+                return;
+
+            if (OnlineManager.IsSpectatingSomeone)
+                return;
+
+            switch (ScreenType)
+            {
+                case ResultsScreenType.Gameplay:
+                    if (Gameplay.InReplayMode)
+                        WatchReplay();
+                    else
+                        RetryMap();
+                    break;
+                case ResultsScreenType.Replay:
+                    WatchReplay();
+                    break;
+            }
         }
 
         /// <summary>
