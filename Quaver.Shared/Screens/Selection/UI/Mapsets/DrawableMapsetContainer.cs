@@ -222,7 +222,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             var container = (SongSelectContainer<Mapset>) ParentMapset.Container;
 
-            Button = new SongSelectContainerButton(WobbleAssets.WhiteBox, container.ClickableArea)
+            Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHovered ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,
@@ -254,7 +254,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(421, 82),
+                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
                 X = -2,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -269,7 +269,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelSongTitleColor ?? Color.White
             };
         }
 
@@ -282,7 +283,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
-                Tint = ColorHelper.HexToColor("#0587e5"),
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelSongArtistColor ?? ColorHelper.HexToColor("#0587e5"),
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -310,7 +311,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX, Artist.Y),
-                Tint = ColorHelper.HexToColor("#757575"),
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelByColor ?? ColorHelper.HexToColor("#757575"),
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -318,8 +319,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(ByText.X + ByText.Width + ArtistCreatorSpacingX, Artist.Y),
-                Tint = Artist.Tint,
-                UsePreviousSpriteBatchOptions = true
+                Tint = SkinManager.Skin?.SongSelect?.MapsetPanelCreatorColor ?? Artist.Tint,
+                UsePreviousSpriteBatchOptions = true,
             };
         }
 
@@ -393,9 +394,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 switch (ParentMapset.Item.Maps.First().Game)
                 {
                     case MapGame.Osu:
-                        return UserInterface.StatusOtherGameOsu;
+                        return SkinManager.Skin?.SongSelect?.StatusOsu ?? UserInterface.StatusOtherGameOsu;
                     case MapGame.Etterna:
-                        return UserInterface.StatusOtherGameEtterna;
+                        return SkinManager.Skin?.SongSelect?.StatusStepmania ?? UserInterface.StatusOtherGameEtterna;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -404,13 +405,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             switch (ParentMapset.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
-                    return UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ??  UserInterface.StatusNotSubmitted;
                 case RankedStatus.Unranked:
-                    return UserInterface.StatusUnranked;
+                    return SkinManager.Skin?.SongSelect?.StatusUnranked ?? UserInterface.StatusUnranked;
                 case RankedStatus.Ranked:
-                    return UserInterface.StatusRanked;
+                    return SkinManager.Skin?.SongSelect?.StatusRanked ?? UserInterface.StatusRanked;
                 case RankedStatus.DanCourse:
-                    return UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -439,11 +440,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             if (has4k && !has7K)
-                return UserInterface.Keys4Panel;
+                return SkinManager.Skin?.SongSelect?.GameMode4K ?? UserInterface.Keys4Panel;
             if (has7K && !has4k)
-                return UserInterface.Keys7Panel;
+                return SkinManager.Skin?.SongSelect?.GameMode7K ?? UserInterface.Keys7Panel;
 
-            return UserInterface.BothModesPanel;
+            return SkinManager.Skin?.SongSelect?.GameMode4K7K ?? UserInterface.BothModesPanel;
         }
 
         /// <summary>
@@ -462,7 +463,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public void Select(bool instantSizeChange = false)
         {
-            Image = UserInterface.SelectedMapset;
+            Image = SkinManager.Skin?.SongSelect?.MapsetSelected ?? UserInterface.SelectedMapset;
 
             var fade = 1f;
             var time = 200;
@@ -512,7 +513,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            Image = UserInterface.DeselectedMapset;
+            Image = SkinManager.Skin?.SongSelect.MapsetDeselected ?? UserInterface.DeselectedMapset;
 
             var fade = 0.85f;
             var time = 200;

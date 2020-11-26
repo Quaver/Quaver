@@ -17,6 +17,7 @@ using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Skinning.Menus;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
@@ -58,6 +59,21 @@ namespace Quaver.Shared.Skinning
         ///     Dictionary that contains both skins for 4K & 7K
         /// </summary>
         internal Dictionary<GameMode, SkinKeys> Keys { get; }
+
+        /// <summary>
+        ///     Skinning for the menu borders
+        /// </summary>
+        internal SkinMenuBorder MenuBorder { get; }
+
+        /// <summary>
+        ///     Skinning for the main menu
+        /// </summary>
+        internal SkinMenuMain MainMenu { get; }
+
+        /// <summary>
+        ///     Skinning for the song select menu
+        /// </summary>
+        internal SkinMenuSongSelect SongSelect { get; }
 
         /// <summary>
         ///     The name of the skin.
@@ -254,6 +270,10 @@ namespace Quaver.Shared.Skinning
                 {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}
             };
 
+            MenuBorder = new SkinMenuBorder(this, Config);
+            MainMenu = new SkinMenuMain(this, Config);
+            SongSelect = new SkinMenuSongSelect(this, Config);
+
             LoadUniversalElements();
 
             // Change cursor image.
@@ -325,7 +345,7 @@ namespace Quaver.Shared.Skinning
             }
             catch (Exception e)
             {
-                Logger.Error($"Failed to load: {resource}. Using default!", LogType.Runtime);
+                Logger.Warning($"Failed to load: {resource}. Using default!", LogType.Runtime, false);
                 return UserInterface.BlankBox;
             }
         }

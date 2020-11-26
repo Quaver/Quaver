@@ -6,6 +6,7 @@ using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online;
+using Quaver.Shared.Skinning;
 using SQLite;
 using Steamworks;
 using Wobble;
@@ -94,7 +95,10 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var color = Button.IsHovered ? Colors.MainAccent : Color.White;
+            var hoveredColor = SkinManager.Skin?.MenuBorder?.ButtonTextHoveredColor ?? Colors.MainAccent;
+            var unhoveredColor = SkinManager.Skin?.MenuBorder?.ButtonTextColor ?? Color.White;
+
+            var color = Button.IsHovered ? hoveredColor : unhoveredColor;
             Caret.FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
             Username.Tint = Caret.Tint;
 

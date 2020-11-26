@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -51,7 +52,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
             RightAlignedItems = rightAligned;
 
             Size = new ScalableVector2(WindowManager.Width, HEIGHT);
-            Image = UserInterface.MenuBorderBackground;
+            Image = SkinManager.Skin?.MenuBorder?.Background ?? UserInterface.MenuBorderBackground;
 
             CreateForegroundLine();
             CreateAnimatedLine();
@@ -80,7 +81,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
                 Parent = this,
                 Size = new ScalableVector2(Width, 2),
                 Alignment = Type == MenuBorderType.Header ? Alignment.BotLeft : Alignment.TopLeft,
-                Tint = Colors.MainBlue
+                Tint = SkinManager.Skin?.MenuBorder?.BackgroundLineColor ?? Colors.MainBlue
             };
         }
 
@@ -93,7 +94,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
             {
                 Parent = ForegroundLine,
                 Size = new ScalableVector2(150, 2),
-                Tint = Color.White,
+                Tint = SkinManager.Skin?.MenuBorder?.ForegroundLineColor ?? Color.White,
             };
 
             if (Type == MenuBorderType.Header)
