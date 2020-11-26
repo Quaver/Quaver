@@ -751,6 +751,8 @@ namespace Quaver.Shared.Screens.Edit
 
                 var lane = i + 1;
 
+                var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
+
                 // Can be multiple if overlap
                 var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
 
@@ -760,7 +762,7 @@ namespace Quaver.Shared.Screens.Edit
                         ActionManager.RemoveHitObject(note);
                 }
                 else
-                    ActionManager.PlaceHitObject(lane, time);
+                    ActionManager.PlaceHitObject(lane, time, 0, layer);
             }
         }
 
