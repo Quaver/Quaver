@@ -31,14 +31,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         public int Index { get; }
 
         /// <summary>
-        ///     Determines if this line is for a measure.
+        ///     Whether or not this line is for a measure.
         /// </summary>
-        public bool IsMeasureLine => Index / BeatSnap.Value % 4 == 0
-                                      && Index % BeatSnap.Value == 0 && Time >= TimingPoint.StartTime;
-
-        /// <summary>
-        /// </summary>
-        private BindableInt BeatSnap { get; }
+        public bool IsMeasureLine { get; }
 
         private SpriteTextPlus Measure { get; }
 
@@ -51,13 +46,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="time"></param>
         /// <param name="index"></param>
         /// <param name="measureCount"></param>
-        public EditorPlayfieldTimelineTick(EditorPlayfield playfield, TimingPointInfo tp, BindableInt beatSnap, float time, int index, int measureCount)
+        public EditorPlayfieldTimelineTick(EditorPlayfield playfield, TimingPointInfo tp, float time, int index, int measureCount, bool isMeasureLine)
         {
             Playfield = playfield;
             TimingPoint = tp;
             Index = index;
             Time = time;
-            BeatSnap = beatSnap;
+            IsMeasureLine = isMeasureLine;
 
             if (!IsMeasureLine)
                 return;
