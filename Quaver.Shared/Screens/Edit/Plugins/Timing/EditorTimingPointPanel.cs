@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using TagLib.Matroska;
@@ -156,7 +157,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var point = new TimingPointInfo
                 {
                     StartTime = (float)Screen.Track.Time,
-                    Bpm = bpm
+                    Bpm = bpm,
+                    Signature = TimeSignature.Quadruple
                 };
 
                 Screen.ActionManager.PlaceTimingPoint(point);
