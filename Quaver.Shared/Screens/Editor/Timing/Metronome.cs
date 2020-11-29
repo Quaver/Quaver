@@ -107,7 +107,9 @@ namespace Quaver.Shared.Screens.Editor.Timing
             var totalBeats = (time - point.StartTime) / (point.MillisecondsPerBeat / (PlayHalfBeats.Value ? 2 : 1));
 
             CurrentTotalBeats = (int) Math.Floor(totalBeats);
-            CurrentBeat = (int) totalBeats % (int) point.Signature;
+
+            var signature = point.Signature != 0 ? Math.Abs((int) point.Signature) : 4;
+            CurrentBeat = (int) totalBeats % signature;
 
             // Play samples
             if (CurrentTotalBeats == 0 && LastTotalBeats < 0 || CurrentBeat != LastBeat)
