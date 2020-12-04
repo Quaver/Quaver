@@ -88,23 +88,14 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
-        ///     Tries to import the given file, be it a map, a replay, a skin, etc.
-        ///     <param name="path">path to the file to import</param>
+        ///     Starts importing of queued Maps.
         /// </summary>
-        public static void ImportFile(string path)
+        private static void PostMapQueue()
         {
-            var game = GameBase.Game as QuaverGame;
-            var screen = game.CurrentScreen;
+             var game = GameBase.Game as QuaverGame;
+             var screen = game.CurrentScreen;
 
-            // Mapset files
-            if (path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc"))
-            {
-                Queue.Add(path);
-
-                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
-                NotificationManager.Show(NotificationLevel.Info, log);
-
-                if (screen.Exiting)
+             if (screen.Exiting)
                     return;
 
                 if (screen.Type == QuaverScreenType.Select)
@@ -128,12 +119,41 @@ namespace Quaver.Shared.Database.Maps
 
                 if (screen.Type == QuaverScreenType.Multiplayer)
                 {
-                    var multi = (MultiplayerGameScreen) screen;
+                    var multi = (MultiplayerGameScreen)screen;
                     multi.DontLeaveGameUponScreenSwitch = true;
 
                     screen.Exit(() => new ImportingScreen());
                     return;
-                }
+                }  
+        }
+
+        /// <summary>
+        ///     Simply returns true if the file given matches a map type which can be imported. False otherwise.
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        private static bool AcceptedMapType(string path)
+        {
+            return path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc");
+        }
+
+        /// <summary>
+        ///     Tries to import the given file, be it a map, a replay, a skin, etc.
+        ///     <param name="path">path to the file to import</param>
+        /// </summary>
+        public static void ImportFile(string path)
+        {
+            var game = GameBase.Game as QuaverGame;
+            var screen = game.CurrentScreen;
+
+            // Mapset files (or directory of Mapset files)
+            if (AcceptedMapType(path))
+            {
+                Queue.Add(path);
+
+                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
+                NotificationManager.Show(NotificationLevel.Info, log);
+
+                PostMapQueue();
             }
             // Quaver Replay
             else if (path.EndsWith(".qr"))
@@ -251,7 +271,7 @@ namespace Quaver.Shared.Database.Maps
 
                 foreach (var subPath in files)
                 { 
-                    if (subPath.EndsWith(".qp") || subPath.EndsWith(".osz") || subPath.EndsWith(".sm") || subPath.EndsWith(".mcz") || subPath.EndsWith(".mc"))
+                    if (AcceptedMapType(subPath))
                     {
                         NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(subPath)} to be imported!");
                         Queue.Add(subPath);
@@ -261,37 +281,8 @@ namespace Quaver.Shared.Database.Maps
                 {
                     MapsetImporter.ImportFile(subDir);
                 }
-                // Took this from the first block
-                if (screen.Exiting)
-                    return;
 
-                if (screen.Type == QuaverScreenType.Select)
-                {
-                    if (OnlineManager.CurrentGame != null)
-                    {
-                        var select = game.CurrentScreen as SelectionScreen;
-                        screen.Exit(() => new ImportingScreen(null, true));
-                        return;
-                    }
-
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
-
-                if (screen.Type == QuaverScreenType.Music)
-                {
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
-
-                if (screen.Type == QuaverScreenType.Multiplayer)
-                {
-                    var multi = (MultiplayerGameScreen)screen;
-                    multi.DontLeaveGameUponScreenSwitch = true;
-
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
+                PostMapQueue();
             }
         }
 
