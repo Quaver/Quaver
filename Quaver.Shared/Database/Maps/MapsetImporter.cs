@@ -243,6 +243,56 @@ namespace Quaver.Shared.Database.Maps
                 ConfigManager.AutoLoadOsuBeatmaps.Value = true;
                 NotificationManager.Show(NotificationLevel.Success, $"Successfully set the path for your .db file");
             }
+            // Folder with maps
+            else if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+            {
+                var files = Directory.GetFiles(path);
+                var dirs = Directory.GetDirectories(path);
+
+                foreach (var subPath in files)
+                { 
+                    if (subPath.EndsWith(".qp") || subPath.EndsWith(".osz") || subPath.EndsWith(".sm") || subPath.EndsWith(".mcz") || subPath.EndsWith(".mc"))
+                    {
+                        NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(subPath)} to be imported!");
+                        Queue.Add(subPath);
+                    }
+                }
+                foreach (var subDir in dirs)
+                {
+                    MapsetImporter.ImportFile(subDir);
+                }
+                // Took this from the first block
+                if (screen.Exiting)
+                    return;
+
+                if (screen.Type == QuaverScreenType.Select)
+                {
+                    if (OnlineManager.CurrentGame != null)
+                    {
+                        var select = game.CurrentScreen as SelectionScreen;
+                        screen.Exit(() => new ImportingScreen(null, true));
+                        return;
+                    }
+
+                    screen.Exit(() => new ImportingScreen());
+                    return;
+                }
+
+                if (screen.Type == QuaverScreenType.Music)
+                {
+                    screen.Exit(() => new ImportingScreen());
+                    return;
+                }
+
+                if (screen.Type == QuaverScreenType.Multiplayer)
+                {
+                    var multi = (MultiplayerGameScreen)screen;
+                    multi.DontLeaveGameUponScreenSwitch = true;
+
+                    screen.Exit(() => new ImportingScreen());
+                    return;
+                }
+            }
         }
 
         /// <summary>
