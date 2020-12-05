@@ -125,71 +125,68 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="arg1"></param>
-        /// <param name="arg2"></param>
-        /// <param name="arg3"></param>
-        /// <param name="arg4"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
-        public static IEditorAction CreateEditorAction(EditorActionType type, DynValue arg1 = null, DynValue arg2 = null, DynValue arg3 = null, DynValue arg4 = null)
+        public static IEditorAction CreateEditorAction(EditorActionType type, params DynValue[] args)
         {
             switch (type)
             {
                 case EditorActionType.PlaceHitObject:
-                    return new EditorActionPlaceHitObject(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<HitObjectInfo>());
+                    return new EditorActionPlaceHitObject(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<HitObjectInfo>());
                 case EditorActionType.RemoveHitObject:
-                    return new EditorActionRemoveHitObject(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<HitObjectInfo>());
+                    return new EditorActionRemoveHitObject(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<HitObjectInfo>());
                 case EditorActionType.ResizeLongNote:
-                    return new EditorActionResizeLongNote(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<HitObjectInfo>(), arg2.ToObject<int>(), arg3.ToObject<int>());
+                    return new EditorActionResizeLongNote(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<HitObjectInfo>(), args[1].ToObject<int>(), args[2].ToObject<int>());
                 case EditorActionType.RemoveHitObjectBatch:
-                    return new EditorActionRemoveHitObjectBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<HitObjectInfo>>());
+                    return new EditorActionRemoveHitObjectBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<HitObjectInfo>>());
                 case EditorActionType.PlaceHitObjectBatch:
-                    return new EditorActionPlaceHitObjectBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<HitObjectInfo>>());
+                    return new EditorActionPlaceHitObjectBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<HitObjectInfo>>());
                 case EditorActionType.CreateLayer:
-                    return new EditorActionCreateLayer(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.SelectedHitObjects, arg1.ToObject<EditorLayerInfo>());
+                    return new EditorActionCreateLayer(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.SelectedHitObjects, args[0].ToObject<EditorLayerInfo>());
                 case EditorActionType.RemoveLayer:
-                    return new EditorActionRemoveLayer(EditScreen.ActionManager, EditScreen.WorkingMap, EditScreen.SelectedHitObjects, arg1.ToObject<EditorLayerInfo>());
+                    return new EditorActionRemoveLayer(EditScreen.ActionManager, EditScreen.WorkingMap, EditScreen.SelectedHitObjects, args[0].ToObject<EditorLayerInfo>());
                 case EditorActionType.RenameLayer:
-                    return new EditorActionRenameLayer(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<EditorLayerInfo>(), arg2.ToObject<string>());
+                    return new EditorActionRenameLayer(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<EditorLayerInfo>(), args[1].ToObject<string>());
                 case EditorActionType.MoveToLayer:
-                    return new EditorActionMoveObjectsToLayer(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<EditorLayerInfo>(), arg2.ToObject<List<HitObjectInfo>>());
+                    return new EditorActionMoveObjectsToLayer(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<EditorLayerInfo>(), args[1].ToObject<List<HitObjectInfo>>());
                 case EditorActionType.ColorLayer:
-                    return new EditorActionChangeLayerColor(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<EditorLayerInfo>(), new Color(arg2.ToObject<int>(), arg3.ToObject<int>(), arg4.ToObject<int>()));
+                    return new EditorActionChangeLayerColor(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<EditorLayerInfo>(), new Color(args[1].ToObject<int>(), args[2].ToObject<int>(), args[3].ToObject<int>()));
                 case EditorActionType.ToggleLayerVisibility:
-                    return new EditorActionToggleLayerVisibility(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<EditorLayerInfo>());
+                    return new EditorActionToggleLayerVisibility(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<EditorLayerInfo>());
                 case EditorActionType.AddScrollVelocity:
-                    return new EditorActionAddScrollVelocity(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<SliderVelocityInfo>());
+                    return new EditorActionAddScrollVelocity(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<SliderVelocityInfo>());
                 case EditorActionType.RemoveScrollVelocity:
-                    return new EditorActionRemoveScrollVelocity(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<SliderVelocityInfo>());
+                    return new EditorActionRemoveScrollVelocity(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<SliderVelocityInfo>());
                 case EditorActionType.AddScrollVelocityBatch:
-                    return new EditorActionAddScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>());
+                    return new EditorActionAddScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>());
                 case EditorActionType.RemoveScrollVelocityBatch:
-                    return new EditorActionRemoveScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>());
+                    return new EditorActionRemoveScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>());
                 case EditorActionType.AddTimingPoint:
-                    return new EditorActionAddTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<TimingPointInfo>());
+                    return new EditorActionAddTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<TimingPointInfo>());
                 case EditorActionType.RemoveTimingPoint:
-                    return new EditorActionRemoveTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<TimingPointInfo>());
+                    return new EditorActionRemoveTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<TimingPointInfo>());
                 case EditorActionType.AddTimingPointBatch:
-                    return new EditorActionAddTimingPointBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<TimingPointInfo>>());
+                    return new EditorActionAddTimingPointBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<TimingPointInfo>>());
                 case EditorActionType.RemoveTimingPointBatch:
-                    return new EditorActionRemoveTimingPointBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<TimingPointInfo>>());
+                    return new EditorActionRemoveTimingPointBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<TimingPointInfo>>());
                 case EditorActionType.ChangeTimingPointOffset:
-                    return new EditorActionChangeTimingPointOffset(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<TimingPointInfo>(), arg2.ToObject<float>());
+                    return new EditorActionChangeTimingPointOffset(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<TimingPointInfo>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeTimingPointBpm:
-                    return new EditorActionChangeTimingPointBpm(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<TimingPointInfo>(), arg2.ToObject<float>());
+                    return new EditorActionChangeTimingPointBpm(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<TimingPointInfo>(), args[1].ToObject<float>());
                 case EditorActionType.ResetTimingPoint:
-                    return new EditorActionResetTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<TimingPointInfo>());
+                    return new EditorActionResetTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<TimingPointInfo>());
                 case EditorActionType.ChangeTimingPointBpmBatch:
-                    return new EditorActionChangeTimingPointBpmBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<TimingPointInfo>>(), arg2.ToObject<float>());
+                    return new EditorActionChangeTimingPointBpmBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<TimingPointInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeTimingPointOffsetBatch:
-                    return new EditorActionChangeTimingPointOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<TimingPointInfo>>(), arg2.ToObject<float>());
+                    return new EditorActionChangeTimingPointOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<TimingPointInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeScrollVelocityOffsetBatch:
-                    return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>(), arg2.ToObject<float>());
+                    return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
-                    return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<SliderVelocityInfo>>(), arg2.ToObject<float>());
+                    return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ResnapHitObjects:
-                    return new EditorActionResnapHitObjects(EditScreen.ActionManager, EditScreen.WorkingMap, arg1.ToObject<List<int>>(), arg2.ToObject<List<HitObjectInfo>>());
+                    return new EditorActionResnapHitObjects(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<int>>(), args[1].ToObject<List<HitObjectInfo>>());
                 case EditorActionType.Batch:
-                    return new EditorActionBatch(EditScreen.ActionManager, arg1.ToObject<List<IEditorAction>>());
+                    return new EditorActionBatch(EditScreen.ActionManager, args[0].ToObject<List<IEditorAction>>());
                 default:
                     return null;
             }
