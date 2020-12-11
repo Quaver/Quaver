@@ -154,12 +154,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             Button.RightClicked += (sender, args) =>
             {
-                if (Item == Container.AvailableItems.First())
-                {
-                    NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
-                    return;
-                }
-
                 LayerContainer.ActivateRightClickOptions(new DrawableEditorLayerRightClickOptions(Item,
                     LayerContainer.ActionManager,
                     LayerContainer.WorkingMap));
@@ -215,12 +209,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             EditButton.Clicked += (sender, args) =>
             {
-                if (Item == Container.AvailableItems.First())
-                {
-                    NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
-                    return;
-                }
-
                 LayerContainer.ActivateRightClickOptions(new DrawableEditorLayerRightClickOptions(Item, LayerContainer.ActionManager,
                     LayerContainer.WorkingMap));
             };

@@ -29,19 +29,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 switch (args.Text)
                 {
                     case EditName:
+                        if (layer == manager.EditScreen.DefaultLayer)
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "You cannot rename the default layer!");
+                            break;
+                        }
                         DialogManager.Show(new DialogRenameLayer(layer, manager, workingMap));
                         break;
                     case ChangeColor:
+                        if (layer == manager.EditScreen.DefaultLayer)
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "You cannot change the default layer's color!");
+                            break;
+                        }
                         DialogManager.Show(new DialogChangeLayerColor(layer, manager, workingMap));
                         break;
                     case Merge:
-                        var destLayer = manager.EditScreen.SelectedLayer.Value;
-                        if (layer == destLayer)
+                        var selectedLayer = manager.EditScreen.SelectedLayer.Value;
+                        if (selectedLayer == manager.EditScreen.DefaultLayer)
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "You cannot merge the default layer into another layer!");
+                            break;
+                        }
+                        if (layer == selectedLayer)
                         {
                             NotificationManager.Show(NotificationLevel.Warning, "You cannot merge a layer onto itself!");
                             break;
                         }
-                        manager.MergeLayers(layer, destLayer);
+                        manager.MergeLayers(selectedLayer, layer);
                         break;
                 }
             };
