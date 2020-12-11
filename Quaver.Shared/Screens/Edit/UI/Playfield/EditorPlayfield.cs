@@ -1239,7 +1239,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var layer = 0;
 
-            if (SelectedLayer.Value != null)
+            if (SelectedLayer.Value != DefaultLayer)
                 layer = Map.EditorLayers.IndexOf(SelectedLayer.Value) + 1;
 
             switch (Tool.Value)

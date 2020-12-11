@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             DeleteLayer.Clicked += (sender, args) =>
             {
-                if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
+                if (SelectedLayer.Value == DefaultLayer)
                 {
                     NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default layer!");
                     return;

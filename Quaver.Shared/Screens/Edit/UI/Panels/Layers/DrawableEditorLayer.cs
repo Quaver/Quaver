@@ -150,17 +150,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Alpha = 0
             };
 
-            Button.Clicked += (sender, args) =>
-            {
-                // Default layer, so reset it back to null
-                if (Item == Container.AvailableItems.First())
-                {
-                    SelectedLayer.Value = null;
-                    return;
-                }
-
-                SelectedLayer.Value = Item;
-            };
+            Button.Clicked += (sender, args) => SelectedLayer.Value = Item;
 
             Button.RightClicked += (sender, args) =>
             {
@@ -259,14 +249,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private bool IsSelected()
-        {
-            // Default layer is selected when SelectedLayer is null
-            if (SelectedLayer.Value == null && Item == Container.AvailableItems.First())
-                return true;
-
-            return SelectedLayer.Value == Item;
-        }
+        private bool IsSelected() => SelectedLayer.Value == Item;
 
         private void OnLayerRenamed(object sender, EditorLayerRenamedEventArgs e) => UpdateContent(Item, Index);
         private void OnLayerColorChanged(object sender, EditorLayerColorChangedEventArgs e) => UpdateContent(Item, Index);
