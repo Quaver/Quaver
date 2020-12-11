@@ -1456,7 +1456,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (SelectedLayer.Value == DefaultLayer)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot merge the default layer into another layer!");
                 return;
             }
 
@@ -1470,7 +1470,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (SelectedLayer.Value == DefaultLayer)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot merge the default layer into another layer!");
                 return;
             }
 
