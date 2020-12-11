@@ -17,21 +17,33 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
 
         private BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
+        private int Index { get; }
+
         public EditorActionCreateLayer(Qua workingMap, EditorActionManager actionManager, BindableList<HitObjectInfo> selectedHitObjects,
-            EditorLayerInfo layer)
+            EditorLayerInfo layer, int index = -1)
         {
             WorkingMap = workingMap;
             ActionManager = actionManager;
             Layer = layer;
             SelectedHitObjects = selectedHitObjects;
+            Index = index;
         }
 
         public void Perform()
         {
             if (!WorkingMap.EditorLayers.Contains(Layer))
-                WorkingMap.EditorLayers.Add(Layer);
+            {
+                if (Index >= 1)
+                {
+                    WorkingMap.EditorLayers.Insert(Index - 1, Layer);
+                    var hitObjects = WorkingMap.HitObjects.FindAll(x => x.EditorLayer > Index);
+                    hitObjects.ForEach(x => x.EditorLayer++);
+                }
+                else
+                    WorkingMap.EditorLayers.Add(Layer);
+            }
 
-            ActionManager.TriggerEvent(EditorActionType.CreateLayer, new EditorLayerCreatedEventArgs(Layer));
+            ActionManager.TriggerEvent(EditorActionType.CreateLayer, new EditorLayerCreatedEventArgs(Layer, Index));
         }
 
         public void Undo() => new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects, Layer).Perform();

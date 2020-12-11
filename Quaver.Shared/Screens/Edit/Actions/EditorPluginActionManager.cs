@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
-        public void CreateLayer(EditorLayerInfo layer) => ActionManager.CreateLayer(layer);
+        public void CreateLayer(EditorLayerInfo layer, int index = -1) => ActionManager.CreateLayer(layer, index);
 
         /// <summary>
         /// </summary>
