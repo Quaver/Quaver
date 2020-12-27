@@ -117,6 +117,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="tp"></param>
+        /// <param name="hidden"></param>
+        public void ChangeTimingPointHidden(TimingPointInfo tp, bool hidden) => ActionManager.ChangeTimingPointHidden(tp, hidden);
+
+        /// <summary>
+        /// </summary>
         /// <param name="tps"></param>
         /// <param name="bpm"></param>
         public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm) => ActionManager.ChangeTimingPointBpmBatch(tps, bpm);
