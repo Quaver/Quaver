@@ -1117,11 +1117,6 @@ namespace Quaver.Shared.Config
             // Tracks the number of attempts to write the file it has made.
             var attempts = 0;
 
-            // Don't do anything if the file isn't ready.
-            while (!IsFileReady(_gameDirectory + "/quaver.cfg") && !FirstWrite)
-            {
-            }
-
             var sb = new StringBuilder();
 
             // Top file information
