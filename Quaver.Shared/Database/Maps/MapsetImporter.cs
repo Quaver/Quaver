@@ -88,23 +88,14 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
-        ///     Tries to import the given file, be it a map, a replay, a skin, etc.
-        ///     <param name="path">path to the file to import</param>
+        ///     Starts importing of queued Maps.
         /// </summary>
-        public static void ImportFile(string path)
+        private static void PostMapQueue()
         {
-            var game = GameBase.Game as QuaverGame;
-            var screen = game.CurrentScreen;
+             var game = GameBase.Game as QuaverGame;
+             var screen = game.CurrentScreen;
 
-            // Mapset files
-            if (path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc"))
-            {
-                Queue.Add(path);
-
-                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
-                NotificationManager.Show(NotificationLevel.Info, log);
-
-                if (screen.Exiting)
+             if (screen.Exiting)
                     return;
 
                 if (screen.Type == QuaverScreenType.Select)
@@ -128,12 +119,41 @@ namespace Quaver.Shared.Database.Maps
 
                 if (screen.Type == QuaverScreenType.Multiplayer)
                 {
-                    var multi = (MultiplayerGameScreen) screen;
+                    var multi = (MultiplayerGameScreen)screen;
                     multi.DontLeaveGameUponScreenSwitch = true;
 
                     screen.Exit(() => new ImportingScreen());
                     return;
-                }
+                }  
+        }
+
+        /// <summary>
+        ///     Simply returns true if the file given matches a map type which can be imported. False otherwise.
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        private static bool AcceptedMapType(string path)
+        {
+            return path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc");
+        }
+
+        /// <summary>
+        ///     Tries to import the given file, be it a map, a replay, a skin, etc.
+        ///     <param name="path">path to the file to import</param>
+        /// </summary>
+        public static void ImportFile(string path)
+        {
+            var game = GameBase.Game as QuaverGame;
+            var screen = game.CurrentScreen;
+
+            // Mapset files (or directory of Mapset files)
+            if (AcceptedMapType(path))
+            {
+                Queue.Add(path);
+
+                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
+                NotificationManager.Show(NotificationLevel.Info, log);
+
+                PostMapQueue();
             }
             // Quaver Replay
             else if (path.EndsWith(".qr"))
@@ -242,6 +262,27 @@ namespace Quaver.Shared.Database.Maps
 
                 ConfigManager.AutoLoadOsuBeatmaps.Value = true;
                 NotificationManager.Show(NotificationLevel.Success, $"Successfully set the path for your .db file");
+            }
+            // Folder with maps
+            else if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+            {
+                var files = Directory.GetFiles(path);
+                var dirs = Directory.GetDirectories(path);
+
+                foreach (var subPath in files)
+                { 
+                    if (AcceptedMapType(subPath))
+                    {
+                        NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(subPath)} to be imported!");
+                        Queue.Add(subPath);
+                    }
+                }
+                foreach (var subDir in dirs)
+                {
+                    MapsetImporter.ImportFile(subDir);
+                }
+
+                PostMapQueue();
             }
         }
 
