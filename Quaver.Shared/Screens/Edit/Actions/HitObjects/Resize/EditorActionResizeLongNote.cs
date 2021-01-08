@@ -1,9 +1,12 @@
 using System;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize
 {
+    [MoonSharpUserData]
     public class EditorActionResizeLongNote : IEditorAction
     {
         /// <inheritdoc />
@@ -40,6 +43,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize
         /// <param name="hitObject"></param>
         /// <param name="originalTime"></param>
         /// <param name="newTime"></param>
+        [MoonSharpVisible(false)]
         public EditorActionResizeLongNote(EditorActionManager actionManager, Qua workingMap, HitObjectInfo hitObject,
             int originalTime, int newTime)
         {
@@ -54,6 +58,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             HitObject.EndTime = NewTime;
@@ -63,6 +68,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionResizeLongNote(ActionManager, Map, HitObject, NewTime, OriginalTime).Perform();
     }
 }

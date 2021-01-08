@@ -9,6 +9,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Edit.Actions.Batch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -17,6 +18,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
@@ -255,6 +257,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
             UndoStack.Push(action);
             RedoStack.Clear();
         }
+
+        /// <summary>
+        ///     Performs a list of actions as a single action.
+        /// </summary>
+        /// <param name="actions"></param>
+        public void PerformBatch(List<IEditorAction> actions) => Perform(new EditorActionBatch(this, actions));
 
         /// <summary>
         ///     Undos the first action in the stack

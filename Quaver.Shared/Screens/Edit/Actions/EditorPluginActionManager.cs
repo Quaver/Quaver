@@ -27,6 +27,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="action"></param>
+        public void Perform(IEditorAction action) => ActionManager.Perform(action);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="actions"></param>
+        public void PerformBatch(List<IEditorAction> actions) => ActionManager.PerformBatch(actions);
+
+        /// <summary>
+        /// </summary>
         /// <param name="h"></param>
         public void PlaceHitObject(HitObjectInfo h) => ActionManager.PlaceHitObject(h);
 
