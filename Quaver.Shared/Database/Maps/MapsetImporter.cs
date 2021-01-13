@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Replays;
@@ -124,7 +125,7 @@ namespace Quaver.Shared.Database.Maps
 
                     screen.Exit(() => new ImportingScreen());
                     return;
-                }  
+                }
         }
 
         /// <summary>
@@ -270,7 +271,7 @@ namespace Quaver.Shared.Database.Maps
                 var dirs = Directory.GetDirectories(path);
 
                 foreach (var subPath in files)
-                { 
+                {
                     if (AcceptedMapType(subPath))
                     {
                         NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(subPath)} to be imported!");
@@ -296,7 +297,9 @@ namespace Quaver.Shared.Database.Maps
             if (MapManager.Selected.Value != null)
                 selectedMap = MapManager.Selected.Value;
 
-            for (var i = 0; i < Queue.Count; i++)
+            var done = -1;
+
+            Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
@@ -304,8 +307,6 @@ namespace Quaver.Shared.Database.Maps
 
                 try
                 {
-                    ImportingMapset?.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), i));
-
                     if (file.EndsWith(".qp"))
                     {
                         ExtractQuaverMapset(file, extractDirectory);
@@ -329,13 +330,16 @@ namespace Quaver.Shared.Database.Maps
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
+
+                    done++;
+                    ImportingMapset?.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), done));
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, $"Failed to import file: {Path.GetFileName(file)}");
                 }
-            }
+            });
 
             MapDatabaseCache.OrderAndSetMapsets();
             Queue.Clear();
