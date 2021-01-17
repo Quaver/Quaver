@@ -109,11 +109,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 if (ImGui.MenuItem("Copy Current Map"))
                     Screen.CreateNewDifficulty();
 
+                if (ImGui.MenuItem("From .qua File"))
+                    DialogManager.Show(new EditorAddDifficultyFromQuaDialog(Screen));
+
                 ImGui.EndMenu();
             }
 
             if (ImGui.MenuItem("Save", "CTRL + S", false, Screen.ActionManager.HasUnsavedChanges))
                 Screen.Save();
+
+            if (ImGui.MenuItem("Refresh File Cache", "CTRL + R", false, Screen.Map.Game == MapGame.Quaver))
+                Screen.RefreshFileCache();
 
             ImGui.Separator();
 
@@ -252,6 +258,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             }
 
             ImGui.Separator();
+
+            if (ImGui.MenuItem("Add Background Image"))
+                NotificationManager.Show(NotificationLevel.Info, "To add a background image, drag a .jpg or .png file into the window.");
 
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
