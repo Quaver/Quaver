@@ -9,9 +9,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         public EditorManualChangesDialog(EditScreen screen) : base("DETECTED MANUAL FILE CHANGES",
             "There were manual changes detected to the .qua file.\nWould you like to reload the editor?", () =>
             {
-                var track = AudioEngine.LoadMapAudioTrack(screen.Map);
                 screen.RefreshFileCache();
-                screen.Exit(() => new EditScreen(screen.Map, track));
+                screen.Exit(() => new EditScreen(screen.Map));
             })
         {
         }
