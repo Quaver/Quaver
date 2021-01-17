@@ -714,6 +714,9 @@ namespace Quaver.Shared.Screens.Edit
             if (KeyboardManager.IsUniqueKeyPress(Keys.S))
                 Save();
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.R))
+                RefreshFileCache();
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.N))
                 DialogManager.Show(new EditorNewSongDialog());
 
@@ -1198,6 +1201,17 @@ namespace Quaver.Shared.Screens.Edit
                 Logger.Error(e, LogType.Runtime);
                 NotificationManager.Show(NotificationLevel.Error, "There was an issue while saving your map!");
             }
+        }
+
+        /// <summary>
+        ///     Schedule Refresh for an outdated .qua file
+        /// </summary>
+        public void RefreshFileCache()
+        {
+            if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
+                MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
+
+            NotificationManager.Show(NotificationLevel.Info, $"The cached data for this file will be updated when you leave the editor.");
         }
 
         /// <summary>

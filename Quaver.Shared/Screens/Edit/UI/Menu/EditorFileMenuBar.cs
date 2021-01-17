@@ -115,6 +115,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Save", "CTRL + S", false, Screen.ActionManager.HasUnsavedChanges))
                 Screen.Save();
 
+            if (ImGui.MenuItem("Refresh File Cache", "CTRL + R", false, Screen.Map.Game == MapGame.Quaver))
+                Screen.RefreshFileCache();
+
             ImGui.Separator();
 
             if (ImGui.MenuItem("Upload", "CTRL + U", false, Screen.Map.Game == MapGame.Quaver))
