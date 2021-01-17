@@ -109,6 +109,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 if (ImGui.MenuItem("Copy Current Map"))
                     Screen.CreateNewDifficulty();
 
+                if (ImGui.MenuItem("From .qua File"))
+                    DialogManager.Show(new EditorAddDifficultyFromQuaDialog(Screen));
+
                 ImGui.EndMenu();
             }
 
