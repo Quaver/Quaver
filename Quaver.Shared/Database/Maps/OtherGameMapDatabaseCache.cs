@@ -294,7 +294,7 @@ namespace Quaver.Shared.Database.Maps
 
                             var dir = line.Split("=")[1].Trim();
 
-                            MapManager.OsuSongsFolder = Directory.Exists(dir) ? dir + "/" : $"{osuFolder}/{dir}/";
+                            MapManager.OsuSongsFolder = dir == "Songs" ? $"{osuFolder}/{dir}/" : dir + "/";
                             break;
                         }
                     }
