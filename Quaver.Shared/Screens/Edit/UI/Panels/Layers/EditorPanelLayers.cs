@@ -102,7 +102,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     ColorRgb = "255,255,255"
                 };
 
-                int index = SelectedLayer.Value == DefaultLayer ? 0 : WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 2;
+                // FindIndex() returns -1 when the default layer is selected
+                int index = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 2;
 
                 ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer, index));
             };
