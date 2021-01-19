@@ -231,17 +231,16 @@ namespace Quaver.Shared.Graphics.Containers
                 var drawable = CreateObject(AvailableItems[index], index);
                 drawable.DestroyIfParentIsNull = false;
 
-                Pool.Insert(index, drawable);
+                Pool.Insert(index - PoolStartingIndex, drawable);
+
+                for (int i = index; i < Pool.Count; i++)
+                {
+                    var foo = Pool[i];
+                    foo.Y = (PoolStartingIndex + i) * foo.Height + PaddingTop;
+                }
 
                 if (updateContent)
-                {
-                    for (int i = index; i < Pool.Count; i++)
-                    {
-                        var foo = Pool[i];
-                        foo.Y = (PoolStartingIndex + i) * foo.Height + PaddingTop;
-                        foo.UpdateContent(AvailableItems[i], i);
-                    }
-                }
+                    drawable.UpdateContent(AvailableItems[index], index);
 
                 return drawable;
             }
