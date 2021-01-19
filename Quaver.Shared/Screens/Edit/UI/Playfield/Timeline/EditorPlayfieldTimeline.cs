@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
+using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
@@ -184,7 +185,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                 {
                     while (true)
                     {
-                        if (numBeatsOffsetted / BeatSnap.Value % 4 == 0
+                        if (numBeatsOffsetted / BeatSnap.Value % (int)tp.Signature == 0
                             && numBeatsOffsetted % BeatSnap.Value == 0 && startTime <= -2000)
                             break;
 
@@ -208,14 +209,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                 {
                     var time = startTime + tp.MillisecondsPerBeat / BeatSnap.Value * i;
 
-                    var measureBeat = i / BeatSnap.Value % 4 == 0 && i % BeatSnap.Value == 0;
+                    var measureBeat = i / BeatSnap.Value % (int)tp.Signature == 0 && i % BeatSnap.Value == 0;
 
                     if (measureBeat && time >= tp.StartTime)
                         measureCount++;
 
                     var height = measureBeat ? 5 : 2;
 
-                    lines.Add(new EditorPlayfieldTimelineTick(Playfield, tp, BeatSnap, time, i, measureCount)
+                    lines.Add(new EditorPlayfieldTimelineTick(Playfield, tp, time, i, measureCount, measureBeat && time >= tp.StartTime)
                     {
                         Image = UserInterface.BlankBox,
                         Size = new ScalableVector2(Playfield.Width - 4, 0),
@@ -297,7 +298,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         }
 
         /// <summary>
-        ///     Gets an individual lioe color for the snap line.
+        ///     Gets an individual line color for the snap line.
         /// </summary>
         /// <param name="val"></param>
         /// <param name="i"></param>

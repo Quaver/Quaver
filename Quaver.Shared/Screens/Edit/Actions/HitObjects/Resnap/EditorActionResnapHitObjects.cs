@@ -6,9 +6,12 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Wobble.Logging;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
-namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
+namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
 {
+    [MoonSharpUserData]
     public class EditorActionResnapHitObjects : IEditorAction
     {
         /// <inheritdoc />
@@ -45,6 +48,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         /// <param name="actionManager"></param>
         /// <param name="workingMap"></param>
         /// <param name="hitObjects"></param>
+        [MoonSharpVisible(false)]
         public EditorActionResnapHitObjects(EditorActionManager actionManager, Qua workingMap, List<int> snaps, List<HitObjectInfo> hitObjectsToResnap)
         {
             ActionManager = actionManager;
@@ -56,13 +60,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             foreach (var note in HitObjectsToResnap)
             {
                 // Using AudioEngine.GetNearestSnapTimeFromTime is unreliable since it might not return the current snap
                 var startTimeDelta = DiffToClosestSnap(note.StartTime);
-                
+
                 if (startTimeDelta != 0)
                     note.StartTime -= startTimeDelta;
 
@@ -121,6 +126,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(false)]
         public void Undo()
         {
             foreach (var adjustment in noteTimeAdjustments)

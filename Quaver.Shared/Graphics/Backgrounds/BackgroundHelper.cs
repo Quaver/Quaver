@@ -18,6 +18,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -394,7 +395,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 GameBase.Game.SpriteBatch.End();
 
                 // Cache a smaller version of the texture to a RenderTarget
-                var size = new ScalableVector2(421, 82);
+                var size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82);
                 var scrollContainer = new ScrollContainer(size, size);
 
                 var maskedSprite = new Sprite

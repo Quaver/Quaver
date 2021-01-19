@@ -1117,11 +1117,6 @@ namespace Quaver.Shared.Config
             // Tracks the number of attempts to write the file it has made.
             var attempts = 0;
 
-            // Don't do anything if the file isn't ready.
-            while (!IsFileReady(GameDirectory.Value + "/quaver.cfg") && !FirstWrite)
-            {
-            }
-
             var sb = new StringBuilder();
 
             // Top file information
@@ -1150,7 +1145,7 @@ namespace Quaver.Shared.Config
             try
             {
                 // Create a new stream
-                var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
+                var sw = new StreamWriter(_gameDirectory + "/quaver.cfg")
                 {
                     AutoFlush = true
                 };
@@ -1169,7 +1164,7 @@ namespace Quaver.Shared.Config
                     attempts++;
 
                     // Create a new stream
-                    var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
+                    var sw = new StreamWriter(_gameDirectory + "/quaver.cfg")
                     {
                         AutoFlush = true
                     };

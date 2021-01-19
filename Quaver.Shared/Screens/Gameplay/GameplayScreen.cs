@@ -1400,6 +1400,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void UpdateMapInDatabase()
         {
+            if (IsSongSelectPreview)
+                return;
+            
             var map = MapManager.Selected.Value;
 
             map.TimesPlayed++;

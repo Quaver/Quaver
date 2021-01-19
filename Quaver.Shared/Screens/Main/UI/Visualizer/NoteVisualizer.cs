@@ -8,6 +8,7 @@ using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -23,7 +24,7 @@ namespace Quaver.Shared.Screens.Main.UI.Visualizer
         public List<Sprite> Sprites { get; } = new List<Sprite>();
 
         private const int ANIM_TIME = 20000;
-        
+
         public NoteVisualizer()
         {
             Tex = UserInterface.NoteVisualizer;
@@ -41,13 +42,13 @@ namespace Quaver.Shared.Screens.Main.UI.Visualizer
             const float scale = 0.65f;
 
             var tex = Tex;
-            
+
             var sprite = new Sprite()
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(tex.Width * scale, tex.Height * scale),
-                Alpha = 0.60f,
+                Alpha = SkinManager.Skin?.MainMenu.NoteVisualizerOpacity ?? 0.60f,
                 Image = tex,
             };
 
@@ -55,20 +56,20 @@ namespace Quaver.Shared.Screens.Main.UI.Visualizer
                 sprite.Y = y.Value;
             else
                 sprite.Y = -sprite.Height;
-            
+
             sprite.MoveToY((int) WindowManager.Height, Easing.Linear, ANIM_TIME);
-            
+
             Sprites.Add(sprite);
         }
-        
+
         private void AddSprites()
         {
             var firstSprite = Sprites.First();
-            
+
             if (firstSprite.Y >= 0 && Sprites.Count == 1)
                 CreateSprites((int) -firstSprite.Height + 100);
 
-            if (!RectangleF.Intersects(firstSprite.ScreenRectangle, new RectangleF(0, 0, WindowManager.Width, WindowManager.Height)) 
+            if (!RectangleF.Intersects(firstSprite.ScreenRectangle, new RectangleF(0, 0, WindowManager.Width, WindowManager.Height))
                 && firstSprite.Y > 0)
             {
                 firstSprite.Destroy();

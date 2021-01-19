@@ -9,6 +9,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -21,6 +22,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Selection.UI;
@@ -74,6 +76,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
+            ActionManager.TimingPointHiddenChanged += OnTimingPointHiddenChanged;
         }
 
         /// <inheritdoc />
@@ -103,6 +106,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
+            ActionManager.TimingPointHiddenChanged -= OnTimingPointHiddenChanged;
 
             base.Destroy();
         }
@@ -157,6 +161,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => Refresh();
 
         private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => Refresh();
+
+        private void OnTimingPointHiddenChanged(object sender, EditorTimingPointHiddenChangedEventArgs e) => Refresh();
 
         private void OnScrollVelocityOffsetBatchChanged(object sender, EditorChangedScrollVelocityOffsetBatchEventArgs e) => Refresh();
 

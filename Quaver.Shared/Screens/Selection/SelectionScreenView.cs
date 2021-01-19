@@ -13,6 +13,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Selection.UI.Background;
 using Quaver.Shared.Screens.Selection.UI.Borders.Footer;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
@@ -184,7 +185,7 @@ namespace Quaver.Shared.Screens.Selection
         ///     Creates <see cref="Background"/>
         /// </summary>
         private void CreateBackground()
-            => Background = new BackgroundImage(UserInterface.Triangles, 0, false) { Parent = Container };
+            => Background = new SongSelectBackground() { Parent = Container };
 
         /// <summary>
         ///     Creates <see cref="Header"/>

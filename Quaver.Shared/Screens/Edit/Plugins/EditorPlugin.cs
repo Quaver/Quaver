@@ -5,6 +5,7 @@ using ImGuiNET;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -59,11 +60,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             Description = description;
             IsBuiltIn = isResource;
 
+            EditorPluginUtils.EditScreen = editScreen;
+
             EditorPluginMap = new EditorPluginMap();
 
             UserData.RegisterType<GameMode>();
             UserData.RegisterType<HitSounds>();
             UserData.RegisterType<TimeSignature>();
+            UserData.RegisterType<EditorActionType>();
         }
 
         /// <inheritdoc />
@@ -82,6 +86,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             WorkingScript.Globals["game_mode"] = typeof(GameMode);
             WorkingScript.Globals["hitsounds"] = typeof(HitSounds);
             WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
+            WorkingScript.Globals["action_type"] = typeof(EditorActionType);
             WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
 
             var state = (EditorPluginState)State;

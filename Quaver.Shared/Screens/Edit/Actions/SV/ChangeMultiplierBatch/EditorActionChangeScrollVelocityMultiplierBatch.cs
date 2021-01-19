@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch
 {
+    [MoonSharpUserData]
     public class EditorActionChangeScrollVelocityMultiplierBatch : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangeScrollVelocityMultiplierBatch;
@@ -18,6 +21,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch
 
         private float Multiplier { get; }
 
+        [MoonSharpVisible(false)]
         public EditorActionChangeScrollVelocityMultiplierBatch(EditorActionManager manager, Qua workingMap, List<SliderVelocityInfo> svs,
             float multiplier)
         {
@@ -29,12 +33,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch
             ScrollVelocities.ForEach(x => OriginalMultipliers.Add(x.Multiplier));
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             ScrollVelocities.ForEach(x => x.Multiplier = Multiplier);
             ActionManager.TriggerEvent(Type, new EditorChangedScrollVelocityMultiplierBatchEventArgs(ScrollVelocities, Multiplier));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo()
         {
             for (var i = 0; i < ScrollVelocities.Count; i++)

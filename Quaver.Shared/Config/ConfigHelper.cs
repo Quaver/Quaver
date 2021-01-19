@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Wobble.Graphics;
 
 namespace Quaver.Shared.Config
 {
@@ -234,6 +235,25 @@ namespace Quaver.Shared.Config
             {
                 var vectorSplit = newVal.Split(',');
                 return new Vector2(int.Parse(vectorSplit[0]), int.Parse(vectorSplit[1]));
+            }
+            catch (Exception)
+            {
+                return defaultVector2;
+            }
+        }
+
+        /// <summary>
+        ///     Reads a ScalableVector2 from a string
+        /// </summary>
+        /// <param name="defaultVector2"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static ScalableVector2? ReadVector2(ScalableVector2 defaultVector2, string newVal)
+        {
+            try
+            {
+                var vectorSplit = newVal.Split(',');
+                return new ScalableVector2(int.Parse(vectorSplit[0]), int.Parse(vectorSplit[1]));
             }
             catch (Exception)
             {

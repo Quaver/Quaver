@@ -90,6 +90,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             for (var i = 0; i < map.TimingPoints.Count; i++)
             {
+                if (map.TimingPoints[i].Hidden)
+                    continue;
+
                 // Get target position and increment
                 // Target position has tolerance of 1ms so timing points dont overlap by chance
                 var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1 : map.Length;

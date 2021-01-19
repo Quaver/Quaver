@@ -59,10 +59,10 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         /// </summary>
         public MenuTipContainer(): base(UserInterface.BlankBox)
         {
-            var tex = UserInterface.MenuTipPanel;
+            var tex =  SkinManager.Skin?.MainMenu?.TipPanel ?? UserInterface.MenuTipPanel;
 
             Image = tex;
-            Size = new ScalableVector2(tex.Width, tex.Height);
+            Size = new ScalableVector2(484, 52);
 
             CreateLabel();
             CreateScrollContainer();
@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
             Parent = this,
             Alignment = Alignment.MidLeft,
             X = 16,
-            Tint = ColorHelper.HexToColor("#45D6F5")
+            Tint = SkinManager.Skin?.MainMenu?.TipTitleColor ?? ColorHelper.HexToColor("#45D6F5")
         };
 
         /// <summary>
@@ -123,6 +123,7 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
             TextTip = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Tips[12], Label.FontSize)
             {
                 Alignment = Alignment.MidLeft,
+                Tint = SkinManager.Skin?.MainMenu?.TipTextColor ?? Color.White
             };
 
             ScrollingContainer.AddContainedDrawable(TextTip);

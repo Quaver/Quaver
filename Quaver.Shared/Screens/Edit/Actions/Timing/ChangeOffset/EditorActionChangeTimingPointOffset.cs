@@ -1,8 +1,11 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset
 {
+    [MoonSharpUserData]
     public class EditorActionChangeTimingPointOffset : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangeTimingPointOffset;
@@ -17,6 +20,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset
 
         private float NewOffset { get; }
 
+        [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointOffset(EditorActionManager manager, Qua workingMap, TimingPointInfo tp, float newOffset)
         {
             ActionManager = manager;
@@ -27,6 +31,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset
             NewOffset = newOffset;
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             TimingPoint.StartTime = NewOffset;
@@ -34,6 +39,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset
             ActionManager.TriggerEvent(Type, new  EditorTimingPointOffsetChangedEventArgs(OriginalOffset, NewOffset));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionChangeTimingPointOffset(ActionManager, WorkingMap, TimingPoint, OriginalOffset).Perform();
     }
 }

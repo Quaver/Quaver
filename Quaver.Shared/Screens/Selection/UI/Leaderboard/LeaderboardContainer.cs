@@ -15,6 +15,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
+using Quaver.Shared.Skinning;
 using WebSocketSharp;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -153,6 +154,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
+                Tint = SkinManager.Skin?.SongSelect?.LeaderboardTitleColor ?? Color.White
             };
         }
 
@@ -180,7 +182,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Alignment = Alignment.TopLeft,
                 Y = Header.Y + Header.Height + 8,
                 Size = new ScalableVector2(Width,664),
-                Image = UserInterface.LeaderboardScoresPanel,
+                Image = SkinManager.Skin?.SongSelect?.LeaderboardPanel ?? UserInterface.LeaderboardScoresPanel,
                 AutoScaleHeight = true
             };
 
@@ -199,7 +201,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             PersonalBestHeader = new SpriteTextPlus(Header.Font, "PERSONAL BEST", Header.FontSize)
             {
                 Parent = this,
-                Y = ScoresContainerBackground.Y + ScoresContainerBackground.Height + 28
+                Y = ScoresContainerBackground.Y + ScoresContainerBackground.Height + 28,
+                Tint = SkinManager.Skin?.SongSelect?.PersonalBestTitleColor ?? Color.White
             };
         }
 
@@ -214,7 +217,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(25, 25),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_trophy),
-                Tint = ColorHelper.HexToColor("#E9B736"),
+                Tint = SkinManager.Skin?.SongSelect?.PersonalBestTrophyColor ?? ColorHelper.HexToColor("#E9B736"),
                 Alpha = 0
             };
         }
@@ -228,7 +231,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Parent = this,
                 Y = PersonalBestTrophy.Y - 3,
                 Alignment = Alignment.TopRight,
-                Alpha = 0
+                Alpha = 0,
+                Tint = SkinManager.Skin?.SongSelect?.PersonalBestRankColor ?? Color.White
             };
         }
 

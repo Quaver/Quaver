@@ -1,9 +1,12 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.SV.Add
 {
+    [MoonSharpUserData]
     public class EditorActionAddScrollVelocity : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.AddScrollVelocity;
@@ -14,6 +17,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Add
 
         private SliderVelocityInfo ScrollVelocity { get; }
 
+        [MoonSharpVisible(false)]
         public EditorActionAddScrollVelocity(EditorActionManager manager, Qua workingMap, SliderVelocityInfo sv)
         {
             ActionManager = manager;
@@ -21,6 +25,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Add
             ScrollVelocity = sv;
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             WorkingMap.SliderVelocities.Add(ScrollVelocity);
@@ -29,6 +34,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Add
             ActionManager.TriggerEvent(Type, new EditorScrollVelocityAddedEventArgs(ScrollVelocity));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionRemoveScrollVelocity(ActionManager, WorkingMap, ScrollVelocity).Perform();
     }
 }
