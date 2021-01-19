@@ -445,6 +445,7 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             HandleBeatSnapChanges();
+            HandleCompositionToolChanges();
             HandlePlaybackRateChanges();
             HandleTemporaryHitObjectPlacement();
             HandleCtrlInput();
@@ -763,6 +764,23 @@ namespace Quaver.Shared.Screens.Edit
                 }
                 else
                     ActionManager.PlaceHitObject(lane, time, 0, layer);
+            }
+        }
+
+        /// <summary>
+        ///     Switches the selected composition tool depending on the number key pressed
+        ///     Will only switch tools when live mapping is disabled
+        /// </summary>
+        private void HandleCompositionToolChanges()
+        {
+            if (LiveMapping.Value)
+                return;
+
+            // Using i < 3 to prevent selecting the unimplemented Mine tool
+            for (var i = 0; i < 3; i++)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                    CompositionTool.Value = (EditorCompositionTool)i;
             }
         }
 
