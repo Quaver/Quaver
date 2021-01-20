@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -64,7 +65,7 @@ namespace Quaver.Shared.Graphics.Graphs
         /// <summary>
         ///     The time for each sample in the graph
         /// </summary>
-        private int SampleTime => (int) Math.Ceiling(Track.Length / MaxBars);
+        private int SampleTime => (int) Math.Ceiling(Track.Length / Track.Rate / MaxBars);
 
         /// <summary>
         /// </summary>
@@ -165,58 +166,41 @@ namespace Quaver.Shared.Graphics.Graphs
             if (Map.HitObjects.Count == 0)
                 return;
 
-            var groupedSamples = Map.HitObjects.GroupBy(u => u.StartTime / SampleTime)
-                .Select(grp => grp.ToList())
-                .ToList();
+            var regularLength = Track.Length / Track.Rate;
+            var diff = (DifficultyProcessorKeys)Map.SolveDifficulty(Mods);
 
-            var calculators = new List<DifficultyProcessorKeys>();
+            Console.WriteLine(diff.StrainSolverData.Max(s => s.EndTime));
 
-            foreach (var s in groupedSamples)
+            var bins = new List<(float, List<StrainSolverData>)>();
+            // times are not scaled to rate
+            for (var time = 0; time < regularLength; time += SampleTime)
             {
-                var qua = new Qua
-                {
-                    Mode = Map.Mode,
-                    HasScratchKey = Map.HasScratchKey
-                };
-
-                if (s.Count != 0)
-                    s.ForEach(x => qua.HitObjects.Add(x));
-
-                var diff = (DifficultyProcessorKeys) qua.SolveDifficulty(Mods);
-
-                if (s.Count != 0 && diff.StrainSolverData.Count == 0)
-                    diff.StrainSolverData.Add(new StrainSolverData(new StrainSolverHitObject(s.First())));
-
-                calculators.Add(diff);
+                var valuesInBin = diff.StrainSolverData.Where(s => s.StartTime >= time && s.StartTime < time + SampleTime);
+                var pos = (float) (time / regularLength);
+                bins.Add((pos, valuesInBin.ToList()));
             }
 
-            if (calculators.Count == 0)
+            if (bins.Count == 0)
                 return;
 
-            var highestDiff = calculators.Max(x => x.OverallDifficulty);
+            var highestDiff = bins.Max(grp =>
+                grp.Item2.Any() ? grp.Item2.Average(s => s.TotalStrainValue) : 0
+            );
 
             AddScheduledUpdate(() =>
             {
-                foreach (var calculator in calculators)
+                foreach (var (pos, group) in bins)
                 {
-                    var width = MathHelper.Clamp(calculator.OverallDifficulty / highestDiff * Width, 6, Width);
-
-                    if (calculator.StrainSolverData.Count == 0)
-                        continue;
-
-                    // ReSharper disable once ObjectCreationAsStatement
-                    var length = Track.Length;
-
-                    if (ScaleForRates)
-                        length /= Track.Rate;
+                    var rating = group.Any() ? group.Average(s => s.TotalStrainValue) : 0;
+                    var width = MathHelper.Clamp(rating / highestDiff * Width, 6, Width);
 
                     var bar = new Sprite
                     {
                         Parent = this,
                         Alignment = AlignRightToLeft ? Alignment.BotRight : Alignment.BotLeft,
                         Size = new ScalableVector2((int) (width * BarWidthScale), BarSize),
-                        Y = -Height * (float) (calculator.StrainSolverData.First().StartTime / SampleTime * SampleTime / length) - 2,
-                        Tint = ColorHelper.DifficultyToColor(calculator.OverallDifficulty)
+                        Y = -Height * pos - 2,
+                        Tint = ColorHelper.DifficultyToColor(rating)
                     };
 
                     Bars.Add(bar);
