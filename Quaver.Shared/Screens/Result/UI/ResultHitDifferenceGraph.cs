@@ -111,9 +111,9 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Processor.Stats != null)
             {
                 FilterHitStats();
+                CreateMissLines();
                 CreateDotsWithHitDifference();
                 CreateDotsWithoutHitDifference();
-                CreateMissLines();
             }
         }
 
