@@ -405,6 +405,7 @@ namespace Quaver.Shared.Database.Maps
                     {
                         map.RankedStatus = info.Map.RankedStatus;
                         map.DateLastUpdated = info.Map.DateLastUpdated;
+                        map.OnlineOffset = info.Map.OnlineOffset;
                     }
 
                     map.CalculateDifficulties();
