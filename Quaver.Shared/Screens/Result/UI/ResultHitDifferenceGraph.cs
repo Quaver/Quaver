@@ -14,8 +14,10 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
+using TagLib.Matroska;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -34,6 +36,11 @@ namespace Quaver.Shared.Screens.Result.UI
         ///     The size of each miss dot.
         /// </summary>
         private const float MissDotSize = 5;
+
+        /// <summary>
+        ///     The width of each miss line.
+        /// </summary>
+        private const float MissLineWidth = 2;
 
         /// <summary>
         ///     The largest of the dot sizes. Used for things like minimum graph width and dot positioning.
@@ -124,8 +131,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <returns></returns>
         private float TimeToX(float time)
         {
-            var totalLength = LatestHitTime - EarliestHitTime;
-
+            var totalLength = Processor.Map.Length;
             if (totalLength == 0)
                 return Width / 2;
 
