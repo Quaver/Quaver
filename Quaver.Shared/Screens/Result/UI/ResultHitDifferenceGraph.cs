@@ -206,7 +206,7 @@ namespace Quaver.Shared.Screens.Result.UI
                         Size = new ScalableVector2(Width, 2),
                     };
 
-                    LineData.Add(new HitDifferenceGraphLineData(judgement, line, difference * k));
+                    LineData.Add(new HitDifferenceGraphLineData(judgement, line, (difference - windowSize) * k));
                 }
             }
         }
