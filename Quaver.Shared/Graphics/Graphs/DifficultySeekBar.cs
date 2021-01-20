@@ -189,6 +189,8 @@ namespace Quaver.Shared.Graphics.Graphs
                 foreach (var (pos, group) in bins)
                 {
                     var rating = group.Any() ? group.Average(s => s.TotalStrainValue) : 0;
+                    if (rating < 0.05)
+                        continue;
                     var width = MathHelper.Clamp(rating / highestDiff * Width, 6, Width);
 
                     var bar = new Sprite
