@@ -113,6 +113,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 FilterHitStats();
                 CreateDotsWithHitDifference();
                 CreateDotsWithoutHitDifference();
+                CreateMissLines();
             }
         }
 
@@ -266,6 +267,28 @@ namespace Quaver.Shared.Screens.Result.UI
                     StatsWithHitDifference.Add(hitStat);
                 else
                     StatsWithoutHitDifference.Add(hitStat);
+            }
+        }
+
+        /// <summary>
+        ///     Creates lines for misses to indicate combo breaks
+        /// </summary>
+        private void CreateMissLines()
+        {
+            foreach (var miss in Processor.Stats.FindAll(s => s.Judgement == Judgement.Miss))
+            {
+                Console.WriteLine(miss);
+                // ReSharper disable once ObjectCreationAsStatement
+                new Sprite
+                {
+                    Parent = this,
+                    Alpha = 0.35f,
+                    Tint = ResultsJudgementGraphBar.GetColor(Judgement.Miss),
+                    Alignment = Alignment.MidLeft,
+                    X = TimeToX(miss.SongPosition),
+                    Y = 0,
+                    Size = new ScalableVector2(MissLineWidth, Height)
+                };
             }
         }
 
