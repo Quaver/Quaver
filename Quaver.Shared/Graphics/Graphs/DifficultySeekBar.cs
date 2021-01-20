@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -168,8 +167,6 @@ namespace Quaver.Shared.Graphics.Graphs
 
             var regularLength = Track.Length / Track.Rate;
             var diff = (DifficultyProcessorKeys)Map.SolveDifficulty(Mods);
-
-            Console.WriteLine(diff.StrainSolverData.Max(s => s.EndTime));
 
             var bins = new List<(float, List<StrainSolverData>)>();
             // times are not scaled to rate
