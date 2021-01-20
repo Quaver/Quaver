@@ -338,6 +338,7 @@ namespace Quaver.Shared.Database.Maps
                         RegularNoteCount = map.CountHitCircles,
                         LongNoteCount = map.CountSliders,
                         LocalOffset = map.OffsetLocal,
+                        OnlineOffset = map.OffsetOnline,
                         HasScratchKey = map.CircleSize == 8
                     };
 

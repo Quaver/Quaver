@@ -566,6 +566,7 @@ namespace Quaver.Shared.Online
                 }
 
                 map.DateLastUpdated = e.Response.DateLastUpdated;
+                map.OnlineOffset = e.Response.OnlineOffset;
                 MapDatabaseCache.UpdateMap(map);
 
                 var game = GameBase.Game as QuaverGame;
