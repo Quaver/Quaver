@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
 {
+    [MoonSharpUserData]
     public class EditorActionPlaceHitObjectBatch : IEditorAction
     {
         /// <inheritdoc />
@@ -29,6 +32,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
         /// <param name="actionManager"></param>
         /// <param name="workingMap"></param>
         /// <param name="hitObjects"></param>
+        [MoonSharpVisible(false)]
         public EditorActionPlaceHitObjectBatch(EditorActionManager actionManager, Qua workingMap, List<HitObjectInfo> hitObjects)
         {
             ActionManager = actionManager;
@@ -39,6 +43,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             HitObjects.ForEach(x => WorkingMap.HitObjects.Add(x));
@@ -50,6 +55,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, HitObjects)?.Perform();
     }
 }

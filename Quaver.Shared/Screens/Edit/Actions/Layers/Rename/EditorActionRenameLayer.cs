@@ -1,8 +1,11 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Layers.Rename
 {
+    [MoonSharpUserData]
     public class EditorActionRenameLayer : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.RenameLayer;
@@ -17,6 +20,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Rename
 
         private string Previous { get; set; }
 
+        [MoonSharpVisible(false)]
         public EditorActionRenameLayer(EditorActionManager manager, Qua map, EditorLayerInfo layer, string name)
         {
             ActionManager = manager;
@@ -25,6 +29,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Rename
             Name = name;
         }
 
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             Previous = Layer.Name;
@@ -33,6 +38,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Rename
             ActionManager.TriggerEvent(Type, new EditorLayerRenamedEventArgs(Layer, Name));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionRenameLayer(ActionManager, WorkingMap, Layer, Previous).Perform();
     }
 }

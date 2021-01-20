@@ -209,6 +209,11 @@ namespace Quaver.Shared.Database.Maps
         public bool HasScratchKey { get; set; }
 
         /// <summary>
+        ///     Retroactively fixed offset for ranked maps.
+        /// </summary>
+        public int OnlineOffset { get; set; }
+
+        /// <summary>
         ///    Returns the notes per second a map has
         /// </summary>
         [Ignore]

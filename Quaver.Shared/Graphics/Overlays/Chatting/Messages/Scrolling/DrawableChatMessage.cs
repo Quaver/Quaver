@@ -94,7 +94,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Item = item;
             Index = index;
 
-            var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) item.Time);
+            var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) item.Time).ToLocalTime();
 
             Time.Text = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";
             var icon = GetIcon(Item.Sender.OnlineUser.UserGroups);

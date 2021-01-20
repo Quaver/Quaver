@@ -27,6 +27,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="action"></param>
+        public void Perform(IEditorAction action) => ActionManager.Perform(action);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="actions"></param>
+        public void PerformBatch(List<IEditorAction> actions) => ActionManager.PerformBatch(actions);
+
+        /// <summary>
+        /// </summary>
         /// <param name="h"></param>
         public void PlaceHitObject(HitObjectInfo h) => ActionManager.PlaceHitObject(h);
 
@@ -114,6 +124,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="tp"></param>
         /// <param name="bpm"></param>
         public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => ActionManager.ChangeTimingPointBpm(tp, bpm);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        /// <param name="hidden"></param>
+        public void ChangeTimingPointHidden(TimingPointInfo tp, bool hidden) => ActionManager.ChangeTimingPointHidden(tp, hidden);
 
         /// <summary>
         /// </summary>

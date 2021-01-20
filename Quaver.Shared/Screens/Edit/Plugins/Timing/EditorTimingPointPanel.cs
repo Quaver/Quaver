@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using TagLib.Matroska;
@@ -156,7 +157,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var point = new TimingPointInfo
                 {
                     StartTime = (float)Screen.Track.Time,
-                    Bpm = bpm
+                    Bpm = bpm,
+                    Signature = TimeSignature.Quadruple
                 };
 
                 Screen.ActionManager.PlaceTimingPoint(point);
@@ -337,11 +339,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawTableHeader()
         {
-            ImGui.Columns(2);
+            ImGui.Columns(3);
             ImGui.SetColumnWidth(0, 160);
             ImGui.TextWrapped("Time");
             ImGui.NextColumn();
             ImGui.TextWrapped("BPM");
+            ImGui.NextColumn();
+            ImGui.TextWrapped("Hide Lines");
             ImGui.Columns();
             ImGui.Separator();
         }
@@ -352,7 +356,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             ImGui.BeginChild("Timing Point Area");
 
-            ImGui.Columns(2);
+            ImGui.Columns(3);
             ImGui.SetColumnWidth(0, 160);
 
             if (
@@ -435,6 +439,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 ImGui.NextColumn();
                 ImGui.TextWrapped($"{point.Bpm:0.00}");
+                ImGui.NextColumn();
+
+                var hidden = point.Hidden;
+                // give each checkbox a unique ID based off timing point's StartTime so that they behave separately
+                if (ImGui.Checkbox($"##{point.StartTime}", ref hidden))
+                    Screen.ActionManager.ChangeTimingPointHidden(point, hidden);
                 ImGui.NextColumn();
             }
 

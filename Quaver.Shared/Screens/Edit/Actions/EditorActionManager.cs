@@ -9,6 +9,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Edit.Actions.Batch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -17,6 +18,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
@@ -36,6 +38,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
@@ -209,6 +212,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorTimingPointBpmChangedEventArgs> TimingPointBpmChanged;
 
         /// <summary>
+        ///     Event invoked when the lines of a timing point have been hidden or unhidden
+        /// </summary>
+        public event EventHandler<EditorTimingPointHiddenChangedEventArgs> TimingPointHiddenChanged;
+
+        /// <summary>
         ///     Event invoked when a batch of timing points have had their BPM changed
         /// </summary>
         public event EventHandler<EditorChangedTimingPointBpmBatchEventArgs> TimingPointBpmBatchChanged;
@@ -249,6 +257,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
             UndoStack.Push(action);
             RedoStack.Clear();
         }
+
+        /// <summary>
+        ///     Performs a list of actions as a single action.
+        /// </summary>
+        /// <param name="actions"></param>
+        public void PerformBatch(List<IEditorAction> actions) => Perform(new EditorActionBatch(this, actions));
 
         /// <summary>
         ///     Undos the first action in the stack
@@ -401,6 +415,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="tp"></param>
         /// <param name="bpm"></param>
         public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => Perform(new EditorActionChangeTimingPointBpm(this, WorkingMap, tp, bpm));
+
+        /// <summary>
+        ///     Changes whether an existing timing point's lines are hidden or not
+        /// </summary>
+        /// <param name="tp"></param>
+        /// <param name="hidden"></param>
+        public void ChangeTimingPointHidden(TimingPointInfo tp, bool hidden) => Perform(new EditorActionChangeTimingPointHidden(this, WorkingMap, tp, hidden));
 
         /// <summary>
         ///     Changes a batch of timing points to a new BPM
@@ -604,6 +625,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ChangeTimingPointBpm:
                     TimingPointBpmChanged?.Invoke(this, (EditorTimingPointBpmChangedEventArgs)args);
                     break;
+                case EditorActionType.ChangeTimingPointHidden:
+                    TimingPointHiddenChanged?.Invoke(this, (EditorTimingPointHiddenChangedEventArgs)args);
+                    break;
                 case EditorActionType.ChangeTimingPointBpmBatch:
                     TimingPointBpmBatchChanged?.Invoke(this, (EditorChangedTimingPointBpmBatchEventArgs)args);
                     break;
@@ -653,6 +677,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             PreviewTimeChanged = null;
             TimingPointOffsetChanged = null;
             TimingPointBpmChanged = null;
+            TimingPointHiddenChanged = null;
             TimingPointBpmBatchChanged = null;
             TimingPointOffsetBatchChanged = null;
             ScrollVelocityOffsetBatchChanged = null;

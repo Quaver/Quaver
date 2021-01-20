@@ -14,13 +14,11 @@
 
 **Quaver** is a community-driven and open-source competitive vertical scrolling rhythm game with two game modes and online leaderboards. It also features an in-game editor and a flexible multiplayer mode.
 
-It is also being officially released on [Steam](https://store.steampowered.com/app/980610/Quaver/) for Windows, Mac, and Linux—making it one of the most accessible community-driven rhythm games to date.
+It is also available on [Steam](https://store.steampowered.com/app/980610/Quaver/) Early Access for Windows, Mac, and Linux—making it one of the most accessible community-driven rhythm games to date.
 
 ## Status
 
-This project is currently under heavy development and is in an alpha state, however it is extremely playable as a standalone game. Quaver still has a ton of work ahead of it and will continue to get better as time goes on with new features and bug fixes being added each day.
-
-Occasionally we open registrations where you can join the Steam alpha and get exclusive access to all the features Quaver has to offer including online rankings, multiplayer, in-game chat, map downloading/uploading, and so much more. Registrations are **currently closed,** however you can still enjoy a limited version of Quaver by compiling the `develop` branch or by downloading one of the [GitHub Releases](https://github.com/Quaver/Quaver/releases).
+This project is currently under heavy development and is in a beta state, however it is extremely playable as a standalone game. Quaver still has a ton of work ahead of it and will continue to get better as time goes on with new features and bug fixes being added each day.
 
 ## Features
 
@@ -42,7 +40,7 @@ Although there are many games like this, **Quaver** offers many unique features 
 
 * **Steam Achievements** - Become a master of Quaver by completing challenges and earning achievements!
 
-* **Play Maps From Other Games** - Coming from a different game and miss all of your favorite maps? Quaver supports .osz, .sm, and .mc/.mcz files out of the box - with support for more games to be added in the future!
+* **Play Maps From Other Games** - Coming from a different game and miss all of your favorite maps? Quaver supports .osz, .sm, and .mc/.mcz files out of the box—with support for more games to be added in the future!
 
 ## Building & Running
 

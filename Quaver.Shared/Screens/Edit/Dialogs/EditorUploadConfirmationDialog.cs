@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
     public class EditorUploadConfirmationDialog : YesNoDialog
     {
         public EditorUploadConfirmationDialog(EditScreen screen) : base("UPLOAD MAPSET",
-            "Are you sure you would like to upload your mapset to the server?")
+            "Are you sure you would like to upload your mapset to the server?\nNote: You must own the rights to all files you upload.")
         {
             YesAction += () =>
             {
