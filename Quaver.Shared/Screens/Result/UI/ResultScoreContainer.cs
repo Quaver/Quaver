@@ -146,7 +146,7 @@ namespace Quaver.Shared.Screens.Result.UI
             CreateOnlineStats();
 
             // Create the graph but don't set a constructor, as we need to draw it to a RenderTarget2D
-            HitDifferenceGraphRaw = new ResultHitDifferenceGraph(new ScalableVector2(Width - VerticalDividerLine.X - 30, 200), Processor);
+            HitDifferenceGraphRaw = new ResultHitDifferenceGraph(new ScalableVector2(Width - VerticalDividerLine.X - 30, 200), Processor, ResultScreen.Map);
         }
 
         public override void Update(GameTime gameTime)

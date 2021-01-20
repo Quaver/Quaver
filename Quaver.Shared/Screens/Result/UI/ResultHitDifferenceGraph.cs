@@ -53,6 +53,11 @@ namespace Quaver.Shared.Screens.Result.UI
         private ScoreProcessor Processor { get; set; }
 
         /// <summary>
+        ///     The map of the stats
+        /// </summary>
+        private Map Map { get; set; }
+
+        /// <summary>
         ///     Hit stats with meaningful hit differences which are drawn as regular dots. This includes hits
         ///     within the judgement range. LN release hit differences are scaled down by their multiplier.
         /// </summary>
@@ -63,16 +68,6 @@ namespace Quaver.Shared.Screens.Result.UI
         ///     outside of the judgement range (early LN releases) and misses (including late LN releases).
         /// </summary>
         private List<HitStat> StatsWithoutHitDifference { get; set; }
-
-        /// <summary>
-        ///     Time of the first hit. Set in FilterHitStats().
-        /// </summary>
-        private int EarliestHitTime { get; set; }
-
-        /// <summary>
-        ///     Time of the last hit. Set in FilterHitStats().
-        /// </summary>
-        private int LatestHitTime { get; set; }
 
         /// <summary>
         ///     The largest hit window.
@@ -92,11 +87,15 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         /// <param name="size"></param>
         /// <param name="processor"></param>
-        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor, bool fakeStats = false)
+        /// <param name="map"></param>
+        /// <param name="fakeStats"></param>
+        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor, Map map,
+            bool fakeStats = false)
         {
             Tint = Color.Black;
             Alpha = 0f;
             Size = size;
+            Map = map;
 
             Processor = processor;
             LargestHitWindow = Processor.JudgementWindow.Values.Max();
@@ -131,11 +130,12 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <returns></returns>
         private float TimeToX(float time)
         {
-            var totalLength = Processor.Map.Length;
+            // Processor.Map is null when loading in a replay
+            var totalLength = Map.SongLength;
             if (totalLength == 0)
                 return Width / 2;
 
-            return (time - EarliestHitTime) * ((Width - MaxDotSize) / totalLength) + MaxDotSize / 2;
+            return time * ((Width - MaxDotSize) / totalLength) + MaxDotSize / 2;
         }
 
         /// <summary>
@@ -246,14 +246,9 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             StatsWithHitDifference = new List<HitStat>();
             StatsWithoutHitDifference = new List<HitStat>();
-            EarliestHitTime = int.MaxValue;
-            LatestHitTime = int.MinValue;
 
             foreach (var breakdown in Processor.Stats)
             {
-                EarliestHitTime = Math.Min(EarliestHitTime, breakdown.SongPosition);
-                LatestHitTime = Math.Max(LatestHitTime, breakdown.SongPosition);
-
                 var hitDifference = breakdown.HitDifference;
                 if (breakdown.KeyPressType == KeyPressType.Release && breakdown.Judgement != Judgement.Miss)
                 {
