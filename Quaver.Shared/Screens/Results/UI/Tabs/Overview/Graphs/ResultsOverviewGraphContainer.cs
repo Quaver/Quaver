@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -5,6 +6,7 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
@@ -100,7 +102,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// <param name="processor"></param>
         /// <param name="isSubmittingScore"></param>
         /// <param name="scoreSubmissionStats"></param>
-        public ResultsOverviewGraphContainer(Map map, Bindable<ScoreProcessor> processor, Bindable<bool> isSubmittingScore,
+        public ResultsOverviewGraphContainer(Map map, Bindable<ScoreProcessor> processor,
+            Bindable<bool> isSubmittingScore,
             Bindable<ScoreSubmissionResponse> scoreSubmissionStats)
         {
             Map = map;
@@ -124,6 +127,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             CreateStandardDeviation();
             CreateRatio();
 
+            if (ConfigManager.ResultGraph != null)
+                ConfigManager.ResultGraph.ValueChanged += OnResultGraphDropdownChanged;
+
             GraphDropdown.Parent = this;
         }
 
@@ -138,7 +144,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Size = new ScalableVector2(Width, 69),
             };
 
-            Footer = new ResultsOverviewFooter(Map, Processor, IsSubmittingScore, ScoreSubmissionStats, FooterContainer.Size)
+            Footer = new ResultsOverviewFooter(Map, Processor, IsSubmittingScore, ScoreSubmissionStats,
+                FooterContainer.Size)
             {
                 Parent = FooterContainer
             };
@@ -199,8 +206,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
                 Y = GraphDropdown.Y + GraphDropdown.Dropdown.Height / 2f,
-                Key = { Tint = ColorHelper.HexToColor("#808080") },
-                Value = { Tint = ColorHelper.HexToColor("#45D6F5") }
+                Key = {Tint = ColorHelper.HexToColor("#808080")},
+                Value = {Tint = ColorHelper.HexToColor("#45D6F5")}
             };
 
 
@@ -211,13 +218,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateStandardDeviation()
         {
-            StandardDeviation = new TextKeyValue("Std. Dev:", $"{Statistics.StandardDeviation:0.00} ms", Mean.Key.FontSize, Color.White)
+            StandardDeviation = new TextKeyValue("Std. Dev:", $"{Statistics.StandardDeviation:0.00} ms",
+                Mean.Key.FontSize, Color.White)
             {
                 Parent = RightContainer,
                 X = Mean.X + Mean.Width + STATISTICS_SPACING_X,
                 Y = Mean.Y,
-                Key = { Tint = Mean.Key.Tint },
-                Value = { Tint = Mean.Value.Tint }
+                Key = {Tint = Mean.Key.Tint},
+                Value = {Tint = Mean.Value.Tint}
             };
         }
 
@@ -234,15 +242,15 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             else if (judgements[Judgement.Marv] > 0 && judgements[Judgement.Perf] == 0)
                 ratio = "∞";
             else
-                ratio = $"{(float)judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
+                ratio = $"{(float) judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
 
             Ratio = new TextKeyValue("Ratio:", ratio, Mean.Key.FontSize, Color.White)
             {
                 Parent = RightContainer,
                 X = StandardDeviation.X + StandardDeviation.Width + STATISTICS_SPACING_X,
                 Y = Mean.Y,
-                Key = { Tint = Mean.Key.Tint },
-                Value = { Tint = Mean.Value.Tint }
+                Key = {Tint = Mean.Key.Tint},
+                Value = {Tint = Mean.Value.Tint}
             };
         }
 
@@ -289,5 +297,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Alignment = Alignment.MidCenter
             };
         }
+
+        private void OnResultGraphDropdownChanged(object sender, BindableValueChangedEventArgs<ResultGraphs> e) =>
+            CreateGraph();
     }
 }
