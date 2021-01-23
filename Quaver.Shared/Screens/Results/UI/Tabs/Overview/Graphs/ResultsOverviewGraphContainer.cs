@@ -10,6 +10,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
@@ -78,6 +79,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        private CachedAccuracyGraph AccuracyGraph { get; set; }
+
+        /// <summary>
+        /// </summary>
         private TextKeyValue Mean { get; set; }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             CreateLeftAndRightContainers();
             CreateJudgementGraph();
             CreateSelectionDropdown();
-            CreateDevianceGraph();
+            CreateGraph();
             CreateMean();
             CreateStandardDeviation();
             CreateRatio();
@@ -266,7 +271,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateDevianceGraph()
+        private void CreateGraph()
         {
             const int headerHeight = 68;
 
@@ -280,14 +285,44 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             if (Processor.Value.Stats != null && Processor.Value.Stats.Count > 0)
             {
-                DevianceGraph = new CachedHitDifferenceGraph(Map, Processor,
-                    new ScalableVector2(container.Width * 0.95f, container.Height * 0.95f))
+                var graphSize = new ScalableVector2(container.Width * 0.95f, container.Height * 0.95f);
+                switch (ConfigManager.ResultGraph.Value) // only generate the graphs if needed
                 {
-                    Parent = container,
-                    Alignment = Alignment.MidCenter,
-                    X = -5,
-                    Visible = true
-                };
+                    case ResultGraphs.Deviance:
+                        if (DevianceGraph == null)
+                        {
+                            DevianceGraph = new CachedHitDifferenceGraph(Map, Processor, graphSize)
+                            {
+                                Parent = container,
+                                Alignment = Alignment.MidCenter,
+                                X = -5,
+                                Visible = true
+                            };
+                        }
+                        // TODO how to make this better
+                        DevianceGraph.Visible = true;
+                        if (AccuracyGraph != null)
+                            AccuracyGraph.Visible = false;
+                        break;
+                    case ResultGraphs.Accuracy:
+                        if (AccuracyGraph == null)
+                        {
+                            AccuracyGraph = new CachedAccuracyGraph(Map, Processor, graphSize)
+                            {
+                                Parent = container,
+                                Alignment = Alignment.MidCenter,
+                                X = -5,
+                                Visible = true
+                            };
+                        }
+                        if (DevianceGraph != null)
+                            DevianceGraph.Visible = false;
+                        AccuracyGraph.Visible = true;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
                 return;
             }
 
