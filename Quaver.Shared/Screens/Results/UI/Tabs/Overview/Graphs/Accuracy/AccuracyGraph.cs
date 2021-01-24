@@ -162,7 +162,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 var thickness = 3;
 
                 // is sub grid line
-                if (AccuracyStep < 1 && acc % 1 > 0 ||
+                if (AccuracyStep < 0.25 && acc % 0.5 > 0 ||
+                    AccuracyStep >= 0.25 && AccuracyStep < 1 && acc % 1 > 0 ||
                     AccuracyStep >= 1 && AccuracyStep < 5 && acc % 5 > 0 ||
                     AccuracyStep >= 5 && AccuracyStep < 10 && acc % 10 > 0 ||
                     AccuracyStep >= 10 && AccuracyStep < 50 && acc % 50 > 0
