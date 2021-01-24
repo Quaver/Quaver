@@ -34,10 +34,19 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// </summary>
         private float MinAccuracy { get; set; }
 
+        /// <summary>
+        ///     The accuracy interval between each grid line
+        /// </summary>
         private float AccuracyStep { get; set; }
 
+        /// <summary>
+        ///     How many grid lines to draw in total
+        /// </summary>
         private int GridLineCount => (int) Math.Round((100f - AccuracyStart) / AccuracyStep);
 
+        /// <summary>
+        ///     The lower bound of the graph
+        /// </summary>
         private float AccuracyStart => MinAccuracy - AccuracyStep - (MinAccuracy % AccuracyStep);
 
         /// <summary>
@@ -45,6 +54,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// </summary>
         private List<(int, float)> AccuracyHistory { get; set; }
 
+        /// <summary>
+        ///     Downscaled container from parent container in order to fit the numbers
+        /// </summary>
         private Sprite ContentContainer { get; set; }
 
         /// <summary>
