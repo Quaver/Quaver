@@ -262,6 +262,9 @@ namespace Quaver.Shared.Screens.Result
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 ExitToMenu();
+            
+            // Allow users
+            HandleKeyPressRetry();
 
             if (MouseManager.IsUniqueClick(MouseButton.Right))
             {
