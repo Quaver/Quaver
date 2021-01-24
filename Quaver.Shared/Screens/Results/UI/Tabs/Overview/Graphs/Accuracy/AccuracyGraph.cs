@@ -34,9 +34,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// </summary>
         private float MinAccuracy { get; set; }
 
-        private float AccuracyStart { get; set; }
-
         private float AccuracyStep { get; set; }
+
+        private int GridLineCount => (int) Math.Round((100f - AccuracyStart) / AccuracyStep);
+
+        private float AccuracyStart => MinAccuracy - AccuracyStep - (MinAccuracy % AccuracyStep);
 
         /// <summary>
         ///     Accuracy data points throughout the score
@@ -96,26 +98,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 i++;
             }
 
-            switch (GradeHelper.GetGradeFromAccuracy(MinAccuracy))
+            // 99.5, 99, 98, 96, 90, 80, 75
+            foreach (var step in new[] {0.10f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f})
             {
-                case Grade.SS:
-                    AccuracyStep = 0.25f;
-                    break;
-                case Grade.S:
-                    AccuracyStep = 1.0f;
-                    break;
-                case Grade.A:
-                    AccuracyStep = 2.5f;
-                    break;
-                case Grade.B:
-                    AccuracyStep = 5.0f;
-                    break;
-                default:
-                    AccuracyStep = 10.0f;
+                AccuracyStep = step;
+                if (GridLineCount <= 10)
                     break;
             }
-
-            AccuracyStart = MinAccuracy - (MinAccuracy % AccuracyStep);
         }
 
         private void CreateDataPoints()
@@ -151,13 +140,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// </summary>
         private void CreateGridlinesAndLabels()
         {
-            var lineCount =
-                (int) Math.Round((100f - AccuracyStart) / AccuracyStep); // Round because of possible float inaccuracy
-
             // <= because we also want to draw the final line
-            for (var i = 0; i <= lineCount; i++)
+            for (var i = 0; i <= GridLineCount; i++)
             {
-                var relativeY = (float) i / lineCount;
+                var relativeY = (float) i / GridLineCount;
                 var acc = Math.Round(100f - i * AccuracyStep, 2);
 
                 var line = new Sprite
@@ -191,19 +177,19 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
             switch (GradeHelper.GetGradeFromAccuracy(accuracy))
             {
                 case Grade.X:
-                    return new Color(251,255,182);
+                    return new Color(251, 255, 182);
                 case Grade.SS:
-                    return new Color(255,241,137);
+                    return new Color(255, 241, 137);
                 case Grade.S:
-                    return new Color(255,231,107);
+                    return new Color(255, 231, 107);
                 case Grade.A:
-                    return new Color(86,254,110);
+                    return new Color(86, 254, 110);
                 case Grade.B:
-                    return new Color(0,209,255);
+                    return new Color(0, 209, 255);
                 case Grade.C:
-                    return new Color(217,107,206);
+                    return new Color(217, 107, 206);
                 default:
-                    return new Color(249,100,93);
+                    return new Color(249, 100, 93);
             }
         }
     }
