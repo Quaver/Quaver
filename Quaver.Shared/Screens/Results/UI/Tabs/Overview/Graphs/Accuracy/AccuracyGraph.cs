@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 Parent = this,
                 Alpha = 0f,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(Width - 60, Height * 0.9f)
+                Size = new ScalableVector2(Width - 80, Height * 0.9f)
             };
 
             CreateAccuracyHistory();
@@ -157,23 +157,39 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
             {
                 var relativeY = (float) i / GridLineCount;
                 var acc = Math.Round(100f - i * AccuracyStep, 2);
+                var alpha = 0.5f;
+                var textAlpha = 1.0f;
+                var thickness = 3;
+
+                // is sub grid line
+                if (AccuracyStep < 1 && acc % 1 > 0 ||
+                    AccuracyStep >= 1 && AccuracyStep < 5 && acc % 5 > 0 ||
+                    AccuracyStep >= 5 && AccuracyStep < 10 && acc % 10 > 0 ||
+                    AccuracyStep >= 10 && AccuracyStep < 50 && acc % 50 > 0
+                    )
+                {
+                    alpha /= 3;
+                    textAlpha /= 2;
+                    thickness = 2;
+                }
 
                 var line = new Sprite
                 {
                     Parent = ContentContainer,
-                    Alpha = 0.5f,
+                    Alpha = alpha,
                     Tint = ColorHelper.HexToColor("#808080"),
                     Alignment = Alignment.TopCenter,
                     Y = relativeY * ContentContainer.Height,
-                    Size = new ScalableVector2(ContentContainer.Width, 2),
+                    Size = new ScalableVector2(ContentContainer.Width, thickness),
                 };
 
-                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{acc}%", 20,
+                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{acc:f2}%", 20,
                     false)
                 {
                     Parent = line,
                     Alignment = Alignment.MidLeft,
-                    Tint = ColorHelper.HexToColor("#808080")
+                    Tint = ColorHelper.HexToColor("#808080"),
+                    Alpha = textAlpha
                 };
 
                 text.X -= text.Width + 10;
