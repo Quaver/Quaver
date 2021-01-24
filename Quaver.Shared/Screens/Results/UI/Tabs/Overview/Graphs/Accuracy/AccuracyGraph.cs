@@ -121,17 +121,16 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         private void CreateDataPoints()
         {
             var start = AccuracyHistory.First().Item1;
-            var end = AccuracyHistory.Last().Item1;
+            var end = Map.SongLength;
 
             for (var i = 0; i < AccuracyHistory.Count; i++)
             {
                 var (time, acc) = AccuracyHistory[i];
-
-                var nextTime = i == AccuracyHistory.Count - 1 ? 1 : AccuracyHistory[i + 1].Item1;
-                var songProgress = (float) (time - start) / (end - start);
-                var nextSongProgress = (float) (nextTime - start) / (end - start);
-
                 var y = (acc - AccuracyStart) / (100f - AccuracyStart);
+
+                var songProgress = (float) (time - start) / (end - start);
+                var nextTime = i == AccuracyHistory.Count - 1 ? time : AccuracyHistory[i + 1].Item1;
+                var nextSongProgress = (float) (nextTime - start) / (end - start);
                 var width = nextSongProgress - songProgress;
 
                 var point = new Sprite
