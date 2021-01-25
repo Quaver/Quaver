@@ -777,7 +777,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             // Using i < 3 to prevent selecting the unimplemented Mine tool
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < Enum.GetNames(typeof(EditorCompositionTool)).Length; i++)
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
                     CompositionTool.Value = (EditorCompositionTool)i;
