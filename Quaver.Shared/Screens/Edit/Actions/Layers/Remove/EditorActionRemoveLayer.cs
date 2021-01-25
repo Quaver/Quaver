@@ -29,6 +29,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
 
         private BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
+        private int Index { get; set; }
+
         /// <summary>
         /// </summary>
         /// <param name="manager"></param>
@@ -48,9 +50,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            var index = WorkingMap.EditorLayers.IndexOf(Layer) + 1;
+            Index = WorkingMap.EditorLayers.IndexOf(Layer) + 1;
 
-            HitObjectsInLayer = WorkingMap.HitObjects.FindAll(x => x.EditorLayer == index);
+            HitObjectsInLayer = WorkingMap.HitObjects.FindAll(x => x.EditorLayer == Index);
 
             // Remove the objects from being selected
             HitObjectsInLayer.ForEach(x => SelectedHitObjects.Remove(x));
@@ -60,7 +62,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
             new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, HitObjectsInLayer).Perform();
 
             // Find HitObjects at the indices above it and update them
-            var hitObjects = WorkingMap.HitObjects.FindAll(x => x.EditorLayer > index);
+            var hitObjects = WorkingMap.HitObjects.FindAll(x => x.EditorLayer > Index);
             hitObjects.ForEach(x => x.EditorLayer--);
 
             ActionManager.TriggerEvent(EditorActionType.RemoveLayer, new EditorLayerRemovedEventArgs(Layer));
@@ -70,8 +72,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
         public void Undo()
         {
             new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, HitObjectsInLayer).Perform();
-            new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, Layer).Perform();
-            HitObjectsInLayer.ForEach(x => x.EditorLayer = WorkingMap.EditorLayers.Count);
+            new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, Layer, Index).Perform();
+            HitObjectsInLayer.ForEach(x => x.EditorLayer = Index);
         }
     }
 }

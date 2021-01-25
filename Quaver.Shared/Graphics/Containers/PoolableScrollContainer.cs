@@ -230,14 +230,38 @@ namespace Quaver.Shared.Graphics.Containers
             {
                 var drawable = CreateObject(AvailableItems[index], index);
                 drawable.DestroyIfParentIsNull = false;
-                drawable.Y = (PoolStartingIndex + index) * drawable.Height + PaddingTop;
+
+                Pool.Insert(index - PoolStartingIndex, drawable);
+
+                for (int i = index; i < Pool.Count; i++)
+                {
+                    var foo = Pool[i];
+                    foo.Y = (PoolStartingIndex + i) * foo.Height + PaddingTop;
+                }
 
                 if (updateContent)
                     drawable.UpdateContent(AvailableItems[index], index);
 
-                Pool.Add(drawable);
-
                 return drawable;
+            }
+        }
+
+        protected void AddObjectAtIndex(int index, T obj, bool scrollTo, bool usePoolCount = false)
+        {
+            lock (AvailableItems)
+            lock (Pool)
+            {
+                if (!AvailableItems.Contains(obj))
+                    AvailableItems.Insert(index, obj);
+
+                // Need another drawable to use
+                if (Pool.Count < PoolSize)
+                    AddContainedDrawable(AddObject(index));
+
+                RecalculateContainerHeight(usePoolCount);
+
+                if (scrollTo)
+                    ScrollTo(-index * DrawableHeight, 1000);
             }
         }
 
