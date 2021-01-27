@@ -89,7 +89,10 @@ namespace Quaver.Shared.Database.Maps
                                 Logger.Debug($"Successfully converted osu beatmap: {osuPath}", LogType.Runtime);
                                 break;
                             case MapGame.Etterna:
-                                var stepFile = new StepFile(map.Path);
+                                var stepFile = new StepFile(map.Path)
+                                {
+                                    Background = Path.GetFileName(map.BackgroundPath)
+                                };
                                 var fileName = StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}].qua");
                                 var fileSavePath = $"{tempFolder}/{fileName}";
                                 stepFile.ToQuas().Find(x => x.DifficultyName == map.DifficultyName).Save(fileSavePath);
@@ -113,6 +116,14 @@ namespace Quaver.Shared.Database.Maps
 
                         if (File.Exists(MapManager.GetBackgroundPath(map)) && !File.Exists(bgPath))
                             File.Copy(MapManager.GetBackgroundPath(map), bgPath);
+
+                        // Copy over banner file if necessary
+                        var bnPath = map.Game != MapGame.Etterna ?
+                            $"{tempFolder}/{map.BannerPath}" :
+                            $"{tempFolder}/{Path.GetFileName(map.BannerPath)}";
+
+                        if (File.Exists(MapManager.GetBannerPath(map)) && !File.Exists(bnPath))
+                            File.Copy(MapManager.GetBannerPath(map), bnPath);
                     }
                     catch (Exception e)
                     {
