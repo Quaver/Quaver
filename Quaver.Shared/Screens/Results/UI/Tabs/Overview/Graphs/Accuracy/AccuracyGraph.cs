@@ -55,6 +55,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         private List<(int, float)> AccuracyHistory { get; set; }
 
         /// <summary>
+        ///     Accuracy data if the player hit perfectly after the fail/quit point
+        /// </summary>
+        private List<(int, float)> MaximumPossibleHistory { get; set; }
+
+        /// <summary>
         ///     Downscaled container from parent container in order to fit the numbers
         /// </summary>
         private Sprite ContentContainer { get; set; }
@@ -110,6 +115,30 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 i++;
             }
 
+            // score was quit or failed
+            if (simulatedProcessor.TotalJudgementCount < simulatedProcessor.GetTotalJudgementCount())
+            {
+                MaximumPossibleHistory = new List<(int, float)>();
+                var hitObjectsLeftToPlay = Map.Qua.HitObjects.Where(h => h.StartTime > AccuracyHistory.Last().Item1);
+
+                // separate ordered list is required because of hits being out of order if you go though each hit object and take the start/end time at that moment
+                var hitTimes = new List<(int, bool)>(); // time, isLN
+                foreach (var hitObject in hitObjectsLeftToPlay)
+                {
+                    hitTimes.Add((hitObject.StartTime, false));
+                    if (hitObject.IsLongNote)
+                        hitTimes.Add((hitObject.EndTime, true));
+                }
+
+                foreach (var (time, isLn) in hitTimes.OrderBy(h => h.Item1))
+                {
+                    simulatedProcessor.CalculateScore(Judgement.Marv, isLn);
+                    var acc = simulatedProcessor.Accuracy;
+                    MaximumPossibleHistory.Add((time, acc));
+                }
+            }
+
+            // determine optimal step size for grid lines
             // 99.5, 99, 98, 96, 90, 80, 75
             foreach (var step in new[] {0.10f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f})
             {
@@ -121,16 +150,23 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
 
         private void CreateDataPoints()
         {
+            DrawDataPointsFromHistory(AccuracyHistory, 1f);
+            if (MaximumPossibleHistory != null)
+                DrawDataPointsFromHistory(MaximumPossibleHistory, 0.2f);
+        }
+
+        private void DrawDataPointsFromHistory(IReadOnlyList<(int, float)> history, float opacity)
+        {
             var start = AccuracyHistory.First().Item1;
             var end = Map.SongLength;
 
-            for (var i = 0; i < AccuracyHistory.Count; i++)
+            for (var i = 0; i < history.Count; i++)
             {
-                var (time, acc) = AccuracyHistory[i];
+                var (time, acc) = history[i];
                 var y = (acc - AccuracyStart) / (100f - AccuracyStart);
 
                 var songProgress = (float) (time - start) / (end - start);
-                var nextTime = i == AccuracyHistory.Count - 1 ? time : AccuracyHistory[i + 1].Item1;
+                var nextTime = i == history.Count - 1 ? time : history[i + 1].Item1;
                 var nextSongProgress = (float) (nextTime - start) / (end - start);
                 var width = nextSongProgress - songProgress;
 
@@ -142,7 +178,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                     Y = (1f - y) * ContentContainer.Height,
                     Size = new ScalableVector2(width * ContentContainer.Width, y * ContentContainer.Height),
                     Visible = true,
-                    Alpha = 1f,
+                    Alpha = opacity,
                     Tint = GetColor(acc)
                 };
             }
