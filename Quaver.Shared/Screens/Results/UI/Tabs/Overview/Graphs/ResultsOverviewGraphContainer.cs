@@ -8,17 +8,20 @@ using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
@@ -318,6 +321,24 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                         if (DevianceGraph != null)
                             DevianceGraph.Visible = false;
                         AccuracyGraph.Visible = true;
+
+                        var tooltipArea = new ImageButton(UserInterface.BlankBox)
+                        {
+                            Parent = container,
+                            Alignment = Alignment.MidRight,
+                            Size = container.Size,
+                            Alpha = 0f
+                        };
+
+                        const string tooltipText = "Course of accuracy throughout the map.\n" +
+                                                   "If the map was not completed, then it will additionally\n" +
+                                                   "show the accuracy if all subsequent hits had been\n" +
+                                                   "Marvelouses instead.";
+
+                        var game = GameBase.Game as QuaverGame;
+                        tooltipArea.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(new Tooltip(tooltipText, ColorHelper.HexToColor("#5dc7f9")));
+                        tooltipArea.LeftHover += (sender, args) => game?.CurrentScreen?.DeactivateTooltip();
+
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
