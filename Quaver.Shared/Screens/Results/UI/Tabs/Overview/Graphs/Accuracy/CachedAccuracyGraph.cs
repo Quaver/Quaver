@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         private AccuracyGraph AccuracyGraph { get; set; }
 
         /// <summary>
-        ///     Displays the cached version of <see cref="ResultHitDifferenceGraph"/>
+        ///     Displays the cached version of <see cref="AccuracyGraph"/>
         /// </summary>
         public Sprite CachedSprite { get; }
 
@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
             Processor = processor;
             Size = size;
 
-            CreateHitDifferenceGraph();
+            CreateAccuracyGraph();
 
             CachedSprite = new Sprite
             {
@@ -113,6 +113,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
 
         /// <summary>
         /// </summary>
-        private void CreateHitDifferenceGraph() => AccuracyGraph = new AccuracyGraph(Map, Processor, Size);
+        private void CreateAccuracyGraph() => AccuracyGraph = new AccuracyGraph(Map, Processor, Size);
     }
 }
