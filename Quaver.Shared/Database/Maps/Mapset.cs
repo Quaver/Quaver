@@ -89,10 +89,8 @@ namespace Quaver.Shared.Database.Maps
                                 Logger.Debug($"Successfully converted osu beatmap: {osuPath}", LogType.Runtime);
                                 break;
                             case MapGame.Etterna:
-                                var stepFile = new StepFile(map.Path)
-                                {
-                                    Background = Path.GetFileName(map.BackgroundPath)
-                                };
+                                var stepFile = new StepFile(map.Path);
+
                                 var fileName = StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}].qua");
                                 var fileSavePath = $"{tempFolder}/{fileName}";
                                 stepFile.ToQuas().Find(x => x.DifficultyName == map.DifficultyName).Save(fileSavePath);
