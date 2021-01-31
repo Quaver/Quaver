@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -70,6 +71,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        private Sprite GraphContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
         private ResultsJudgementGraph JudgementGraph { get; set; }
 
         /// <summary>
@@ -78,11 +83,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private CachedHitDifferenceGraph DevianceGraph { get; set; }
-
-        /// <summary>
-        /// </summary>
-        private CachedAccuracyGraph AccuracyGraph { get; set; }
+        private Dictionary<ResultGraphs, Drawable> Graphs { get; } = new Dictionary<ResultGraphs, Drawable>();
 
         /// <summary>
         /// </summary>
@@ -103,6 +104,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// <summary>
         /// </summary>
         private HitStatistics Statistics { get; }
+
+        /// <summary>
+        /// </summary>
+        private ScalableVector2 GraphSize => new ScalableVector2(GraphContainer.Width * 0.95f, GraphContainer.Height * 0.95f);
 
         /// <summary>
         /// </summary>
@@ -286,7 +291,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         {
             const int headerHeight = 68;
 
-            var container = new Sprite()
+            GraphContainer = new Sprite
             {
                 Parent = RightContainer,
                 Size = new ScalableVector2(RightContainer.Width, RightContainer.Height - headerHeight),
@@ -296,76 +301,53 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             if (Processor.Value.Stats != null && Processor.Value.Stats.Count > 0)
             {
-                var graphSize = new ScalableVector2(container.Width * 0.95f, container.Height * 0.95f);
-
-                // Only generate the graphs if needed
-                switch (ConfigManager.ResultGraph.Value)
-                {
-                    case ResultGraphs.Deviance:
-                        if (DevianceGraph == null)
-                        {
-                            DevianceGraph = new CachedHitDifferenceGraph(Map, Processor, graphSize)
-                            {
-                                Parent = container,
-                                Alignment = Alignment.MidCenter,
-                                X = -5,
-                                Visible = true
-                            };
-                        }
-                        // TODO how to make this better
-                        DevianceGraph.Visible = true;
-                        if (AccuracyGraph != null)
-                            AccuracyGraph.Visible = false;
-                        break;
-                    case ResultGraphs.Accuracy:
-                        if (AccuracyGraph == null)
-                        {
-                            AccuracyGraph = new CachedAccuracyGraph(Map, Processor, graphSize)
-                            {
-                                Parent = container,
-                                Alignment = Alignment.MidCenter,
-                                X = -5,
-                                Visible = true
-                            };
-                        }
-                        if (DevianceGraph != null)
-                            DevianceGraph.Visible = false;
-                        AccuracyGraph.Visible = true;
-
-                        var tooltipArea = new ImageButton(UserInterface.BlankBox)
-                        {
-                            Parent = container,
-                            Alignment = Alignment.MidRight,
-                            Size = container.Size,
-                            Alpha = 0f
-                        };
-
-                        const string tooltipText = "Course of accuracy throughout the map.\n" +
-                                                   "If the map was not completed, then it will additionally\n" +
-                                                   "show the accuracy if all subsequent hits had been\n" +
-                                                   "Marvelouses instead.";
-
-                        var game = GameBase.Game as QuaverGame;
-                        tooltipArea.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(new Tooltip(tooltipText, ColorHelper.HexToColor("#5dc7f9")));
-                        tooltipArea.LeftHover += (sender, args) => game?.CurrentScreen?.DeactivateTooltip();
-
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
+                CreateDevianceGraph();
+                CreateAccuracyGraph();
+                ToggleGraphVisibility();
                 return;
             }
 
             var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Statistics Not Available", 22)
             {
-                Parent = container,
+                Parent = GraphContainer,
                 Alignment = Alignment.MidCenter
             };
         }
 
+        /// <summary>
+        ///     Creates/Enables the deviance graph
+        /// </summary>
+        private void CreateDevianceGraph() => Graphs[ResultGraphs.Deviance] = new CachedHitDifferenceGraph(Map, Processor, GraphSize)
+        {
+            Parent = GraphContainer,
+            Alignment = Alignment.MidCenter,
+            X = -5,
+            Visible = false
+        };
+
+        /// <summary>
+        ///     Creates/Enables the accuracy graph
+        /// </summary>
+        private void CreateAccuracyGraph() => Graphs[ResultGraphs.Accuracy] = new CachedAccuracyGraph(Map, Processor, GraphSize)
+        {
+            Parent = GraphContainer,
+            Alignment = Alignment.MidCenter,
+            X = -5,
+            Visible = false
+        };
+
+        /// <summary>
+        ///     Toggles the visibility of the correct graph
+        /// </summary>
+        private void ToggleGraphVisibility()
+        {
+            foreach (var graph in Graphs)
+            {
+                graph.Value.Visible = graph.Key == ConfigManager.ResultGraph.Value;
+            }
+        }
 
         private void OnResultGraphDropdownChanged(object sender, BindableValueChangedEventArgs<ResultGraphs> e) =>
-            CreateGraph();
+            ToggleGraphVisibility();
     }
 }

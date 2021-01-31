@@ -91,10 +91,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
 
         private void CreateAccuracyHistory()
         {
-            if (!(Processor.Value is ScoreProcessorKeys keysProcessor)) return;
-            // keysProcessor.Map is not set for replays
-            var simulatedProcessor =
-                new ScoreProcessorKeys(Map.Qua, keysProcessor.Mods, keysProcessor.Windows);
+            if (!(Processor.Value is ScoreProcessorKeys keysProcessor))
+                return;
+
+            var simulatedProcessor = new ScoreProcessorKeys(Map.Qua ?? Map.LoadQua(), keysProcessor.Mods, keysProcessor.Windows);
 
             AccuracyHistory = new List<(int, float)>();
             MinAccuracy = 100f;

@@ -2,14 +2,19 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Result.UI;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
 using Wobble.Window;
 
@@ -38,6 +43,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         ///     The RenderTarget that draws the bar for <see cref="CachedSprite"/> to use
         /// </summary>
         private RenderTarget2D RenderTarget { get; }
+
+        /// <summary>
+        /// </summary>
+        private ImageButton ToolTipArea { get; set; }
 
         /// <summary>
         /// </summary>
@@ -71,6 +80,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
 
             NeedsToCache = true;
+            CreateTooltip();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            ToolTipArea.IsClickable = ConfigManager.ResultGraph?.Value == ResultGraphs.Accuracy;
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -114,5 +130,27 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// <summary>
         /// </summary>
         private void CreateAccuracyGraph() => AccuracyGraph = new AccuracyGraph(Map, Processor, Size);
+
+        /// <summary>
+        /// </summary>
+        private void CreateTooltip()
+        {
+            ToolTipArea = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                Size = Size,
+                Alpha = 0f,
+            };
+
+            const string tooltipText = "This displays the course of accuracy throughout the score.\n\n" +
+                                       "If the map was not completed, then it will additionally\n" +
+                                       "show the accuracy if all subsequent hits had been\n" +
+                                       "Marvelous instead.";
+
+            var game = GameBase.Game as QuaverGame;
+            ToolTipArea.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(new Tooltip(tooltipText, ColorHelper.HexToColor("#5dc7f9")));
+            ToolTipArea.LeftHover += (sender, args) => game?.CurrentScreen?.DeactivateTooltip();
+        }
     }
 }
