@@ -22,6 +22,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
@@ -239,7 +240,7 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> TintHitLightingBasedOnJudgementColor { get; private set; }
 
         /// <summary>
-        ///     Dictates how to order the mapsets during song select.
+        ///     Dictates how to order the mapsets during song select.Get
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
@@ -742,6 +743,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyScreenshot { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<ResultGraphs> ResultGraph { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -991,6 +996,7 @@ namespace Quaver.Shared.Config
             EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
+            ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
