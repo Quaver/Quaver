@@ -141,6 +141,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             GraphDropdown.Parent = this;
         }
 
+        public override void Destroy()
+        {
+            if (ConfigManager.ResultGraph != null)
+                ConfigManager.ResultGraph.ValueChanged -= OnResultGraphDropdownChanged;
+
+            base.Destroy();
+        }
+
         /// <summary>
         /// </summary>
         private void CreateFooterContainer()
@@ -289,7 +297,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             if (Processor.Value.Stats != null && Processor.Value.Stats.Count > 0)
             {
                 var graphSize = new ScalableVector2(container.Width * 0.95f, container.Height * 0.95f);
-                switch (ConfigManager.ResultGraph.Value) // only generate the graphs if needed
+
+                // Only generate the graphs if needed
+                switch (ConfigManager.ResultGraph.Value)
                 {
                     case ResultGraphs.Deviance:
                         if (DevianceGraph == null)
@@ -353,6 +363,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Alignment = Alignment.MidCenter
             };
         }
+
 
         private void OnResultGraphDropdownChanged(object sender, BindableValueChangedEventArgs<ResultGraphs> e) =>
             CreateGraph();
