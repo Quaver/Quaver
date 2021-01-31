@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// <summary>
         ///     Downscaled container from parent container in order to fit the numbers
         /// </summary>
-        private Sprite ContentContainer { get; set; }
+        private Sprite ContentContainer { get; }
 
         /// <summary>
         /// </summary>
@@ -101,31 +101,42 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
 
             var i = 0;
             var previousTime = int.MinValue;
+
             foreach (var stat in keysProcessor.Stats)
             {
                 simulatedProcessor.CalculateScore(stat.Judgement, stat.KeyPressType == KeyPressType.Release);
+
                 var acc = simulatedProcessor.Accuracy;
+
+                // Prevent multiple accuracies on a single time
                 if (stat.SongPosition == previousTime)
-                    AccuracyHistory.Remove(AccuracyHistory.Last()); // prevent multiple accuracies on a single time
+                    AccuracyHistory.Remove(AccuracyHistory.Last());
+
                 AccuracyHistory.Add((stat.SongPosition, acc));
                 previousTime = stat.SongPosition;
+
                 // skip the first judgements because of heavy fluctuations
                 if (i > 20)
                     MinAccuracy = Math.Min(acc, MinAccuracy);
+
                 i++;
             }
 
-            // score was quit or failed
+            // Score was quit or failed
             if (simulatedProcessor.TotalJudgementCount < simulatedProcessor.GetTotalJudgementCount())
             {
                 MaximumPossibleHistory = new List<(int, float)>();
                 var hitObjectsLeftToPlay = Map.Qua.HitObjects.Where(h => h.StartTime > AccuracyHistory.Last().Item1);
 
-                // separate ordered list is required because of hits being out of order if you go though each hit object and take the start/end time at that moment
-                var hitTimes = new List<(int, bool)>(); // time, isLN
+                // Separate ordered list is required because of hits being out of order if you go though each hit object
+                // and take the start/end time at that moment
+                // time, isLN
+                var hitTimes = new List<(int, bool)>();
+
                 foreach (var hitObject in hitObjectsLeftToPlay)
                 {
                     hitTimes.Add((hitObject.StartTime, false));
+
                     if (hitObject.IsLongNote)
                         hitTimes.Add((hitObject.EndTime, true));
                 }
@@ -133,12 +144,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 foreach (var (time, isLn) in hitTimes.OrderBy(h => h.Item1))
                 {
                     simulatedProcessor.CalculateScore(Judgement.Marv, isLn);
+
                     var acc = simulatedProcessor.Accuracy;
                     MaximumPossibleHistory.Add((time, acc));
                 }
             }
 
-            // determine optimal step size for grid lines
+            // Determine optimal step size for grid lines
             // 99.5, 99, 98, 96, 90, 80, 75
             foreach (var step in new[] {0.10f, 0.25f, 0.5f, 1.0f, 2.0f, 5.0f, 10.0f})
             {
@@ -151,6 +163,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         private void CreateDataPoints()
         {
             DrawDataPointsFromHistory(AccuracyHistory, 1f);
+
             if (MaximumPossibleHistory != null)
                 DrawDataPointsFromHistory(MaximumPossibleHistory, 0.2f);
         }
@@ -202,8 +215,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                     AccuracyStep >= 0.25 && AccuracyStep < 1 && acc % 1 > 0 ||
                     AccuracyStep >= 1 && AccuracyStep < 5 && acc % 5 > 0 ||
                     AccuracyStep >= 5 && AccuracyStep < 10 && acc % 10 > 0 ||
-                    AccuracyStep >= 10 && AccuracyStep < 50 && acc % 50 > 0
-                    )
+                    AccuracyStep >= 10 && AccuracyStep < 50 && acc % 50 > 0)
                 {
                     alpha /= 3;
                     textAlpha /= 2;
