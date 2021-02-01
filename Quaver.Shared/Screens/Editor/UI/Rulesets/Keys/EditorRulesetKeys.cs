@@ -211,7 +211,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                     break;
                 case EditorCompositionTool.Note:
                 case EditorCompositionTool.LongNote:
-                case EditorCompositionTool.Mine:
                     HandleHitObjectMouseInput();
                     break;
                 default:
@@ -666,7 +665,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.Select),
             new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.Note),
             new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.LongNote),
-            new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.Mine)
         };
 
         /// <summary>

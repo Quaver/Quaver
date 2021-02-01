@@ -249,7 +249,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 // Give custom banners first priority
                 var bannerExists = true;
 
-                var path = MapManager.GetBannerPath(mapset);
+                var path = MapManager.GetMapsetBannerPath(mapset);
 
                 // Give map backgrounds second priority
                 if (!File.Exists(path))

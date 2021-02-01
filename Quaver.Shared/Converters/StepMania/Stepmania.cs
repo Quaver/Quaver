@@ -84,6 +84,19 @@ namespace Quaver.Shared.Converters.StepMania
                     {
                         Logger.Error(e, LogType.Runtime);
                     }
+
+                    // Copy over banner files.
+                    try
+                    {
+                        var path = $"{extractDirectory}/{qua.BannerFile}";
+
+                        if (!File.Exists(path))
+                            File.Copy($"{Path.GetDirectoryName(file)}/{qua.BannerFile}", path);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, LogType.Runtime);
+                    }
                 }
             }
             catch (Exception e)

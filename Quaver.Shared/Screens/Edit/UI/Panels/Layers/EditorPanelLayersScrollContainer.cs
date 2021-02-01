@@ -141,10 +141,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             if (Pool.Any(x => x.Item == e.Layer))
                 return;
 
-            AddObjectToBottom(e.Layer, true);
-
-            var item = Pool.Last() as DrawableEditorLayer;
-            SelectedLayer.Value = item?.Item;
+            if (e.Index >= 1)
+            {
+                AddObjectAtIndex(e.Index, e.Layer, true);
+                var item = Pool[e.Index] as DrawableEditorLayer;
+                SelectedLayer.Value = item?.Item;
+            }
+            else
+            {
+                AddObjectToBottom(e.Layer, true);
+                var item = Pool.Last() as DrawableEditorLayer;
+                SelectedLayer.Value = item?.Item;
+            }
         }
 
         private void OnLayerDeleted(object sender, EditorLayerRemovedEventArgs e)

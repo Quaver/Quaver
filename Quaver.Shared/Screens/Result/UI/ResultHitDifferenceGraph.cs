@@ -14,8 +14,10 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
+using TagLib.Matroska;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -36,6 +38,11 @@ namespace Quaver.Shared.Screens.Result.UI
         private const float MissDotSize = 5;
 
         /// <summary>
+        ///     The width of each miss line.
+        /// </summary>
+        private const float MissLineWidth = 2;
+
+        /// <summary>
         ///     The largest of the dot sizes. Used for things like minimum graph width and dot positioning.
         /// </summary>
         private static float MaxDotSize => Math.Max(DotSize, MissDotSize);
@@ -44,6 +51,11 @@ namespace Quaver.Shared.Screens.Result.UI
         ///     The score processor.
         /// </summary>
         private ScoreProcessor Processor { get; set; }
+
+        /// <summary>
+        ///     The map of the stats
+        /// </summary>
+        private Map Map { get; set; }
 
         /// <summary>
         ///     Hit stats with meaningful hit differences which are drawn as regular dots. This includes hits
@@ -56,16 +68,6 @@ namespace Quaver.Shared.Screens.Result.UI
         ///     outside of the judgement range (early LN releases) and misses (including late LN releases).
         /// </summary>
         private List<HitStat> StatsWithoutHitDifference { get; set; }
-
-        /// <summary>
-        ///     Time of the first hit. Set in FilterHitStats().
-        /// </summary>
-        private int EarliestHitTime { get; set; }
-
-        /// <summary>
-        ///     Time of the last hit. Set in FilterHitStats().
-        /// </summary>
-        private int LatestHitTime { get; set; }
 
         /// <summary>
         ///     The largest hit window.
@@ -85,11 +87,15 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         /// <param name="size"></param>
         /// <param name="processor"></param>
-        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor, bool fakeStats = false)
+        /// <param name="map"></param>
+        /// <param name="fakeStats"></param>
+        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor, Map map,
+            bool fakeStats = false)
         {
             Tint = Color.Black;
             Alpha = 0f;
             Size = size;
+            Map = map;
 
             Processor = processor;
             LargestHitWindow = Processor.JudgementWindow.Values.Max();
@@ -105,6 +111,7 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Processor.Stats != null)
             {
                 FilterHitStats();
+                CreateMissLines();
                 CreateDotsWithHitDifference();
                 CreateDotsWithoutHitDifference();
             }
@@ -124,12 +131,12 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <returns></returns>
         private float TimeToX(float time)
         {
-            var totalLength = LatestHitTime - EarliestHitTime;
-
+            // Processor.Map is null when loading in a replay
+            var totalLength = Map.SongLength;
             if (totalLength == 0)
                 return Width / 2;
 
-            return (time - EarliestHitTime) * ((Width - MaxDotSize) / totalLength) + MaxDotSize / 2;
+            return time * ((Width - MaxDotSize) / totalLength) + MaxDotSize / 2;
         }
 
         /// <summary>
@@ -200,7 +207,7 @@ namespace Quaver.Shared.Screens.Result.UI
                         Size = new ScalableVector2(Width, 2),
                     };
 
-                    LineData.Add(new HitDifferenceGraphLineData(judgement, line, difference * k));
+                    LineData.Add(new HitDifferenceGraphLineData(judgement, line, (difference - windowSize) * k));
                 }
             }
         }
@@ -240,14 +247,9 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             StatsWithHitDifference = new List<HitStat>();
             StatsWithoutHitDifference = new List<HitStat>();
-            EarliestHitTime = int.MaxValue;
-            LatestHitTime = int.MinValue;
 
             foreach (var breakdown in Processor.Stats)
             {
-                EarliestHitTime = Math.Min(EarliestHitTime, breakdown.SongPosition);
-                LatestHitTime = Math.Max(LatestHitTime, breakdown.SongPosition);
-
                 var hitDifference = breakdown.HitDifference;
                 if (breakdown.KeyPressType == KeyPressType.Release && breakdown.Judgement != Judgement.Miss)
                 {
@@ -265,6 +267,28 @@ namespace Quaver.Shared.Screens.Result.UI
                     StatsWithHitDifference.Add(hitStat);
                 else
                     StatsWithoutHitDifference.Add(hitStat);
+            }
+        }
+
+        /// <summary>
+        ///     Creates lines for misses to indicate combo breaks
+        /// </summary>
+        private void CreateMissLines()
+        {
+            foreach (var miss in Processor.Stats.FindAll(s => s.Judgement == Judgement.Miss))
+            {
+                Console.WriteLine(miss);
+                // ReSharper disable once ObjectCreationAsStatement
+                new Sprite
+                {
+                    Parent = this,
+                    Alpha = 0.35f,
+                    Tint = ResultsJudgementGraphBar.GetColor(Judgement.Miss),
+                    Alignment = Alignment.MidLeft,
+                    X = TimeToX(miss.SongPosition),
+                    Y = 0,
+                    Size = new ScalableVector2(MissLineWidth, Height)
+                };
             }
         }
 

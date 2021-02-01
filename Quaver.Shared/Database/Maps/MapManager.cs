@@ -117,14 +117,48 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Gets the banner path for a given map.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public static string GetBannerPath(Map map)
+        {
+            if (map == null)
+                return "";
+
+            switch (map.Game)
+            {
+                case MapGame.Osu:
+                    return "";
+                case MapGame.Quaver:
+                    return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BannerPath;
+                case MapGame.Etterna:
+                    return map.BannerPath;
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
         ///     Returns the path of the banner file provided a mapset
         /// </summary>
         /// <param name="mapset"></param>
         /// <returns></returns>
-        public static string GetBannerPath(Mapset mapset)
+        public static string GetMapsetBannerPath(Mapset mapset)
         {
             var map = mapset.Maps.First();
-            return (ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BannerPath).Replace("\\", "/");
+
+            switch (map.Game)
+            {
+                case MapGame.Osu:
+                    return "";
+                case MapGame.Quaver:
+                    return (ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BannerPath).Replace("\\", "/");
+                case MapGame.Etterna:
+                    return map.BannerPath;
+                default:
+                    return "";
+            }
         }
 
         /// <summary>

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -5,17 +7,22 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
@@ -64,6 +71,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        private Sprite GraphContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
         private ResultsJudgementGraph JudgementGraph { get; set; }
 
         /// <summary>
@@ -72,7 +83,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private CachedHitDifferenceGraph DevianceGraph { get; set; }
+        private Dictionary<ResultGraphs, Drawable> Graphs { get; } = new Dictionary<ResultGraphs, Drawable>();
 
         /// <summary>
         /// </summary>
@@ -96,11 +107,16 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        private ScalableVector2 GraphSize => new ScalableVector2(GraphContainer.Width * 0.95f, GraphContainer.Height * 0.95f);
+
+        /// <summary>
+        /// </summary>
         /// <param name="map"></param>
         /// <param name="processor"></param>
         /// <param name="isSubmittingScore"></param>
         /// <param name="scoreSubmissionStats"></param>
-        public ResultsOverviewGraphContainer(Map map, Bindable<ScoreProcessor> processor, Bindable<bool> isSubmittingScore,
+        public ResultsOverviewGraphContainer(Map map, Bindable<ScoreProcessor> processor,
+            Bindable<bool> isSubmittingScore,
             Bindable<ScoreSubmissionResponse> scoreSubmissionStats)
         {
             Map = map;
@@ -119,12 +135,23 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             CreateLeftAndRightContainers();
             CreateJudgementGraph();
             CreateSelectionDropdown();
-            CreateDevianceGraph();
+            CreateGraph();
             CreateMean();
             CreateStandardDeviation();
             CreateRatio();
 
+            if (ConfigManager.ResultGraph != null)
+                ConfigManager.ResultGraph.ValueChanged += OnResultGraphDropdownChanged;
+
             GraphDropdown.Parent = this;
+        }
+
+        public override void Destroy()
+        {
+            if (ConfigManager.ResultGraph != null)
+                ConfigManager.ResultGraph.ValueChanged -= OnResultGraphDropdownChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -138,7 +165,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Size = new ScalableVector2(Width, 69),
             };
 
-            Footer = new ResultsOverviewFooter(Map, Processor, IsSubmittingScore, ScoreSubmissionStats, FooterContainer.Size)
+            Footer = new ResultsOverviewFooter(Map, Processor, IsSubmittingScore, ScoreSubmissionStats,
+                FooterContainer.Size)
             {
                 Parent = FooterContainer
             };
@@ -199,8 +227,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
                 Y = GraphDropdown.Y + GraphDropdown.Dropdown.Height / 2f,
-                Key = { Tint = ColorHelper.HexToColor("#808080") },
-                Value = { Tint = ColorHelper.HexToColor("#45D6F5") }
+                Key = {Tint = ColorHelper.HexToColor("#808080")},
+                Value = {Tint = ColorHelper.HexToColor("#45D6F5")}
             };
 
 
@@ -211,13 +239,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateStandardDeviation()
         {
-            StandardDeviation = new TextKeyValue("Std. Dev:", $"{Statistics.StandardDeviation:0.00} ms", Mean.Key.FontSize, Color.White)
+            StandardDeviation = new TextKeyValue("Std. Dev:", $"{Statistics.StandardDeviation:0.00} ms",
+                Mean.Key.FontSize, Color.White)
             {
                 Parent = RightContainer,
                 X = Mean.X + Mean.Width + STATISTICS_SPACING_X,
                 Y = Mean.Y,
-                Key = { Tint = Mean.Key.Tint },
-                Value = { Tint = Mean.Value.Tint }
+                Key = {Tint = Mean.Key.Tint},
+                Value = {Tint = Mean.Value.Tint}
             };
         }
 
@@ -234,15 +263,15 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             else if (judgements[Judgement.Marv] > 0 && judgements[Judgement.Perf] == 0)
                 ratio = "∞";
             else
-                ratio = $"{(float)judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
+                ratio = $"{(float) judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
 
             Ratio = new TextKeyValue("Ratio:", ratio, Mean.Key.FontSize, Color.White)
             {
                 Parent = RightContainer,
                 X = StandardDeviation.X + StandardDeviation.Width + STATISTICS_SPACING_X,
                 Y = Mean.Y,
-                Key = { Tint = Mean.Key.Tint },
-                Value = { Tint = Mean.Value.Tint }
+                Key = {Tint = Mean.Key.Tint},
+                Value = {Tint = Mean.Value.Tint}
             };
         }
 
@@ -258,11 +287,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateDevianceGraph()
+        private void CreateGraph()
         {
             const int headerHeight = 68;
 
-            var container = new Sprite()
+            GraphContainer = new Sprite
             {
                 Parent = RightContainer,
                 Size = new ScalableVector2(RightContainer.Width, RightContainer.Height - headerHeight),
@@ -272,22 +301,53 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             if (Processor.Value.Stats != null && Processor.Value.Stats.Count > 0)
             {
-                DevianceGraph = new CachedHitDifferenceGraph(Map, Processor,
-                    new ScalableVector2(container.Width * 0.95f, container.Height * 0.95f))
-                {
-                    Parent = container,
-                    Alignment = Alignment.MidCenter,
-                    X = -5,
-                    Visible = true
-                };
+                CreateDevianceGraph();
+                CreateAccuracyGraph();
+                ToggleGraphVisibility();
                 return;
             }
 
             var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Statistics Not Available", 22)
             {
-                Parent = container,
+                Parent = GraphContainer,
                 Alignment = Alignment.MidCenter
             };
         }
+
+        /// <summary>
+        ///     Creates/Enables the deviance graph
+        /// </summary>
+        private void CreateDevianceGraph() => Graphs[ResultGraphs.Deviance] = new CachedHitDifferenceGraph(Map, Processor, GraphSize)
+        {
+            Parent = GraphContainer,
+            Alignment = Alignment.MidCenter,
+            X = -5,
+            Visible = false
+        };
+
+        /// <summary>
+        ///     Creates/Enables the accuracy graph
+        /// </summary>
+        private void CreateAccuracyGraph() => Graphs[ResultGraphs.Accuracy] = new CachedAccuracyGraph(Map, Processor, GraphSize)
+        {
+            Parent = GraphContainer,
+            Alignment = Alignment.MidCenter,
+            X = -5,
+            Visible = false
+        };
+
+        /// <summary>
+        ///     Toggles the visibility of the correct graph
+        /// </summary>
+        private void ToggleGraphVisibility()
+        {
+            foreach (var graph in Graphs)
+            {
+                graph.Value.Visible = graph.Key == ConfigManager.ResultGraph.Value;
+            }
+        }
+
+        private void OnResultGraphDropdownChanged(object sender, BindableValueChangedEventArgs<ResultGraphs> e) =>
+            ToggleGraphVisibility();
     }
 }

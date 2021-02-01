@@ -267,10 +267,10 @@ namespace Quaver.Shared
             WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
 
-            ChangeResolution();
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
-
+            ChangeResolution();
+            
             // Don't change the actual display mode. Especially considering our support for arbitrary resolutions, this
             // can lead to completely locking up user's session (on Linux).
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

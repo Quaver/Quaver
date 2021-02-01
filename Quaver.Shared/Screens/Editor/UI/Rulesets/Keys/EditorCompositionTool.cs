@@ -11,7 +11,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
     {
         Select,
         Note,
-        LongNote,
-        Mine
+        LongNote
     }
 }

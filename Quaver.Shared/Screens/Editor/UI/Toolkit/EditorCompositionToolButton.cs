@@ -79,10 +79,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Toolkit
                     Icon.X += 2;
                     Name.Text = "Long Note";
                     break;
-                case EditorCompositionTool.Mine:
-                    Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_ban_circle_symbol);
-                    Name.Text = "Mine";
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
