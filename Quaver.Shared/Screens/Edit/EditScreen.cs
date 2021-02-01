@@ -1230,9 +1230,13 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void SaveWorkingMap()
         {
-            FileWatcher.EnableRaisingEvents = false;
+            if (Map.Game == MapGame.Quaver)
+                FileWatcher.EnableRaisingEvents = false;
+
             WorkingMap.Save($"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}");
-            FileWatcher.EnableRaisingEvents = true;
+
+            if (Map.Game == MapGame.Quaver)
+                FileWatcher.EnableRaisingEvents = true;
         }
 
         /// <summary>
@@ -1540,6 +1544,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void AddFileWatcher()
         {
+            if (Map.Game != MapGame.Quaver)
+                return;
+
             FileWatcher = new FileSystemWatcher($"{ConfigManager.SongDirectory}/{Map.Directory}")
             {
                 NotifyFilter = NotifyFilters.LastWrite,
