@@ -15,6 +15,7 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Replays;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Converters.BeMusicSource;
 using Quaver.Shared.Converters.Malody;
 using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
@@ -134,7 +135,7 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="path">Path to file</param>
         private static bool AcceptedMapType(string path)
         {
-            return path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc");
+            return path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc") || path.EndsWith(".zip") || path.EndsWith(".7z") || path.EndsWith(".rar");
         }
 
         /// <summary>
@@ -315,6 +316,11 @@ namespace Quaver.Shared.Database.Maps
                     else if (file.EndsWith(".osz"))
                     {
                         Osu.ConvertOsz(file, extractDirectory);
+                        File.Delete(file);
+                    }
+                    else if (file.EndsWith(".zip") || file.EndsWith(".7z") || file.EndsWith(".rar"))
+                    {
+                        new BMS().ConvertBMS(file, extractDirectory);
                         File.Delete(file);
                     }
                     else if (file.EndsWith(".sm"))
