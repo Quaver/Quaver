@@ -176,8 +176,15 @@ namespace Quaver.Shared.Screens.Loading
 
             foreach (var (fileName, value) in streamerValues)
             {
-                using (var writer = File.CreateText($"{ConfigManager.TempDirectory}/Now Playing/{fileName}.txt"))
-                    writer.Write(value);
+                try
+                {
+                    using (var writer = File.CreateText($"{ConfigManager.TempDirectory}/Now Playing/{fileName}.txt"))
+                        writer.Write(value);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
             }
         }
 
