@@ -169,7 +169,7 @@ namespace Quaver.Shared.Screens.Loading
             var streamerValues = new[]
             {
                 ("difficulty", $"{MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods):0.00}"),
-                ("map", MapManager.Selected.Value.Qua.ToString()),
+                ("map", MapManager.Selected.Value.Qua + " "),
                 ("mods", ModHelper.GetModsString(ModManager.Mods)),
                 ("mapid", MapManager.Selected.Value.MapId.ToString())
             };
