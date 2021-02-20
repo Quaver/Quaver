@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys.Structures;
@@ -62,11 +63,6 @@ namespace Quaver.Shared.Graphics.Graphs
         private float BarWidthScale { get; }
 
         /// <summary>
-        ///     The time for each sample in the graph
-        /// </summary>
-        private int SampleTime => (int) Math.Ceiling(Track.Length / Track.Rate / MaxBars);
-
-        /// <summary>
         /// </summary>
         private Sprite SeekBarLine { get; set; }
 
@@ -79,11 +75,6 @@ namespace Quaver.Shared.Graphics.Graphs
         ///     The acive bars with their appropriate sample time
         /// </summary>
         protected List<Sprite> Bars { get; set; }
-
-        /// <summary>
-        ///     If true, the graph will have its positions scaled for rates
-        /// </summary>
-        protected bool ScaleForRates { get; set; } = true;
 
         /// <inheritdoc />
         /// <summary>
@@ -165,14 +156,16 @@ namespace Quaver.Shared.Graphics.Graphs
             if (Map.HitObjects.Count == 0)
                 return;
 
-            var regularLength = Track.Length / Track.Rate;
+            var rate = ModHelper.GetRateFromMods(Mods);
+            var sampleTime = (int) Math.Ceiling(Track.Length / rate / MaxBars);
+            var regularLength = Track.Length / rate;
             var diff = (DifficultyProcessorKeys)Map.SolveDifficulty(Mods);
 
             var bins = new List<(float, List<StrainSolverData>)>();
             // times are not scaled to rate
-            for (var time = 0; time < regularLength; time += SampleTime)
+            for (var time = 0; time < regularLength; time += sampleTime)
             {
-                var valuesInBin = diff.StrainSolverData.Where(s => s.StartTime >= time && s.StartTime < time + SampleTime);
+                var valuesInBin = diff.StrainSolverData.Where(s => s.StartTime >= time && s.StartTime < time + sampleTime);
                 var pos = (float) (time / regularLength);
                 bins.Add((pos, valuesInBin.ToList()));
             }
@@ -191,7 +184,7 @@ namespace Quaver.Shared.Graphics.Graphs
                     var rating = group.Any() ? group.Average(s => s.TotalStrainValue) : 0;
                     if (rating < 0.05)
                         continue;
-                    var width = MathHelper.Clamp(rating / highestDiff * Width, 6, Width);
+                    var width = Microsoft.Xna.Framework.MathHelper.Clamp(rating / highestDiff * Width, 6, Width);
 
                     var bar = new Sprite
                     {
