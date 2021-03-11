@@ -368,7 +368,11 @@ namespace Quaver.Shared.Screens.Gameplay
             bool isTestPlayingInNewEditor = false)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            UpdateMapInDatabase();
+
+            if (!isSongSelectPreview)
+            {
+                UpdateMapInDatabase();
+            }
 
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -1400,9 +1404,6 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void UpdateMapInDatabase()
         {
-            if (IsSongSelectPreview)
-                return;
-            
             var map = MapManager.Selected.Value;
 
             map.TimesPlayed++;
