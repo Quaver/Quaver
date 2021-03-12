@@ -229,7 +229,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             WorkingMap.Creator = Creator.Textbox.RawText;
             WorkingMap.DifficultyName = DifficultyName.Textbox.RawText;
             WorkingMap.Source = Source.Textbox.RawText;
-            WorkingMap.Genre = Source.Textbox.RawText;
+            WorkingMap.Genre = Genre.Textbox.RawText;
             WorkingMap.Tags = Tags.Textbox.RawText;
 
             if (WorkingMap.TimingPoints.Count > 0)
