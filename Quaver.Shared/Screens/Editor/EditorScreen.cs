@@ -891,6 +891,7 @@ namespace Quaver.Shared.Screens.Editor
                     Title = tagFile.Tag.Title ?? "",
                     Source = tagFile.Tag.Album ?? "",
                     Tags = string.Join(" ", tagFile.Tag.Genres) ?? "",
+                    Tags = "",
                     Creator = ConfigManager.Username.Value,
                     DifficultyName = "",
                     // Makes the file different to prevent exception thrown in the DB for same md5 checksum

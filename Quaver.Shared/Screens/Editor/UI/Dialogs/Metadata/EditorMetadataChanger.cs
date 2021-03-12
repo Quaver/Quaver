@@ -191,6 +191,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
             new EditorMetadataTextbox(this, "Creator", Dialog.Screen.WorkingMap.Creator, s => Dialog.Screen.WorkingMap.Creator = s),
             new EditorMetadataTextbox(this, "Difficulty", Dialog.Screen.WorkingMap.DifficultyName, s => Dialog.Screen.WorkingMap.DifficultyName = s),
             new EditorMetadataTextbox(this, "Source", Dialog.Screen.WorkingMap.Source, s => Dialog.Screen.WorkingMap.Source = s),
+            new EditorMetadataTextbox(this, "Genre", Dialog.Screen.WorkingMap.Genre, s => Dialog.Screen.WorkingMap.Genre = s),
             new EditorMetadataTextbox(this, "Tags", Dialog.Screen.WorkingMap.Tags, s => Dialog.Screen.WorkingMap.Tags = s),
             new EditorMetadataTextbox(this, "Description", Dialog.Screen.WorkingMap.Description, s => Dialog.Screen.WorkingMap.Description = s),
             new EditorMetadataGameMode(this, "Game Mode", Dialog.Screen.WorkingMap.Mode, s =>
