@@ -369,11 +369,6 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            if (!isSongSelectPreview)
-            {
-                UpdateMapInDatabase();
-            }
-
             if (isPlayTesting && !isSongSelectPreview)
             {
                 var testingQua = ObjectHelper.DeepClone(map);
@@ -445,6 +440,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // Create the current replay that will be captured.
             ReplayCapturer = new ReplayCapturer(this);
 
+            UpdateMapInDatabase();
             SetRuleset();
             SetRichPresence();
 
@@ -1404,6 +1400,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void UpdateMapInDatabase()
         {
+            if (IsSongSelectPreview)
+                return;
+
             var map = MapManager.Selected.Value;
 
             map.TimesPlayed++;
