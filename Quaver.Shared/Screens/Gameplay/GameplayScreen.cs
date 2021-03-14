@@ -368,7 +368,6 @@ namespace Quaver.Shared.Screens.Gameplay
             bool isTestPlayingInNewEditor = false)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            UpdateMapInDatabase();
 
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -441,6 +440,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // Create the current replay that will be captured.
             ReplayCapturer = new ReplayCapturer(this);
 
+            UpdateMapInDatabase();
             SetRuleset();
             SetRichPresence();
 
@@ -1402,7 +1402,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             if (IsSongSelectPreview)
                 return;
-            
+
             var map = MapManager.Selected.Value;
 
             map.TimesPlayed++;
