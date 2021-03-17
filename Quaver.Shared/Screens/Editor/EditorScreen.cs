@@ -890,7 +890,7 @@ namespace Quaver.Shared.Screens.Editor
                     Artist = tagFile.Tag.FirstPerformer ?? "",
                     Title = tagFile.Tag.Title ?? "",
                     Source = tagFile.Tag.Album ?? "",
-                    Genre = string.Join(" ", tagFile.Tag.Genres) ?? "",
+                    Genres = string.Join(" ", tagFile.Tag.Genres) ?? "",
                     Tags = "",
                     Creator = ConfigManager.Username.Value,
                     DifficultyName = "",

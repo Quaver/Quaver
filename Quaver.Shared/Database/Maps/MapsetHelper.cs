@@ -143,7 +143,7 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         private static List<Mapset> OrderMapsetsByGenre(IEnumerable<Mapset> mapsets)
         {
-            return mapsets.OrderBy(x => x.Maps.First().Genre).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+            return mapsets.OrderBy(x => x.Maps.First().Genres).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
         }
 
         /// <summary>
@@ -716,7 +716,7 @@ namespace Quaver.Shared.Database.Maps
                             if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
                                 !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
                                 !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
-                                !map.DifficultyName.ToLower().Contains(term) && !map.Genre.ToLower().Contains(term))
+                                !map.DifficultyName.ToLower().Contains(term) && !map.Genres.ToLower().Contains(term))
                             {
                                 exitLoop = true;
                                 break;

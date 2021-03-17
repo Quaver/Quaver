@@ -127,9 +127,9 @@ namespace Quaver.Shared.Database.Maps
         public string Source { get; set; }
 
         /// <summary>
-        ///     The genre of the song
+        ///     The genres of the song
         /// </summary>
-        public string Genre { get; set; }
+        public string Genres { get; set; }
 
         /// <summary>
         ///     Tags for the map
@@ -329,7 +329,7 @@ namespace Quaver.Shared.Database.Maps
                 Creator = qua.Creator,
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
-                Genre = qua.Genre,
+                Genres = qua.Genres,
                 Tags = qua.Tags,
                 SongLength =  qua.Length,
                 Mode = qua.Mode,

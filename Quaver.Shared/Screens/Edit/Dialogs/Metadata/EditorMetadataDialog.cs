@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private LabelledTextbox Source { get; set; }
 
-        private LabelledTextbox Genre { get; set; }
+        private LabelledTextbox Genres { get; set; }
 
         private LabelledTextbox Tags { get; set; }
 
@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             CreateCreatorTextbox();
             CreateDifficultyNameTextbox();
             CreateSourceTextbox();
-            CreateGenreTextbox();
+            CreateGenresTextbox();
             CreateTagsTextbox();
             CreateGameModeDropdown();
             CreateBpmAffectsSvCheckbox();
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Creator.Textbox,
                 DifficultyName.Textbox,
                 Source.Textbox,
-                Genre.Textbox,
+                Genres.Textbox,
                 Tags.Textbox
             })
             {
@@ -112,12 +112,13 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateCreatorTextbox()
         {
-            Creator = new LabelledTextbox(Artist.Width, "Creator Username", LabelSize, TextboxHeight, LabelSize,
+            Creator = new LabelledTextbox(Panel.Width * 0.42f, "Creator Username", LabelSize, TextboxHeight, LabelSize,
                 TextboxLabelSpacing, "Enter your username", WorkingMap.Creator)
             {
                 Parent = Panel,
                 Y = Title.Y + Title.Height + Spacing,
-                Alignment = Alignment.TopCenter,
+                X = Panel.Width * 0.05f,
+                Alignment = Alignment.TopLeft,
                 Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
             };
@@ -125,12 +126,13 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateDifficultyNameTextbox()
         {
-            DifficultyName = new LabelledTextbox(Artist.Width, "Difficulty Name", LabelSize, TextboxHeight, LabelSize,
+            DifficultyName = new LabelledTextbox(Panel.Width * 0.42f, "Difficulty Name", LabelSize, TextboxHeight, LabelSize,
                 TextboxLabelSpacing, "Enter the name of the difficulty", WorkingMap.DifficultyName)
             {
                 Parent = Panel,
-                Y = Creator.Y + Creator.Height + Spacing,
-                Alignment = Alignment.TopCenter,
+                Y = Title.Y + Title.Height + Spacing,
+                X = -Panel.Width * 0.05f,
+                Alignment = Alignment.TopRight,
                 Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
             };
@@ -150,11 +152,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             };
         }
 
-        private void CreateGenreTextbox()
+        private void CreateGenresTextbox()
         {
-            Genre = new LabelledTextbox(Artist.Width, "Genre", LabelSize, TextboxHeight, LabelSize,
-                TextboxLabelSpacing, "Enter the Genre of the song (EDM, Metal, etc)",
-                WorkingMap.Genre)
+            Genres = new LabelledTextbox(Artist.Width, "Genres", LabelSize, TextboxHeight, LabelSize,
+                TextboxLabelSpacing, "Enter the Genres of the song (EDM, Metal, etc)",
+                WorkingMap.Genres)
             {
                 Parent = Panel,
                 Y = Source.Y + Source.Height + Spacing,
@@ -171,7 +173,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 WorkingMap.Tags)
             {
                 Parent = Panel,
-                Y = Genre.Y + Genre.Height + Spacing,
+                Y = Genres.Y + Genres.Height + Spacing,
                 Alignment = Alignment.TopCenter,
                 Textbox = { AllowSubmission = false },
                 Tint = Color.Transparent
@@ -208,7 +210,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             Creator.Visible = false;
             DifficultyName.Visible = false;
             Source.Visible = false;
-            Genre.Visible = false;
+            Genres.Visible = false;
             Tags.Visible = false;
             GameMode.Visible = false;
             BpmAffectsScrollVelocity.Visible = false;
@@ -229,7 +231,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             WorkingMap.Creator = Creator.Textbox.RawText;
             WorkingMap.DifficultyName = DifficultyName.Textbox.RawText;
             WorkingMap.Source = Source.Textbox.RawText;
-            WorkingMap.Genre = Genre.Textbox.RawText;
+            WorkingMap.Genres = Genres.Textbox.RawText;
             WorkingMap.Tags = Tags.Textbox.RawText;
 
             if (WorkingMap.TimingPoints.Count > 0)
