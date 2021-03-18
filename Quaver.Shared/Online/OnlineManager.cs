@@ -195,6 +195,7 @@ namespace Quaver.Shared.Online
         /// </summary>
         public static void Login()
         {
+            //if (!SteamManager.UseSteam) return;
             if (Status.Value != ConnectionStatus.Disconnected)
                 return;
 

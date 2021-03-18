@@ -85,6 +85,11 @@ namespace Quaver.Shared.Screens.Select
         private MultiplayerScreen MultiplayerScreen { get; }
 
         /// <summary>
+        ///     This will be set to true if a map has been updated and needs to be refreshed.
+        /// </summary>
+        public bool RequestMapDatabaseCacheUpdate { get; set; } = false;
+
+        /// <summary>
         /// </summary>
         public SelectScreen(MultiplayerScreen screen = null)
         {
@@ -142,6 +147,7 @@ namespace Quaver.Shared.Screens.Select
         {
             KeepPlayingAudioTrackAtPreview();
             HandleInput();
+            if (RequestMapDatabaseCacheUpdate) MapDatabaseCache.OrderAndSetMapsets();
 
             base.Update(gameTime);
         }

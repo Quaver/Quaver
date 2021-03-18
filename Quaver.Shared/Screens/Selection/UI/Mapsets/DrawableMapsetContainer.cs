@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -179,6 +180,29 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                     Title.X = OnlineGrade.X + OnlineGrade.Width + 16;
                     Artist.X = Title.X;
                     DifficultyName.X = Artist.X;
+                }
+                else if (map.RankedStatus == RankedStatus.NotSubmitted)
+                {
+                    var score = ScoreDatabaseCache.FetchHighestLocalScore(map.Md5Checksum);
+                    if (score != null && score.Grade != Grade.None)
+                    {
+                        const int width = 40;
+
+                        OnlineGrade.Visible = true;
+                        OnlineGrade.Image = SkinManager.Skin.Grades[score.Grade];
+                        OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Height / OnlineGrade.Image.Width * width);
+
+                        Title.X = OnlineGrade.X + OnlineGrade.Width + 16;
+                        Artist.X = Title.X;
+                        DifficultyName.X = Artist.X;
+                    }
+                    else
+                    {
+                        Title.X = TitleX;
+                        Artist.X = TitleX;
+                        DifficultyName.X = TitleX;
+                        OnlineGrade.Visible = false;
+                    }
                 }
                 else
                 {

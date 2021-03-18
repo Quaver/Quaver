@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             }
 
             processor.PlayerName = ConfigManager.Username.Value;
-            processor.SteamId = SteamUser.GetSteamID().m_SteamID;
+            processor.SteamId = SteamManager.UseSteam ? SteamUser.GetSteamID().m_SteamID : (ulong) 0;
             processor.UserId = OnlineManager.Self?.OnlineUser?.Id ?? 0;
 
             Logger.Important($"---- Health Weighting ----", LogType.Runtime);

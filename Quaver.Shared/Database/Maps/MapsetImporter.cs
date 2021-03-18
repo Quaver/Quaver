@@ -8,7 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
@@ -21,6 +23,7 @@ using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
@@ -145,6 +148,11 @@ namespace Quaver.Shared.Database.Maps
         {
             var game = GameBase.Game as QuaverGame;
             var screen = game.CurrentScreen;
+
+            if (path.EndsWith(".zip"))
+            {
+                ThreadScheduler.Run(() => ImportMappack(path));
+            }
 
             // Mapset files (or directory of Mapset files)
             if (AcceptedMapType(path))
@@ -287,6 +295,24 @@ namespace Quaver.Shared.Database.Maps
             }
         }
 
+        public static void ImportMappack(string file)
+        {
+            var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+            //Func<string, string> extractDirectory = (string f) => $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(f)} - {time}/";
+            var dir = $@"{ConfigManager.TempDirectory}/{Path.GetFileNameWithoutExtension(file)}";
+            ZipFile.ExtractToDirectory(file, dir);
+            //File.Delete(file);
+            foreach (var f in Directory.EnumerateFiles(dir, "*.sm", SearchOption.AllDirectories).ToArray())
+            {
+                Queue.Add(f);
+            }
+
+            PostMapQueue();
+
+            while (Queue.Count > 0) Thread.Sleep(1000);
+            Directory.Delete(dir, true);
+        }
+
         /// <summary>
         ///     Goes through all the mapsets in the queue and imports them.
         /// </summary>
@@ -299,7 +325,7 @@ namespace Quaver.Shared.Database.Maps
 
             var done = -1;
 
-            Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
+            Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i =>
             {
                 var file = Queue[i];
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
@@ -337,7 +363,8 @@ namespace Quaver.Shared.Database.Maps
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, $"Failed to import file: {Path.GetFileName(file)}");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        $"Failed to import file: {Path.GetFileName(file)}");
                 }
             });
 

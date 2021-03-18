@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps.Components;
@@ -127,6 +128,28 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
                 Name.X = OnlineGrade.X + OnlineGrade.Width + 16;
                 ByText.X = Name.X;
+            }
+            else if (map.RankedStatus == RankedStatus.NotSubmitted)
+            {
+                var score = ScoreDatabaseCache.FetchHighestLocalScore(map.Md5Checksum);
+                if (score != null && score.Grade != Grade.None)
+                {
+                    if (map.Difficulty10X > 20) Console.WriteLine($"Found score for {map.Title}");
+                    const int width = 40;
+
+                    OnlineGrade.Visible = true;
+                    OnlineGrade.Image = SkinManager.Skin.Grades[score.Grade];
+                    OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Height / OnlineGrade.Image.Width * width);
+
+                    Name.X = OnlineGrade.X + OnlineGrade.Width + 16;
+                    ByText.X = Name.X;
+                }
+                else
+                {
+                    Name.X = PaddingX;
+                    ByText.X = Name.X;
+                    OnlineGrade.Visible = false;
+                }
             }
             else
             {

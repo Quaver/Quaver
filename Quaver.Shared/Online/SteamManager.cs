@@ -26,6 +26,11 @@ namespace Quaver.Shared.Online
     public static class SteamManager
     {
         /// <summary>
+        ///     Determines if steam should be used or not.
+        /// </summary>
+        public static bool UseSteam => Environment.GetEnvironmentVariable("DISABLE_STEAM") == null;
+
+        /// <summary>
         ///     The application id for steam.
         /// </summary>
         public static uint ApplicationId => 480;
@@ -115,6 +120,7 @@ namespace Quaver.Shared.Online
         /// </summary>
         public static void Initialize()
         {
+            if (!UseSteam) return;
 #if DEBUG
             // Creates a file with the Steam Application Id, this is required for debugging
             File.WriteAllText($"{Directory.GetCurrentDirectory()}/steam_appid.txt", ApplicationId.ToString());

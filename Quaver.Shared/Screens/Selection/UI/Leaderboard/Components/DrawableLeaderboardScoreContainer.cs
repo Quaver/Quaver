@@ -618,6 +618,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void UpdateAvatar()
         {
+            if (!SteamManager.UseSteam) return;
             var steamId = (ulong) Score.Item.SteamId;
 
             lock (Avatar)

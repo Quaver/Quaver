@@ -73,6 +73,19 @@ namespace Quaver.Shared.Database.Scores
         }
 
         /// <summary>
+        ///     Grabs the highest local score from a particular map by MD5 hash
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <returns></returns>
+        internal static Score FetchHighestLocalScore(string md5)
+        {
+            var sql = $"SELECT *, MAX(PerformanceRating) FROM 'Score' WHERE MapMd5=? AND Grade<>5";
+            var scores = DatabaseManager.Connection.Query<Score>(sql, md5);
+
+            return scores.Count > 0 ? scores[0] : null;
+        }
+
+        /// <summary>
         ///     Responsible for inserting a score into the database
         /// </summary>
         /// <param name="score"></param>

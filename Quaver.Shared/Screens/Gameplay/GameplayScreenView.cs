@@ -508,7 +508,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // Use the replay's name for the scoreboard if we're watching one.
             var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
 
-            var selfAvatar = ConfigManager.Username.Value == scoreboardName ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
+            var selfAvatar = (SteamManager.UseSteam && ConfigManager.Username.Value == scoreboardName) ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
                 : UserInterface.UnknownAvatar;
 
             SelfScoreboard = new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAvatar,

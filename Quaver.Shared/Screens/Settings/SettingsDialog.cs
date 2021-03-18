@@ -456,6 +456,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
                     new SettingsBool(this, "Display Online Friends Notification", ConfigManager.DisplayFriendOnlineNotifications),
                     new SettingsBool(this, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications)
+                    //new SettingsSlider(this, "Number of threads to use for mapset importing", ConfigManager.)
                 })
             };
 
