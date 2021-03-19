@@ -12,17 +12,15 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 {
-    public class EditorAutoModHeader : ImageButton
+    public class EditorAutoModHeader : Sprite
     {
         private EditorAutoModPanel Panel { get; }
 
         private Sprite Gear { get; set; }
 
         private SpriteTextPlus Text { get; set; }
-
-        private IconButton CloseButton { get; set; }
-
-        public EditorAutoModHeader(EditorAutoModPanel panel) : base(UserInterface.BlankBox)
+        
+        public EditorAutoModHeader(EditorAutoModPanel panel)
         {
             Panel = panel;
 
