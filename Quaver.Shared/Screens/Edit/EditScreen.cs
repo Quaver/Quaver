@@ -1544,10 +1544,15 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void AddFileWatcher()
         {
-            if (Map.Game != MapGame.Quaver)
+            if (Map.Game != MapGame.Quaver || ConfigManager.SongDirectory == null)
                 return;
 
-            FileWatcher = new FileSystemWatcher($"{ConfigManager.SongDirectory}/{Map.Directory}")
+            var dir = $"{ConfigManager.SongDirectory}/{Map.Directory}";
+
+            if (!Directory.Exists(dir))
+                return;
+
+            FileWatcher = new FileSystemWatcher(dir)
             {
                 NotifyFilter = NotifyFilters.LastWrite,
                 Filter = $"{Map.Path}"
