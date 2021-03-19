@@ -1516,7 +1516,7 @@ namespace Quaver.Shared.Screens.Edit
         private bool CanSeek()
         {
             var view = (EditScreenView)View;
-            return !view.Layers.IsHovered();
+            return !view.Layers.IsHovered() && !view.AutoMod.Panel.IsHovered();
         }
 
         /// <summary>
