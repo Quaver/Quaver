@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.API.Maps.AutoMod;
@@ -10,10 +11,11 @@ using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 {
-    public class EditorAutoModPanel : Sprite
+    public class EditorAutoModPanel : ImageButton
     {
         public Qua Map { get; }
 
@@ -22,6 +24,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         public Bindable<AutoModMapset> AutoMod { get; }
 
         public Bindable<AutoModIssueCategory> FilterCategory { get; }
+
+        public event EventHandler<EditorAutoModIssueClicked> IssueClicked;
 
         private EditorAutoModHeader Header { get; set; }
 
@@ -35,7 +39,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private const int SpacingY = 16;
 
-        public EditorAutoModPanel(Qua map, List<Qua> mapset)
+        public EditorAutoModPanel(Qua map, List<Qua> mapset) : base(UserInterface.AutoModPanel)
         {
             Map = map;
             Mapset = mapset;
@@ -44,7 +48,6 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             AutoMod = new Bindable<AutoModMapset>(new AutoModMapset(Mapset));
             AutoMod.Value.Run();
 
-            Image = UserInterface.AutoModPanel;
             Size = new ScalableVector2(Image.Width, Image.Height);
 
             CreateHeader();
@@ -66,6 +69,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
             FilterCategory.Dispose();
 
+            IssueClicked = null;
+
             base.Destroy();
         }
 
@@ -74,6 +79,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             AutoMod.Value.Run();
             AutoMod.TriggerChange();
         }
+
+        public void TriggerEvent(AutoModIssue issue) => IssueClicked?.Invoke(this, new EditorAutoModIssueClicked(issue));
 
         private void CreateHeader() => Header = new EditorAutoModHeader(this) {Parent = this};
 
@@ -112,7 +119,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             IssueCount.ChangeValue($"{count:n0}");
         });
 
-        private void CreateScrollPanel() => ScrollPanel = new EditorAutoModScrollPanel(Map, AutoMod, FilterCategory)
+        private void CreateScrollPanel() => ScrollPanel = new EditorAutoModScrollPanel(Map, AutoMod,
+            FilterCategory, this)
         {
             Parent = this,
             Alignment = Alignment.BotCenter,

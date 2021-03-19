@@ -32,6 +32,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             CreateGearIcon();
             CreateText();
             CreateCloseButton();
+            Depth = -1;
         }
 
         private void CreateGearIcon() => Gear = new Sprite

@@ -22,15 +22,18 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private Bindable<AutoModIssueCategory> FilterCategory { get; }
 
+        public EditorAutoModPanel Panel { get; }
+
         private static ScalableVector2 DefaultSize { get; } = new ScalableVector2(720, 600);
 
         public EditorAutoModScrollPanel(Qua map, Bindable<AutoModMapset> autoMod,
-            Bindable<AutoModIssueCategory> category) : base(new List<AutoModIssue>(), 16, 0, DefaultSize,
-            DefaultSize)
+            Bindable<AutoModIssueCategory> category, EditorAutoModPanel panel)
+            : base(new List<AutoModIssue>(), 16, 0, DefaultSize, DefaultSize)
         {
             Map = map;
             AutoMod = autoMod;
             FilterCategory = category;
+            Panel = panel;
 
             Tint = ColorHelper.HexToColor("#242424");
             AddBorder(ColorHelper.HexToColor("#BEBEBE"), 2);

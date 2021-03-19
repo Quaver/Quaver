@@ -117,7 +117,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -PaddingX,
-                Size = new ScalableVector2(img.Width, img.Height)
+                Size = new ScalableVector2(img.Width, img.Height),
+                Depth = -1
             };
 
             RefreshMapButton.Clicked += (sender, args) => Panel.RunAutoMod();

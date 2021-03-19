@@ -8,6 +8,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.UI.AutoMods;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Quaver.Shared.Screens.Edit.UI.Panels;
@@ -84,6 +85,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public EditorAutoModPanelContainer AutoMod { get; private set; }
+
+        /// <summary>
+        /// </summary>
         public bool IsImGuiHovered { get; private set; }
 
         /// <inheritdoc />
@@ -103,6 +108,8 @@ namespace Quaver.Shared.Screens.Edit
 
             if (EditScreen.DisplayGameplayPreview.Value)
                 CreateGameplayPreview();
+
+            CreateAutoMod();
 
             MenuBar = new EditorFileMenuBar(EditScreen);
 
@@ -384,6 +391,13 @@ namespace Quaver.Shared.Screens.Edit
 
             ResetPanelParents();
         }
+
+        /// <summary>
+        /// </summary>
+        private void CreateAutoMod() => AutoMod = new EditorAutoModPanelContainer(EditScreen)
+        {
+            Parent = Container
+        };
 
         /// <summary>
         /// </summary>

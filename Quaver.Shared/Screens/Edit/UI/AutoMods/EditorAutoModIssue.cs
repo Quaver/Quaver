@@ -77,7 +77,14 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             {
                 Parent = this,
                 Alpha = 0,
-                Size = Size
+                Size = Size,
+                Depth = -1
+            };
+
+            Button.Clicked += (o, e) =>
+            {
+                var container = Container as EditorAutoModScrollPanel;
+                container?.Panel.TriggerEvent(Item);
             };
         }
 
@@ -106,6 +113,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 Alignment = Alignment.MidRight,
                 X = -IssueText.X,
                 Size = new ScalableVector2(20, 20),
+                Depth = -1
             };
 
             var game = GameBase.Game as QuaverGame;
