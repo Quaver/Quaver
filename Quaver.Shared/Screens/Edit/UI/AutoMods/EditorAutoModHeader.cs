@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         private Sprite Gear { get; set; }
 
         private SpriteTextPlus Text { get; set; }
-        
+
         public EditorAutoModHeader(EditorAutoModPanel panel)
         {
             Panel = panel;
@@ -29,7 +29,6 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
             CreateGearIcon();
             CreateText();
-            Depth = -1;
         }
 
         private void CreateGearIcon() => Gear = new Sprite
