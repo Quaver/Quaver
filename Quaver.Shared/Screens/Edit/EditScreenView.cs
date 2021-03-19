@@ -105,11 +105,10 @@ namespace Quaver.Shared.Screens.Edit
             CreateCompositionTools();
             CreateHitsoundsPanel();
             CreateLayersPanel();
+            CreateAutoMod();
 
             if (EditScreen.DisplayGameplayPreview.Value)
                 CreateGameplayPreview();
-
-            CreateAutoMod();
 
             MenuBar = new EditorFileMenuBar(EditScreen);
 
@@ -429,6 +428,7 @@ namespace Quaver.Shared.Screens.Edit
             Details.Parent = Container;
             CompositionTools.Parent = Container;
             Hitsounds.Parent = Container;
+            AutoMod.Parent = Container;
             Footer.Parent = Container;
         }
     }
