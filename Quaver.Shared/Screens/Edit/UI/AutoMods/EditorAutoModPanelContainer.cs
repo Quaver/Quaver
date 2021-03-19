@@ -36,6 +36,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 Alignment = Alignment.MidCenter
             };
 
+            ChangePanelPosition();
+
             IsActive.ValueChanged += OnActiveChanged;
         }
 

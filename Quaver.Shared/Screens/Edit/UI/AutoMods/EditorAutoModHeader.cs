@@ -31,7 +31,6 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
             CreateGearIcon();
             CreateText();
-            CreateCloseButton();
             Depth = -1;
         }
 
@@ -51,18 +50,6 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = Gear.X + Gear.Width + 10
-            };
-        }
-
-        private void CreateCloseButton()
-        {
-            CloseButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_times))
-            {
-                Parent = this,
-                Alignment = Alignment.MidRight,
-                X = -Gear.X,
-                Size = new ScalableVector2(Height / 2, Height / 2),
-                Tint = ColorHelper.HexToColor("#eeeeee")
             };
         }
     }

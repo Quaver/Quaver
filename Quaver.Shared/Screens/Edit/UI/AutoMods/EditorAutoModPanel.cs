@@ -15,7 +15,7 @@ using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 {
-    public class EditorAutoModPanel : ImageButton
+    public class EditorAutoModPanel : DraggableButton
     {
         public Qua Map { get; }
 
