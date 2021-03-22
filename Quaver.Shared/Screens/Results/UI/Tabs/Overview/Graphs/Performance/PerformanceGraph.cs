@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
                 var rating = (float) RatingProcessor.CalculateRating(acc);
 
                 // Prevent multiple accuracies on a single time
-                if (stat.SongPosition == previousTime)
+                if (DataPoints.Count > 0 && stat.SongPosition == previousTime)
                     DataPoints.Remove(DataPoints.Last());
 
                 DataPoints.Add((stat.SongPosition, acc, rating));

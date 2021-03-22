@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health
         /// <summary>
         ///     Health data points throughout the score
         /// </summary>
-        private List<(int, float, bool)> HealthHistory { get; set; }
+        private List<(int, float, bool)> HealthDataHistory { get; set; }
 
         /// <summary>
         ///     Downscaled container from parent container in order to fit the numbers
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health
             var simulatedProcessor =
                 new ScoreProcessorKeys(Map.Qua ?? Map.LoadQua(), keysProcessor.Mods, keysProcessor.Windows);
 
-            HealthHistory = new List<(int, float, bool)>();
+            HealthDataHistory = new List<(int, float, bool)>();
 
             var previousTime = int.MinValue;
             var playIsFailed = false;
@@ -87,29 +87,29 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health
                     playIsFailed = true;
 
                 // Prevent multiple data points on a single time
-                if (stat.SongPosition == previousTime)
-                    HealthHistory.Remove(HealthHistory.Last());
+                if (HealthDataHistory.Count > 0 && stat.SongPosition == previousTime)
+                    HealthDataHistory.Remove(HealthDataHistory.Last());
 
-                HealthHistory.Add((stat.SongPosition, hp, playIsFailed));
+                HealthDataHistory.Add((stat.SongPosition, hp, playIsFailed));
                 previousTime = stat.SongPosition;
             }
         }
 
         private void DrawDataPointsFromHistory()
         {
-            var start = this.HealthHistory.First().Item1;
+            var start = this.HealthDataHistory.First().Item1;
             var end = Map.SongLength;
 
             // Needs to be replaced in case max health is changed, since there is no constant for it right now
             var maxHealth = 100f;
 
-            for (var i = 0; i < HealthHistory.Count; i++)
+            for (var i = 0; i < HealthDataHistory.Count; i++)
             {
-                var (time, health, failed) = HealthHistory[i];
+                var (time, health, failed) = HealthDataHistory[i];
                 var y = health / maxHealth;
 
                 var songProgress = (float) (time - start) / (end - start);
-                var nextTime = i == HealthHistory.Count - 1 ? time : HealthHistory[i + 1].Item1;
+                var nextTime = i == HealthDataHistory.Count - 1 ? time : HealthDataHistory[i + 1].Item1;
                 var nextSongProgress = (float) (nextTime - start) / (end - start);
                 var width = nextSongProgress - songProgress;
 
