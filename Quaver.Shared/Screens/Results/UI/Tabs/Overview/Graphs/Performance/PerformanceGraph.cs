@@ -104,8 +104,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
             if (!(Processor.Value is ScoreProcessorKeys keysProcessor))
                 return;
 
-            var simulatedProcessor =
-                new ScoreProcessorKeys(Map.Qua ?? Map.LoadQua(), keysProcessor.Mods, keysProcessor.Windows);
+            var qua = Map.Qua ?? Map.LoadQua();
+
+            var simulatedProcessor = new ScoreProcessorKeys(qua, keysProcessor.Mods, keysProcessor.Windows);
             var difficulty = simulatedProcessor.Map.SolveDifficulty(keysProcessor.Mods).OverallDifficulty;
 
             RatingProcessor = new RatingProcessorKeys(difficulty);
@@ -140,7 +141,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
             if (simulatedProcessor.TotalJudgementCount < simulatedProcessor.GetTotalJudgementCount())
             {
                 MaximumPossibleHistory = new List<(int, float, float)>();
-                var hitObjectsLeftToPlay = Map.Qua.HitObjects.Where(h => h.StartTime > DataPoints.Last().Item1);
+                var hitObjectsLeftToPlay = qua.HitObjects.Where(h => h.StartTime > DataPoints.Last().Item1);
 
                 // Separate ordered list is required because of hits being out of order if you go though each hit object
                 // and take the start/end time at that moment
