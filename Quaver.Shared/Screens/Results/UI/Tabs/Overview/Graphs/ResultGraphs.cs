@@ -4,6 +4,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
     {
         Deviance,
         Accuracy,
-        Health
+        Health,
+        Performance
     }
 }
