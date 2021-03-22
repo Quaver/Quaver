@@ -2,12 +2,27 @@ using System;
 using System.Numerics;
 using ImGuiNET;
 using MoonSharp.Interpreter;
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
 
 namespace Quaver.Shared.Scripting
 {
     [MoonSharpUserData]
     public static class ImGuiWrapper
     {
+        /*
+         * The ImGui.NET repository wrote their code in a way that requires function that (usually) take an array
+         * as a parameter to require requires the reference of the first element in the array to be given instead.
+         * This is not possible in Lua, as references do not exist there. Therefore, the wrapper for following functions
+         * has edited so it passes the reference to the first element of the given array to the ImGui function:
+         *
+         * - DragInt2/3/4()
+         * - InputInt2/3/4()
+         * - SliderInt2/3/4()
+         * - PlotLines()
+         * - PlotHistogram()
+         */
+
         public static ImGuiPayloadPtr AcceptDragDropPayload(string type) => ImGui.AcceptDragDropPayload(type);
         public static ImGuiPayloadPtr AcceptDragDropPayload(string type, ImGuiDragDropFlags flags) => ImGui.AcceptDragDropPayload(type, flags);
         public static void AlignTextToFramePadding() => ImGui.AlignTextToFramePadding();
@@ -138,21 +153,25 @@ namespace Quaver.Shared.Scripting
         public static bool DragInt(string label, ref int v) => ImGui.DragInt(label, ref v);
         public static bool DragInt(string label, ref int v, float v_speed) => ImGui.DragInt(label, ref v, v_speed);
         public static bool DragInt(string label, ref int v, float v_speed, int v_min) => ImGui.DragInt(label, ref v, v_speed, v_min);
-        public static bool DragInt2(string label, ref int v) => ImGui.DragInt2(label, ref v);
-        public static bool DragInt2(string label, ref int v, float v_speed) => ImGui.DragInt2(label, ref v, v_speed);
-        public static bool DragInt2(string label, ref int v, float v_speed, int v_min) => ImGui.DragInt2(label, ref v, v_speed, v_min);
-        public static bool DragInt2(string label, ref int v, float v_speed, int v_min, int v_max) => ImGui.DragInt2(label, ref v, v_speed, v_min, v_max);
-        public static bool DragInt2(string label, ref int v, float v_speed, int v_min, int v_max, string format) => ImGui.DragInt2(label, ref v, v_speed, v_min, v_max, format);
-        public static bool DragInt3(string label, ref int v) => ImGui.DragInt3(label, ref v);
-        public static bool DragInt3(string label, ref int v, float v_speed) => ImGui.DragInt3(label, ref v, v_speed);
-        public static bool DragInt3(string label, ref int v, float v_speed, int v_min) => ImGui.DragInt3(label, ref v, v_speed, v_min);
-        public static bool DragInt3(string label, ref int v, float v_speed, int v_min, int v_max) => ImGui.DragInt3(label, ref v, v_speed, v_min, v_max);
-        public static bool DragInt3(string label, ref int v, float v_speed, int v_min, int v_max, string format) => ImGui.DragInt3(label, ref v, v_speed, v_min, v_max, format);
-        public static bool DragInt4(string label, ref int v) => ImGui.DragInt4(label, ref v);
-        public static bool DragInt4(string label, ref int v, float v_speed) => ImGui.DragInt4(label, ref v, v_speed);
-        public static bool DragInt4(string label, ref int v, float v_speed, int v_min) => ImGui.DragInt4(label, ref v, v_speed, v_min);
-        public static bool DragInt4(string label, ref int v, float v_speed, int v_min, int v_max) => ImGui.DragInt4(label, ref v, v_speed, v_min, v_max);
-        public static bool DragInt4(string label, ref int v, float v_speed, int v_min, int v_max, string format) => ImGui.DragInt4(label, ref v, v_speed, v_min, v_max, format);
+
+        // Adjusted, refer to top of the file
+
+        public static bool DragInt2(string label, ref int[] v) => ImGui.DragInt2(label, ref v[0]);
+        public static bool DragInt2(string label, ref int[] v, float v_speed) => ImGui.DragInt2(label, ref v[0], v_speed);
+        public static bool DragInt2(string label, ref int[] v, float v_speed, int v_min) => ImGui.DragInt2(label, ref v[0], v_speed, v_min);
+        public static bool DragInt2(string label, ref int[] v, float v_speed, int v_min, int v_max) => ImGui.DragInt2(label, ref v[0], v_speed, v_min, v_max);
+        public static bool DragInt2(string label, ref int[] v, float v_speed, int v_min, int v_max, string format) => ImGui.DragInt2(label, ref v[0], v_speed, v_min, v_max, format);
+
+        public static bool DragInt3(string label, ref int[] v) => ImGui.DragInt3(label, ref v[0]);
+        public static bool DragInt3(string label, ref int[] v, float v_speed) => ImGui.DragInt3(label, ref v[0], v_speed);
+        public static bool DragInt3(string label, ref int[] v, float v_speed, int v_min) => ImGui.DragInt3(label, ref v[0], v_speed, v_min);
+        public static bool DragInt3(string label, ref int[] v, float v_speed, int v_min, int v_max) => ImGui.DragInt3(label, ref v[0], v_speed, v_min, v_max);
+        public static bool DragInt3(string label, ref int[] v, float v_speed, int v_min, int v_max, string format) => ImGui.DragInt3(label, ref v[0], v_speed, v_min, v_max, format);
+        public static bool DragInt4(string label, ref int[] v) => ImGui.DragInt4(label, ref v[0]);
+        public static bool DragInt4(string label, ref int[] v, float v_speed) => ImGui.DragInt4(label, ref v[0], v_speed);
+        public static bool DragInt4(string label, ref int[] v, float v_speed, int v_min) => ImGui.DragInt4(label, ref v[0], v_speed, v_min);
+        public static bool DragInt4(string label, ref int[] v, float v_speed, int v_min, int v_max) => ImGui.DragInt4(label, ref v[0], v_speed, v_min, v_max);
+        public static bool DragInt4(string label, ref int[] v, float v_speed, int v_min, int v_max, string format) => ImGui.DragInt4(label, ref v[0], v_speed, v_min, v_max, format);
         public static bool DragIntRange2(string label, ref int v_current_min, ref int v_current_max) => ImGui.DragIntRange2(label, ref v_current_min, ref v_current_max);
         public static bool DragIntRange2(string label, ref int v_current_min, ref int v_current_max, float v_speed) => ImGui.DragIntRange2(label, ref v_current_min, ref v_current_max, v_speed);
         public static bool DragIntRange2(string label, ref int v_current_min, ref int v_current_max, float v_speed, int v_min) => ImGui.DragIntRange2(label, ref v_current_min, ref v_current_max, v_speed, v_min);
@@ -285,12 +304,15 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt(string label, ref int v, int step) => ImGui.InputInt(label, ref v, step);
         public static bool InputInt(string label, ref int v, int step, int step_fast) => ImGui.InputInt(label, ref v, step, step_fast);
         public static bool InputInt(string label, ref int v, int step, int step_fast, ImGuiInputTextFlags flags) => ImGui.InputInt(label, ref v, step, step_fast, flags);
-        public static bool InputInt2(string label, ref int v) => ImGui.InputInt2(label, ref v);
-        public static bool InputInt2(string label, ref int v, ImGuiInputTextFlags flags) => ImGui.InputInt2(label, ref v, flags);
-        public static bool InputInt3(string label, ref int v) => ImGui.InputInt3(label, ref v);
-        public static bool InputInt3(string label, ref int v, ImGuiInputTextFlags flags) => ImGui.InputInt3(label, ref v, flags);
-        public static bool InputInt4(string label, ref int v) => ImGui.InputInt4(label, ref v);
-        public static bool InputInt4(string label, ref int v, ImGuiInputTextFlags flags) => ImGui.InputInt4(label, ref v, flags);
+
+        // Adjusted, refer to top of the file
+        public static bool InputInt2(string label, ref int[] v) => ImGui.InputInt2(label, ref v[0]);
+        public static bool InputInt2(string label, ref int[] v, ImGuiInputTextFlags flags) => ImGui.InputInt2(label, ref v[0], flags);
+        public static bool InputInt3(string label, ref int[] v) => ImGui.InputInt3(label, ref v[0]);
+        public static bool InputInt3(string label, ref int[] v, ImGuiInputTextFlags flags) => ImGui.InputInt3(label, ref v[0], flags);
+        public static bool InputInt4(string label, ref int[] v) => ImGui.InputInt4(label, ref v[0]);
+
+        public static bool InputInt4(string label, ref int[] v, ImGuiInputTextFlags flags) => ImGui.InputInt4(label, ref v[0], flags);
         public static bool InputScalar(string label, ImGuiDataType data_type, IntPtr v) => ImGui.InputScalar(label, data_type, v);
         public static bool InputScalar(string label, ImGuiDataType data_type, IntPtr v, IntPtr step) => ImGui.InputScalar(label, data_type, v, step);
         public static bool InputScalar(string label, ImGuiDataType data_type, IntPtr v, IntPtr step, IntPtr step_fast) => ImGui.InputScalar(label, data_type, v, step, step_fast);
@@ -395,12 +417,7 @@ namespace Quaver.Shared.Scripting
         public static bool OpenPopupOnItemClick(string str_id) => ImGui.OpenPopupOnItemClick(str_id);
         public static bool OpenPopupOnItemClick(string str_id, int mouse_button) => ImGui.OpenPopupOnItemClick(str_id, mouse_button);
 
-        /*
-         * The ImGui.NET repository wrote their code in a way, that requires the reference of the first
-         * element in the array to be given, instead of taking an array, which is what one would usually put.
-         * This is not possible in lua, as references do not exist there. Therefore, the wrapper for the plot
-         * functions has been edited so it passes the reference to the first element to the ImGui function.
-         */
+        // Adjusted, refer to top of the file
 
         public static void PlotHistogram(string label, ref float[] values, int values_count) => ImGui.PlotHistogram(label, ref values[0], values_count);
         public static void PlotHistogram(string label, ref float[] values, int values_count, int values_offset) => ImGui.PlotHistogram(label, ref values[0], values_count, values_offset);
@@ -545,12 +562,16 @@ namespace Quaver.Shared.Scripting
         public static bool SliderFloat4(string label, ref Vector4 v, float v_min, float v_max, string format) => ImGui.SliderFloat4(label, ref v, v_min, v_max, format);
         public static bool SliderInt(string label, ref int v, int v_min, int v_max) => ImGui.SliderInt(label, ref v, v_min, v_max);
         public static bool SliderInt(string label, ref int v, int v_min, int v_max, string format) => ImGui.SliderInt(label, ref v, v_min, v_max, format);
-        public static bool SliderInt2(string label, ref int v, int v_min, int v_max) => ImGui.SliderInt2(label, ref v, v_min, v_max);
-        public static bool SliderInt2(string label, ref int v, int v_min, int v_max, string format) => ImGui.SliderInt2(label, ref v, v_min, v_max, format);
-        public static bool SliderInt3(string label, ref int v, int v_min, int v_max) => ImGui.SliderInt3(label, ref v, v_min, v_max);
-        public static bool SliderInt3(string label, ref int v, int v_min, int v_max, string format) => ImGui.SliderInt3(label, ref v, v_min, v_max, format);
-        public static bool SliderInt4(string label, ref int v, int v_min, int v_max) => ImGui.SliderInt4(label, ref v, v_min, v_max);
-        public static bool SliderInt4(string label, ref int v, int v_min, int v_max, string format) => ImGui.SliderInt4(label, ref v, v_min, v_max, format);
+
+        // Adjusted, refer to top of the file
+
+        public static bool SliderInt2(string label, ref int[] v, int v_min, int v_max) => ImGui.SliderInt2(label, ref v[0], v_min, v_max);
+        public static bool SliderInt2(string label, ref int[] v, int v_min, int v_max, string format) => ImGui.SliderInt2(label, ref v[0], v_min, v_max, format);
+        public static bool SliderInt3(string label, ref int[] v, int v_min, int v_max) => ImGui.SliderInt3(label, ref v[0], v_min, v_max);
+        public static bool SliderInt3(string label, ref int[] v, int v_min, int v_max, string format) => ImGui.SliderInt3(label, ref v[0], v_min, v_max, format);
+        public static bool SliderInt4(string label, ref int[] v, int v_min, int v_max) => ImGui.SliderInt4(label, ref v[0], v_min, v_max);
+        public static bool SliderInt4(string label, ref int[] v, int v_min, int v_max, string format) => ImGui.SliderInt4(label, ref v[0], v_min, v_max, format);
+
         public static bool SliderScalar(string label, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max) => ImGui.SliderScalar(label, data_type, v, v_min, v_max);
         public static bool SliderScalar(string label, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format) => ImGui.SliderScalar(label, data_type, v, v_min, v_max, format);
         public static bool SliderScalar(string label, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format, float power) => ImGui.SliderScalar(label, data_type, v, v_min, v_max, format, power);
