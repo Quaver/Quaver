@@ -76,12 +76,10 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var isOnScreen = RectangleF.Intersects(ScreenRectangle, new RectangleF(0, 0, WindowManager.Width, WindowManager.Height));
-
-            if (IsActive.Value && DialogManager.Dialogs.Count == 0 && isOnScreen)
+            if (IsActive.Value && Panel.Position.X.Value > 0)
                 PanelPosition = Panel.Position;
 
-            if (DialogsOpen != DialogManager.Dialogs.Count > 0)
+            if (DialogManager.Dialogs.Count > 0 || DialogManager.Dialogs.Count > 0 != DialogsOpen)
                 ChangePanelPosition();
 
             DialogsOpen = DialogManager.Dialogs.Count > 0;
