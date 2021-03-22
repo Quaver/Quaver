@@ -267,6 +267,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
+            var view = Screen.View as EditScreenView;
+
+            if (ImGui.MenuItem("Enable AutoMod", "", view?.AutoMod.IsActive.Value ?? false))
+            {
+                if (view != null)
+                    view.AutoMod.IsActive.Value = !view.AutoMod.IsActive.Value;
+            }
+
+            ImGui.Separator();
+
             if (ImGui.MenuItem("Apply Offset To Map"))
                 DialogManager.Show(new EditorApplyOffsetDialog(Screen));
 
