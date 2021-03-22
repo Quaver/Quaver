@@ -15,6 +15,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
 using Wobble;
 using Wobble.Assets;
@@ -303,6 +304,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             {
                 CreateDevianceGraph();
                 CreateAccuracyGraph();
+                CreateHealthGraph();
                 ToggleGraphVisibility();
                 return;
             }
@@ -329,6 +331,17 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         ///     Creates/Enables the accuracy graph
         /// </summary>
         private void CreateAccuracyGraph() => Graphs[ResultGraphs.Accuracy] = new CachedAccuracyGraph(Map, Processor, GraphSize)
+        {
+            Parent = GraphContainer,
+            Alignment = Alignment.MidCenter,
+            X = -5,
+            Visible = false
+        };
+
+        /// <summary>
+        ///     Creates/Enables the health graph
+        /// </summary>
+        private void CreateHealthGraph() => Graphs[ResultGraphs.Health] = new CachedHealthGraph(Map, Processor, GraphSize)
         {
             Parent = GraphContainer,
             Alignment = Alignment.MidCenter,
