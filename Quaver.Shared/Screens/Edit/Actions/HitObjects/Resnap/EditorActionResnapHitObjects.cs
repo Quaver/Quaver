@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
                     new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap));
             }
             else
-                NotificationManager.Show(NotificationLevel.Info, $"No notes to resnap");
+                NotificationManager.Show(NotificationLevel.Info, $"No notes resnapped");
         }
 
         /// <summary>
