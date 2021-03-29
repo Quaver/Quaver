@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
 
         public override void Update(GameTime gameTime)
         {
-            ToolTipArea.IsClickable = ConfigManager.ResultGraph?.Value == ResultGraphs.Performance;
+            ToolTipArea.IsClickable = ConfigManager.ResultGraph?.Value == ResultGraphs.Rating;
             base.Update(gameTime);
         }
 

@@ -354,7 +354,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// <summary>
         ///     Creates/Enables the performance graph
         /// </summary>
-        private void CreatePerformanceGraph() => Graphs[ResultGraphs.Performance] = new CachedPerformanceGraph(Map, Processor, GraphSize)
+        private void CreatePerformanceGraph() => Graphs[ResultGraphs.Rating] = new CachedPerformanceGraph(Map, Processor, GraphSize)
         {
             Parent = GraphContainer,
             Alignment = Alignment.MidCenter,
