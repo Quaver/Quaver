@@ -185,7 +185,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ResnapHitObjects:
-                    return new EditorActionResnapHitObjects(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<int>>(), args[1].ToObject<List<HitObjectInfo>>());
+                    return new EditorActionResnapHitObjects(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<int>>(), args[1].ToObject<List<HitObjectInfo>>(), args[2].ToObject<bool>());
                 case EditorActionType.Batch:
                     return new EditorActionBatch(EditScreen.ActionManager, args[0].ToObject<List<IEditorAction>>());
                 default:

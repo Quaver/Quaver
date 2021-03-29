@@ -43,6 +43,10 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
         private readonly Dictionary<HitObjectInfo, NoteAdjustment> noteTimeAdjustments =
             new Dictionary<HitObjectInfo, NoteAdjustment>();
 
+        /// <summary>
+        /// </summary>
+        public bool ShowNotif { get; }
+
         private struct NoteAdjustment
         {
             public int OriginalStartTime;
@@ -81,15 +85,17 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
         /// <param name="actionManager"></param>
         /// <param name="workingMap"></param>
         /// <param name="snaps"></param>
-        /// /// <param name="hitObjectsToResnap"></param>
+        /// <param name="hitObjectsToResnap"></param>
+        /// <param name="showNotif"></param>
         [MoonSharpVisible(false)]
         public EditorActionResnapHitObjects(EditorActionManager actionManager, Qua workingMap, List<int> snaps,
-            List<HitObjectInfo> hitObjectsToResnap)
+            List<HitObjectInfo> hitObjectsToResnap, bool showNotif)
         {
             ActionManager = actionManager;
             HitObjectsToResnap = hitObjectsToResnap;
             WorkingMap = workingMap;
             Snaps = snaps;
+            ShowNotif = showNotif;
         }
 
         /// <inheritdoc />
@@ -119,14 +125,19 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
 
             if (resnapCount > 0)
             {
-                var notifMessage = $"Resnapped {resnapCount} note{(resnapCount == 1 ? "" : "s")}";
-                NotificationManager.Show(NotificationLevel.Info, notifMessage);
+                if (ShowNotif)
+                {
+                    var notifMessage = $"Resnapped {resnapCount} note{(resnapCount == 1 ? "" : "s")}";
+                    NotificationManager.Show(NotificationLevel.Info, notifMessage);
+                }
 
                 ActionManager.TriggerEvent(EditorActionType.ResnapHitObjects,
-                    new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap));
+                    new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap, ShowNotif));
             }
-            else
+            else if (ShowNotif)
+            {
                 NotificationManager.Show(NotificationLevel.Info, $"No notes resnapped");
+            }
         }
 
         /// <summary>
@@ -198,11 +209,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
             }
 
             ActionManager.TriggerEvent(EditorActionType.ResnapHitObjects,
-                new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap));
+                new EditorActionHitObjectsResnappedEventArgs(Snaps, HitObjectsToResnap, ShowNotif));
 
-            var offsnapCount = noteTimeAdjustments.Values.Count(x => x.StartTimeWasChanged || x.EndTimeWasChanged);
-            var notifMessage = $"Unsnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
-            NotificationManager.Show(NotificationLevel.Info, notifMessage);
+            if (ShowNotif)
+            {
+                var offsnapCount = noteTimeAdjustments.Values.Count(x => x.StartTimeWasChanged || x.EndTimeWasChanged);
+                var notifMessage = $"Unsnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
+                NotificationManager.Show(NotificationLevel.Info, notifMessage);
+            }
 
             noteTimeAdjustments.Clear();
         }

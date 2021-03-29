@@ -1064,7 +1064,7 @@ namespace Quaver.Shared.Screens.Edit
             if (resnapObjects)
             {
                 // Don't add to undo stack
-                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> { 16, 12 }, clonedObjects);
+                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> { 16, 12 }, clonedObjects, false);
                 resnapAction.Perform();
             }
 
