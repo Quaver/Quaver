@@ -8,8 +8,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Result.UI;
-using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -18,9 +16,9 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
 using Wobble.Window;
 
-namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
+namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
 {
-    public class CachedPerformanceGraph : CacheableContainer
+    public class CachedRatingGraph : CacheableContainer
     {
         /// <summary>
         /// </summary>
@@ -32,10 +30,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
 
         /// <summary>
         /// </summary>
-        private PerformanceGraph PerformanceGraph { get; set; }
+        private RatingGraph RatingGraph { get; set; }
 
         /// <summary>
-        ///     Displays the cached version of <see cref="PerformanceGraph"/>
+        ///     Displays the cached version of <see cref="RatingGraph"/>
         /// </summary>
         public Sprite CachedSprite { get; }
 
@@ -53,13 +51,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
         /// <param name="map"></param>
         /// <param name="processor"></param>
         /// <param name="size"></param>
-        public CachedPerformanceGraph(Map map, Bindable<ScoreProcessor> processor, ScalableVector2 size)
+        public CachedRatingGraph(Map map, Bindable<ScoreProcessor> processor, ScalableVector2 size)
         {
             Map = map;
             Processor = processor;
             Size = size;
 
-            CreatePerformanceGraph();
+            CreateRatingGraph();
 
             CachedSprite = new Sprite
             {
@@ -113,7 +111,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
                     GameBase.Game.GraphicsDevice.SetRenderTarget(RenderTarget);
                     GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
-                    PerformanceGraph.Draw(new GameTime());
+                    RatingGraph.Draw(new GameTime());
                     GameBase.Game.SpriteBatch.End();
 
                     GameBase.Game.GraphicsDevice.SetRenderTarget(null);
@@ -129,7 +127,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
 
         /// <summary>
         /// </summary>
-        private void CreatePerformanceGraph() => PerformanceGraph = new PerformanceGraph(Map, Processor, Size);
+        private void CreateRatingGraph() => RatingGraph = new RatingGraph(Map, Processor, Size);
 
         /// <summary>
         /// </summary>

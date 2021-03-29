@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
@@ -11,16 +10,15 @@ using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Result.UI;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
+namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
 {
-    public class PerformanceGraph : Sprite
+    public class RatingGraph : Sprite
     {
         /// <summary>
         /// </summary>
@@ -79,7 +77,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Performance
         /// <param name="map"></param>
         /// <param name="processor"></param>
         /// <param name="size"></param>
-        public PerformanceGraph(Map map, Bindable<ScoreProcessor> processor, ScalableVector2 size)
+        public RatingGraph(Map map, Bindable<ScoreProcessor> processor, ScalableVector2 size)
         {
             Map = map;
             Processor = processor;
