@@ -122,7 +122,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health
                     Size = new ScalableVector2(width * ContentContainer.Width, y * ContentContainer.Height),
                     Visible = true,
                     Alpha = 1f,
-                    Tint = GetColor(failed)
+                    Tint = GetColor(failed, health)
                 };
             }
         }
@@ -177,6 +177,26 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private static Color GetColor(bool failed) => failed ? new Color(249, 100, 93) : new Color(251, 255, 182);
+        private static Color GetColor(bool failed, float health)
+        {
+            var white = new Color(251, 255, 182);
+            var yellow = new Color(255, 231, 107);
+            var orange = new Color(255, 156, 107);
+            var red = new Color(249, 100, 93);
+
+            if (!failed)
+            {
+                if (health >= 60)
+                    return white;
+                else if (health >= 40)
+                    return yellow;
+                else if (health >= 1)
+                    return orange;
+                else
+                    return red;
+            }
+            else
+                return red;
+        }
     }
 }
