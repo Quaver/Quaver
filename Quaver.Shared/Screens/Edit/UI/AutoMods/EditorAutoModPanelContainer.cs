@@ -56,7 +56,14 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             Screen = screen;
 
             var mapset = new List<Qua> {Screen.WorkingMap};
-            Screen.Map.Mapset.Maps.ForEach(x => mapset.Add(x.LoadQua()));
+
+            Screen.Map.Mapset.Maps.ForEach(x =>
+            {
+                if (x == Screen.Map)
+                    return;
+
+                mapset.Add(x.LoadQua());
+            });
 
             Panel = new EditorAutoModPanel(Screen.WorkingMap, mapset)
             {
