@@ -9,6 +9,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -126,6 +127,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Upload", "CTRL + U", false, Screen.Map.Game == MapGame.Quaver))
             {
                 Screen.UploadMapset();
+            }
+
+            if (ImGui.MenuItem("Submit For Rank", "", false, Screen.Map.Game == MapGame.Quaver
+                                                             && Screen.Map.RankedStatus != RankedStatus.Ranked && Screen.Map.MapId != -1))
+            {
+                DialogManager.Show(new EditorSubmitForRankDialog(Screen));
             }
 
             if (ImGui.MenuItem("Export", "CTRL + E", false))
