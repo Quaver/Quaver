@@ -130,6 +130,7 @@ namespace Quaver.Shared.Skinning
                         if (!Directory.Exists(skinDir))
                         {
                             NotificationManager.Show(NotificationLevel.Warning, "You cannot export this skin!");
+                            SkinExportInProgress = false;
                             return;
                         }
 
