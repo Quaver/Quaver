@@ -747,6 +747,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<ResultGraphs> ResultGraph { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> GrayOutEarlyHitNotes { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -997,6 +1001,7 @@ namespace Quaver.Shared.Config
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
+            GrayOutEarlyHitNotes = ReadValue(@"GrayOutEarlyHitNotes", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))

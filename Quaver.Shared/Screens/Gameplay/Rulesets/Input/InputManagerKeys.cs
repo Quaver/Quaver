@@ -202,6 +202,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
             }
 
+            var isEarlyHit = hitDifference > 0;
+
             // Update Object Pooling
             switch (judgement)
             {
@@ -229,7 +231,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     break;
                 // Handle miss cases.
                 case Judgement.Miss:
-                    manager.RecyclePoolObject(gameplayHitObject);
+                    if (ConfigManager.GrayOutEarlyHitNotes.Value && isEarlyHit)
+                        manager.KillPoolObject(gameplayHitObject);
+                    else
+                        manager.RecyclePoolObject(gameplayHitObject);
                     break;
                 // Handle non-miss cases. Perform Hit Lighting Animation and Handle Object pooling.
                 default:
@@ -239,6 +244,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                         manager.ChangePoolObjectStatusToHeld(gameplayHitObject);
                         gameplayHitObject.StartLongNoteAnimation();
                     }
+                    else if (ConfigManager.GrayOutEarlyHitNotes.Value && isEarlyHit && judgement >= Judgement.Good)
+                        manager.KillPoolObject(gameplayHitObject);
                     else
                         manager.RecyclePoolObject(gameplayHitObject);
                     break;

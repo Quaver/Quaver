@@ -166,7 +166,11 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Experimental", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay),
+                        new OptionsItemCheckbox(containerRect, "Gray out early-hit notes instead of despawning them", ConfigManager.GrayOutEarlyHitNotes)
+                        {
+                            Tags = new List<string> { "hitmiss", "grey", "disappear" }
+                        }
                     }),
                 }),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
