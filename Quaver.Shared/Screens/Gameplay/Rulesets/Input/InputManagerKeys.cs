@@ -303,10 +303,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
                 }
 
-                // If the player recieved an early miss or "okay",
-                // show the player that they were inaccurate by killing the object instead of recycling it
-                if (judgement == Judgement.Miss || judgement == Judgement.Okay)
-                    manager.KillHoldPoolObject(gameplayHitObject, judgement == Judgement.Miss);
+                // If the player released early, show the player that they were
+                // inaccurate by killing the object instead of recycling it.
+                //
+                // The inclusion of the Good window when GrayOutEarlyHitNotes is enabled is
+                // to match the same window used in HandleKeyPress() when processing notes.
+                if ((ConfigManager.GrayOutEarlyHitNotes.Value && judgement == Judgement.Good) || judgement >= Judgement.Okay)
+                    manager.KillHoldPoolObject(gameplayHitObject);
                 else
                     manager.RecyclePoolObject(gameplayHitObject);
 
