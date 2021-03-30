@@ -8,6 +8,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.UI.AutoMods;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Quaver.Shared.Screens.Edit.UI.Panels;
@@ -84,6 +85,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public EditorAutoModPanelContainer AutoMod { get; private set; }
+
+        /// <summary>
+        /// </summary>
         public bool IsImGuiHovered { get; private set; }
 
         /// <inheritdoc />
@@ -100,6 +105,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateCompositionTools();
             CreateHitsoundsPanel();
             CreateLayersPanel();
+            CreateAutoMod();
 
             if (EditScreen.DisplayGameplayPreview.Value)
                 CreateGameplayPreview();
@@ -387,6 +393,13 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private void CreateAutoMod() => AutoMod = new EditorAutoModPanelContainer(EditScreen)
+        {
+            Parent = Container
+        };
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisplayGameplayPreviewChanged(object sender, BindableValueChangedEventArgs<bool> e)
@@ -415,6 +428,7 @@ namespace Quaver.Shared.Screens.Edit
             Details.Parent = Container;
             CompositionTools.Parent = Container;
             Hitsounds.Parent = Container;
+            AutoMod.Parent = Container;
             Footer.Parent = Container;
         }
     }

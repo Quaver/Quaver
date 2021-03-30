@@ -97,16 +97,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 // Target position has tolerance of 1ms so timing points dont overlap by chance
                 var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1 : map.Length;
 
-                var signature = TimeSignature.Quadruple;
-
-                if (Enum.IsDefined(typeof(TimeSignature), map.TimingPoints[i].Signature))
-                    signature = map.TimingPoints[i].Signature;
+                var signature = (int)map.TimingPoints[i].Signature;
 
                 // Max possible sane value for timing lines
                 const float maxBpm = 9999f;
 
                 var msPerBeat = 60000 / Math.Min(Math.Abs(map.TimingPoints[i].Bpm), maxBpm);
-                var increment = (int) signature * msPerBeat;
+                var increment = signature * msPerBeat;
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (increment <= 0)
