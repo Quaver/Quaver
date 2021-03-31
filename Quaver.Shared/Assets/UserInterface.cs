@@ -255,5 +255,11 @@ namespace Quaver.Shared.Assets
         public static Texture2D MenuTipPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/menu-tip-panel.png");
         public static Texture2D NoteVisualizer => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/notes.png");
         public static Texture2D NoPreviewImage => TextureManager.Load(@"Quaver.Resources/Textures/UI/MainMenu/no-preview-image.png");
+        public static Texture2D AutoModPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/automod-panel.png");
+        public static Texture2D AutoModPanelHeader => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/automod-panel-header.png");
+        public static Texture2D AutoModHeaderGear => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/automod-header-gear.png");
+        public static Texture2D AutoModRefreshButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/refresh-button.png");
+        public static Texture2D AutoModIconCritical => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/icon-critical.png");
+        public static Texture2D AutoModIconWarning => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/icon-warning.png");
     }
 }
