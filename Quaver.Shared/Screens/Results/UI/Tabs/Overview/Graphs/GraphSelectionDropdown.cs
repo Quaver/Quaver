@@ -21,7 +21,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         private static List<string> GetDropdownItems() => new List<string>
         {
             "Deviance",
-            "Accuracy"
+            "Accuracy",
+            "Health",
+            "Rating"
         };
 
         /// <summary>
