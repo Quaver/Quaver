@@ -1475,7 +1475,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
-            DialogManager.Show(new EditorSubmitForRankDialog(this));
+            DialogManager.Show(new EditorSubmitForRankConfirmationDialog(this));
         }
 
         /// <summary>
