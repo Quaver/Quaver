@@ -541,6 +541,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Plugins"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/plugins");
 
+            if (ImGui.MenuItem("Ranking Criteria"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/criteria");
+
+            if (ImGui.MenuItem("Ranking Process"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/process");
+
             ImGui.EndMenu();
         }
 
