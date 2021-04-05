@@ -1458,6 +1458,28 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public void SubmitForRank()
+        {
+            if (!OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to submit your mapset for rank!");
+                return;
+            }
+
+            if (!EditorUploadConfirmationDialog.IsMapsetEligibleToUpload(Map))
+                return;
+
+            if (ActionManager.HasUnsavedChanges)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Your map has unsaved changes. Please save & upload before submitting for rank.");
+                return;
+            }
+
+            DialogManager.Show(new EditorSubmitForRankConfirmationDialog(this));
+        }
+
+        /// <summary>
+        /// </summary>
         public void ExportToZip()
         {
             NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");

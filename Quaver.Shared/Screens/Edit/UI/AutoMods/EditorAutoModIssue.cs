@@ -68,6 +68,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             IssueText.Text = Item.Text;
 
             Icon.Image = GetIconImage();
+            Icon.Tint = Item.Level == AutoModIssueLevel.Ranking ? Colors.MainBlue : Color.White;
             Icon.Size = new ScalableVector2(Icon.Image.Width, Icon.Image.Height);
         }
 
@@ -135,7 +136,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                         break;
                     case AutoModIssueLevel.Ranking:
                         text = "This is a ranking criteria error. Without fixing this, your map cannot be ranked.";
-                        color = Color.Lime;
+                        color = Colors.MainBlue;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -154,8 +155,9 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 case AutoModIssueLevel.Warning:
                     return UserInterface.AutoModIconWarning;
                 case AutoModIssueLevel.Critical:
-                case AutoModIssueLevel.Ranking:
                     return UserInterface.AutoModIconCritical;
+                case AutoModIssueLevel.Ranking:
+                    return UserInterface.RequiredAccAlert;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
