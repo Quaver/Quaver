@@ -31,6 +31,7 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
@@ -690,8 +691,9 @@ namespace Quaver.Shared.Screens.Edit
             if (KeyboardManager.IsUniqueKeyPress(Keys.C))
                 CopySelectedObjects();
 
+            // Add shift to paste without automatic resnapping
             if (KeyboardManager.IsUniqueKeyPress(Keys.V))
-                PasteCopiedObjects();
+                PasteCopiedObjects(!KeyboardManager.IsShiftDown());
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.X))
                 CutSelectedObjects();
@@ -1028,9 +1030,9 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
-        ///     Pastes any objects that are currently selected
+        ///     Pastes any objects that are currently selected and resnaps the pasted notes if desired
         /// </summary>
-        public void PasteCopiedObjects()
+        public void PasteCopiedObjects(bool resnapObjects)
         {
             if (Clipboard.Count == 0)
                 return;
@@ -1057,6 +1059,13 @@ namespace Quaver.Shared.Screens.Edit
                     continue;
 
                 clonedObjects.Add(hitObject);
+            }
+
+            if (resnapObjects)
+            {
+                // Don't add to undo stack
+                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> { 16, 12 }, clonedObjects, false);
+                resnapAction.Perform();
             }
 
             ActionManager.Perform(new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, clonedObjects));

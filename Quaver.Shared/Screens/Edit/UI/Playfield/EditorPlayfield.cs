@@ -770,13 +770,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             // always go to the nearest backwards tick
             if (Math.Abs(fwdDiff - bwdDiff) <= 2)
             {
-                // Get the current timing point
-                var point = Map.GetTimingPointAt(time);
-
-                if (point == null)
-                    return time;
-
-                var snapTimePerBeat = 60000f / point.Bpm / beatSnap;
+                var snapTimePerBeat = 60000f / timingPoint.Bpm / beatSnap;
 
                 if (PlaceObjectsOnNearestTick.Value)
                     return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
