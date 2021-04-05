@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Submit For Rank", "", false, Screen.Map.Game == MapGame.Quaver
                                                              && Screen.Map.RankedStatus != RankedStatus.Ranked && Screen.Map.MapId != -1))
             {
-                DialogManager.Show(new EditorSubmitForRankDialog(Screen));
+                Screen.SubmitForRank();
             }
 
             if (ImGui.MenuItem("Export", "CTRL + E", false))

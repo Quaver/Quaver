@@ -5,9 +5,12 @@ using MoreLinq.Extensions;
 using Quaver.API.Maps;
 using Quaver.API.Maps.AutoMod;
 using Quaver.API.Maps.AutoMod.Issues;
+using Quaver.Server.Client;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Edit.UI.AutoMods;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
@@ -30,12 +33,41 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 var view = screen.View as EditScreenView;
 
                 if (view != null)
+                {
+                    view.AutoMod.Panel.RunAutoMod();
                     view.AutoMod.IsActive.Value = true;
+                }
 
                 return;
             }
 
             // Lastly, submit for rank.
+            try
+            {
+                var response = OnlineManager.Client?.SubmitForRank(screen.Map.MapSetId, screen.Map.Mapset.Maps.Select(x => x.Md5Checksum).ToList());
+
+                if (response == null)
+                    throw new ArgumentNullException($"No response received from the server.");
+
+                switch ((int) response["status"])
+                {
+                    case 200:
+                        var msg = response["message"]?.ToString();
+                        NotificationManager.Show(NotificationLevel.Success, msg);
+                        Logger.Important($"Successfully submitted mapset for rank - {msg}", LogType.Network);
+                        break;
+                    default:
+                        var err = response["error"]?.ToString();
+                        NotificationManager.Show(NotificationLevel.Error, err);
+                        Logger.Important($"Failed to submit mapset for rank - {err}", LogType.Network);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, $"An error occured while submitting your mapset for rank.");
+                Logger.Error(e, LogType.Runtime);
+            }
         })
         {
         }
