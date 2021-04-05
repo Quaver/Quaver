@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Submit For Rank", "", false, Screen.Map.Game == MapGame.Quaver
                                                              && Screen.Map.RankedStatus != RankedStatus.Ranked && Screen.Map.MapId != -1))
             {
-                DialogManager.Show(new EditorSubmitForRankDialog(Screen));
+                Screen.SubmitForRank();
             }
 
             if (ImGui.MenuItem("Export", "CTRL + E", false))
@@ -198,8 +198,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Cut", "CTRL + X", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.CutSelectedObjects();
 
-            if (ImGui.MenuItem("Paste", "CTRL + V", false, Screen.Clipboard.Count > 0))
-                Screen.PasteCopiedObjects();
+            if (ImGui.MenuItem("Paste (snapped)", "CTRL + V", false, Screen.Clipboard.Count > 0))
+                Screen.PasteCopiedObjects(true);
+
+            if (ImGui.MenuItem("Paste (unsnapped)", "CTRL + SHIFT + V", false, Screen.Clipboard.Count > 0))
+                Screen.PasteCopiedObjects(false);
 
             if (ImGui.MenuItem("Delete", "DEL", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.DeleteSelectedObjects();
@@ -540,6 +543,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Plugins"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/plugins");
+
+            if (ImGui.MenuItem("Ranking Criteria"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/criteria");
+
+            if (ImGui.MenuItem("Ranking Process"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/process");
 
             ImGui.EndMenu();
         }

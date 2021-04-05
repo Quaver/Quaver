@@ -14,10 +14,20 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
         /// </summary>
         public List<HitObjectInfo> HitObjectsToResnap { get; }
 
-        public EditorActionHitObjectsResnappedEventArgs(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap)
+        /// <summary>
+        /// </summary>
+        public bool ShowNotif { get; }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="snaps"></param>
+        /// <param name="hitObjectsToResnap"></param>
+        /// <param name="showNotif"></param>
+        public EditorActionHitObjectsResnappedEventArgs(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap, bool showNotif)
         {
             Snaps = snaps;
             HitObjectsToResnap = hitObjectsToResnap;
+            ShowNotif = showNotif;
         }
     }
 }

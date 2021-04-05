@@ -531,7 +531,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </remarks>
         /// <param name="snaps">List of snaps to snap to</param>
         /// <param name="hitObjectsToResnap">List of hitobjects to resnap</param>
-        public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps, hitObjectsToResnap));
+        public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps, hitObjectsToResnap, true));
 
         /// <summary>
         ///     Detects the BPM of the map and returns the object instance
