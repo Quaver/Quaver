@@ -885,6 +885,10 @@ namespace Quaver.Shared.Screens.Results
         /// <param name="e"></param>
         private void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
         {
+            if (e.Response == null)
+                // Hasn't submitted successfully yet.
+                return;
+
             IsSubmittingScore.Value = false;
             ScoreSubmissionStats.Value = e.Response;
             Logger.Important($"Received score submission response with status: {e.Response.Status}", LogType.Network);
