@@ -1428,7 +1428,7 @@ namespace Quaver.Shared.Screens.Edit
                         qua.HitObjects.Clear();
 
                     var dir = $"{ConfigManager.SongDirectory.Value}/{Map.Directory}";
-                    var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                    var path = $"{dir}/{StringHelper.FileNameSafeString($"{TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
                     qua.Save(path);
 
                     // Add the new map to the db.

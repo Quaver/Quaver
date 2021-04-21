@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
@@ -61,7 +62,17 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             {
                 if (x == Screen.Map)
                     return;
-
+                try
+                {
+                    File.OpenRead(Directory.GetCurrentDirectory() + "\\Songs\\" + x.Directory + "\\" + x.Path);
+                } catch (FileNotFoundException)
+                {
+                    mapset.Remove(x.LoadQua());
+                    MapDatabaseCache.RemoveMap(x);
+                    MapDatabaseCache.Load(false);
+                    return;
+                }
+                
                 mapset.Add(x.LoadQua());
             });
 

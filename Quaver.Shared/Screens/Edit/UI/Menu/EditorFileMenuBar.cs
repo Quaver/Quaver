@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ImGuiNET;
 using Microsoft.VisualBasic.CompilerServices;
@@ -347,6 +348,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 foreach (var map in Screen.Map.Mapset.Maps)
                 {
+                    try
+                    {
+                        File.OpenRead(Directory.GetCurrentDirectory() + "\\Songs\\" + map.Directory + "\\" + map.Path);
+                    } catch (FileNotFoundException)
+                    {
+                        break;
+                    }
+
                     var color = ColorHelper.DifficultyToColor((float) map.Difficulty10X);
 
                     ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
