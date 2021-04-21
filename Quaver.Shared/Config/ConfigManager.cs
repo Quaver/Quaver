@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using IniFileParser;
+using IniFileParser.Exceptions;
 using IniFileParser.Model;
 using ManagedBass;
 using Microsoft.Xna.Framework.Input;
@@ -804,11 +805,25 @@ namespace Quaver.Shared.Config
         /// </summary>
         private static void ReadConfigFile()
         {
+            // Delete the config file if we catch an exception.
+            try
+            {
+                var Testdata = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
+            }
+            catch (ParsingException)
+            {
+                Logger.Important("Config file couldn't be read.", LogType.Runtime);
+                File.Delete(_gameDirectory + "/quaver.cfg");
+            }
+
             // We'll want to write a quaver.cfg file if it doesn't already exist.
             // There's no need to read the config file afterwards, since we already have
             // all of the default values.
             if (!File.Exists(_gameDirectory + "/quaver.cfg"))
+            {
                 File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configuration File");
+                Logger.Important("Creating a new config file...", LogType.Runtime);
+            }  
 
             var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
 
