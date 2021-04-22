@@ -350,7 +350,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 {
                     try
                     {
-                        File.OpenRead(Directory.GetCurrentDirectory() + "\\Songs\\" + map.Directory + "\\" + map.Path);
+                        File.OpenRead(Directory.GetCurrentDirectory() + "/Songs/" + map.Directory + "/" + map.Path);
                     } catch (FileNotFoundException)
                     {
                         break;
