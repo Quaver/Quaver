@@ -18,6 +18,7 @@ using IniFileParser.Model;
 using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -813,6 +814,8 @@ namespace Quaver.Shared.Config
             catch (ParsingException)
             {
                 Logger.Important("Config file couldn't be read.", LogType.Runtime);
+                File.Copy(_gameDirectory + "/quaver.cfg", _gameDirectory + "/quaver.corrupted." + TimeHelper.GetUnixTimestampMilliseconds()
+                + ".cfg");
                 File.Delete(_gameDirectory + "/quaver.cfg");
             }
 
