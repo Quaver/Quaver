@@ -30,7 +30,7 @@ In the guide whenever you see $YOU, replace it with your GitHub username.
 
 ### **Configuration**
 For GitHub to know who you are when using Git, type these two commands:
-`
+```bash
 git config --global user.name $YOU
 git config --global user.email you@example.com
 `
@@ -39,7 +39,7 @@ git config --global user.email you@example.com
 
 The `git clone ` command is used to create a copy of a specific repository or branch within a repository.
 Git is a distributed version control system. Maximize the advantages of a full repository on your own machine by cloning.
-`
+```bash
 git clone --recurse-submodules https://github.com/Quaver/Quaver
 cd Quaver
 `
