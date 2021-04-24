@@ -33,7 +33,7 @@ For GitHub to know who you are when using Git, type these two commands:
 ```bash
 git config --global user.name $YOU
 git config --global user.email you@example.com
-`
+```
 
 ### **Cloning**
 
@@ -42,7 +42,7 @@ Git is a distributed version control system. Maximize the advantages of a full r
 ```bash
 git clone --recurse-submodules https://github.com/Quaver/Quaver
 cd Quaver
-`
+```
 •   later use ` git push ` to share your branch with the remote repository
 •	open a pull request to compare the changes with your collaborators
 •	test and deploy as needed from the branch
