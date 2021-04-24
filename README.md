@@ -47,7 +47,8 @@ Although there are many games like this, **Quaver** offers many unique features 
 Getting started with **Quaver** development is extremely easy.
 
 * Install the [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-* Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Quaver/Quaver` Please read [Contributing.md] (https://github.com/ravindurra/Quaver/blob/ui-redesign/Contributing.md) for help.
+* Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Quaver/Quaver` 
+Please read [Contributing.md](https://github.com/ravindurra/Quaver/blob/ui-redesign/Contributing.md) for help.
 * **Have Steam open and running**
 * Build & run Quaver with `dotnet run --project Quaver`
 
