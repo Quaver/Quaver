@@ -3,7 +3,7 @@ A guide for how to contribute to Quaver if you aren't familiar with Git, GitHub,
 
 
 ## **What you need**
-- A GitHub account (https://github.com/Quaver/ Quaver)
+- A GitHub account (https://github.com/Quaver/Quaver)
 - A Git client
     - GitKraken is a great multi-platform Git client, supporting Windows, Mac, and Linux.
     - Windows only: Git Extensions work well.
@@ -13,3 +13,8 @@ A guide for how to contribute to Quaver if you aren't familiar with Git, GitHub,
 
 
 ## **GitHub Account Setup**
+
+### **Forking**
+
+
+The first step for new contributors is to fork the Quaver repository. Forking creates a copy of the repository that belongs to your GitHub account. They are free to make any changes to their repository, having no effect on the Quaver repository. At a later point they may ask to create a pull request to merge their changes to the Quaver repository. This does not put any code on your machine, so the next step is to start using git.
