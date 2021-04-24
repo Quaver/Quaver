@@ -72,6 +72,43 @@ git remote -v
 > upstream  https://github.com/Quaver/Quaver.git (fetch)
 > upstream  https://github.com/Quaver/Quaver.git (push)
 ```
+### **Fetching**
+
+Ensure your copy of Git is up to date with all the various commits / branches / tags that exist in the Quaver repository on GitHub by entering this command:
+
+` git fetch --all `
+
+### **Branching**
+
+It's advised to switch to different branches when working on different features or bugfixes.
+
+Here's a way to make sure you create a branch based off of the latest Quaver repository bleed, and change to it:
+```bash
+git fetch upstream
+git checkout -b myfeature upstream/bleed
+```
+This will create the branch myfeature, which will be based on upstream/bleed, and check it out.
+
+### **Git Commit**
+The ` git commit` command is used to save your changes to the local repository. 
+-   If you want to commit all changes at ones you can use below command
+```bash
+git add --all
+git commit -m "Added Some Files With Featrues"
+```
+
+-   If you want to commit certain files, you can use below command to do it.
+```bash
+git add hello.js
+git add dir/
+git commit -m "Added Some Files With Featrues"
+```
+
+### **Git Push**
+When you have commited all the changes to your project at a point that you want to share, you have to push it upstream. 
+` git push origin master `
+
+
 
 # **Compiling**
 
@@ -84,13 +121,3 @@ git remote -v
 •	Press F5 or the Start Debugging button in the Debug Toolbar, located above the code editor. 
 •	If you want to run the unit tests suite,
         • Go to Quaver.API.Test- right click on anywhere in code section and click Run ALL Test.
-
-
-
-
-
-
-
-
-
-
