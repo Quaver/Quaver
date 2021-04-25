@@ -3,10 +3,10 @@ A guide for how to contribute to Quaver if you aren't familiar with Git, GitHub,
 
 
 ## **What you need**
-- A GitHub account [This Account] (https://github.com/Quaver/Quaver)
+- A GitHub account [This Account](https://github.com/Quaver/Quaver)
 - A Git client
-    -You can use [GitKraken] (https://www.gitkraken.com/). It is a great multi-platform Git client, supporting Windows, Mac, and Linux.
-    - Alternatively, the [Gitbash] (https://git-scm.com/downloads) command line is always an option.
+    -You can use [GitKraken](https://www.gitkraken.com/). It is a great multi-platform Git client, supporting Windows, Mac, and Linux.
+    - Alternatively, the [Gitbash](https://git-scm.com/downloads) command line is always an option.
 - C# IDE (if you intend on modifying code)
     - Windows only: Microsoft [Visual Studio](https://visualstudio.microsoft.com/downloads/) 2017 or newer
 
