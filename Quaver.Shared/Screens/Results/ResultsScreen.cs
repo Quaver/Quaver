@@ -885,8 +885,8 @@ namespace Quaver.Shared.Screens.Results
         /// <param name="e"></param>
         private void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
         {
+            // Hasn't submitted successfully yet.
             if (e.Response == null)
-                // Hasn't submitted successfully yet.
                 return;
 
             IsSubmittingScore.Value = false;
