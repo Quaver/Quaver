@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -145,6 +145,22 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// <summary>
         /// </summary>
         /// <param name="issue"></param>
+        private void OnAudioFormat(AutoModIssueAudioFormat issue)
+        {
+            if (Screen.Map.Game != MapGame.Quaver)
+                return;
+
+            var path = MapManager.GetAudioPath(Screen.Map);
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            Utils.NativeUtils.HighlightInFileManager(path);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="issue"></param>
         private void OnAutoplayFailure(AutoModIssueAutoplayFailure issue) => Logger.Debug($"Autoplay Failure", LogType.Runtime, false);
 
         /// <summary>
@@ -270,6 +286,13 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// <summary>
         /// </summary>
         /// <param name="issue"></param>
+        private void OnMapPreviewPoint(AutoModIssuePreviewPoint issue)
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="issue"></param>
         private void OnMapsetSpreadLength(AutoModIssueMapsetSpreadLength issue)
         {
         }
@@ -375,6 +398,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         private void InitializeIssueClickMethods() => IssueMethods = new Dictionary<Type, Action<AutoModIssue>>
         {
             {typeof(AutoModIssueAudioBitrate), e => OnAudioBitrate((AutoModIssueAudioBitrate) e)},
+            {typeof(AutoModIssueAudioFormat), e => OnAudioFormat((AutoModIssueAudioFormat) e)},
             {typeof(AutoModIssueAutoplayFailure), e => OnAutoplayFailure((AutoModIssueAutoplayFailure) e)},
             {typeof(AutoModIssueBackgroundResolution), e => OnBackgroundResolution((AutoModIssueBackgroundResolution) e)},
             {typeof(AutoModIssueBackgroundTooLarge), e => OnBackgroundTooLarge((AutoModIssueBackgroundTooLarge) e)},
@@ -386,6 +410,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             {typeof(AutoModIssueOverlappingObjects), e => OnOverlappingObjects((AutoModIssueOverlappingObjects) e)},
             {typeof(AutoModIssueShortLongNote), e => OnShortLongNote((AutoModIssueShortLongNote) e)},
             {typeof(AutoModIssueMapLength), e => OnMapLength((AutoModIssueMapLength) e)},
+            {typeof(AutoModIssuePreviewPoint), e => OnMapPreviewPoint((AutoModIssuePreviewPoint) e)},
             {typeof(AutoModIssueMapsetSpreadLength), e => OnMapsetSpreadLength((AutoModIssueMapsetSpreadLength) e)},
             {typeof(AutoModIssueMismatchingMetdata), e => OnMismatchingMetadata((AutoModIssueMismatchingMetdata) e)},
             {typeof(AutoModIssueMultiModeDiffName), e => OnMultiModDiffName((AutoModIssueMultiModeDiffName) e)},
