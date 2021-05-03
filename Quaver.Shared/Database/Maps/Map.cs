@@ -383,16 +383,6 @@ namespace Quaver.Shared.Database.Maps
             {
                 case MapGame.Quaver:
                     var quaPath = $"{ConfigManager.SongDirectory}/{Directory}/{Path}";
-
-                    try
-                    {
-                        File.OpenText(quaPath);
-                    } catch (FileNotFoundException)
-                    {
-                        qua = new Qua();
-                        break;
-                    }
-
                     qua = Qua.Parse(quaPath, checkValidity);
                     break;
                 case MapGame.Osu:

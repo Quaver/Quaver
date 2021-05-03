@@ -67,9 +67,6 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                     File.OpenRead(Directory.GetCurrentDirectory() + "/Songs/" + x.Directory + "/" + x.Path);
                 } catch (FileNotFoundException)
                 {
-                    mapset.Remove(x.LoadQua());
-                    MapDatabaseCache.RemoveMap(x);
-                    MapDatabaseCache.Load(false);
                     return;
                 }
                 

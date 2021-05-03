@@ -235,6 +235,19 @@ namespace Quaver.Shared.Screens.Edit
             Map = map;
             BackgroundStore = visualTestBackground;
 
+            Map.Mapset.Maps.ForEach(x =>
+            {
+                try
+                {
+                    File.OpenRead(Directory.GetCurrentDirectory() + "/Songs/" + x.Directory + "/" + x.Path);
+                }
+                catch (FileNotFoundException)
+                {
+                    MapDatabaseCache.RemoveMap(x);
+                    MapDatabaseCache.Load(false);
+                }
+            });
+
             try
             {
                 OriginalQua = map.LoadQua();
