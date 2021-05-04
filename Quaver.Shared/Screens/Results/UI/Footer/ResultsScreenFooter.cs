@@ -4,6 +4,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Results;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Results.UI.Footer
@@ -21,7 +22,9 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
 
             if (OnlineManager.CurrentGame == null)
             {
-                RightAlignedItems.Add(new ResultsFooterRetryButton(screen));
+                if (screen.ScreenType == ResultsScreenType.Gameplay && screen.Gameplay.LoadedReplay == null)
+                    RightAlignedItems.Add(new ResultsFooterRetryButton(screen));
+
                 RightAlignedItems.Add(new ResultsFooterWatchReplayButton(screen));
                 RightAlignedItems.Add(new ResultsFooterExportReplayButton(screen));
             }
