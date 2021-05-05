@@ -1142,6 +1142,8 @@ namespace Quaver.Shared.Screens.Edit
         public void GoToObjects(string input)
         {
             SelectedHitObjects.Clear();
+            
+            input = input.Trim();
 
             // Only timestamp was given
             if (Regex.IsMatch(input, @"^\d+$"))
