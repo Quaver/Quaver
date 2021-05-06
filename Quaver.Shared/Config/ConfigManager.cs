@@ -806,16 +806,19 @@ namespace Quaver.Shared.Config
         /// </summary>
         private static void ReadConfigFile()
         {
-            try
+            if (File.Exists(_gameDirectory + "/quaver.cfg"))
             {
-                // Delete the config file if we catch an exception.
-                var _ = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
-            }
-            catch (ParsingException)
-            {
-                Logger.Important("Config file couldn't be read.", LogType.Runtime);
-                File.Copy(_gameDirectory + "/quaver.cfg", _gameDirectory + "/quaver.corrupted." + TimeHelper.GetUnixTimestampMilliseconds() + ".cfg");
-                File.Delete(_gameDirectory + "/quaver.cfg");
+                try
+                {
+                    // Delete the config file if we catch an exception.
+                    var _ = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
+                }
+                catch (ParsingException)
+                {
+                    Logger.Important("Config file couldn't be read.", LogType.Runtime);
+                    File.Copy(_gameDirectory + "/quaver.cfg", _gameDirectory + "/quaver.corrupted." + TimeHelper.GetUnixTimestampMilliseconds() + ".cfg");
+                    File.Delete(_gameDirectory + "/quaver.cfg");
+                }
             }
 
             // We'll want to write a quaver.cfg file if it doesn't already exist.
