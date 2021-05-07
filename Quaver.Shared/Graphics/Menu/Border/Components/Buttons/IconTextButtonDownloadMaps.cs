@@ -26,6 +26,13 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
                     return;
                 }
 
+                if (game.CurrentScreen.Type == QuaverScreenType.Download)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        $"You are already here!");
+                    return;
+                }
+
                 game.CurrentScreen.Exit(() => new DownloadingScreen(game.CurrentScreen.Type));
             })
         {
