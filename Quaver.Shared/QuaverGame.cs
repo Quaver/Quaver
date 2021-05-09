@@ -705,6 +705,10 @@ namespace Quaver.Shared
         /// </summary>
         private void HandleKeyPressAltEnter()
         {
+            // Don't allow to change to fullscreen when playing
+            if (CurrentScreen.Type == QuaverScreenType.Gameplay)
+                return;
+
             // Check for modifier keys
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
