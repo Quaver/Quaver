@@ -83,7 +83,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Screen = screen;
             Replay = Screen.LoadedReplay;
 
-            Windows = Screen.SpectatorClient != null ? JudgementWindowsDatabaseCache.Standard : JudgementWindowsDatabaseCache.Selected.Value;
+            // If spectating someone online OR watching an online replay,
+            // then we use standard judgement windows of the core
+            if (Screen.SpectatorClient != null || (Screen.LoadedScore != null && Screen.LoadedScore.IsOnline))
+                Windows = JudgementWindowsDatabaseCache.Standard;
+
+            // If we are watching a local replay, then we use the windows of the replay's score
+            else if (Screen.LoadedScore != null)
+                Windows = new JudgementWindows(){
+                    Id = 0,
+                    Name = Screen.LoadedScore.JudgementWindowPreset,
+                    IsDefault = false,
+                    Marvelous = Screen.LoadedScore.JudgementWindowMarv,
+                    Perfect = Screen.LoadedScore.JudgementWindowPerf,
+                    Great = Screen.LoadedScore.JudgementWindowGreat,
+                    Good = Screen.LoadedScore.JudgementWindowGood,
+                    Okay = Screen.LoadedScore.JudgementWindowOkay,
+                    Miss = Screen.LoadedScore.JudgementWindowMiss,
+                };
+            else // Otherwise use chosen (used by View Map on the select screen)
+                Windows = JudgementWindowsDatabaseCache.Selected.Value;
+
             VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, Windows, Screen.SpectatorClient != null);
 
             try
