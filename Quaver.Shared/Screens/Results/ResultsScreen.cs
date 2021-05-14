@@ -301,7 +301,7 @@ namespace Quaver.Shared.Screens.Results
                 return;
             }
 
-            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value, replay));
+            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value, replay, null, Score));
         }
 
         /// <summary>

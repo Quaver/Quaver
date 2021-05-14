@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                                         return;
                                     }
 
-                                    game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), replay));
+                                    game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), replay, null, Score));
                                 });
 
                             DialogManager.Show(dialog);
