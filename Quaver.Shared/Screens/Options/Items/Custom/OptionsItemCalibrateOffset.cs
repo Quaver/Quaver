@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     BackgroundHelper.Load(MapManager.Selected.Value);
                     DialogManager.Dismiss(DialogManager.Dialogs.Last());
 
-                    return new GameplayScreen(qua, "", new List<Score>(), null, false, 0, true);
+                    return new GameplayScreen(qua, "", new List<Score>(), null, null, false, 0, true);
                 });
             };
         }

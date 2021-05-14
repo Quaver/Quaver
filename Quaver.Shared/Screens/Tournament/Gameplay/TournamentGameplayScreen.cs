@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Tournament.Gameplay
         /// <param name="md5"></param>
         /// <param name="spectatorClient"></param>
         public TournamentGameplayScreen(Qua map, string md5, SpectatorClient spectatorClient) : base(map, md5,
-            new List<Score>(), null, false, 0, false, spectatorClient)
+            new List<Score>(), null, null, false, 0, false, spectatorClient)
         {
             Type = TournamentScreenType.Spectator;
         }
@@ -47,8 +47,8 @@ namespace Quaver.Shared.Screens.Tournament.Gameplay
         /// <param name="map"></param>
         /// <param name="md5"></param>
         /// <param name="options"></param>
-        public TournamentGameplayScreen(Qua map, string md5, TournamentPlayerOptions options) : base(map, md5, new List<Score>(), 
-            null, false, 0, false, null, options)
+        public TournamentGameplayScreen(Qua map, string md5, TournamentPlayerOptions options) : base(map, md5, new List<Score>(),
+            null, null, false, 0, false, null, options)
         {
             Type = TournamentScreenType.Coop;
         }

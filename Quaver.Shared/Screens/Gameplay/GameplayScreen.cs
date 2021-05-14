@@ -1041,9 +1041,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Use ChangeScreen here to give instant feedback. Can't be threaded
             if (IsPlayTesting)
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor));
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor));
             else if (InReplayMode)
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay, LoadedScore));
             else
                 QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
         }

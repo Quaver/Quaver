@@ -1317,7 +1317,7 @@ namespace Quaver.Shared.Screens.Edit
                 var map = ObjectHelper.DeepClone(WorkingMap);
                 map.ApplyMods(ModManager.Mods);
 
-                return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
+                return new GameplayScreen(map, "", new List<Score>(), null, null, true, Track.Time, false, null, null, false, true);
             });
         }
 

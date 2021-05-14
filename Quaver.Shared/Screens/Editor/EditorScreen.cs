@@ -970,7 +970,7 @@ namespace Quaver.Shared.Screens.Editor
             Exit(() =>
             {
                 Save();
-                return new GameplayScreen(WorkingMap, "", new List<Score>(), null, true, AudioEngine.Track.Time);
+                return new GameplayScreen(WorkingMap, "", new List<Score>(), null, null, true, AudioEngine.Track.Time);
             });
         }
 
