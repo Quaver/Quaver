@@ -108,6 +108,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public string MapHash { get; }
 
         /// <summary>
+        ///     The score of the current replay (if there is one.)
+        /// </summary>
+        public Score LoadedScore { get; private set; }
+
+        /// <summary>
         ///     The current replay being watched (if there is one.)
         /// </summary>
         public Replay LoadedReplay { get; private set; }
@@ -363,7 +368,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="options"></param>
         /// <param name="isSongSelectPreview"></param>
         /// <param name="isTestPlayingInNewEditor"></param>
-        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
+        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, Score score = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
             bool isTestPlayingInNewEditor = false)
         {
@@ -383,6 +388,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             LocalScores = scores;
             MapHash = md5;
+            LoadedScore = score;
             LoadedReplay = replay;
             IsPlayTesting = isPlayTesting;
             IsTestPlayingInNewEditor = isTestPlayingInNewEditor;
