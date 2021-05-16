@@ -142,7 +142,7 @@ namespace Quaver.Shared.IPC
                     return;
                 }
 
-                DownloadAndImport(response.Map.MapsetId, response.Map.Artist, response.Map.Title, game);
+                DownloadAndImport(response.Map.MapsetId, response.Map.Artist, response.Map.Title, game, mapId);
             }
             catch (Exception e)
             {
@@ -232,19 +232,18 @@ namespace Quaver.Shared.IPC
             return allowed;
         }
 
-        private static void DownloadAndImport(int mapsetId, string artist, string title, QuaverGame game)
+        private static void DownloadAndImport(int mapsetId, string artist, string title, QuaverGame game, int? mapId = null)
         {
             // User doesn't have the map, so download it for them
             if (MapsetDownloadManager.CurrentDownloads.All(x => x.MapsetId != mapsetId))
             {
-                var download =
-                    MapsetDownloadManager.Download(mapsetId, artist, title);
+                var download = MapsetDownloadManager.Download(mapsetId, artist, title);
                 MapsetDownloadManager.OpenOnlineHub();
 
                 // Auto import
                 download.Completed.ValueChanged += (sender, args) =>
                 {
-                    game.CurrentScreen.Exit(() => new ImportingScreen(null, true));
+                    game.CurrentScreen.Exit(() => new ImportingScreen(null, true, false, mapId));
                     var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
                     dialog?.Close();
                 };

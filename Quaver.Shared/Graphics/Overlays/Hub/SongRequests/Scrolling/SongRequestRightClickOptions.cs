@@ -141,14 +141,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
                         // Auto import
                         download.Completed.ValueChanged += (sender, args) =>
                         {
-                            if (game.CurrentScreen.Type == QuaverScreenType.Select)
-                            {
-                                var selectScreen = (SelectionScreen) game.CurrentScreen;
-                                game.CurrentScreen.Exit(() => new ImportingScreen(null, true));
+                            game.CurrentScreen.Exit(() => new ImportingScreen(null, true, false, Request.MapId));
 
-                                var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
-                                dialog?.Close();
-                            }
+                            var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
+                            dialog?.Close();
                         };
                     }
                     break;

@@ -288,9 +288,9 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
-        ///     Goes through all the mapsets in the queue and imports them.
+        ///     Goes through all the mapsets in the queue and imports them, selects a specific difficulty after the import if given.
         /// </summary>
-        public static void ImportMapsetsInQueue()
+        public static void ImportMapsetsInQueue(int? selectMapIdAfterImport = null)
         {
             Map selectedMap = null;
 
@@ -346,6 +346,16 @@ namespace Quaver.Shared.Database.Maps
 
             if (MapManager.Mapsets.Count == 0)
                 return;
+
+            if (selectMapIdAfterImport != null)
+            {
+                var map = MapManager.FindMapFromOnlineId((int)selectMapIdAfterImport);
+                if (map != null)
+                {
+                    MapManager.Selected.Value = map;
+                    return;
+                }
+            }
 
             var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == selectedMap?.Md5Checksum));
 
