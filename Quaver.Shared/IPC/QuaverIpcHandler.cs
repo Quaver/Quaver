@@ -92,6 +92,13 @@ namespace Quaver.Shared.IPC
         /// <param name="message"></param>
         private static void HandleMapMessage(string message)
         {
+            int mapId;
+            if (!int.TryParse(message, out mapId))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "The provided ID was not a number!");
+                return;
+            }
+
             var game = (QuaverGame) GameBase.Game;
             if (game.CurrentScreen.Type != QuaverScreenType.Select)
             {
@@ -101,12 +108,6 @@ namespace Quaver.Shared.IPC
             }
 
             var screen = game.CurrentScreen as SelectionScreen;
-            int mapId;
-            if (!int.TryParse(message, out mapId))
-            {
-                NotificationManager.Show(NotificationLevel.Warning, "The provided ID was not a number!");
-                return;
-            }
 
             // Check if we have the map installed
             var map = MapManager.FindMapFromOnlineId(mapId);
@@ -148,6 +149,13 @@ namespace Quaver.Shared.IPC
         /// <param name="message"></param>
         private static void HandleMapsetMessage(string message)
         {
+            int mapsetId;
+            if (!int.TryParse(message, out mapsetId))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "The provided ID was not a number!");
+                return;
+            }
+
             var game = (QuaverGame) GameBase.Game;
             if (game.CurrentScreen.Type != QuaverScreenType.Select)
             {
@@ -157,12 +165,6 @@ namespace Quaver.Shared.IPC
             }
 
             var screen = game.CurrentScreen as SelectionScreen;
-            int mapsetId;
-            if (!int.TryParse(message, out mapsetId))
-            {
-                NotificationManager.Show(NotificationLevel.Warning, "The provided ID was not a number!");
-                return;
-            }
 
             // Check if we have the mapset installed
             if (MapManager.Mapsets.Count != 0)
