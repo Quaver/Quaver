@@ -100,19 +100,14 @@ namespace Quaver.Shared.IPC
             }
 
             var game = (QuaverGame) GameBase.Game;
-            if (game.CurrentScreen.Type != QuaverScreenType.Select)
-            {
-                NotificationManager.Show(NotificationLevel.Warning,
-                    "You must be in the song select screen to select a map!");
-                return;
-            }
-
-            var screen = game.CurrentScreen as SelectionScreen;
 
             // Check if we have the map installed
             var map = MapManager.FindMapFromOnlineId(mapId);
             if (map != null)
             {
+                if (!CanGoToSongSelect(game.CurrentScreen.Type)) return;
+                game.CurrentScreen.Exit(() => new SelectionScreen());
+                var screen = game.CurrentScreen as SelectionScreen;
                 MapManager.Selected.Value = map;
 
                 lock (screen.AvailableMapsets.Value)
@@ -126,27 +121,34 @@ namespace Quaver.Shared.IPC
                 return;
             }
 
+            // Make sure they can visit the song select before making API requests
+            // It's possible that something triggers an IPC during gameplay and download/import would interrupt gameplay
+            if (!CanGoToSongSelect(game.CurrentScreen.Type)) return;
+
             try
             {
                 // Check if the map exists online
                 var request = new APIRequestMapInformation(mapId);
                 var response = request.ExecuteRequest();
-                if (response.Status == 400 || response.Map == null)
+                if (response.Status == 400 || response.Map == null || response.Map.MapsetId == -1)
                 {
                     NotificationManager.Show(NotificationLevel.Warning, "The map does not exist on the server!");
                     return;
                 }
                 else if (response.Status != 200)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        "There was an issue while requesting mapset data from the server");
                     return;
                 }
+
                 DownloadAndImport(response.Map.MapsetId, response.Map.Artist, response.Map.Title, game);
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server or downloading!");
+                NotificationManager.Show(NotificationLevel.Error,
+                    "There was an issue while requesting mapset data from the server or downloading!");
             }
         }
 
@@ -164,14 +166,6 @@ namespace Quaver.Shared.IPC
             }
 
             var game = (QuaverGame) GameBase.Game;
-            if (game.CurrentScreen.Type != QuaverScreenType.Select)
-            {
-                NotificationManager.Show(NotificationLevel.Warning,
-                    "You must be in the song select screen to select a mapset!");
-                return;
-            }
-
-            var screen = game.CurrentScreen as SelectionScreen;
 
             // Check if we have the mapset installed
             if (MapManager.Mapsets.Count != 0)
@@ -181,6 +175,10 @@ namespace Quaver.Shared.IPC
 
                 if (mapset != null)
                 {
+                    if (!CanGoToSongSelect(game.CurrentScreen.Type)) return;
+                    game.CurrentScreen.Exit(() => new SelectionScreen());
+                    var screen = game.CurrentScreen as SelectionScreen;
+
                     MapManager.Selected.Value = mapset.Maps.First();
                     lock (screen.AvailableMapsets.Value)
                         screen.AvailableMapsets.Value = MapsetHelper.FilterMapsets(screen.CurrentSearchQuery);
@@ -194,28 +192,44 @@ namespace Quaver.Shared.IPC
                 return;
             }
 
+            // Make sure they can visit the song select before making API requests
+            // It's possible that something triggers an IPC during gameplay and download/import would interrupt gameplay
+            if (!CanGoToSongSelect(game.CurrentScreen.Type)) return;
+
             try
             {
                 // Check if the mapset exists online
                 var request = new APIRequestMapsetInformation(mapsetId);
                 var response = request.ExecuteRequest();
-                if (response.Status == 400 || response.Mapset == null)
+                if (response.Status == 400 || response.Mapset == null || response.Mapset.Id == -1)
                 {
                     NotificationManager.Show(NotificationLevel.Warning, "The map does not exist on the server!");
                     return;
                 }
                 else if (response.Status != 200)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server!");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        "There was an issue while requesting mapset data from the server!");
                     return;
                 }
+
                 DownloadAndImport(response.Mapset.Id, response.Mapset.Artist, response.Mapset.Title, game);
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server or downloading!");
+                NotificationManager.Show(NotificationLevel.Error,
+                    "There was an issue while requesting mapset data from the server or downloading!");
             }
+        }
+
+        private static bool CanGoToSongSelect(QuaverScreenType type)
+        {
+            var allowed = SelectionScreen.CanGoToSongSelect(type);
+            if (!allowed)
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "This screen does not support map IPC messages, please visit the song select screen!");
+            return allowed;
         }
 
         private static void DownloadAndImport(int mapsetId, string artist, string title, QuaverGame game)
@@ -230,14 +244,9 @@ namespace Quaver.Shared.IPC
                 // Auto import
                 download.Completed.ValueChanged += (sender, args) =>
                 {
-                    if (game.CurrentScreen.Type == QuaverScreenType.Select)
-                    {
-                        var selectScreen = (SelectionScreen) game.CurrentScreen;
-                        game.CurrentScreen.Exit(() => new ImportingScreen(null, true));
-
-                        var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
-                        dialog?.Close();
-                    }
+                    game.CurrentScreen.Exit(() => new ImportingScreen(null, true));
+                    var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
+                    dialog?.Close();
                 };
             }
         }

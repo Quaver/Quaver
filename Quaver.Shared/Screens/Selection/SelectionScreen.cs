@@ -924,5 +924,26 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Selecting, -1, "", 0, "", 0);
+
+        /// <summary>
+        ///     Whether the user is allowed to transition to the song select screen from their current screen
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool CanGoToSongSelect(QuaverScreenType type)
+        {
+            switch (type)
+            {
+                case QuaverScreenType.Select:
+                case QuaverScreenType.Menu:
+                case QuaverScreenType.Results:
+                case QuaverScreenType.Lobby:
+                case QuaverScreenType.Download:
+                case QuaverScreenType.Music:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }
