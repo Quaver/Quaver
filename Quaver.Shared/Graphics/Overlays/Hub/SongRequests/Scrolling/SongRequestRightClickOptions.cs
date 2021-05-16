@@ -95,9 +95,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
             // First check if we're in song select
             var game = (QuaverGame) GameBase.Game;
 
-            if (!SelectionScreen.CanGoToSongSelect(game.CurrentScreen.Type))
+            if (game.CurrentScreen.Type != QuaverScreenType.Select)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "This screen does not support playing song requests, please visit the song select screen!");
+                NotificationManager.Show(NotificationLevel.Warning, "You must be in the song select screen to play song requests!");
                 return;
             }
 
@@ -111,8 +111,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
 
                 if (map != null)
                 {
-                    if (game.CurrentScreen.Type != QuaverScreenType.Select)
-                        game.CurrentScreen.Exit(() => new SelectionScreen());
                     MapManager.PlaySongRequest(Request, map);
                     return;
                 }
@@ -129,8 +127,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
 
                         if (mapset != null)
                         {
-                            if (game.CurrentScreen.Type != QuaverScreenType.Select)
-                                game.CurrentScreen.Exit(() => new SelectionScreen());
                             MapManager.PlaySongRequest(Request, mapset.Maps.First());
                             return;
                         }
