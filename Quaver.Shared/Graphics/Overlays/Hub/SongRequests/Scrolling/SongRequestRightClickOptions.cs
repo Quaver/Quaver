@@ -95,9 +95,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
             // First check if we're in song select
             var game = (QuaverGame) GameBase.Game;
 
-            if (game.CurrentScreen.Type != QuaverScreenType.Select)
+            if (!SelectionScreen.CanGoToSongSelect(game.CurrentScreen.Type))
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You must be in the song select screen to play song requests!");
+                NotificationManager.Show(NotificationLevel.Warning, "This screen does not support playing song requests, please visit the song select screen!");
                 return;
             }
 
@@ -111,6 +111,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
 
                 if (map != null)
                 {
+                    if (game.CurrentScreen.Type != QuaverScreenType.Select)
+                        game.CurrentScreen.Exit(() => new SelectionScreen());
                     MapManager.PlaySongRequest(Request, map);
                     return;
                 }
@@ -127,6 +129,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
 
                         if (mapset != null)
                         {
+                            if (game.CurrentScreen.Type != QuaverScreenType.Select)
+                                game.CurrentScreen.Exit(() => new SelectionScreen());
                             MapManager.PlaySongRequest(Request, mapset.Maps.First());
                             return;
                         }
@@ -141,10 +145,13 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
                         // Auto import
                         download.Completed.ValueChanged += (sender, args) =>
                         {
-                            game.CurrentScreen.Exit(() => new ImportingScreen(null, true, false, Request.MapId));
+                            if (game.CurrentScreen.Type == QuaverScreenType.Select)
+                            {
+                                game.CurrentScreen.Exit(() => new ImportingScreen(null, true, false, Request.MapId));
 
-                            var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
-                            dialog?.Close();
+                                var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
+                                dialog?.Close();
+                            }
                         };
                     }
                     break;
