@@ -126,21 +126,28 @@ namespace Quaver.Shared.IPC
                 return;
             }
 
-            // Check if the map exists online
-            var request = new APIRequestMapInformation(mapId);
-            var response = request.ExecuteRequest();
-            if (response.Status == 400 || response.Map == null || response.Map.MapsetId == -1)
+            try
             {
-                NotificationManager.Show(NotificationLevel.Warning, "The map does not exist!");
-                return;
+                // Check if the map exists online
+                var request = new APIRequestMapInformation(mapId);
+                var response = request.ExecuteRequest();
+                if (response.Status == 400 || response.Map == null)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "The map does not exist on the server!");
+                    return;
+                }
+                else if (response.Status != 200)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server");
+                    return;
+                }
+                DownloadAndImport(response.Map.MapsetId, response.Map.Artist, response.Map.Title, game);
             }
-            else if (response.Status != 200)
+            catch (Exception e)
             {
-                NotificationManager.Show(NotificationLevel.Error, "Something happened during the request!");
-                return;
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server or downloading!");
             }
-
-            DownloadAndImport(response.Map.MapsetId, response.Map.Artist, response.Map.Title, game);
         }
 
         /// <summary>
@@ -187,21 +194,28 @@ namespace Quaver.Shared.IPC
                 return;
             }
 
-            // Check if the mapset exists online
-            var request = new APIRequestMapsetInformation(mapsetId);
-            var response = request.ExecuteRequest();
-            if (response.Status == 400 || response.Mapset == null || response.Mapset?.Id == -1)
+            try
             {
-                NotificationManager.Show(NotificationLevel.Warning, "The map does not exist!");
-                return;
+                // Check if the mapset exists online
+                var request = new APIRequestMapsetInformation(mapsetId);
+                var response = request.ExecuteRequest();
+                if (response.Status == 400 || response.Mapset == null)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "The map does not exist on the server!");
+                    return;
+                }
+                else if (response.Status != 200)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server!");
+                    return;
+                }
+                DownloadAndImport(response.Mapset.Id, response.Mapset.Artist, response.Mapset.Title, game);
             }
-            else if (response.Status != 200)
+            catch (Exception e)
             {
-                NotificationManager.Show(NotificationLevel.Error, "Something happened during the request!");
-                return;
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while requesting mapset data from the server or downloading!");
             }
-
-            DownloadAndImport(response.Mapset.Id, response.Mapset.Artist, response.Mapset.Title, game);
         }
 
         private static void DownloadAndImport(int mapsetId, string artist, string title, QuaverGame game)
