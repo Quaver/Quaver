@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Replays;
@@ -365,20 +366,46 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="extractPath"></param>
         private static void ExtractQuaverMapset(string fileName, string extractPath)
         {
-            try
+            var options = new ExtractionOptions {ExtractFullPath = true, Overwrite = true};
+
+            using (var archive = ArchiveFactory.Open(fileName))
             {
-                using (var archive = ArchiveFactory.Open(fileName))
+                foreach (var entry in archive.Entries)
                 {
-                    foreach (var entry in archive.Entries)
+                    if (entry.IsDirectory)
+                        continue;
+
+                    try
                     {
-                        if (!entry.IsDirectory)
-                            entry.WriteToDirectory(extractPath, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                        entry.WriteToDirectory(extractPath, options);
+                    }
+                    catch (Exception e)
+                    {
+                        var path = entry.Key;
+                        Logger.Warning($"Entry `{path}` failed to extract: {e}", LogType.Runtime);
+
+                        if (Path.GetExtension(path) != ".qua" || Path.GetDirectoryName(path) != "")
+                        {
+                            // Can't try a different name for other files as they are referenced by name.
+                            throw;
+                        }
+
+                        path = Path.Join(extractPath, CryptoHelper.StringToMd5(path) + ".qua");
+                        Logger.Warning($"Trying with a different file name: {path}...", LogType.Runtime);
+
+                        try
+                        {
+                            entry.WriteToFile(path, options);
+                        }
+                        catch (Exception e2)
+                        {
+                            Logger.Warning($"Entry `{path}` failed to extract: {e2}", LogType.Runtime);
+
+                            // Oh well.
+                            throw;
+                        }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
             }
         }
 
