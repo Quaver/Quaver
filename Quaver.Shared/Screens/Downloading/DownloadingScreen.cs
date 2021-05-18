@@ -875,8 +875,6 @@ namespace Quaver.Shared.Screens.Downloading
                 if (!CurrentPreview.IsDisposed)
                     CurrentPreview.Dispose();
             }
-
-            AudioPreviews = null;
         }
 
         /// <summary>
