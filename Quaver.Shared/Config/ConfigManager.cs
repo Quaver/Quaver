@@ -806,31 +806,32 @@ namespace Quaver.Shared.Config
         /// </summary>
         private static void ReadConfigFile()
         {
-            if (File.Exists(_gameDirectory + "/quaver.cfg"))
+            var _configFileDirectory = _gameDirectory + "/quaver.cfg";
+            if (File.Exists(_configFileDirectory))
             {
                 try
                 {
                     // Delete the config file if we catch an exception.
-                    var _ = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
+                    var _ = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_configFileDirectory)["Config"];
                 }
                 catch (ParsingException)
                 {
                     Logger.Important("Config file couldn't be read.", LogType.Runtime);
-                    File.Copy(_gameDirectory + "/quaver.cfg", _gameDirectory + "/quaver.corrupted." + TimeHelper.GetUnixTimestampMilliseconds() + ".cfg");
-                    File.Delete(_gameDirectory + "/quaver.cfg");
+                    File.Copy(_configFileDirectory, _gameDirectory + "/quaver.corrupted." + TimeHelper.GetUnixTimestampMilliseconds() + ".cfg");
+                    File.Delete(_configFileDirectory);
                 }
             }
 
             // We'll want to write a quaver.cfg file if it doesn't already exist.
             // There's no need to read the config file afterwards, since we already have
             // all of the default values.
-            if (!File.Exists(_gameDirectory + "/quaver.cfg"))
+            if (!File.Exists(_configFileDirectory))
             {
-                File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configuration File");
+                File.WriteAllText(_configFileDirectory, "; Quaver Configuration File");
                 Logger.Important("Creating a new config file...", LogType.Runtime);
             }
 
-            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
+            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_configFileDirectory)["Config"];
 
             // Read / Set Config Values
             // NOTE: MAKE SURE TO SET THE VALUE TO AUTO-SAVE WHEN CHANGING! THIS ISN'T DONE AUTOMATICALLY.
