@@ -797,6 +797,9 @@ namespace Quaver.Shared.Screens.Gameplay
                         return new SelectionScreen();
                     }
 
+                    if (Screen.InReplayMode && Screen.LoadedReplay != null)
+                        return new ResultsScreen(MapManager.Selected.Value, Screen.LoadedReplay);
+
                     return new ResultsScreen(Screen);
                 }, Screen.Failed ? Screen.FailFadeTime : 500);
 

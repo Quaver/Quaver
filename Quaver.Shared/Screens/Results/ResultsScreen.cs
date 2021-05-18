@@ -514,10 +514,7 @@ namespace Quaver.Shared.Screens.Results
             switch (ScreenType)
             {
                 case ResultsScreenType.Gameplay:
-                    if (Gameplay.InReplayMode)
-                        WatchReplay();
-                    else
-                        RetryMap();
+                    RetryMap();
                     break;
                 case ResultsScreenType.Replay:
                     WatchReplay();
