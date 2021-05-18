@@ -11,23 +11,19 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
 {
-    public class IconTextButtonMusicPlayer : IconTextButton
+    public class IconTextButtonMusicPlayer : MenuBorderScreenChangeButton
     {
+        public override QuaverScreenType Screen { get; } = QuaverScreenType.Music;
+
         public IconTextButtonMusicPlayer() : base(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Jukebox", (sender, args) =>
-            {
-                var game = (QuaverGame) GameBase.Game;
-
-                if (game.CurrentScreen.Type == QuaverScreenType.Music)
-                {
-                    NotificationManager.Show(NotificationLevel.Warning,
-                        $"You are already here!");
-                    return;
-                }
-
-                game.CurrentScreen.Exit(() => new MusicPlayerScreen());
-            })
+            FontManager.GetWobbleFont(Fonts.LatoBlack), "Jukebox")
         {
+        }
+
+        public override void OnClick()
+        {
+            var game = (QuaverGame) GameBase.Game;
+            game.CurrentScreen.Exit(() => new MusicPlayerScreen());
         }
     }
 }
