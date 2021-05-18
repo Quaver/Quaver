@@ -32,12 +32,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
         public MenuHeaderMain() : base(MenuBorderType.Header, new List<Drawable>
             {
                 new MenuBorderLogo(),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.LatoBlack),"Home",
-                    (sender, args) =>
-                    {
-                        var game = (QuaverGame) GameBase.Game;
-                        game.CurrentScreen.Exit(() => new MainMenuScreen());
-                    }),
+                new IconTextButtonHome(),
                 new IconTextButtonDownloadMaps(),
                 new IconTextButtonMusicPlayer(),
                 new IconTextButtonTheater(),
