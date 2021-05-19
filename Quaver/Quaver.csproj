@@ -39,4 +39,9 @@
   <ItemGroup>
     <PackageReference Include="ZetaIpc" Version="1.0.0.9" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Quaver.Server.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Quaver.Shared\Quaver.Server.Client.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
