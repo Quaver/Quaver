@@ -110,7 +110,10 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         public override void Dispose()
         {
             IsActive.Dispose();
-            Panel.IssueClicked -= OnIssueClicked;
+
+            // Can happen if an exception occurs before Panel is created.
+            if (Panel != null)
+                Panel.IssueClicked -= OnIssueClicked;
 
             base.Dispose();
         }
