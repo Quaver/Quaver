@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                     // Add the new map to the db.
                     var map = Map.FromQua(qua, path);
                     map.DateAdded = DateTime.Now;
-                    map.Id = MapDatabaseCache.InsertMap(map, path);
+                    map.Id = MapDatabaseCache.InsertMap(map);
                     map.Mapset = Screen.Map.Mapset;
                     map.NewlyCreated = true;
                     Screen.Map.Mapset.Maps.Add(map);

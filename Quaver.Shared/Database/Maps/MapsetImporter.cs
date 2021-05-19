@@ -436,7 +436,7 @@ namespace Quaver.Shared.Database.Maps
                     }
 
                     map.CalculateDifficulties();
-                    MapDatabaseCache.InsertMap(map, quaFile);
+                    MapDatabaseCache.InsertMap(map);
                     lastImported = map;
                 }
             }

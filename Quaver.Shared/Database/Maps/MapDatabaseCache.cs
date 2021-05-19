@@ -177,7 +177,7 @@ namespace Quaver.Shared.Database.Maps
                 try
                 {
                     var map = Map.FromQua(Qua.Parse(file, false), file);
-                    InsertMap(map, file);
+                    InsertMap(map);
 
                     if (!QuaverSettingsDatabaseCache.OutdatedMaps.Contains(map))
                         QuaverSettingsDatabaseCache.OutdatedMaps.Add(map);
@@ -207,8 +207,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Inserts an individual map to the database.
         /// </summary>
         /// <param name="map"></param>
-        /// <param name="file"></param>
-        public static int InsertMap(Map map, string file)
+        public static int InsertMap(Map map)
         {
             try
             {
@@ -219,6 +218,7 @@ namespace Quaver.Shared.Database.Maps
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
+                var file = Path.Combine(ConfigManager.SongDirectory.Value, map.Directory, map.Path);
                 File.Delete(file);
                 return -1;
             }
@@ -341,7 +341,7 @@ namespace Quaver.Shared.Database.Maps
 
                     if (map.Id == 0)
                     {
-                        map.Id = InsertMap(map, path);
+                        map.Id = InsertMap(map);
                     }
                     else
                     {
