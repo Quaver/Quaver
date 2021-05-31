@@ -62,7 +62,16 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 if (x == Screen.Map)
                     return;
 
-                mapset.Add(x.LoadQua());
+                try
+                {
+                    mapset.Add(x.LoadQua());
+                }
+                catch (Exception e)
+                {
+                    // This can happen if e.g. a mapset in the database has a missing .qua file.
+                    // Just ignore these, don't prevent editor from loading.
+                    Logger.Warning($"Couldn't load difficulty `{x.DifficultyName}` for automod: {e}", LogType.Runtime);
+                }
             });
 
             Panel = new EditorAutoModPanel(Screen.WorkingMap, mapset)
@@ -110,7 +119,10 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         public override void Dispose()
         {
             IsActive.Dispose();
-            Panel.IssueClicked -= OnIssueClicked;
+
+            // Can happen if an exception occurs before Panel is created.
+            if (Panel != null)
+                Panel.IssueClicked -= OnIssueClicked;
 
             base.Dispose();
         }

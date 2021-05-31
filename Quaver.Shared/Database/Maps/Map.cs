@@ -387,7 +387,7 @@ namespace Quaver.Shared.Database.Maps
                     break;
                 case MapGame.Osu:
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
-                    qua = osu.ToQua();
+                    qua = osu.ToQua(checkValidity);
                     break;
                 case MapGame.Etterna:
                     var stepFile = new StepFile(Path).ToQuas();
