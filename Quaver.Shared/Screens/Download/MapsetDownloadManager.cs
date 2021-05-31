@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
@@ -46,6 +47,9 @@ namespace Quaver.Shared.Screens.Download
                 return null;
             }
 
+            if (CurrentDownloads.Any(x => x.MapsetId == (int) mapset["id"]))
+                return null;
+
             var download = new MapsetDownload(mapset, mapset["artist"].ToString(), mapset["title"].ToString(),
                 CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
 
@@ -65,6 +69,9 @@ namespace Quaver.Shared.Screens.Download
                 NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download mapsets!");
                 return null;
             }
+
+            if (CurrentDownloads.Any(x => x.MapsetId == id))
+                return null;
 
             var download = new MapsetDownload(id, artist, title, CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
             CurrentDownloads.Add(download);
