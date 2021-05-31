@@ -93,7 +93,6 @@ namespace Quaver.Shared.IPC
 
             if (map != null)
             {
-                // Require user to be in song select or the main menu.
                 if (!IsSelectionAllowedOnScreen())
                 {
                     NotificationManager.Show(NotificationLevel.Warning, $"Please finish what you're doing before selecting this map!");
