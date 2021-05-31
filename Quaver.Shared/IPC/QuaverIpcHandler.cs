@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
@@ -53,7 +54,7 @@ namespace Quaver.Shared.IPC
             if (message.StartsWith("editor/"))
                 HandleEditorNoteHighlighting(message);
             else if (message.StartsWith("map/"))
-                HandleMapDownload(message);
+                HandleMapSelection(message);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace Quaver.Shared.IPC
         ///     Selects a map if already imported or downloads it from the server.
         /// </summary>
         /// <param name="message"></param>
-        private static void HandleMapDownload(string message)
+        private static void HandleMapSelection(string message)
         {
             message = message.Replace("map/", "");
 
@@ -92,14 +93,21 @@ namespace Quaver.Shared.IPC
 
             if (map != null)
             {
-                // Require user to be in song select
-                if (game.CurrentScreen.Type != QuaverScreenType.Select)
+                // Require user to be in song select or the main menu.
+                if (!IsSelectionAllowedOnScreen())
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, $"You must be in the song select to select a map.");
+                    NotificationManager.Show(NotificationLevel.Warning, $"Please finish what you're doing before selecting this map!");
                     return;
                 }
 
-                MapManager.PlaySongRequest(new SongRequest(), map);
+                if (game.CurrentScreen.Type == QuaverScreenType.Select)
+                    MapManager.PlaySongRequest(new SongRequest(), map);
+                else
+                {
+                    MapManager.Selected.Value = map;
+                    AudioEngine.LoadCurrentTrack();
+                }
+
                 return;
             }
 
@@ -129,7 +137,7 @@ namespace Quaver.Shared.IPC
                 // Automatically import if the user is still in song select after completion.
                 dl.Completed.ValueChanged += (o, e) =>
                 {
-                    if (game.CurrentScreen.Type != QuaverScreenType.Select)
+                    if (!IsSelectionAllowedOnScreen())
                         return;
 
                     var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;
@@ -142,6 +150,27 @@ namespace Quaver.Shared.IPC
             {
                 NotificationManager.Show(NotificationLevel.Error, $"An error occurred while fetching map information.");
                 Logger.Error(e, LogType.Network);
+            }
+        }
+
+        /// <summary>
+        ///     Returns if the user is allowed to select a map/import on specific screens
+        /// </summary>
+        /// <returns></returns>
+        private static bool IsSelectionAllowedOnScreen()
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            switch (game.CurrentScreen.Type)
+            {
+                case QuaverScreenType.Select:
+                case QuaverScreenType.Menu:
+                case QuaverScreenType.Lobby:
+                case QuaverScreenType.Download:
+                case QuaverScreenType.Music:
+                    return true;
+                default:
+                    return false;
             }
         }
     }
