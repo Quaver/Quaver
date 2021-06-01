@@ -757,9 +757,7 @@ namespace Quaver.Shared.Screens.Results
         private bool SubmitOnlineScore(GameplayScreen screen, Replay replay)
         {
             const string skipping = "Skipping online score submission due to:";
-
-            Console.WriteLine(Replay.TimePlayed + " " + Gameplay.TimePlayEnd);
-
+            
             // Don't submit scores if disconnected from the server completely.
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
             {
