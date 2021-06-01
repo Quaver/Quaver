@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -12,6 +12,7 @@
     <Version>0.0.0</Version>
     <FileVersion>0.0.0</FileVersion>
     <Configurations>Debug;Release;Visual Tests</Configurations>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
@@ -35,6 +36,7 @@
     <ProjectReference Include="..\Quaver.Shared\Quaver.Shared.csproj" />
     <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
+    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ZetaIpc" Version="1.0.0.9" />

@@ -514,10 +514,7 @@ namespace Quaver.Shared.Screens.Results
             switch (ScreenType)
             {
                 case ResultsScreenType.Gameplay:
-                    if (Gameplay.InReplayMode)
-                        WatchReplay();
-                    else
-                        RetryMap();
+                    RetryMap();
                     break;
                 case ResultsScreenType.Replay:
                     WatchReplay();
@@ -885,6 +882,10 @@ namespace Quaver.Shared.Screens.Results
         /// <param name="e"></param>
         private void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
         {
+            // Hasn't submitted successfully yet.
+            if (e.Response == null)
+                return;
+
             IsSubmittingScore.Value = false;
             ScoreSubmissionStats.Value = e.Response;
             Logger.Important($"Received score submission response with status: {e.Response.Status}", LogType.Network);

@@ -270,33 +270,7 @@ namespace Quaver.Shared.Screens.Selection
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 return;
 
-            switch (ActiveLeftPanel.Value)
-            {
-                case SelectContainerPanel.Leaderboard:
-                case SelectContainerPanel.MapPreview:
-                    if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
-                    {
-                        ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
-                        return;
-                    }
-
-                    if (ActiveScrollContainer.Value == SelectScrollContainerType.Mapsets &&
-                        ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
-                    {
-                        ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
-                        return;
-                    }
-
-                    if (ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
-                        ExitToMenu();
-
-                    if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
-                        ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
-                    break;
-                default:
-                    ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
-                    break;
-            }
+            HandleBackAction();
         }
 
         /// <summary>
@@ -484,6 +458,40 @@ namespace Quaver.Shared.Screens.Selection
                     break;
                 case SelectScrollContainerType.Playlists:
                     return;
+            }
+        }
+
+        /// <summary>
+        ///     Handles the back button action
+        /// </summary>
+        public void HandleBackAction()
+        {
+            switch (ActiveLeftPanel.Value)
+            {
+                case SelectContainerPanel.Leaderboard:
+                case SelectContainerPanel.MapPreview:
+                    if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
+                    {
+                        ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                        return;
+                    }
+
+                    if (ActiveScrollContainer.Value == SelectScrollContainerType.Mapsets &&
+                        ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                    {
+                        ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
+                        return;
+                    }
+
+                    if (ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
+                        ExitToMenu();
+
+                    if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
+                        ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+                    break;
+                default:
+                    ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+                    break;
             }
         }
 

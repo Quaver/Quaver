@@ -13,10 +13,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using IniFileParser;
+using IniFileParser.Exceptions;
 using IniFileParser.Model;
 using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -804,27 +806,44 @@ namespace Quaver.Shared.Config
         /// </summary>
         private static void ReadConfigFile()
         {
+            var configFilePath = _gameDirectory + "/quaver.cfg";
+
+            if (File.Exists(configFilePath))
+            {
+                try
+                {
+                    // Delete the config file if we catch an exception.
+                    var _ = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(configFilePath)["Config"];
+                }
+                catch (ParsingException)
+                {
+                    Logger.Important("Config file couldn't be read.", LogType.Runtime);
+                    File.Copy(configFilePath, _gameDirectory + "/quaver.corrupted." + TimeHelper.GetUnixTimestampMilliseconds() + ".cfg");
+                    File.Delete(configFilePath);
+                }
+            }
+
             // We'll want to write a quaver.cfg file if it doesn't already exist.
             // There's no need to read the config file afterwards, since we already have
             // all of the default values.
-            if (!File.Exists(_gameDirectory + "/quaver.cfg"))
-                File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configuration File");
+            if (!File.Exists(configFilePath))
+            {
+                File.WriteAllText(configFilePath, "; Quaver Configuration File");
+                Logger.Important("Creating a new config file...", LogType.Runtime);
+            }
 
-            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
+            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(configFilePath)["Config"];
 
             // Read / Set Config Values
             // NOTE: MAKE SURE TO SET THE VALUE TO AUTO-SAVE WHEN CHANGING! THIS ISN'T DONE AUTOMATICALLY.
             // YOU CAN DO THIS DOWN BELOW, AFTER THE CONFIG HAS WRITTEN FOR THE FIRST TIME.
             GameDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"GameDirectory", _gameDirectory, data);
             SkinDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SkinDirectory", _skinDirectory, data);
-            ScreenshotDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"ScreenshotDirectory",
-                _screenshotDirectory, data);
-            ReplayDirectory =
-                ReadSpecialConfigType(SpecialConfigType.Directory, @"ReplayDirectory", _replayDirectory, data);
+            ScreenshotDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"ScreenshotDirectory", _screenshotDirectory, data);
+            ReplayDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"ReplayDirectory", _replayDirectory, data);
             LogsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"LogsDirectory", _logsDirectory, data);
             DataDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"DataDirectory", _dataDirectory, data);
             SongDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SongDirectory", _songDirectory, data);
-
             _steamWorkshopDirectory = $"{GameDirectory.Value}/../../workshop/content/{SteamManager.ApplicationId}";
             SteamWorkshopDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SteamWorkshopDirectory", _steamWorkshopDirectory, data);
             SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);

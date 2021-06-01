@@ -1143,6 +1143,8 @@ namespace Quaver.Shared.Screens.Edit
         {
             SelectedHitObjects.Clear();
 
+            input = input.Trim();
+
             // Only timestamp was given
             if (Regex.IsMatch(input, @"^\d+$"))
             {
@@ -1360,7 +1362,7 @@ namespace Quaver.Shared.Screens.Edit
 
                 // Create a new database map
                 var map = Map.FromQua(qua, path);
-                map.Id = MapDatabaseCache.InsertMap(map, path);
+                map.Id = MapDatabaseCache.InsertMap(map);
                 map.NewlyCreated = true;
 
                 // Create a new mapset from the map
@@ -1434,7 +1436,7 @@ namespace Quaver.Shared.Screens.Edit
                     // Add the new map to the db.
                     var map = Map.FromQua(qua, path);
                     map.DateAdded = DateTime.Now;
-                    map.Id = MapDatabaseCache.InsertMap(map, path);
+                    map.Id = MapDatabaseCache.InsertMap(map);
                     map.Mapset = Map.Mapset;
                     map.NewlyCreated = true;
                     Map.Mapset.Maps.Add(map);

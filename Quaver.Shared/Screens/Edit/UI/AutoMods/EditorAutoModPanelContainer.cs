@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -62,7 +62,16 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 if (x == Screen.Map)
                     return;
 
-                mapset.Add(x.LoadQua());
+                try
+                {
+                    mapset.Add(x.LoadQua());
+                }
+                catch (Exception e)
+                {
+                    // This can happen if e.g. a mapset in the database has a missing .qua file.
+                    // Just ignore these, don't prevent editor from loading.
+                    Logger.Warning($"Couldn't load difficulty `{x.DifficultyName}` for automod: {e}", LogType.Runtime);
+                }
             });
 
             Panel = new EditorAutoModPanel(Screen.WorkingMap, mapset)
@@ -110,7 +119,10 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         public override void Dispose()
         {
             IsActive.Dispose();
-            Panel.IssueClicked -= OnIssueClicked;
+
+            // Can happen if an exception occurs before Panel is created.
+            if (Panel != null)
+                Panel.IssueClicked -= OnIssueClicked;
 
             base.Dispose();
         }
@@ -130,6 +142,22 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// </summary>
         /// <param name="issue"></param>
         private void OnAudioBitrate(AutoModIssueAudioBitrate issue)
+        {
+            if (Screen.Map.Game != MapGame.Quaver)
+                return;
+
+            var path = MapManager.GetAudioPath(Screen.Map);
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            Utils.NativeUtils.HighlightInFileManager(path);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="issue"></param>
+        private void OnAudioFormat(AutoModIssueAudioFormat issue)
         {
             if (Screen.Map.Game != MapGame.Quaver)
                 return;
@@ -270,6 +298,13 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// <summary>
         /// </summary>
         /// <param name="issue"></param>
+        private void OnMapPreviewPoint(AutoModIssuePreviewPoint issue)
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="issue"></param>
         private void OnMapsetSpreadLength(AutoModIssueMapsetSpreadLength issue)
         {
         }
@@ -375,6 +410,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         private void InitializeIssueClickMethods() => IssueMethods = new Dictionary<Type, Action<AutoModIssue>>
         {
             {typeof(AutoModIssueAudioBitrate), e => OnAudioBitrate((AutoModIssueAudioBitrate) e)},
+            {typeof(AutoModIssueAudioFormat), e => OnAudioFormat((AutoModIssueAudioFormat) e)},
             {typeof(AutoModIssueAutoplayFailure), e => OnAutoplayFailure((AutoModIssueAutoplayFailure) e)},
             {typeof(AutoModIssueBackgroundResolution), e => OnBackgroundResolution((AutoModIssueBackgroundResolution) e)},
             {typeof(AutoModIssueBackgroundTooLarge), e => OnBackgroundTooLarge((AutoModIssueBackgroundTooLarge) e)},
@@ -386,6 +422,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             {typeof(AutoModIssueOverlappingObjects), e => OnOverlappingObjects((AutoModIssueOverlappingObjects) e)},
             {typeof(AutoModIssueShortLongNote), e => OnShortLongNote((AutoModIssueShortLongNote) e)},
             {typeof(AutoModIssueMapLength), e => OnMapLength((AutoModIssueMapLength) e)},
+            {typeof(AutoModIssuePreviewPoint), e => OnMapPreviewPoint((AutoModIssuePreviewPoint) e)},
             {typeof(AutoModIssueMapsetSpreadLength), e => OnMapsetSpreadLength((AutoModIssueMapsetSpreadLength) e)},
             {typeof(AutoModIssueMismatchingMetdata), e => OnMismatchingMetadata((AutoModIssueMismatchingMetdata) e)},
             {typeof(AutoModIssueMultiModeDiffName), e => OnMultiModDiffName((AutoModIssueMultiModeDiffName) e)},
