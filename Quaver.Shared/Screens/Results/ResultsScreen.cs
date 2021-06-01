@@ -757,7 +757,7 @@ namespace Quaver.Shared.Screens.Results
         private bool SubmitOnlineScore(GameplayScreen screen, Replay replay)
         {
             const string skipping = "Skipping online score submission due to:";
-
+            
             // Don't submit scores if disconnected from the server completely.
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
             {
@@ -870,7 +870,7 @@ namespace Quaver.Shared.Screens.Results
 
             // Submit score to the server...
             OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, replay, processor, scrollSpeed,
-                ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                ModHelper.GetRateFromMods(ModManager.Mods), Gameplay.TimePlayEnd,
                 SteamManager.PTicket, OnlineManager.CurrentGame));
 
             return true;
