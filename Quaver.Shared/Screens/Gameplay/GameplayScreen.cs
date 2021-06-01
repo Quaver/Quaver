@@ -248,7 +248,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The time the score began.
         /// </summary>
-        public long TimePlayed { get; }
+        public long TimePlayed { get; private set; }
+
+        /// <summary>
+        ///     The time the score ended.
+        /// </summary>
+        public long TimePlayEnd { get; set; }
 
         /// <summary>
         ///     If the user is currently calibrating their offset.
@@ -367,8 +372,6 @@ namespace Quaver.Shared.Screens.Gameplay
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
             bool isTestPlayingInNewEditor = false)
         {
-            TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
             if (isPlayTesting && !isSongSelectPreview)
             {
                 var testingQua = ObjectHelper.DeepClone(map);
@@ -473,6 +476,11 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (OnlineManager.IsBeingSpectated && !InReplayMode)
                 OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
+
+            TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            if (ReplayCapturer != null)
+                ReplayCapturer.Replay.TimePlayed = TimePlayed;
 
             base.OnFirstUpdate();
         }
