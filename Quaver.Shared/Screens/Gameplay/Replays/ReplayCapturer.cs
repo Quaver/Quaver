@@ -54,10 +54,7 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
             var name = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
             var mods = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.Mods : ModManager.Mods;
 
-            Replay = new Replay(Screen.Map.Mode, name, mods, Screen.MapHash)
-            {
-                TimePlayed = Screen.TimePlayed
-            };
+            Replay = new Replay(Screen.Map.Mode, name, mods, Screen.MapHash);
 
             // Add sample first frame.
             Replay.AddFrame(-10000, 0);
