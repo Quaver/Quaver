@@ -114,7 +114,7 @@ namespace Quaver.Shared.IPC
                 if (response.Status != (int) HttpStatusCode.OK)
                     throw new Exception($"Failed map information `{id}` fetch with response: {response.Status}");
 
-                DownloadMapAndImport(id, response.Map.Artist, response.Map.Title, true);
+                DownloadMapAndImport(response.Map.MapsetId, response.Map.Artist, response.Map.Title, true);
             }
             catch (Exception e)
             {
