@@ -19,6 +19,9 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Processing;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -30,6 +33,7 @@ using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
 using Logger = Wobble.Logging.Logger;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Quaver.Shared.Graphics.Backgrounds
 {
@@ -281,7 +285,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     continue;
                 }
 
-                CreateBanner(mapTexture, mapset);
+                CreateBanner(path, mapset);
 
                 bannersToRemove.Add(mapset);
             }
@@ -352,7 +356,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     continue;
                 }
 
-                CreateBanner(mapTexture, null, playlist);
+                CreateBanner(path, null, playlist);
                 bannersToRemove.Add(playlist);
             }
 
@@ -361,89 +365,39 @@ namespace Quaver.Shared.Graphics.Backgrounds
         }
 
         /// <summary>
-        ///     Masks a banner to use
+        ///     Makes and creates a banner to use for song select/playlists
         /// </summary>
-        /// <param name="mapTexture"></param>
+        /// <param name="path"></param>
         /// <param name="mapset"></param>
-        private static void CreateBanner(Texture2D mapTexture, Mapset mapset = null, Playlist playlist = null)
+        /// <param name="playlist"></param>
+        private static void CreateBanner(string path, Mapset mapset = null, Playlist playlist = null)
         {
             if (mapset == null && playlist == null || mapset != null && playlist != null)
                 throw new InvalidOperationException();
 
-            // Mask the image and draw it to a RenderTarget
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            using (var outStream = new MemoryStream())
+            using (var image = Image.Load(File.OpenRead(path), out var format))
             {
-                // Create a RenderTarget with mipmapping with the original texuture.
-                var mipmapped = new RenderTarget2D(GameBase.Game.GraphicsDevice, mapTexture.Width, mapTexture.Height, true,
-                    SurfaceFormat.Bgr565, DepthFormat.Depth24Stencil8);
+                image.Mutate(i => i.Resize(448, 252).Crop(new SixLabors.ImageSharp.Rectangle(0, 20, 421, 82)));
+                image.Save(outStream, format);
 
-                GameBase.Game.GraphicsDevice.SetRenderTarget(mipmapped);
-                GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
-
-                var textureSprite = new Sprite
-                {
-                    Size = new ScalableVector2(mapTexture.Width, mapTexture.Height),
-                    Image = mapTexture,
-                    SpriteBatchOptions = new SpriteBatchOptions()
-                    {
-                        DoNotScale = true,
-                        SamplerState = SamplerState.PointClamp
-                    }
-                };
-
-                textureSprite.Draw(new GameTime());
-                GameBase.Game.SpriteBatch.End();
-
-                // Cache a smaller version of the texture to a RenderTarget
-                var size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82);
-                var scrollContainer = new ScrollContainer(size, size);
-
-                var maskedSprite = new Sprite
-                {
-                    Alignment = Alignment.MidCenter,
-                    // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
-                    Size = new ScalableVector2(448, 252),
-                    Image = mipmapped
-                };
-
-                scrollContainer.AddContainedDrawable(maskedSprite);
-
-                // Only create a new RT if needed
-                var (pixelWidth, pixelHeight) = scrollContainer.AbsoluteSize * WindowManager.ScreenScale;
-
-                var renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth,
-                    (int) pixelHeight, false,
-                    GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
-                GameBase.Game.GraphicsDevice.SetRenderTarget(renderTarget);
-                GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
-
-                scrollContainer.Draw(new GameTime());
-                GameBase.Game.SpriteBatch.End();
-
-                GameBase.Game.GraphicsDevice.SetRenderTarget(null);
-                scrollContainer?.Destroy();
-                maskedSprite?.Destroy();
-
-                textureSprite.Destroy();
-                mipmapped?.Dispose();
-                mapTexture.Dispose();
+                var img = Texture2D.FromStream(GameBase.Game.GraphicsDevice, outStream);
 
                 if (mapset != null)
                 {
                     if (!MapsetBanners.ContainsKey(mapset.Directory))
-                        MapsetBanners.Add(mapset.Directory, renderTarget);
+                        MapsetBanners.Add(mapset.Directory, img);
 
-                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, renderTarget));
+                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, img));
                 }
-                else if (playlist != null)
+                else
                 {
                     if (!PlaylistBanners.ContainsKey(playlist.Id.ToString()))
-                        PlaylistBanners.Add(playlist.Id.ToString(), renderTarget);
+                        PlaylistBanners.Add(playlist.Id.ToString(), img);
 
-                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(playlist, renderTarget));
+                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(playlist, img));
                 }
-            });
+            }
         }
     }
 }
