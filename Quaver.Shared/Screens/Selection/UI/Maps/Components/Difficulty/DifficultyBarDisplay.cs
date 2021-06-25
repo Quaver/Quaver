@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
         {
             var diff = Map.DifficultyFromMods(ModManager.Mods);
 
-            const int maxDiff = 35;
+            const int maxDiff = 100;
 
             var percent = diff / maxDiff;
 
