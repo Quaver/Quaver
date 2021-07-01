@@ -42,9 +42,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
         private void OnFileDropped(object sender, string e)
         {
-            e = e.ToLower();
+            var file = e.ToLower();
 
-            if (!e.EndsWith(".qua"))
+            if (!file.EndsWith(".qua"))
                 return;
 
             Logger.Important($"Importing file: {e} into the mapset.", LogType.Runtime);
