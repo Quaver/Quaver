@@ -1331,7 +1331,6 @@ namespace Quaver.Shared.Screens.Edit
         {
             try
             {
-                Logger.Important(audioFile, LogType.Runtime);
                 var game = GameBase.Game as QuaverGame;
                 var tagFile = TagLib.File.Create(audioFile);
                 var audioFileName = "audio" + Path.GetExtension(audioFile);
