@@ -305,13 +305,16 @@ namespace Quaver.Shared.Database.Maps
                 }
 
                 // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
-                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7  || x.CircleSize == 8)).ToList();
+                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize >= 1 || x.CircleSize <= 8)).ToList();
                 osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
 
                 var osuToQuaverMaps = new List<OtherGameMap>();
 
                 foreach (var map in osuBeatmaps)
                 {
+                    // Include the Keymode in the diffname if it's not 4/7/8k and if it's not already included in it or in the title (in case of packs).
+                    if (map.CircleSize != 4 && map.CircleSize != 7 && map.CircleSize != 8 && !map.Version.ToLower().Contains(map.CircleSize.ToString() + "k") && !map.Title.ToLower().Contains(map.CircleSize.ToString() + "k")) map.Version = map.CircleSize.ToString() + "K " + map.Version;
+
                     var newMap = new OtherGameMap()
                     {
                         Md5Checksum = map.BeatmapChecksum,
@@ -330,7 +333,7 @@ namespace Quaver.Shared.Database.Maps
                         Source = map.SongSource,
                         Tags = map.SongTags,
                         // ReSharper disable once CompareOfFloatsByEqualityOperator
-                        Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
+                        Mode = map.CircleSize <= 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
                         OriginalGame = OtherGameMapDatabaseGame.Osu,
