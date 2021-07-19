@@ -34,6 +34,11 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
         private double TimeSinceLastCapture { get; set; }
 
         /// <summary>
+        ///  The judgement count in the previous frame
+        /// </summary>
+        private int LastRecordedJudgementCount { get; set; }
+
+        /// <summary>
         ///     The last recorded key press state.
         /// </summary>
         private ReplayKeyPressState LastKeyPressState { get; set; }
@@ -98,7 +103,7 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
                 return;
             }
 
-            TimeSinceLastCapture += gameTime.ElapsedGameTime.TotalMilliseconds;
+            //TimeSinceLastCapture += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             var currentPressState = GetKeyPressState();
 
@@ -106,17 +111,20 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
             if (LastKeyPressState != currentPressState)
                 AddFrame(currentPressState);
 
-            if (Screen.LastRecordedCombo != Screen.Ruleset.ScoreProcessor.Combo)
+            var judgementCount = Screen.Ruleset.ScoreProcessor.TotalJudgementCount;
+
+            if (LastRecordedJudgementCount != judgementCount)
                 AddFrame(currentPressState);
 
-            // Add frame for 60 fps.
+           /* // Add frame for 60 fps.
             if (TimeSinceLastCapture >= 1000 / 60f)
             {
                 AddFrame(currentPressState);
                 TimeSinceLastCapture = 0;
-            }
+            }*/
 
             LastKeyPressState = GetKeyPressState();
+            LastRecordedJudgementCount = judgementCount;
 
             if (Screen.IsPlayComplete || Screen.Failed)
                 ShouldCapture = false;
