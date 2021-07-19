@@ -1642,7 +1642,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
-            DialogManager.Show(new EditorChangeBackgroundDialog(this, file));
+            DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
         }
     }
 }
