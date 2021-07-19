@@ -685,11 +685,8 @@ namespace Quaver.Shared.Screens.Results
                 OnlineManager.Client.OnScoreSubmitted += OnScoreSubmitted;
             }
 
-            ThreadScheduler.Run(() =>
-            {
-                SubmitLocalScore(screen, replay);
-                IsSubmittingScore.Value = SubmitOnlineScore(screen, replay);
-            });
+            ThreadScheduler.Run(() => SubmitLocalScore(screen, replay));
+            ThreadScheduler.Run(() => IsSubmittingScore.Value = SubmitOnlineScore(screen, replay));
         }
 
         /// <summary>
@@ -757,7 +754,7 @@ namespace Quaver.Shared.Screens.Results
         private bool SubmitOnlineScore(GameplayScreen screen, Replay replay)
         {
             const string skipping = "Skipping online score submission due to:";
-            
+
             // Don't submit scores if disconnected from the server completely.
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
             {
