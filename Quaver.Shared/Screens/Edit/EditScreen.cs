@@ -1333,11 +1333,12 @@ namespace Quaver.Shared.Screens.Edit
             {
                 var game = GameBase.Game as QuaverGame;
                 var tagFile = TagLib.File.Create(audioFile);
+                var audioFileName = "audio" + Path.GetExtension(audioFile);
 
                 // Create a fresh .qua with the available metadata from the file
                 var qua = new Qua()
                 {
-                    AudioFile = Path.GetFileName(audioFile),
+                    AudioFile = audioFileName,
                     Artist = tagFile.Tag.FirstPerformer ?? "",
                     Title = tagFile.Tag.Title ?? "",
                     Source = tagFile.Tag.Album ?? "",
@@ -1354,10 +1355,10 @@ namespace Quaver.Shared.Screens.Edit
                 Directory.CreateDirectory(dir);
 
                 // Copy over the audio file into the directory
-                File.Copy(audioFile, $"{dir}/{Path.GetFileName(audioFile)}");
+                File.Copy(audioFile, $"{dir}/{audioFileName}");
 
                 // Save the new .qua file into the directory
-                var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                var path = $"{dir}/{StringHelper.FileNameSafeString($"{TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
                 qua.Save(path);
 
                 // Create a new database map
@@ -1430,7 +1431,7 @@ namespace Quaver.Shared.Screens.Edit
                         qua.HitObjects.Clear();
 
                     var dir = $"{ConfigManager.SongDirectory.Value}/{Map.Directory}";
-                    var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                    var path = $"{dir}/{StringHelper.FileNameSafeString($"{TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
                     qua.Save(path);
 
                     // Add the new map to the db.
@@ -1642,7 +1643,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
-            DialogManager.Show(new EditorChangeBackgroundDialog(this, file));
+            DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
         }
     }
 }
