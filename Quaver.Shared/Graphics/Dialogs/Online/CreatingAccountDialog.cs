@@ -9,8 +9,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
         public CreatingAccountDialog(string username) : base("CREATING ACCOUNT", "Your account is being created. Please wait!",
             () =>
             {
-                OnlineManager.Client.ChooseUsername(username, SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(),
-                    SteamManager.PTicket, SteamManager.PcbTicket);
+                OnlineManager.Client.ChooseUsername(username, SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName());
             })
         {
         }
