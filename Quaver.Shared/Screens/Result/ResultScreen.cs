@@ -445,7 +445,7 @@ namespace Quaver.Shared.Screens.Result
 
                 OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, Gameplay.ReplayCapturer.Replay,
                     Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods),
-                    TimeHelper.GetUnixTimestampMilliseconds(), SteamManager.PTicket, OnlineManager.CurrentGame));
+                    TimeHelper.GetUnixTimestampMilliseconds(), OnlineManager.CurrentGame));
             });
         }
 

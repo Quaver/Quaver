@@ -28,32 +28,12 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The application id for steam.
         /// </summary>
-        public static uint ApplicationId => 480;
+        public static uint ApplicationId => 980610;
 
         /// <summary>
         ///     Determines if steam is initialized or not.
         /// </summary>
         public static bool IsInitialized { get; private set; }
-
-        /// <summary>
-        ///     The Steam auth session ticket handle
-        /// </summary>
-        public static HAuthTicket AuthSessionTicket { get; private set; }
-
-        /// <summary>
-        ///     The buffer that contains the actual session ticket
-        /// </summary>
-        public static byte[] PTicket { get; set; }
-
-        /// <summary>
-        ///     PCB Ticket
-        /// </summary>
-        public static uint PcbTicket;
-
-        /// <summary>
-        ///     Determines if the auth session ticket we have is validated.
-        /// </summary>
-        public static bool AuthSessionTicketValidated { get; private set; }
 
         /// <summary>
         ///     The avatars for steam users.
@@ -153,7 +133,6 @@ namespace Quaver.Shared.Online
                               $"<{SteamUser.GetSteamID()}>", LogType.Runtime);
 
             InitializeCallbacks();
-            StartAuthSession();
 
             // Prevents a crash on OSX for the time being
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -168,46 +147,11 @@ namespace Quaver.Shared.Online
         /// </summary>
         private static void InitializeCallbacks()
         {
-            GetAuthSessionTickResponse = Callback<GetAuthSessionTicketResponse_t>.Create(OnValidateAuthSessionTicketResponse);
             PersonaStateChanged = Callback<PersonaStateChange_t>.Create(OnPersonaStateChanged);
             OnSubmitUpdateResponse = CallResult<SubmitItemUpdateResult_t>.Create(OnSubmittedItemUpdate);
             OnCreateItemResponse = CallResult<CreateItemResult_t>.Create(OnCreateItemResultCallResponse);
             OnFileSubscribedResponse = CallResult<RemoteStoragePublishedFileSubscribed_t>.Create(OnFileSubscribed);
             OnFileUbsubscribedResponse = CallResult<RemoteStoragePublishedFileUnsubscribed_t>.Create(OnfileUnsubscribed);
-        }
-
-        /// <summary>
-        ///     Starts the authentication session so that we can log into the Quaver server afterwards.
-        /// </summary>
-        private static void StartAuthSession()
-        {
-            // Generate an auth session token and wait for a response from Steam
-            // After calling this, it should call OnValidateAuthSessionTicketResponse(GetAuthSessionTicketResponse_t pCallback);
-            // where we will then continue to authenticate the user
-            PTicket = new byte[1024];
-            AuthSessionTicket = SteamUser.GetAuthSessionTicket(PTicket, PTicket.Length, out PcbTicket);
-        }
-
-        /// <summary>
-        ///     Called after attempting to generate an auth session ticket.
-        ///     This further connects the user to the server
-        /// </summary>
-        /// <param name="pCallback"></param>
-        private static void OnValidateAuthSessionTicketResponse(GetAuthSessionTicketResponse_t pCallback)
-        {
-            // Make the server login request if we've received confirmation that the auth session ticket
-            // was successfully created
-            switch (pCallback.m_eResult)
-            {
-                // Send the login request to Flamingo.
-                case EResult.k_EResultOK:
-                    AuthSessionTicketValidated = true;
-                    break;
-                // All error cases returned from Steam
-                default:
-                    Logger.Error("Could not generate an auth session ticket!", LogType.Runtime);
-                    return;
-            }
         }
 
         /// <summary>
