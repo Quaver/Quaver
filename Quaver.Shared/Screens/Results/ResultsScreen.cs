@@ -867,8 +867,7 @@ namespace Quaver.Shared.Screens.Results
 
             // Submit score to the server...
             OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, replay, processor, scrollSpeed,
-                ModHelper.GetRateFromMods(ModManager.Mods), Gameplay.TimePlayEnd,
-                SteamManager.PTicket, OnlineManager.CurrentGame));
+                ModHelper.GetRateFromMods(ModManager.Mods), Gameplay.TimePlayEnd, OnlineManager.CurrentGame));
 
             return true;
         }
