@@ -82,6 +82,7 @@ namespace Quaver.Shared.Converters.Osu
                         case ".png":
                         case ".jpeg":
                         case ".ogg":
+                        case ".wav":
                             File.Move(tempFile, fileName);
                             break;
                         default:

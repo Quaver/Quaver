@@ -304,7 +304,11 @@ namespace Quaver.Shared.Database.Maps
             {
                 var file = Queue[i];
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
-                var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}/";
+
+                var folderName = Path.GetFileNameWithoutExtension(file);
+                folderName = folderName.Substring(0, Math.Min(folderName.Length, 100));
+
+                var extractDirectory = $@"{ConfigManager.SongDirectory}/{folderName} - {time}/";
 
                 try
                 {
