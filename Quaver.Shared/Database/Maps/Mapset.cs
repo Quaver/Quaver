@@ -68,15 +68,20 @@ namespace Quaver.Shared.Database.Maps
                 {
                     try
                     {
+                        var folderPath = "";
+
                         switch (map.Game)
                         {
                             case MapGame.Quaver:
-                                var path = $"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}";
-                                File.Copy(path, $"{tempFolder}/{map.Path}");
+                                folderPath = $"{ConfigManager.SongDirectory.Value}/{map.Directory}";
+                                var path = $"{folderPath}/{map.Path}";
+
+                                File.Copy(path, $"{tempFolder}/{map.Path}", true);
                                 break;
                             // Map is from osu!, so we need to convert it to .qua format
                             case MapGame.Osu:
-                                var osuPath = $"{MapManager.OsuSongsFolder}{map.Directory}/{map.Path}";
+                                folderPath = $"{MapManager.OsuSongsFolder}{map.Directory}";
+                                var osuPath = $"{folderPath}/{map.Path}";
 
                                 var osu = new OsuBeatmap(osuPath);
                                 map.BackgroundPath = osu.Background;
@@ -89,6 +94,7 @@ namespace Quaver.Shared.Database.Maps
                                 Logger.Debug($"Successfully converted osu beatmap: {osuPath}", LogType.Runtime);
                                 break;
                             case MapGame.Etterna:
+                                folderPath = Path.GetDirectoryName(map.Path);
                                 var stepFile = new StepFile(map.Path);
 
                                 var fileName = StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}].qua");
@@ -99,29 +105,22 @@ namespace Quaver.Shared.Database.Maps
                                 break;
                         }
 
-                        // Copy over audio file if necessary
-                        var audioPath = map.Game != MapGame.Etterna ?
-                            $"{tempFolder}/{map.AudioPath}" :
-                            $"{tempFolder}/{Path.GetFileName(map.AudioPath)}";
-
-                        if (File.Exists(MapManager.GetAudioPath(map)) && !File.Exists(audioPath))
-                            File.Copy(MapManager.GetAudioPath(map), audioPath);
-
-                        // Copy over background file if necessary
-                        var bgPath = map.Game != MapGame.Etterna ?
-                            $"{tempFolder}/{map.BackgroundPath}" :
-                            $"{tempFolder}/{Path.GetFileName(map.BackgroundPath)}";
-
-                        if (File.Exists(MapManager.GetBackgroundPath(map)) && !File.Exists(bgPath))
-                            File.Copy(MapManager.GetBackgroundPath(map), bgPath);
-
-                        // Copy over banner file if necessary
-                        var bnPath = map.Game != MapGame.Etterna ?
-                            $"{tempFolder}/{map.BannerPath}" :
-                            $"{tempFolder}/{Path.GetFileName(map.BannerPath)}";
-
-                        if (File.Exists(MapManager.GetBannerPath(map)) && !File.Exists(bnPath))
-                            File.Copy(MapManager.GetBannerPath(map), bnPath);
+                        // Copy each non-map file in the directory. Handles things like audio files, backgrounds, etc.
+                        foreach (var file in System.IO.Directory.GetFiles(folderPath))
+                        {
+                            switch (Path.GetExtension(file).ToLower())
+                            {
+                                case ".qua":
+                                case ".osu":
+                                case ".sm":
+                                case ".mcz":
+                                case ".mc":
+                                    continue;
+                                default:
+                                    File.Copy(file, $"{tempFolder}/{Path.GetFileName(file)}", true);
+                                    break;
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
