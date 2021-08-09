@@ -39,6 +39,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
 
         /// <summary>
         /// </summary>
+        private Bindable<SelectContainerPanel> ActiveLeftPanel { get; }
+
+        /// <summary>
+        /// </summary>
         private Sprite SearchIcon { get; set; }
 
         /// <summary>
@@ -53,14 +57,16 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
         /// <param name="currentSearchQuery"></param>
         /// <param name="availableMapsets"></param>
         /// <param name="initialText"></param>
+        /// <param name="isPlayTesting"></param>
         /// <param name="placeHolderText"></param>
         public FilterPanelSearchBox(Bindable<string> currentSearchQuery, Bindable<List<Mapset>> availableMapsets,
-            Bindable<bool> isPlayTesting, string placeHolderText)
+            Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel, string placeHolderText)
             : base(new ScalableVector2(280, 40), FontManager.GetWobbleFont(Fonts.LatoBlack),22, PreviousSearchTerm, placeHolderText)
         {
             CurrentSearchQuery = currentSearchQuery;
             AvailableMapsets = availableMapsets;
             IsPlayTesting = isPlayTesting;
+            ActiveLeftPanel = activeLeftPanel;
 
             AllowSubmission = false;
             Tint = Colors.DarkGray;
@@ -79,7 +85,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            AlwaysFocused = DialogManager.Dialogs.Count == 0 && !IsPlayTesting.Value;
+            AlwaysFocused = DialogManager.Dialogs.Count == 0 && (!IsPlayTesting.Value ||
+                            IsPlayTesting.Value && ActiveLeftPanel.Value != SelectContainerPanel.MapPreview);
+
             Focused = AlwaysFocused;
 
             HandleSearchIconAnimations(gameTime);
