@@ -225,7 +225,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (Map.HitObjects.Count == 0)
                     return false;
 
-                return Map.HitObjects.First().StartTime - Ruleset.Screen.Timing.Time >=
+                var nextObject = Ruleset.HitObjectManager.NextHitObject;
+
+                if (nextObject == null)
+                    return false;
+
+                return nextObject.StartTime - Ruleset.Screen.Timing.Time >=
                        GameplayAudioTiming.StartDelay + 5000;
             }
         }
@@ -1065,7 +1070,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 OnlineManager.Client?.RequestToSkipSong();
                 RequestedToSkipSong = true;
+
                 NotificationManager.Show(NotificationLevel.Info, "Requested to skip song. Waiting for all other players to skip!", null, true);
+
                 return;
             }
 
@@ -1096,6 +1103,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Stop all playing sound effects and move NextSoundEffectIndex ahead.
                 CustomAudioSampleCache.StopAll();
                 UpdateNextSoundEffectIndex();
+                RequestedToSkipSong = false;
             }
         }
 
