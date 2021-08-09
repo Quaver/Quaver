@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Alignment = Alignment.BotLeft
             };
 
-            FilterPanel = new SelectFilterPanel(screen.AvailableMapsets, screen.CurrentSearchQuery, new Bindable<bool>(false))
+            FilterPanel = new SelectFilterPanel(screen.AvailableMapsets, screen.CurrentSearchQuery, new Bindable<bool>(false), null)
             {
                 Parent = Container,
                 Y = Header.Height + Header.ForegroundLine.Height
