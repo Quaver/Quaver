@@ -19,7 +19,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Test Play", (sender, args) => screen.ExitToTestPlay())
         {
             var tooltip = new Tooltip("Save and test play your map.\n" +
-                         "Right-clicking will allow you to select modifers to use while test playing.", ColorHelper.HexToColor("#808080"));
+                         "Right-clicking will allow you to select modifers to use while test playing.\n" +
+                         "Hotkey: F4", ColorHelper.HexToColor("#808080"));
 
             Hovered += (sender, args) => screen?.ActivateTooltip(tooltip);
             LeftHover += (sender, args) => screen?.DeactivateTooltip();
