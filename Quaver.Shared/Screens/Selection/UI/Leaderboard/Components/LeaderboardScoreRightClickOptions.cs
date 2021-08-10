@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -145,10 +146,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                         BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{Score.SteamId}");
                         break;
                     case AddFriend:
-                        OnlineManager.AddFriend(new User { OnlineUser = { Id = Score.PlayerId }});
+                        OnlineManager.AddFriend(GetUserFromScore(Score));
                         break;
                     case RemoveFriend:
-                        OnlineManager.RemoveFriend(new User { OnlineUser = { Id = Score.PlayerId }});
+                        OnlineManager.RemoveFriend(GetUserFromScore(Score));
                         break;
                 }
             };
@@ -187,5 +188,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             return options;
         }
+
+        private static User GetUserFromScore(Score score) => new User(new OnlineUser()
+        {
+            Id = score.PlayerId,
+            SteamId = score.SteamId,
+            Username = score.Name
+        });
     }
 }
