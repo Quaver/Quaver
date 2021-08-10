@@ -714,7 +714,7 @@ namespace Quaver.Shared.Screens.Results
 
             // Select proper local profile id to attach with this score for ranking
             if (UserProfileDatabaseCache.Selected.Value.Id != 0 && !UserProfileDatabaseCache.Selected.Value.IsOnline)
-                score.UserProfileId = UserProfileDatabaseCache.Selected.Value.Id;
+                score.LocalProfileId = UserProfileDatabaseCache.Selected.Value.Id;
 
             var scoreId = -1;
 

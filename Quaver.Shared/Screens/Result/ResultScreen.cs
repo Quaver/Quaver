@@ -485,7 +485,7 @@ namespace Quaver.Shared.Screens.Result
                 if (UserProfileDatabaseCache.Selected.Value.Id != 0 &&
                     !UserProfileDatabaseCache.Selected.Value.IsOnline)
                 {
-                    localScore.UserProfileId = UserProfileDatabaseCache.Selected.Value.Id;
+                    localScore.LocalProfileId = UserProfileDatabaseCache.Selected.Value.Id;
                 }
 
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
