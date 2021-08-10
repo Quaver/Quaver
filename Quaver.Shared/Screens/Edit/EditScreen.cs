@@ -229,6 +229,13 @@ namespace Quaver.Shared.Screens.Edit
         private FileSystemWatcher FileWatcher { get; set; }
 
         /// <summary>
+        ///     The amount of time that has elapsed since the playfield has zoomed.
+        ///     Used to create a 'textbox-like' function to change playfield zoom when
+        ///     holding down the key.
+        /// </summary>
+        private double TimeSinceLastPlayfieldZoom { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -437,8 +444,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             HandleKeyPressSpace();
-            HandleKeyPressPageUp();
-            HandleKeyPressPageDown();
+            HandleKeyPressPlayfieldZoom();
             HandleKeyPressHome();
             HandleKeyPressEnd();
 
@@ -873,18 +879,28 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressPageUp()
+        private void HandleKeyPressPlayfieldZoom()
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.PageUp))
-                PlayfieldScrollSpeed.Value++;
-        }
+            const int zoomTime = 100;
+            const Keys zoomInKey = Keys.PageUp;
+            const Keys zoomOutKey = Keys.PageDown;
+            TimeSinceLastPlayfieldZoom += GameBase.Game.TimeSinceLastFrame;
+            var canZoom = TimeSinceLastPlayfieldZoom >= zoomTime;
 
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressPageDown()
-        {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
+            if (KeyboardManager.IsUniqueKeyPress(zoomInKey))
+                PlayfieldScrollSpeed.Value++;
+            else if (KeyboardManager.IsUniqueKeyPress(zoomOutKey))
                 PlayfieldScrollSpeed.Value--;
+            else if (KeyboardManager.CurrentState.IsKeyDown(zoomInKey) && canZoom)
+            {
+                PlayfieldScrollSpeed.Value++;
+                TimeSinceLastPlayfieldZoom = 0;
+            }
+            else if (KeyboardManager.CurrentState.IsKeyDown(zoomOutKey) && canZoom)
+            {
+                PlayfieldScrollSpeed.Value--;
+                TimeSinceLastPlayfieldZoom = 0;
+            }
         }
 
         /// <summary>
