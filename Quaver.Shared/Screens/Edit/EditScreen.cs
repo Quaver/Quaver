@@ -1300,6 +1300,12 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
+            if (WorkingMap.TimingPoints.Count == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "A timing point must be added to your map before test playing!");
+                return;
+            }
+
             if (DialogManager.Dialogs.Count != 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "Finish what you're doing before test playing!");
