@@ -460,6 +460,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
+            HandleKeyPressF4();
             HandleKeyPressF5();
             HandleKeyPressF6();
             HandleKeyPressShiftH();
@@ -481,6 +482,14 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 DialogManager.Show(new EditorMetadataDialog(this));
+        }
+
+        private void HandleKeyPressF4()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F4))
+                return;
+
+            ExitToTestPlay();
         }
 
         /// <summary>
