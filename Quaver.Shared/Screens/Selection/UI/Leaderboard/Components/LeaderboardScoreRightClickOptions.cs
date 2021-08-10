@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
+using Quaver.Server.Client.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -42,6 +43,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private const string PlayerProfile = "Player Profile";
 
         private const string SteamProfile = "Steam Profile";
+
+        private const string AddFriend = "Add Friend";
+
+        private const string RemoveFriend = "Remove Friend";
 
         private const string Delete = "Delete";
 
@@ -139,6 +144,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     case SteamProfile:
                         BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{Score.SteamId}");
                         break;
+                    case AddFriend:
+                        OnlineManager.AddFriend(new User { OnlineUser = { Id = Score.PlayerId }});
+                        break;
+                    case RemoveFriend:
+                        OnlineManager.RemoveFriend(new User { OnlineUser = { Id = Score.PlayerId }});
+                        break;
                 }
             };
         }
@@ -162,6 +173,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 options.Add(DownloadReplay, ColorHelper.HexToColor("#0FBAE5"));
                 options.Add(PlayerProfile, ColorHelper.HexToColor("#27B06E"));
                 options.Add(SteamProfile, ColorHelper.HexToColor("#0787E3"));
+
+                if (OnlineManager.FriendsList != null && OnlineManager.FriendsList.Contains(score.PlayerId))
+                    options.Add(RemoveFriend, ColorHelper.HexToColor($"#FF6868"));
+                else
+                    options.Add(AddFriend, ColorHelper.HexToColor("#27B06E"));
+
                 return options;
             }
 
