@@ -511,6 +511,9 @@ namespace Quaver.Shared.Screens.Results
             if (OnlineManager.IsSpectatingSomeone)
                 return;
 
+            if (OnlineManager.CurrentGame != null)
+                return;
+
             switch (ScreenType)
             {
                 case ResultsScreenType.Gameplay:
