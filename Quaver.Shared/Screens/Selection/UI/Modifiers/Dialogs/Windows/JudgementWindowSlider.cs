@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             };
 
             // ReSharper disable once PossibleLossOfFraction
-            JudgementSprite.Height = img.Width / img.Height * JudgementSprite.Width;
+            JudgementSprite.Height = (float) img.Height / img.Width * JudgementSprite.Width;
         }
 
         /// <summary>
