@@ -296,6 +296,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
                 }
 
+                // play hitlighting animation on release
+                if (gameplayHitObject.Info.IsLongNote)
+                    playfield.Stage.HitLightingObjects[lane].PerformHitAnimation(false, judgement);
+
                 // If the player recieved an early miss or "okay",
                 // show the player that they were inaccurate by killing the object instead of recycling it
                 if (judgement == Judgement.Miss || judgement == Judgement.Okay)
