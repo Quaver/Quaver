@@ -775,13 +775,12 @@ namespace Quaver.Shared.Screens.Gameplay
                     return;
                 }
 
-                // Show notification to the user that their score is invalid.
-                NotificationManager.Show(NotificationLevel.Warning,
-                    "WARNING! Your score will not be submitted due to pausing during gameplay!", null, true);
-
                 // Add the pause mod to their score.
-                if (!ModManager.IsActivated(ModIdentifier.Paused))
+                if (!ModManager.IsActivated(ModIdentifier.Paused) && Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                 {
+                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " +
+                                                                        "during gameplay!", null, true);
+
                     ModManager.AddMod(ModIdentifier.Paused);
                     ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
                     Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
