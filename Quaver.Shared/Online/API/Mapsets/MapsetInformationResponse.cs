@@ -50,16 +50,16 @@ namespace Quaver.Shared.Online.API.Mapsets
         public string DateLastUpdated { get; set; }
 
         [JsonProperty("ranking_queue_status")]
-        public int RankingQueueStatus { get; set; }
+        public int? RankingQueueStatus { get; set; }
 
         [JsonProperty("ranking_queue_last_updated")]
         public string RankingQueueLastUpdated { get; set; }
 
         [JsonProperty("ranking_queue_vote_count")]
-        public int RankingQueueVoteCount { get; set; }
+        public int? RankingQueueVoteCount { get; set; }
 
         [JsonProperty("mapset_ranking_queue_id")]
-        public int MapsetRankingQueueId { get; set; }
+        public int? MapsetRankingQueueId { get; set; }
 
         [JsonProperty("maps")]
         public List<MapInformationResponseMap> Maps { get; set; }
