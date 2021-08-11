@@ -90,6 +90,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private LabelledTextbox NameTextbox { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private JudgementWindowComboBreakDropdown ComboBreak { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -121,6 +125,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             CreateJudgementWindowScrollContainer();
             CreateNameTextbox();
             CreateSliders();
+            CreateComboBreakDropdown();
 
             HandleButtonVisibility();
         }
@@ -369,7 +374,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateNameTextbox()
         {
-            NameTextbox = new LabelledTextbox(784, "Preset Name:", 24, 40, 22, 14,
+            NameTextbox = new LabelledTextbox(300, "Preset Name:", 24, 40, 22, 14,
                 "Enter the name of the preset", JudgementWindowsDatabaseCache.Selected.Value.Name)
             {
                 Parent = ContentBackground,
@@ -392,6 +397,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             NameTextbox.Textbox.X = NameTextbox.Label.X + NameTextbox.Label.Width + 12;
             NameTextbox.Textbox.Parent = NameTextbox.Label;
             NameTextbox.Textbox.Alignment = Alignment.MidLeft;
+        }
+
+        private void CreateComboBreakDropdown()
+        {
+            ComboBreak = new JudgementWindowComboBreakDropdown(JudgementWindowsDatabaseCache.Selected)
+            {
+                Parent = ContentBackground,
+                Alignment = Alignment.TopRight,
+                Y = NameTextbox.Y - 10,
+                X = -22
+            };
         }
 
         /// <summary>
