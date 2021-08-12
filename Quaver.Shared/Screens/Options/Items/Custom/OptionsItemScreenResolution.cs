@@ -11,6 +11,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Window;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
@@ -32,6 +33,10 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             Dropdown.ItemContainer.Scrollbar.Tint = Color.White;
             Dropdown.ItemContainer.Scrollbar.Width = 2;
             Dropdown.SelectedText.Text = Resolution;
+
+            Dropdown.ItemContainer.EasingType = Easing.OutQuint;
+            Dropdown.ItemContainer.TimeToCompleteScroll = 1200;
+            Dropdown.ItemContainer.ScrollSpeed = 220;
 
             Dropdown.ItemSelected += (sender, args) =>
             {
