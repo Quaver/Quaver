@@ -26,6 +26,9 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             new Dropdown(GetOptions(), new ScalableVector2(300, 35), 22,
             Colors.MainAccent, GetSelectedIndex(skin), 240, 700))
         {
+            Dropdown.ItemContainer.Scrollbar.Tint = Color.White;
+            Dropdown.ItemContainer.Scrollbar.Width = 2;
+
             Dropdown.ItemContainer.EasingType = Easing.OutQuint;
             Dropdown.ItemContainer.TimeToCompleteScroll = 1200;
             Dropdown.ItemContainer.ScrollSpeed = 220;
@@ -73,7 +76,9 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            Dropdown.ItemContainer.Scrollbar.Visible = Dropdown.Opened;
             Dropdown.ItemContainer.InputEnabled = Dropdown.Opened;
+
             base.Update(gameTime);
         }
 
