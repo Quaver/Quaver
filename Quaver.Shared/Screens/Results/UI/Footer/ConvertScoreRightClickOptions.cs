@@ -78,7 +78,10 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
             var options = new Dictionary<string, Color>();
 
             foreach (var preset in JudgementWindowsDatabaseCache.Presets)
-                options.Add(preset.Name, Color.White);
+            {
+                if (!options.ContainsKey(preset.Name))
+                    options.Add(preset.Name, Color.White);
+            }
 
             return options;
         }
