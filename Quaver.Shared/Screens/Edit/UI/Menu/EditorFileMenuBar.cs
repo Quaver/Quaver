@@ -487,15 +487,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Plugins"))
                 return;
 
-            if (ImGui.BeginMenu($"Local Plugins"))
+            if (ImGui.BeginMenu($"Local"))
             {
                 var totalPlugins = 0;
 
-                for (var i = 0; i < Screen.Plugins.Count; i++)
+                foreach (var plugin in Screen.Plugins)
                 {
-                    var plugin = Screen.Plugins[i];
-
-                    if (plugin.IsBuiltIn)
+                    if (plugin.IsBuiltIn || plugin.IsWorkshop)
                         continue;
 
                     if (ImGui.BeginMenu(plugin.Name))
@@ -544,6 +542,35 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (ImGui.MenuItem("No Plugins Installed", "", false, false))
                     {
                     }
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu("Steam Workshop"))
+            {
+                foreach (var plugin in Screen.Plugins)
+                {
+                    if (!plugin.IsWorkshop)
+                        continue;
+
+                    if (!ImGui.BeginMenu(plugin.Name))
+                        continue;
+                    
+                    if (ImGui.MenuItem("Enabled", plugin.Author, plugin.IsActive))
+                    {
+                        plugin.IsActive = !plugin.IsActive;
+
+                        if (plugin.IsActive)
+                            plugin.Initialize();
+                    }
+
+                    Tooltip(plugin.Description);
+
+                    if (ImGui.MenuItem("Open Folder"))
+                        Utils.NativeUtils.OpenNatively($"{ConfigManager.SteamWorkshopDirectory.Value}/{plugin.Directory}");
+
+                    ImGui.EndMenu();
                 }
 
                 ImGui.EndMenu();

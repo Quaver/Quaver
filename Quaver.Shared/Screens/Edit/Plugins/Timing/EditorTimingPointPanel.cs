@@ -43,6 +43,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         public string Directory { get; set; }
 
+        public bool IsWorkshop { get; set; }
+
         /// <summary>
         /// </summary>
         public bool IsActive { get; set; }
