@@ -41,6 +41,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public bool IsBuiltIn { get; set; }
 
+        public string Directory { get; set; }
+
         public EditorPluginMap EditorPluginMap { get; set; }
 
         /// <inheritdoc />
@@ -52,13 +54,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="description"></param>
         /// <param name="filePath"></param>
         /// <param name="isResource"></param>
-        public EditorPlugin(EditScreen editScreen, string name, string author, string description, string filePath, bool isResource = false) : base(filePath, isResource)
+        /// <param name="directory"></param>
+        public EditorPlugin(EditScreen editScreen, string name, string author, string description, string filePath,
+            bool isResource = false, string directory = null) : base(filePath, isResource)
         {
             Editor = editScreen;
             Name = name;
             Author = author;
             Description = description;
             IsBuiltIn = isResource;
+            Directory = directory;
 
             EditorPluginUtils.EditScreen = editScreen;
 
