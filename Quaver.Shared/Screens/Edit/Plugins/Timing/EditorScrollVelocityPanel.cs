@@ -39,6 +39,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         public string Directory { get; set; }
 
+        public bool IsWorkshop { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

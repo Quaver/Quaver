@@ -961,46 +961,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             Plugins = new List<IEditorPlugin>();
 
-            var pluginDirectories = Directory.GetDirectories($"{WobbleGame.WorkingDirectory}/Plugins");
-
-            foreach (var directory in pluginDirectories)
-            {
-                var pluginPath = $"{directory}/plugin.lua";
-                var settingsPath = $"{directory}/settings.ini";
-
-                if (!File.Exists(pluginPath))
-                {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
-                    continue;
-                }
-
-                if (!File.Exists(settingsPath))
-                {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
-                    continue;
-                }
-
-                try
-                {
-                    var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
-                        .ReadFile($"{directory}/settings.ini")["Settings"];
-
-                    var plugin = new EditorPlugin(this, data["Name"] ?? "", data["Author"] ?? "",
-                        data["Description"] ?? "", pluginPath, false, Path.GetFileName(directory));
-
-                    Plugins.Add(plugin);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
-            }
-
+            LoadPluginsFromDirectory($"{WobbleGame.WorkingDirectory}/Plugins", false);
+            LoadPluginsFromDirectory($"{ConfigManager.SteamWorkshopDirectory.Value}", true);
             LoadBuiltInPlugins();
-
-            // If the user has no timing points in their map, auto-open the bpm calculator
-            if (WorkingMap.TimingPoints.Count == 0)
-                BuiltInPlugins[EditorBuiltInPlugin.BpmCalculator].IsActive = true;
         }
 
         /// <summary>
@@ -1023,6 +986,46 @@ namespace Quaver.Shared.Screens.Edit
 
             foreach (var plugin in BuiltInPlugins)
                 Plugins.Add(plugin.Value);
+
+            // If the user has no timing points in their map, auto-open the bpm calculator
+            if (WorkingMap.TimingPoints.Count == 0)
+                BuiltInPlugins[EditorBuiltInPlugin.BpmCalculator].IsActive = true;
+        }
+
+        private void LoadPluginsFromDirectory(string dir, bool isWorkshop)
+        {
+            foreach (var directory in Directory.GetDirectories(dir))
+            {
+                var pluginPath = $"{directory}/plugin.lua";
+                var settingsPath = $"{directory}/settings.ini";
+
+                if (!File.Exists(pluginPath))
+                {
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
+                    continue;
+                }
+
+                if (!File.Exists(settingsPath))
+                {
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
+                    continue;
+                }
+
+                try
+                {
+                    var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                        .ReadFile($"{directory}/settings.ini")["Settings"];
+
+                    var plugin = new EditorPlugin(this, data["Name"] ?? "", data["Author"] ?? "",
+                        data["Description"] ?? "", pluginPath, false, Path.GetFileName(directory), isWorkshop);
+
+                    Plugins.Add(plugin);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
         }
 
         /// <summary>
