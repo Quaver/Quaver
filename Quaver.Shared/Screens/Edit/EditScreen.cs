@@ -986,7 +986,7 @@ namespace Quaver.Shared.Screens.Edit
                         .ReadFile($"{directory}/settings.ini")["Settings"];
 
                     var plugin = new EditorPlugin(this, data["Name"] ?? "", data["Author"] ?? "",
-                        data["Description"] ?? "", pluginPath);
+                        data["Description"] ?? "", pluginPath, false, Path.GetFileName(directory));
 
                     Plugins.Add(plugin);
                 }

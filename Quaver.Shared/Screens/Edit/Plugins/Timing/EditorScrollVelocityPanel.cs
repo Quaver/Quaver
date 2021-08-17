@@ -37,6 +37,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         public bool IsBuiltIn { get; set; } = true;
 
+        public string Directory { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

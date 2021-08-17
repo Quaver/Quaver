@@ -58,7 +58,6 @@ namespace Quaver.Shared.Online
                 return;
             }
 
-            Current = this;
             Title = title;
             FolderPath = folderPath;
             PreviewFilePath = $"{FolderPath}/steam_workshop_preview.png";
@@ -77,6 +76,8 @@ namespace Quaver.Shared.Online
         /// </summary>
         public void Upload()
         {
+            Current = this;
+
             if (File.Exists(WorkshopIdFilePath))
             {
                 ExistingWorkshopFileId = ulong.Parse(File.ReadAllText(WorkshopIdFilePath));
