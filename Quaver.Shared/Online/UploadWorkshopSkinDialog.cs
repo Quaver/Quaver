@@ -7,12 +7,12 @@ namespace Quaver.Shared.Online
 {
     public class UploadWorkshopSkinDialog : LoadingDialog
     {
-        public UploadWorkshopSkinDialog(SteamWorkshopSkin skin) : base("UPLOADING SKIN", "Please wait while your skin is being uploaded...",
+        public UploadWorkshopSkinDialog(SteamWorkshopItem item) : base("UPLOADING SKIN", "Please wait while your skin is being uploaded...",
             () =>
             {
-                skin.Upload();
+                item.Upload();
 
-                while (!skin.HasUploaded)
+                while (!item.HasUploaded)
                     Thread.Sleep(50);
             })
         {

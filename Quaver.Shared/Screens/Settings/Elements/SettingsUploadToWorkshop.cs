@@ -4,6 +4,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 
@@ -48,7 +49,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
                     return;
                 }
 
-                var skin = new SteamWorkshopSkin(ConfigManager.Skin.Value);
+                var skin = new SteamWorkshopItem(ConfigManager.Skin.Value, SkinManager.Skin.Dir.Replace("\\", "/"));
 
                 if (skin.HasUploaded)
                     return;
