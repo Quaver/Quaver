@@ -128,6 +128,7 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> { "fps", "limited", "unlimited", "vsync", "wayland"}
                         },
+                        new OptionsSlider(containerRect, "Custom Framerate", ConfigManager.CustomFpsLimit, i => $"{i} fps"),
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
                         new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
                         new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority)
