@@ -123,7 +123,9 @@ namespace Quaver.Shared.Graphics.Graphs
 
                 SeekToPos(targetPos);
             }
-            else if (!KeyboardManager.IsAltDown() && game?.CurrentScreen?.Type == QuaverScreenType.Select && IsHovered)
+            else if (!KeyboardManager.IsAltDown() && IsHovered &&
+                    (game?.CurrentScreen?.Type == QuaverScreenType.Select ||
+                     game?.CurrentScreen?.Type == QuaverScreenType.Multiplayer))
             {
                 if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
                     SeekInDirection(Direction.Forward);
