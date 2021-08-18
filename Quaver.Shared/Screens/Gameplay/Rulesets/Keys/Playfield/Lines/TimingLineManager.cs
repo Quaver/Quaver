@@ -99,10 +99,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
                 var signature = (int)map.TimingPoints[i].Signature;
 
-                // Max possible sane value for timing lines
-                const float maxBpm = 9999f;
-
-                var msPerBeat = 60000 / Math.Min(Math.Abs(map.TimingPoints[i].Bpm), maxBpm);
+                var msPerBeat = 60000 / Math.Abs(map.TimingPoints[i].Bpm);
                 var increment = signature * msPerBeat;
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
