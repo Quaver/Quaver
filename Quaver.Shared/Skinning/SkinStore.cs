@@ -260,7 +260,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal SkinStore(string skin = null)
         {
-            Skin = string.IsNullOrEmpty(skin) ? ConfigManager.Skin.Value : skin;
+            Skin = string.IsNullOrEmpty(skin) ? ConfigManager.Skin?.Value : skin;
             LoadConfig();
 
             // Load up Keys game mode skins.
@@ -270,9 +270,17 @@ namespace Quaver.Shared.Skinning
                 {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}
             };
 
-            MenuBorder = new SkinMenuBorder(this, Config);
-            MainMenu = new SkinMenuMain(this, Config);
-            SongSelect = new SkinMenuSongSelect(this, Config);
+
+            try
+            {
+                MenuBorder = new SkinMenuBorder(this, Config);
+                MainMenu = new SkinMenuMain(this, Config);
+                SongSelect = new SkinMenuSongSelect(this, Config);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
 
             LoadUniversalElements();
 

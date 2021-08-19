@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
         public IconTextButtonSelectBack(SelectionScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Back", (sender, args) =>
             {
-                screen.ExitToMenu();
+                screen.HandleBackAction();
             })
         {
         }

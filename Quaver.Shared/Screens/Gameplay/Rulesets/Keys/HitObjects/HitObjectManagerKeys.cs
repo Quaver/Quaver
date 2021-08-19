@@ -893,7 +893,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void UpdateCurrentTrackPosition()
         {
             CurrentAudioPosition = Ruleset.Screen.Timing.Time + ConfigManager.GlobalAudioOffset.Value * AudioEngine.Track.Rate
-                                   - MapManager.Selected.Value.LocalOffset + MapManager.Selected.Value.OnlineOffset;
+                                   - MapManager.Selected.Value.LocalOffset - MapManager.Selected.Value.OnlineOffset;
 
             CurrentVisualPosition = CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate;
 

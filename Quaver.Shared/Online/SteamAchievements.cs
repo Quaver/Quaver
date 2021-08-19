@@ -40,14 +40,9 @@ namespace Quaver.Shared.Online
         {
             foreach (var achievement in Achievements)
             {
-                Logger.Important($"Achievement Progress Received - {achievement.Id} | {achievement.SteamApiName} " +
-                                 $"| Unlocked: {achievement.Unlocked} | {achievement.Progress}", LogType.Network);
-
-                if (achievement.Unlocked)
-                {
-                    SteamUserStats.SetAchievement(achievement.SteamApiName);
-                    SteamUserStats.StoreStats();
-                }
+                Logger.Important($"Achievement Progress Received - {achievement.Id} | {achievement.SteamApiName}", LogType.Network);
+                SteamUserStats.SetAchievement(achievement.SteamApiName);
+                SteamUserStats.StoreStats();
             }
 
             Dispose();

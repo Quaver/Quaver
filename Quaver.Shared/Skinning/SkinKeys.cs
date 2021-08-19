@@ -363,7 +363,7 @@ namespace Quaver.Shared.Skinning
         {
             Store = store;
             Mode = mode;
-            DefaultSkin = ConfigManager.DefaultSkin?.Value.ToString() ?? DefaultSkins.Arrow.ToString();
+            DefaultSkin = ConfigManager.DefaultSkin?.Value.ToString() ?? DefaultSkins.Bar.ToString();
 
             // Set the generic config variables, and THEN try to read from
             // skin.ini.

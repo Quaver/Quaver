@@ -83,7 +83,10 @@ namespace Quaver.Shared.Graphics.Notifications
             var info = new NotificationInfo(level, text, true, onClick, forceShow);
             var notification = new DrawableNotification(null, info, -1) {  Alignment = Alignment.TopRight };
 
-            QueuedNotifications.Add(notification);
+            lock (QueuedNotifications)
+            {
+                QueuedNotifications.Add(notification);
+            }
         }
 
         /// <summary>
@@ -94,31 +97,34 @@ namespace Quaver.Shared.Graphics.Notifications
         {
             var game = GameBase.Game as QuaverGame;
 
-            foreach (var notification in QueuedNotifications)
+            lock (QueuedNotifications)
             {
-                // Prevent unimportant notifications from displaying during gameplay
-                if (game?.CurrentScreen is GameplayScreen screen && !screen.IsPaused && !notification.Item.ForceShow
-                    && !ConfigManager.DisplayNotificationsInGameplay.Value)
-                    continue;
-
-                notification.Parent = Container;
-
-                if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
+                foreach (var notification in QueuedNotifications)
                 {
-                    notification.Alignment = Alignment.BotRight;
-                    notification.Y = -InitialY;
-                }
-                else
-                {
-                    notification.Y = InitialY;
+                    // Prevent unimportant notifications from displaying during gameplay
+                    if (game?.CurrentScreen is GameplayScreen screen && !screen.IsPaused && !notification.Item.ForceShow
+                        && !ConfigManager.DisplayNotificationsInGameplay.Value)
+                        continue;
+
+                    notification.Parent = Container;
+
+                    if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
+                    {
+                        notification.Alignment = Alignment.BotRight;
+                        notification.Y = -InitialY;
+                    }
+                    else
+                    {
+                        notification.Y = InitialY;
+                    }
+
+                    ActiveNotifications.Add(notification);
+                    NotificationsToClear.Add(notification);
                 }
 
-                ActiveNotifications.Add(notification);
-                NotificationsToClear.Add(notification);
+                foreach (var notification in NotificationsToClear)
+                    QueuedNotifications.Remove(notification);
             }
-
-            foreach (var notification in NotificationsToClear)
-                QueuedNotifications.Remove(notification);
 
             NotificationsToClear.Clear();
         }

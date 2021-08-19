@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ImGuiNET;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
@@ -9,6 +10,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -128,6 +130,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 Screen.UploadMapset();
             }
 
+            if (ImGui.MenuItem("Submit For Rank", "", false, Screen.Map.Game == MapGame.Quaver
+                                                             && Screen.Map.RankedStatus != RankedStatus.Ranked && Screen.Map.MapId != -1))
+            {
+                Screen.SubmitForRank();
+            }
+
             if (ImGui.MenuItem("Export", "CTRL + E", false))
             {
                 Screen.ExportToZip();
@@ -191,8 +199,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Cut", "CTRL + X", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.CutSelectedObjects();
 
-            if (ImGui.MenuItem("Paste", "CTRL + V", false, Screen.Clipboard.Count > 0))
-                Screen.PasteCopiedObjects();
+            if (ImGui.MenuItem("Paste (snapped)", "CTRL + V", false, Screen.Clipboard.Count > 0))
+                Screen.PasteCopiedObjects(true);
+
+            if (ImGui.MenuItem("Paste (unsnapped)", "CTRL + SHIFT + V", false, Screen.Clipboard.Count > 0))
+                Screen.PasteCopiedObjects(false);
 
             if (ImGui.MenuItem("Delete", "DEL", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.DeleteSelectedObjects();
@@ -264,6 +275,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
+
+            ImGui.Separator();
+
+            var view = Screen.View as EditScreenView;
+
+            if (ImGui.MenuItem("Enable AutoMod", "", view?.AutoMod.IsActive.Value ?? false))
+            {
+                if (view != null)
+                    view.AutoMod.IsActive.Value = !view.AutoMod.IsActive.Value;
+            }
 
             ImGui.Separator();
 
@@ -466,23 +487,51 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Plugins"))
                 return;
 
-            if (ImGui.BeginMenu($"Local Plugins"))
+            if (ImGui.BeginMenu($"Local"))
             {
                 var totalPlugins = 0;
 
-                for (var i = 0; i < Screen.Plugins.Count; i++)
+                foreach (var plugin in Screen.Plugins)
                 {
-                    var plugin = Screen.Plugins[i];
-
-                    if (plugin.IsBuiltIn)
+                    if (plugin.IsBuiltIn || plugin.IsWorkshop)
                         continue;
 
-                    if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
+                    if (ImGui.BeginMenu(plugin.Name))
                     {
-                        plugin.IsActive = !plugin.IsActive;
+                        if (ImGui.MenuItem("Enabled", plugin.Author, plugin.IsActive))
+                        {
+                            plugin.IsActive = !plugin.IsActive;
 
-                        if (plugin.IsActive)
-                            plugin.Initialize();
+                            if (plugin.IsActive)
+                                plugin.Initialize();
+                        }
+
+                        Tooltip(plugin.Description);
+
+                        if (ImGui.MenuItem("Upload To Workshop"))
+                        {
+                            var item = new SteamWorkshopItem(plugin.Name, $"{WobbleGame.WorkingDirectory}Plugins/{plugin.Directory}");
+
+                            if (!item.HasUploaded && (SteamWorkshopItem.Current == null || SteamWorkshopItem.Current.HasUploaded))
+                            {
+                                NotificationManager.Show(NotificationLevel.Info, "Uploading plugin to the Steam Workshop...");
+
+                                ThreadScheduler.Run(() =>
+                                {
+                                    item.Upload();
+
+                                    while (!item.HasUploaded)
+                                        Thread.Sleep(50);
+
+                                    NotificationManager.Show(NotificationLevel.Success, "Successfully uploaded plugin to the workshop!");
+                                });
+                            }
+                        }
+
+                        if (ImGui.MenuItem("Open Folder"))
+                            Utils.NativeUtils.OpenNatively($"{WobbleGame.WorkingDirectory}Plugins/{plugin.Directory}");
+
+                        ImGui.EndMenu();
                     }
 
                     totalPlugins++;
@@ -493,6 +542,35 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (ImGui.MenuItem("No Plugins Installed", "", false, false))
                     {
                     }
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu("Steam Workshop"))
+            {
+                foreach (var plugin in Screen.Plugins)
+                {
+                    if (!plugin.IsWorkshop)
+                        continue;
+
+                    if (!ImGui.BeginMenu(plugin.Name))
+                        continue;
+                    
+                    if (ImGui.MenuItem("Enabled", plugin.Author, plugin.IsActive))
+                    {
+                        plugin.IsActive = !plugin.IsActive;
+
+                        if (plugin.IsActive)
+                            plugin.Initialize();
+                    }
+
+                    Tooltip(plugin.Description);
+
+                    if (ImGui.MenuItem("Open Folder"))
+                        Utils.NativeUtils.OpenNatively($"{ConfigManager.SteamWorkshopDirectory.Value}/{plugin.Directory}");
+
+                    ImGui.EndMenu();
                 }
 
                 ImGui.EndMenu();
@@ -521,6 +599,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Plugins"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/plugins");
+
+            if (ImGui.MenuItem("Ranking Criteria"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/criteria");
+
+            if (ImGui.MenuItem("Ranking Process"))
+                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/process");
 
             ImGui.EndMenu();
         }
@@ -601,6 +685,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             }
 
             ImGui.EndMenu();
+        }
+
+        private void Tooltip(string text)
+        {
+            if (!ImGui.IsItemHovered()) return;
+            ImGui.BeginTooltip();
+            ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25);
+            ImGui.TextWrapped(text);
+            ImGui.PopTextWrapPos();
+            ImGui.EndTooltip();
         }
 
         /// <summary>

@@ -42,9 +42,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
         private void OnFileDropped(object sender, string e)
         {
-            e = e.ToLower();
+            var file = e.ToLower();
 
-            if (!e.EndsWith(".qua"))
+            if (!file.EndsWith(".qua"))
                 return;
 
             Logger.Important($"Importing file: {e} into the mapset.", LogType.Runtime);
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                     // Add the new map to the db.
                     var map = Map.FromQua(qua, path);
                     map.DateAdded = DateTime.Now;
-                    map.Id = MapDatabaseCache.InsertMap(map, path);
+                    map.Id = MapDatabaseCache.InsertMap(map);
                     map.Mapset = Screen.Map.Mapset;
                     map.NewlyCreated = true;
                     Screen.Map.Mapset.Maps.Add(map);

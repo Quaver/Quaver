@@ -177,7 +177,7 @@ namespace Quaver.Shared.Database.Maps
                 try
                 {
                     var map = Map.FromQua(Qua.Parse(file, false), file);
-                    InsertMap(map, file);
+                    InsertMap(map);
 
                     if (!QuaverSettingsDatabaseCache.OutdatedMaps.Contains(map))
                         QuaverSettingsDatabaseCache.OutdatedMaps.Add(map);
@@ -207,8 +207,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Inserts an individual map to the database.
         /// </summary>
         /// <param name="map"></param>
-        /// <param name="file"></param>
-        public static int InsertMap(Map map, string file)
+        public static int InsertMap(Map map)
         {
             try
             {
@@ -218,8 +217,27 @@ namespace Quaver.Shared.Database.Maps
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime);
-                File.Delete(file);
+                var existing = DatabaseManager.Connection.Find<Map>(x => x.Md5Checksum == map.Md5Checksum);
+                if (existing == null)
+                {
+                    // Weird.
+                    Logger.Error(e, LogType.Runtime);
+                    return -1;
+                }
+
+                var newPath = Path.Combine(ConfigManager.SongDirectory.Value, map.Directory, map.Path);
+                var existingPath = Path.Combine(ConfigManager.SongDirectory.Value, existing.Directory, existing.Path);
+
+                if (existingPath != newPath)
+                {
+                    Logger.Warning($"Tried importing a duplicate of `{existingPath}` at `{newPath}`, deleting.", LogType.Runtime);
+                    // Delete the duplicate file.
+                    File.Delete(newPath);
+                    return -1;
+                }
+
+                // Do not delete if the path matches.
+                Logger.Warning($"Tried importing `{existingPath}` twice.", LogType.Runtime);
                 return -1;
             }
         }
@@ -341,7 +359,7 @@ namespace Quaver.Shared.Database.Maps
 
                     if (map.Id == 0)
                     {
-                        map.Id = InsertMap(map, path);
+                        map.Id = InsertMap(map);
                     }
                     else
                     {

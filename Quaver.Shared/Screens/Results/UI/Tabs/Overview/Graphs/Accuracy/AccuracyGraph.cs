@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// <summary>
         ///     Accuracy data points throughout the score
         /// </summary>
-        private List<(int, float)> AccuracyHistory { get; set; }
+        private List<(int, float)> AccuracyDataHistory { get; set; }
 
         /// <summary>
         ///     Accuracy data if the player hit perfectly after the fail/quit point
@@ -94,9 +94,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
             if (!(Processor.Value is ScoreProcessorKeys keysProcessor))
                 return;
 
-            var simulatedProcessor = new ScoreProcessorKeys(Map.Qua ?? Map.LoadQua(), keysProcessor.Mods, keysProcessor.Windows);
+            var qua = Map.Qua ?? Map.LoadQua();
 
-            AccuracyHistory = new List<(int, float)>();
+            var simulatedProcessor = new ScoreProcessorKeys(qua, keysProcessor.Mods, keysProcessor.Windows);
+
+            AccuracyDataHistory = new List<(int, float)>();
             MinAccuracy = 100f;
 
             var i = 0;
@@ -109,10 +111,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 var acc = simulatedProcessor.Accuracy;
 
                 // Prevent multiple accuracies on a single time
-                if (stat.SongPosition == previousTime)
-                    AccuracyHistory.Remove(AccuracyHistory.Last());
+                if (AccuracyDataHistory.Count > 0 && stat.SongPosition == previousTime)
+                    AccuracyDataHistory.Remove(AccuracyDataHistory.Last());
 
-                AccuracyHistory.Add((stat.SongPosition, acc));
+                AccuracyDataHistory.Add((stat.SongPosition, acc));
                 previousTime = stat.SongPosition;
 
                 // skip the first judgements because of heavy fluctuations
@@ -126,7 +128,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
             if (simulatedProcessor.TotalJudgementCount < simulatedProcessor.GetTotalJudgementCount())
             {
                 MaximumPossibleHistory = new List<(int, float)>();
-                var hitObjectsLeftToPlay = Map.Qua.HitObjects.Where(h => h.StartTime > AccuracyHistory.Last().Item1);
+                var hitObjectsLeftToPlay = qua.HitObjects.Where(h => h.StartTime > AccuracyDataHistory.Last().Item1);
 
                 // Separate ordered list is required because of hits being out of order if you go though each hit object
                 // and take the start/end time at that moment
@@ -162,7 +164,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
 
         private void CreateDataPoints()
         {
-            DrawDataPointsFromHistory(AccuracyHistory, 1f);
+            DrawDataPointsFromHistory(AccuracyDataHistory, 1f);
 
             if (MaximumPossibleHistory != null)
                 DrawDataPointsFromHistory(MaximumPossibleHistory, 0.2f);
@@ -170,7 +172,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
 
         private void DrawDataPointsFromHistory(IReadOnlyList<(int, float)> history, float opacity)
         {
-            var start = AccuracyHistory.First().Item1;
+            var start = AccuracyDataHistory.First().Item1;
             var end = Map.SongLength;
 
             for (var i = 0; i < history.Count; i++)

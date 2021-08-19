@@ -60,6 +60,11 @@ namespace Quaver.Shared.Screens.Importing
         ///	</summary>
         private bool FullSync { get; set; }
 
+        /// <summary>
+        ///     Selects a specific difficulty after importing, useful for song requests or IPC messages
+        /// </summary>
+        private int? SelectMapIdAfterImport { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -68,11 +73,13 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false, bool fullSync = false)
+        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false,
+            bool fullSync = false, int? selectMapIdAfterImport = null)
         {
             ComingFromSelect = fromSelect;
             FullSync = fullSync;
             MultiplayerScreen = multiplayerScreen;
+            SelectMapIdAfterImport = selectMapIdAfterImport;
 
             PreviouslySelectedMap = MapManager.Selected.Value;
             View = new ImportingScreenView(this);
@@ -100,7 +107,7 @@ namespace Quaver.Shared.Screens.Importing
                     QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();
                 }
 
-                MapsetImporter.ImportMapsetsInQueue();
+                MapsetImporter.ImportMapsetsInQueue(SelectMapIdAfterImport);
                 OnImportCompletion();
             });
 

@@ -445,7 +445,7 @@ namespace Quaver.Shared.Screens.Result
 
                 OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, Gameplay.ReplayCapturer.Replay,
                     Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods),
-                    TimeHelper.GetUnixTimestampMilliseconds(), SteamManager.PTicket, OnlineManager.CurrentGame));
+                    TimeHelper.GetUnixTimestampMilliseconds(), OnlineManager.CurrentGame));
             });
         }
 
@@ -485,7 +485,7 @@ namespace Quaver.Shared.Screens.Result
                 if (UserProfileDatabaseCache.Selected.Value.Id != 0 &&
                     !UserProfileDatabaseCache.Selected.Value.IsOnline)
                 {
-                    localScore.UserProfileId = UserProfileDatabaseCache.Selected.Value.Id;
+                    localScore.LocalProfileId = UserProfileDatabaseCache.Selected.Value.Id;
                 }
 
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);

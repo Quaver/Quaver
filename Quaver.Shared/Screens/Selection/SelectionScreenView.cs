@@ -220,7 +220,7 @@ namespace Quaver.Shared.Screens.Selection
         ///     Creates <see cref="FilterPanel"/>
         /// </summary>
         private void CreateFilterPanel() => FilterPanel = new SelectFilterPanel(SelectScreen.AvailableMapsets,
-            SelectScreen.CurrentSearchQuery, SelectScreen.IsPlayTestingInPreview)
+            SelectScreen.CurrentSearchQuery, SelectScreen.IsPlayTestingInPreview, SelectScreen.ActiveLeftPanel)
         {
             Parent = Container,
             Y = Header.Height + Header.ForegroundLine.Height - 2

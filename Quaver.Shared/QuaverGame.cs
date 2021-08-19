@@ -59,6 +59,7 @@ using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
+using Quaver.Shared.Screens.Tests.AutoMods;
 using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Chat;
 using Quaver.Shared.Screens.Tests.CheckboxContainers;
@@ -205,6 +206,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"AutoMod", typeof(AutoModTestScreen)},
             {"Main Menu", typeof(MainMenuScreen)},
             {"ResultsScreen (Multi)", typeof(TestResultsMultiScreen)},
             {"ResultsScreen", typeof(TestResultsScreen)},
@@ -270,7 +272,7 @@ namespace Quaver.Shared
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
             ChangeResolution();
-            
+
             // Don't change the actual display mode. Especially considering our support for arbitrary resolutions, this
             // can lead to completely locking up user's session (on Linux).
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -703,6 +705,10 @@ namespace Quaver.Shared
         /// </summary>
         private void HandleKeyPressAltEnter()
         {
+            // Don't allow to change to fullscreen when playing
+            if (CurrentScreen.Type == QuaverScreenType.Gameplay)
+                return;
+
             // Check for modifier keys
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;

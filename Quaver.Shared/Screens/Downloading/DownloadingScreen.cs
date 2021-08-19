@@ -15,6 +15,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.MapsetSearch;
 using Quaver.Shared.Scheduling;
@@ -219,6 +220,8 @@ namespace Quaver.Shared.Screens.Downloading
         {
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                 AudioEngine.Track?.Stop();
+
+            ModManager.RemoveSpeedMods();
 
             CurrentSearchQuery.ValueChanged += OnSearchQueryChanged;
             FilterGameMode.ValueChanged += OnGameModeChanged;
@@ -875,8 +878,6 @@ namespace Quaver.Shared.Screens.Downloading
                 if (!CurrentPreview.IsDisposed)
                     CurrentPreview.Dispose();
             }
-
-            AudioPreviews = null;
         }
 
         /// <summary>

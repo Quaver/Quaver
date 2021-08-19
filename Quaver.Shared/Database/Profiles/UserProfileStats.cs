@@ -90,7 +90,7 @@ namespace Quaver.Shared.Database.Profiles
             Scores = DatabaseManager.Connection?.Table<Score>().ToList().FindAll(x => x.Mode == Mode).ToList();
 
             if (Profile.Id != 0)
-                Scores = Scores?.FindAll(x => x.UserProfileId == Profile.Id).ToList();
+                Scores = Scores?.FindAll(x => x.LocalProfileId == Profile.Id).ToList();
 
             if (Scores == null)
                 Scores = new List<Score>();

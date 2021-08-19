@@ -17,6 +17,7 @@ using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
@@ -731,6 +732,8 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (!ResultsScreenLoadInitiated)
             {
+                Screen.TimePlayEnd = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
                 // Force all replay frames on failure
                 if (OnlineManager.IsBeingSpectated)
                 {
@@ -796,6 +799,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
                         return new SelectionScreen();
                     }
+
+                    if (Screen.InReplayMode && Screen.LoadedReplay != null)
+                        return new ResultsScreen(MapManager.Selected.Value, Screen.LoadedReplay);
 
                     return new ResultsScreen(Screen);
                 }, Screen.Failed ? Screen.FailFadeTime : 500);

@@ -200,12 +200,6 @@ namespace Quaver.Shared.Online
 
             Logger.Important($"Attempting to log into the Quaver server...", LogType.Network);
 
-            if (!SteamManager.AuthSessionTicketValidated)
-            {
-                Logger.Error($"Could not log in because the steam auth session ticket was not validated.", LogType.Network);
-                throw new Exception("Failed to login");
-            }
-
             // Create the new online client and subscribe to all of its online events.
             if (Client == null)
             {
@@ -236,8 +230,7 @@ namespace Quaver.Shared.Online
             }
 
             // Initiate the connection to the game server.
-            Client.Connect(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(),
-                SteamManager.PTicket, SteamManager.PcbTicket, false);
+            Client.Connect(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), false);
         }
 
         /// <summary>
@@ -605,12 +598,19 @@ namespace Quaver.Shared.Online
             Self.Stats[e.Response.GameMode] = e.Response.Stats.ToUserStats(e.Response.GameMode);
 
             // Unlock any achievements
-            if (e.Response.Achievements.Count > 0)
+            if (e.Response.Achievements != null && e.Response.Achievements.Count > 0)
                 new SteamAchievements(e.Response.Achievements).Unlock();
 
-            DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
-            DiscordHelper.Presence.EndTimestamp = 0;
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            try
+            {
+                DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
+                DiscordHelper.Presence.EndTimestamp = 0;
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, LogType.Runtime);
+            }
         }
 
         /// <summary>

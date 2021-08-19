@@ -80,6 +80,7 @@ namespace Quaver
             {
                 var exception = args.ExceptionObject as Exception;
                 Logger.Error(exception, LogType.Runtime);
+                SendCrashLog(exception);
             };
 
             ConfigManager.Initialize();
@@ -156,6 +157,23 @@ namespace Quaver
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        /// <summary>
+        ///     Automatically sends crash logs to the server.
+        /// </summary>
+        private static void SendCrashLog(Exception e)
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            // Exclude non-steam builds
+            if (!game.IsDeployedBuild)
+                return;
+
+            var runtime = File.ReadAllText(Logger.GetLogPath(LogType.Runtime));
+            var network = File.ReadAllText(Logger.GetLogPath(LogType.Network));
+
+            OnlineManager.Client?.SendCrashLog(runtime, network, e.ToString(), game.Version);
         }
     }
 }

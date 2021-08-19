@@ -65,6 +65,7 @@ namespace Quaver.Shared.Converters.Malody
                     case ".png":
                     case ".jpeg":
                     case ".ogg":
+                    case ".wav":
                         File.Move(tempFile, fileName);
                         break;
                     default:

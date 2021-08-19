@@ -44,9 +44,9 @@ namespace Quaver.Shared.Database.Scores
         public int Id { get; set; }
 
         /// <summary>
-        ///     The id of the user profile that the score has
+        ///     The id of the user local profile that the score has
         /// </summary>
-        public int UserProfileId { get; set; }
+        public int LocalProfileId { get; set; }
 
         /// <summary>
         ///     The MD5 Hash of the map

@@ -24,13 +24,13 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             };
         }
 
-        private bool IsMapsetEligibleToUpload(Map map)
+        public static bool IsMapsetEligibleToUpload(Map map)
         {
             var mapset = map.Mapset;
 
             if (mapset.Maps.Any(x => x.RankedStatus == RankedStatus.Ranked))
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot upload a mapset that is already ranked!");
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot submit a mapset that is already ranked!");
                 return false;
             }
 
