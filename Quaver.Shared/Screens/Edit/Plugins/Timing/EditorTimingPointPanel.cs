@@ -373,8 +373,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 NeedsToScrollToLastSelectedPoint = false;
             }
 
-            foreach (var point in Screen.WorkingMap.TimingPoints)
+            for (int i = 0; i < Screen.WorkingMap.TimingPoints.Count; i++)
             {
+                // https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-why-is-my-widget-not-reacting-when-i-click-on-it
+                // allows all timing points with same truncated time to be selected, instead of just the first in list
+                ImGui.PushID(i);
+
+                var point = Screen.WorkingMap.TimingPoints[i];
+
                 var isSelected = SelectedTimingPoints.Contains(point);
 
                 if (!isSelected)
@@ -446,10 +452,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
 
                 var hidden = point.Hidden;
-                // give each checkbox a unique ID based off timing point's StartTime so that they behave separately
                 if (ImGui.Checkbox($"##{point.StartTime}", ref hidden))
                     Screen.ActionManager.ChangeTimingPointHidden(point, hidden);
+
                 ImGui.NextColumn();
+                ImGui.PopID();
             }
 
             IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();

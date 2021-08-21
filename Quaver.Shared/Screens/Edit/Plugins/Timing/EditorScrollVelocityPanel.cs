@@ -371,8 +371,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 NeedsToScrollToLastSelectedSv = false;
             }
 
-            foreach (var sv in Screen.WorkingMap.SliderVelocities)
+            for (int i = 0; i < Screen.WorkingMap.SliderVelocities.Count; i++)
             {
+                // https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-why-is-my-widget-not-reacting-when-i-click-on-it
+                // allows all SVs with same truncated time to be selected, instead of just the first in list
+                ImGui.PushID(i);
+
+                var sv = Screen.WorkingMap.SliderVelocities[i];
+
                 var isSelected = SelectedScrollVelocities.Contains(sv);
 
                 if (!isSelected)
@@ -442,6 +448,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
                 ImGui.TextWrapped($"{sv.Multiplier:0.00}x");
                 ImGui.NextColumn();
+
+                ImGui.PopID();
             }
 
             IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
