@@ -594,9 +594,18 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             var map = RngHistory.Pop();
+            var index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, dmap => dmap.Maps.Contains(map));
+
+            while(index == -1)
+            {
+                if (RngHistory.Count == 0)
+                    return;
+                map = RngHistory.Pop();
+                index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, dmap => dmap.Maps.Contains(map));
+            }
 
             MapManager.Selected.Value = map;
-            RandomMapsetSelected?.Invoke(this, new RandomMapsetSelectedEventArgs(map.Mapset, AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, dmap => dmap == map.Mapset)));
+            RandomMapsetSelected?.Invoke(this, new RandomMapsetSelectedEventArgs(map.Mapset, index));
 
         }
 
