@@ -219,7 +219,24 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             }
             // FFA Color
             else
-                Border.Tint = ColorHelper.HexToColor("#0587E5");
+            {
+                if (Game.Value.HostId == User.OnlineUser.Id)
+                {
+                    Border.Tint = ColorHelper.HexToColor("#E8B636");
+                }
+                else if (Game.Value.PlayersWithoutMap.Contains(User.OnlineUser.Id))
+                {
+                    Border.Tint = ColorHelper.HexToColor("#F8645D");
+                }
+                else if (Game.Value.PlayersReady.Contains(User.OnlineUser.Id))
+                {
+                    Border.Tint = ColorHelper.HexToColor("#27AF6E");
+                }
+                else
+                {
+                    Border.Tint = ColorHelper.HexToColor("#0587E5");
+                }
+            }
 
             UpdateModifiers();
 
