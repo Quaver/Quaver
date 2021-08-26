@@ -594,14 +594,15 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             var map = RngHistory.Pop();
-            var index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, dmap => dmap.Maps.Contains(map));
+            var index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, x => x.Maps.Contains(map));
 
-            while(index == -1)
+            while (index == -1)
             {
                 if (RngHistory.Count == 0)
                     return;
+
                 map = RngHistory.Pop();
-                index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, dmap => dmap.Maps.Contains(map));
+                index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, x => x.Maps.Contains(map));
             }
 
             MapManager.Selected.Value = map;
