@@ -13,68 +13,64 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         public EditorChangeBackgroundBannerDialog(EditScreen screen, string file) : base("CHANGE BACKGROUND / BANNER",
             $"Would you like to change the background or the banner?")
         {
-            BackgroundAction += () =>
+            BackgroundBannerAction += () =>
             {
                 var name = Path.GetFileName(file);
 
+                if (ConfigManager.SongDirectory == null)
+                    throw new InvalidOperationException("Song directory is null. Visual testing?");
+
                 try
                 {
-                    if (ConfigManager.SongDirectory == null)
-                        throw new InvalidOperationException("Song directory is null. Visual testing?");
-
-                    try
-                    {
-                        File.Copy(file, $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}/{name}", true);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-
-                    screen.WorkingMap.BackgroundFile = name;
-                    screen.Map.BackgroundPath = name;
-                    screen.Save(true, true);
-
-                    NotificationManager.Show(NotificationLevel.Success, "Your background has been successfully changed!");
-                    BackgroundHelper.Load(screen.Map);
+                    File.Copy(file, $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}/{name}", true);
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while changing your background");
+                    NotificationManager.Show(NotificationLevel.Error, "An error occured while moving the file.");
                 }
-            };
 
-            BannerAction += () =>
-            {
-                var name = Path.GetFileName(file);
-
-                try
+                BackgroundAction += () =>
                 {
-                    if (ConfigManager.SongDirectory == null)
-                        throw new InvalidOperationException("Song directory is null. Visual testing?");
-
                     try
                     {
-                        File.Copy(file, $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}/{name}", true);
+                        screen.WorkingMap.BackgroundFile = name;
+                        screen.Map.BackgroundPath = name;
+                        screen.Save(true, true);
+
+                        NotificationManager.Show(NotificationLevel.Success, "Your background has been successfully changed!");
+                        BackgroundHelper.Load(screen.Map);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        // ignored
+                        Logger.Error(e, LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error, "There was an issue while changing your background");
                     }
+                };
 
-                    screen.WorkingMap.BannerFile = name;
-                    screen.Map.BannerPath = name;
-                    screen.Save(true, true);
-
-                    NotificationManager.Show(NotificationLevel.Success, "Your banner has been successfully changed!");
-                    BackgroundHelper.Load(screen.Map);
-                }
-                catch (Exception e)
+                BannerAction += () =>
                 {
-                    Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while changing your banner");
-                }
+                    try
+                    {
+                        screen.WorkingMap.BannerFile = name;
+                        foreach (var Map in screen.Map.Mapset.Maps) {
+                            var QuaFile = Map.LoadQua();
+                            Map.BannerPath = name;
+                            QuaFile.BannerFile = name;
+                            QuaFile.Save($"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}");
+                        }
+                        screen.Save(true, true, true);
+                        BackgroundHelper.MapsetBannersToLoad.Add(screen.Map.Mapset);
+                        BackgroundHelper.LoadAllMapsetBanners(true);
+
+                        NotificationManager.Show(NotificationLevel.Success, "Your banner has been successfully changed!");
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error, "There was an issue while changing your banner");
+                    }
+                };
             };
         }
     }

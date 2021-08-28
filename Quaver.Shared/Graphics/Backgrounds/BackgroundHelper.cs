@@ -72,7 +72,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         ///     A list of banners that are queued to be loaded on the load thread
         /// </summary>
-        private static List<Mapset> MapsetBannersToLoad { get; } = new List<Mapset>();
+        public static List<Mapset> MapsetBannersToLoad { get; } = new List<Mapset>();
 
         /// <summary>
         ///     A list of playlist banners to load
@@ -239,7 +239,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         ///     Responsible for making sure all mapset banners are loaded in
         /// </summary>
-        private static void LoadAllMapsetBanners()
+        public static void LoadAllMapsetBanners(bool updateBanner = false)
         {
             if (MapsetBannersToLoad.Count == 0)
                 return;
@@ -273,6 +273,8 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     mapTexture = DefaultBanner;
                     Logger.Error(e, LogType.Runtime);
                 }
+
+                if (updateBanner) MapsetBanners.Remove(mapset.Directory);
 
                 // The banner is the default, so there's no need to cache it to a RenderTarget
                 if (mapTexture == DefaultBanner || bannerExists)

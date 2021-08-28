@@ -1225,7 +1225,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <param name="synchronous"></param>
         /// <param name="forceSave"></param>
-        public void Save(bool synchronous = false, bool forceSave = false)
+        /// <param name="wholeSet"></param>
+        public void Save(bool synchronous = false, bool forceSave = false, bool wholeSet = false)
         {
             if (!ActionManager.HasUnsavedChanges && !forceSave)
                 return;
@@ -1252,11 +1253,26 @@ namespace Quaver.Shared.Screens.Edit
                 if (ActionManager.UndoStack.Count != 0)
                     ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
 
-                Map.DifficultyProcessorVersion = "Needs Update";
-                MapDatabaseCache.UpdateMap(Map);
+                if (wholeSet)
+                {
+                    foreach (var UpdateMap in Map.Mapset.Maps)
+                    {
+                        UpdateMap.DifficultyProcessorVersion = "Needs Update";
+                        MapDatabaseCache.UpdateMap(UpdateMap);
 
-                if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
-                    MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
+                        if (!MapDatabaseCache.MapsToUpdate.Contains(UpdateMap))
+                            MapDatabaseCache.MapsToUpdate.Add(UpdateMap);
+                    }
+                }
+                else
+                {
+                    Map.DifficultyProcessorVersion = "Needs Update";
+                    MapDatabaseCache.UpdateMap(Map);
+
+                    if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
+                        MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
+                }
+
             }
             catch (Exception e)
             {

@@ -75,6 +75,10 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
+        protected Action BackgroundBannerAction { get; set; }
+
+        /// <summary>
+        /// </summary>
         protected Action NoneAction { get; set; }
 
         /// <summary>
@@ -89,12 +93,14 @@ namespace Quaver.Shared.Graphics
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public BackgroundBannerDialog(string header, string confirmationText, Action backgroundAction = null, Action bannerAction = null, Action noneAction = null) : base(0)
+        public BackgroundBannerDialog(string header, string confirmationText, Action backgroundAction = null,
+            Action bannerAction = null, Action backgroundBannerAction = null, Action noneAction = null) : base(0)
         {
             HeaderText = header;
             ConfirmationText = confirmationText;
             BackgroundAction = backgroundAction;
             BannerAction = bannerAction;
+            BackgroundBannerAction = backgroundBannerAction;
             NoneAction = noneAction;
 
             FadeTo(0.85f, Easing.Linear, FadeTime);
@@ -246,6 +252,7 @@ namespace Quaver.Shared.Graphics
         {
             BackgroundButton = new IconButton(UserInterface.BackgroundButton, (o, e) =>
             {
+                BackgroundBannerAction?.Invoke();
                 BackgroundAction?.Invoke();
 
                 if (ValidateBeforeClosing == null)
@@ -269,6 +276,7 @@ namespace Quaver.Shared.Graphics
 
             BannerButton = new IconButton(UserInterface.BannerButton, (o, e) =>
             {
+                BackgroundBannerAction?.Invoke();
                 BannerAction?.Invoke();
 
                 if (ValidateBeforeClosing == null)
