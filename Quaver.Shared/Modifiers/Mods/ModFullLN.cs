@@ -20,6 +20,8 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; } = true;
 
+        public bool ChangesMapObjects { get; set; } = true;
+
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.NoLongNotes, ModIdentifier.Inverse };
 
         public Color ModColor { get; } = ColorHelper.HexToColor("#F2994A");

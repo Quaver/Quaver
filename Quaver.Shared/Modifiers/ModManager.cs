@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -58,10 +59,42 @@ namespace Quaver.Shared.Modifiers
         /// </summary>
         public static void AddMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false)
         {
-            IGameplayModifier gameplayModifier;
+            var gameplayModifier = IdentifierToModifier(modIdentifier);
 
-            // Set the newMod based on the ModType that is coming in
-            switch (modIdentifier)
+            // Remove incompatible mods.
+            var incompatibleMods = CurrentModifiersList.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
+            incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier, false));
+
+            // Remove the mod if it's already on.
+            var alreadyOnMod = CurrentModifiersList.Find(x => x.ModIdentifier == gameplayModifier.ModIdentifier);
+
+            if (alreadyOnMod != null)
+                CurrentModifiersList.Remove(alreadyOnMod);
+
+            // Add The Mod
+            CurrentModifiersList.Add(gameplayModifier);
+            gameplayModifier.InitializeMod();
+
+            if (updateMultiplayerMods)
+                UpdateMultiplayerMods();
+
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Add, Mods, modIdentifier));
+
+            Logger.Debug($"Added mod: {gameplayModifier.ModIdentifier}.", LogType.Runtime, false);
+        }
+
+         /// <summary>
+         ///    Converts a mod identifier into a modifier object.
+         /// </summary>
+         /// <param name="modIdentifier"></param>
+         /// <returns></returns>
+         /// <exception cref="InvalidEnumArgumentException"></exception>
+         public static IGameplayModifier IdentifierToModifier(ModIdentifier modIdentifier)
+         {
+             if (modIdentifier == 0 || modIdentifier == ModIdentifier.None)
+                 return null;
+
+             switch (modIdentifier)
             {
                 case ModIdentifier.Speed05X:
                 case ModIdentifier.Speed055X:
@@ -93,72 +126,37 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.Speed19X:
                 case ModIdentifier.Speed195X:
                 case ModIdentifier.Speed20X:
-                    gameplayModifier = new ModSpeed(modIdentifier);
-                    break;
+                    return new ModSpeed(modIdentifier);
                 case ModIdentifier.NoSliderVelocity:
-                    gameplayModifier = new ModNoSliderVelocities();
-                    break;
+                    return new ModNoSliderVelocities();
                 case ModIdentifier.Strict:
-                    gameplayModifier = new ModStrict();
-                    break;
+                    return  new ModStrict();
                 case ModIdentifier.Chill:
-                    gameplayModifier = new ModChill();
-                    break;
+                    return new ModChill();
                 case ModIdentifier.Autoplay:
-                    gameplayModifier = new ModAutoplay();
-                    break;
+                    return new ModAutoplay();
                 case ModIdentifier.Paused:
-                    gameplayModifier = new ModPaused();
-                    break;
+                    return new ModPaused();
                 case ModIdentifier.NoFail:
-                    gameplayModifier = new ModNoFail();
-                    break;
+                    return new ModNoFail();
                 case ModIdentifier.NoLongNotes:
-                    gameplayModifier = new ModNoLongNotes();
-                    break;
+                    return new ModNoLongNotes();
                 case ModIdentifier.Randomize:
-                    gameplayModifier = new ModRandomize();
-                    break;
+                    return new ModRandomize();
                 case ModIdentifier.Inverse:
-                    gameplayModifier = new ModInverse();
-                    break;
+                    return new ModInverse();
                 case ModIdentifier.FullLN:
-                    gameplayModifier = new ModFullLN();
-                    break;
+                    return new ModFullLN();
                 case ModIdentifier.Mirror:
-                    gameplayModifier = new ModMirror();
-                    break;
+                    return new ModMirror();
                 case ModIdentifier.Coop:
-                    gameplayModifier = new ModCoop();
-                    break;
+                    return new ModCoop();
                 case ModIdentifier.HeatlthAdjust:
-                    gameplayModifier = new ModLongNoteAdjust();
-                    break;
+                    return new ModLongNoteAdjust();
                 default:
-                    return;
+                    throw new InvalidEnumArgumentException();
             }
-
-            // Remove incompatible mods.
-            var incompatibleMods = CurrentModifiersList.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
-            incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier, false));
-
-            // Remove the mod if it's already on.
-            var alreadyOnMod = CurrentModifiersList.Find(x => x.ModIdentifier == gameplayModifier.ModIdentifier);
-
-            if (alreadyOnMod != null)
-                CurrentModifiersList.Remove(alreadyOnMod);
-
-            // Add The Mod
-            CurrentModifiersList.Add(gameplayModifier);
-            gameplayModifier.InitializeMod();
-
-            if (updateMultiplayerMods)
-                UpdateMultiplayerMods();
-
-            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Add, Mods, modIdentifier));
-
-            Logger.Debug($"Added mod: {gameplayModifier.ModIdentifier}.", LogType.Runtime, false);
-        }
+         }
 
          /// <summary>
         ///     Removes a gameplayModifier from our GameBase
