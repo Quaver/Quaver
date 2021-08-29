@@ -189,15 +189,17 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             var players = new List<ScoreProcessor>(Team1Players);
             players = players.Concat(Team2Players).ToList();
 
+            var qua = Map.LoadQua();
+
             switch (Game.Ruleset)
             {
                 case MultiplayerGameRuleset.Battle_Royale:
                 case MultiplayerGameRuleset.Free_For_All:
-                    players = players.OrderByDescending(x => new RatingProcessorKeys(Map.DifficultyFromMods(x.Mods)).CalculateRating(x)).ToList();
+                    players = players.OrderByDescending(x => new RatingProcessorKeys(qua.SolveDifficulty(x.Mods, true).OverallDifficulty).CalculateRating(x)).ToList();
                     break;
                 case MultiplayerGameRuleset.Team:
                     players = players.OrderByDescending(x => GetTeamFromScoreProcessor(Game, x))
-                        .ThenByDescending(x => new RatingProcessorKeys(Map.DifficultyFromMods(x.Mods)).CalculateRating(x)).ToList();
+                        .ThenByDescending(x => new RatingProcessorKeys(qua.SolveDifficulty(x.Mods, true).OverallDifficulty).CalculateRating(x)).ToList();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
