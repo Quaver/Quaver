@@ -119,7 +119,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            var difficulty = (float) MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
+            var difficulty = Screen.Map.SolveDifficulty(ModManager.Mods, true).OverallDifficulty;
 
             Rating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
                 $"Difficulty: {StringHelper.AccuracyToString(difficulty).Replace("%", "")}",

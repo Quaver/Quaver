@@ -139,14 +139,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <param name="avatar"></param>
         /// <param name="mods"></param>
         /// <param name="score"></param>
+        /// <param name="processor"></param>
         /// <exception cref="T:System.ComponentModel.InvalidEnumArgumentException"></exception>
-        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<Judgement> judgements, Texture2D avatar, ModIdentifier mods, Score score = null)
+        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<Judgement> judgements, Texture2D avatar,
+            ModIdentifier mods, Score score = null, RatingProcessorKeys processor = null)
         {
             Screen = screen;
             LocalScore = score;
             Judgements = judgements;
             UsernameRaw = username;
-            RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
+            RatingProcessor = (RatingProcessorKeys) score?.RatingProcessor ?? processor ?? new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
             Type = type;
             Size = new ScalableVector2(299, 58);
 

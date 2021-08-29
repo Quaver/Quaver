@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -298,8 +300,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             }
 
             // Set scores to use during gameplay
-            if (OnlineManager.CurrentGame == null)
-                MapManager.Selected.Value.Scores.Value = scores.Scores;
+            if (OnlineManager.CurrentGame != null)
+                return scores;
+
+            MapManager.Selected.Value.Scores.Value = scores.Scores;
+            ScoresHelper.SetRatingProcessors(MapManager.Selected.Value.Scores.Value);
 
             return scores;
         }

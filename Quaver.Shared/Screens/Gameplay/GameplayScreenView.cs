@@ -216,7 +216,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
-            RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.Ruleset.ScoreProcessor.Mods));
+            RatingProcessor = new RatingProcessorKeys(Screen.Map.SolveDifficulty(ModManager.Mods, true).OverallDifficulty);
 
             CreateBackground();
 
@@ -513,7 +513,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 : UserInterface.UnknownAvatar;
 
             SelfScoreboard = new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAvatar,
-                ModManager.Mods)
+                ModManager.Mods, null, RatingProcessor)
             {
                 Parent = Container,
                 Alignment = Alignment.MidLeft

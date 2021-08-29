@@ -1928,6 +1928,7 @@ namespace Quaver.Shared.Online
                 });
             });
 
+            ScoresHelper.SetRatingProcessors(scores);
             return scores;
         }
     }
