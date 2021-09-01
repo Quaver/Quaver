@@ -95,7 +95,7 @@ namespace Quaver.Shared.Skinning.Menus
             TipPanel = LoadSkinElement(folder, "tip-panel.png");
             NewsPanel = LoadSkinElement(folder, "news-panel.png");
             JukeboxOverlay = LoadSkinElement(folder, "jukebox-overlay.png");
-            NoteVisualizer = LoadSkinElement(folder, "notes.png");
+            NoteVisualizer = LoadSkinElement(folder, "note-visualizer.png");
         }
     }
 }
