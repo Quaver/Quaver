@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ManagedBass;
@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Main.UI.Visualizer
 
         public NoteVisualizer()
         {
-            Tex = UserInterface.NoteVisualizer;
+            Tex = SkinManager.Skin?.MainMenu?.NoteVisualizer ?? UserInterface.NoteVisualizer;
             CreateSprites(null);
         }
 
