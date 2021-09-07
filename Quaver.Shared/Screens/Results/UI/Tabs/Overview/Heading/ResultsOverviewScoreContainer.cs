@@ -5,6 +5,7 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -34,7 +35,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
             Map = map;
             Processor = processor;
 
-            Image = UserInterface.ResultsScoreContainerPanel;
+            Image = SkinManager.Skin?.Results?.ResultsScoreContainerPanel ?? UserInterface.ResultsScoreContainerPanel;
             Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, Image.Height);
         }
 
@@ -47,12 +48,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 
             Items.AddRange(new []
             {
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelMaxCombo, $"{Processor.Value.MaxCombo:n0}x"),
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelAccuracy, StringHelper.AccuracyToString(Processor.Value.Accuracy)),
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelPerformanceRating,
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelMaxCombo ?? UserInterface.ResultsLabelMaxCombo, $"{Processor.Value.MaxCombo:n0}x"),
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelAccuracy ?? UserInterface.ResultsLabelAccuracy, StringHelper.AccuracyToString(Processor.Value.Accuracy)),
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelPerformanceRating ?? UserInterface.ResultsLabelPerformanceRating,
                     $"{StringHelper.RatingToString(rating.CalculateRating(accuracy))}", ColorHelper.HexToColor("#E9B736")),
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelRankedAccuracy, StringHelper.AccuracyToString(accuracy)),
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelTotalScore,
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelRankedAccuracy ?? UserInterface.ResultsLabelRankedAccuracy, StringHelper.AccuracyToString(accuracy)),
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelTotalScore ?? UserInterface.ResultsLabelTotalScore,
                     $"{Processor.Value.Score:n0}"),
             });
         }

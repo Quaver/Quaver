@@ -10,6 +10,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling;
+using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -77,11 +78,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             {
                 case MultiplayerGameRuleset.Free_For_All:
                 case MultiplayerGameRuleset.Battle_Royale:
-                    Image = UserInterface.ResultsMultiplayerFFAPanel;
+                    Image = SkinManager.Skin?.Results?.ResultsMultiplayerFFAPanel ?? UserInterface.ResultsMultiplayerFFAPanel;
                     Height = Image.Height + 4;
                     break;
                 case MultiplayerGameRuleset.Team:
-                    Image = UserInterface.ResultsMultiplayerTeamPanel;
+                    Image = SkinManager.Skin?.Results?.ResultsMultiplayerTeamPanel ?? UserInterface.ResultsMultiplayerTeamPanel;
                     Height = Image.Height;
                     break;
                 default:

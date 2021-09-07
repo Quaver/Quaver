@@ -12,6 +12,7 @@ using Quaver.Shared.Screens.Results.UI.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -117,11 +118,11 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.Triangles, 0,false)
+        private void CreateBackground() => Background = new BackgroundImage(SkinManager.Skin?.Results?.ResultsBackground ?? UserInterface.Triangles, 0,false)
         {
             Parent = Container,
-            Y = -10,
-            X = -6
+            Y = 0,
+            X = 0
         };
 
         /// <summary>

@@ -4,6 +4,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -26,7 +27,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         public ResultsScreenHeaderAvatar(float size, Bindable<ScoreProcessor> processor)
         {
             Size = new ScalableVector2(size, size);
-            Image = UserInterface.ResultsAvatarBorder;
+            Image = SkinManager.Skin?.Results?.ResultsAvatarBorder ?? UserInterface.ResultsAvatarBorder;
 
             var avatarSize = size - OFFSET * 2;
 
@@ -34,7 +35,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Image = UserInterface.ResultsAvatarMask
+                Image = SkinManager.Skin?.Results?.ResultsAvatarMask ?? UserInterface.ResultsAvatarMask
             };
 
             if (SteamManager.UserAvatars != null)

@@ -4,6 +4,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Header.Contents;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -50,13 +51,15 @@ namespace Quaver.Shared.Screens.Results.UI.Header
 
             Size = new ScalableVector2(WindowManager.Width, HEIGHT);
 
-            CreateBackground();
+            if (SkinManager.Skin.Results.ResultsBackgroundType != "None")
+                CreateBackground();
             CreateContentContainer();
         }
 
         /// <summary>
         /// </summary>
-        private void CreateBackground() => Background = new ResultsScreenHeaderBackground(new ScalableVector2(Width, 208))
+        private void CreateBackground() => Background = new ResultsScreenHeaderBackground(
+            new ScalableVector2(Width, SkinManager.Skin.Results.ResultsBackgroundType == "Background" ? 1080 : 208))
             { Parent = this };
 
         /// <summary>

@@ -2,6 +2,7 @@ using System;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Music.UI.Controller;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -22,9 +23,9 @@ namespace Quaver.Shared.Screens.Results.UI.Header
         /// <param name="size"></param>
         public ResultsScreenHeaderBackground(ScalableVector2 size) : base(size, false)
         {
-            Background.Y = 100;
+            Background.Y = SkinManager.Skin.Results.ResultsBackgroundType == "Background" ? 0 : 100;
             Background.Alignment = Alignment.MidCenter;
-            Darkness.Alpha = 0f;
+            Darkness.Alpha = (float)SkinManager.Skin.Results.ResultsBackgroundFilterAlpha;
 
             var game = GameBase.Game;
             var ratio = (float) game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;
@@ -47,7 +48,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header
             {
                 Parent = this,
                 Size = Size,
-                Image = UserInterface.ResultsBackgroundFilter
+                Image = SkinManager.Skin?.Results?.ResultsBackgroundFilter ?? UserInterface.ResultsBackgroundFilter
             };
         }
     }
