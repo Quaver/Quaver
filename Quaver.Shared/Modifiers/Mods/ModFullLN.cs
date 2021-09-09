@@ -14,7 +14,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "So I heard you like long notes.";
 
-        public bool Ranked() => false;
+        public bool Ranked() => true;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
