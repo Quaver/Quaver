@@ -59,7 +59,7 @@ namespace Quaver.Shared.Modifiers
         /// </summary>
         public static void AddMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false)
         {
-            var gameplayModifier = IdentifierToModifier(modIdentifier);
+            var gameplayModifier = IdentifierToModifier(modIdentifier).First();
 
             // Remove incompatible mods.
             var incompatibleMods = CurrentModifiersList.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
@@ -89,73 +89,99 @@ namespace Quaver.Shared.Modifiers
          /// <param name="modIdentifier"></param>
          /// <returns></returns>
          /// <exception cref="InvalidEnumArgumentException"></exception>
-         public static IGameplayModifier IdentifierToModifier(ModIdentifier modIdentifier)
+         public static List<IGameplayModifier> IdentifierToModifier(ModIdentifier modIdentifier)
          {
              if (modIdentifier == 0 || modIdentifier == ModIdentifier.None)
                  return null;
 
-             switch (modIdentifier)
-            {
-                case ModIdentifier.Speed05X:
-                case ModIdentifier.Speed055X:
-                case ModIdentifier.Speed06X:
-                case ModIdentifier.Speed065X:
-                case ModIdentifier.Speed07X:
-                case ModIdentifier.Speed075X:
-                case ModIdentifier.Speed08X:
-                case ModIdentifier.Speed085X:
-                case ModIdentifier.Speed09X:
-                case ModIdentifier.Speed095X:
-                case ModIdentifier.Speed105X:
-                case ModIdentifier.Speed11X:
-                case ModIdentifier.Speed115X:
-                case ModIdentifier.Speed12X:
-                case ModIdentifier.Speed125X:
-                case ModIdentifier.Speed13X:
-                case ModIdentifier.Speed135X:
-                case ModIdentifier.Speed14X:
-                case ModIdentifier.Speed145X:
-                case ModIdentifier.Speed15X:
-                case ModIdentifier.Speed155X:
-                case ModIdentifier.Speed16X:
-                case ModIdentifier.Speed165X:
-                case ModIdentifier.Speed17X:
-                case ModIdentifier.Speed175X:
-                case ModIdentifier.Speed18X:
-                case ModIdentifier.Speed185X:
-                case ModIdentifier.Speed19X:
-                case ModIdentifier.Speed195X:
-                case ModIdentifier.Speed20X:
-                    return new ModSpeed(modIdentifier);
-                case ModIdentifier.NoSliderVelocity:
-                    return new ModNoSliderVelocities();
-                case ModIdentifier.Strict:
-                    return  new ModStrict();
-                case ModIdentifier.Chill:
-                    return new ModChill();
-                case ModIdentifier.Autoplay:
-                    return new ModAutoplay();
-                case ModIdentifier.Paused:
-                    return new ModPaused();
-                case ModIdentifier.NoFail:
-                    return new ModNoFail();
-                case ModIdentifier.NoLongNotes:
-                    return new ModNoLongNotes();
-                case ModIdentifier.Randomize:
-                    return new ModRandomize();
-                case ModIdentifier.Inverse:
-                    return new ModInverse();
-                case ModIdentifier.FullLN:
-                    return new ModFullLN();
-                case ModIdentifier.Mirror:
-                    return new ModMirror();
-                case ModIdentifier.Coop:
-                    return new ModCoop();
-                case ModIdentifier.HeatlthAdjust:
-                    return new ModLongNoteAdjust();
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
+             var mods = new List<IGameplayModifier>();
+
+             for (var i = 0; i <= Math.Log((long) modIdentifier, 2); i++)
+             {
+                 var mod = (ModIdentifier)((long)Math.Pow(2, i));
+
+                 if (!modIdentifier.HasFlag(mod))
+                     continue;
+
+                switch (mod)
+                {
+                    case ModIdentifier.Speed05X:
+                    case ModIdentifier.Speed055X:
+                    case ModIdentifier.Speed06X:
+                    case ModIdentifier.Speed065X:
+                    case ModIdentifier.Speed07X:
+                    case ModIdentifier.Speed075X:
+                    case ModIdentifier.Speed08X:
+                    case ModIdentifier.Speed085X:
+                    case ModIdentifier.Speed09X:
+                    case ModIdentifier.Speed095X:
+                    case ModIdentifier.Speed105X:
+                    case ModIdentifier.Speed11X:
+                    case ModIdentifier.Speed115X:
+                    case ModIdentifier.Speed12X:
+                    case ModIdentifier.Speed125X:
+                    case ModIdentifier.Speed13X:
+                    case ModIdentifier.Speed135X:
+                    case ModIdentifier.Speed14X:
+                    case ModIdentifier.Speed145X:
+                    case ModIdentifier.Speed15X:
+                    case ModIdentifier.Speed155X:
+                    case ModIdentifier.Speed16X:
+                    case ModIdentifier.Speed165X:
+                    case ModIdentifier.Speed17X:
+                    case ModIdentifier.Speed175X:
+                    case ModIdentifier.Speed18X:
+                    case ModIdentifier.Speed185X:
+                    case ModIdentifier.Speed19X:
+                    case ModIdentifier.Speed195X:
+                    case ModIdentifier.Speed20X:
+                        mods.Add(new ModSpeed(mod));
+                        break;
+                    case ModIdentifier.NoSliderVelocity:
+                        mods.Add(new ModNoSliderVelocities());
+                        break;
+                    case ModIdentifier.Strict:
+                        mods.Add(new ModStrict());
+                        break;
+                    case ModIdentifier.Chill:
+                        mods.Add(new ModChill());
+                        break;
+                    case ModIdentifier.Autoplay:
+                        mods.Add(new ModAutoplay());
+                        break;
+                    case ModIdentifier.Paused:
+                        mods.Add(new ModPaused());
+                        break;
+                    case ModIdentifier.NoFail:
+                        mods.Add(new ModNoFail());
+                        break;
+                    case ModIdentifier.NoLongNotes:
+                        mods.Add(new ModNoLongNotes());
+                        break;
+                    case ModIdentifier.Randomize:
+                        mods.Add(new ModRandomize());
+                        break;
+                    case ModIdentifier.Inverse:
+                        mods.Add(new ModInverse());
+                        break;
+                    case ModIdentifier.FullLN:
+                        mods.Add(new ModFullLN());
+                        break;
+                    case ModIdentifier.Mirror:
+                        mods.Add(new ModMirror());
+                        break;
+                    case ModIdentifier.Coop:
+                        mods.Add(new ModCoop());
+                        break;
+                    case ModIdentifier.HeatlthAdjust:
+                        mods.Add(new ModLongNoteAdjust());
+                        break;
+                    default:
+                        throw new InvalidEnumArgumentException();
+                }
+             }
+
+             return mods;
          }
 
          /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.Shared.Database.Maps;
@@ -21,9 +22,9 @@ namespace Quaver.Shared.Helpers
             foreach (var score in MapManager.Selected.Value.Scores.Value)
             {
                 var id = (ModIdentifier) score.Mods;
-                var mod = ModManager.IdentifierToModifier(id);
+                var mods = ModManager.IdentifierToModifier(id);
 
-                if (mod != null && mod.ChangesMapObjects)
+                if (mods != null && mods.Any(x => x.ChangesMapObjects))
                     score.RatingProcessor  = new RatingProcessorKeys(freshQua.SolveDifficulty(id, true).OverallDifficulty);
             }
         }
