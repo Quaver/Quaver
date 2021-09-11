@@ -1,4 +1,4 @@
-﻿using IniFileParser.Model;
+using IniFileParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Config;
@@ -12,6 +12,10 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D NavigationButton { get; private set; }
 
         public Texture2D NavigationButtonSelected { get; private set; }
+
+        public Texture2D NavigationButtonHovered { get; private set; }
+
+        public float? NavigationButtonHoveredAlpha { get; private set; }
 
         public Texture2D TipPanel { get; private set; }
 
@@ -48,6 +52,9 @@ namespace Quaver.Shared.Skinning.Menus
         protected override void ReadConfig()
         {
             var ini = Config["MainMenu"];
+
+            var navigationButtonHoveredAlpha = ini["NavigationButtonHoveredAlpha"];
+            ReadIndividualConfig(navigationButtonHoveredAlpha, () => NavigationButtonHoveredAlpha = ConfigHelper.ReadFloat(0.35f, navigationButtonHoveredAlpha));
 
             var noteVisualizerOpacity = ini["NoteVisualizerOpacity"];
             ReadIndividualConfig(noteVisualizerOpacity, () => NoteVisualizerOpacity = ConfigHelper.ReadFloat(0, noteVisualizerOpacity));
@@ -90,6 +97,7 @@ namespace Quaver.Shared.Skinning.Menus
             Background = LoadSkinElement(folder, "menu-background.png");
             NavigationButton = LoadSkinElement(folder, "navigation-button.png");
             NavigationButtonSelected = LoadSkinElement(folder, "navigation-button-selected.png");
+            NavigationButtonHovered = LoadSkinElement(folder, "navigation-button-hovered.png");
             TipPanel = LoadSkinElement(folder, "tip-panel.png");
             NewsPanel = LoadSkinElement(folder, "news-panel.png");
             JukeboxOverlay = LoadSkinElement(folder, "jukebox-overlay.png");
