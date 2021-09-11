@@ -1,4 +1,4 @@
-﻿using IniFileParser.Model;
+using IniFileParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Config;
@@ -21,6 +21,8 @@ namespace Quaver.Shared.Skinning.Menus
         public Color? MapsetPanelByColor { get; private set; }
 
         public ScalableVector2? MapsetPanelBannerSize { get; private set; }
+
+        public float? MapsetPanelHoveringAlpha { get; private set; }
 
         public Color? LeaderboardScoreColorEven { get; private set; }
 
@@ -122,6 +124,9 @@ namespace Quaver.Shared.Skinning.Menus
 
             var mapsetPanelBannerSize = ini["MapsetPanelBannerSize"];
             ReadIndividualConfig(mapsetPanelBannerSize, () => MapsetPanelBannerSize = ConfigHelper.ReadVector2(new ScalableVector2(0, 0), mapsetPanelBannerSize));
+
+            var mapsetPanelHoveringAlpha = ini["MapsetPanelHoveringAlpha"];
+            ReadIndividualConfig(mapsetPanelHoveringAlpha, () => MapsetPanelHoveringAlpha = ConfigHelper.ReadFloat(0.35f, mapsetPanelHoveringAlpha));
 
             var leaderboardScoreColorEven = ini["LeaderboardScoreColorEven"];
             ReadIndividualConfig(leaderboardScoreColorEven, () => LeaderboardScoreColorEven = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreColorEven));
