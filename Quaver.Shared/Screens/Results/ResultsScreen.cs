@@ -511,6 +511,9 @@ namespace Quaver.Shared.Screens.Results
             if (OnlineManager.IsSpectatingSomeone)
                 return;
 
+            if (OnlineManager.CurrentGame != null)
+                return;
+
             switch (ScreenType)
             {
                 case ResultsScreenType.Gameplay:
@@ -709,12 +712,12 @@ namespace Quaver.Shared.Screens.Results
             // Calculate performance rating
             score.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
             score.RatingProcessorVersion = RatingProcessorKeys.Version;
-            score.PerformanceRating = processor.Failed ? 0 : new RatingProcessorKeys(Map.DifficultyFromMods(processor.Mods)).CalculateRating(rankedAccuracy);
+            score.PerformanceRating = processor.Failed ? 0 : new RatingProcessorKeys(screen.Map.SolveDifficulty(processor.Mods).OverallDifficulty).CalculateRating(rankedAccuracy);
             score.RankedAccuracy = rankedAccuracy;
 
             // Select proper local profile id to attach with this score for ranking
             if (UserProfileDatabaseCache.Selected.Value.Id != 0 && !UserProfileDatabaseCache.Selected.Value.IsOnline)
-                score.UserProfileId = UserProfileDatabaseCache.Selected.Value.Id;
+                score.LocalProfileId = UserProfileDatabaseCache.Selected.Value.Id;
 
             var scoreId = -1;
 

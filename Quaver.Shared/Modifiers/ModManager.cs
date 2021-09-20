@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -58,85 +59,7 @@ namespace Quaver.Shared.Modifiers
         /// </summary>
         public static void AddMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false)
         {
-            IGameplayModifier gameplayModifier;
-
-            // Set the newMod based on the ModType that is coming in
-            switch (modIdentifier)
-            {
-                case ModIdentifier.Speed05X:
-                case ModIdentifier.Speed055X:
-                case ModIdentifier.Speed06X:
-                case ModIdentifier.Speed065X:
-                case ModIdentifier.Speed07X:
-                case ModIdentifier.Speed075X:
-                case ModIdentifier.Speed08X:
-                case ModIdentifier.Speed085X:
-                case ModIdentifier.Speed09X:
-                case ModIdentifier.Speed095X:
-                case ModIdentifier.Speed105X:
-                case ModIdentifier.Speed11X:
-                case ModIdentifier.Speed115X:
-                case ModIdentifier.Speed12X:
-                case ModIdentifier.Speed125X:
-                case ModIdentifier.Speed13X:
-                case ModIdentifier.Speed135X:
-                case ModIdentifier.Speed14X:
-                case ModIdentifier.Speed145X:
-                case ModIdentifier.Speed15X:
-                case ModIdentifier.Speed155X:
-                case ModIdentifier.Speed16X:
-                case ModIdentifier.Speed165X:
-                case ModIdentifier.Speed17X:
-                case ModIdentifier.Speed175X:
-                case ModIdentifier.Speed18X:
-                case ModIdentifier.Speed185X:
-                case ModIdentifier.Speed19X:
-                case ModIdentifier.Speed195X:
-                case ModIdentifier.Speed20X:
-                    gameplayModifier = new ModSpeed(modIdentifier);
-                    break;
-                case ModIdentifier.NoSliderVelocity:
-                    gameplayModifier = new ModNoSliderVelocities();
-                    break;
-                case ModIdentifier.Strict:
-                    gameplayModifier = new ModStrict();
-                    break;
-                case ModIdentifier.Chill:
-                    gameplayModifier = new ModChill();
-                    break;
-                case ModIdentifier.Autoplay:
-                    gameplayModifier = new ModAutoplay();
-                    break;
-                case ModIdentifier.Paused:
-                    gameplayModifier = new ModPaused();
-                    break;
-                case ModIdentifier.NoFail:
-                    gameplayModifier = new ModNoFail();
-                    break;
-                case ModIdentifier.NoLongNotes:
-                    gameplayModifier = new ModNoLongNotes();
-                    break;
-                case ModIdentifier.Randomize:
-                    gameplayModifier = new ModRandomize();
-                    break;
-                case ModIdentifier.Inverse:
-                    gameplayModifier = new ModInverse();
-                    break;
-                case ModIdentifier.FullLN:
-                    gameplayModifier = new ModFullLN();
-                    break;
-                case ModIdentifier.Mirror:
-                    gameplayModifier = new ModMirror();
-                    break;
-                case ModIdentifier.Coop:
-                    gameplayModifier = new ModCoop();
-                    break;
-                case ModIdentifier.HeatlthAdjust:
-                    gameplayModifier = new ModLongNoteAdjust();
-                    break;
-                default:
-                    return;
-            }
+            var gameplayModifier = IdentifierToModifier(modIdentifier).First();
 
             // Remove incompatible mods.
             var incompatibleMods = CurrentModifiersList.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
@@ -159,6 +82,110 @@ namespace Quaver.Shared.Modifiers
 
             Logger.Debug($"Added mod: {gameplayModifier.ModIdentifier}.", LogType.Runtime, false);
         }
+
+         /// <summary>
+         ///    Converts a mod identifier into a modifier object.
+         /// </summary>
+         /// <param name="modIdentifier"></param>
+         /// <returns></returns>
+         /// <exception cref="InvalidEnumArgumentException"></exception>
+         public static List<IGameplayModifier> IdentifierToModifier(ModIdentifier modIdentifier)
+         {
+             if (modIdentifier == 0 || modIdentifier == ModIdentifier.None)
+                 return null;
+
+             var mods = new List<IGameplayModifier>();
+
+             for (var i = 0; i <= Math.Log((long) modIdentifier, 2); i++)
+             {
+                 var mod = (ModIdentifier)((long)Math.Pow(2, i));
+
+                 if (!modIdentifier.HasFlag(mod))
+                     continue;
+
+                switch (mod)
+                {
+                    case ModIdentifier.Speed05X:
+                    case ModIdentifier.Speed055X:
+                    case ModIdentifier.Speed06X:
+                    case ModIdentifier.Speed065X:
+                    case ModIdentifier.Speed07X:
+                    case ModIdentifier.Speed075X:
+                    case ModIdentifier.Speed08X:
+                    case ModIdentifier.Speed085X:
+                    case ModIdentifier.Speed09X:
+                    case ModIdentifier.Speed095X:
+                    case ModIdentifier.Speed105X:
+                    case ModIdentifier.Speed11X:
+                    case ModIdentifier.Speed115X:
+                    case ModIdentifier.Speed12X:
+                    case ModIdentifier.Speed125X:
+                    case ModIdentifier.Speed13X:
+                    case ModIdentifier.Speed135X:
+                    case ModIdentifier.Speed14X:
+                    case ModIdentifier.Speed145X:
+                    case ModIdentifier.Speed15X:
+                    case ModIdentifier.Speed155X:
+                    case ModIdentifier.Speed16X:
+                    case ModIdentifier.Speed165X:
+                    case ModIdentifier.Speed17X:
+                    case ModIdentifier.Speed175X:
+                    case ModIdentifier.Speed18X:
+                    case ModIdentifier.Speed185X:
+                    case ModIdentifier.Speed19X:
+                    case ModIdentifier.Speed195X:
+                    case ModIdentifier.Speed20X:
+                        mods.Add(new ModSpeed(mod));
+                        break;
+                    case ModIdentifier.NoSliderVelocity:
+                        mods.Add(new ModNoSliderVelocities());
+                        break;
+                    case ModIdentifier.Strict:
+                        mods.Add(new ModStrict());
+                        break;
+                    case ModIdentifier.Chill:
+                        mods.Add(new ModChill());
+                        break;
+                    case ModIdentifier.Autoplay:
+                        mods.Add(new ModAutoplay());
+                        break;
+                    case ModIdentifier.Paused:
+                        mods.Add(new ModPaused());
+                        break;
+                    case ModIdentifier.NoFail:
+                        mods.Add(new ModNoFail());
+                        break;
+                    case ModIdentifier.NoLongNotes:
+                        mods.Add(new ModNoLongNotes());
+                        break;
+                    case ModIdentifier.Randomize:
+                        mods.Add(new ModRandomize());
+                        break;
+                    case ModIdentifier.Inverse:
+                        mods.Add(new ModInverse());
+                        break;
+                    case ModIdentifier.FullLN:
+                        mods.Add(new ModFullLN());
+                        break;
+                    case ModIdentifier.Mirror:
+                        mods.Add(new ModMirror());
+                        break;
+                    case ModIdentifier.Coop:
+                        mods.Add(new ModCoop());
+                        break;
+                    case ModIdentifier.HeatlthAdjust:
+                        mods.Add(new ModLongNoteAdjust());
+                        break;
+                    case ModIdentifier.NoPause:
+                        break;
+                    default:
+                        Logger.Warning($"Cannot convert {mod} to its appropriate IModifier class.", LogType.Runtime);
+                        break;
+                }
+             }
+
+             return mods;
+         }
 
          /// <summary>
         ///     Removes a gameplayModifier from our GameBase

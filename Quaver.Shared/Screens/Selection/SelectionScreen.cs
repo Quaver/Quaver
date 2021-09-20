@@ -84,6 +84,11 @@ namespace Quaver.Shared.Screens.Selection
         private Random Rng { get; } = new Random();
 
         /// <summary>
+        ///     Contains the currently history of the random maps
+        /// </summary>
+        public Stack<Map> RngHistory { get; set; } = new Stack<Map>();
+
+        /// <summary>
         ///     Invoked when a random mapset has been selected
         /// </summary>
         public static event EventHandler<RandomMapsetSelectedEventArgs> RandomMapsetSelected;
@@ -295,7 +300,10 @@ namespace Quaver.Shared.Screens.Selection
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F2))
                 return;
 
-            SelectRandomMap();
+            if (KeyboardManager.IsShiftDown())
+                SelectPrevRandomMap();
+            else
+                SelectRandomMap();
         }
 
         /// <summary>
@@ -575,6 +583,34 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
+        ///     Undoes the random map choice
+        /// </summary>
+        public void SelectPrevRandomMap()
+        {
+            if (AvailableMapsets.Value.Count == 0)
+                return;
+
+            if (RngHistory.Count == 0)
+                return;
+
+            var map = RngHistory.Pop();
+            var index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, x => x.Maps.Contains(map));
+
+            while (index == -1)
+            {
+                if (RngHistory.Count == 0)
+                    return;
+
+                map = RngHistory.Pop();
+                index = AvailableMapsets.Value.FindIndex(0, AvailableMapsets.Value.Count, x => x.Maps.Contains(map));
+            }
+
+            MapManager.Selected.Value = map;
+            RandomMapsetSelected?.Invoke(this, new RandomMapsetSelectedEventArgs(map.Mapset, index));
+
+        }
+
+        /// <summary>
         ///     Selects a random map
         /// </summary>
         public void SelectRandomMap()
@@ -587,6 +623,7 @@ namespace Quaver.Shared.Screens.Selection
             var index = Rng.Next(AvailableMapsets.Value.Count);
             var mapIndex = Rng.Next(AvailableMapsets.Value[index].Maps.Count);
 
+            RngHistory.Push(MapManager.Selected.Value);
             MapManager.Selected.Value = AvailableMapsets.Value[index].Maps[mapIndex];
             RandomMapsetSelected?.Invoke(this, new RandomMapsetSelectedEventArgs(AvailableMapsets.Value[index], index));
         }

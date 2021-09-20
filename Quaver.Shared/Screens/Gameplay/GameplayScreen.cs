@@ -225,7 +225,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (Map.HitObjects.Count == 0)
                     return false;
 
-                return Map.HitObjects.First().StartTime - Ruleset.Screen.Timing.Time >=
+                var nextObject = Ruleset.HitObjectManager.NextHitObject;
+
+                if (nextObject == null)
+                    return false;
+
+                return nextObject.StartTime - Ruleset.Screen.Timing.Time >=
                        GameplayAudioTiming.StartDelay + 5000;
             }
         }
@@ -770,13 +775,12 @@ namespace Quaver.Shared.Screens.Gameplay
                     return;
                 }
 
-                // Show notification to the user that their score is invalid.
-                NotificationManager.Show(NotificationLevel.Warning,
-                    "WARNING! Your score will not be submitted due to pausing during gameplay!", null, true);
-
                 // Add the pause mod to their score.
-                if (!ModManager.IsActivated(ModIdentifier.Paused))
+                if (!ModManager.IsActivated(ModIdentifier.Paused) && Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                 {
+                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " +
+                                                                        "during gameplay!", null, true);
+
                     ModManager.AddMod(ModIdentifier.Paused);
                     ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
                     Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
@@ -1065,7 +1069,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 OnlineManager.Client?.RequestToSkipSong();
                 RequestedToSkipSong = true;
+
                 NotificationManager.Show(NotificationLevel.Info, "Requested to skip song. Waiting for all other players to skip!", null, true);
+
                 return;
             }
 
@@ -1096,6 +1102,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Stop all playing sound effects and move NextSoundEffectIndex ahead.
                 CustomAudioSampleCache.StopAll();
                 UpdateNextSoundEffectIndex();
+                RequestedToSkipSong = false;
             }
         }
 

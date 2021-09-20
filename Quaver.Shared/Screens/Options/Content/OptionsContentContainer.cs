@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Sections;
@@ -53,9 +54,14 @@ namespace Quaver.Shared.Screens.Options.Content
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            var dropdownHovered = ButtonManager.Buttons.Any(x => x is DropdownItem item &&
+                                                 GraphicsHelper.RectangleContains(x.ScreenRectangle, MouseManager.CurrentState.Position) &&
+                                                 item.Dropdown.Opened);
+
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
-                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)
+                           && !dropdownHovered;
 
             base.Update(gameTime);
         }

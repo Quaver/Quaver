@@ -43,6 +43,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         private Bindable<bool> IsPlayTesting { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<SelectContainerPanel> ActiveLeftPanel { get; }
+
+        /// <summary>
         ///     Underlying button that prevents mapsets from being clicked from inside the area
         /// </summary>
         private ImageButton Button { get; }
@@ -95,22 +99,15 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         /// </summary>
         public SelectFilterPanel(Bindable<List<Mapset>> availableMapsets, Bindable<string> currentSearchQuery,
-            Bindable<bool> isPlayTesting)
+            Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel)
         {
             AvailableMapsets = availableMapsets;
             CurrentSearchQuery = currentSearchQuery;
             IsPlayTesting = isPlayTesting;
+            ActiveLeftPanel = activeLeftPanel;
 
             Size = new ScalableVector2(WindowManager.Width, 88);
             Tint = ColorHelper.HexToColor("#242424");
-
-            /*Button = new ImageButton(UserInterface.BlankBox)
-            {
-                Parent = this,
-                Size = Size,
-                Alpha = 0,
-                Depth = 1
-            };*/
 
             Banner = new FilterPanelBanner(this)
             {
@@ -220,8 +217,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableMapsets, IsPlayTesting, "Type to search...")
-                { Parent = this };
+            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableMapsets, IsPlayTesting, ActiveLeftPanel,
+                    "Type to search...")
+            {
+                Parent = this
+            };
 
             RightItems.Add(SearchBox);
         }

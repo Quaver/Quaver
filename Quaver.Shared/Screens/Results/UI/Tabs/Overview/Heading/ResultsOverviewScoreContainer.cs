@@ -42,7 +42,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
         /// </summary>
         protected virtual void SetItems()
         {
-            var rating = new RatingProcessorKeys(Map.DifficultyFromMods(Processor.Value.Mods));
+            var rating = new RatingProcessorKeys(Map.LoadQua().SolveDifficulty(Processor.Value.Mods, true).OverallDifficulty);
             var accuracy = Processor.Value?.StandardizedProcessor?.Accuracy ?? Processor.Value.Accuracy;
 
             Items.AddRange(new []

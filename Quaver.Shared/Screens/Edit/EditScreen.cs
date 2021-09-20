@@ -229,6 +229,13 @@ namespace Quaver.Shared.Screens.Edit
         private FileSystemWatcher FileWatcher { get; set; }
 
         /// <summary>
+        ///     The amount of time that has elapsed since the playfield has zoomed.
+        ///     Used to create a 'textbox-like' function to change playfield zoom when
+        ///     holding down the key.
+        /// </summary>
+        private double TimeSinceLastPlayfieldZoom { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -437,8 +444,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             HandleKeyPressSpace();
-            HandleKeyPressPageUp();
-            HandleKeyPressPageDown();
+            HandleKeyPressPlayfieldZoom();
             HandleKeyPressHome();
             HandleKeyPressEnd();
 
@@ -460,6 +466,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
+            HandleKeyPressF4();
             HandleKeyPressF5();
             HandleKeyPressF6();
             HandleKeyPressShiftH();
@@ -481,6 +488,14 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 DialogManager.Show(new EditorMetadataDialog(this));
+        }
+
+        private void HandleKeyPressF4()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F4))
+                return;
+
+            ExitToTestPlay();
         }
 
         /// <summary>
@@ -864,18 +879,28 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressPageUp()
+        private void HandleKeyPressPlayfieldZoom()
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.PageUp))
-                PlayfieldScrollSpeed.Value++;
-        }
+            const int zoomTime = 100;
+            const Keys zoomInKey = Keys.PageUp;
+            const Keys zoomOutKey = Keys.PageDown;
+            TimeSinceLastPlayfieldZoom += GameBase.Game.TimeSinceLastFrame;
+            var canZoom = TimeSinceLastPlayfieldZoom >= zoomTime;
 
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressPageDown()
-        {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
+            if (KeyboardManager.IsUniqueKeyPress(zoomInKey))
+                PlayfieldScrollSpeed.Value++;
+            else if (KeyboardManager.IsUniqueKeyPress(zoomOutKey))
                 PlayfieldScrollSpeed.Value--;
+            else if (KeyboardManager.CurrentState.IsKeyDown(zoomInKey) && canZoom)
+            {
+                PlayfieldScrollSpeed.Value++;
+                TimeSinceLastPlayfieldZoom = 0;
+            }
+            else if (KeyboardManager.CurrentState.IsKeyDown(zoomOutKey) && canZoom)
+            {
+                PlayfieldScrollSpeed.Value--;
+                TimeSinceLastPlayfieldZoom = 0;
+            }
         }
 
         /// <summary>
@@ -936,46 +961,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             Plugins = new List<IEditorPlugin>();
 
-            var pluginDirectories = Directory.GetDirectories($"{WobbleGame.WorkingDirectory}/Plugins");
-
-            foreach (var directory in pluginDirectories)
-            {
-                var pluginPath = $"{directory}/plugin.lua";
-                var settingsPath = $"{directory}/settings.ini";
-
-                if (!File.Exists(pluginPath))
-                {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
-                    continue;
-                }
-
-                if (!File.Exists(settingsPath))
-                {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
-                    continue;
-                }
-
-                try
-                {
-                    var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
-                        .ReadFile($"{directory}/settings.ini")["Settings"];
-
-                    var plugin = new EditorPlugin(this, data["Name"] ?? "", data["Author"] ?? "",
-                        data["Description"] ?? "", pluginPath);
-
-                    Plugins.Add(plugin);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
-            }
-
+            LoadPluginsFromDirectory($"{WobbleGame.WorkingDirectory}/Plugins", false);
+            LoadPluginsFromDirectory($"{ConfigManager.SteamWorkshopDirectory.Value}", true);
             LoadBuiltInPlugins();
-
-            // If the user has no timing points in their map, auto-open the bpm calculator
-            if (WorkingMap.TimingPoints.Count == 0)
-                BuiltInPlugins[EditorBuiltInPlugin.BpmCalculator].IsActive = true;
         }
 
         /// <summary>
@@ -998,6 +986,46 @@ namespace Quaver.Shared.Screens.Edit
 
             foreach (var plugin in BuiltInPlugins)
                 Plugins.Add(plugin.Value);
+
+            // If the user has no timing points in their map, auto-open the bpm calculator
+            if (WorkingMap.TimingPoints.Count == 0)
+                BuiltInPlugins[EditorBuiltInPlugin.BpmCalculator].IsActive = true;
+        }
+
+        private void LoadPluginsFromDirectory(string dir, bool isWorkshop)
+        {
+            foreach (var directory in Directory.GetDirectories(dir))
+            {
+                var pluginPath = $"{directory}/plugin.lua";
+                var settingsPath = $"{directory}/settings.ini";
+
+                if (!File.Exists(pluginPath))
+                {
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
+                    continue;
+                }
+
+                if (!File.Exists(settingsPath))
+                {
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
+                    continue;
+                }
+
+                try
+                {
+                    var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                        .ReadFile($"{directory}/settings.ini")["Settings"];
+
+                    var plugin = new EditorPlugin(this, data["Name"] ?? "", data["Author"] ?? "",
+                        data["Description"] ?? "", pluginPath, false, Path.GetFileName(directory), isWorkshop);
+
+                    Plugins.Add(plugin);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
         }
 
         /// <summary>
@@ -1297,6 +1325,12 @@ namespace Quaver.Shared.Screens.Edit
             if (WorkingMap.HitObjects.Count(x => x.StartTime >= Track.Time) == 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "There aren't any hitobjects to play past this point!");
+                return;
+            }
+
+            if (WorkingMap.TimingPoints.Count == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "A timing point must be added to your map before test playing!");
                 return;
             }
 

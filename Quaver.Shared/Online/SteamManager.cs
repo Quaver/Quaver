@@ -183,7 +183,7 @@ namespace Quaver.Shared.Online
         /// <param name="bIOfailure"></param>
         public static void OnSubmittedItemUpdate(SubmitItemUpdateResult_t result, bool bIOfailure)
         {
-            SteamWorkshopSkin.Current.HasUploaded = true;
+            SteamWorkshopItem.Current.HasUploaded = true;
 
             if (bIOfailure)
             {
@@ -231,7 +231,7 @@ namespace Quaver.Shared.Online
                              $"m_nPublishedFileId: {result.m_nPublishedFileId}\n" +
                              $"m_bUserNeedsToAcceptWorkshopLegalAgreement: {result.m_bUserNeedsToAcceptWorkshopLegalAgreement}", LogType.Network);
 
-                SteamWorkshopSkin.Current.HasUploaded = true;
+                SteamWorkshopItem.Current.HasUploaded = true;
                 return;
             }
 
@@ -241,30 +241,30 @@ namespace Quaver.Shared.Online
             if (result.m_bUserNeedsToAcceptWorkshopLegalAgreement)
             {
                 BrowserHelper.OpenURL($"steam://url/CommunityFilePage/{result.m_nPublishedFileId}");
-                SteamWorkshopSkin.Current.HasUploaded = true;
+                SteamWorkshopItem.Current.HasUploaded = true;
                 return;
             }
 
             var publishedFileId = result.m_nPublishedFileId;
 
-            SteamWorkshopSkin.Current.Handle = SteamUGC.StartItemUpdate((AppId_t) ApplicationId, publishedFileId);
+            SteamWorkshopItem.Current.Handle = SteamUGC.StartItemUpdate((AppId_t) ApplicationId, publishedFileId);
 
             // Write a file with the workshop id
-            File.WriteAllText(SteamWorkshopSkin.Current.WorkshopIdFilePath, result.m_nPublishedFileId.m_PublishedFileId.ToString());
+            File.WriteAllText(SteamWorkshopItem.Current.WorkshopIdFilePath, result.m_nPublishedFileId.m_PublishedFileId.ToString());
 
-            if (SteamWorkshopSkin.Current.ExistingWorkshopFileId == 0)
+            if (SteamWorkshopItem.Current.ExistingWorkshopFileId == 0)
             {
-                SteamUGC.SetItemTitle(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.Title);
-                SteamUGC.SetItemVisibility(SteamWorkshopSkin.Current.Handle, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate);
+                SteamUGC.SetItemTitle(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.Title);
+                SteamUGC.SetItemVisibility(SteamWorkshopItem.Current.Handle, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate);
             }
 
-            if (SteamWorkshopSkin.Current.PreviewFilePath != null && File.Exists(SteamWorkshopSkin.Current.PreviewFilePath))
-                SteamUGC.SetItemPreview(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.PreviewFilePath);
+            if (SteamWorkshopItem.Current.PreviewFilePath != null && File.Exists(SteamWorkshopItem.Current.PreviewFilePath))
+                SteamUGC.SetItemPreview(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.PreviewFilePath);
 
-            SteamUGC.SetItemContent(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.SkinFolderPath);
+            SteamUGC.SetItemContent(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.FolderPath);
 
             // Start updating to Steam
-            var call = SteamUGC.SubmitItemUpdate(SteamWorkshopSkin.Current.Handle, "");
+            var call = SteamUGC.SubmitItemUpdate(SteamWorkshopItem.Current.Handle, "");
             OnSubmitUpdateResponse.Set(call);
         }
 

@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     return;
                 }
 
-                var skin = new SteamWorkshopSkin(ConfigManager.Skin.Value);
+                var skin = new SteamWorkshopItem(ConfigManager.Skin.Value, SkinManager.Skin.Dir.Replace("\\", "/"));
 
                 if (skin.HasUploaded)
                     return;

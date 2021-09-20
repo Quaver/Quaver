@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Events.Scores;
+using Quaver.Server.Client.Structures;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Modifiers;
@@ -26,9 +27,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                 if (mods == ModIdentifier.None)
                     mods = 0;
 
-                var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(map.MapId, map.Md5Checksum, ModIdentifier.None,
-                    false, mods, false, OnlineManager.ShouldFetchRealtimeLeaderboard);
-
+                var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Rate, mods);
                 map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
 
                 var scores = new List<Score>();

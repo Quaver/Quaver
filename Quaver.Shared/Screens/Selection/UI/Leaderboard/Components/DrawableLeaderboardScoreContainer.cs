@@ -121,9 +121,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             get
             {
                 if (Score.Index % 2 == 0)
-                    return SkinManager.Skin?.SongSelect?.LeaderboardScoreColorEven ?? ColorHelper.HexToColor("#363636");
+                    return SkinManager.Skin?.SongSelect?.LeaderboardScoreColorOdd ?? ColorHelper.HexToColor("#363636");
 
-                return SkinManager.Skin?.SongSelect?.LeaderboardScoreColorOdd ?? ColorHelper.HexToColor("#242424");
+                return SkinManager.Skin?.SongSelect?.LeaderboardScoreColorEven ?? ColorHelper.HexToColor("#242424");
             }
         }
 

@@ -30,6 +30,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         bool IsBuiltIn { get; set; }
 
         /// <summary>
+        ///     The directory of the plugin if it is not built in.
+        /// </summary>
+        string Directory { get; set; }
+
+        /// <summary>
+        ///     If the plugin belongs to the Steam Workshop
+        /// </summary>
+        bool IsWorkshop { get; set; }
+
+        /// <summary>
         ///     Called when the plugin goes active
         /// </summary>
         void Initialize();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ImGuiNET;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
@@ -486,26 +487,52 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Plugins"))
                 return;
 
-            if (ImGui.BeginMenu($"Local Plugins"))
+            if (ImGui.BeginMenu($"Local"))
             {
                 var totalPlugins = 0;
 
-                for (var i = 0; i < Screen.Plugins.Count; i++)
+                foreach (var plugin in Screen.Plugins)
                 {
-                    var plugin = Screen.Plugins[i];
-
-                    if (plugin.IsBuiltIn)
+                    if (plugin.IsBuiltIn || plugin.IsWorkshop)
                         continue;
 
-                    if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
+                    if (ImGui.BeginMenu(plugin.Name))
                     {
-                        plugin.IsActive = !plugin.IsActive;
+                        if (ImGui.MenuItem("Enabled", plugin.Author, plugin.IsActive))
+                        {
+                            plugin.IsActive = !plugin.IsActive;
 
-                        if (plugin.IsActive)
-                            plugin.Initialize();
+                            if (plugin.IsActive)
+                                plugin.Initialize();
+                        }
+
+                        Tooltip(plugin.Description);
+
+                        if (ImGui.MenuItem("Upload To Workshop"))
+                        {
+                            var item = new SteamWorkshopItem(plugin.Name, $"{WobbleGame.WorkingDirectory}Plugins/{plugin.Directory}");
+
+                            if (!item.HasUploaded && (SteamWorkshopItem.Current == null || SteamWorkshopItem.Current.HasUploaded))
+                            {
+                                NotificationManager.Show(NotificationLevel.Info, "Uploading plugin to the Steam Workshop...");
+
+                                ThreadScheduler.Run(() =>
+                                {
+                                    item.Upload();
+
+                                    while (!item.HasUploaded)
+                                        Thread.Sleep(50);
+
+                                    NotificationManager.Show(NotificationLevel.Success, "Successfully uploaded plugin to the workshop!");
+                                });
+                            }
+                        }
+
+                        if (ImGui.MenuItem("Open Folder"))
+                            Utils.NativeUtils.OpenNatively($"{WobbleGame.WorkingDirectory}Plugins/{plugin.Directory}");
+
+                        ImGui.EndMenu();
                     }
-
-                    Tooltip(plugin.Description);
 
                     totalPlugins++;
                 }
@@ -515,6 +542,35 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (ImGui.MenuItem("No Plugins Installed", "", false, false))
                     {
                     }
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu("Steam Workshop"))
+            {
+                foreach (var plugin in Screen.Plugins)
+                {
+                    if (!plugin.IsWorkshop)
+                        continue;
+
+                    if (!ImGui.BeginMenu(plugin.Name))
+                        continue;
+                    
+                    if (ImGui.MenuItem("Enabled", plugin.Author, plugin.IsActive))
+                    {
+                        plugin.IsActive = !plugin.IsActive;
+
+                        if (plugin.IsActive)
+                            plugin.Initialize();
+                    }
+
+                    Tooltip(plugin.Description);
+
+                    if (ImGui.MenuItem("Open Folder"))
+                        Utils.NativeUtils.OpenNatively($"{ConfigManager.SteamWorkshopDirectory.Value}/{plugin.Directory}");
+
+                    ImGui.EndMenu();
                 }
 
                 ImGui.EndMenu();
