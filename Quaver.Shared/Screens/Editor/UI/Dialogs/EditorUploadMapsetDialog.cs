@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
             {MapsetSubmissionStatusCode.ErrorConflictingDifficultyNames, "Error: One or more of your maps have the same difficulty name!"},
             {MapsetSubmissionStatusCode.ErrorNoExistingMapsetFound, "Error: You're trying to update a mapset, but this mapset isn't uploaded online!"},
             {MapsetSubmissionStatusCode.ErrorAlreadyRanked, "Error: You cannot update a mapset that is already ranked!"},
-            {MapsetSubmissionStatusCode.ErrorContainsNonUploadedNotNewMapId, "Error: One or more of youir maps contains a non-uploaded map id!"},
+            {MapsetSubmissionStatusCode.ErrorContainsNonUploadedNotNewMapId, "Error: One or more of your maps contains a non-uploaded map id!"},
             {MapsetSubmissionStatusCode.SuccessUploaded, "Success! Your mapset has been uploaded!"},
             {MapsetSubmissionStatusCode.SuccessUpdated, "Success! Your mapset has been updated!"},
             {MapsetSubmissionStatusCode.ErrorExceededLimit, "Error: You have exceeded the amount of maps you can upload at this time!"}
