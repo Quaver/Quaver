@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         public override FetchedScoreStore FetchScores()
         {
-            if (!OnlineManager.Connected)
+            /*if (!OnlineManager.Connected)
                 return new FetchedScoreStore(new List<Score>());
 
             var map = MapManager.Selected.Value;
@@ -53,8 +53,8 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             foreach (var score in onlineScores.Scores)
                 scores.Add(Score.FromOnlineScoreboardScore(score));
 
-            var pb = onlineScores.PersonalBest != null ? Score.FromOnlineScoreboardScore(onlineScores.PersonalBest) : null;
-            return new FetchedScoreStore(scores, pb);
+            var pb = onlineScores.PersonalBest != null ? Score.FromOnlineScoreboardScore(onlineScores.PersonalBest) : null;*/
+            return new FetchedScoreStore(null, null);
         }
 
         /// <inheritdoc />

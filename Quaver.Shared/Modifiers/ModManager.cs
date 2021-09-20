@@ -176,8 +176,11 @@ namespace Quaver.Shared.Modifiers
                     case ModIdentifier.HeatlthAdjust:
                         mods.Add(new ModLongNoteAdjust());
                         break;
+                    case ModIdentifier.NoPause:
+                        break;
                     default:
-                        throw new InvalidEnumArgumentException();
+                        Logger.Warning($"Cannot convert {mod} to its appropriate IModifier class.", LogType.Runtime);
+                        break;
                 }
              }
 

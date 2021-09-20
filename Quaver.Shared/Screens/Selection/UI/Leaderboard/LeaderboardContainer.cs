@@ -17,6 +17,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings.Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using Quaver.Shared.Skinning;
 using WebSocketSharp;
 using Wobble.Bindables;
@@ -293,6 +294,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                     break;
                 case LeaderboardType.Friends:
                     scores = new ScoreFetcherFriends().Fetch(map);
+                    break;
+                case LeaderboardType.All:
+                    scores = new ScoreFetcherAll().Fetch(map);
                     break;
                 default:
                     scores = new FetchedScoreStore();
