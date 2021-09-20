@@ -243,6 +243,12 @@ namespace Quaver.Shared.Database.Scores
         public List<Judgement> OnlineJudgements { get; set; }
 
         /// <summary>
+        ///     Used for handling realtime rating calculations on this score.
+        /// </summary>
+        [Ignore]
+        public RatingProcessor RatingProcessor { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>

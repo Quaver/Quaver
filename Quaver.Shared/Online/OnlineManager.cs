@@ -514,7 +514,7 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
         {
-            Logger.Important($"Retrieved scores and ranked status for: {e.Id} | {e.Md5} | {e.Response.Code}", LogType.Network);
+            Logger.Important($"Retrieved scores and ranked status for: {e.Id} | {e.Md5}", LogType.Network);
 
             try
             {
@@ -1928,6 +1928,7 @@ namespace Quaver.Shared.Online
                 });
             });
 
+            ScoresHelper.SetRatingProcessors(scores);
             return scores;
         }
     }

@@ -48,6 +48,11 @@ namespace Quaver.Shared.Modifiers
         bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         /// <summary>
+        ///     If the mod changes the HitObjects in some form.
+        /// </summary>
+        bool ChangesMapObjects { get; set; }
+
+        /// <summary>
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
         ModIdentifier[] IncompatibleMods { get; set; }
