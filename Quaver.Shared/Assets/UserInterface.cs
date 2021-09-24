@@ -261,5 +261,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D AutoModRefreshButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/refresh-button.png");
         public static Texture2D AutoModIconCritical => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/icon-critical.png");
         public static Texture2D AutoModIconWarning => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/AutoMod/icon-warning.png");
+        public static Texture2D EditorBannerButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/banner-button.png");
+        public static Texture2D EditorBackgroundButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/background-button.png");
     }
 }
