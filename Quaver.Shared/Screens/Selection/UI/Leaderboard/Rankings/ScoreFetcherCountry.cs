@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                     return new FetchedScoreStore(new List<Score>());
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Country,
-                    0, "US");
+                    0, OnlineManager.Self.OnlineUser.CountryFlag.ToUpper());
 
                 map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
 
