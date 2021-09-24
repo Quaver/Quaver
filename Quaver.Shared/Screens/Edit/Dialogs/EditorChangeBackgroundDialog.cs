@@ -112,14 +112,14 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
                         if (!MapDatabaseCache.MapsToUpdate.Contains(map))
                             MapDatabaseCache.MapsToUpdate.Add(map);
+                    }
 
-                        if (!BackgroundHelper.MapsetBanners.ContainsKey(map.Mapset.Directory))
-                            continue;
-
-                        // Get rid of the old banner if one exists
-                        var banner = BackgroundHelper.MapsetBanners[map.Mapset.Directory];
+                    // Get rid of the old banner if one exists
+                    if (BackgroundHelper.MapsetBanners.ContainsKey(screen.Map.Directory))
+                    {
+                        var banner = BackgroundHelper.MapsetBanners[screen.Map.Directory];
                         banner.Dispose();
-                        BackgroundHelper.MapsetBanners.Remove(map.Mapset.Directory);
+                        BackgroundHelper.MapsetBanners.Remove(screen.Map.Directory);
                     }
 
                     // Manually change the working map separately.
