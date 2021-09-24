@@ -17,9 +17,12 @@ namespace Quaver.Shared.Helpers
         /// </summary>
         public static void SetRatingProcessors(List<Score> scores)
         {
+            if (MapManager.Selected.Value == null)
+                return;
+
             var freshQua = MapManager.Selected.Value.LoadQua();
 
-            foreach (var score in MapManager.Selected.Value.Scores.Value)
+            foreach (var score in scores)
             {
                 var id = (ModIdentifier) score.Mods;
                 var mods = ModManager.IdentifierToModifier(id);
