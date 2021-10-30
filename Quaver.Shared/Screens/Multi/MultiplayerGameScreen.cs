@@ -75,6 +75,9 @@ namespace Quaver.Shared.Screens.Multi
                 if (DontLeaveGameUponScreenSwitch)
                     return;
 
+                SteamManager.SetRichPresence("steam_player_group", null);
+                SteamManager.SetRichPresence("steam_player_group_size", null);
+
                 OnlineManager.LeaveGame();
             };
 
@@ -312,6 +315,12 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         private void SetRichPresence()
         {
+            SteamManager.SetRichPresence("steam_player_group", Game.Value.GameId.ToString());
+            SteamManager.SetRichPresence("steam_player_group_size", Game.Value.PlayerIds.Count.ToString());
+
+            SteamManager.SetRichPresence("State", $"Multiplayer [{Game.Value.Name}]");
+            SteamManager.SetRichPresence("Details", "Waiting to Start");
+
             DiscordHelper.Presence.Details = "Waiting to Start";
             DiscordHelper.Presence.State = $"{Game.Value.Name} ({Game.Value.PlayerIds.Count} of {Game.Value.MaxPlayers})";
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);

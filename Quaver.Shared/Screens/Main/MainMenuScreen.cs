@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Main
         public MainMenuScreen()
         {
 #if  !VISUAL_TESTS
-            SetDiscordRichPresence();
+            SetRichPresence();
 #endif
             ModManager.RemoveSpeedMods();
 
@@ -245,8 +245,11 @@ namespace Quaver.Shared.Screens.Main
 
         /// <summary>
         /// </summary>
-        private void SetDiscordRichPresence()
+        private void SetRichPresence()
         {
+            SteamManager.SetRichPresence("Details", "Main Menu");
+            SteamManager.SetRichPresence("State", "In the menus");
+
             DiscordHelper.Presence.Details = "Main Menu";
             DiscordHelper.Presence.State = "In the menus";
             DiscordHelper.Presence.PartySize = 0;

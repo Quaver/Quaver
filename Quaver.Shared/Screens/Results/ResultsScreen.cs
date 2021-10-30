@@ -936,6 +936,9 @@ namespace Quaver.Shared.Screens.Results
         {
             try
             {
+                SteamManager.SetRichPresence("State", "In the menus");
+                SteamManager.SetRichPresence("Details", "Results Screen");
+
                 DiscordHelper.Presence.Details = "Results Screen";
                 DiscordHelper.Presence.State = "In the menus";
                 DiscordHelper.Presence.PartySize = 0;

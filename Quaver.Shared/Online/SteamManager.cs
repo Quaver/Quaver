@@ -138,6 +138,9 @@ namespace Quaver.Shared.Online
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 RefreshWorkshopSkins();
 
+            // Set the rich presence.
+            SetRichPresence("steam_display", "Status");
+
             // DANGEROUS: Uncomment to reset all achievements
             // SteamUserStats.ResetAllStats(true);
         }
@@ -266,6 +269,34 @@ namespace Quaver.Shared.Online
             // Start updating to Steam
             var call = SteamUGC.SubmitItemUpdate(SteamWorkshopItem.Current.Handle, "");
             OnSubmitUpdateResponse.Set(call);
+        }
+
+        /// <summary>
+        ///     Sets a Rich Presence key/value for the current user that is automatically shared to all friends playing the same game.
+        /// </summary>
+        /// <param name="pchKey">The rich presence 'key' to set. This can not be longer than specified in k_cchMaxRichPresenceKeyLength.</param>
+        /// <param name="pchValue">The rich presence 'value' to associate with pchKey. This can not be longer than specified in k_cchMaxRichPresenceValueLength.
+        /// If this is set to an empty string ("") or NULL then the key is removed if it's set.</param>
+        /// <returns></returns>
+        public static bool SetRichPresence(string pchKey, string pchValue)
+        {
+            // don't bother trying to set rich presence if it's not a steam build.
+            if (!((QuaverGame)GameBase.Game).IsDeployedBuild)
+                return false;
+
+            return SteamFriends.SetRichPresence(pchKey, pchValue);
+        }
+
+        /// <summary>
+        ///     Clears all of the current user's Rich Presence key/values.
+        /// </summary>
+        public static void ClearRichPresence()
+        {
+            // don't bother if it's not a steam build.
+            if (!((QuaverGame)GameBase.Game).IsDeployedBuild)
+                return;
+
+            SteamFriends.ClearRichPresence();
         }
 
         /// <summary>

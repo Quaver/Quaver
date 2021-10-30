@@ -175,6 +175,10 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
+            // Steam Rich Presence
+            SteamManager.SetRichPresence("State", "Editing");
+            SteamManager.SetRichPresence("Details", WorkingMap.ToString());
+
             ActiveLayerInterface = new Bindable<EditorLayerInterface>(EditorLayerInterface.Composition) { Value = EditorLayerInterface.Composition };
 
             ModManager.RemoveSpeedMods();

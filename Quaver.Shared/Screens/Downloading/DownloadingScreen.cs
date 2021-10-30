@@ -853,6 +853,9 @@ namespace Quaver.Shared.Screens.Downloading
         {
             try
             {
+                SteamManager.SetRichPresence("State", "In the menus");
+                SteamManager.SetRichPresence("Details", "Downloading Maps");
+
                 DiscordHelper.Presence.Details = "Downloading Maps";
                 DiscordHelper.Presence.State = "In the menus";
                 DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);

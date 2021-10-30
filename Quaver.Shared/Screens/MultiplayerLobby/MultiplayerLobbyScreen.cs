@@ -108,6 +108,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// </summary>
         private void SetRichPresence()
         {
+            SteamManager.SetRichPresence("State", $"In the menus");
+            SteamManager.SetRichPresence("Details", "Multiplayer Lobby");
+
             DiscordHelper.Presence.Details = "Multiplayer Lobby";
             DiscordHelper.Presence.State = $"In the menus";
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);

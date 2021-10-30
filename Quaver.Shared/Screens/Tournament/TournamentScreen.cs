@@ -458,6 +458,9 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void SetRichPresenceForTournamentViewer()
         {
+            SteamManager.SetRichPresence("State", "Tournament Viewer");
+            SteamManager.SetRichPresence("Details", MapManager.Selected.Value.ToString());
+
             DiscordHelper.Presence.Details = MapManager.Selected.Value.ToString();
             DiscordHelper.Presence.State = "Tournament Viewer";
             DiscordHelper.Presence.PartySize = GameplayScreens.Count;

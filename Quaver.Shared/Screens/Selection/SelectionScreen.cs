@@ -858,6 +858,9 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void SetRichPresence()
         {
+            SteamManager.SetRichPresence("State", "In the menus");
+            SteamManager.SetRichPresence("Details", "Selecting a song");
+
             DiscordHelper.Presence.Details = "Selecting a song";
             DiscordHelper.Presence.State = "In the menus";
             DiscordHelper.Presence.PartySize = 0;

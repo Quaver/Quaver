@@ -1593,6 +1593,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             try
             {
+                SteamManager.SetRichPresence("State", "Editing");
+                SteamManager.SetRichPresence("Details", WorkingMap.ToString());
+
                 DiscordHelper.Presence.Details = WorkingMap.ToString();
                 DiscordHelper.Presence.State = "Editing";
                 DiscordHelper.Presence.StartTimestamp = (long)(TimeHelper.GetUnixTimestampMilliseconds() / 1000);
