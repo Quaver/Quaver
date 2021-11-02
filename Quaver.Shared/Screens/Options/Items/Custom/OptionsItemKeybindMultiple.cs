@@ -10,6 +10,7 @@ using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Helpers;
 using Wobble.Input;
 using Wobble.Managers;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
@@ -32,16 +33,16 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        private Keys[] PreviousPressedKeys { get; set; }
+        private List<GenericKey> PreviousPressedKeys { get; set; }
 
         /// <summary>
         /// </summary>
-        private List<Bindable<Keys>> BindedKeys { get; }
+        private List<Bindable<GenericKey>> BindedKeys { get; }
 
         /// <summary>
         ///     The keys that are ready to be set
         /// </summary>
-        private List<Keys> QueuedKeys { get; set; }
+        private List<GenericKey> QueuedKeys { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -50,7 +51,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="name"></param>
         /// <param name="keys"></param>
         /// <param name="isKeybindFocused"></param>
-        public OptionsItemKeybindMultiple(RectangleF containerRect, string name, List<Bindable<Keys>> keys) : base(containerRect, name)
+        public OptionsItemKeybindMultiple(RectangleF containerRect, string name, List<Bindable<GenericKey>> keys) : base(containerRect, name)
         {
             BindedKeys = keys;
 
@@ -66,7 +67,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.Clicked += (sender, args) =>
             {
-                QueuedKeys = new List<Keys>();
+                QueuedKeys = new List<GenericKey>();
                 SetFocusedText();
             };
 
@@ -101,12 +102,12 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        private void InitializeText(List<Keys> keys)
+        private void InitializeText(List<GenericKey> keys)
         {
             var text = "";
 
             foreach (var key in keys)
-                text += XnaKeyHelper.GetStringFromKey(key) + " ";
+                text += key.GetName() + " ";
 
             Text.Text = text;
         }
@@ -127,11 +128,11 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             if (!Focused)
                 return;
 
-            var keys = KeyboardManager.CurrentState.GetPressedKeys();
+            var keys = GenericKeyManager.GetPressedKeys();
 
             foreach (var key in keys)
             {
-                if (keys.Length != 0 && !PreviousPressedKeys.Contains(key) && !QueuedKeys.Contains(key))
+                if (keys.Count != 0 && !PreviousPressedKeys.Contains(key) && !QueuedKeys.Contains(key))
                 {
                     QueuedKeys.Add(key);
                     InitializeText(QueuedKeys);

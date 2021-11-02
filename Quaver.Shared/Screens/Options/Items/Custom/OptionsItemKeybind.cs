@@ -12,6 +12,7 @@ using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Helpers;
 using Wobble.Input;
 using Wobble.Managers;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;

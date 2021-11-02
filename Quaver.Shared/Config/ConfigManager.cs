@@ -28,6 +28,7 @@ using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
+using Wobble.Input;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Config
@@ -616,62 +617,62 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Keybindings for 4K
         /// </summary>
-        internal static Bindable<Keys> KeyMania4K1 { get; private set; }
-        internal static Bindable<Keys> KeyMania4K2 { get; private set; }
-        internal static Bindable<Keys> KeyMania4K3 { get; private set; }
-        internal static Bindable<Keys> KeyMania4K4 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania4K1 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania4K2 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania4K3 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania4K4 { get; private set; }
 
         /// <summary>
         ///     Keybindings for 7K
         /// </summary>
-        internal static Bindable<Keys> KeyMania7K1 { get; private set; }
-        internal static Bindable<Keys> KeyMania7K2 { get; private set; }
-        internal static Bindable<Keys> KeyMania7K3 { get; private set; }
-        internal static Bindable<Keys> KeyMania7K4 { get; private set; }
-        internal static Bindable<Keys> KeyMania7K5 { get; private set; }
-        internal static Bindable<Keys> KeyMania7K6 { get; private set; }
-        internal static Bindable<Keys> KeyMania7K7 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania7K1 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania7K2 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania7K3 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania7K4 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania7K5 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania7K6 { get; private set; }
+        internal static Bindable<GenericKey> KeyMania7K7 { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K (co-op 2 player)
         /// </summary>
-        internal static Bindable<Keys> KeyCoop2P4K1 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P4K2 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P4K3 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P4K4 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P4K1 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P4K2 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P4K3 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P4K4 { get; private set; }
 
         /// <summary>
         ///     Keybindings for 7K (co-op 2 player)
         /// </summary>
-        internal static Bindable<Keys> KeyCoop2P7K1 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P7K2 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P7K3 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P7K4 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P7K5 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P7K6 { get; private set; }
-        internal static Bindable<Keys> KeyCoop2P7K7 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P7K1 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P7K2 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P7K3 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P7K4 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P7K5 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P7K6 { get; private set; }
+        internal static Bindable<GenericKey> KeyCoop2P7K7 { get; private set; }
 
         /// <summary>
         ///     Scratch key layout for 4K+1
         /// </summary>
-        internal static Bindable<Keys> KeyLayout4KScratch1 { get; private set; }
-        internal static Bindable<Keys> KeyLayout4KScratch2 { get; private set; }
-        internal static Bindable<Keys> KeyLayout4KScratch3 { get; private set; }
-        internal static Bindable<Keys> KeyLayout4KScratch4 { get; private set; }
-        internal static Bindable<Keys> KeyLayout4KScratch5 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout4KScratch1 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout4KScratch2 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout4KScratch3 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout4KScratch4 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout4KScratch5 { get; private set; }
 
         /// <summary>
         ///     Scratch key layout for 7K+1
         /// </summary>
-        internal static Bindable<Keys> KeyLayout7KScratch1 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch2 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch3 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch4 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch5 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch6 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch7 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch8 { get; private set; }
-        internal static Bindable<Keys> KeyLayout7KScratch9 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch1 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch2 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch3 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch4 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch5 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch6 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch7 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch8 { get; private set; }
+        internal static Bindable<GenericKey> KeyLayout7KScratch9 { get; private set; }
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
@@ -890,44 +891,44 @@ namespace Quaver.Shared.Config
             KeyNavigateDown = ReadValue(@"KeyNavigateDown", Keys.Down, data);
             KeyNavigateBack = ReadValue(@"KeyNavigateBack", Keys.Escape, data);
             KeyNavigateSelect = ReadValue(@"KeyNavigateSelect", Keys.Enter, data);
-            KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
-            KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
-            KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
-            KeyMania4K4 = ReadValue(@"KeyMania4K4", Keys.L, data);
-            KeyMania7K1 = ReadValue(@"KeyMania7K1", Keys.A, data);
-            KeyMania7K2 = ReadValue(@"KeyMania7K2", Keys.S, data);
-            KeyMania7K3 = ReadValue(@"KeyMania7K3", Keys.D, data);
-            KeyMania7K4 = ReadValue(@"KeyMania7K4", Keys.Space, data);
-            KeyMania7K5 = ReadValue(@"KeyMania7K5", Keys.J, data);
-            KeyMania7K6 = ReadValue(@"KeyMania7K6", Keys.K, data);
-            KeyMania7K7 = ReadValue(@"KeyMania7K7", Keys.L, data);
-            KeyCoop2P4K1 = ReadValue(@"KeyCoop2P4K1", Keys.Z, data);
-            KeyCoop2P4K2 = ReadValue(@"KeyCoop2P4K2", Keys.X, data);
-            KeyCoop2P4K3 = ReadValue(@"KeyCoop2P4K3", Keys.OemComma, data);
-            KeyCoop2P4K4 = ReadValue(@"KeyCoop2P4K4", Keys.OemPeriod, data);
-            KeyCoop2P7K1 = ReadValue(@"KeyCoop2P7K1", Keys.Z, data);
-            KeyCoop2P7K2 = ReadValue(@"KeyCoop2P7K2", Keys.X, data);
-            KeyCoop2P7K3 = ReadValue(@"KeyCoop2P7K3", Keys.C, data);
-            KeyCoop2P7K4 = ReadValue(@"KeyCoop2P7K4", Keys.V, data);
-            KeyCoop2P7K5 = ReadValue(@"KeyCoop2P7K5", Keys.M, data);
-            KeyCoop2P7K6 = ReadValue(@"KeyCoop2P7K6", Keys.OemComma, data);
-            KeyCoop2P7K7 = ReadValue(@"KeyCoop2P7K7", Keys.OemPeriod, data);
+            KeyMania4K1 = ReadGenericKey(@"KeyMania4K1", new GenericKey { KeyboardKey = Keys.A }, data);
+            KeyMania4K2 = ReadGenericKey(@"KeyMania4K2", new GenericKey { KeyboardKey = Keys.S }, data);
+            KeyMania4K3 = ReadGenericKey(@"KeyMania4K3", new GenericKey { KeyboardKey = Keys.K }, data);
+            KeyMania4K4 = ReadGenericKey(@"KeyMania4K4", new GenericKey { KeyboardKey = Keys.L }, data);
+            KeyMania7K1 = ReadGenericKey(@"KeyMania7K1", new GenericKey { KeyboardKey = Keys.A }, data);
+            KeyMania7K2 = ReadGenericKey(@"KeyMania7K2", new GenericKey { KeyboardKey = Keys.S }, data);
+            KeyMania7K3 = ReadGenericKey(@"KeyMania7K3", new GenericKey { KeyboardKey = Keys.D }, data);
+            KeyMania7K4 = ReadGenericKey(@"KeyMania7K4", new GenericKey { KeyboardKey = Keys.Space }, data);
+            KeyMania7K5 = ReadGenericKey(@"KeyMania7K5", new GenericKey { KeyboardKey = Keys.J }, data);
+            KeyMania7K6 = ReadGenericKey(@"KeyMania7K6", new GenericKey { KeyboardKey = Keys.K }, data);
+            KeyMania7K7 = ReadGenericKey(@"KeyMania7K7", new GenericKey { KeyboardKey = Keys.L }, data);
+            KeyCoop2P4K1 = ReadGenericKey(@"KeyCoop2P4K1", new GenericKey { KeyboardKey = Keys.Z }, data);
+            KeyCoop2P4K2 = ReadGenericKey(@"KeyCoop2P4K2", new GenericKey { KeyboardKey = Keys.X }, data);
+            KeyCoop2P4K3 = ReadGenericKey(@"KeyCoop2P4K3", new GenericKey { KeyboardKey = Keys.OemComma }, data);
+            KeyCoop2P4K4 = ReadGenericKey(@"KeyCoop2P4K4", new GenericKey { KeyboardKey = Keys.OemPeriod }, data);
+            KeyCoop2P7K1 = ReadGenericKey(@"KeyCoop2P7K1", new GenericKey { KeyboardKey = Keys.Z }, data);
+            KeyCoop2P7K2 = ReadGenericKey(@"KeyCoop2P7K2", new GenericKey { KeyboardKey = Keys.X }, data);
+            KeyCoop2P7K3 = ReadGenericKey(@"KeyCoop2P7K3", new GenericKey { KeyboardKey = Keys.C }, data);
+            KeyCoop2P7K4 = ReadGenericKey(@"KeyCoop2P7K4", new GenericKey { KeyboardKey = Keys.V }, data);
+            KeyCoop2P7K5 = ReadGenericKey(@"KeyCoop2P7K5", new GenericKey { KeyboardKey = Keys.M }, data);
+            KeyCoop2P7K6 = ReadGenericKey(@"KeyCoop2P7K6", new GenericKey { KeyboardKey = Keys.OemComma }, data);
+            KeyCoop2P7K7 = ReadGenericKey(@"KeyCoop2P7K7", new GenericKey { KeyboardKey = Keys.OemPeriod }, data);
 
-            KeyLayout4KScratch1 = ReadValue(@"KeyLayout4KScratch1", Keys.A, data);
-            KeyLayout4KScratch2 = ReadValue(@"KeyLayout4KScratch2", Keys.S, data);
-            KeyLayout4KScratch3 = ReadValue(@"KeyLayout4KScratch3", Keys.D, data);
-            KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.K, data);
-            KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.L, data);
+            KeyLayout4KScratch1 = ReadGenericKey(@"KeyLayout4KScratch1", new GenericKey { KeyboardKey = Keys.A }, data);
+            KeyLayout4KScratch2 = ReadGenericKey(@"KeyLayout4KScratch2", new GenericKey { KeyboardKey = Keys.S }, data);
+            KeyLayout4KScratch3 = ReadGenericKey(@"KeyLayout4KScratch3", new GenericKey { KeyboardKey = Keys.D }, data);
+            KeyLayout4KScratch4 = ReadGenericKey(@"KeyLayout4KScratch4", new GenericKey { KeyboardKey = Keys.K }, data);
+            KeyLayout4KScratch5 = ReadGenericKey(@"KeyLayout4KScratch5", new GenericKey { KeyboardKey = Keys.L }, data);
 
-            KeyLayout7KScratch1 = ReadValue(@"KeyLayout7KScratch1", Keys.A, data);
-            KeyLayout7KScratch2 = ReadValue(@"KeyLayout7KScratch2", Keys.S, data);
-            KeyLayout7KScratch3 = ReadValue(@"KeyLayout7KScratch3", Keys.D, data);
-            KeyLayout7KScratch4 = ReadValue(@"KeyLayout7KScratch4", Keys.Space, data);
-            KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.J, data);
-            KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.K, data);
-            KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.L, data);
-            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
-            KeyLayout7KScratch9 = ReadValue(@"KeyLayout7KScratch9", Keys.OemColon, data);
+            KeyLayout7KScratch1 = ReadGenericKey(@"KeyLayout7KScratch1", new GenericKey { KeyboardKey = Keys.A }, data);
+            KeyLayout7KScratch2 = ReadGenericKey(@"KeyLayout7KScratch2", new GenericKey { KeyboardKey = Keys.S }, data);
+            KeyLayout7KScratch3 = ReadGenericKey(@"KeyLayout7KScratch3", new GenericKey { KeyboardKey = Keys.D }, data);
+            KeyLayout7KScratch4 = ReadGenericKey(@"KeyLayout7KScratch4", new GenericKey { KeyboardKey = Keys.Space }, data);
+            KeyLayout7KScratch5 = ReadGenericKey(@"KeyLayout7KScratch5", new GenericKey { KeyboardKey = Keys.J }, data);
+            KeyLayout7KScratch6 = ReadGenericKey(@"KeyLayout7KScratch6", new GenericKey { KeyboardKey = Keys.K }, data);
+            KeyLayout7KScratch7 = ReadGenericKey(@"KeyLayout7KScratch7", new GenericKey { KeyboardKey = Keys.L }, data);
+            KeyLayout7KScratch8 = ReadGenericKey(@"KeyLayout7KScratch8", new GenericKey { KeyboardKey = Keys.CapsLock }, data);
+            KeyLayout7KScratch9 = ReadGenericKey(@"KeyLayout7KScratch9", new GenericKey { KeyboardKey = Keys.OemColon }, data);
 
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.Space, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
@@ -1117,6 +1118,22 @@ namespace Quaver.Shared.Config
             {
                 binded.Value = defaultVal;
             }
+
+            binded.ValueChanged += AutoSaveConfiguration;
+            return binded;
+        }
+
+        /// <summary>
+        ///     Reads a Bindable<GenericKey>.
+        /// </summary>
+        /// <returns></returns>
+        private static Bindable<GenericKey> ReadGenericKey(string name, GenericKey defaultVal, KeyDataCollection ini)
+        {
+            var binded = new Bindable<GenericKey>(name, defaultVal);
+
+            GenericKey key;
+            if (GenericKey.TryParse(ini[name], out key))
+                binded.Value = key;
 
             binded.ValueChanged += AutoSaveConfiguration;
             return binded;
