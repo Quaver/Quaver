@@ -2,6 +2,7 @@ using IniFileParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Results.UI;
 
 namespace Quaver.Shared.Skinning.Menus
 {
@@ -24,7 +25,7 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D ResultsGraphContainerPanel { get; private set; }
         public Texture2D ResultsMultiplayerFFAPanel { get; private set; }
         public Texture2D ResultsBackground { get; private set; }
-        public string ResultsBackgroundType { get; private set; }
+        public ResultsBackgroundType ResultsBackgroundType { get; private set; }
         public float? ResultsBackgroundFilterAlpha { get; private set; }
 
         public SkinMenuResults(SkinStore store, IniData config) : base(store, config)
@@ -36,7 +37,7 @@ namespace Quaver.Shared.Skinning.Menus
             var ini = Config["Results"];
 
             var resultsBackgroundType = ini["ResultsBackgroundType"];
-            ReadIndividualConfig(resultsBackgroundType, () => ResultsBackgroundType = ConfigHelper.ReadString("Header", resultsBackgroundType));
+            ReadIndividualConfig(resultsBackgroundType, () => ResultsBackgroundType = ConfigHelper.ReadEnum(ResultsBackgroundType.Header, resultsBackgroundType));
 
             var resultsBackgroundFilterAlpha = ini["ResultsBackgroundFilterAlpha"];
             ReadIndividualConfig(resultsBackgroundFilterAlpha, () => ResultsBackgroundFilterAlpha = ConfigHelper.ReadFloat(0f, resultsBackgroundFilterAlpha));

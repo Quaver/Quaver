@@ -23,9 +23,9 @@ namespace Quaver.Shared.Screens.Results.UI.Header
         /// <param name="size"></param>
         public ResultsScreenHeaderBackground(ScalableVector2 size) : base(size, false)
         {
-            Background.Y = SkinManager.Skin.Results.ResultsBackgroundType == "Background" ? 0 : 100;
+            Background.Y = SkinManager.Skin.Results.ResultsBackgroundType == ResultsBackgroundType.Background ? 0 : 100;
             Background.Alignment = Alignment.MidCenter;
-            Darkness.Alpha = (float)SkinManager.Skin.Results.ResultsBackgroundFilterAlpha;
+            Darkness.Alpha = SkinManager.Skin?.Results?.ResultsBackgroundFilterAlpha ?? 0f;
 
             var game = GameBase.Game;
             var ratio = (float) game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;

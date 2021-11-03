@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Results.UI;
 using Quaver.Shared.Screens.Results.UI.Footer;
 using Quaver.Shared.Screens.Results.UI.Header;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
@@ -118,7 +120,8 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(SkinManager.Skin?.Results?.ResultsBackground ?? UserInterface.Triangles, 0,false)
+        private void CreateBackground() => Background = new BackgroundImage(SkinManager.Skin.Results.ResultsBackgroundType == ResultsBackgroundType.Background ?
+           BackgroundHelper.RawTexture : SkinManager.Skin?.Results?.ResultsBackground ?? UserInterface.Triangles, 0,false)
         {
             Parent = Container,
             Y = 0,

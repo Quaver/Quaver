@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header
 
             Size = new ScalableVector2(WindowManager.Width, HEIGHT);
 
-            if (SkinManager.Skin.Results.ResultsBackgroundType != "None")
+            if (SkinManager.Skin.Results.ResultsBackgroundType == ResultsBackgroundType.Header)
                 CreateBackground();
             CreateContentContainer();
         }
@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header
         /// <summary>
         /// </summary>
         private void CreateBackground() => Background = new ResultsScreenHeaderBackground(
-            new ScalableVector2(Width, SkinManager.Skin.Results.ResultsBackgroundType == "Background" ? 1080 : 208))
+            new ScalableVector2(Width, 208))
             { Parent = this };
 
         /// <summary>
