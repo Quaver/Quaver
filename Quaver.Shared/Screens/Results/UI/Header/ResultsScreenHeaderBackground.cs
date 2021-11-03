@@ -13,19 +13,15 @@ namespace Quaver.Shared.Screens.Results.UI.Header
 {
     public class ResultsScreenHeaderBackground : MusicControllerBackground
     {
-        /// <summary>
-        /// </summary>
-        private Sprite DarknessFilter { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
         public ResultsScreenHeaderBackground(ScalableVector2 size) : base(size, false)
         {
-            Background.Y = SkinManager.Skin.Results.ResultsBackgroundType == ResultsBackgroundType.Background ? 0 : 100;
+            Background.Y = 100;
             Background.Alignment = Alignment.MidCenter;
-            Darkness.Alpha = SkinManager.Skin?.Results?.ResultsBackgroundFilterAlpha ?? 0f;
+            Darkness.Alpha = 0f;
 
             var game = GameBase.Game;
             var ratio = (float) game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;
@@ -36,20 +32,6 @@ namespace Quaver.Shared.Screens.Results.UI.Header
                 Background.Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
                 Darkness.Size = Background.Size;
             }
-
-            CreateDarknessFilter();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateDarknessFilter()
-        {
-            DarknessFilter = new Sprite
-            {
-                Parent = this,
-                Size = Size,
-                Image = SkinManager.Skin?.Results?.ResultsBackgroundFilter ?? UserInterface.ResultsBackgroundFilter
-            };
         }
     }
 }

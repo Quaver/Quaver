@@ -1,5 +1,6 @@
 using System;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Header.Contents;
@@ -40,6 +41,10 @@ namespace Quaver.Shared.Screens.Results.UI.Header
 
         /// <summary>
         /// </summary>
+        private Sprite DarknessFilter { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="map"></param>
         /// <param name="processor"></param>
         /// <param name="activeTab"></param>
@@ -53,6 +58,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header
 
             if (SkinManager.Skin.Results.ResultsBackgroundType == ResultsBackgroundType.Header)
                 CreateBackground();
+            CreateDarknessFilter();
             CreateContentContainer();
         }
 
@@ -69,5 +75,18 @@ namespace Quaver.Shared.Screens.Results.UI.Header
             Parent = this,
             Alignment = Alignment.BotCenter,
         };
+
+        /// <summary>
+        /// </summary>
+        private void CreateDarknessFilter()
+        {
+            DarknessFilter = new Sprite
+            {
+                Parent = this,
+                Size = new ScalableVector2(WindowManager.Width , WindowManager.Height),
+                Alpha = SkinManager.Skin?.Results?.ResultsBackgroundFilterAlpha ?? 0f,
+                Image = SkinManager.Skin?.Results?.ResultsBackgroundFilter ?? UserInterface.ResultsBackgroundFilter
+            };
+        }
     }
 }
