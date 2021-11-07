@@ -321,10 +321,10 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Gameplay Controls", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Pause", ConfigManager.KeyPause),
+                        new OptionsItemKeybindGeneric(containerRect, "Pause", ConfigManager.KeyPause),
                         new OptionsItemKeybind(containerRect, "Quick Restart", ConfigManager.KeyRestartMap),
                         new OptionsItemKeybind(containerRect, "Quick Exit", ConfigManager.KeyQuickExit),
-                        new OptionsItemKeybind(containerRect, "Skip Song Intro", ConfigManager.KeySkipIntro),
+                        new OptionsItemKeybindGeneric(containerRect, "Skip Song Intro", ConfigManager.KeySkipIntro),
                         new OptionsItemKeybind(containerRect, "Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
                         new OptionsItemKeybind(containerRect, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
                         new OptionsItemKeybind(containerRect, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),

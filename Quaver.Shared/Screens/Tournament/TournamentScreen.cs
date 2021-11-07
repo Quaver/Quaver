@@ -206,7 +206,7 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 UpdateScreens(gameTime);
 
-                if (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value))
+                if (GenericKeyManager.IsDown(ConfigManager.KeyPause.Value))
                 {
                     if (TournamentType == TournamentScreenType.Spectator)
                     {
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Tournament
                 }
 
                 // Add skipping
-                if (MainGameplayScreen.EligibleToSkip && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                if (MainGameplayScreen.EligibleToSkip && GenericKeyManager.IsUniquePress(ConfigManager.KeySkipIntro.Value))
                 {
                     GameplayScreens.ForEach(x =>
                     {

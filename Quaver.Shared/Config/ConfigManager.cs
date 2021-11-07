@@ -677,12 +677,12 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     The key pressed to pause and menu-back.
         /// </summary>
-        internal static Bindable<Keys> KeyPause { get; private set; }
+        internal static Bindable<GenericKey> KeyPause { get; private set; }
 
         /// <summary>
         ///     The key pressed to skip the song introduction
         /// </summary>
-        internal static Bindable<Keys> KeySkipIntro { get; private set; }
+        internal static Bindable<GenericKey> KeySkipIntro { get; private set; }
 
         /// <summary>
         ///     The key to toggle the overlay
@@ -930,8 +930,8 @@ namespace Quaver.Shared.Config
             KeyLayout7KScratch8 = ReadGenericKey(@"KeyLayout7KScratch8", new GenericKey { KeyboardKey = Keys.CapsLock }, data);
             KeyLayout7KScratch9 = ReadGenericKey(@"KeyLayout7KScratch9", new GenericKey { KeyboardKey = Keys.OemColon }, data);
 
-            KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.Space, data);
-            KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
+            KeySkipIntro = ReadGenericKey(@"KeySkipIntro", new GenericKey { KeyboardKey = Keys.Space }, data);
+            KeyPause = ReadGenericKey(@"KeyPause", new GenericKey { KeyboardKey = Keys.Escape }, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
             KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
             KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemPlus, data);
