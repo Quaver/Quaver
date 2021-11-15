@@ -63,7 +63,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 320;
-            IsMinScrollYEnabled = true;
 
             Alpha = 0;
             CreateScrollbar();
@@ -131,7 +130,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Tint = ColorHelper.HexToColor("#474747")
             };
 
-            MinScrollBarY = -805 - (int) Scrollbar.Height / 2;
             Scrollbar.Width = ScrollbarBackground.Width;
             Scrollbar.Parent = ScrollbarBackground;
             Scrollbar.Alignment = Alignment.BotCenter;
