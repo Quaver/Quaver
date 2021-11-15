@@ -83,8 +83,8 @@ namespace Quaver.Shared.Screens.Results.UI.Header
             DarknessFilter = new Sprite
             {
                 Parent = this,
-                Size = new ScalableVector2(WindowManager.Width , WindowManager.Height),
-                Alpha = SkinManager.Skin?.Results?.ResultsBackgroundFilterAlpha ?? 0f,
+                Size = new ScalableVector2(WindowManager.Width, SkinManager.Skin.Results.ResultsBackgroundType != ResultsBackgroundType.Header ? WindowManager.Height : Background.Height),
+                Alpha = SkinManager.Skin?.Results?.ResultsBackgroundFilterAlpha ?? 1f,
                 Image = SkinManager.Skin?.Results?.ResultsBackgroundFilter ?? UserInterface.ResultsBackgroundFilter
             };
         }
