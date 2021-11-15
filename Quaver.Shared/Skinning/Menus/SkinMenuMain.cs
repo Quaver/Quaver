@@ -23,6 +23,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D JukeboxOverlay { get; private set; }
 
+        public Texture2D NoteVisualizer { get; private set; }
+
         public float? NoteVisualizerOpacity { get; private set; }
 
         public Color? AudioVisualizerColor { get; private set; }
@@ -101,6 +103,7 @@ namespace Quaver.Shared.Skinning.Menus
             TipPanel = LoadSkinElement(folder, "tip-panel.png");
             NewsPanel = LoadSkinElement(folder, "news-panel.png");
             JukeboxOverlay = LoadSkinElement(folder, "jukebox-overlay.png");
+            NoteVisualizer = LoadSkinElement(folder, "note-visualizer.png");
         }
     }
 }

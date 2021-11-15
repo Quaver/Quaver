@@ -30,6 +30,8 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
+        public bool ChangesMapObjects { get; set; }
+
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Strict };
 
         public Color ModColor { get; }

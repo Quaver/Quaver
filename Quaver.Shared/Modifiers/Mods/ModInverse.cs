@@ -14,11 +14,13 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Converts regular notes into long notes and long notes into gaps.";
 
-        public bool Ranked() => false;
+        public bool Ranked() => true;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; } = true;
+
+        public bool ChangesMapObjects { get; set; } = true;
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.NoLongNotes, ModIdentifier.FullLN };
 

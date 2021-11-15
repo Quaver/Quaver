@@ -335,7 +335,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <returns></returns>
         private bool RequiresDonator() => RequiresOnline()
                                           && (ConfigManager.LeaderboardSection.Value == LeaderboardType.Country
-                                          || ConfigManager.LeaderboardSection.Value == LeaderboardType.Friends);
+                                          || ConfigManager.LeaderboardSection.Value == LeaderboardType.Friends
+                                          || ConfigManager.LeaderboardSection.Value == LeaderboardType.All);
 
         /// <summary>
         ///     Creates <see cref="StatusText"/>

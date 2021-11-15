@@ -135,7 +135,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         /// </summary>
         private void CreateDifficulty()
         {
-            var difficulty = Map.DifficultyFromMods(Processor.Value.Mods);
+            var difficulty = Map.LoadQua().SolveDifficulty(Processor.Value.Mods, true).OverallDifficulty;
             var rate = ModHelper.GetRateFromMods(Processor.Value.Mods);
 
             var rateStr = rate != 1.0f ? $" {rate}x" : "";
@@ -146,7 +146,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
                 Parent = this,
                 X = SongTitle.X,
                 Y = SongTitle.Y + SongTitle.Height + TEXT_SPACING,
-                Tint = ColorHelper.DifficultyToColor((float)difficulty)
+                Tint = ColorHelper.DifficultyToColor(difficulty)
             };
         }
 

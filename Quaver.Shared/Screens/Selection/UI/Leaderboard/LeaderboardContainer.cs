@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -15,6 +17,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings.Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using Quaver.Shared.Skinning;
 using WebSocketSharp;
 using Wobble.Bindables;
@@ -292,14 +295,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 case LeaderboardType.Friends:
                     scores = new ScoreFetcherFriends().Fetch(map);
                     break;
+                case LeaderboardType.All:
+                    scores = new ScoreFetcherAll().Fetch(map);
+                    break;
                 default:
                     scores = new FetchedScoreStore();
                     break;
             }
 
             // Set scores to use during gameplay
-            if (OnlineManager.CurrentGame == null)
-                MapManager.Selected.Value.Scores.Value = scores.Scores;
+            if (OnlineManager.CurrentGame != null)
+                return scores;
+
+            MapManager.Selected.Value.Scores.Value = scores.Scores;
+            ScoresHelper.SetRatingProcessors(MapManager.Selected.Value.Scores.Value);
 
             return scores;
         }

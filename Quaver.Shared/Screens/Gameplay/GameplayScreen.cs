@@ -225,13 +225,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (Map.HitObjects.Count == 0)
                     return false;
 
-                var nextObject = Ruleset.HitObjectManager.NextHitObject;
-
-                if (nextObject == null)
-                    return false;
-
-                return nextObject.StartTime - Ruleset.Screen.Timing.Time >=
-                       GameplayAudioTiming.StartDelay + 5000;
+                return Map.HitObjects.First().StartTime - Ruleset.Screen.Timing.Time >= GameplayAudioTiming.StartDelay + 5000;
             }
         }
 
@@ -1102,7 +1096,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Stop all playing sound effects and move NextSoundEffectIndex ahead.
                 CustomAudioSampleCache.StopAll();
                 UpdateNextSoundEffectIndex();
-                RequestedToSkipSong = false;
             }
         }
 

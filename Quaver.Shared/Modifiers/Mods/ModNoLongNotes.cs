@@ -21,11 +21,13 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "I have a variety of taste preferences, but noodles aren't included.";
 
-        public bool Ranked() => false;
+        public bool Ranked() => true;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
         public bool OnlyMultiplayerHostCanCanChange { get; set; } = true;
+
+        public bool ChangesMapObjects { get; set; } = true;
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Inverse, ModIdentifier.FullLN };
 

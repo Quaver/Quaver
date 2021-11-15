@@ -712,7 +712,7 @@ namespace Quaver.Shared.Screens.Results
             // Calculate performance rating
             score.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
             score.RatingProcessorVersion = RatingProcessorKeys.Version;
-            score.PerformanceRating = processor.Failed ? 0 : new RatingProcessorKeys(Map.DifficultyFromMods(processor.Mods)).CalculateRating(rankedAccuracy);
+            score.PerformanceRating = processor.Failed ? 0 : new RatingProcessorKeys(screen.Map.SolveDifficulty(processor.Mods).OverallDifficulty).CalculateRating(rankedAccuracy);
             score.RankedAccuracy = rankedAccuracy;
 
             // Select proper local profile id to attach with this score for ranking
