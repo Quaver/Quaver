@@ -210,11 +210,15 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             if (!HasRequestedMessageHistory || MessageHistoryQueue.Count == 0)
                 return;
 
-            foreach (var message in MessageHistoryQueue)
-                AddMessage(message);
+            lock (MessageHistoryQueue)
+            {
+                foreach (var message in MessageHistoryQueue)
+                    AddMessage(message);
 
-            Logger.Important($"Flushed {MessageHistoryQueue.Count} messages from the `{Channel.Name}` message history queue.", LogType.Runtime);
-            MessageHistoryQueue.Clear();
+                Logger.Important($"Flushed {MessageHistoryQueue.Count} messages from the `{Channel.Name}` message history queue.", LogType.Runtime);
+                MessageHistoryQueue.Clear();
+            }
+
             ScrollToBottomIfNecessary(true);
         }
 
