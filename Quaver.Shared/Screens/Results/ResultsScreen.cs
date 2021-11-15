@@ -936,11 +936,6 @@ namespace Quaver.Shared.Screens.Results
         {
             try
             {
-                SteamManager.SetRichPresence("State", "In the menus");
-                SteamManager.SetRichPresence("Details", "Results Screen");
-
-                DiscordHelper.Presence.Details = "Results Screen";
-                DiscordHelper.Presence.State = "In the menus";
                 DiscordHelper.Presence.PartySize = 0;
                 DiscordHelper.Presence.PartyMax = 0;
                 DiscordHelper.Presence.StartTimestamp = 0;
@@ -948,7 +943,8 @@ namespace Quaver.Shared.Screens.Results
                 DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
                 DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
                 DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+                RichPresenceHelper.UpdateRichPresence("In the Menus", "Results Screen");
             }
             catch (Exception e)
             {

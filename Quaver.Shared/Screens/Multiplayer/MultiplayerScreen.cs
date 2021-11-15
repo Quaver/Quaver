@@ -196,15 +196,11 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         public void SetRichPresence()
         {
+            // Friend Grouping of Steam's Enhanced Rich Presence
             SteamManager.SetRichPresence("steam_player_group", Game.GameId.ToString());
             SteamManager.SetRichPresence("steam_player_group_size", Game.PlayerIds.Count.ToString());
 
-            SteamManager.SetRichPresence("State", $"Multiplayer [{Game.Name}]");
-            SteamManager.SetRichPresence("Details", "Waiting to Start");
-
-            DiscordHelper.Presence.Details = "Waiting to Start";
-            DiscordHelper.Presence.State = $"{Game.Name} ({Game.PlayerIds.Count} of {Game.MaxPlayers})";
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            RichPresenceHelper.UpdateRichPresence($"{Game.Name} ({Game.PlayerIds.Count} of {Game.MaxPlayers})", "Waiting to Start");
         }
 
         /// <summary>

@@ -247,18 +247,17 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         private void SetRichPresence()
         {
-            SteamManager.SetRichPresence("Details", "Main Menu");
-            SteamManager.SetRichPresence("State", "In the menus");
-
-            DiscordHelper.Presence.Details = "Main Menu";
-            DiscordHelper.Presence.State = "In the menus";
             DiscordHelper.Presence.PartySize = 0;
             DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            SteamManager.SetRichPresence("steam_player_group", null);
+            SteamManager.SetRichPresence("steam_player_group_size", null);
+
+            Helpers.RichPresenceHelper.UpdateRichPresence("In the menus", "Main Menu");
         }
 
         /// <inheritdoc />

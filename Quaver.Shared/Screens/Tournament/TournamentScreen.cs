@@ -458,18 +458,14 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void SetRichPresenceForTournamentViewer()
         {
-            SteamManager.SetRichPresence("State", "Tournament Viewer");
-            SteamManager.SetRichPresence("Details", MapManager.Selected.Value.ToString());
-
-            DiscordHelper.Presence.Details = MapManager.Selected.Value.ToString();
-            DiscordHelper.Presence.State = "Tournament Viewer";
             DiscordHelper.Presence.PartySize = GameplayScreens.Count;
             DiscordHelper.Presence.PartyMax = 4;
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            Helpers.RichPresenceHelper.UpdateRichPresence("Tournament Viewer", MapManager.Selected.Value.ToString());
         }
     }
 }

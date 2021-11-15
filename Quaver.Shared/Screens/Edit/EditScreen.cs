@@ -1593,17 +1593,13 @@ namespace Quaver.Shared.Screens.Edit
         {
             try
             {
-                SteamManager.SetRichPresence("State", "Editing");
-                SteamManager.SetRichPresence("Details", WorkingMap.ToString());
-
-                DiscordHelper.Presence.Details = WorkingMap.ToString();
-                DiscordHelper.Presence.State = "Editing";
                 DiscordHelper.Presence.StartTimestamp = (long)(TimeHelper.GetUnixTimestampMilliseconds() / 1000);
                 DiscordHelper.Presence.EndTimestamp = 0;
                 DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
                 DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
                 DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+                RichPresenceHelper.UpdateRichPresence("Editing", WorkingMap.ToString());
             }
             catch (Exception e)
             {
