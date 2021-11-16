@@ -139,8 +139,14 @@ namespace Quaver.Shared.Online
                 RefreshWorkshopSkins();
 
             // Set the rich presence.
-            // note that this depends on the localization file. 
-            SteamFriends.SetRichPresence("steam_display", "Status");
+            // note that this depends on the localization file.
+
+            // have am initial value for State and details, so it doesn't just show "%state%: %details%" on Beta warning screen.
+            SteamFriends.SetRichPresence("State", "Loading");
+            SteamFriends.SetRichPresence("Details", "Launching the game");
+            // set our "displayed key" to #Status.  
+            SteamFriends.SetRichPresence("steam_display", "#Status");
+
 
             // DANGEROUS: Uncomment to reset all achievements
             // SteamUserStats.ResetAllStats(true);
