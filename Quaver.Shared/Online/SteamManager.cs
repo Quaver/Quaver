@@ -139,7 +139,8 @@ namespace Quaver.Shared.Online
                 RefreshWorkshopSkins();
 
             // Set the rich presence.
-            SetRichPresence("steam_display", "Status");
+            // note that this depends on the localization file. 
+            SteamFriends.SetRichPresence("steam_display", "Status");
 
             // DANGEROUS: Uncomment to reset all achievements
             // SteamUserStats.ResetAllStats(true);
@@ -274,17 +275,23 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Sets a Rich Presence key/value for the current user that is automatically shared to all friends playing the same game.
         /// </summary>
+        /// <remarks>https://partner.steamgames.com/doc/api/ISteamFriends#SetRichPresence</remarks>
         /// <param name="pchKey">The rich presence 'key' to set. This can not be longer than specified in k_cchMaxRichPresenceKeyLength.</param>
         /// <param name="pchValue">The rich presence 'value' to associate with pchKey. This can not be longer than specified in k_cchMaxRichPresenceValueLength.
         /// If this is set to an empty string ("") or NULL then the key is removed if it's set.</param>
-        /// <returns></returns>
+        /// <returns>boolean
+        /// true - if the rich presence was set successfully.
+        /// false - if failed.
+        /// </returns>
         public static bool SetRichPresence(string pchKey, string pchValue)
         {
-            // don't bother trying to set rich presence if it's not a steam build.
-            if (!((QuaverGame)GameBase.Game).IsDeployedBuild)
-                return false;
+            var result = SteamFriends.SetRichPresence(pchKey, pchValue);
+            if (!result)
+            {
+                Logger.Error($"setting rich presence key ${pchKey} failed, please check the Rich Presence Tester for more details.", LogType.Runtime);
+            }
 
-            return SteamFriends.SetRichPresence(pchKey, pchValue);
+            return result;
         }
 
         /// <summary>
@@ -292,10 +299,6 @@ namespace Quaver.Shared.Online
         /// </summary>
         public static void ClearRichPresence()
         {
-            // don't bother if it's not a steam build.
-            if (!((QuaverGame)GameBase.Game).IsDeployedBuild)
-                return;
-
             SteamFriends.ClearRichPresence();
         }
 
