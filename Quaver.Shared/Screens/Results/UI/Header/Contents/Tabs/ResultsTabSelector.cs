@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -38,7 +39,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
             Processor = processor;
             Size = size;
 
-            Image = UserInterface.ResultsTabSelectorBackground;
+            Image = SkinManager.Skin?.Results?.ResultsTabSelectorBackground ?? UserInterface.ResultsTabSelectorBackground;
 
             CreateTabs();
             CreateModifiers();

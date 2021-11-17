@@ -18,6 +18,7 @@ using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -126,7 +127,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             IsSubmittingScore = isSubmittingScore;
             ScoreSubmissionStats = scoreSubmissionStats;
 
-            Image = UserInterface.ResultsGraphContainerPanel;
+            Image = SkinManager.Skin?.Results?.ResultsGraphContainerPanel ?? UserInterface.ResultsGraphContainerPanel;
             Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, Image.Height);
 
             Statistics = Processor.Value.Stats != null ? Processor.Value.GetHitStatistics() : new HitStatistics();

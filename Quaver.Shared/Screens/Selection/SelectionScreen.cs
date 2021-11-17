@@ -858,8 +858,6 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void SetRichPresence()
         {
-            DiscordHelper.Presence.Details = "Selecting a song";
-            DiscordHelper.Presence.State = "In the menus";
             DiscordHelper.Presence.PartySize = 0;
             DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.Presence.StartTimestamp = 0;
@@ -867,7 +865,8 @@ namespace Quaver.Shared.Screens.Selection
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            Helpers.RichPresenceHelper.UpdateRichPresence("In the menus", "Selecting a song");
         }
 
         /// <summary>
