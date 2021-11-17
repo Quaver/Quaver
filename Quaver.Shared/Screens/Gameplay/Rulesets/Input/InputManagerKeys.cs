@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     inputLane--;
 
                 // A key was uniquely pressed.
-                if (!BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyPress(BindingStore[lane].Key.Value) &&
+                if (!BindingStore[lane].Pressed && (GenericKeyManager.IsUniquePress(BindingStore[lane].Key.Value) &&
                                                     !Ruleset.Screen.InReplayMode || Ruleset.Screen.InReplayMode && ReplayInputManager.UniquePresses[lane]))
                 {
                     // Update Replay Manager. Reset UniquePresses value for this lane.
@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     screenView.KpsDisplay.AddClick();
                 }
                 // A key was uniquely released.
-                else if (BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyRelease(BindingStore[lane].Key.Value) &&
+                else if (BindingStore[lane].Pressed && (GenericKeyManager.IsUniqueRelease(BindingStore[lane].Key.Value) &&
                                                         !Ruleset.Screen.InReplayMode
                                                     || Ruleset.Screen.InReplayMode && ReplayInputManager.UniqueReleases[lane]))
                 {

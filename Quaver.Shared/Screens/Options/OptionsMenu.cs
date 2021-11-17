@@ -18,6 +18,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Options
 {
@@ -265,14 +266,14 @@ namespace Quaver.Shared.Screens.Options
                 {
                     new OptionsSubcategory("Gameplay", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybindMultiple(containerRect, "4K Gameplay Layout", new List<Bindable<Keys>>()
+                        new OptionsItemKeybindMultiple(containerRect, "4K Gameplay Layout", new List<Bindable<GenericKey>>()
                         {
                             ConfigManager.KeyMania4K1,
                             ConfigManager.KeyMania4K2,
                             ConfigManager.KeyMania4K3,
                             ConfigManager.KeyMania4K4
                         }),
-                        new OptionsItemKeybindMultiple(containerRect, "7K Gameplay Layout", new List<Bindable<Keys>>()
+                        new OptionsItemKeybindMultiple(containerRect, "7K Gameplay Layout", new List<Bindable<GenericKey>>()
                         {
                             ConfigManager.KeyMania7K1,
                             ConfigManager.KeyMania7K2,
@@ -282,7 +283,7 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyMania7K6,
                             ConfigManager.KeyMania7K7,
                         }),
-                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<Keys>>()
+                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<GenericKey>>()
                         {
                             ConfigManager.KeyLayout7KScratch1,
                             ConfigManager.KeyLayout7KScratch2,
@@ -292,7 +293,7 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyLayout7KScratch6,
                             ConfigManager.KeyLayout7KScratch7,
                         }),
-                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Scratch Lane Keys", new List<Bindable<Keys>>()
+                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Scratch Lane Keys", new List<Bindable<GenericKey>>()
                         {
                             ConfigManager.KeyLayout7KScratch8,
                             ConfigManager.KeyLayout7KScratch9,
@@ -300,14 +301,14 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybindMultiple(containerRect, "4K Co-op Player 2 Layout", new List<Bindable<Keys>>()
+                        new OptionsItemKeybindMultiple(containerRect, "4K Co-op Player 2 Layout", new List<Bindable<GenericKey>>()
                         {
                             ConfigManager.KeyCoop2P4K1,
                             ConfigManager.KeyCoop2P4K2,
                             ConfigManager.KeyCoop2P4K3,
                             ConfigManager.KeyCoop2P4K4
                         }),
-                        new OptionsItemKeybindMultiple(containerRect, "7K Co-op Player 2 Layout", new List<Bindable<Keys>>()
+                        new OptionsItemKeybindMultiple(containerRect, "7K Co-op Player 2 Layout", new List<Bindable<GenericKey>>()
                         {
                             ConfigManager.KeyCoop2P7K1,
                             ConfigManager.KeyCoop2P7K2,
@@ -320,10 +321,10 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Gameplay Controls", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Pause", ConfigManager.KeyPause),
+                        new OptionsItemKeybindGeneric(containerRect, "Pause", ConfigManager.KeyPause),
                         new OptionsItemKeybind(containerRect, "Quick Restart", ConfigManager.KeyRestartMap),
                         new OptionsItemKeybind(containerRect, "Quick Exit", ConfigManager.KeyQuickExit),
-                        new OptionsItemKeybind(containerRect, "Skip Song Intro", ConfigManager.KeySkipIntro),
+                        new OptionsItemKeybindGeneric(containerRect, "Skip Song Intro", ConfigManager.KeySkipIntro),
                         new OptionsItemKeybind(containerRect, "Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
                         new OptionsItemKeybind(containerRect, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
                         new OptionsItemKeybind(containerRect, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),

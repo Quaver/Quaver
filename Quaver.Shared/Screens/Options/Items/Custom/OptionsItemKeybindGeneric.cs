@@ -1,25 +1,19 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
-using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
-using Wobble.Helpers;
 using Wobble.Input;
 using Wobble.Managers;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
 {
-    public class OptionsItemKeybind : OptionsItem
+    public class OptionsItemKeybindGeneric : OptionsItem
     {
         /// <summary>
         /// </summary>
@@ -27,7 +21,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        private Bindable<Keys> BindedKey { get; }
+        private Bindable<GenericKey> BindedKey { get; }
 
         /// <summary>
         /// </summary>
@@ -39,7 +33,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        private Keys[] PreviousPressedKeys { get; set; }
+        private List<GenericKey> PreviousPressedKeys { get; set; }
 
         /// <summary>
         /// </summary>
@@ -48,7 +42,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="bindedKeys"></param>
         /// <param name="bindedKey"></param>
         /// <param name="isKeybindFocused"></param>
-        public OptionsItemKeybind(RectangleF containerRect, string name, Bindable<Keys> bindedKey) : base(containerRect, name)
+        public OptionsItemKeybindGeneric(RectangleF containerRect, string name, Bindable<GenericKey> bindedKey) : base(containerRect, name)
         {
             BindedKey = bindedKey;
 
@@ -94,7 +88,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        private void InitializeText() => Text.Text = XnaKeyHelper.GetStringFromKey(BindedKey.Value);
+        private void InitializeText() => Text.Text = BindedKey.Value.GetName();
 
         /// <summary>
         /// </summary>
@@ -112,9 +106,9 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             if (!Focused)
                 return;
 
-            var keys = KeyboardManager.CurrentState.GetPressedKeys();
+            var keys = GenericKeyManager.GetPressedKeys();
 
-            if (keys.Length != 0 && !PreviousPressedKeys.Contains(keys[0]))
+            if (keys.Count != 0 && !PreviousPressedKeys.Contains(keys[0]))
             {
                 BindedKey.Value = keys[0];
                 Focused = false;

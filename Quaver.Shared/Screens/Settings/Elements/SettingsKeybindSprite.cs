@@ -13,6 +13,8 @@ using Quaver.Shared.Helpers;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Helpers;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Settings.Elements
 {
@@ -21,7 +23,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
          /// <summary>
         ///     The binded key.
         /// </summary>
-        public Bindable<Keys> Key { get; }
+        public Bindable<GenericKey> Key { get; }
 
         /// <summary>
         ///     The text that displays the current keybind
@@ -37,7 +39,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <summary>
         /// </summary>
         /// <param name="key"></param>
-        public SettingsKeybindSprite(Bindable<Keys> key)
+        public SettingsKeybindSprite(Bindable<GenericKey> key)
         {
             Key = key;
             Image = UserInterface.BlankBox;
@@ -45,7 +47,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
             AddBorder(Color.White, 2);
             Size = new ScalableVector2(54, 54);
 
-            KeyText = new SpriteText(Fonts.Exo2Regular, XnaKeyHelper.GetStringFromKey(Key.Value), 13)
+            KeyText = new SpriteText(Fonts.Exo2Regular, Key.Value.GetName(), 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
@@ -81,6 +83,6 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnKeybindChanged(object sender, BindableValueChangedEventArgs<Keys> args) => KeyText.Text = XnaKeyHelper.GetStringFromKey(args.Value);
+        private void OnKeybindChanged(object sender, BindableValueChangedEventArgs<GenericKey> args) => KeyText.Text = args.Value.GetName();
     }
 }
