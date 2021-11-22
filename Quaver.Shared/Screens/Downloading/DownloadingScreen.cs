@@ -895,15 +895,15 @@ namespace Quaver.Shared.Screens.Downloading
 
                     var rating = OnlineManager.Self.Stats[ConfigManager.SelectedGameMode.Value].OverallPerformanceRating;
 
-                    var aproxLevel = rating / 20f;
+                    var aproxLevel = rating / 10f;
 
                     if (rating == 0 || aproxLevel < 5)
                         CurrentSearchQuery.Value = "Easy";
-                    else if (aproxLevel < 10)
-                        CurrentSearchQuery.Value = "Normal";
                     else if (aproxLevel < 20)
+                        CurrentSearchQuery.Value = "Normal";
+                    else if (aproxLevel < 40)
                         CurrentSearchQuery.Value = "Hard";
-                    else if (aproxLevel < 28)
+                    else if (aproxLevel < 60)
                         CurrentSearchQuery.Value = "Insane";
                     else
                         CurrentSearchQuery.Value = "";
