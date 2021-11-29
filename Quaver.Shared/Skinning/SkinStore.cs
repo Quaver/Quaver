@@ -71,6 +71,11 @@ namespace Quaver.Shared.Skinning
         internal SkinMenuMain MainMenu { get; }
 
         /// <summary>
+        ///     Skinning for the Results menu
+        /// </summary>
+        internal SkinMenuResults Results { get; }
+
+        /// <summary>
         ///     Skinning for the song select menu
         /// </summary>
         internal SkinMenuSongSelect SongSelect { get; }
@@ -275,6 +280,7 @@ namespace Quaver.Shared.Skinning
             {
                 MenuBorder = new SkinMenuBorder(this, Config);
                 MainMenu = new SkinMenuMain(this, Config);
+                Results = new SkinMenuResults(this, Config);
                 SongSelect = new SkinMenuSongSelect(this, Config);
             }
             catch (Exception e)

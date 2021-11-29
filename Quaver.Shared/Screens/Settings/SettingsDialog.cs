@@ -393,14 +393,14 @@ namespace Quaver.Shared.Screens.Settings
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
                 {
-                    new SettingsKeybindMultiple(this, "Gameplay Layout (4 Keys)", new List<Bindable<Keys>>
+                    new SettingsKeybindMultiple(this, "Gameplay Layout (4 Keys)", new List<Bindable<GenericKey>>
                     {
                         ConfigManager.KeyMania4K1,
                         ConfigManager.KeyMania4K2,
                         ConfigManager.KeyMania4K3,
                         ConfigManager.KeyMania4K4
                     }),
-                    new SettingsKeybindMultiple(this, "Gameplay Layout (7 Keys)", new List<Bindable<Keys>>
+                    new SettingsKeybindMultiple(this, "Gameplay Layout (7 Keys)", new List<Bindable<GenericKey>>
                     {
                         ConfigManager.KeyMania7K1,
                         ConfigManager.KeyMania7K2,
@@ -410,14 +410,14 @@ namespace Quaver.Shared.Screens.Settings
                         ConfigManager.KeyMania7K6,
                         ConfigManager.KeyMania7K7
                     }),
-                    new SettingsKeybindMultiple(this, "Co-op 2 Player Layout (4 Keys)", new List<Bindable<Keys>>
+                    new SettingsKeybindMultiple(this, "Co-op 2 Player Layout (4 Keys)", new List<Bindable<GenericKey>>
                     {
                         ConfigManager.KeyCoop2P4K1,
                         ConfigManager.KeyCoop2P4K2,
                         ConfigManager.KeyCoop2P4K3,
                         ConfigManager.KeyCoop2P4K4,
                     }),
-                    new SettingsKeybindMultiple(this, "Co-op 2 Player Layout (7 Keys)", new List<Bindable<Keys>>
+                    new SettingsKeybindMultiple(this, "Co-op 2 Player Layout (7 Keys)", new List<Bindable<GenericKey>>
                     {
                         ConfigManager.KeyCoop2P7K1,
                         ConfigManager.KeyCoop2P7K2,
@@ -427,8 +427,8 @@ namespace Quaver.Shared.Screens.Settings
                         ConfigManager.KeyCoop2P7K6,
                         ConfigManager.KeyCoop2P7K7,
                     }),
-                    new SettingsKeybind(this, "Pause", ConfigManager.KeyPause),
-                    new SettingsKeybind(this, "Skip Intro", ConfigManager.KeySkipIntro),
+                    // new SettingsKeybind(this, "Pause", ConfigManager.KeyPause),
+                    // new SettingsKeybind(this, "Skip Intro", ConfigManager.KeySkipIntro),
                     new SettingsKeybind(this, "Restart Map", ConfigManager.KeyRestartMap),
                     new SettingsKeybind(this, "Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
                     new SettingsKeybind(this, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),

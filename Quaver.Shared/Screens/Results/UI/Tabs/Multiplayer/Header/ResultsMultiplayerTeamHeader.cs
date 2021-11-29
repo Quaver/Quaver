@@ -7,6 +7,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading;
+using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Bindables;
 
@@ -45,11 +46,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Header
         {
             Items.AddRange(new []
             {
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelBlueTeam,
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelBlueTeam ?? UserInterface.ResultsLabelBlueTeam,
                     StringHelper.RatingToString(GetTeamAverageRating(Map, BlueTeam)), ColorHelper.HexToColor("#0587E5")),
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelScore,
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelScore ?? UserInterface.ResultsLabelScore,
                     $"{Game.BlueTeamWins:n0} : {Game.RedTeamWins:n0}"),
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelRedTeam,
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelRedTeam ?? UserInterface.ResultsLabelRedTeam,
                     StringHelper.RatingToString(GetTeamAverageRating(Map, RedTeam)), ColorHelper.HexToColor("#F9645D")),
             });
         }

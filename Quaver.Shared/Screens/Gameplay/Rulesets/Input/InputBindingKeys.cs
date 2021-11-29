@@ -6,6 +6,7 @@
 */
 
 using Wobble.Bindables;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 {
@@ -14,7 +15,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     The key that this maps to.
         /// </summary>
-        public Bindable<Microsoft.Xna.Framework.Input.Keys> Key { get; }
+        public Bindable<GenericKey> Key { get; }
 
         /// <summary>
         ///     If the key is currently pressed.
@@ -22,9 +23,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         public bool Pressed { get; set; }
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="key"></param>
-        public InputBindingKeys(Bindable<Microsoft.Xna.Framework.Input.Keys> key) => Key = key;
+        public InputBindingKeys(Bindable<GenericKey> key) => Key = key;
     }
 }
