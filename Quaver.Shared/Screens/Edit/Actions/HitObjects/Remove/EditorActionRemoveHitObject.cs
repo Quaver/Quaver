@@ -48,6 +48,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove
             WorkingMap.HitObjects.Remove(HitObject);
             WorkingMap.Sort();
 
+            ActionManager.EditScreen.SelectedHitObjects.Remove(HitObject);
+
             ActionManager.TriggerEvent(EditorActionType.RemoveHitObject, new EditorHitObjectRemovedEventArgs(HitObject));
         }
 
