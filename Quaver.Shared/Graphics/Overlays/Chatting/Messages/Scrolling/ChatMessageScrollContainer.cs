@@ -207,11 +207,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void FlushMessageHistoryQueue()
         {
-            if (!HasRequestedMessageHistory || MessageHistoryQueue.Count == 0)
-                return;
-
             lock (MessageHistoryQueue)
             {
+                if (!HasRequestedMessageHistory || MessageHistoryQueue.Count == 0)
+                    return;
+
                 foreach (var message in MessageHistoryQueue)
                     AddMessage(message);
 
