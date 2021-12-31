@@ -20,19 +20,19 @@ namespace Quaver.Shared.Helpers
         internal static Color DifficultyToColor(float rating)
         {
             // Beginner
-            if (rating < 2) return HexToColor("#D1FFFA");
+            if (rating < 1) return HexToColor("#D1FFFA");
             // Easy
-            if (rating < 5) return HexToColor("#5EFF75");
+            if (rating < 2.5) return HexToColor("#5EFF75");
             // Normal
-            if (rating < 20) return HexToColor("#5EC4FF");
+            if (rating < 10) return HexToColor("#5EC4FF");
             // Hard
-            if (rating < 40) return HexToColor("#F5B25B");
+            if (rating < 20) return HexToColor("#F5B25B");
             // Insane
-            if (rating < 60) return HexToColor("#F9645D");
+            if (rating < 30) return HexToColor("#F9645D");
             // Expert
-            if (rating < 80) return HexToColor("#D761EB");
+            if (rating < 40) return HexToColor("#D761EB");
             // Expert+
-            if (rating < 100) return HexToColor("#7B61EB");
+            if (rating < 500) return HexToColor("#7B61EB");
             // ???
             return HexToColor("#B7B7B7");
         }
