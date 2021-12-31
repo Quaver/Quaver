@@ -32,7 +32,7 @@ namespace Quaver.Shared.Helpers
             // Expert
             if (rating < 40) return HexToColor("#D761EB");
             // Expert+
-            if (rating < 500) return HexToColor("#7B61EB");
+            if (rating < 50) return HexToColor("#7B61EB");
             // ???
             return HexToColor("#B7B7B7");
         }
