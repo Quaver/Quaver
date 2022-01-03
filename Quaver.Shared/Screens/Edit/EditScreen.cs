@@ -1122,8 +1122,7 @@ namespace Quaver.Shared.Screens.Edit
             if (SelectedHitObjects.Value.Count == 0)
                 return;
 
-            ActionManager.Perform(new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
-            SelectedHitObjects.Clear();
+            ActionManager.RemoveHitObjectBatch(SelectedHitObjects.Value);
         }
 
         /// <summary>

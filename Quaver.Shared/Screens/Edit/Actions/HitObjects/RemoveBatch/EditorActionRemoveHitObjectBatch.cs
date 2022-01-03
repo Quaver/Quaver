@@ -37,7 +37,10 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         {
             ActionManager = actionManager;
             WorkingMap = workingMap;
-            HitObjects = hitObjects;
+
+            // create a copy since it is highly likely the original list is
+            // the list of selected hitobjects that will be modified when this action is performed
+            HitObjects = new List<HitObjectInfo>(hitObjects);
         }
 
         /// <inheritdoc />
@@ -48,6 +51,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         {
             HitObjects.ForEach(x => WorkingMap.HitObjects.Remove(x));
             WorkingMap.Sort();
+
+            HitObjects.ForEach(x => ActionManager.EditScreen.SelectedHitObjects.Remove(x));
 
             ActionManager.TriggerEvent(EditorActionType.RemoveHitObjectBatch, new EditorHitObjectBatchRemovedEventArgs(HitObjects));
         }
