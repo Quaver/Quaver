@@ -325,7 +325,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ShowWaveform = showWaveform;
 
             Alignment = Alignment.TopCenter;
-            Tint = ColorHelper.HexToColor("#181818");
+            Tint = new Color(ConfigManager.EditorPlayfieldColorR.Value, ConfigManager.EditorPlayfieldColorG.Value, ConfigManager.EditorPlayfieldColorB.Value);
             Size = new ScalableVector2(ColumnSize * Map.GetKeyCount(), WindowManager.Height);
 
             CreateBorders();
