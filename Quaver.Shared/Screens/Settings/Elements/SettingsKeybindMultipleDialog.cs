@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <summary>
         ///     The list of bindable keys
         /// </summary>
-        private List<Bindable<Keys>> Keybinds { get; }
+        private List<Bindable<GenericKey>> Keybinds { get; }
 
         /// <summary>
         /// </summary>
@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public SettingsKeybindMultipleDialog(List<Bindable<Keys>> keybinds) : base(0.75f)
+        public SettingsKeybindMultipleDialog(List<Bindable<GenericKey>> keybinds) : base(0.75f)
         {
             Keybinds = keybinds;
             CreateContent();
@@ -73,17 +73,17 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public override void HandleInput(GameTime gameTime)
         {
             // Get the current pressed keys
-            var pressedKeys = KeyboardManager.CurrentState.GetPressedKeys();
+            var pressedKeys = GenericKeyManager.GetPressedKeys();
 
             // Don't bother continuing if the user hasn't pressed any keys.
-            if (pressedKeys.Length == 0)
+            if (pressedKeys.Count == 0)
                 return;
 
             // Grab only the first key that was pressed.
             var firstKey = pressedKeys[0];
 
             // If the key wasn't uniquely pressed then don't handle anything else.
-            if (!KeyboardManager.IsUniqueKeyPress(firstKey))
+            if (!GenericKeyManager.IsUniquePress(firstKey))
                 return;
 
             KeybindSprites[CurrentChangingKeybind].Key.Value = firstKey;

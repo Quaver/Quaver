@@ -75,6 +75,9 @@ namespace Quaver.Shared.Screens.Multi
                 if (DontLeaveGameUponScreenSwitch)
                     return;
 
+                SteamManager.SetRichPresence("steam_player_group", null);
+                SteamManager.SetRichPresence("steam_player_group_size", null);
+
                 OnlineManager.LeaveGame();
             };
 
@@ -312,12 +315,15 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         private void SetRichPresence()
         {
-            DiscordHelper.Presence.Details = "Waiting to Start";
-            DiscordHelper.Presence.State = $"{Game.Value.Name} ({Game.Value.PlayerIds.Count} of {Game.Value.MaxPlayers})";
+            // Friend Grouping of Steam's Enhanced Rich Presence
+            SteamManager.SetRichPresence("steam_player_group", Game.Value.GameId.ToString());
+            SteamManager.SetRichPresence("steam_player_group_size", Game.Value.PlayerIds.Count.ToString());
+
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            RichPresenceHelper.UpdateRichPresence($"{Game.Value.Name} ({Game.Value.PlayerIds.Count} of {Game.Value.MaxPlayers})", "Waiting to Start");
         }
 
         /// <summary>

@@ -1122,8 +1122,7 @@ namespace Quaver.Shared.Screens.Edit
             if (SelectedHitObjects.Value.Count == 0)
                 return;
 
-            ActionManager.Perform(new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
-            SelectedHitObjects.Clear();
+            ActionManager.RemoveHitObjectBatch(SelectedHitObjects.Value);
         }
 
         /// <summary>
@@ -1593,14 +1592,13 @@ namespace Quaver.Shared.Screens.Edit
         {
             try
             {
-                DiscordHelper.Presence.Details = WorkingMap.ToString();
-                DiscordHelper.Presence.State = "Editing";
                 DiscordHelper.Presence.StartTimestamp = (long)(TimeHelper.GetUnixTimestampMilliseconds() / 1000);
                 DiscordHelper.Presence.EndTimestamp = 0;
                 DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
                 DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
                 DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+                RichPresenceHelper.UpdateRichPresence("Editing", WorkingMap.ToString());
             }
             catch (Exception e)
             {

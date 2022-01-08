@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -196,15 +196,20 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         public void SetRichPresence()
         {
-            DiscordHelper.Presence.Details = "Waiting to Start";
-            DiscordHelper.Presence.State = $"{Game.Name} ({Game.PlayerIds.Count} of {Game.MaxPlayers})";
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            // Friend Grouping of Steam's Enhanced Rich Presence
+            SteamManager.SetRichPresence("steam_player_group", Game.GameId.ToString());
+            SteamManager.SetRichPresence("steam_player_group_size", Game.PlayerIds.Count.ToString());
+
+            RichPresenceHelper.UpdateRichPresence($"{Game.Name} ({Game.PlayerIds.Count} of {Game.MaxPlayers})", "Waiting to Start");
         }
 
         /// <summary>
         /// </summary>
         public void LeaveGame() => Exit(() =>
         {
+            SteamManager.SetRichPresence("steam_player_group", null);
+            SteamManager.SetRichPresence("steam_player_group_size", null);
+
             OnlineManager.LeaveGame();
             ThreadScheduler.RunAfter(Destroy, 1000);
             return new MultiplayerLobbyScreen();

@@ -138,6 +138,16 @@ namespace Quaver.Shared.Online
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 RefreshWorkshopSkins();
 
+            // Set the rich presence.
+            // note that this depends on the localization file.
+
+            // have am initial value for State and details, so it doesn't just show "%state%: %details%" on Beta warning screen.
+            SteamFriends.SetRichPresence("State", "Loading");
+            SteamFriends.SetRichPresence("Details", "Launching the game");
+            // set our "displayed key" to #Status.  
+            SteamFriends.SetRichPresence("steam_display", "#Status");
+
+
             // DANGEROUS: Uncomment to reset all achievements
             // SteamUserStats.ResetAllStats(true);
         }
@@ -266,6 +276,36 @@ namespace Quaver.Shared.Online
             // Start updating to Steam
             var call = SteamUGC.SubmitItemUpdate(SteamWorkshopItem.Current.Handle, "");
             OnSubmitUpdateResponse.Set(call);
+        }
+
+        /// <summary>
+        ///     Sets a Rich Presence key/value for the current user that is automatically shared to all friends playing the same game.
+        /// </summary>
+        /// <remarks>https://partner.steamgames.com/doc/api/ISteamFriends#SetRichPresence</remarks>
+        /// <param name="pchKey">The rich presence 'key' to set. This can not be longer than specified in k_cchMaxRichPresenceKeyLength.</param>
+        /// <param name="pchValue">The rich presence 'value' to associate with pchKey. This can not be longer than specified in k_cchMaxRichPresenceValueLength.
+        /// If this is set to an empty string ("") or NULL then the key is removed if it's set.</param>
+        /// <returns>boolean
+        /// true - if the rich presence was set successfully.
+        /// false - if failed.
+        /// </returns>
+        public static bool SetRichPresence(string pchKey, string pchValue)
+        {
+            var result = SteamFriends.SetRichPresence(pchKey, pchValue);
+            if (!result)
+            {
+                Logger.Error($"setting rich presence key ${pchKey} failed, please check the Rich Presence Tester for more details.", LogType.Runtime);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Clears all of the current user's Rich Presence key/values.
+        /// </summary>
+        public static void ClearRichPresence()
+        {
+            SteamFriends.ClearRichPresence();
         }
 
         /// <summary>

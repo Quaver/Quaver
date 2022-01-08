@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
@@ -34,6 +34,8 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 
         private static Texture2D SelectedButton => SkinManager.Skin?.MainMenu?.NavigationButtonSelected ?? UserInterface.NavigationButtonSelected;
 
+        private static Texture2D HoveredButton => SkinManager.Skin?.MainMenu?.NavigationButtonHovered ?? UserInterface.NavigationButtonHovered;
+
         private static ScalableVector2 OriginalSize = new ScalableVector2(434, 52);
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
         public override void Update(GameTime gameTime)
         {
             HoverEffect.Size = new ScalableVector2(Width - 4, Height - 4);
-            HoverEffect.Alpha = IsHovered ? 0.35f : 0;
+            HoverEffect.Alpha = IsHovered ? (SkinManager.Skin?.MainMenu?.NavigationButtonHoveredAlpha ?? 0.35f) : 0;
 
             base.Update(gameTime);
         }
@@ -115,6 +117,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
             Parent = this,
             Alignment = Alignment.MidCenter,
             Size = new ScalableVector2(Width - 4, Height - 4),
+            Image = HoveredButton,
             Alpha = 0
         };
     }

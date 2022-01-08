@@ -38,10 +38,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Time
             {
                 case EditorFooterTimeType.Current:
                     // @"mm\:ss\.fff")
-                    Text = TimeSpan.FromMilliseconds(Track.Time).ToString(@"mm\:ss\.fff");
+                    Text = TimeSpan.FromMilliseconds(Math.Round(Track.Time)).ToString(@"mm\:ss\.fff");
                     break;
                 case EditorFooterTimeType.Left:
-                    Text = "-" + TimeSpan.FromMilliseconds(Track.Length - Track.Time).ToString(@"mm\:ss\.fff");
+                    Text = "-" + TimeSpan.FromMilliseconds(Track.Length - Math.Round(Track.Time)).ToString(@"mm\:ss\.fff");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

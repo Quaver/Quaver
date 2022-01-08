@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
     {
         /// <summary>
         /// </summary>
-        private EditScreen EditScreen { get; }
+        public EditScreen EditScreen { get; }
 
         /// <summary>
         /// </summary>

@@ -110,15 +110,18 @@ namespace Quaver.Shared.Database.Maps
                         {
                             switch (Path.GetExtension(file).ToLower())
                             {
-                                case ".qua":
-                                case ".osu":
-                                case ".sm":
-                                case ".mcz":
-                                case ".mc":
-                                    continue;
-                                default:
+                                // This list matches the extensions allowed by the server. If any other file is included,
+                                // the server will reject attempts to upload the map.
+                                case ".mp3":
+                                case ".ogg":
+                                case ".png":
+                                case ".jpg":
+                                case ".jpeg":
+                                case ".wav":
                                     File.Copy(file, $"{tempFolder}/{Path.GetFileName(file)}", true);
                                     break;
+                                default:
+                                    continue;
                             }
                         }
                     }

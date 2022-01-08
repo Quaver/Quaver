@@ -587,9 +587,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             if (IgnoreRichPresence)
                 return;
 
-            DiscordHelper.Presence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
-            DiscordHelper.Presence.State = "In the Menus - Listening";
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            Helpers.RichPresenceHelper.UpdateRichPresence("In the Menus - Listening", $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}");
         }
 
         /// <summary>

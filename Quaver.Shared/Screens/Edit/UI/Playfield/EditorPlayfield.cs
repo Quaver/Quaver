@@ -1279,7 +1279,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             ActionManager.RemoveHitObject(ho.Info);
-            SelectedHitObjects.Remove(ho.Info);
         }
 
         /// <summary>

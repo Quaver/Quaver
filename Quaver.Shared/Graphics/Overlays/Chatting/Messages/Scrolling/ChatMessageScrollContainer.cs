@@ -207,14 +207,18 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void FlushMessageHistoryQueue()
         {
-            if (!HasRequestedMessageHistory || MessageHistoryQueue.Count == 0)
-                return;
+            lock (MessageHistoryQueue)
+            {
+                if (!HasRequestedMessageHistory || MessageHistoryQueue.Count == 0)
+                    return;
 
-            foreach (var message in MessageHistoryQueue)
-                AddMessage(message);
+                foreach (var message in MessageHistoryQueue)
+                    AddMessage(message);
 
-            Logger.Important($"Flushed {MessageHistoryQueue.Count} messages from the `{Channel.Name}` message history queue.", LogType.Runtime);
-            MessageHistoryQueue.Clear();
+                Logger.Important($"Flushed {MessageHistoryQueue.Count} messages from the `{Channel.Name}` message history queue.", LogType.Runtime);
+                MessageHistoryQueue.Clear();
+            }
+
             ScrollToBottomIfNecessary(true);
         }
 
@@ -223,14 +227,17 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void FlushMessageQueue()
         {
-            if (!HasRequestedMessageHistory || MessageQueue.Count == 0 || RequestHistoryTask.IsRunning)
-                return;
+            lock (MessageQueue)
+            {
+                if (!HasRequestedMessageHistory || MessageQueue.Count == 0 || RequestHistoryTask.IsRunning)
+                    return;
 
-            foreach (var message in MessageQueue)
-                AddMessage(message);
+                foreach (var message in MessageQueue)
+                    AddMessage(message);
 
-            Logger.Important($"Flushed {MessageQueue.Count} messages from the `{Channel.Name}` message queue.", LogType.Runtime);
-            MessageQueue.Clear();
+                Logger.Important($"Flushed {MessageQueue.Count} messages from the `{Channel.Name}` message queue.", LogType.Runtime);
+                MessageQueue.Clear();
+            }
         }
 
         /// <summary>

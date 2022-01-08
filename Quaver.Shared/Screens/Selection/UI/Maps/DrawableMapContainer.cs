@@ -328,7 +328,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// <param name="gameTime"></param>
         private void PerformHoverAnimation(GameTime gameTime)
         {
-            var targetAlpha = Button.IsHovered ? 0.35f : 0;
+            var targetAlpha = Button.IsHovered ? (SkinManager.Skin?.SongSelect?.MapsetPanelHoveringAlpha ?? 0.35f) : 0;
 
             Button.Alpha = MathHelper.Lerp(Button.Alpha, targetAlpha,
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));

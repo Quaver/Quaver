@@ -108,12 +108,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// </summary>
         private void SetRichPresence()
         {
-            DiscordHelper.Presence.Details = "Multiplayer Lobby";
-            DiscordHelper.Presence.State = $"In the menus";
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            Helpers.RichPresenceHelper.UpdateRichPresence("In the menus", "Multiplayer Lobby");
         }
 
         /// <inheritdoc />

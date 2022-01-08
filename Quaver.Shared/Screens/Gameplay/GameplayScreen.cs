@@ -601,7 +601,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (!IsPlayComplete && !IsCalibratingOffset)
             {
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                if (GenericKeyManager.IsUniquePress(ConfigManager.KeySkipIntro.Value))
                 {
                     SkipToNextObject();
                 }
@@ -658,7 +658,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             // If the pause key is not pressed...
-            if (KeyboardManager.CurrentState.IsKeyUp(ConfigManager.KeyPause.Value))
+            if (GenericKeyManager.IsUp(ConfigManager.KeyPause.Value))
             {
                 if (Failed || IsPlayComplete || IsPaused)
                     return;
@@ -675,7 +675,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // If the pause key was just pressed...
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
+            if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
             {
                 // Go back to editor if we're currently play testing.
                 if (IsPlayTesting)
@@ -1159,6 +1159,9 @@ namespace Quaver.Shared.Screens.Gameplay
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(Ruleset.Mode).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(Ruleset.Mode);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            SteamManager.SetRichPresence("State", DiscordHelper.Presence.State);
+            SteamManager.SetRichPresence("Details", Map.ToString());
         }
 
         /// <inheritdoc />

@@ -31,6 +31,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Helpers;
 using Wobble.Managers;
 using Wobble.Window;
 
@@ -726,7 +727,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     continue;
 
                 var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                    XnaKeyHelper.GetStringFromKey(input.BindingStore[i].Key.Value), 32)
+                    input.BindingStore[i].Key.Value.GetName(), 32)
                 {
                     Parent = Receptors[i],
                     Alignment = Playfield.ScrollDirections[i] == ScrollDirection.Down ? Alignment.TopCenter : Alignment.BotCenter,

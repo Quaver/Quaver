@@ -13,6 +13,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Settings.Elements
 {
@@ -21,7 +22,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <summary>
         ///     The binded keybinds that'll be changed
         /// </summary>
-        private List<Bindable<Keys>> Keybinds { get; }
+        private List<Bindable<GenericKey>> Keybinds { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -29,7 +30,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <param name="dialog"></param>
         /// <param name="name"></param>
         /// <param name="keybinds"></param>
-        public SettingsKeybindMultiple(SettingsDialog dialog, string name, List<Bindable<Keys>> keybinds) : base(dialog, name)
+        public SettingsKeybindMultiple(SettingsDialog dialog, string name, List<Bindable<GenericKey>> keybinds) : base(dialog, name)
         {
             Keybinds = keybinds;
 

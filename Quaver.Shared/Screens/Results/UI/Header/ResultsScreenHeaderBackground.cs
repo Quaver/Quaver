@@ -2,6 +2,7 @@ using System;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Music.UI.Controller;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -12,10 +13,6 @@ namespace Quaver.Shared.Screens.Results.UI.Header
 {
     public class ResultsScreenHeaderBackground : MusicControllerBackground
     {
-        /// <summary>
-        /// </summary>
-        private Sprite DarknessFilter { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -35,20 +32,6 @@ namespace Quaver.Shared.Screens.Results.UI.Header
                 Background.Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
                 Darkness.Size = Background.Size;
             }
-
-            CreateDarknessFilter();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateDarknessFilter()
-        {
-            DarknessFilter = new Sprite
-            {
-                Parent = this,
-                Size = Size,
-                Image = UserInterface.ResultsBackgroundFilter
-            };
         }
     }
 }
