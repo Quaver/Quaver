@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private EditorPlayfield Playfield { get; set; }
+        public EditorPlayfield Playfield { get; set; }
 
         /// <summary>
         /// </summary>
@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Edit
             if (EditScreen.DisplayGameplayPreview.Value)
                 CreateGameplayPreview();
 
-            MenuBar = new EditorFileMenuBar(EditScreen);
+            MenuBar = new EditorFileMenuBar(EditScreen, Playfield);
 
             EditScreen.DisplayGameplayPreview.ValueChanged += OnDisplayGameplayPreviewChanged;
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;

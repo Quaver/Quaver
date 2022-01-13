@@ -210,7 +210,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private EditorPlayfieldWaveform Waveform { get; set; }
+        public EditorPlayfieldWaveform Waveform { get; set; }
 
         /// <summary>
         /// </summary>
@@ -372,6 +372,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Alignment = Alignment;
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
+
+            Tint = new Color(ConfigManager.EditorPlayfieldColorR.Value, ConfigManager.EditorPlayfieldColorG.Value, ConfigManager.EditorPlayfieldColorB.Value);
 
             if (LoadingWaveform != null)
             {
@@ -541,7 +543,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateWaveform()
+        public void CreateWaveform()
         {
             if (IsUneditable)
                 return;

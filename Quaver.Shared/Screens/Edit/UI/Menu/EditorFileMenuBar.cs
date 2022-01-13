@@ -21,6 +21,8 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -45,6 +47,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private EditorPlayfield ScreenPlayfield { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -57,7 +63,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen, EditorPlayfield screenPlayfield) : base(DestroyContext, GetOptions())
+        {
+            Screen = screen;
+            ScreenPlayfield = screenPlayfield;
+        }
+        
 
         /// <inheritdoc />
         /// <summary>
@@ -423,8 +434,59 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
                 Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
 
+            ImGui.Separator();
+
             if (ImGui.MenuItem("Show Waveform", "", Screen.ShowWaveform.Value))
                 Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
+
+            if (ImGui.BeginMenu("Waveform Brightness"))
+            {
+                for (var i = 0; i < 11; i++)
+                {
+                    var value = i * 10;
+
+                    if (ImGui.MenuItem($"{value}%", "", Screen.WaveformBrightness.Value == value))
+                        Screen.WaveformBrightness.Value = value;
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu("Waveform Audio Direction"))
+            {
+                foreach (EditorPlayfieldWaveformAudioDirection type in Enum.GetValues(typeof(EditorPlayfieldWaveformAudioDirection)))
+                {
+                    if (ImGui.MenuItem($"{type}", "", Screen.AudioDirection.Value == type))
+                    {
+                        Screen.AudioDirection.Value = type;
+                        ScreenPlayfield.Waveform.Destroy();
+                        ScreenPlayfield.CreateWaveform();
+                    }
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu("Waveform Filter"))
+            {
+                foreach (EditorPlayfieldWaveformFilter type in Enum.GetValues(typeof(EditorPlayfieldWaveformFilter)))
+                {
+                    if (ImGui.MenuItem($"{type}", "", Screen.WaveformFilter.Value == type))
+                    {
+                        Screen.WaveformFilter.Value = type;
+                        ScreenPlayfield.Waveform.Destroy();
+                        ScreenPlayfield.CreateWaveform();
+                    }
+                }
+
+                ImGui.EndMenu();
+            }
+            
+            if (ImGui.MenuItem("Waveform Color"))
+                DialogManager.Show(new EditorChangeWaveformColorDialog());
+
+            if (ImGui.MenuItem("Playfield Color"))
+                DialogManager.Show(new EditorChangePlayfieldColorDialog());
 
             ImGui.Separator();
 

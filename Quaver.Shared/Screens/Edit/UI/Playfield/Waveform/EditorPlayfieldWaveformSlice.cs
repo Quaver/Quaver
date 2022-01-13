@@ -40,6 +40,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             SliceSprite.X = Playfield.ScreenRectangle.X;
             SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMilliSeconds + SliceSize) * Playfield.TrackSpeed - Height;
             SliceSprite.Height = SliceSize * Playfield.TrackSpeed;
+            SliceSprite.Tint = new Color(
+                (float)ConfigManager.EditorWaveformColorR.Value / 255,
+                (float)ConfigManager.EditorWaveformColorG.Value / 255,
+                (float)ConfigManager.EditorWaveformColorB.Value / 255,
+                (float)ConfigManager.EditorWaveformBrightness.Value / 100);
             SliceSprite.Draw(gameTime);
         }
 
@@ -78,10 +83,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
                 {
                     var index = (textureHeight - y - 1) * (int)Playfield.Width + x;
 
-                    dataColors[index].R = (byte)ConfigManager.EditorWaveformColorR.Value;
-                    dataColors[index].G = (byte)ConfigManager.EditorWaveformColorG.Value;
-                    dataColors[index].B = (byte)ConfigManager.EditorWaveformColorB.Value;
-                    dataColors[index].A = (byte)ConfigManager.EditorWaveformColorA.Value;
+                    dataColors[index].R = 255;
+                    dataColors[index].G = 255;
+                    dataColors[index].B = 255;
+                    dataColors[index].A = 255;
                 }
             }
 

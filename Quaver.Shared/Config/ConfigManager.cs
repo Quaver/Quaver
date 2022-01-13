@@ -555,7 +555,7 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
-        internal static BindableInt EditorWaveformColorA { get; private set; }
+        internal static BindableInt EditorWaveformBrightness { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1048,7 +1048,7 @@ namespace Quaver.Shared.Config
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
             EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
-            EditorWaveformColorA = ReadInt(@"EditorWaveformColorA", 128, 0, 255, data);
+            EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
