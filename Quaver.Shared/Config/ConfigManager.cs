@@ -519,18 +519,6 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
-        internal static BindableInt EditorPlayfieldColorR { get; private set; }
-
-        /// <summary>
-        /// </summary>
-        internal static BindableInt EditorPlayfieldColorG { get; private set; }
-
-        /// <summary>
-        /// </summary>
-        internal static BindableInt EditorPlayfieldColorB { get; private set; }
-
-        /// <summary>
-        /// </summary>
         internal static Bindable<EditorPlayfieldWaveformFilter> EditorAudioFilter { get; private set; }
 
         /// <summary>
@@ -1039,9 +1027,6 @@ namespace Quaver.Shared.Config
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
-            EditorPlayfieldColorR = ReadInt(@"EditorPlayfieldColorR", 24, 0, 255, data);
-            EditorPlayfieldColorG = ReadInt(@"EditorPlayfieldColorG", 24, 0, 255, data);
-            EditorPlayfieldColorB = ReadInt(@"EditorPlayfieldColorB", 24, 0, 255, data);
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);

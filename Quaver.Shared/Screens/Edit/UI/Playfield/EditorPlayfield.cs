@@ -373,8 +373,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
 
-            Tint = new Color(ConfigManager.EditorPlayfieldColorR.Value, ConfigManager.EditorPlayfieldColorG.Value, ConfigManager.EditorPlayfieldColorB.Value);
-
             if (LoadingWaveform != null)
             {
                 LoadingWaveform.Alignment = Alignment;

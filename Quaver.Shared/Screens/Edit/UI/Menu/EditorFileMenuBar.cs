@@ -485,9 +485,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Waveform Color"))
                 DialogManager.Show(new EditorChangeWaveformColorDialog());
 
-            if (ImGui.MenuItem("Playfield Color"))
-                DialogManager.Show(new EditorChangePlayfieldColorDialog());
-
             ImGui.Separator();
 
             if (ImGui.BeginMenu("Long Note Opacity"))
