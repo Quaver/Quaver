@@ -436,54 +436,59 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Show Waveform", "", Screen.ShowWaveform.Value))
-                Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
-
-            if (ImGui.BeginMenu("Waveform Brightness"))
+            if (ImGui.BeginMenu("Waveform"))
             {
-                for (var i = 0; i < 11; i++)
+                if (ImGui.MenuItem("Visible", "", Screen.ShowWaveform.Value))
+                    Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
+
+                if (ImGui.BeginMenu("Brightness"))
                 {
-                    var value = i * 10;
-
-                    if (ImGui.MenuItem($"{value}%", "", Screen.WaveformBrightness.Value == value))
-                        Screen.WaveformBrightness.Value = value;
-                }
-
-                ImGui.EndMenu();
-            }
-
-            if (ImGui.BeginMenu("Waveform Audio Direction"))
-            {
-                foreach (EditorPlayfieldWaveformAudioDirection type in Enum.GetValues(typeof(EditorPlayfieldWaveformAudioDirection)))
-                {
-                    if (ImGui.MenuItem($"{type}", "", Screen.AudioDirection.Value == type))
+                    for (var i = 0; i < 11; i++)
                     {
-                        Screen.AudioDirection.Value = type;
-                        ScreenPlayfield.Waveform.Destroy();
-                        ScreenPlayfield.CreateWaveform();
+                        var value = i * 10;
+
+                        if (ImGui.MenuItem($"{value}%", "", Screen.WaveformBrightness.Value == value))
+                            Screen.WaveformBrightness.Value = value;
                     }
+
+                    ImGui.EndMenu();
                 }
 
-                ImGui.EndMenu();
-            }
-
-            if (ImGui.BeginMenu("Waveform Filter"))
-            {
-                foreach (EditorPlayfieldWaveformFilter type in Enum.GetValues(typeof(EditorPlayfieldWaveformFilter)))
+                if (ImGui.BeginMenu("Audio Direction"))
                 {
-                    if (ImGui.MenuItem($"{type}", "", Screen.WaveformFilter.Value == type))
+                    foreach (EditorPlayfieldWaveformAudioDirection type in Enum.GetValues(typeof(EditorPlayfieldWaveformAudioDirection)))
                     {
-                        Screen.WaveformFilter.Value = type;
-                        ScreenPlayfield.Waveform.Destroy();
-                        ScreenPlayfield.CreateWaveform();
+                        if (ImGui.MenuItem($"{type}", "", Screen.AudioDirection.Value == type))
+                        {
+                            Screen.AudioDirection.Value = type;
+                            ScreenPlayfield.Waveform.Destroy();
+                            ScreenPlayfield.CreateWaveform();
+                        }
                     }
+
+                    ImGui.EndMenu();
                 }
+
+                if (ImGui.BeginMenu("Filter"))
+                {
+                    foreach (EditorPlayfieldWaveformFilter type in Enum.GetValues(typeof(EditorPlayfieldWaveformFilter)))
+                    {
+                        if (ImGui.MenuItem($"{type}", "", Screen.WaveformFilter.Value == type))
+                        {
+                            Screen.WaveformFilter.Value = type;
+                            ScreenPlayfield.Waveform.Destroy();
+                            ScreenPlayfield.CreateWaveform();
+                        }
+                    }
+
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.MenuItem("Color"))
+                    DialogManager.Show(new EditorChangeWaveformColorDialog());
 
                 ImGui.EndMenu();
             }
-            
-            if (ImGui.MenuItem("Waveform Color"))
-                DialogManager.Show(new EditorChangeWaveformColorDialog());
 
             ImGui.Separator();
 
