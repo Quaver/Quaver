@@ -47,10 +47,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
-        private EditorPlayfield ScreenPlayfield { get; }
-
-        /// <summary>
-        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -63,12 +59,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen, EditorPlayfield screenPlayfield) : base(DestroyContext, GetOptions())
-        {
-            Screen = screen;
-            ScreenPlayfield = screenPlayfield;
-        }
-        
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
+
 
         /// <inheritdoc />
         /// <summary>
@@ -459,11 +451,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     foreach (EditorPlayfieldWaveformAudioDirection type in Enum.GetValues(typeof(EditorPlayfieldWaveformAudioDirection)))
                     {
                         if (ImGui.MenuItem($"{type}", "", Screen.AudioDirection.Value == type))
-                        {
                             Screen.AudioDirection.Value = type;
-                            ScreenPlayfield.Waveform.Destroy();
-                            ScreenPlayfield.CreateWaveform();
-                        }
                     }
 
                     ImGui.EndMenu();
@@ -474,11 +462,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     foreach (EditorPlayfieldWaveformFilter type in Enum.GetValues(typeof(EditorPlayfieldWaveformFilter)))
                     {
                         if (ImGui.MenuItem($"{type}", "", Screen.WaveformFilter.Value == type))
-                        {
                             Screen.WaveformFilter.Value = type;
-                            ScreenPlayfield.Waveform.Destroy();
-                            ScreenPlayfield.CreateWaveform();
-                        }
                     }
 
                     ImGui.EndMenu();
@@ -620,7 +604,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     if (!ImGui.BeginMenu(plugin.Name))
                         continue;
-                    
+
                     if (ImGui.MenuItem("Enabled", plugin.Author, plugin.IsActive))
                     {
                         plugin.IsActive = !plugin.IsActive;
