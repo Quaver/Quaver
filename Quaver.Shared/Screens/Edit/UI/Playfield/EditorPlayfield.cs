@@ -373,6 +373,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             Skin.ValueChanged += OnSkinChanged;
+            WaveFormAudioDirection.ValueChanged += OnWaveFormAudioDirectionChanged;
+            WaveformFilter.ValueChanged += OnWaveformFilterChanged;
         }
 
         /// <inheritdoc />
@@ -559,11 +561,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             if (IsUneditable)
                 return;
-
-            Waveform?.Destroy();
-
-            WaveFormAudioDirection.ValueChanged += OnWaveFormAudioDirectionChanged;
-            WaveformFilter.ValueChanged += OnWaveformFilterChanged;
 
             LoadingWaveform = new LoadingWheelText(20, "Loading Waveform...")
             {
@@ -1492,9 +1489,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         }
 
         private void OnWaveformFilterChanged(object sender, BindableValueChangedEventArgs<EditorPlayfieldWaveformFilter> e)
-            => CreateWaveform();
+            => ReloadWaveform();
 
         private void OnWaveFormAudioDirectionChanged(object sender,
-            BindableValueChangedEventArgs<EditorPlayfieldWaveformAudioDirection> e) => CreateWaveform();
+            BindableValueChangedEventArgs<EditorPlayfieldWaveformAudioDirection> e) => ReloadWaveform();
+
+        private void ReloadWaveform()
+        {
+            Waveform?.Destroy();
+            LoadingWaveform.FadeIn();
+            WaveformLoadTask.Run(0);
+        }
     }
 }
