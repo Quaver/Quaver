@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble;
 using Wobble.Graphics.Animations;
+using Quaver.Shared.Config;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
@@ -39,6 +40,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             SliceSprite.X = Playfield.ScreenRectangle.X;
             SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMilliSeconds + SliceSize) * Playfield.TrackSpeed - Height;
             SliceSprite.Height = SliceSize * Playfield.TrackSpeed;
+            SliceSprite.Tint = new Color(
+                (float)ConfigManager.EditorWaveformColorR.Value / 255,
+                (float)ConfigManager.EditorWaveformColorG.Value / 255,
+                (float)ConfigManager.EditorWaveformColorB.Value / 255,
+                (float)ConfigManager.EditorWaveformBrightness.Value / 100);
             SliceSprite.Draw(gameTime);
         }
 
@@ -59,39 +65,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         {
             SliceSprite = new Sprite { Alpha = 0 };
 
-            var textureHeight = SliceSize / 2;
+            var textureHeight = SliceSize;
 
             SliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, (int)Playfield.Width, textureHeight);
 
             var dataColors = new Color[(int)Playfield.Width * textureHeight];
 
+            var LeftDirection = ConfigManager.EditorAudioDirection.Value == EditorPlayfieldWaveformAudioDirection.Right ? 1 : 0;
+            var RightDirection = ConfigManager.EditorAudioDirection.Value == EditorPlayfieldWaveformAudioDirection.Left ? 0 : 1;
+
             for (var y = 0; y < textureHeight; y += 1)
             {
-                var lengthLeft = (int)Math.Abs(sliceData[y * 2, 0] * 127);
-                var lengthRight = (int)Math.Abs(sliceData[y * 2, 1] * 127);
+                var LeftPoint = (int)Math.Clamp((Playfield.Width / 2) - (Math.Abs(sliceData[y, LeftDirection]) * 254), 0, Playfield.Width / 2);
+                var RightPoint = (int)Math.Clamp((Playfield.Width / 2) + (Math.Abs(sliceData[y, RightDirection]) * 254), Playfield.Width / 2, Playfield.Width);
 
-                var pivotPoint = (int)Playfield.Width / 2 - lengthLeft;
-
-                for (var x = 0; x < Playfield.Width; x++)
+                for (var x = LeftPoint; x < RightPoint; x++)
                 {
                     var index = (textureHeight - y - 1) * (int)Playfield.Width + x;
 
-                    switch (x >= pivotPoint && x <= pivotPoint + lengthRight + lengthLeft)
-                    {
-                        case true:
-                            dataColors[index].R = 0;
-                            dataColors[index].G = 200;
-                            dataColors[index].B = 255;
-                            dataColors[index].A = 128;
-                            break;
-
-                        default:
-                            dataColors[index].R = 0;
-                            dataColors[index].G = 0;
-                            dataColors[index].B = 0;
-                            dataColors[index].A = 0;
-                            break;
-                    }
+                    dataColors[index].R = 255;
+                    dataColors[index].G = 255;
+                    dataColors[index].B = 255;
+                    dataColors[index].A = 255;
                 }
             }
 

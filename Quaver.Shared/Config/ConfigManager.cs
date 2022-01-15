@@ -22,6 +22,7 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
@@ -518,7 +519,31 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<EditorPlayfieldWaveformFilter> EditorAudioFilter { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<bool> EditorShowWaveform { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<EditorPlayfieldWaveformAudioDirection> EditorAudioDirection { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorWaveformColorR { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorWaveformColorG { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorWaveformColorB { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorWaveformBrightness { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1002,7 +1027,13 @@ namespace Quaver.Shared.Config
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
+            EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
+            EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
+            EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
+            EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
+            EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
+            EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);

@@ -21,6 +21,8 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -58,6 +60,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 #endif
 
         public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
+
 
         /// <inheritdoc />
         /// <summary>
@@ -423,8 +426,53 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
                 Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
 
-            if (ImGui.MenuItem("Show Waveform", "", Screen.ShowWaveform.Value))
-                Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
+            ImGui.Separator();
+
+            if (ImGui.BeginMenu("Waveform"))
+            {
+                if (ImGui.MenuItem("Visible", "", Screen.ShowWaveform.Value))
+                    Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
+
+                if (ImGui.BeginMenu("Brightness"))
+                {
+                    for (var i = 0; i < 11; i++)
+                    {
+                        var value = i * 10;
+
+                        if (ImGui.MenuItem($"{value}%", "", Screen.WaveformBrightness.Value == value))
+                            Screen.WaveformBrightness.Value = value;
+                    }
+
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Audio Direction"))
+                {
+                    foreach (EditorPlayfieldWaveformAudioDirection type in Enum.GetValues(typeof(EditorPlayfieldWaveformAudioDirection)))
+                    {
+                        if (ImGui.MenuItem($"{type}", "", Screen.AudioDirection.Value == type))
+                            Screen.AudioDirection.Value = type;
+                    }
+
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Filter"))
+                {
+                    foreach (EditorPlayfieldWaveformFilter type in Enum.GetValues(typeof(EditorPlayfieldWaveformFilter)))
+                    {
+                        if (ImGui.MenuItem($"{type}", "", Screen.WaveformFilter.Value == type))
+                            Screen.WaveformFilter.Value = type;
+                    }
+
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.MenuItem("Color"))
+                    DialogManager.Show(new EditorChangeWaveformColorDialog());
+
+                ImGui.EndMenu();
+            }
 
             ImGui.Separator();
 
@@ -556,7 +604,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     if (!ImGui.BeginMenu(plugin.Name))
                         continue;
-                    
+
                     if (ImGui.MenuItem("Enabled", plugin.Author, plugin.IsActive))
                     {
                         plugin.IsActive = !plugin.IsActive;
