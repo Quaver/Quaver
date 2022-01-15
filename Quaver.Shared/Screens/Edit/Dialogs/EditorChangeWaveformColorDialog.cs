@@ -24,7 +24,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorChangeWaveformColorDialog() : base("CHANGE WAVEFORM COLOR", "Enter a new RGB color for your waveform... (default: 0,200,255)")
+        public EditorChangeWaveformColorDialog() : base("CHANGE WAVEFORM COLOR",
+            "Enter a new RGB color for your waveform... (default: 0,200,255)")
         {
             var currentEditorWaveformColor = new Color(
                 ConfigManager.EditorWaveformColorR.Value,
@@ -35,7 +36,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             UpdateColor(currentEditorWaveformColor);
         }
 
-        override protected void OnColorChange(Color newColor)
+        protected override void OnColorChange(Color newColor)
         {
             ConfigManager.EditorWaveformColorR.Value = newColor.R;
             ConfigManager.EditorWaveformColorG.Value = newColor.G;
