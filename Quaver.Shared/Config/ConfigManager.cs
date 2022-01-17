@@ -1017,7 +1017,7 @@ namespace Quaver.Shared.Config
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
             DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
-            DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomTotop", false, data);
+            DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomToTop", false, data);
             SelectedProfileId = ReadInt(@"SelectedProfileId", -1, -1, int.MaxValue, data);
             EditorBackgroundBrightness = ReadInt(@"EditorBackgroundBrightness", 40, 0, 100, data);
             EditorHitsoundVolume = ReadInt(@"EditorHitsoundVolume", -1, -1, 100, data);
