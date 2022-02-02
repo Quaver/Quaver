@@ -689,7 +689,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Image = Skin.LaneCoverTop,
                 Y = yAxis,
-                Size = new ScalableVector2(LaneCoverContainer.Width, 700),
+                Size = new ScalableVector2(LaneCoverContainer.Width, LaneCoverContainer.Height),
                 Alignment = Alignment.BotLeft,
                 Parent = LaneCoverContainer,
             };
@@ -709,7 +709,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Image = Skin.LaneCoverBottom,
                 Y = yAxis,
-                Size = new ScalableVector2(LaneCoverContainer.Width, 700),
+                Size = new ScalableVector2(LaneCoverContainer.Width, LaneCoverContainer.Height),
                 Alignment = Alignment.TopLeft,
                 Parent = LaneCoverContainer,
             };
