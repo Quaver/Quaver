@@ -31,6 +31,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         private int Stream { get; set; }
 
+        private int FFT_samples { get; set; } = 1024;
+
         private CancellationToken Token { get; }
 
         public EditorPlayfieldWaveform(EditorPlayfield playfield, CancellationToken token)
@@ -128,8 +130,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             TrackByteLength = Bass.ChannelGetLength(Stream);
             TrackData = new float[TrackByteLength / sizeof(float)];
 
-            TrackByteLength = Bass.ChannelGetData(Stream, TrackData, (int)TrackByteLength);
+            var TrackDataFFT = new float[FFT_samples];
+            var index = 0;
 
+            TrackByteLength = Bass.ChannelGetData(Stream, TrackDataFFT, FFT_samples);
+            while (TrackData.Length - index > FFT_samples)
+            {
+                TrackDataFFT.CopyTo(TrackData, index);
+                TrackDataFFT = new float[FFT_samples];
+                
+                TrackByteLength = Bass.ChannelGetData(Stream, TrackDataFFT, FFT_samples);
+
+                index += FFT_samples / 4;
+            }
+
+            TrackByteLength = Bass.ChannelGetLength(Stream);
             TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
         }
 
