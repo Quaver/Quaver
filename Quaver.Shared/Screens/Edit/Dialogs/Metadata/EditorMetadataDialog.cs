@@ -205,12 +205,12 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 return;
             }
 
-            WorkingMap.Artist = Artist.Textbox.RawText;
-            WorkingMap.Title = Title.Textbox.RawText;
-            WorkingMap.Creator = Creator.Textbox.RawText;
-            WorkingMap.DifficultyName = DifficultyName.Textbox.RawText;
-            WorkingMap.Source = Source.Textbox.RawText;
-            WorkingMap.Tags = Tags.Textbox.RawText;
+            WorkingMap.Artist = Artist.Textbox.RawText.Trim();
+            WorkingMap.Title = Title.Textbox.RawText.Trim();
+            WorkingMap.Creator = Creator.Textbox.RawText.Trim();
+            WorkingMap.DifficultyName = DifficultyName.Textbox.RawText.Trim();
+            WorkingMap.Source = Source.Textbox.RawText.Trim();
+            WorkingMap.Tags = Tags.Textbox.RawText.Trim();
 
             if (WorkingMap.TimingPoints.Count > 0)
             {
