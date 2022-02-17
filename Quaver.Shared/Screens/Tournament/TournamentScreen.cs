@@ -283,7 +283,21 @@ namespace Quaver.Shared.Screens.Tournament
                 screen.Update(gameTime);
             }
 
-            HandleSpectator();
+            try
+            {
+                HandleSpectator();
+            }
+            catch (NullReferenceException ex)
+            {
+                Logger.Error($"NullReferenceException at TournamentScreen.HandleSpectator()\n{ex}", LogType.Runtime);
+                Logger.Error(ex.StackTrace, LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Unhandled exception thrown at TournamentScreen.HandleSpectator()\n{e}", LogType.Runtime);
+                Logger.Error(e.StackTrace, LogType.Runtime);
+            }
+            
             HandlePlayCompletion();
         }
 
