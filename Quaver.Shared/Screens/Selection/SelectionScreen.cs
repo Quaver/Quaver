@@ -545,6 +545,9 @@ namespace Quaver.Shared.Screens.Selection
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void ChangeScrollSpeed()
         {
+            if (MapManager.Selected.Value == null)
+                return;
+
             BindableInt scrollSpeed;
 
             switch (MapManager.Selected.Value.Mode)
@@ -556,7 +559,7 @@ namespace Quaver.Shared.Screens.Selection
                     scrollSpeed = ConfigManager.ScrollSpeed7K;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return;
             }
 
             var changed = false;
