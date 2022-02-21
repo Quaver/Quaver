@@ -123,11 +123,6 @@ namespace Quaver.Shared.Screens.Results
         public bool FixedLocalOffset { get; private set; }
 
         /// <summary>
-        ///		An audio channel that holds the applause sound effect, which is played when the user passes a map.
-        ///	</summary>
-        private AudioSampleChannel ApplauseSoundEffect { get; set; }
-
-        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public ResultsScreen(GameplayScreen screen)
@@ -141,12 +136,9 @@ namespace Quaver.Shared.Screens.Results
 
             SetDiscordRichPresence();
             View = new ResultsScreenView(this);
-
+            
             if (!Gameplay.Failed)
-            {
-                ApplauseSoundEffect = SkinManager.Skin.SoundApplause.CreateChannel();
-                ApplauseSoundEffect.Play();
-            }
+                SkinManager.Skin.SoundApplause.CreateChannel().Play();
         }
 
         /// <summary>
