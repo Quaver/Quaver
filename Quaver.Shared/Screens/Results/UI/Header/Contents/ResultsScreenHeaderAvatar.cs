@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
         /// <summary>
         /// </summary>
-        private Sprite Avatar { get; }
+        private SpriteAlphaMaskBlend Avatar { get; }
 
         public ResultsScreenHeaderAvatar(float size, Bindable<ScoreProcessor> processor)
         {
@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
             var avatarSize = size - OFFSET * 2;
 
-            Avatar = new Sprite()
+            Avatar = new SpriteAlphaMaskBlend()
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
             GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
             {
-                Avatar.Image = SpriteAlphaMaskBlend.PerformBlend(Avatar.Image, SkinManager.Skin?.Results?.ResultsAvatarMask ?? UserInterface.ResultsAvatarMask);
+                Avatar.Image = Avatar.PerformBlend(Avatar.Image, SkinManager.Skin?.Results?.ResultsAvatarMask ?? UserInterface.ResultsAvatarMask);
             });
         }
     }
