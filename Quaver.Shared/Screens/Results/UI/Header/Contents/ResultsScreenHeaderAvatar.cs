@@ -62,7 +62,8 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
             GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
             {
-                Avatar.Image = Avatar.PerformBlend(Avatar.Image, SkinManager.Skin?.Results?.ResultsAvatarMask ?? UserInterface.ResultsAvatarMask);
+                var mask = SkinManager.Skin?.Results?.ResultsAvatarMask ?? UserInterface.ResultsAvatarMask;
+                Avatar.Image = Avatar.PerformBlend(Avatar.Image, mask);
             });
         }
     }
