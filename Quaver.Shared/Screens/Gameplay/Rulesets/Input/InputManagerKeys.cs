@@ -237,7 +237,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     if (gameplayHitObject.Info.IsLongNote)
                     {
                         manager.ChangePoolObjectStatusToHeld(gameplayHitObject);
-                        gameplayHitObject.StartLongNoteAnimation();
+                        //gameplayHitObject.StartLongNoteAnimation();
                     }
                     else
                         manager.RecyclePoolObject(gameplayHitObject);
@@ -261,7 +261,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Update animations
             playfield.Stage.HitLightingObjects[lane].StopHolding();
-            gameplayHitObject.StopLongNoteAnimation();
+            //gameplayHitObject.StopLongNoteAnimation();
 
             // Dequeue from pool
             gameplayHitObject = manager.HeldLongNoteLanes[lane].Dequeue();

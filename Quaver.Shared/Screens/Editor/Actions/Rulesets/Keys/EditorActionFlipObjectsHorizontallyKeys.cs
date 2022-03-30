@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Quaver.API.Maps;
@@ -69,8 +69,8 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
                     else
                     {
                         h.Image = skin.NoteHoldHitObjects[h.Info.Lane - 1][index];
-                        ln.Body.Image = skin.NoteHoldBodies[h.Info.Lane - 1].First();
-                        ln.Tail.Image = skin.NoteHoldEnds[h.Info.Lane - 1];
+                        ln.Body.Image = skin.NoteHoldBodies[h.Info.Lane - 1][index];
+                        ln.Tail.Image = skin.NoteHoldEnds[h.Info.Lane - 1][index];
                     }
 
                     ln.ResizeLongNote();

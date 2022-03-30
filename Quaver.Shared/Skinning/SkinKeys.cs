@@ -230,6 +230,8 @@ namespace Quaver.Shared.Skinning
 
         internal bool UseHitObjectSheet { get; private set; }
 
+        internal bool UseHoldSheet { get; private set; }
+
         [FixedScale]
         internal float ScratchLaneSize { get; private set; }
 
@@ -302,7 +304,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> NoteHoldEnds { get; } = new List<Texture2D>();
+        internal List<List<Texture2D>> NoteHoldEnds { get; } = new List<List<Texture2D>>();
 
         /// <summary>
         /// </summary>
@@ -496,6 +498,7 @@ namespace Quaver.Shared.Skinning
             HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
             UseHitObjectSheet = ConfigHelper.ReadBool(UseHitObjectSheet, ini["UseHitObjectSheet"]);
+            UseHoldSheet = ConfigHelper.ReadBool(UseHoldSheet, ini["UseHoldSheet"]);
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
             RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
             JudgementHitBurstFps = ConfigHelper.ReadInt32(JudgementHitBurstFps, ini["JudgementHitBurstFps"]);
@@ -656,6 +659,8 @@ namespace Quaver.Shared.Skinning
                 if (Store.Config != null)
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
+                const int snapCount = 9;
+
                 // HitObjects
                 if (!UseHitObjectSheet)
                 {
@@ -664,13 +669,10 @@ namespace Quaver.Shared.Skinning
                 }
                 else
                 {
-                    const int snapCount = 9;
-
                     var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
-
+                    
                     NoteHitObjects.Add(objects);
                     NoteHoldHitObjects.Add(objects);
-
 
                     for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
                         NoteHitObjects[i].Add(NoteHitObjects[i].Last());
@@ -680,8 +682,25 @@ namespace Quaver.Shared.Skinning
                 }
 
                 // LNS
-                NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
-                NoteHoldEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-holdend-{i + 1}", false));
+                if (!UseHoldSheet)
+                {
+                    NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
+                    NoteHoldEnds.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdend-{i + 1}", false, 0, 0));
+                }
+                else
+                {
+                    var objectsBody = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdbody-sheet", false, snapCount, 1);
+                    var objectsEnd = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdend-sheet", false, snapCount, 1);
+
+                    NoteHoldBodies.Add(objectsBody);
+                    NoteHoldEnds.Add(objectsEnd);
+
+                    for (var j = 0; j < snapCount - NoteHoldBodies[i].Count; j++)
+                    {
+                        NoteHoldBodies[i].Add(NoteHoldBodies[i].Last());
+                        NoteHoldEnds[i].Add(NoteHoldEnds[i].Last());
+                    }
+                }
 
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{i + 1}", false));

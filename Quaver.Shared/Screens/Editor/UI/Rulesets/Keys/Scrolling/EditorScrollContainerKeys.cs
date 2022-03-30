@@ -367,8 +367,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 {
                     hitObject = new DrawableEditorHitObjectLong(this, h,
                         skin.NoteHoldHitObjects[h.Lane - 1][index],
-                        skin.NoteHoldBodies[h.Lane - 1].First(),
-                        skin.NoteHoldEnds[h.Lane - 1]);
+                        skin.NoteHoldBodies[h.Lane - 1][index],
+                        skin.NoteHoldEnds[h.Lane - 1][index]);
                 }
             }
             else
@@ -568,7 +568,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                         else
                         {
                             h.Image = skin.NoteHoldHitObjects[h.Info.Lane - 1][index];
-                            ln.ChangeTextures(skin.NoteHoldBodies[h.Info.Lane - 1].First(), skin.NoteHoldEnds[h.Info.Lane - 1]);
+                            ln.ChangeTextures(skin.NoteHoldBodies[h.Info.Lane - 1][index], skin.NoteHoldEnds[h.Info.Lane - 1][index]);
                         }
                     }
                     else
