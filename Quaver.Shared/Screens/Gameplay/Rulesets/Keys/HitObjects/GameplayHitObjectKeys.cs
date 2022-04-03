@@ -261,6 +261,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Image = GetHitObjectTexture(HitObjectSprite, info.Lane, manager.Ruleset.Mode);
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = tint;
+
             var lastHitObjectFrame = HitObjectSprite.DefaultFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHitObjects[Info.Lane].Count / 9);
             HitObjectSprite.StartLoop(Direction.Forward, SkinManager.Skin?.Keys[manager.Ruleset.Mode].HitObjectsFps ?? 5, 0, lastHitObjectFrame);
 
@@ -486,15 +487,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
 
                 if (longNoteSprite)
-                {
                     objects = isLongNoteEnd ? skin.NoteHoldEnds[lane] : skin.NoteHoldBodies[lane];
-                }
 
                 if (HitObjectManager.SnapIndices.ContainsKey(Info))
                 {
                     var snap = HitObjectManager.SnapIndices[Info];
                     var columns = objects.Count / 9;
-                    sprite.DefaultFrame = columns == 0 ? snap : snap * columns;
+
+                    sprite.DefaultFrame = snap * columns;
+
                     return snap < objects.Count ? objects[snap * columns] : objects[objects.Count - 1];
                 }
 
@@ -502,9 +503,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
 
             if (longNoteSprite)
-            {
                 return isLongNoteEnd ? skin.NoteHoldEnds[lane].First() : skin.NoteHoldBodies[lane].First();
-            }
 
             return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }
