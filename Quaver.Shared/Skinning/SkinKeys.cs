@@ -293,24 +293,44 @@ namespace Quaver.Shared.Skinning
         // ----- HitObjects ----- //
 
         /// <summary>
-        ///
         /// </summary>
         internal List<List<Texture2D>> NoteHitObjects { get; } = new List<List<Texture2D>>();
 
         /// <summary>
-        ///
         /// </summary>
         internal List<List<Texture2D>> NoteHoldHitObjects { get; } = new List<List<Texture2D>>();
 
         /// <summary>
-        ///
+        /// </summary>
+        internal int NoteHitObjectsSpritesheetColumns { get; set; } = 1;
+
+        /// <summary>
+        /// </summary>
+        internal int NoteHitObjectsSpritesheetRows { get; set; } = 9;
+
+        /// <summary>
         /// </summary>
         internal List<List<Texture2D>> NoteHoldBodies { get;} = new List<List<Texture2D>>();
 
         /// <summary>
-        ///
         /// </summary>
         internal List<List<Texture2D>> NoteHoldEnds { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        /// </summary>
+        internal int NoteHoldBodiesSpritesheetColumns { get; set; } = 1;
+
+        /// <summary>
+        /// </summary>
+        internal int NoteHoldBodiesSpritesheetRows { get; set; } = 9;
+
+        /// <summary>
+        /// </summary>
+        internal int NoteHoldEndsSpritesheetColumns { get; set; } = 1;
+
+        /// <summary>
+        /// </summary>
+        internal int NoteHoldEndsSpritesheetRows { get; set; } = 9;
 
         /// <summary>
         /// </summary>
@@ -598,7 +618,7 @@ namespace Quaver.Shared.Skinning
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode).ToLower()}/{folder.ToString()}/";
-            return Store.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
+            return Store.LoadSpritesheet(folderName, element, resource, rows, columns, extension, this);
         }
 
         /// <summary>
@@ -679,7 +699,7 @@ namespace Quaver.Shared.Skinning
                 else
                 {
                     var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
-                    
+
                     NoteHitObjects.Add(objects);
                     NoteHoldHitObjects.Add(objects);
 

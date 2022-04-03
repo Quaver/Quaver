@@ -146,16 +146,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public Texture2D GetHitObjectTexture()
         {
             var snap = SkinMode.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
-            var index = SkinMode.NoteHoldHitObjects[Info.Lane - 1].Count / 9 * snap;
+            var row = SkinMode.NoteHitObjectsSpritesheetRows;
+            var hitObjects = SkinMode.NoteHitObjects[Info.Lane - 1];
+            var holdHitObjects = SkinMode.NoteHoldHitObjects[Info.Lane - 1];
+
+            var index = holdHitObjects.Count / row * snap;
 
             if (ViewLayers.Value)
                 return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];
 
             if (Info.IsLongNote)
-                return SkinMode.NoteHoldHitObjects[Info.Lane - 1][index];
+                return index < holdHitObjects.Count ? holdHitObjects[index] : holdHitObjects[holdHitObjects.Count - row - 1];
 
-            index = SkinMode.NoteHitObjects[Info.Lane - 1].Count / 9 * snap;
-            return SkinMode.NoteHitObjects[Info.Lane - 1][index];
+            index = hitObjects.Count / row * snap;
+            return index < hitObjects.Count ? hitObjects[index] : hitObjects[hitObjects.Count - row - 1];
         }
 
         /// <summary>

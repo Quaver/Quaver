@@ -189,7 +189,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None
+                SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                Rows = SkinManager.Skin.Keys[ruleset.Mode].NoteHitObjectsSpritesheetRows,
+                Columns = SkinManager.Skin.Keys[ruleset.Mode].NoteHitObjectsSpritesheetColumns
             };
 
             // Handle rotating the objects automatically
@@ -203,7 +205,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(laneSize , 0),
                 Position = new ScalableVector2(posX, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Parent = playfield.Stage.HitObjectContainer,
+                Rows = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodiesSpritesheetRows,
+                Columns = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodiesSpritesheetColumns
             };
 
             // Create the Hold End
@@ -213,7 +217,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
                 Size = new ScalableVector2(laneSize, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Parent = playfield.Stage.HitObjectContainer,
+                Rows = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEndsSpritesheetRows,
+                Columns = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEndsSpritesheetColumns
             };
 
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
@@ -262,7 +268,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = tint;
 
-            var lastHitObjectFrame = HitObjectSprite.DefaultFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHitObjects[Info.Lane].Count / 9);
+            var lastHitObjectFrame = HitObjectSprite.FirstFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHitObjects[Info.Lane].Count / HitObjectSprite.Rows);
             HitObjectSprite.StartLoop(Direction.Forward, SkinManager.Skin?.Keys[manager.Ruleset.Mode].HitObjectsFps ?? 5, 0, lastHitObjectFrame);
 
             // Set long note end properties.
@@ -492,11 +498,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 if (HitObjectManager.SnapIndices.ContainsKey(Info))
                 {
                     var snap = HitObjectManager.SnapIndices[Info];
-                    var columns = objects.Count / 9;
 
-                    sprite.DefaultFrame = snap * columns;
-
-                    return snap < objects.Count ? objects[snap * columns] : objects[objects.Count - 1];
+                    if (snap * sprite.Columns < objects.Count)
+                    {
+                        sprite.FirstFrame = snap * sprite.Columns;
+                        return objects[snap * sprite.Columns];
+                    }
+                    else
+                    {
+                        sprite.FirstFrame = objects.Count - sprite.Columns;
+                        return objects[objects.Count - sprite.Columns];
+                    }
                 }
 
                 return objects.First();
@@ -545,8 +557,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void StartLongNoteAnimation()
         {
-            var lastHoldBodyFrame = LongNoteBodySprite.DefaultFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldBodies[Info.Lane].Count / 9);
-            var lastHoldEndFrame = LongNoteEndSprite.DefaultFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldEnds[Info.Lane].Count / 9);
+            var lastHoldBodyFrame = LongNoteBodySprite.FirstFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldBodies[Info.Lane].Count / LongNoteBodySprite.Rows);
+            var lastHoldEndFrame = LongNoteEndSprite.FirstFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldEnds[Info.Lane].Count / LongNoteEndSprite.Rows);
             LongNoteBodySprite.StartLoop(Direction.Forward, SkinManager.Skin?.Keys[Ruleset.Mode].HoldBodyFps ?? 5, 0, lastHoldBodyFrame);
             LongNoteEndSprite.StartLoop(Direction.Forward, SkinManager.Skin?.Keys[Ruleset.Mode].HoldEndFps ?? 5, 0, lastHoldEndFrame);
         }
