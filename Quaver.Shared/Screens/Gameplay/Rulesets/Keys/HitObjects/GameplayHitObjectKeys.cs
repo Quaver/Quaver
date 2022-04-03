@@ -100,17 +100,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The actual HitObject sprite.
         /// </summary>
-        public Sprite HitObjectSprite { get; private set; }
+        public AnimatableSprite HitObjectSprite { get; private set; }
 
         /// <summary>
         ///     The hold body sprite for long notes.
         /// </summary>
-        public Sprite LongNoteBodySprite { get; private set; }
+        public AnimatableSprite LongNoteBodySprite { get; private set; }
 
         /// <summary>
         ///     The hold end sprite for long notes.
         /// </summary>
-        public Sprite LongNoteEndSprite { get; private set; }
+        public AnimatableSprite LongNoteEndSprite { get; private set; }
 
         /// <summary>
         ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
@@ -184,7 +184,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var laneSize = playfield.LaneSize * scale;
 
             // Create the base HitObjectSprite
-            HitObjectSprite = new Sprite()
+            var notes = SkinManager.Skin.Keys[ruleset.Mode].NoteHitObjects[lane];
+            HitObjectSprite = new AnimatableSprite(notes)
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
@@ -196,7 +197,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 HitObjectSprite.Rotation = GetObjectRotation(MapManager.Selected.Value.Mode, lane);
 
             // Create Hold Body
-            LongNoteBodySprite = new Sprite()
+            var bodies = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodies[lane];
+            LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(laneSize , 0),
@@ -205,7 +207,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             };
 
             // Create the Hold End
-            LongNoteEndSprite = new Sprite()
+            var end = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
+            LongNoteEndSprite = new AnimatableSprite(end)
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
@@ -255,21 +258,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             tint.A = 255;
 
             // Update Hit Object State
-            HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
+            HitObjectSprite.Image = GetHitObjectTexture(HitObjectSprite, info.Lane, manager.Ruleset.Mode);
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = tint;
+            var lastHitObjectFrame = HitObjectSprite.DefaultFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHitObjects[Info.Lane].Count / 9);
+            HitObjectSprite.StartLoop(Direction.Forward, SkinManager.Skin?.Keys[manager.Ruleset.Mode].HitObjectsFps ?? 5, 0, lastHitObjectFrame);
 
             // Set long note end properties.
-            LongNoteEndSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode, true, true);
+            LongNoteEndSprite.Image = GetHitObjectTexture(LongNoteEndSprite, info.Lane, manager.Ruleset.Mode, true, true);
             LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
             LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
             // Update the long note body sprite.
-            LongNoteBodySprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode, true, false);
+            LongNoteBodySprite.Image = GetHitObjectTexture(LongNoteBodySprite, info.Lane, manager.Ruleset.Mode, true, false);
 
             InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
             CurrentlyBeingHeld = false;
-            //StopLongNoteAnimation();
+            StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
             HitObjectSprite.Size = new ScalableVector2(laneSize, defaultLaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
@@ -471,7 +476,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     If not, we default it to the first beat snap in the list.
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetHitObjectTexture(int lane, GameMode mode, bool longNoteSprite = false, bool isLongNoteEnd = false)
+        private Texture2D GetHitObjectTexture(AnimatableSprite sprite, int lane, GameMode mode, bool longNoteSprite = false, bool isLongNoteEnd = false)
         {
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
@@ -488,7 +493,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 if (HitObjectManager.SnapIndices.ContainsKey(Info))
                 {
                     var snap = HitObjectManager.SnapIndices[Info];
-                    return snap < objects.Count ? objects[snap] : objects[objects.Count - 1];
+                    var columns = objects.Count / 9;
+                    sprite.DefaultFrame = columns == 0 ? snap : snap * columns;
+                    return snap < objects.Count ? objects[snap * columns] : objects[objects.Count - 1];
                 }
 
                 return objects.First();
@@ -537,13 +544,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Starts looping the long note sprite.
         ///     It will only be initiated when the player presses the note.
         /// </summary>
-        //public void StartLongNoteAnimation() => LongNoteBodySprite.StartLoop(Direction.Forward, 30);
+        public void StartLongNoteAnimation()
+        {
+            var lastHoldBodyFrame = LongNoteBodySprite.DefaultFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldBodies[Info.Lane].Count / 9);
+            var lastHoldEndFrame = LongNoteEndSprite.DefaultFrame + (SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldEnds[Info.Lane].Count / 9);
+            LongNoteBodySprite.StartLoop(Direction.Forward, SkinManager.Skin?.Keys[Ruleset.Mode].HoldBodyFps ?? 5, 0, lastHoldBodyFrame);
+            LongNoteEndSprite.StartLoop(Direction.Forward, SkinManager.Skin?.Keys[Ruleset.Mode].HoldEndFps ?? 5, 0, lastHoldEndFrame);
+        }
 
         /// <summary>
         ///     Stops looping the long note sprite.
         ///     It will only be initiated when the player releases the note.
         /// </summary>
-        //public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
+        public void StopLongNoteAnimation()
+        {
+            LongNoteBodySprite.StopLoop();
+            LongNoteEndSprite.StopLoop();
+        }
 
         /// <summary>
         /// </summary>

@@ -232,6 +232,12 @@ namespace Quaver.Shared.Skinning
 
         internal bool UseHoldSheet { get; private set; }
 
+        internal int HitObjectsFps { get; private set; }
+
+        internal int HoldBodyFps { get; private set; }
+
+        internal int HoldEndFps { get; private set; }
+
         [FixedScale]
         internal float ScratchLaneSize { get; private set; }
 
@@ -499,6 +505,9 @@ namespace Quaver.Shared.Skinning
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
             UseHitObjectSheet = ConfigHelper.ReadBool(UseHitObjectSheet, ini["UseHitObjectSheet"]);
             UseHoldSheet = ConfigHelper.ReadBool(UseHoldSheet, ini["UseHoldSheet"]);
+            HitObjectsFps = ConfigHelper.ReadInt32(HitObjectsFps, ini["HitObjectsFps"]);
+            HoldBodyFps = ConfigHelper.ReadInt32(HoldBodyFps, ini["HoldBodyFps"]);
+            HoldEndFps = ConfigHelper.ReadInt32(HoldEndFps, ini["HoldEndFps"]);
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
             RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
             JudgementHitBurstFps = ConfigHelper.ReadInt32(JudgementHitBurstFps, ini["JudgementHitBurstFps"]);

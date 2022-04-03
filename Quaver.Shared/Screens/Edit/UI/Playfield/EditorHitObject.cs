@@ -145,7 +145,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public Texture2D GetHitObjectTexture()
         {
-            var index = SkinMode.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var snap = SkinMode.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var index = SkinMode.NoteHoldHitObjects[Info.Lane - 1].Count / 9 * snap;
 
             if (ViewLayers.Value)
                 return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];
@@ -153,6 +154,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (Info.IsLongNote)
                 return SkinMode.NoteHoldHitObjects[Info.Lane - 1][index];
 
+            index = SkinMode.NoteHitObjects[Info.Lane - 1].Count / 9 * snap;
             return SkinMode.NoteHitObjects[Info.Lane - 1][index];
         }
 

@@ -237,7 +237,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     if (gameplayHitObject.Info.IsLongNote)
                     {
                         manager.ChangePoolObjectStatusToHeld(gameplayHitObject);
-                        //gameplayHitObject.StartLongNoteAnimation();
+                        gameplayHitObject.StartLongNoteAnimation();
                     }
                     else
                         manager.RecyclePoolObject(gameplayHitObject);

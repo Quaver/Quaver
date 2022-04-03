@@ -236,7 +236,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetBodyTexture()
         {
-            var index = SkinMode.ColorObjectsBySnapDistance && SkinMode.UseHoldSheet ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var snap = SkinMode.ColorObjectsBySnapDistance && SkinMode.UseHoldSheet ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var index = SkinMode.NoteHoldBodies[Info.Lane - 1].Count / 9 * snap;
             return ViewLayers.Value ? SkinMode.EditorLayerNoteHoldBodies[Info.Lane - 1] : SkinMode.NoteHoldBodies[Info.Lane - 1][index];
         }
 
@@ -245,7 +246,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetTailTexture()
         {
-            var index = SkinMode.ColorObjectsBySnapDistance && SkinMode.UseHoldSheet ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var snap = SkinMode.ColorObjectsBySnapDistance && SkinMode.UseHoldSheet ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var index = SkinMode.NoteHoldEnds[Info.Lane - 1].Count / 9 * snap;
             return ViewLayers.Value ? SkinMode.EditorLayerNoteHoldEnds[Info.Lane - 1] : SkinMode.NoteHoldEnds[Info.Lane - 1][index];
         }
 
