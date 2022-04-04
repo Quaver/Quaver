@@ -396,8 +396,9 @@ namespace Quaver.Shared.Skinning
                             // Load it up if so.
                             var texture = AssetLoader.LoadTexture2DFromFile(f);
 
-                            // Save the values of the spritesheets.
-                            keys.SetSpritesheetValue(element, int.Parse(match.Groups[1].Value),
+                            // Save the values of Keys spritesheets if a SkinKeys is specified.
+                            if (keys != null)
+                                keys.SetSpritesheetValue(element, int.Parse(match.Groups[1].Value),
                                 int.Parse(match.Groups[2].Value));
 
                             return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value),
