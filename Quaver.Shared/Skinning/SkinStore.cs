@@ -396,24 +396,9 @@ namespace Quaver.Shared.Skinning
                             // Load it up if so.
                             var texture = AssetLoader.LoadTexture2DFromFile(f);
 
-                            // Save the column and row value for elements that need them.
-                            switch (element)
-                            {
-                                case "note-hitobject-sheet":
-                                    keys.NoteHitObjectsSpritesheetRows = int.Parse(match.Groups[1].Value);
-                                    keys.NoteHitObjectsSpritesheetColumns = int.Parse(match.Groups[2].Value);
-                                    break;
-                                case "note-holdbody-sheet":
-                                    keys.NoteHoldBodiesSpritesheetRows = int.Parse(match.Groups[1].Value);
-                                    keys.NoteHoldBodiesSpritesheetColumns = int.Parse(match.Groups[2].Value);
-                                    break;
-                                case "note-holdend-sheet":
-                                    keys.NoteHoldEndsSpritesheetRows = int.Parse(match.Groups[1].Value);
-                                    keys.NoteHoldEndsSpritesheetColumns = int.Parse(match.Groups[2].Value);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            // Save the values of the spritesheets.
+                            keys.SetSpritesheetValue(element, int.Parse(match.Groups[1].Value),
+                                int.Parse(match.Groups[2].Value));
 
                             return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value),
                                 int.Parse(match.Groups[2].Value));

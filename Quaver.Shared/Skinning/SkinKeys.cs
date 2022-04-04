@@ -741,5 +741,29 @@ namespace Quaver.Shared.Skinning
                 EditorLayerNoteHoldEnds.Add(LoadTexture(SkinKeysFolder.Editor, $"note-holdend-{i + 1}", false));
             }
         }
+
+        /// <summary>
+        ///     Set the row and column value of the spritesheets.
+        /// </summary>
+        public void SetSpritesheetValue(string element, int row, int column)
+        {
+            switch (element)
+            {
+                case "note-hitobject-sheet":
+                    NoteHitObjectsSpritesheetRows = row;
+                    NoteHitObjectsSpritesheetColumns = column;
+                    break;
+                case "note-holdbody-sheet":
+                    NoteHoldBodiesSpritesheetRows = row;
+                    NoteHoldBodiesSpritesheetColumns = column;
+                    break;
+                case "note-holdend-sheet":
+                    NoteHoldEndsSpritesheetRows = row;
+                    NoteHoldEndsSpritesheetColumns = column;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
