@@ -10,6 +10,7 @@ using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI;
@@ -30,6 +31,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -69,6 +71,14 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         /// </summary>
         private LeaderboardContainer LeaderboardContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool IsLeaderboardVisible { get; set; } = true;
+
+        /// <summary>
+        /// </summary>
+        private TextButton ToggleLeaderboardButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -122,6 +132,7 @@ namespace Quaver.Shared.Screens.Selection
             CreatePlaylistContainer();
             ReorderContainerLayerDepth();
             CreateLeaderboardContainer();
+            CreateLeaderboardToggleContainer();
             CreateModifierSelectorContainer();
             CreateUserProfileContainer();
 
@@ -241,6 +252,26 @@ namespace Quaver.Shared.Screens.Selection
 
             LeaderboardContainer.X = -LeaderboardContainer.Width - ScreenPaddingX;
             LeaderboardContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 500);
+        }
+
+        private void CreateLeaderboardToggleContainer()
+        {
+            // This code is very similar in design to CreateLeaderboardContainer, to
+            // keep it in sync with the leaderboard's position.
+            ToggleLeaderboardButton = new TextButton(UserInterface.LeaderboardPanel, Fonts.LatoRegular, "Toggle Leaderboard", 24, (o, e) =>
+            {
+                IsLeaderboardVisible = !IsLeaderboardVisible;
+                LeaderboardContainer.Visible = IsLeaderboardVisible;
+            })
+            {
+                Parent = Container,
+                Size = new ScalableVector2(300, 20),
+                Alignment = Alignment.TopLeft,
+                X = ScreenPaddingX,
+                Y = FilterPanel.Y + FilterPanel.Height + LeftPanelSpacingY
+            };
+            ToggleLeaderboardButton.X = -LeaderboardContainer.Width - ScreenPaddingX;
+            ToggleLeaderboardButton.MoveToX(ScreenPaddingX, Easing.OutQuint, 500);
         }
 
         /// <summary>
