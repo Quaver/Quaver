@@ -273,7 +273,7 @@ namespace Quaver.Shared.Screens.Selection
                 Size = new ScalableVector2(20, 150),
                 Alignment = Alignment.TopLeft,
                 X = ScreenPaddingX,
-                Y = FilterPanel.Y + FilterPanel.Height + LeftPanelSpacingY
+                Y = (float)(FilterPanel.Y + FilterPanel.Height + LeftPanelSpacingY + (LeaderboardContainer.Y / 2.5))
             };
             ToggleLeaderboardButton.X = -LeaderboardContainer.Width;
             ToggleLeaderboardButton.MoveToX(LeaderboardContainer.Width + ScreenPaddingX, Easing.OutQuint, 500);
