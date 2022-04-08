@@ -32,6 +32,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Managers;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -256,22 +257,26 @@ namespace Quaver.Shared.Screens.Selection
 
         private void CreateLeaderboardToggleContainer()
         {
-            // This code is very similar in design to CreateLeaderboardContainer, to
+            // This code is very similar in design to CreateLeaderboardContainer, in order to
             // keep it in sync with the leaderboard's position.
-            ToggleLeaderboardButton = new TextButton(UserInterface.LeaderboardPanel, Fonts.LatoRegular, "Toggle Leaderboard", 24, (o, e) =>
+            ToggleLeaderboardButton = new TextButton(UserInterface.LeaderboardPanel, Fonts.LatoBlack, "<", 18, (o, e) =>
             {
                 IsLeaderboardVisible = !IsLeaderboardVisible;
-                LeaderboardContainer.Visible = IsLeaderboardVisible;
+
+                if (IsLeaderboardVisible) CreateLeaderboardContainer();
+                LeaderboardContainer.MoveToX(IsLeaderboardVisible ? ScreenPaddingX : -300, Easing.OutQuint, 500);
+                ToggleLeaderboardButton.MoveToX(IsLeaderboardVisible ? LeaderboardContainer.Width + ScreenPaddingX : 0, Easing.OutQuint, 500);
+                if (!IsLeaderboardVisible) LeaderboardContainer.Destroy();
             })
             {
                 Parent = Container,
-                Size = new ScalableVector2(300, 20),
+                Size = new ScalableVector2(20, 150),
                 Alignment = Alignment.TopLeft,
                 X = ScreenPaddingX,
                 Y = FilterPanel.Y + FilterPanel.Height + LeftPanelSpacingY
             };
-            ToggleLeaderboardButton.X = -LeaderboardContainer.Width - ScreenPaddingX;
-            ToggleLeaderboardButton.MoveToX(ScreenPaddingX, Easing.OutQuint, 500);
+            ToggleLeaderboardButton.X = -LeaderboardContainer.Width;
+            ToggleLeaderboardButton.MoveToX(LeaderboardContainer.Width + ScreenPaddingX, Easing.OutQuint, 500);
         }
 
         /// <summary>
