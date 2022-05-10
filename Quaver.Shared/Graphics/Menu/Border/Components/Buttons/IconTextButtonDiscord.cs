@@ -17,7 +17,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public IconTextButtonDiscord() : base(FontAwesome.Get(FontAwesomeIcon.fa_discord),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Discord", (sender, args) =>
             {
-                BrowserHelper.OpenURL($"https://discord.gg/nJa8VFr", true);
+                BrowserHelper.OpenURL($"https://discord.gg/quaver", true);
             })
         {
         }

@@ -41,5 +41,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
             TextSubmitting.FadeTo(0, Easing.Linear, time);
             Wheel.FadeTo(0, Easing.Linear, time);
         }
+
+        public void FadeIn(int time = 250)
+        {
+            TextSubmitting.FadeTo(1, Easing.Linear, time);
+            Wheel.FadeTo(1, Easing.Linear, time);
+        }
     }
 }

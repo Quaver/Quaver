@@ -801,7 +801,10 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
 
                     if (Screen.InReplayMode && Screen.LoadedReplay != null)
+                    {
+                        Screen.LoadedReplay.FromScoreProcessor(Screen.Ruleset.ScoreProcessor);
                         return new ResultsScreen(MapManager.Selected.Value, Screen.LoadedReplay);
+                    }
 
                     return new ResultsScreen(Screen);
                 }, Screen.Failed ? Screen.FailFadeTime : 500);

@@ -785,7 +785,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public long GetPositionFromTime(double time, int index)
         {
             // NoSV Modifier is toggled on
-            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
                 return (long)(time * TrackRounding);
 
             if (index == 0)
@@ -811,7 +811,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             var changes = new List<SVDirectionChange>();
 
-            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
                 return changes;
 
             // Find the first SV index.
@@ -859,7 +859,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <returns></returns>
         public bool IsSVNegative(double time)
         {
-            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
                 return false;
 
             // Find the SV index at time.

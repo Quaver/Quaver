@@ -116,6 +116,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private Bindable<bool> ShowWaveform { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<EditorPlayfieldWaveformAudioDirection> WaveFormAudioDirection { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<EditorPlayfieldWaveformFilter> WaveformFilter { get; }
+
+        /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
         /// </summary>
         public bool IsUneditable { get; }
@@ -210,7 +218,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private EditorPlayfieldWaveform Waveform { get; set; }
+        public EditorPlayfieldWaveform Waveform { get; set; }
 
         /// <summary>
         /// </summary>
@@ -303,7 +311,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform, bool isUneditable = false)
+            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform,
+            Bindable<EditorPlayfieldWaveformAudioDirection> waveFormAudioDirection, Bindable<EditorPlayfieldWaveformFilter> waveformFilter,
+            bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -323,9 +333,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             DefaultLayer = defaultLayer;
             PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
             ShowWaveform = showWaveform;
+            WaveFormAudioDirection = waveFormAudioDirection;
+            WaveformFilter = waveformFilter;
 
             Alignment = Alignment.TopCenter;
-            Tint = ColorHelper.HexToColor("#181818");
+            Tint = new Color(24,24,24);
             Size = new ScalableVector2(ColumnSize * Map.GetKeyCount(), WindowManager.Height);
 
             CreateBorders();
@@ -361,6 +373,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             Skin.ValueChanged += OnSkinChanged;
+            WaveFormAudioDirection.ValueChanged += OnWaveFormAudioDirectionChanged;
+            WaveformFilter.ValueChanged += OnWaveformFilterChanged;
         }
 
         /// <inheritdoc />
@@ -465,6 +479,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             Skin.ValueChanged -= OnSkinChanged;
+            WaveFormAudioDirection.ValueChanged -= OnWaveFormAudioDirectionChanged;
+            WaveformFilter.ValueChanged -= OnWaveformFilterChanged;
 
             base.Destroy();
         }
@@ -541,7 +557,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateWaveform()
+        public void CreateWaveform()
         {
             if (IsUneditable)
                 return;
@@ -1279,7 +1295,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             ActionManager.RemoveHitObject(ho.Info);
-            SelectedHitObjects.Remove(ho.Info);
         }
 
         /// <summary>
@@ -1471,6 +1486,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             foreach (var ho in HitObjects)
                 ho.Refresh();
+        }
+
+        private void OnWaveformFilterChanged(object sender, BindableValueChangedEventArgs<EditorPlayfieldWaveformFilter> e)
+            => ReloadWaveform();
+
+        private void OnWaveFormAudioDirectionChanged(object sender,
+            BindableValueChangedEventArgs<EditorPlayfieldWaveformAudioDirection> e) => ReloadWaveform();
+
+        private void ReloadWaveform()
+        {
+            Waveform?.Destroy();
+            LoadingWaveform.FadeIn();
+            WaveformLoadTask.Run(0);
         }
     }
 }

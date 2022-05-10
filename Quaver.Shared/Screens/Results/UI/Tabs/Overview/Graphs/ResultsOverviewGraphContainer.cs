@@ -70,10 +70,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private Sprite DividerLine { get; set; }
-
-        /// <summary>
-        /// </summary>
         private Sprite GraphContainer { get; set; }
 
         /// <summary>
@@ -134,7 +130,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             CreateFooterContainer();
             CreateContentContainer();
-            CreateDividerLine();
             CreateLeftAndRightContainers();
             CreateJudgementGraph();
             CreateSelectionDropdown();
@@ -186,22 +181,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateDividerLine() => DividerLine = new Sprite
-        {
-            Parent = ContentContainer,
-            Alignment = Alignment.TopCenter,
-            Size = new ScalableVector2(2, ContentContainer.Height),
-            Tint = ColorHelper.HexToColor("#363636")
-        };
-
-        /// <summary>
-        /// </summary>
         private void CreateLeftAndRightContainers()
         {
             LeftContainer = new Container
             {
                 Parent = ContentContainer,
-                Size = new ScalableVector2(ContentContainer.Width / 2 - DividerLine.Width, ContentContainer.Height)
+                Size = new ScalableVector2(ContentContainer.Width / 2 - 2, ContentContainer.Height)
             };
 
             RightContainer = new Container
