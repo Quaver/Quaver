@@ -1393,7 +1393,8 @@ namespace Quaver.Shared.Screens.Edit
                     DifficultyName = "",
                     Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
                     BackgroundFile = "",
-                    Mode = GameMode.Keys4
+                    Mode = GameMode.Keys4,
+                    BPMDoesNotAffectScrollVelocity = true
                 };
 
                 // Create a new directory to house the map.
