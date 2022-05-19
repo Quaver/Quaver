@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -10,14 +9,12 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.API.Replays.Virtual;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
@@ -36,7 +33,6 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Multi;
-using Quaver.Shared.Screens.Results.UI;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
@@ -123,6 +119,11 @@ namespace Quaver.Shared.Screens.Results
         public bool FixedLocalOffset { get; private set; }
 
         /// <summary>
+        ///     Audio channel to play the applause sound
+        /// </summary>
+        public AudioSampleChannel ApplauseChannel { get; }
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public ResultsScreen(GameplayScreen screen)
@@ -136,9 +137,12 @@ namespace Quaver.Shared.Screens.Results
 
             SetDiscordRichPresence();
             View = new ResultsScreenView(this);
-            
+
             if (!Gameplay.Failed)
-                SkinManager.Skin.SoundApplause.CreateChannel().Play();
+            {
+                ApplauseChannel = SkinManager.Skin.SoundApplause.CreateChannel();
+                ApplauseChannel.Play();
+            }
         }
 
         /// <summary>
@@ -257,6 +261,9 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public override void Destroy()
         {
+            if (ApplauseChannel != null && ApplauseChannel.HasPlayed && !ApplauseChannel.HasStopped)
+                ApplauseChannel.Stop();
+
             Processor.Dispose();
             ActiveTab.Dispose();
             IsSubmittingScore.Dispose();
