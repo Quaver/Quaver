@@ -261,9 +261,8 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public override void Destroy()
         {
-            if (ApplauseChannel != null)
-                if (ApplauseChannel.HasPlayed && !ApplauseChannel.HasStopped)
-                    ApplauseChannel.Stop();
+            if (ApplauseChannel != null && ApplauseChannel.HasPlayed && !ApplauseChannel.HasStopped)
+                ApplauseChannel.Stop();
 
             Processor.Dispose();
             ActiveTab.Dispose();
