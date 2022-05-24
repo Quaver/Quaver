@@ -188,9 +188,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
                 // case SelectScreenView selectView:
                 //     selectView.UserProfile?.PerformClickAnimation(Selected);
                 //     break;
-                case DownloadScreenView downloadScreenView:
-                    downloadScreenView?.UserProfile?.PerformClickAnimation(Selected);
-                    break;
+                // case DownloadScreenView downloadScreenView:
+                //     downloadScreenView?.UserProfile?.PerformClickAnimation(Selected);
+                //     break;
             }
         }
     }
