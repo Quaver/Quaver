@@ -1,9 +1,6 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
@@ -15,14 +12,10 @@ using Quaver.Shared.Online.API.Mapsets;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Edit;
-using Quaver.Shared.Screens.Editor;
-using Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo;
 using Quaver.Shared.Screens.Importing;
-using WebSocketSharp;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
-using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Shared.IPC
 {

@@ -5,11 +5,12 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
-namespace Quaver.Shared.Screens.Editor.UI.Graphing
+namespace Quaver.Shared.Screens.Edit.UI
 {
-    public enum EditorVisualizationGraphType
+    public enum EditorCompositionTool
     {
-        Tick,
-        Density
+        Select,
+        Note,
+        LongNote
     }
 }

@@ -7,7 +7,6 @@ using MonoGame.Extended;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.UI.Footer;
-using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
