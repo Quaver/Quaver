@@ -10,8 +10,6 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Download;
-using Quaver.Shared.Screens.Select;
 using Steamworks;
 using Wobble.Bindables;
 using Wobble.Graphics;

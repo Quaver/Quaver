@@ -24,7 +24,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Input;

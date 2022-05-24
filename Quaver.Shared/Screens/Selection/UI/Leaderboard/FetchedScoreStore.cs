@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using Quaver.Shared.Database.Scores;
 
-namespace Quaver.Shared.Screens.Select.UI.Leaderboard
+namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
 {
     public struct FetchedScoreStore
     {

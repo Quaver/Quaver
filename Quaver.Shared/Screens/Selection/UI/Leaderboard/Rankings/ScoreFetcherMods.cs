@@ -9,7 +9,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
