@@ -114,7 +114,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             }
 
             // The button is no longer in range of the container, so uncontain it.
-            if (Container != null && RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (Container != null && RectangleF.Intersection(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 Container.RemoveContainedDrawable(this);
 
             base.Update(gameTime);

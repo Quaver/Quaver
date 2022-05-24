@@ -60,7 +60,7 @@ namespace Quaver.Shared.Screens.Options.Items
             // Set visibility based on if the options item is visible inside of the container.
             // Helps to raise FPS by not drawing unnecessary items
             if (Parent is Drawable contentContainer && contentContainer.Parent is ScrollContainer container)
-                Visible = !RectangleF.Intersect(ScreenRectangle, container.ScreenRectangle).IsEmpty;
+                Visible = !RectangleF.Intersection(ScreenRectangle, container.ScreenRectangle).IsEmpty;
             else
                 Visible = true;
 
