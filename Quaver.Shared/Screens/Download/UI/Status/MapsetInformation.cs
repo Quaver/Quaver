@@ -15,7 +15,6 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Download.UI.Drawable;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
-using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;

@@ -6,14 +6,9 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Select;
-using Quaver.Shared.Screens.Select.UI.Modifiers;
 using Quaver.Shared.Screens.Selection;
-using Quaver.Shared.Screens.Settings;
 using Wobble;
-using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI
 {
@@ -315,7 +310,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     return;
                 }
 
-                DialogManager.Show(new ModifiersDialog());
+                // DialogManager.Show(new ModifiersDialog());
             })
             {
                 DestroyIfParentIsNull = false

@@ -94,9 +94,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
                 case MenuScreenView menuView:
                     NavbarButton = menuView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
                     break;
-                case SelectScreenView selectView:
-                    NavbarButton = selectView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
-                    break;
+                // case SelectScreenView selectView:
+                //     NavbarButton = selectView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
+                //     break;
                 case DownloadScreenView downloadScreenView:
                     NavbarButton = downloadScreenView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
                     break;
