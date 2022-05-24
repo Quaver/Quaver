@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
@@ -15,28 +14,16 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
-using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Results;
-using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
 using Quaver.Shared.Skinning;
-using SQLite;
-using TimeAgo;
 using Wobble;
 using Wobble.Assets;
-using Wobble.Bindables;
-using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
-using Wobble.Graphics.UI.Buttons;
-using Wobble.Graphics.UI.Dialogs;
-using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Managers;
-using Wobble.Window;
-using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
-using MathHelper = Quaver.API.Helpers.MathHelper;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
