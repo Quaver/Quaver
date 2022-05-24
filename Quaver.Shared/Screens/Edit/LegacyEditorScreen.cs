@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorScreen(Qua map)
         {
-            //
+            // legacy screen
         }
 
         public override QuaverScreenType Type { get; }
