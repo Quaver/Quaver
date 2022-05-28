@@ -8,8 +8,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Result.UI;
-using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;

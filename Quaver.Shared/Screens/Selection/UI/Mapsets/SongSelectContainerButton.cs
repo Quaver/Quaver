@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = RectangleF.Intersect(ScreenRectangle, ClickableArea.ScreenRectangle);
+            var newRect = RectangleF.Intersection(ScreenRectangle, ClickableArea.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

@@ -1,11 +1,9 @@
 using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
-using Quaver.Shared.Screens.Result.UI;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;

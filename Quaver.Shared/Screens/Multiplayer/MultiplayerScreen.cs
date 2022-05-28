@@ -3,23 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.API.Enums;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
-using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
-using Quaver.Shared.Discord;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.MultiplayerLobby;
-using Quaver.Shared.Screens.Select.UI.Modifiers;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -91,8 +85,8 @@ namespace Quaver.Shared.Screens.Multiplayer
                 if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                     LeaveGame();
 
-                if (KeyboardManager.IsUniqueKeyPress(Keys.F1) && OnlineManager.CurrentGame?.FreeModType != MultiplayerFreeModType.None)
-                    DialogManager.Show(new ModifiersDialog());
+                // if (KeyboardManager.IsUniqueKeyPress(Keys.F1) && OnlineManager.CurrentGame?.FreeModType != MultiplayerFreeModType.None)
+                //     DialogManager.Show(new ModifiersDialog());
             }
 
             KeepPlayingAudioTrack();

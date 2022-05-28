@@ -5,11 +5,12 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
-namespace Quaver.Shared.Screens.Select
+namespace Quaver.Shared.Screens.Edit.UI
 {
-    public enum SelectContainerStatus
+    public enum EditorCompositionTool
     {
-        Mapsets,
-        Difficulty
+        Select,
+        Note,
+        LongNote
     }
 }

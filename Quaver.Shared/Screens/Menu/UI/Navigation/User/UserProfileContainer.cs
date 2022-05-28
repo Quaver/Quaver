@@ -6,18 +6,14 @@
 */
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Download;
-using Quaver.Shared.Screens.Select;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -94,12 +90,12 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
                 case MenuScreenView menuView:
                     NavbarButton = menuView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
                     break;
-                case SelectScreenView selectView:
-                    NavbarButton = selectView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
-                    break;
-                case DownloadScreenView downloadScreenView:
-                    NavbarButton = downloadScreenView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
-                    break;
+                // case SelectScreenView selectView:
+                //     NavbarButton = selectView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
+                //     break;
+                // case DownloadScreenView downloadScreenView:
+                //     NavbarButton = downloadScreenView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
+                //     break;
             }
 
             if (NavbarButton == null)

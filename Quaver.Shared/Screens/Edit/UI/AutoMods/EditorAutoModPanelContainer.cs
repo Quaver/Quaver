@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using Quaver.API.Maps;
 using Quaver.API.Maps.AutoMod.Issues;
 using Quaver.API.Maps.AutoMod.Issues.Audio;
@@ -17,15 +16,12 @@ using Quaver.API.Maps.AutoMod.Issues.TimingPoints;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
-using Quaver.Shared.Screens.Editor.UI.Dialogs;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Platform;
-using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 {

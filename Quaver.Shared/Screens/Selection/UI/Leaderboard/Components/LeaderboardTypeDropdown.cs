@@ -6,7 +6,6 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;

@@ -5,7 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
-namespace Quaver.Shared.Screens.Select.UI.Leaderboard
+namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
 {
     public enum LeaderboardType
     {

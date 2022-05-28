@@ -2,25 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys.Structures;
-using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Graphics.Graphs
 {
@@ -186,7 +184,7 @@ namespace Quaver.Shared.Graphics.Graphs
                     var rating = group.Any() ? group.Average(s => s.TotalStrainValue) : 0;
                     if (rating < 0.05)
                         continue;
-                    var width = Microsoft.Xna.Framework.MathHelper.Clamp(rating / highestDiff * Width, 6, Width);
+                    var width = MathHelper.Clamp(rating / highestDiff * Width, 6, Width);
 
                     var bar = new Sprite
                     {

@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using MoreLinq;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
@@ -12,15 +10,14 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Loading;
-using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
@@ -297,7 +294,7 @@ namespace Quaver.Shared.Screens.Tournament
                 Logger.Error($"Unhandled exception thrown at TournamentScreen.HandleSpectator()\n{e}", LogType.Runtime);
                 Logger.Error(e.StackTrace, LogType.Runtime);
             }
-            
+
             HandlePlayCompletion();
         }
 
@@ -479,7 +476,7 @@ namespace Quaver.Shared.Screens.Tournament
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
 
-            Helpers.RichPresenceHelper.UpdateRichPresence("Tournament Viewer", MapManager.Selected.Value.ToString());
+            RichPresenceHelper.UpdateRichPresence("Tournament Viewer", MapManager.Selected.Value.ToString());
         }
     }
 }

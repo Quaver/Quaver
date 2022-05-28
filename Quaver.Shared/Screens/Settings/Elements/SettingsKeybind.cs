@@ -8,13 +8,10 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
-using Quaver.Shared.Helpers;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Helpers;
 using Wobble.Input;
 

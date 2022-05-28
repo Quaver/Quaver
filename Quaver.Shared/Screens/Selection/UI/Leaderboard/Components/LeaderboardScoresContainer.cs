@@ -14,7 +14,6 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Skinning;
 using TagLib.Ape;
 using Wobble.Graphics;

@@ -3,7 +3,6 @@ using Quaver.Server.Client.Structures;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
 {
