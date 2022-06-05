@@ -17,7 +17,7 @@ Getting started with **Quaver** development is extremely easy.
 
 ## Contributing 
 
-The best place to begin contributing to Quaver is through our [Discord server](https://discord.gg/nJa8VFr), where all of our developers, community, and testers are located.
+The best place to begin contributing to Quaver is through our [Discord server](https://discord.gg/quaver), where all of our developers, community, and testers are located.
 
 Any contributions can be made through opening a pull request. When contributing however, please keep in mind that there should only be one branch/pull request per feature. This means if your branch is titled `my-new-feature`, you shouldn't have any unrelated commits, and the same system is applied to pull requests. Please make sure to keep your pull requests short and concise.
 
