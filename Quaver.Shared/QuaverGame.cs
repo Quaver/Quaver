@@ -407,6 +407,8 @@ namespace Quaver.Shared
         {
             DeleteTemporaryFiles();
 
+			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
             DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
