@@ -168,6 +168,6 @@ namespace Quaver.Shared.Database.Playlists
             return missing;
         }
 
-        public void OpenUrl() => BrowserHelper.OpenURL($"https://quavergame.com/mappool/{OnlineMapPoolId}");
+        public void OpenUrl() => BrowserHelper.OpenURL($"https://quavergame.com/playlist/{OnlineMapPoolId}");
     }
 }
