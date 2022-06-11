@@ -7,6 +7,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Playlists;
@@ -344,18 +345,26 @@ namespace Quaver.Shared.Database.Playlists
 
             var response = new APIRequestPlaylistMaps(playlist).ExecuteRequest();
 
+            var missingMapCount = 0;
             foreach (var id in response.MapIds)
             {
                 var map = MapManager.FindMapFromOnlineId(id);
 
                 // Map is already in playlist or doesn't exist
-                if (map == null || playlist.Maps.Any(x => x.MapId == id))
+                if (map == null)
+                {
+                    missingMapCount++;
+                    continue;
+                }
+
+                if (playlist.Maps.Any(x => x.MapId == id))
                     continue;
 
                 AddMapToPlaylist(playlist, map);
-                playlist.Maps.Add(map);
             }
 
+            NotificationManager.Show(NotificationLevel.Info,
+                $"Skipped {missingMapCount} missing maps during playlist sync");
             Logger.Important($"Playlist {playlist.Name} (#{playlist.Id}) has been synced to map pool: {playlist.OnlineMapPoolId}", LogType.Runtime);
             PlaylistSynced?.Invoke(typeof(PlaylistManager), new PlaylistSyncedEventArgs(playlist));
         }
@@ -511,6 +520,62 @@ namespace Quaver.Shared.Database.Playlists
                     Logger.Error(e, LogType.Runtime);
                 }
             });
+        }
+
+        /// <summary>
+        ///     Imports an online playlist
+        /// </summary>
+        /// <param name="onlineId"></param>
+        public static void ImportPlaylist(int onlineId)
+        {
+            Logger.Important($"Importing playlist: ID {onlineId}", LogType.Runtime);
+            var playlistResponse = new APIRequestPlaylistInformation(onlineId).ExecuteRequest();
+            if (playlistResponse == null || playlistResponse.Status != 200)
+            {
+                Logger.Important(
+                    $"Failed retrieving playlist information with error code: {playlistResponse?.Status ?? -1}",
+                    LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve playlist information");
+                return;
+            }
+
+            var playlistAlreadyExistsLocally = false;
+
+            var playlist = Playlists.Find(p => p.OnlineMapPoolId == onlineId);
+            if (playlist == null)
+            {
+                var newPlaylist = new Playlist()
+                {
+                    Name = playlistResponse.PlaylistInformation.Name,
+                    Description = playlistResponse.PlaylistInformation.Description,
+                    Creator = playlistResponse.PlaylistInformation.OwnerUsername,
+                    OnlineMapPoolId = playlistResponse.PlaylistInformation.Id,
+                    OnlineMapPoolCreatorId = playlistResponse.PlaylistInformation.OwnerId
+                };
+
+                AddPlaylist(newPlaylist);
+                playlist = Playlists.Find(p => p.OnlineMapPoolId == onlineId);
+            }
+            else
+            {
+                Logger.Important($"Playlist with online ID #{playlist.OnlineMapPoolId} already exists locally",
+                    LogType.Network);
+
+                playlist.Name = playlistResponse.PlaylistInformation.Name;
+                playlist.Description = playlistResponse.PlaylistInformation.Description;
+                playlist.Creator = playlistResponse.PlaylistInformation.OwnerUsername;
+
+                EditPlaylist(playlist, null);
+
+                playlistAlreadyExistsLocally = true;
+            }
+
+            SyncPlaylistToMapPool(playlist);
+
+            if (playlistAlreadyExistsLocally)
+                NotificationManager.Show(NotificationLevel.Success, $"Successfully updated playlist {playlist.Name}");
+            else
+                NotificationManager.Show(NotificationLevel.Success, $"Successfully imported playlist {playlist.Name}");
         }
 
         /// <summary>
