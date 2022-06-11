@@ -345,7 +345,7 @@ namespace Quaver.Shared.Database.Playlists
 
             var response = new APIRequestPlaylistMaps(playlist).ExecuteRequest();
 
-            var missingMapCount = 0;
+            var missingMapIds = new List<int>();
             foreach (var id in response.MapIds)
             {
                 var map = MapManager.FindMapFromOnlineId(id);
@@ -353,7 +353,7 @@ namespace Quaver.Shared.Database.Playlists
                 // Map is already in playlist or doesn't exist
                 if (map == null)
                 {
-                    missingMapCount++;
+                    missingMapIds.Add(id);
                     continue;
                 }
 
@@ -363,8 +363,14 @@ namespace Quaver.Shared.Database.Playlists
                 AddMapToPlaylist(playlist, map);
             }
 
-            NotificationManager.Show(NotificationLevel.Info,
-                $"Skipped {missingMapCount} missing maps during playlist sync");
+            if (missingMapIds.Count > 0)
+            {
+                Logger.Debug("Skipped following maps during playlist sync: " + String.Join(',', missingMapIds),
+                    LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Info,
+                    $"Skipped {missingMapIds.Count} missing maps during playlist sync");
+            }
+
             Logger.Important($"Playlist {playlist.Name} (#{playlist.Id}) has been synced to map pool: {playlist.OnlineMapPoolId}", LogType.Runtime);
             PlaylistSynced?.Invoke(typeof(PlaylistManager), new PlaylistSyncedEventArgs(playlist));
         }
@@ -559,7 +565,7 @@ namespace Quaver.Shared.Database.Playlists
             else
             {
                 Logger.Important($"Playlist with online ID #{playlist.OnlineMapPoolId} already exists locally",
-                    LogType.Network);
+                    LogType.Runtime);
 
                 playlist.Name = playlistResponse.PlaylistInformation.Name;
                 playlist.Description = playlistResponse.PlaylistInformation.Description;
