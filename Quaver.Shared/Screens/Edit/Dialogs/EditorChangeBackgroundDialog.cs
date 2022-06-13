@@ -70,9 +70,10 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 {
                     foreach (var map in screen.Map.Mapset.Maps)
                     {
-                        var qua = map.LoadQua();
                         if (map.Id == screen.Map.Id)
                             continue;
+
+                        var qua = map.LoadQua();
 
                         // If background is in use by another map in the mapset, don't remove it.
                         if (qua.GetBackgroundPath() != null && qua.BackgroundFile == backgroundFile)
