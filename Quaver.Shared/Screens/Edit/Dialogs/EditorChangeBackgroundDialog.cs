@@ -64,6 +64,10 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 var name = Path.GetFileName(file);
                 CopyFileToFolder(screen, file);
 
+                // Removes existing map background file if it exists.
+                if (!string.IsNullOrEmpty(screen.WorkingMap.BackgroundFile))
+                    File.Delete($"{ConfigManager.SongDirectory}/{screen.Map.Directory}/{screen.WorkingMap.BackgroundFile}");
+
                 screen.WorkingMap.BackgroundFile = name;
                 screen.Map.BackgroundPath = name;
                 screen.Save(true, true);
@@ -138,7 +142,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         }
 
         /// <summary>
-        ///     Copies the icnoming file to the mapset directory.
+        ///     Copies the incoming file to the mapset directory.
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="file"></param>
