@@ -248,8 +248,7 @@ namespace Quaver.Shared.Database.Playlists
             {
                 id = DatabaseManager.Connection.Insert(playlist);
 
-                Logger.Important($"Successfully added playlist: {playlist.Name} (#{playlist.Id}) (by: {playlist.Creator}) to the database",
-                    LogType.Runtime);
+                Logger.Important($"Successfully added playlist: {playlist.Name} (#{playlist.Id}) (by: {playlist.Creator}) to the database", LogType.Runtime);
 
                 CopyPlaylistBanner(playlist, bannerPath);
             }
@@ -365,10 +364,8 @@ namespace Quaver.Shared.Database.Playlists
 
             if (missingMapIds.Count > 0)
             {
-                Logger.Debug("Skipped following maps during playlist sync: " + String.Join(',', missingMapIds),
-                    LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Info,
-                    $"Skipped {missingMapIds.Count} locally missing maps during playlist sync");
+                Logger.Debug("Skipped following maps during playlist sync: " + String.Join(',', missingMapIds), LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Info, $"Skipped {missingMapIds.Count} locally missing maps during playlist sync");
             }
 
             Logger.Important($"Playlist {playlist.Name} (#{playlist.Id}) has been synced to map pool: {playlist.OnlineMapPoolId}", LogType.Runtime);
@@ -538,9 +535,7 @@ namespace Quaver.Shared.Database.Playlists
             var playlistResponse = new APIRequestPlaylistInformation(onlineId).ExecuteRequest();
             if (playlistResponse == null || playlistResponse.Status != 200)
             {
-                Logger.Important(
-                    $"Failed retrieving playlist information with error code: {playlistResponse?.Status ?? -1}",
-                    LogType.Network);
+                Logger.Important($"Failed retrieving playlist information with error code: {playlistResponse?.Status ?? -1}", LogType.Network);
                 NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve playlist information");
                 return;
             }
@@ -563,8 +558,7 @@ namespace Quaver.Shared.Database.Playlists
             }
             else
             {
-                Logger.Important($"Playlist with online ID #{playlist.OnlineMapPoolId} already exists locally",
-                    LogType.Runtime);
+                Logger.Important($"Playlist with online ID #{playlist.OnlineMapPoolId} already exists locally", LogType.Runtime);
 
                 playlist.Name = playlistResponse.PlaylistInformation.Name;
                 playlist.Description = playlistResponse.PlaylistInformation.Description;
