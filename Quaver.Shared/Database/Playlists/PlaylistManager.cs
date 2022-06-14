@@ -532,10 +532,22 @@ namespace Quaver.Shared.Database.Playlists
         public static void ImportPlaylist(int onlineId)
         {
             Logger.Important($"Importing playlist: ID {onlineId}", LogType.Runtime);
-            var playlistResponse = new APIRequestPlaylistInformation(onlineId).ExecuteRequest();
+            PlaylistInformationResponse playlistResponse;
+
+            try
+            {
+                playlistResponse = new APIRequestPlaylistInformation(onlineId).ExecuteRequest();
+            }
+            catch (Exception e)
+            {
+                Logger.Important($"Failed to retrieve playlist information: {e.StackTrace}", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve playlist information");
+                return;
+            }
+
             if (playlistResponse == null || playlistResponse.Status != 200)
             {
-                Logger.Important($"Failed retrieving playlist information with error code: {playlistResponse?.Status ?? -1}", LogType.Network);
+                Logger.Important($"Failed to retrieve playlist information with error code: {playlistResponse?.Status ?? -1}", LogType.Network);
                 NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve playlist information");
                 return;
             }
