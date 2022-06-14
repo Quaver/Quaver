@@ -474,6 +474,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressF4();
             HandleKeyPressF5();
             HandleKeyPressF6();
+            HandleKeyPressF10();
             HandleKeyPressShiftH();
         }
 
@@ -529,6 +530,14 @@ namespace Quaver.Shared.Screens.Edit
 
             if (plugin.IsActive)
                 plugin.Initialize();
+        }
+
+        private void HandleKeyPressF10()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F10))
+                return;
+
+            ExitToTestPlay(true);
         }
 
         /// <summary>
@@ -1321,7 +1330,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public void ExitToTestPlay()
+        public void ExitToTestPlay(bool fromstart = false)
         {
             if (Exiting)
                 return;
@@ -1357,7 +1366,14 @@ namespace Quaver.Shared.Screens.Edit
                 var map = ObjectHelper.DeepClone(WorkingMap);
                 map.ApplyMods(ModManager.Mods);
 
-                return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
+                if (!fromstart)
+                {
+                    return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
+                }
+                else
+                {
+                    return new GameplayScreen(map, "", new List<Score>(), null, true, 0, false, null, null, false, true);
+                }               
             });
         }
 
