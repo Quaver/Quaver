@@ -368,7 +368,7 @@ namespace Quaver.Shared.Database.Playlists
                 Logger.Debug("Skipped following maps during playlist sync: " + String.Join(',', missingMapIds),
                     LogType.Runtime);
                 NotificationManager.Show(NotificationLevel.Info,
-                    $"Skipped {missingMapIds.Count} missing maps during playlist sync");
+                    $"Skipped {missingMapIds.Count} locally missing maps during playlist sync");
             }
 
             Logger.Important($"Playlist {playlist.Name} (#{playlist.Id}) has been synced to map pool: {playlist.OnlineMapPoolId}", LogType.Runtime);
