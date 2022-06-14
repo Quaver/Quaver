@@ -550,7 +550,7 @@ namespace Quaver.Shared.Database.Playlists
             var playlist = Playlists.Find(p => p.OnlineMapPoolId == onlineId);
             if (playlist == null)
             {
-                var newPlaylist = new Playlist()
+                playlist = new Playlist()
                 {
                     Name = playlistResponse.PlaylistInformation.Name,
                     Description = playlistResponse.PlaylistInformation.Description,
@@ -559,8 +559,7 @@ namespace Quaver.Shared.Database.Playlists
                     OnlineMapPoolCreatorId = playlistResponse.PlaylistInformation.OwnerId
                 };
 
-                AddPlaylist(newPlaylist);
-                playlist = Playlists.Find(p => p.OnlineMapPoolId == onlineId);
+                AddPlaylist(playlist);
             }
             else
             {
