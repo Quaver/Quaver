@@ -571,10 +571,8 @@ namespace Quaver.Shared.Database.Playlists
 
             SyncPlaylistToMapPool(playlist);
 
-            if (playlistAlreadyExistsLocally)
-                NotificationManager.Show(NotificationLevel.Success, $"Successfully updated playlist {playlist.Name}");
-            else
-                NotificationManager.Show(NotificationLevel.Success, $"Successfully imported playlist {playlist.Name}");
+            var action = playlistAlreadyExistsLocally ? "updated" : "imported";
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully {action} playlist {playlist.Name}");
         }
 
         /// <summary>
