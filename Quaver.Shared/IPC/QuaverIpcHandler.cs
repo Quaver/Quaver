@@ -4,6 +4,7 @@ using System.Net;
 using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Online;
@@ -52,6 +53,8 @@ namespace Quaver.Shared.IPC
                 HandleMapSelection(message);
             else if (message.StartsWith("mapset/"))
                 HandleMapsetSelection(message);
+            else if (message.StartsWith("playlist/"))
+                HandlePlaylistImport(message);
         }
 
         /// <summary>
@@ -159,6 +162,23 @@ namespace Quaver.Shared.IPC
                 NotificationManager.Show(NotificationLevel.Error, $"An error occurred while fetching mapset information.");
                 Logger.Error(e, LogType.Network);
             }
+        }
+
+        /// <summary>
+        ///     Imports an online playlist
+        /// </summary>
+        /// <param name="message"></param>
+        private static void HandlePlaylistImport(string message)
+        {
+            message = message.Replace("playlist/", "");
+
+            if (!int.TryParse(message, out var id))
+            {
+                NotificationManager.Show(NotificationLevel.Error, $"The provided playlist id was not a valid number.");
+                return;
+            }
+
+            PlaylistManager.ImportPlaylist(id);
         }
 
         /// <summary>

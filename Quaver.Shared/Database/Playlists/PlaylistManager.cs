@@ -7,6 +7,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Playlists;
@@ -247,8 +248,7 @@ namespace Quaver.Shared.Database.Playlists
             {
                 id = DatabaseManager.Connection.Insert(playlist);
 
-                Logger.Important($"Successfully added playlist: {playlist.Name} (#{playlist.Id}) (by: {playlist.Creator}) to the database",
-                    LogType.Runtime);
+                Logger.Important($"Successfully added playlist: {playlist.Name} (#{playlist.Id}) (by: {playlist.Creator}) to the database", LogType.Runtime);
 
                 CopyPlaylistBanner(playlist, bannerPath);
             }
@@ -344,16 +344,28 @@ namespace Quaver.Shared.Database.Playlists
 
             var response = new APIRequestPlaylistMaps(playlist).ExecuteRequest();
 
+            var missingMapIds = new List<int>();
             foreach (var id in response.MapIds)
             {
                 var map = MapManager.FindMapFromOnlineId(id);
 
                 // Map is already in playlist or doesn't exist
-                if (map == null || playlist.Maps.Any(x => x.MapId == id))
+                if (map == null)
+                {
+                    missingMapIds.Add(id);
+                    continue;
+                }
+
+                if (playlist.Maps.Any(x => x.MapId == id))
                     continue;
 
                 AddMapToPlaylist(playlist, map);
-                playlist.Maps.Add(map);
+            }
+
+            if (missingMapIds.Count > 0)
+            {
+                Logger.Debug("Skipped following maps during playlist sync: " + String.Join(',', missingMapIds), LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Info, $"Skipped {missingMapIds.Count} locally missing maps during playlist sync");
             }
 
             Logger.Important($"Playlist {playlist.Name} (#{playlist.Id}) has been synced to map pool: {playlist.OnlineMapPoolId}", LogType.Runtime);
@@ -511,6 +523,68 @@ namespace Quaver.Shared.Database.Playlists
                     Logger.Error(e, LogType.Runtime);
                 }
             });
+        }
+
+        /// <summary>
+        ///     Imports an online playlist
+        /// </summary>
+        /// <param name="onlineId"></param>
+        public static void ImportPlaylist(int onlineId)
+        {
+            Logger.Important($"Importing playlist: ID {onlineId}", LogType.Runtime);
+            PlaylistInformationResponse playlistResponse;
+
+            try
+            {
+                playlistResponse = new APIRequestPlaylistInformation(onlineId).ExecuteRequest();
+            }
+            catch (Exception e)
+            {
+                Logger.Important($"Failed to retrieve playlist information: {e.StackTrace}", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve playlist information");
+                return;
+            }
+
+            if (playlistResponse == null || playlistResponse.Status != 200)
+            {
+                Logger.Important($"Failed to retrieve playlist information with error code: {playlistResponse?.Status ?? -1}", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve playlist information");
+                return;
+            }
+
+            var playlistAlreadyExistsLocally = false;
+
+            var playlist = Playlists.Find(p => p.OnlineMapPoolId == onlineId);
+            if (playlist == null)
+            {
+                playlist = new Playlist()
+                {
+                    Name = playlistResponse.PlaylistInformation.Name,
+                    Description = playlistResponse.PlaylistInformation.Description,
+                    Creator = playlistResponse.PlaylistInformation.OwnerUsername,
+                    OnlineMapPoolId = playlistResponse.PlaylistInformation.Id,
+                    OnlineMapPoolCreatorId = playlistResponse.PlaylistInformation.OwnerId
+                };
+
+                AddPlaylist(playlist);
+            }
+            else
+            {
+                Logger.Important($"Playlist with online ID #{playlist.OnlineMapPoolId} already exists locally", LogType.Runtime);
+
+                playlist.Name = playlistResponse.PlaylistInformation.Name;
+                playlist.Description = playlistResponse.PlaylistInformation.Description;
+                playlist.Creator = playlistResponse.PlaylistInformation.OwnerUsername;
+
+                EditPlaylist(playlist, null);
+
+                playlistAlreadyExistsLocally = true;
+            }
+
+            SyncPlaylistToMapPool(playlist);
+
+            var action = playlistAlreadyExistsLocally ? "updated" : "imported";
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully {action} playlist {playlist.Name}");
         }
 
         /// <summary>
