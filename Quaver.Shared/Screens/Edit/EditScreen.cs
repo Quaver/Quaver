@@ -1330,7 +1330,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public void ExitToTestPlay(bool fromstart = false)
+        public void ExitToTestPlay(bool fromStart = false)
         {
             if (Exiting)
                 return;
@@ -1366,7 +1366,7 @@ namespace Quaver.Shared.Screens.Edit
                 var map = ObjectHelper.DeepClone(WorkingMap);
                 map.ApplyMods(ModManager.Mods);
 
-                if (!fromstart)
+                if (!fromStart)
                 {
                     return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
                 }
