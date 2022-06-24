@@ -32,6 +32,7 @@ namespace Quaver.Shared.Modifiers.Mods
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
             ModIdentifier.Autoplay,
+            ModIdentifier.NoMiss
         };
 
         public Color ModColor { get; } = ColorHelper.HexToColor("#2F80ED");

@@ -704,6 +704,12 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!Screen.Failed && !Screen.IsPlayComplete || Screen.IsSongSelectPreview || Screen is TournamentGameplayScreen)
                 return;
 
+            if (Screen.Failed && !Screen.HasQuit && Screen.Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+            {
+                Screen.Retry();
+                return;
+            }
+
             Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (Screen.Exiting && Screen.Failed)
