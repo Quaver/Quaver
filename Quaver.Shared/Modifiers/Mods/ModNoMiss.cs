@@ -28,7 +28,7 @@ namespace Quaver.Shared.Modifiers.Mods
             ModIdentifier.NoFail
         };
 
-        public Color ModColor { get; } = ColorHelper.HexToColor("#2D9CDB");
+        public Color ModColor { get; } = ColorHelper.HexToColor("#EB5757");
 
         public void InitializeMod()
         {
