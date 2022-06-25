@@ -67,9 +67,10 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     const int delay = 500;
 
+
                     if (Screen.PlayTestAudioTime < StartDelay)
                     {
-                        Time = -delay;
+                        Time = Screen.PlayTestAudioTime <= 500 ? -1500 : -delay;
                         return;
                     }
 
