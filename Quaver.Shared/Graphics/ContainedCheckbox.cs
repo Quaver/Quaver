@@ -13,13 +13,13 @@ namespace Quaver.Shared.Graphics
         /// <summary>
         /// </summary>
         private Drawable Container { get; }
-        
-        public ContainedCheckbox(Drawable container, Bindable<bool> bindedValue, Vector2 size, Texture2D activeImage, 
+
+        public ContainedCheckbox(Drawable container, Bindable<bool> bindedValue, Vector2 size, Texture2D activeImage,
             Texture2D inactiveImage, bool disposeBindableOnDestroy) : base(bindedValue, size, activeImage, inactiveImage, disposeBindableOnDestroy)
         {
             Container = container;
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -29,7 +29,7 @@ namespace Quaver.Shared.Graphics
             if (Container == null)
                 return base.IsMouseInClickArea();
 
-            var newRect = RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle);
+            var newRect = RectangleF.Intersection(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

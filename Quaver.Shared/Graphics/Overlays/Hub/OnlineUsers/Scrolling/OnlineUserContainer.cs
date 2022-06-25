@@ -383,6 +383,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             OnlineManager.Client.OnUsersOnline += OnUsersOnline;
             OnlineManager.Client.OnUserConnected += OnUserConnected;
             OnlineManager.Client.OnUserDisconnected += OnUserDisconnected;
+            OnlineManager.Client.OnUserFriendsListReceived += OnFriendsListReceived;
         }
 
         /// <summary>
@@ -395,6 +396,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             OnlineManager.Client.OnUsersOnline -= OnUsersOnline;
             OnlineManager.Client.OnUserConnected -= OnUserConnected;
             OnlineManager.Client.OnUserDisconnected -= OnUserDisconnected;
+            OnlineManager.Client.OnUserFriendsListReceived -= OnFriendsListReceived;
         }
 
         /// <summary>
@@ -433,6 +435,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
             RemoveUser(user.Item);
         }
+
+        private void OnFriendsListReceived(object sender, UserFriendsListEventArgs e) => ResetPool();
 
         /// <summary>
         ///     Returns a list of filtered users

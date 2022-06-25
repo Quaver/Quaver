@@ -9,9 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
-using Microsoft.Xna.Framework;
-using MonoGame.Extended.Collections;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client;
@@ -22,7 +19,6 @@ using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Listening;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -36,35 +32,23 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Online;
 using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Graphics.Online.Username;
-using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Modifiers;
-using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Download;
-using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multi;
-using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs;
 using Quaver.Shared.Screens.Music;
-using Quaver.Shared.Screens.Select;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Tournament;
 using Steamworks;
-using UniversalThreadManagement;
 using Wobble;
 using Wobble.Bindables;
-using Wobble.Discord;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
-using static Quaver.Shared.Online.OnlineManager;
 
 namespace Quaver.Shared.Online
 {
@@ -564,14 +548,14 @@ namespace Quaver.Shared.Online
 
                 var game = GameBase.Game as QuaverGame;
 
-                // If in song select, update the banner of the currently selected map.
-                if (game.CurrentScreen is SelectScreen screen)
-                {
-                    var view = screen.View as SelectScreenView;
-
-                    if (MapManager.Selected.Value == map)
-                        view.Banner.RankedStatus.UpdateMap(map);
-                }
+                // // If in song select, update the banner of the currently selected map.
+                // if (game.CurrentScreen is SelectScreen screen)
+                // {
+                //     var view = screen.View as SelectScreenView;
+                //
+                //     if (MapManager.Selected.Value == map)
+                //         view.Banner.RankedStatus.UpdateMap(map);
+                // }
             }
             catch (Exception)
             {

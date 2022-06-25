@@ -23,14 +23,14 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         {
             ClickableArea = clickableArea;
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = RectangleF.Intersect(ScreenRectangle, ClickableArea.ScreenRectangle);
+            var newRect = RectangleF.Intersection(ScreenRectangle, ClickableArea.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

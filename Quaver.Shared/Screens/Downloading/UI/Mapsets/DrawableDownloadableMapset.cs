@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         public override void Update(GameTime gameTime)
         {
             // Only perform animations if the drawable isn't visible
-            if (RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (RectangleF.Intersection(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
             {
                 Button.Update(gameTime);
                 PerformTransformations(gameTime);

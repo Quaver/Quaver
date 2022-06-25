@@ -11,16 +11,16 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
         /// <summary>
         /// </summary>
         private Drawable ClickableArea { get; }
-        
+
         public DrawableSongRequestButton(Texture2D image, Drawable clickableArea) : base(image)  => ClickableArea = clickableArea;
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = RectangleF.Intersect(ScreenRectangle, ClickableArea.ScreenRectangle);
+            var newRect = RectangleF.Intersection(ScreenRectangle, ClickableArea.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

@@ -1,24 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Quaver.Shared.Audio;
+﻿using System.Linq;
 using Quaver.Shared.Config;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Options;
-using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
-using Quaver.Shared.Screens.Settings;
-using Wobble;
 using Wobble.Graphics.UI.Dialogs;
-using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Offset
 {

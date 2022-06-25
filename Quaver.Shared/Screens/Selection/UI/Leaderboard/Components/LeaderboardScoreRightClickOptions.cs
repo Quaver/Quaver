@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -13,17 +12,13 @@ using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
-using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Platform;
-using Wobble.Platform.Linux;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {

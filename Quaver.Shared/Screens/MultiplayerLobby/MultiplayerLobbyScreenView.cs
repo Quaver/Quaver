@@ -1,25 +1,17 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Footer;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Selected;
-using Quaver.Shared.Screens.Select.UI.Mapsets;
-using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Scheduling;
 using Wobble.Screens;
-using CreateGameDialog = Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create.CreateGameDialog;
-using DrawableMapset = Quaver.Shared.Screens.Selection.UI.Mapsets.DrawableMapset;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby
 {

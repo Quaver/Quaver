@@ -1,12 +1,7 @@
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Music;
-using Quaver.Shared.Screens.Settings;
 using Wobble;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons

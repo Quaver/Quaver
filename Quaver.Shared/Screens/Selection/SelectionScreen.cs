@@ -30,10 +30,10 @@ using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Tournament;
@@ -545,6 +545,9 @@ namespace Quaver.Shared.Screens.Selection
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void ChangeScrollSpeed()
         {
+            if (MapManager.Selected.Value == null)
+                return;
+
             BindableInt scrollSpeed;
 
             switch (MapManager.Selected.Value.Mode)
@@ -556,7 +559,7 @@ namespace Quaver.Shared.Screens.Selection
                     scrollSpeed = ConfigManager.ScrollSpeed7K;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return;
             }
 
             var changed = false;
