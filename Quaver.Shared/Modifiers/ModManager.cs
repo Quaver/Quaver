@@ -178,6 +178,9 @@ namespace Quaver.Shared.Modifiers
                         break;
                     case ModIdentifier.NoPause:
                         break;
+                    case ModIdentifier.NoMiss:
+                        mods.Add(new ModNoMiss());
+                        break;
                     default:
                         Logger.Warning($"Cannot convert {mod} to its appropriate IModifier class.", LogType.Runtime);
                         break;

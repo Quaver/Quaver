@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         public SelectableModifier(int width, IGameplayModifier mod)
         {
             Mod = mod;
-            Size = new ScalableVector2(width, 52);
+            Size = new ScalableVector2(width, 48);
             Tint = ColorHelper.HexToColor("#464545");
 
             var game = GameBase.Game as QuaverGame;

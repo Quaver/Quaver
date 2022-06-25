@@ -939,7 +939,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
-            if (!Failed || FailureHandled)
+            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
                 return;
 
             try
