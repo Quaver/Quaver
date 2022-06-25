@@ -53,6 +53,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 using Wobble.Screens;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
@@ -476,6 +477,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer != null)
                 ReplayCapturer.Replay.TimePlayed = TimePlayed;
 
+            Utils.NativeUtils.DisableWindowsKey();
             base.OnFirstUpdate();
         }
 
@@ -516,6 +518,13 @@ namespace Quaver.Shared.Screens.Gameplay
             SendReplayFramesToServer();
 
             base.Update(gameTime);
+        }
+
+        public override void Exit(Func<QuaverScreen> screen, int delay = 0,
+            QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
+        {
+            Utils.NativeUtils.EnableWindowsKey();
+            base.Exit(screen, delay, type);
         }
 
         /// <inheritdoc />
@@ -798,6 +807,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 // Activate pause menu
                 screenView.PauseScreen?.Activate();
+                Utils.NativeUtils.EnableWindowsKey();
                 return;
             }
 
@@ -820,6 +830,7 @@ namespace Quaver.Shared.Screens.Gameplay
             SetRichPresence();
             OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            Utils.NativeUtils.DisableWindowsKey();
         }
 
         /// <summary>
