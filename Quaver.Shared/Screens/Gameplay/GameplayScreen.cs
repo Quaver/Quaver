@@ -477,7 +477,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer != null)
                 ReplayCapturer.Replay.TimePlayed = TimePlayed;
 
-            Utils.NativeUtils.DisableWindowsKey();
+            if (!InReplayMode)
+                Utils.NativeUtils.DisableWindowsKey();
+
             base.OnFirstUpdate();
         }
 
@@ -830,7 +832,9 @@ namespace Quaver.Shared.Screens.Gameplay
             SetRichPresence();
             OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-            Utils.NativeUtils.DisableWindowsKey();
+
+            if (!InReplayMode)
+                Utils.NativeUtils.DisableWindowsKey();
         }
 
         /// <summary>
