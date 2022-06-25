@@ -275,11 +275,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             TimingLinePositionY = new float[ScrollDirections.Length];
             LongNoteSizeAdjustment = new float[ScrollDirections.Length];
 
+            var defaultLaneSize = skin.WidthForNoteHeightScale > 0 ? skin.WidthForNoteHeightScale : LaneSize;
 
             for (var i = 0; i < ScrollDirections.Length; i++)
             {
-                var hitObOffset = LaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
-                var holdHitObOffset = LaneSize * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
+                var hitObOffset = defaultLaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
+                var holdHitObOffset = defaultLaneSize * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
                 var holdEndOffset = LaneSize * skin.NoteHoldEnds[i].Height / skin.NoteHoldEnds[i].Width;
                 var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
 
