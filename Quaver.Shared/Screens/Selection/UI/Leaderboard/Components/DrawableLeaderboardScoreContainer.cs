@@ -16,6 +16,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Skinning;
+using Steamworks;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -607,12 +608,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             var steamId = (ulong) Score.Item.SteamId;
 
+            if (ConfigManager.LeaderboardSection?.Value == LeaderboardType.Local)
+                steamId = SteamUser.GetSteamID().m_SteamID;
+
             lock (Avatar)
             lock (Avatar.Image)
             {
                 if (Score.IsPersonalBest && !Score.Item.IsOnline)
                 {
-                    Avatar.Image = UserInterface.UnknownAvatar;
+                    Avatar.Image = SteamManager.UserAvatars[steamId];
                     Avatar.Alpha = 1;
                     return;
                 }
