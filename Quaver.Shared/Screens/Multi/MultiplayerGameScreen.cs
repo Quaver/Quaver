@@ -247,6 +247,7 @@ namespace Quaver.Shared.Screens.Multi
                 SelectionScreen.HandleKeyPressTab();
 
             HandleKeyPressControlInput();
+            HandleKeyPressAltInput();
         }
 
         /// <summary>
@@ -254,8 +255,7 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         private void HandleKeyPressControlInput()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown() || KeyboardManager.IsAltDown())
                 return;
 
             // Increase rate.
@@ -268,6 +268,31 @@ namespace Quaver.Shared.Screens.Multi
                 // Decrease Rate
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
                     ModManager.AddSpeedMods(SelectionScreen.GetNextRate(false, KeyboardManager.IsShiftDown()));
+            }
+        }
+
+        /// <summary>
+        ///     Handles when the user holds ALT down and performs input actions
+        /// </summary>
+        private void HandleKeyPressAltInput()
+        {
+            if (!KeyboardManager.IsAltDown())
+                return;
+
+            if (MapManager.Selected.Value != null)
+            {
+                var offsetChange = KeyboardManager.IsCtrlDown() ? 1 : 5;
+
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
+                {
+                    MapManager.Selected.Value.LocalOffset += offsetChange;
+                    HandleOffsetChange();
+                }
+                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
+                {
+                    MapManager.Selected.Value.LocalOffset -= offsetChange;
+                    HandleOffsetChange();
+                }
             }
         }
 
@@ -309,6 +334,19 @@ namespace Quaver.Shared.Screens.Multi
                 ActiveLeftPanel.Value = SelectContainerPanel.UserProfile;
             else
                 ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleOffsetChange()
+        {
+            var map = MapManager.Selected.Value;
+
+            if (map == null)
+                return;
+
+            NotificationManager.Show(NotificationLevel.Info, $"Local map offset changed to: {map.LocalOffset} ms");
+            MapDatabaseCache.UpdateMap(map);
         }
 
         /// <summary>
