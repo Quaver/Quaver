@@ -113,6 +113,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers
         /// </summary>
         private void SetUserCount()
         {
+            if (!OnlineManager.Connected)
+            {
+                UserCount.Text = "OFFLINE";
+                return;
+            }
+
             UserCount.ScheduleUpdate(() =>
             {
                 var users = OnlineManager.OnlineUsers?.Count;
