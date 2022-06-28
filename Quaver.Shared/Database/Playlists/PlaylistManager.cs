@@ -17,7 +17,6 @@ using Quaver.Shared.Online.API.Playlists;
 using Quaver.Shared.Scheduling;
 using SQLite;
 using Wobble.Bindables;
-using Wobble.Helpers;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Playlists
