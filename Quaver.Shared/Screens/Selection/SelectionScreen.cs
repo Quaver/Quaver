@@ -361,6 +361,9 @@ namespace Quaver.Shared.Screens.Selection
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
 
+            if (KeyboardManager.IsAltDown())
+                return;
+
             switch (ActiveScrollContainer.Value)
             {
                 case SelectScrollContainerType.Mapsets:
