@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using osu_database_reader.BinaryFiles;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -138,6 +141,7 @@ namespace Quaver.Shared.Database.Playlists
         /// </summary>
         private static void LoadPlaylists()
         {
+            var tasks = new List<Task>();
             Playlists = new List<Playlist>();
             Selected.Value = null;
 
@@ -146,27 +150,27 @@ namespace Quaver.Shared.Database.Playlists
                 var playlists = DatabaseManager.Connection.Table<Playlist>().ToList();
                 var playlistMaps = DatabaseManager.Connection.Table<PlaylistMap>().ToList();
 
-                // Convert playlists into a dictionary w/ the id as its key for quick access
-                var playlistDictionary = playlists.ToDictionary(x => x.Id);
+                var playlistDictionary = ConcurrentDictionaryExtensions.ToConcurrentDictionary(playlists, playlist => playlist.Id);
 
-                // Go through each map and add it to the playlists
-                foreach (var playlistMap in playlistMaps)
+                foreach (var playlist in playlists)
                 {
-                    // Check to see if the playlist exists
-                    if (!playlistDictionary.ContainsKey(playlistMap.PlaylistId))
-                        continue;
-
-                    // Check to see if the map exists and add it
-                    foreach (var mapset in MapManager.Mapsets)
+                    tasks.Add(Task.Run(() =>
                     {
-                        var map = mapset.Maps.Find(x => x.Md5Checksum == playlistMap.Md5);
+                        foreach (var mapset in MapManager.Mapsets)
+                        {
+                            foreach (var map in mapset.Maps)
+                            {
+                                var playlistMap = playlistMaps.Find(x =>
+                                    (x.PlaylistId == playlist.Id) && (x.Md5 == map.Md5Checksum));
 
-                        if (map == null)
-                            continue;
-
-                        playlistDictionary[playlistMap.PlaylistId].Maps.Add(map);
-                    }
+                                if (playlistMap != null)
+                                    playlistDictionary[playlist.Id].Maps.Add(map);
+                            }
+                        }
+                    }));
                 }
+
+                Task.WaitAll(tasks.ToArray());
 
                 Playlists = Playlists.Concat(playlists).ToList();
 
