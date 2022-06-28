@@ -17,6 +17,7 @@ using Quaver.Shared.Online.API.Playlists;
 using Quaver.Shared.Scheduling;
 using SQLite;
 using Wobble.Bindables;
+using Wobble.Helpers;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Playlists
@@ -142,16 +143,6 @@ namespace Quaver.Shared.Database.Playlists
         }
 
         /// <summary>
-        ///     Convert list to concurrent dictionary
-        /// </summary>
-        public static ConcurrentDictionary<TKey, TValue> ToConcurrentDictionary<TKey, TValue>
-            (this IEnumerable<TValue> source, Func<TValue, TKey> valueSelector)
-        {
-            return new ConcurrentDictionary<TKey, TValue>
-                (source.ToDictionary(valueSelector));
-        }
-
-        /// <summary>
         ///     Loads playlists from the database
         /// </summary>
         private static void LoadPlaylists()
@@ -164,7 +155,7 @@ namespace Quaver.Shared.Database.Playlists
                 var playlists = DatabaseManager.Connection.Table<Playlist>().ToList();
                 var playlistMaps = DatabaseManager.Connection.Table<PlaylistMap>().ToList();
 
-                var playlistDictionary = playlists.ToConcurrentDictionary(x => x.Id);
+                var playlistDictionary = ConcurrentDictionaryExtensions.ToConcurrentDictionary(playlists, playlist => playlist.Id);
 
                 foreach (var playlist in playlists)
                 {
