@@ -296,7 +296,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Fetches all maps, groups them into mapsets, sets them to allow them to be played.
         /// </summary>
-        public static void OrderAndSetMapsets()
+        public static void OrderAndSetMapsets(bool skipPlaylistLoad = false)
         {
             OtherGameMapDatabaseCache.Initialize();
 
@@ -309,7 +309,8 @@ namespace Quaver.Shared.Database.Maps
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
             MapManager.RecentlyPlayed = new List<Map>();
 
-            PlaylistManager.Load();
+            if(!skipPlaylistLoad)
+                PlaylistManager.Load();
 
             // Schedule maps that don't have difficulty ratings to recalculate.
             // If forcing a full recalculation due to diff calc updates, then the difficulty processor version should just be bumped
