@@ -14,6 +14,7 @@ using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Main;
+using Quaver.Shared.Screens.Selection;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Writers.Zip;
@@ -94,6 +95,9 @@ namespace Quaver.Shared.Skinning
                 {
                     case QuaverScreenType.Menu:
                         game.CurrentScreen.Exit(() => new MainMenuScreen());
+                        break;
+                    case QuaverScreenType.Select:
+                        game.CurrentScreen.Exit(() => new SelectionScreen());
                         break;
                 }
 
