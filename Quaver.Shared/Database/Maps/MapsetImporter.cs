@@ -342,7 +342,7 @@ namespace Quaver.Shared.Database.Maps
                 }
             });
 
-            MapDatabaseCache.OrderAndSetMapsets();
+            MapDatabaseCache.OrderAndSetMapsets(true);
             Queue.Clear();
 
             if (MapManager.Mapsets.Count == 0)
