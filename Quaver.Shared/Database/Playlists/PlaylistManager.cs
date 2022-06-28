@@ -189,9 +189,7 @@ namespace Quaver.Shared.Database.Playlists
                 Playlists = Playlists.Concat(playlists).ToList();
 
                 foreach (var playlist in playlists)
-                    Logger.Important(
-                        $"Loaded Quaver playlist: {playlist.Name ?? ""} w/ {playlist.Maps?.Count ?? 0} maps!",
-                        LogType.Runtime);
+                    Logger.Important($"Loaded Quaver playlist: {playlist.Name ?? ""} w/ {playlist.Maps?.Count ?? 0} maps!", LogType.Runtime);
             }
             catch (Exception e)
             {
