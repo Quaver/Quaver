@@ -29,11 +29,6 @@ namespace Quaver.Shared.Database.Playlists
         public static List<Playlist> Playlists { get; private set; } = new List<Playlist>();
 
         /// <summary>
-        ///     Tasks list
-        /// </summary>
-        public static List<Task> Tasks { get; private set; } = new List<Task>();
-
-        /// <summary>
         ///     The currently selected playlist
         /// </summary>
         public static Bindable<Playlist> Selected { get; } = new Bindable<Playlist>(null);
@@ -146,6 +141,7 @@ namespace Quaver.Shared.Database.Playlists
         /// </summary>
         private static void LoadPlaylists()
         {
+            var tasks = new List<Task>();
             Playlists = new List<Playlist>();
             Selected.Value = null;
 
@@ -158,7 +154,7 @@ namespace Quaver.Shared.Database.Playlists
 
                 foreach (var playlist in playlists)
                 {
-                    Tasks.Add(Task.Run(() =>
+                    tasks.Add(Task.Run(() =>
                     {
                         foreach (var mapset in MapManager.Mapsets)
                         {
@@ -174,7 +170,7 @@ namespace Quaver.Shared.Database.Playlists
                     }));
                 }
 
-                Task.WaitAll(Tasks.ToArray());
+                Task.WaitAll(tasks.ToArray());
 
                 Playlists = Playlists.Concat(playlists).ToList();
 
