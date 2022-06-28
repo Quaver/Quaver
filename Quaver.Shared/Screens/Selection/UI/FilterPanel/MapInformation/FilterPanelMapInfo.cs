@@ -51,6 +51,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
 
         private FilterMetadataNotesPerSecond NotesPerSecond { get; set; }
 
+        private FilterMetadataMods Mods { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -144,6 +146,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
                 Y = GameMode.Y,
                 X = LongNotePercentage.X + LongNotePercentage.Width + spacing
             };
+
+            Mods = new FilterMetadataMods()
+            {
+                Parent = this,
+                Y = GameMode.Y,
+                X = NotesPerSecond.X + NotesPerSecond.Width + spacing * 2
+            };
         }
 
         /// <summary>
@@ -159,12 +168,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             {
                 ArtistTitle.Text = map.Artist + " - " + map.Title;
 
-                var mods = ModManager.CurrentModifiersList.Count > 0 ? $" + {ModHelper.GetModsString(ModManager.Mods)}": "";
-
-                var windows = JudgementWindowsDatabaseCache.Selected.Value == JudgementWindowsDatabaseCache.Standard
-                    ? "" : $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
-
-                DifficultyMods.Text = $"[{map.DifficultyName}]{mods}{windows}";
+                DifficultyMods.Text = $"[{map.DifficultyName}]";
                 DifficultyMods.TruncateWithEllipsis(480);
 
                 //  Reset positions of the text
