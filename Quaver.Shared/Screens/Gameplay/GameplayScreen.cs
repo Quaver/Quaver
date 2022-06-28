@@ -756,7 +756,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 IsPaused = true;
                 IsResumeInProgress = false;
-                PauseCount++;
+
+                if (Ruleset.ScoreProcessor.TotalJudgementCount > 0)
+                    PauseCount++;
+                
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 // Exit right away if playing a replay.
