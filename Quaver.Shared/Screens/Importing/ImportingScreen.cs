@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Importing
                 }
 
                 MapsetImporter.ImportMapsetsInQueue(SelectMapIdAfterImport);
-                OnImportCompletion();
+                OnImportCompletion(true);
             });
 
             base.OnFirstUpdate();
@@ -114,11 +114,11 @@ namespace Quaver.Shared.Screens.Importing
         /// <summary>
         ///     Called after all maps have been imported to the database.
         /// </summary>
-        private void OnImportCompletion()
+        private void OnImportCompletion(bool refreshMapsetStatuses = false)
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
 
-            if (FullSync)
+            if (FullSync || refreshMapsetStatuses)
                 OptionsItemUpdateRankedStatuses.Run(false);
 
             if (OnlineManager.CurrentGame != null)
