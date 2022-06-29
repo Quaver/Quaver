@@ -17,6 +17,7 @@ using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Music;
+using Quaver.Shared.Screens.Options.Items.Custom;
 using Quaver.Shared.Screens.Selection;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -116,6 +117,9 @@ namespace Quaver.Shared.Screens.Importing
         private void OnImportCompletion()
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
+
+            if (FullSync)
+                OptionsItemUpdateRankedStatuses.Run(false);
 
             if (OnlineManager.CurrentGame != null)
             {
