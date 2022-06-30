@@ -28,6 +28,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -1501,7 +1502,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown())
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen)
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
 
