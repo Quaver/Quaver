@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         private void Initialize()
         {
-            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+            if (AudioEngine.Track != null)
                 AudioEngine.Track?.Stop();
 
             ModManager.RemoveSpeedMods();
