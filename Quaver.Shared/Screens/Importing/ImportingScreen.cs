@@ -17,6 +17,7 @@ using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Music;
+using Quaver.Shared.Screens.Options.Items.Custom;
 using Quaver.Shared.Screens.Selection;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -104,7 +105,7 @@ namespace Quaver.Shared.Screens.Importing
                 }
 
                 MapsetImporter.ImportMapsetsInQueue(SelectMapIdAfterImport);
-                OnImportCompletion();
+                OnImportCompletion(true);
             });
 
             base.OnFirstUpdate();
@@ -113,9 +114,12 @@ namespace Quaver.Shared.Screens.Importing
         /// <summary>
         ///     Called after all maps have been imported to the database.
         /// </summary>
-        private void OnImportCompletion()
+        private void OnImportCompletion(bool refreshMapsetStatuses = false)
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
+
+            if (FullSync || refreshMapsetStatuses)
+                OptionsItemUpdateRankedStatuses.Run(false);
 
             if (OnlineManager.CurrentGame != null)
             {

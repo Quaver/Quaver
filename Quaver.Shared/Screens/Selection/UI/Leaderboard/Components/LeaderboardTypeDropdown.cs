@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         ///     Retrieves the index of the selected value
         /// </summary>
         /// <returns></returns>
-        private static int GetSelectedIndex() => ConfigManager.LeaderboardSection != null ? (int) ConfigManager.LeaderboardSection.Value : 0;
+        private static int GetSelectedIndex() => ConfigManager.LeaderboardSection != null ? (int) ConfigManager.LeaderboardSection.Value : (int) LeaderboardType.Global;
 
         /// <summary>
         ///     Called when a dropdown item has been selected

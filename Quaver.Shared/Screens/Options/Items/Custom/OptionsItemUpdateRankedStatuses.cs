@@ -57,51 +57,57 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
                 NotificationManager.Show(NotificationLevel.Info, "Your maps' ranked statuses are now being updated in the background...");
 
-                var mapsets = new List<Mapset>(MapManager.Mapsets);
-
-                ThreadScheduler.Run(() =>
-                {
-                    try
-                    {
-                        var count = 0;
-                        var response = new APIRequestRankedMapsets().ExecuteRequest();
-                        var hashSet = response.Mapsets.ToHashSet();
-
-                        Logger.Important($"There are currently {response.Mapsets.Count} ranked mapsets to check.", LogType.Runtime);
-
-                        foreach (var mapset in mapsets)
-                        {
-                            if (mapset.Maps.Count == 0)
-                                continue;
-
-                            if (mapset.Maps.First().Game != MapGame.Quaver)
-                                continue;
-
-                            foreach (var map in mapset.Maps)
-                            {
-                                if (map.MapId == -1 || !hashSet.Contains(map.MapSetId) || map.RankedStatus == RankedStatus.Ranked)
-                                    continue;
-
-                                map.RankedStatus = RankedStatus.Ranked;
-                                MapDatabaseCache.UpdateMap(map);
-                                count++;
-                            }
-                        }
-
-                        NotificationManager.Show(NotificationLevel.Success, $"Successfully updated the ranked statuses of {count:n0} maps!");
-                        Logger.Important($"Finished updating statuses of: {count} maps", LogType.Runtime);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e, LogType.Runtime);
-                        NotificationManager.Show(NotificationLevel.Error, "There was an issue while updating your maps' ranked statuses");
-                    }
-                    finally
-                    {
-                        IsRunning = false;
-                    }
-                });
+                Run();
             };
+        }
+
+        public static void Run(bool fromOptions = true)
+        {
+            var mapsets = new List<Mapset>(MapManager.Mapsets);
+
+            ThreadScheduler.Run(() =>
+            {
+                try
+                {
+                    var count = 0;
+                    var response = new APIRequestRankedMapsets().ExecuteRequest();
+                    var hashSet = response.Mapsets.ToHashSet();
+
+                    Logger.Important($"There are currently {response.Mapsets.Count} ranked mapsets to check.", LogType.Runtime);
+
+                    foreach (var mapset in mapsets)
+                    {
+                        if (mapset.Maps.Count == 0)
+                            continue;
+
+                        if (mapset.Maps.First().Game != MapGame.Quaver)
+                            continue;
+
+                        foreach (var map in mapset.Maps)
+                        {
+                            if (map.MapId == -1 || !hashSet.Contains(map.MapSetId) || map.RankedStatus == RankedStatus.Ranked)
+                                continue;
+
+                            map.RankedStatus = RankedStatus.Ranked;
+                            MapDatabaseCache.UpdateMap(map);
+                            count++;
+                        }
+                    }
+
+                    NotificationManager.Show(NotificationLevel.Success, $"Successfully updated the ranked statuses of {count:n0} maps!");
+                    Logger.Important($"Finished updating statuses of: {count} maps", LogType.Runtime);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while updating your maps' ranked statuses");
+                }
+                finally
+                {
+                    if (fromOptions)
+                        IsRunning = false;
+                }
+            });
         }
     }
 }
