@@ -164,6 +164,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers
                 SubscribeToEvents();
             else
                 UnsubcribeToEvents();
+
+            SetUserCount();
         }
 
         /// <summary>
