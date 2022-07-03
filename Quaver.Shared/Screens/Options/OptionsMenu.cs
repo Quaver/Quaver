@@ -143,6 +143,10 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Audio", UserInterface.OptionsAudio, new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Output", new List<OptionsItem>()
+                    {
+                       new OptionsItemAudioOutputDevice(containerRect, "Audio Output Device")
+                    }),
                     new OptionsSubcategory("Volume", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Master Volume", ConfigManager.VolumeGlobal),
