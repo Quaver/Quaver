@@ -932,7 +932,7 @@ namespace Quaver.Shared
             catch (Win32Exception) { /* do nothing */ }
         }
 
-        public static void SetAudioDevice()
+        public static void SetAudioDevice(bool reloadResources = false)
         {
             for (var i = 1; i < Bass.DeviceCount; i++)
             {
@@ -942,6 +942,13 @@ namespace Quaver.Shared
                 AudioManager.Initialize(ConfigManager.DevicePeriod.Value, ConfigManager.DeviceBufferLengthMultiplier.Value, i);
                 break;
             }
+
+            if (!reloadResources)
+                return;
+
+            AudioEngine.Track.Stop();
+            CustomAudioSampleCache.StopAll();
+            SkinManager.Skin.LoadSoundEffects();
         }
 
 #if VISUAL_TESTS

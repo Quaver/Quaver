@@ -35,12 +35,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     }
 
                     ConfigManager.AudioOutputDevice.Value = args.Options[args.Index];
-                    QuaverGame.SetAudioDevice();
-
-                    // Clear resources/load new ones on the new device.
-                    AudioEngine.Track.Stop();
-                    CustomAudioSampleCache.StopAll();
-                    SkinManager.Skin.LoadSoundEffects();
+                    QuaverGame.SetAudioDevice(true);
                 }
                 catch (Exception e)
                 {
