@@ -768,6 +768,8 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<ResultGraphs> ResultGraph { get; private set; }
 
+        internal static Bindable<string> AudioOutputDevice { get; private set; }
+
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
@@ -1041,6 +1043,7 @@ namespace Quaver.Shared.Config
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
+            AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))

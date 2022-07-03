@@ -143,9 +143,11 @@ namespace Quaver.Shared.Audio
         /// </summary>
         public static void StopAll()
         {
-            foreach (var channel in Channels)
-                channel.Stop();
-            Channels = new List<AudioSampleChannel>();
+            Channels.ForEach(x =>x.Stop());
+            Channels.Clear();
+
+            Samples.ForEach(x => x.Dispose());
+            Samples.Clear();
         }
     }
 }
