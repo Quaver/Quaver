@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -100,6 +101,7 @@ using Quaver.Shared.Skinning;
 using Quaver.Shared.Window;
 using Steamworks;
 using Wobble;
+using Wobble.Audio;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -407,6 +409,7 @@ namespace Quaver.Shared
         {
             DeleteTemporaryFiles();
 
+            SetAudioDevice();
             DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
@@ -927,6 +930,18 @@ namespace Quaver.Shared
                     p.PriorityClass = priority;
             }
             catch (Win32Exception) { /* do nothing */ }
+        }
+
+        public static void SetAudioDevice()
+        {
+            for (var i = 1; i < Bass.DeviceCount; i++)
+            {
+                if (ConfigManager.AudioOutputDevice.Value != Bass.GetDeviceInfo(i).Name)
+                    continue;
+
+                AudioManager.Initialize(ConfigManager.DevicePeriod.Value, ConfigManager.DeviceBufferLengthMultiplier.Value, i);
+                break;
+            }
         }
 
 #if VISUAL_TESTS
