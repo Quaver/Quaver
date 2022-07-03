@@ -29,7 +29,6 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     if (game.CurrentScreen.Type == QuaverScreenType.Editor)
                     {
                         NotificationManager.Show(NotificationLevel.Error, "Please leave the editor before changing the output device.");
-
                         Dropdown.SelectItem(Dropdown.Items[GetSelectedIndex()], false);
                         return;
                     }
