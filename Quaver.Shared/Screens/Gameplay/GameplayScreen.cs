@@ -28,10 +28,10 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
@@ -44,20 +44,17 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.MultiplayerLobby;
-using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
-using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
-using TagLib.Riff;
 using Wobble;
-using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 using Wobble.Screens;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
@@ -481,6 +478,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer != null)
                 ReplayCapturer.Replay.TimePlayed = TimePlayed;
 
+            if (!InReplayMode)
+                Utils.NativeUtils.DisableWindowsKey();
+
             base.OnFirstUpdate();
         }
 
@@ -521,6 +521,13 @@ namespace Quaver.Shared.Screens.Gameplay
             SendReplayFramesToServer();
 
             base.Update(gameTime);
+        }
+
+        public override void Exit(Func<QuaverScreen> screen, int delay = 0,
+            QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
+        {
+            Utils.NativeUtils.EnableWindowsKey();
+            base.Exit(screen, delay, type);
         }
 
         /// <inheritdoc />
@@ -750,7 +757,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 IsPaused = true;
                 IsResumeInProgress = false;
-                PauseCount++;
+
+                if (Ruleset.ScoreProcessor.TotalJudgementCount > 0)
+                    PauseCount++;
+                
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 // Exit right away if playing a replay.
@@ -803,6 +813,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 // Activate pause menu
                 screenView.PauseScreen?.Activate();
+                Utils.NativeUtils.EnableWindowsKey();
                 return;
             }
 
@@ -825,6 +836,9 @@ namespace Quaver.Shared.Screens.Gameplay
             SetRichPresence();
             OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+
+            if (!InReplayMode)
+                Utils.NativeUtils.DisableWindowsKey();
         }
 
         /// <summary>
@@ -944,7 +958,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
-            if (!Failed || FailureHandled)
+            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
                 return;
 
             try
@@ -1488,7 +1502,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown())
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen)
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
 

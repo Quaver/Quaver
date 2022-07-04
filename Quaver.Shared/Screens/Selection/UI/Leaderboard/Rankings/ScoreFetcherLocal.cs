@@ -6,7 +6,6 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings

@@ -668,7 +668,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Loads all sound effect elements.
         /// </summary>
-        private void LoadSoundEffects()
+        public void LoadSoundEffects()
         {
             var sfxFolder = $"{Dir}/SFX/";
 

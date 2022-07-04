@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using IniFileParser;
 using IniFileParser.Exceptions;
 using IniFileParser.Model;
-using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Helpers;
@@ -23,10 +22,9 @@ using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
-using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Input;
@@ -403,10 +401,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
 
         /// <summary>
-        /// </summary>
-        internal static Bindable<EditorVisualizationGraphType> EditorVisualizationGraph { get; private set; }
-
-        /// <summary>
         ///     If true, it'll use hitobjects specifically for viewing layers in the editor.
         /// </summary>
         internal static Bindable<bool> EditorViewLayers { get; private set; }
@@ -774,6 +768,8 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<ResultGraphs> ResultGraph { get; private set; }
 
+        internal static Bindable<string> AudioOutputDevice { get; private set; }
+
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
@@ -992,7 +988,6 @@ namespace Quaver.Shared.Config
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
-            EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraph", EditorVisualizationGraphType.Tick, data);
             EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
@@ -1048,6 +1043,7 @@ namespace Quaver.Shared.Config
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
+            AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))

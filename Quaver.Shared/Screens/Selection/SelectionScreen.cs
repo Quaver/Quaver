@@ -30,10 +30,10 @@ using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Tournament;
@@ -359,6 +359,9 @@ namespace Quaver.Shared.Screens.Selection
         private void HandleKeyPressEnter()
         {
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                return;
+
+            if (KeyboardManager.IsAltDown())
                 return;
 
             switch (ActiveScrollContainer.Value)

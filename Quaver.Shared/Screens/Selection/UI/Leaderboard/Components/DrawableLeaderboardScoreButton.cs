@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (Container == null)
                 return base.IsMouseInClickArea();
 
-            var newRect = RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle);
+            var newRect = RectangleF.Intersection(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

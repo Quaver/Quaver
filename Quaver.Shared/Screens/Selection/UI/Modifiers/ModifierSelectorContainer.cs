@@ -102,6 +102,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                             new SelectableModifierSpeed(width),
                             new SelectableModifierJudgementWindows(width),
                             new SelectableModifierBool(width, new ModMirror()),
+                            new SelectableModifierBool(width, new ModNoMiss())
                         }),
 
                     new ModifierSection(width, FontAwesome.Get(FontAwesomeIcon.fa_warning_sign_on_a_triangular_background), "Unranked",

@@ -6,7 +6,6 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -44,7 +43,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         ///     Retrieves the index of the selected value
         /// </summary>
         /// <returns></returns>
-        private static int GetSelectedIndex() => ConfigManager.LeaderboardSection != null ? (int) ConfigManager.LeaderboardSection.Value : 0;
+        private static int GetSelectedIndex() => ConfigManager.LeaderboardSection != null ? (int) ConfigManager.LeaderboardSection.Value : (int) LeaderboardType.Global;
 
         /// <summary>
         ///     Called when a dropdown item has been selected

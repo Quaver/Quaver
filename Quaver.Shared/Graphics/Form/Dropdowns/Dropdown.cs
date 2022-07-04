@@ -336,7 +336,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         ///     Selects a new dropdown item to be the new value
         /// </summary>
-        public void SelectItem(DropdownItem item)
+        public void SelectItem(DropdownItem item, bool invokeEvent = true)
         {
             // Already selected.
             if (SelectedIndex == item.Index)
@@ -345,7 +345,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             SelectedText.Text = item.Text.Text;
             SelectedIndex = item.Index;
 
-            ItemSelected?.Invoke(this, new DropdownClickedEventArgs(item));
+            if (invokeEvent)
+                ItemSelected?.Invoke(this, new DropdownClickedEventArgs(item));
         }
     }
 }

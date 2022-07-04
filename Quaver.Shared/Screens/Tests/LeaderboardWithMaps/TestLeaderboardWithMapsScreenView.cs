@@ -4,14 +4,11 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
-using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
-using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Modifiers;
@@ -140,7 +137,6 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1) && ActivePanel.Value != SelectContainerPanel.Modifiers)
                 ActivePanel.Value = SelectContainerPanel.Modifiers;
 
-            SelectScreen.HandleKeyPressControlRateChange();
             base.Update(gameTime);
         }
 

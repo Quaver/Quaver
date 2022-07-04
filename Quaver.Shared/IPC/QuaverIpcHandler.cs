@@ -1,12 +1,10 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Online;
@@ -15,14 +13,10 @@ using Quaver.Shared.Online.API.Mapsets;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Edit;
-using Quaver.Shared.Screens.Editor;
-using Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo;
 using Quaver.Shared.Screens.Importing;
-using WebSocketSharp;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
-using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Shared.IPC
 {
@@ -59,6 +53,8 @@ namespace Quaver.Shared.IPC
                 HandleMapSelection(message);
             else if (message.StartsWith("mapset/"))
                 HandleMapsetSelection(message);
+            else if (message.StartsWith("playlist/"))
+                HandlePlaylistImport(message);
         }
 
         /// <summary>
@@ -166,6 +162,23 @@ namespace Quaver.Shared.IPC
                 NotificationManager.Show(NotificationLevel.Error, $"An error occurred while fetching mapset information.");
                 Logger.Error(e, LogType.Network);
             }
+        }
+
+        /// <summary>
+        ///     Imports an online playlist
+        /// </summary>
+        /// <param name="message"></param>
+        private static void HandlePlaylistImport(string message)
+        {
+            message = message.Replace("playlist/", "");
+
+            if (!int.TryParse(message, out var id))
+            {
+                NotificationManager.Show(NotificationLevel.Error, $"The provided playlist id was not a valid number.");
+                return;
+            }
+
+            PlaylistManager.ImportPlaylist(id);
         }
 
         /// <summary>

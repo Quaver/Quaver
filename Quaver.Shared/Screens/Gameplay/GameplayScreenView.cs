@@ -13,26 +13,21 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
@@ -40,21 +35,16 @@ using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Gameplay.UI.Replays;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
-using Quaver.Shared.Screens.Multiplayer;
-using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Results;
-using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
-using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
-using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
@@ -703,6 +693,12 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             if (!Screen.Failed && !Screen.IsPlayComplete || Screen.IsSongSelectPreview || Screen is TournamentGameplayScreen)
                 return;
+
+            if (Screen.Failed && !Screen.HasQuit && Screen.Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+            {
+                Screen.Retry();
+                return;
+            }
 
             Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
 

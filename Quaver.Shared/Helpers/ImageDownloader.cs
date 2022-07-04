@@ -9,15 +9,11 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
-using Wobble;
 using Wobble.Assets;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Helpers
 {

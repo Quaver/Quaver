@@ -24,11 +24,8 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Edit;
-using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Multi;
-using Quaver.Shared.Screens.Multiplayer;
-using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
@@ -36,7 +33,6 @@ using SharpCompress.Archives;
 using SharpCompress.Common;
 using Wobble;
 using Wobble.Logging;
-using Wobble.Screens;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -281,7 +277,7 @@ namespace Quaver.Shared.Database.Maps
                 }
                 foreach (var subDir in dirs)
                 {
-                    MapsetImporter.ImportFile(subDir);
+                    ImportFile(subDir);
                 }
 
                 PostMapQueue();
@@ -346,7 +342,7 @@ namespace Quaver.Shared.Database.Maps
                 }
             });
 
-            MapDatabaseCache.OrderAndSetMapsets();
+            MapDatabaseCache.OrderAndSetMapsets(true);
             Queue.Clear();
 
             if (MapManager.Mapsets.Count == 0)

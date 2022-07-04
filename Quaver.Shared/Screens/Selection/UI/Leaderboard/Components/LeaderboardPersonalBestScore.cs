@@ -3,7 +3,6 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;

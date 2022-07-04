@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ImGuiNET;
 using IniFileParser;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -22,7 +20,6 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -30,17 +27,14 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
-using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
+using Quaver.Shared.Screens.Edit.UI;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
-using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.Timing;
-using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Selection;
@@ -50,11 +44,9 @@ using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
-using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Edit
 {
@@ -482,6 +474,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressF4();
             HandleKeyPressF5();
             HandleKeyPressF6();
+            HandleKeyPressF10();
             HandleKeyPressShiftH();
         }
 
@@ -537,6 +530,14 @@ namespace Quaver.Shared.Screens.Edit
 
             if (plugin.IsActive)
                 plugin.Initialize();
+        }
+
+        private void HandleKeyPressF10()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F10))
+                return;
+
+            ExitToTestPlay(true);
         }
 
         /// <summary>
@@ -1329,7 +1330,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public void ExitToTestPlay()
+        public void ExitToTestPlay(bool fromStart = false)
         {
             if (Exiting)
                 return;
@@ -1365,7 +1366,9 @@ namespace Quaver.Shared.Screens.Edit
                 var map = ObjectHelper.DeepClone(WorkingMap);
                 map.ApplyMods(ModManager.Mods);
 
-                return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
+                var startTime = fromStart ? 0 : Track.Time;
+
+                return new GameplayScreen(map, "", new List<Score>(), null, true, startTime, false, null, null, false, true);
             });
         }
 
@@ -1393,7 +1396,8 @@ namespace Quaver.Shared.Screens.Edit
                     DifficultyName = "",
                     Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
                     BackgroundFile = "",
-                    Mode = GameMode.Keys4
+                    Mode = GameMode.Keys4,
+                    BPMDoesNotAffectScrollVelocity = true
                 };
 
                 // Create a new directory to house the map.

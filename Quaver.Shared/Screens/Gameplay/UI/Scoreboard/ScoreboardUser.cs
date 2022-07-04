@@ -19,12 +19,14 @@ using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Processors.Scoring.Multiplayer;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
+using Steamworks;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -226,7 +228,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 }
                 else
                 {
-                    Avatar.Image = UserInterface.UnknownAvatar;
+                    Avatar.Image = ConfigManager.Username?.Value == UsernameRaw
+                        ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
+                        : UserInterface.UnknownAvatar;
                 }
             }
 

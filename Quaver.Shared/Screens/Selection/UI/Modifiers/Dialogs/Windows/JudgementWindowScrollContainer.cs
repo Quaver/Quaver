@@ -5,7 +5,6 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Select.UI.Modifiers.Windows;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;

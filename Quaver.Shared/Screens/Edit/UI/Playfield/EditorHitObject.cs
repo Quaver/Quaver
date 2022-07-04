@@ -128,7 +128,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 else
                     lane++;
             }
-            
+
             var x = Playfield.ScreenRectangle.X + Playfield.ColumnSize * lane + Playfield.BorderLeft.Width;
             var y = Playfield.HitPositionY - Info.StartTime * Playfield.TrackSpeed - Height;
 
@@ -169,13 +169,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         protected Color GetNoteTint()
         {
             if (Info.EditorLayer == 0)
-                return DefaultLayer.Hidden ? HiddenLayerColor : Color.White;
+                return DefaultLayer.Hidden & !Playfield.IsUneditable ? HiddenLayerColor : Color.White;
 
             try
             {
                 var layer = Map.EditorLayers[Info.EditorLayer - 1];
 
-                if (layer.Hidden)
+                if (layer.Hidden && !Playfield.IsUneditable)
                     return HiddenLayerColor;
 
                 if (!ViewLayers.Value)
