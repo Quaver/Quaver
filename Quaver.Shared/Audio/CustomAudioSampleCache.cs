@@ -145,9 +145,14 @@ namespace Quaver.Shared.Audio
         {
             Channels.ForEach(x =>x.Stop());
             Channels.Clear();
+        }
 
+        public static void Dispose()
+        {
+            StopAll();
             Samples.ForEach(x => x.Dispose());
             Samples.Clear();
+            MapMd5 = null;
         }
     }
 }
