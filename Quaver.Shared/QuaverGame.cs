@@ -947,7 +947,7 @@ namespace Quaver.Shared
                 return;
 
             AudioEngine.Track.Stop();
-            CustomAudioSampleCache.StopAll();
+            CustomAudioSampleCache.Dispose();
             SkinManager.Skin.LoadSoundEffects();
         }
 
