@@ -1397,7 +1397,8 @@ namespace Quaver.Shared.Screens.Edit
                     Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
                     BackgroundFile = "",
                     Mode = GameMode.Keys4,
-                    BPMDoesNotAffectScrollVelocity = true
+                    BPMDoesNotAffectScrollVelocity = true,
+                    InitialScrollVelocity = 1
                 };
 
                 // Create a new directory to house the map.
