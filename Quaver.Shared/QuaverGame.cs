@@ -321,6 +321,7 @@ namespace Quaver.Shared
         /// </summary>
         protected override void UnloadContent()
         {
+            ConfigManager.WriteConfigFileAsync().Wait();
             OnlineManager.Client?.Disconnect();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
