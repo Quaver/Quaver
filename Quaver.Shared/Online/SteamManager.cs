@@ -272,8 +272,17 @@ namespace Quaver.Shared.Online
                 SteamUGC.SetItemPreview(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.PreviewFilePath);
 
             SteamUGC.SetItemContent(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.FolderPath);
+            
+            var tagUpdate = false; 
+            
+            if (File.Exists($"{SteamWorkshopItem.Current.FolderPath}/skin.ini"))
+                tagUpdate = SteamUGC.SetItemTags(SteamWorkshopItem.Current.Handle, new List<string> {"Skins"});
+            else if (File.Exists($"{SteamWorkshopItem.Current.FolderPath}/settings.ini"))
+                tagUpdate = SteamUGC.SetItemTags(SteamWorkshopItem.Current.Handle, new List<string> {"Plugins"});
 
-            // Start updating to Steam
+            if (!tagUpdate)
+                NotificationManager.Show(NotificationLevel.Error, $"Failed to update tags for the workshop item. Please report this!");
+
             var call = SteamUGC.SubmitItemUpdate(SteamWorkshopItem.Current.Handle, "");
             OnSubmitUpdateResponse.Set(call);
         }
