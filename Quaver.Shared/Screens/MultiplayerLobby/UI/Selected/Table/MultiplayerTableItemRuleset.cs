@@ -27,8 +27,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                     return "Free-For-All";
                 case MultiplayerGameRuleset.Team:
                     return "Team";
-                case MultiplayerGameRuleset.Battle_Royale:
-                    return "Battle Royale";
+                //case MultiplayerGameRuleset.Battle_Royale:
+                //    return "Battle Royale";
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         {
             "Free-For-All",
             "Team",
-            "Battle Royale"
+            //"Battle Royale"
         }, new ScalableVector2(170, 36), 22, Colors.MainAccent, 0)
         {
             Game = game;

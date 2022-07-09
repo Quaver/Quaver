@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
             "All",
             "Free-For-All",
             "Team",
-            "Battle Royale"
+            // "Battle Royale"
         };
 
         /// <summary>
