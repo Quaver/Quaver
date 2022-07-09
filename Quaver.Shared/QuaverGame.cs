@@ -321,6 +321,7 @@ namespace Quaver.Shared
         /// </summary>
         protected override void UnloadContent()
         {
+            ConfigManager.WriteConfigFileAsync().Wait();
             OnlineManager.Client?.Disconnect();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
@@ -895,6 +896,8 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
                     break;
                 case QuaverScreenType.Multiplayer:
+                    var screen = (MultiplayerGameScreen) CurrentScreen;
+                    screen.DontLeaveGameUponScreenSwitch = true;
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;
                 case QuaverScreenType.Music:

@@ -111,8 +111,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
         /// </summary>
         private void UpdateCountdownTimer()
         {
-            var targetTime = OnlineManager.CurrentGame.CountdownStartTime + 5000;
-            var timeLeft = (int) ((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - targetTime) / 1000);
+            var timeLeft = (int) Math.Abs((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - OnlineManager.CurrentGame.CountdownStartTime) / 1000);
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (LastNearestCountdownSecond != timeLeft)
