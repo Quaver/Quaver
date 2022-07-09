@@ -895,6 +895,8 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
                     break;
                 case QuaverScreenType.Multiplayer:
+                    var screen = (MultiplayerGameScreen) CurrentScreen;
+                    screen.DontLeaveGameUponScreenSwitch = true;
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;
                 case QuaverScreenType.Music:
