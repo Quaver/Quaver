@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
         {
             "Free-For-All",
             "Team",
-            "Battle Royale"
+            //"Battle Royale"
         };
     }
 }
