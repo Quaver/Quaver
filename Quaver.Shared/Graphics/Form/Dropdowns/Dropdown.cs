@@ -145,7 +145,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// </summary>
         public override void Destroy()
         {
-            Logger.Debug("Destroy dropdown!!!!!!!!!", LogType.Runtime);
             ItemSelected = null;
             base.Destroy();
         }
