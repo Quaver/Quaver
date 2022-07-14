@@ -364,7 +364,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             if (ItemContainer.ScreenRectangle.Contains(mousePoint) || ScreenRectangle.Contains(mousePoint))
                 return;
 
-            Close();
+            if(Opened)
+                Close();
         }
     }
 }
