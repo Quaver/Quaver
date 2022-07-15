@@ -104,6 +104,18 @@ namespace Quaver.Shared.Screens.Options
             CurrentSearchQuery?.Dispose();
             IsKeybindFocused?.Dispose();
 
+            // Make sure to destroy everything that's not visible
+            foreach (var section in Sections)
+            {
+                foreach (var subcategory in section.Subcategories)
+                {
+                    foreach (var item in subcategory.Items)
+                    {
+                        item.Destroy();
+                    }
+                }
+            }
+
             base.Destroy();
         }
 
