@@ -10,6 +10,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Graphics.Form.Dropdowns
 {
@@ -55,7 +56,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             Hovered += OnHovered;
             LeftHover += OnHoverLeft;
             Clicked += OnClicked;
-            ClickedOutside += OnClickedOutside;
         }
 
         /// <inheritdoc />
@@ -136,21 +136,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 return;
 
             Dropdown.SelectItem(this);
-            Dropdown.Close();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void OnClickedOutside(object sender, EventArgs e)
-        {
-            var mousePoint = MouseManager.CurrentState.Position.ToPoint();
-
-            if (Dropdown.ItemContainer.ScreenRectangle.Contains(mousePoint) || Dropdown.ScreenRectangle.Contains(mousePoint))
-                return;
-
             Dropdown.Close();
         }
     }
