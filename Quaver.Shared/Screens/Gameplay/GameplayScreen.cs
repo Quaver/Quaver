@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Gameplay
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
                               && Ruleset.ScoreProcessor.Health <= 0)
                               && !(this is TournamentGameplayScreen)
-                              || ForceFail;
+                              || ForceFail || Ruleset.ScoreProcessor.ForceFail;
 
         /// <summary>
         ///     If we're force failing the user.
