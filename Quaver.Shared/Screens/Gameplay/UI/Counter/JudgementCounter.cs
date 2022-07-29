@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                     Alpha = skin.JudgementCounterAlpha,
                     X = skin.JudgementCounterPosX,
                     Y = skin.JudgementCounterPosY
-            };
+                };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
