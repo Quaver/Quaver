@@ -55,13 +55,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                     Alignment = Alignment.MidRight,
                     Parent = this,
                     Image = SkinManager.Skin.JudgementOverlay,
-                    Alpha = skin.JudgementCounterAlpha
+                    Alpha = skin.JudgementCounterAlpha,
+                    X = skin.JudgementCounterPosX
                 };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
                     Y = Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count * -JudgementDisplays[key].Height / 2f;
+                    Y += skin.JudgementCounterPosY;
                     continue;
                 }
 
