@@ -56,18 +56,21 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                     Parent = this,
                     Image = SkinManager.Skin.JudgementOverlay,
                     Alpha = skin.JudgementCounterAlpha,
-                    X = skin.JudgementCounterPosX
-                };
+                    X = skin.JudgementCounterPosX,
+                    Y = skin.JudgementCounterPosY
+            };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    Y = Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count * -JudgementDisplays[key].Height / 2f;
-                    Y += skin.JudgementCounterPosY;
+                    Y += Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count * -JudgementDisplays[key].Height / 2f;
                     continue;
                 }
 
-                JudgementDisplays[key].Y = JudgementDisplays[(Judgement)(i - 1)].Y + JudgementDisplays[key].Height + 5;
+                if (skin.JudgementCounterHorizontal)
+                    JudgementDisplays[key].X = JudgementDisplays[(Judgement)(i - 1)].X + JudgementDisplays[key].Width + 5;
+                else
+                    JudgementDisplays[key].Y = JudgementDisplays[(Judgement)(i - 1)].Y + JudgementDisplays[key].Height + 5;
             }
         }
 
