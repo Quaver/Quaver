@@ -211,6 +211,8 @@ namespace Quaver.Shared.Skinning
 
         internal bool JudgementCounterHorizontal { get; private set; }
 
+        internal bool JudgementCounterFadeToAlpha { get; private set; }
+
         internal bool DrawLongNoteEnd { get; private set; }
 
         internal Color DeadNoteColor { get; private set; }
@@ -491,6 +493,7 @@ namespace Quaver.Shared.Skinning
             JudgementCounterPosX = ConfigHelper.ReadInt32((int) JudgementCounterPosX, ini["JudgementCounterPosX"]);
             JudgementCounterPosY = ConfigHelper.ReadInt32((int) JudgementCounterPosY, ini["JudgementCounterPosY"]);
             JudgementCounterHorizontal = ConfigHelper.ReadBool(JudgementCounterHorizontal, ini["JudgementCounterHorizontal"]);
+            JudgementCounterFadeToAlpha = ConfigHelper.ReadBool(JudgementCounterFadeToAlpha, ini["JudgementCounterFadeToAlpha"]);
             DrawLongNoteEnd = ConfigHelper.ReadBool(DrawLongNoteEnd, ini["DrawLongNoteEnd"]);
             ScoreDisplayScale = ConfigHelper.ReadInt32((int) ScoreDisplayScale, ini["ScoreDisplayScale"]);
             RatingDisplayScale = ConfigHelper.ReadInt32((int) RatingDisplayScale, ini["RatingDisplayScale"]);

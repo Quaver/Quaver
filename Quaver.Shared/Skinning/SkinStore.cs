@@ -183,6 +183,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D JudgementOverlay { get; private set; }
 
         /// <summary>
+        ///     The background of the judgement overlay.
+        /// </summary>
+        internal Texture2D JudgementOverlayBackground { get; private set; }
+
+        /// <summary>
         ///     The scoreboard displayed on the screen for the player.
         /// </summary>
         internal Texture2D Scoreboard { get; private set; }
@@ -519,8 +524,11 @@ namespace Quaver.Shared.Skinning
 
             // Load judgement overlay
             const string judgementOverlay = "judgement-overlay";
+            const string judgementOverlayBackground = "judgement-overlay-background";
             JudgementOverlay = LoadSingleTexture( $"{Dir}/{folder}/{judgementOverlay}",
                 $"Quaver.Resources/Textures/Skins/Shared/Judgements/{judgementOverlay}.png");
+            JudgementOverlayBackground = LoadSingleTexture( $"{Dir}/{folder}/{judgementOverlayBackground}",
+                null);
         }
 
         /// <summary>
