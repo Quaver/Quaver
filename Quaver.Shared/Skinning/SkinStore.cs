@@ -521,14 +521,14 @@ namespace Quaver.Shared.Skinning
                 var judgementOverlayBackground = $"judgement-overlay-background-{j.ToString().ToLower()}";
 
                 // Compatibility for old skin.
-                if (!File.Exists($"/{folder}/{judgementOverlay}"))
+                if (!File.Exists($"{Dir}/{folder}/{judgementOverlay}"))
                     judgementOverlay = "judgement-overlay";
 
                 Judgements[j] = LoadSpritesheet($"/{folder}/", element,
                     $"Quaver.Resources/Textures/Skins/Shared/Judgements/{element}", 0, 0);
-                JudgementOverlay[j] = LoadSingleTexture($"/{folder}/{judgementOverlay}",
+                JudgementOverlay[j] = LoadSingleTexture($"{Dir}/{folder}/{judgementOverlay}",
                     $"Quaver.Resources/Textures/Skins/Shared/Judgements/judgement-overlay.png");
-                JudgementOverlayBackground[j] = LoadSingleTexture($"/{folder}/{judgementOverlayBackground}",
+                JudgementOverlayBackground[j] = LoadSingleTexture($"{Dir}/{folder}/{judgementOverlayBackground}",
                     null);
             }
         }
