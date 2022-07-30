@@ -90,9 +90,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 }
 
                 if (skin.JudgementCounterHorizontal)
-                    JudgementDisplays[key].X = JudgementDisplays[(Judgement)(i - 1)].X + JudgementDisplays[key].Width + 5;
+                    JudgementDisplays[key].X = JudgementDisplays[(Judgement)(i - 1)].X + JudgementDisplays[key].Width + 5 + skin.JudgementCounterPadding;
                 else
-                    JudgementDisplays[key].Y = JudgementDisplays[(Judgement)(i - 1)].Y + JudgementDisplays[key].Height + 5;
+                    JudgementDisplays[key].Y = JudgementDisplays[(Judgement)(i - 1)].Y + JudgementDisplays[key].Height + 5 + skin.JudgementCounterPadding;
 
                 if (SkinManager.Skin.JudgementOverlayBackground[key] != UserInterface.BlankBox)
                     JudgementDisplaysBackground[key].Position = JudgementDisplays[key].Position;
