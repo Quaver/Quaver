@@ -521,7 +521,7 @@ namespace Quaver.Shared.Skinning
                 var judgementOverlayBackground = $"judgement-overlay-background-{j.ToString().ToLower()}";
 
                 // Compatibility for old skin.
-                if (!File.Exists($"{Dir}/{folder}/{judgementOverlay}"))
+                if (!File.Exists($"{Dir}/{folder}/{judgementOverlay}.png"))
                     judgementOverlay = "judgement-overlay";
 
                 Judgements[j] = LoadSpritesheet($"/{folder}/", element,
