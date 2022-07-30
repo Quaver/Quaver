@@ -88,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
-                Tint = skin.JudgementCounterFontColor,
+                Tint = skin.UseJudgementColorForNumbers ? color * 2 : skin.JudgementCounterFontColor,
                 X = 0,
                 FontSize = (int)(Width * 0.35f)
             };

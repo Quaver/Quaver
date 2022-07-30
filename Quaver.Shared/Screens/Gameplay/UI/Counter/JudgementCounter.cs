@@ -56,13 +56,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 var key = (Judgement)i;
                 var color = SkinManager.Skin.Keys[Screen.Map.Mode].JudgeColors[key];
 
-                if (SkinManager.Skin.JudgementOverlayBackground != UserInterface.BlankBox)
+                if (SkinManager.Skin.JudgementOverlayBackground[key] != UserInterface.BlankBox)
                 {
                     JudgementDisplaysBackground[key] = new Sprite()
                     {
                         Alignment = Alignment.MidRight,
                         Parent = this,
-                        Image = SkinManager.Skin.JudgementOverlayBackground,
+                        Image = SkinManager.Skin.JudgementOverlayBackground[key],
                         Alpha = skin.JudgementCounterAlpha,
                         X = skin.JudgementCounterPosX,
                         Y = skin.JudgementCounterPosY,
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 {
                     Alignment = Alignment.MidRight,
                     Parent = this,
-                    Image = SkinManager.Skin.JudgementOverlay,
+                    Image = SkinManager.Skin.JudgementOverlay[key],
                     Alpha = skin.JudgementCounterAlpha,
                     X = skin.JudgementCounterPosX,
                     Y = skin.JudgementCounterPosY
@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 else
                     JudgementDisplays[key].Y = JudgementDisplays[(Judgement)(i - 1)].Y + JudgementDisplays[key].Height + 5;
 
-                if (SkinManager.Skin.JudgementOverlayBackground != UserInterface.BlankBox)
+                if (SkinManager.Skin.JudgementOverlayBackground[key] != UserInterface.BlankBox)
                     JudgementDisplaysBackground[key].Position = JudgementDisplays[key].Position;
             }
         }

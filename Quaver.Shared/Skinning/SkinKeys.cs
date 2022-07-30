@@ -200,6 +200,8 @@ namespace Quaver.Shared.Skinning
 
         internal Color JudgementCounterFontColor { get; private set; }
 
+        internal bool UseJudgementColorForNumbers { get; private set; }
+
         [FixedScale]
         internal float JudgementCounterSize { get; private set; }
 
@@ -489,6 +491,7 @@ namespace Quaver.Shared.Skinning
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
+            UseJudgementColorForNumbers = ConfigHelper.ReadBool(UseJudgementColorForNumbers, ini["UseJudgementColorForNumbers"]);
             JudgementCounterSize = ConfigHelper.ReadInt32((int) JudgementCounterSize, ini["JudgementCounterSize"]);
             JudgementCounterPosX = ConfigHelper.ReadInt32((int) JudgementCounterPosX, ini["JudgementCounterPosX"]);
             JudgementCounterPosY = ConfigHelper.ReadInt32((int) JudgementCounterPosY, ini["JudgementCounterPosY"]);

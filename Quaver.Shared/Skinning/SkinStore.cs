@@ -180,12 +180,12 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The overlay that displayed the judgement counts.
         /// </summary>
-        internal Texture2D JudgementOverlay { get; private set; }
+        internal Dictionary<Judgement, Texture2D> JudgementOverlay { get; } = new Dictionary<Judgement, Texture2D>();
 
         /// <summary>
         ///     The background of the judgement overlay.
         /// </summary>
-        internal Texture2D JudgementOverlayBackground { get; private set; }
+        internal Dictionary<Judgement, Texture2D> JudgementOverlayBackground { get; } = new Dictionary<Judgement, Texture2D>();
 
         /// <summary>
         ///     The scoreboard displayed on the screen for the player.
@@ -510,25 +510,27 @@ namespace Quaver.Shared.Skinning
         {
             const string folder = "Judgements";
 
-            // Load Judgements
+            // Load Judgements and judgement overlay
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
                 if (j == Judgement.Ghost)
                     continue;
 
                 var element = $"judge-{j.ToString().ToLower()}";
+                var judgementOverlay = $"judgement-overlay-{j.ToString().ToLower()}";
+                var judgementOverlayBackground = $"judgement-overlay-background-{j.ToString().ToLower()}";
+
+                // Compatibility for old skin.
+                if (!File.Exists($"/{folder}/{judgementOverlay}"))
+                    judgementOverlay = "judgement-overlay";
 
                 Judgements[j] = LoadSpritesheet($"/{folder}/", element,
                     $"Quaver.Resources/Textures/Skins/Shared/Judgements/{element}", 0, 0);
+                JudgementOverlay[j] = LoadSingleTexture($"/{folder}/{judgementOverlay}",
+                    $"Quaver.Resources/Textures/Skins/Shared/Judgements/judgement-overlay.png");
+                JudgementOverlayBackground[j] = LoadSingleTexture($"/{folder}/{judgementOverlayBackground}",
+                    null);
             }
-
-            // Load judgement overlay
-            const string judgementOverlay = "judgement-overlay";
-            const string judgementOverlayBackground = "judgement-overlay-background";
-            JudgementOverlay = LoadSingleTexture( $"{Dir}/{folder}/{judgementOverlay}",
-                $"Quaver.Resources/Textures/Skins/Shared/Judgements/{judgementOverlay}.png");
-            JudgementOverlayBackground = LoadSingleTexture( $"{Dir}/{folder}/{judgementOverlayBackground}",
-                null);
         }
 
         /// <summary>
