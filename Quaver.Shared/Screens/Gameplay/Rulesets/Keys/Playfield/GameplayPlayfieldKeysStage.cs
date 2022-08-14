@@ -562,7 +562,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     Parent = Playfield.ForegroundContainer,
                     Alignment = Alignment.MidCenter,
-                    X = skin.DisplayJudgementsInEachColumn == true ? Receptors[i].X - (Playfield.Width / 2 - (Playfield.LaneSize / 2)) : 0
+                    X = skin.DisplayJudgementsInEachColumn == true ? Receptors[i].X - ((Playfield.Width / 2) - (Playfield.LaneSize / 2)) : 0
                 };
 
                 if (skin.RotateJudgements && skin.DisplayJudgementsInEachColumn)
