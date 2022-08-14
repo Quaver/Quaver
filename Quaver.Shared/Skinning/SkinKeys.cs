@@ -168,6 +168,10 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float JudgementBurstPosY { get; private set; }
 
+        internal bool DisplayJudgementsInEachColumn { get; private set; }
+
+        internal bool RotateJudgements { get; private set; }
+
         [FixedScale]
         internal float HitErrorPosX { get; private set; }
 
@@ -481,6 +485,8 @@ namespace Quaver.Shared.Skinning
             ComboPosX = ConfigHelper.ReadInt32((int) ComboPosX, ini["ComboPosX"]);
             ComboPosY = ConfigHelper.ReadInt32((int) ComboPosY, ini["ComboPosY"]);
             JudgementBurstPosY = ConfigHelper.ReadInt32((int) JudgementBurstPosY, ini["JudgementBurstPosY"]);
+            DisplayJudgementsInEachColumn = ConfigHelper.ReadBool(DisplayJudgementsInEachColumn, ini["DisplayJudgementsInEachColumn"]);
+            RotateJudgements = ConfigHelper.ReadBool(RotateJudgements, ini["RotateJudgements"]);
             HealthBarType = ConfigHelper.ReadEnum(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadEnum(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
             HealthBarScale = ConfigHelper.ReadInt32((int) HealthBarScale, ini["HealthBarScale"]);

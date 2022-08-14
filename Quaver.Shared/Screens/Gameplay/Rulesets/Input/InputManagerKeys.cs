@@ -199,7 +199,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             {
                 playfield.Stage.ComboDisplay.MakeVisible();
                 playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - time);
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                playfield.Stage.JudgementHitBurst[Math.Clamp(lane, 0, playfield.Stage.JudgementHitBurst.Count - 1)].PerformJudgementAnimation(judgement);
             }
 
             // Update Object Pooling
@@ -223,7 +223,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
                     view.UpdateScoreboardUsers();
                     view.UpdateScoreAndAccuracyDisplays();
-                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+                    playfield.Stage.JudgementHitBurst[Math.Clamp(lane, 0, playfield.Stage.JudgementHitBurst.Count - 1)].PerformJudgementAnimation(Judgement.Miss);
 
                     manager.KillPoolObject(gameplayHitObject);
                     break;
@@ -293,7 +293,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 {
                     playfield.Stage.ComboDisplay.MakeVisible();
                     playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.EndTime - time);
-                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                    playfield.Stage.JudgementHitBurst[Math.Clamp(lane, 0, playfield.Stage.JudgementHitBurst.Count - 1)].PerformJudgementAnimation(judgement);
                 }
 
                 // play hitlighting animation on release
@@ -336,7 +336,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Perform hit burst animation
             if (ReplayInputManager == null)
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+                playfield.Stage.JudgementHitBurst[Math.Clamp(lane, 0, playfield.Stage.JudgementHitBurst.Count - 1)].PerformJudgementAnimation(Judgement.Miss);
 
             // Update Object Pool
             manager.KillHoldPoolObject(gameplayHitObject);
