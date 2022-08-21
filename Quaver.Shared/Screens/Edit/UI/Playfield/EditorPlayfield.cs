@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Colors.Add;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
@@ -24,6 +25,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
@@ -359,6 +361,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
+            ActionManager.ColorSet += OnColorSet;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
@@ -465,6 +468,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
+            ActionManager.ColorSet -= OnColorSet;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
@@ -1010,6 +1014,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             ResetObjectPositions();
             InitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnColorSet(object sender, EditorColorSetEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
         }
 
         /// <summary>

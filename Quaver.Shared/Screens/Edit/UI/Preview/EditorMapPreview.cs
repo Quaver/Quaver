@@ -29,6 +29,8 @@ using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Preview;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
+using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
+using Quaver.Shared.Screens.Edit.Actions.Colors.Add;
 
 namespace Quaver.Shared.Screens.Edit.UI.Preview
 {
@@ -61,6 +63,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
+            ActionManager.ColorSet += OnColorSet;
             ActionManager.LongNoteResized += OnLongNoteResized;
             ActionManager.ScrollVelocityAdded += OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
@@ -91,6 +94,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
+            ActionManager.ColorSet -= OnColorSet;
             ActionManager.LongNoteResized -= OnLongNoteResized;
             ActionManager.ScrollVelocityAdded -= OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
@@ -135,6 +139,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnHitObjectBatchRemoved(object sender, EditorHitObjectBatchRemovedEventArgs e) => Refresh();
 
         private void OnHitObjectsResnapped(object sender, EditorActionHitObjectsResnappedEventArgs e) => Refresh();
+
+        private void OnColorSet(object sender, EditorColorSetEventArgs e) => Refresh();
 
         private void OnLongNoteResized(object sender, EditorLongNoteResizedEventArgs e) => Refresh();
 

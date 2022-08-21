@@ -112,6 +112,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> EnableSnapColorPanel { get; } = ConfigManager.EditorEnableSnapColorPanel ?? new Bindable<bool>(true) { Value = false };
+
+        /// <summary>
+        /// </summary>
         public BindableInt PlayfieldScrollSpeed { get; } = ConfigManager.EditorScrollSpeedKeys ?? new BindableInt(20, 1, 40);
 
         /// <summary>
@@ -367,6 +371,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (BeatSnapColor != ConfigManager.EditorBeatSnapColorType)
                 BeatSnapColor.Dispose();
+
+            if (EnableSnapColorPanel != ConfigManager.EditorEnableSnapColorPanel)
+                EnableSnapColorPanel.Dispose();
 
             if (ViewLayers != ConfigManager.EditorViewLayers)
                 ViewLayers.Dispose();

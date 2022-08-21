@@ -415,6 +415,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+
+            if (ImGui.MenuItem("Manual Snap Color Panel", "", Screen.EnableSnapColorPanel.Value))
+                Screen.EnableSnapColorPanel.Value = !Screen.EnableSnapColorPanel.Value;
+
             ImGui.Separator();
 
             if (ImGui.MenuItem("Scale Scroll Speed", "", Screen.ScaleScrollSpeedWithRate.Value))
