@@ -29,7 +29,6 @@ using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Preview;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Colors.Add;
 
 namespace Quaver.Shared.Screens.Edit.UI.Preview
