@@ -463,7 +463,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     the note is a long note or note.
         ///
         ///     If the user has ColourObjectsBySnapDistance enabled in their skin, we load the one with their
-        ///     specified color.
+        ///     specified/overridden color. 
         ///
         ///     If not, we default it to the first beat snap in the list.
         /// </summary>
@@ -476,6 +476,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (skin.ColorObjectsBySnapDistance)
             {
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
+
+                if (Info.Color != -1)
+                    return objects[Info.Color];
 
                 if (HitObjectManager.SnapIndices.ContainsKey(Info))
                 {
