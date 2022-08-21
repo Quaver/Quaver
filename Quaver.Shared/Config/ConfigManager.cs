@@ -356,6 +356,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<EditorBeatSnapColor> EditorBeatSnapColorType { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EditorEnableSnapColorPanel { get; private set; }
+
+        /// <summary>
         ///     Whether or not the user only wants to display measure lines while editing.
         /// </summary>
         internal static Bindable<bool> EditorOnlyShowMeasureLines { get; private set; }
@@ -1022,6 +1026,7 @@ namespace Quaver.Shared.Config
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
+            EditorEnableSnapColorPanel = ReadValue(@"EditorEnableSnapColorPanel", false, data);
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);

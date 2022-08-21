@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Edit.Actions.Colors.Remove;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
 {

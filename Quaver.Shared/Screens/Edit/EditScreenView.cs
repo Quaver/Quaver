@@ -69,6 +69,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private EditorPanelColorPicker ColorPicker { get; set; }
+
+        /// <summary>
+        /// </summary>
         public EditorPanelLayers Layers { get; private set; }
 
         /// <summary>
@@ -103,8 +107,13 @@ namespace Quaver.Shared.Screens.Edit
             CreateSelector();
             CreateDetailsPanel();
             CreateCompositionTools();
-            CreateHitsoundsPanel();
             CreateLayersPanel();
+
+            // panel created inbetween the other two rightward panels for the order that they should be drawn in
+            if (EditScreen.EnableSnapColorPanel.Value)
+                CreateColorPickerPanel();
+
+            CreateHitsoundsPanel();
             CreateAutoMod();
 
             if (EditScreen.DisplayGameplayPreview.Value)
@@ -215,7 +224,16 @@ namespace Quaver.Shared.Screens.Edit
         {
             Parent = Container,
             Alignment = Alignment.MidRight,
-            Y = 200
+            Y = EditScreen.EnableSnapColorPanel.Value ? 275 : 200
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateColorPickerPanel() => ColorPicker = new EditorPanelColorPicker(EditScreen.SelectedHitObjects, EditScreen.ActionManager)
+        {
+            Parent = Container,
+            Alignment = Alignment.MidRight,
+            Y = 0
         };
 
         private void CreateLayersPanel() => Layers = new EditorPanelLayers(EditScreen.ActionManager, EditScreen.WorkingMap,
@@ -223,7 +241,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             Parent = Container,
             Alignment = Alignment.MidRight,
-            Y = -200
+            Y = EditScreen.EnableSnapColorPanel.Value ? -275 : -200
         };
 
         /// <summary>
@@ -428,6 +446,10 @@ namespace Quaver.Shared.Screens.Edit
             Details.Parent = Container;
             CompositionTools.Parent = Container;
             Hitsounds.Parent = Container;
+
+            if (EditScreen.EnableSnapColorPanel.Value)
+                ColorPicker.Parent = Container;
+
             AutoMod.Parent = Container;
             Footer.Parent = Container;
         }
