@@ -11,8 +11,6 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions.Batch;
 using Quaver.Shared.Screens.Edit.Actions.Colors.Add;
-using Quaver.Shared.Screens.Edit.Actions.Colors.Remove;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
@@ -139,14 +137,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorHitSoundRemovedEventArgs> HitsoundRemoved;
 
         /// <summary>
-        ///     Event invoked when a hitsound has been added to a group of objects
+        ///     Event invoked when a custom color has been added to a group of objects
         /// </summary>
         public event EventHandler<EditorColorSetEventArgs> ColorSet;
-
-        /// <summary>
-        ///     Event invoked when a hitsound has been removed from a group of objects
-        /// </summary>
-        public event EventHandler<EditorColorUnsetEventArgs> ColorUnset;
 
         /// <summary>
         ///     Event invoked when a layer has been created
@@ -594,9 +587,6 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.SetColor:
                     ColorSet?.Invoke(this, (EditorColorSetEventArgs)args);
-                    break;
-                case EditorActionType.UnsetColor:
-                    ColorUnset?.Invoke(this, (EditorColorUnsetEventArgs)args);
                     break;
                 case EditorActionType.CreateLayer:
                     LayerCreated?.Invoke(this, (EditorLayerCreatedEventArgs)args);

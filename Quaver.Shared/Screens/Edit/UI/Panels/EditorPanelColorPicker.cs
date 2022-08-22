@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 return;
             }
 
-            ActionManager.Perform(new EditorActionSetColor(ActionManager, new List<HitObjectInfo>(SelectedHitObjects.Value), (int)Color));
+            ActionManager.Perform(new EditorActionSetColor(ActionManager, new List<HitObjectInfo>(SelectedHitObjects.Value), new List<int>(), (int)Color));
         }
 
         /// <inheritdoc />
