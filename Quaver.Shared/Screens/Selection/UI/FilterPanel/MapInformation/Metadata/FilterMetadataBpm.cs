@@ -17,21 +17,18 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
     {
         public Bindable<Map> Map { get; }
 
-        private ImageButton ToolTipArea { get; set; }
-
         public FilterMetadataBpm(Bindable<Map> map = null) : base("BPM:", "000", 20, ColorHelper.HexToColor($"#ffe76b"))
         {
             Map = map ?? MapManager.Selected;
 
             if (Map.Value != null)
-            {
                 Value.Text = $"{GetBpm()}";
-                CreateTooltip();
-            }
 
             ModManager.ModsChanged += OnModsChanged;
             Map.ValueChanged += OnMapChanged;
         }
+
+        public override string ToolTipText => GetTooltipText();
 
         /// <inheritdoc />
         /// <summary>
@@ -43,21 +40,6 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();
-        }
-
-        private void CreateTooltip()
-        {
-            ToolTipArea = new ImageButton(UserInterface.BlankBox)
-            {
-                Parent = this,
-                Alignment = Alignment.MidRight,
-                Size = Size,
-                Alpha = 0f,
-            };
-
-            var game = GameBase.Game as QuaverGame;
-            ToolTipArea.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(new Tooltip(GetTooltipText(), ColorHelper.HexToColor("#5dc7f9")));
-            ToolTipArea.LeftHover += (sender, args) => game?.CurrentScreen?.DeactivateTooltip();
         }
 
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => ScheduleUpdate(SetText);

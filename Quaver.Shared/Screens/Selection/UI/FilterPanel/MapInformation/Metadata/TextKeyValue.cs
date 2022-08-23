@@ -1,9 +1,14 @@
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
+using WebSocketSharp;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
@@ -19,6 +24,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         ///     Displays the value of the metadata
         /// </summary>
         public SpriteTextPlus Value { get; private set; }
+
+        private ImageButton ToolTipArea { get; set; }
+
+        /// <summary>
+        ///     Text displayed when hovered over the container
+        /// </summary>
+        public virtual string ToolTipText => null;
 
         /// <summary>
         ///     The size of the font
@@ -45,6 +57,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             CreateValue(value);
 
             Size = new ScalableVector2(Key.Width + Value.Width + 6, Key.Height);
+            CreateTooltipArea();
         }
 
         /// <summary>
@@ -69,6 +82,26 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
                 X = Key.Width  + 6,
                 Tint = KeyColor
             };
+        }
+
+        private void CreateTooltipArea()
+        {
+            ToolTipArea = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                Size = Size,
+                Alpha = 0f,
+            };
+
+            var game = GameBase.Game as QuaverGame;
+            ToolTipArea.Hovered += (sender, args) =>
+            {
+                if (!ToolTipText.IsNullOrEmpty())
+                    game?.CurrentScreen?.ActivateTooltip(new Tooltip(ToolTipText, ColorHelper.HexToColor("#5dc7f9")));
+            };
+
+            ToolTipArea.LeftHover += (sender, args) => game?.CurrentScreen?.DeactivateTooltip();
         }
 
         /// <summary>
