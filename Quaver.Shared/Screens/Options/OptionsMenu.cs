@@ -171,7 +171,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
                     {
                         new OptionsItemSliderGlobalOffset(containerRect, "Global Audio Offset", ConfigManager.GlobalAudioOffset),
-                        new OptionsSlider(containerRect, "Visual Offset", ConfigManager.VisualOffset, i => $"{i} ms"),
+                        new OptionsSlider(containerRect, "Visual Offset", ConfigManager.VisualOffset, i => $"{i} ms", "Use when there is a visual delay to counteract.\nSet positive offset when hitting late and vice versa."),
                         new OptionsItemCalibrateOffset(containerRect, "Calibrate Offset")
                     }),
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
@@ -356,8 +356,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Song Selection", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
-                        new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
+                        new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate, "Use in song select with Ctrl+Keybind"),
+                        new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate, "Use in song select with Ctrl+Keybind"),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {

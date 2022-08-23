@@ -12,7 +12,8 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     public class OptionsItemFrameLimiter : OptionsItemDropdown
     {
         public OptionsItemFrameLimiter(RectangleF containerRect, string name) : base(containerRect, name,
-            new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex()))
+            new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex()),
+            "Changes the FPS limit.\nCustom limit has to be set manually in the quaver.cfg file.\nConsider using a custom limit over unlimited for performance reasons.")
         {
             Dropdown.ItemSelected += (sender, args) =>
             {

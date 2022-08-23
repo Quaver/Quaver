@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Options.Items
         /// </summary>
         protected Dropdown Dropdown { get; }
 
-        public OptionsItemDropdown(RectangleF containerRect, string name, Dropdown dropdown) : base(containerRect, name)
+        public OptionsItemDropdown(RectangleF containerRect, string name, Dropdown dropdown, string tooltipText = null) : base(containerRect, name, tooltipText)
         {
             Dropdown = dropdown;
             Dropdown.Parent = this;

@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="bindedKeys"></param>
         /// <param name="bindedKey"></param>
         /// <param name="isKeybindFocused"></param>
-        public OptionsItemKeybind(RectangleF containerRect, string name, Bindable<Keys> bindedKey) : base(containerRect, name)
+        public OptionsItemKeybind(RectangleF containerRect, string name, Bindable<Keys> bindedKey, string tooltip = null) : base(containerRect, name, tooltip)
         {
             BindedKey = bindedKey;
 

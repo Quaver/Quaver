@@ -27,8 +27,8 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="name"></param>
         /// <param name="bindedValue"></param>
         /// <param name="valueModifier"></param>
-        public OptionsSlider(RectangleF containerRect, string name, BindableInt bindedValue, Func<int, string> valueModifier = null)
-            : base(containerRect, name)
+        public OptionsSlider(RectangleF containerRect, string name, BindableInt bindedValue, Func<int, string> valueModifier = null, string tooltip = null)
+            : base(containerRect, name, tooltip)
         {
             if (bindedValue == null)
                 bindedValue = new BindableInt(0, 0, 100);
