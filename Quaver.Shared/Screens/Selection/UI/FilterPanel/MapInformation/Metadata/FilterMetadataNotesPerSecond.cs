@@ -19,6 +19,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             ModManager.ModsChanged += OnModsChanged;
         }
 
+        public override string ToolTipText => $"Actions per second: {GetActionsPerSecond()}";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -48,8 +50,16 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             return Math.Floor(MapManager.Selected.Value.NotesPerSecond * 100) / 100;
         }
 
+        private double GetActionsPerSecond()
+        {
+            if (MapManager.Selected.Value == null)
+                return 0;
+
+            return Math.Floor(MapManager.Selected.Value.Qua.GetActionsPerSecond() * 100) / 100;
+        }
+
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => SetText();
 
-        private void SetText() => ScheduleUpdate(() => Value.Text = GetNotesPerSecond().ToString());
+        private void SetText() => ScheduleUpdate(() => Value.Text = GetNotesPerSecond().ToString(CultureInfo.InvariantCulture));
     }
 }
