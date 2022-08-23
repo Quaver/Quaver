@@ -187,7 +187,12 @@ namespace Quaver.Shared.Screens
             }
 
             ActiveTooltip = tooltip;
-            ActiveTooltip.Parent = View.Container;
+
+            if (DialogManager.Dialogs.Count > 0)
+                ActiveTooltip.Parent = DialogManager.Dialogs.Last();
+            else
+                ActiveTooltip.Parent = View.Container;
+
             ActiveTooltip.Visible = true;
 
             var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width, 0,

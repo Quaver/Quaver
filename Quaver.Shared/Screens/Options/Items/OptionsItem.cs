@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
+using WebSocketSharp;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -28,11 +32,16 @@ namespace Quaver.Shared.Screens.Options.Items
         /// </summary>
         public List<string> Tags { get; set; } = new List<string>();
 
+        private FadeableButton TooltipArea;
+
+        private Tooltip Tooltip;
+
         /// <summary>
         /// </summary>
         /// <param name="containerRect"></param>
         /// <param name="name"></param>
-        public OptionsItem(RectangleF containerRect, string name)
+        /// <param name="tooltipText"></param>
+        public OptionsItem(RectangleF containerRect, string name, string tooltipText = null)
         {
             ContainerRectangle = containerRect;
 
@@ -42,8 +51,9 @@ namespace Quaver.Shared.Screens.Options.Items
             Tint = ColorHelper.HexToColor("#242424");
 
             CreateName(name);
-
             UsePreviousSpriteBatchOptions = true;
+
+            CreateTooltip(tooltipText);
         }
 
         /// <inheritdoc />
@@ -79,6 +89,26 @@ namespace Quaver.Shared.Screens.Options.Items
                 X = 16,
                 UsePreviousSpriteBatchOptions = true,
             };
+        }
+
+        private void CreateTooltip(string text)
+        {
+            if (text.IsNullOrEmpty()) return;
+
+            TooltipArea = new FadeableButton(UserInterface.NotificationInfo)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                Size = new ScalableVector2(15, 15),
+                X = Name.X + Name.Width + 10,
+                Y = Name.Y,
+            };
+
+            Tooltip = new Tooltip(text, ColorHelper.HexToColor("#5dc7f9"));
+
+            var game = GameBase.Game as QuaverGame;
+            TooltipArea.Hovered += (sender, args) => game?.CurrentScreen.ActivateTooltip(Tooltip);
+            TooltipArea.LeftHover += (sender, args) => game?.CurrentScreen.DeactivateTooltip();
         }
     }
 }
