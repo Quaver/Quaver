@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Shared.Database.Maps;
@@ -23,6 +24,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             Map.ValueChanged += OnMapChanged;
         }
 
+        public override string ToolTipText => $"Drain time: {GetDrainTime()}";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -44,7 +47,25 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             if (Map.Value == null)
                 return "00:00";
 
-            var length = TimeSpan.FromMilliseconds(Map.Value.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
+            return FormatMilliseconds(Map.Value.SongLength);
+        }
+
+        private string GetDrainTime()
+        {
+            if (Map.Value == null || Map.Value.Qua.HitObjects.Count < 2)
+                return "00:00";
+
+            var first = Map.Value.Qua.HitObjects.First();
+            var last = Map.Value.Qua.HitObjects.Last();
+
+            var drainTime = Math.Max(last.StartTime, last.EndTime) - first.StartTime;
+
+            return FormatMilliseconds(drainTime);
+        }
+
+        private string FormatMilliseconds(int milliseconds)
+        {
+            var length = TimeSpan.FromMilliseconds(milliseconds / ModHelper.GetRateFromMods(ModManager.Mods));
             return length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
         }
 
