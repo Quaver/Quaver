@@ -109,7 +109,6 @@ namespace Quaver.Shared.Screens.Edit
             CreateCompositionTools();
             CreateLayersPanel();
 
-            // panel created inbetween the other two rightward panels for the order that they should be drawn in
             if (EditScreen.EnableSnapColorPanel.Value)
                 CreateColorPickerPanel();
 

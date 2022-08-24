@@ -476,17 +476,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (skin.ColorObjectsBySnapDistance)
             {
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
+                var index = Rulesets.HitObjects.HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Ruleset.Map.TimingPoints));
 
-                if (Info.Color != -1)
-                    return objects[Info.Color];
-
-                if (HitObjectManager.SnapIndices.ContainsKey(Info))
-                {
-                    var snap = HitObjectManager.SnapIndices[Info];
-                    return snap < objects.Count ? objects[snap] : objects[objects.Count - 1];
-                }
-
-                return objects.First();
+                return objects[index];
             }
 
             return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();

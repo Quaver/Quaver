@@ -59,6 +59,34 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         }
 
         /// <summary>
+        ///     Assigns beat snaps to hitobject texture indexes.
+        /// </summary>
+        public static int BeatSnapToSnapIndex(int color)
+        {
+            switch (color)
+            {
+                case 1:
+                    return 0;
+                case 2:
+                    return 1;
+                case 3:
+                    return 2;
+                case 4:
+                    return 3;
+                case 6:
+                    return 4;
+                case 8:
+                    return 5;
+                case 12:
+                    return 6;
+                case 16:
+                    return 7;
+                default:
+                    return 8;
+            }
+        }
+
+        /// <summary>
         ///     Updates all the containing HitObjects
         /// </summary>
         /// <param name="gameTime"></param>
@@ -157,6 +185,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <returns></returns>
         public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
         {
+            // Check for Beat Snap Color Override
+            if (info.Color != 0 && ConfigManager.DisplaySnapColorOverrides.Value)
+                return BeatSnapToSnapIndex(info.Color);
+
             // Add 2ms offset buffer space to offset and get beat length
             var pos = info.StartTime - timingPoint.StartTime + 0;
             var beatlength = 60000 / timingPoint.Bpm;

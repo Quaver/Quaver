@@ -33,11 +33,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
         /// <summary>
         /// </summary>
-        private List<DrawableEditorColorPicker> HitsoundList { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<HitSounds> SelectedHitsounds { get; } = new Bindable<HitSounds>(0);
+        private List<DrawableEditorColorPicker> SnapColorList { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -52,7 +48,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
             Depth = 1;
 
-            HitsoundList = new List<DrawableEditorColorPicker>
+            SnapColorList = new List<DrawableEditorColorPicker>
             {
                 new DrawableEditorColorPicker(SnapColor.Red, SelectedHitObjects, ActionManager),
                 new DrawableEditorColorPicker(SnapColor.Blue, SelectedHitObjects, ActionManager),
@@ -65,30 +61,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 new DrawableEditorColorPicker(SnapColor.White, SelectedHitObjects, ActionManager)
             };
 
-            AlignSounds();
+            AlignColorList();
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy()
-        {
-            SelectedHitsounds.Dispose();
-            base.Destroy();
-        }
+        public override void Destroy() => base.Destroy();
 
         /// <summary>
         /// </summary>
-        private void AlignSounds()
+        private void AlignColorList()
         {
-            for (var i = 0; i < HitsoundList.Count; i++)
+            for (var i = 0; i < SnapColorList.Count; i++)
             {
-                var sound = HitsoundList[i];
+                var color = SnapColorList[i];
 
-                sound.Parent = Content;
-                sound.Size = new ScalableVector2(Content.Width, Content.Height / HitsoundList.Count - 2.5f);
-                sound.X = 4;
-                sound.Y = 7f + sound.Height * i;
+                color.Parent = Content;
+                color.Size = new ScalableVector2(Content.Width, (Content.Height / SnapColorList.Count) - 2.5f);
+                color.X = 4;
+                color.Y = 7f + (color.Height * i);
             }
         }
     }
@@ -166,9 +158,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         {
             if (IsHovered)
             {
-                var col = DrawingColor.FromName(Color.ToString());
                 Alpha = 0.45f;
-                Tint = new Microsoft.Xna.Framework.Color(col.R, col.G, col.B);
+                Tint = ColorHelper.BeatSnapToColor(16);
                 BorderLine.Alpha = Alpha;
             }
             else

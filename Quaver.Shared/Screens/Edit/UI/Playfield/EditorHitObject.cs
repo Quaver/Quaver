@@ -147,10 +147,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             var index = SkinMode.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
 
-            // snap color override
-            if (Info.Color != -1)
-                index = Info.Color;
-
             if (ViewLayers.Value)
                 return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];
 
