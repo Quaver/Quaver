@@ -58,7 +58,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 new DrawableEditorColorPicker(SnapColor.Orange, SelectedHitObjects, ActionManager),
                 new DrawableEditorColorPicker(SnapColor.Cyan, SelectedHitObjects, ActionManager),
                 new DrawableEditorColorPicker(SnapColor.Green, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.White, SelectedHitObjects, ActionManager)
+                new DrawableEditorColorPicker(SnapColor.White, SelectedHitObjects, ActionManager),
+                new DrawableEditorColorPicker(SnapColor.None, SelectedHitObjects, ActionManager)
             };
 
             AlignColorList();
@@ -159,7 +160,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             if (IsHovered)
             {
                 Alpha = 0.45f;
-                Tint = ColorHelper.BeatSnapToColor(16);
+                Tint = ColorHelper.BeatSnapToColor((int)Color);
                 BorderLine.Alpha = Alpha;
             }
             else
@@ -182,16 +183,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreateIcon()
         {
-            var icon = GetTexture();
-
             Icon = new Sprite
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 17,
-                Size = new ScalableVector2(20, 20f * icon.Height / icon.Width),
-                Image = icon
-            };
+                Size = new ScalableVector2(4, 24),
+                Tint = ColorHelper.BeatSnapToColor((int)Color)
+        };
         }
 
         /// <summary>
@@ -213,7 +212,5 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             Parent = this,
             Size = new ScalableVector2(4, 0)
         };
-
-        private Texture2D GetTexture() => FontAwesome.Get(FontAwesomeIcon.fa_angle_arrow_pointing_to_right);
     }
 }

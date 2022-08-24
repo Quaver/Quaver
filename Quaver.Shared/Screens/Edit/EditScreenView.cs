@@ -447,18 +447,18 @@ namespace Quaver.Shared.Screens.Edit
             {
                 CreateColorPickerPanel();
 
-                Hitsounds.Y = 275;
-                Layers.Y = -275;
+                Hitsounds.MoveToPosition(new Vector2(0, 275), Easing.Linear, 0);
+                Layers.MoveToPosition(new Vector2(0, 275), Easing.Linear, 0);
 
                 ResetPanelParents();
                 return;
             }
 
+            Hitsounds.MoveToPosition(new Vector2(0, 200), Easing.Linear, 0);
+            Layers.MoveToPosition(new Vector2(0, 200), Easing.Linear, 0);
+
             ColorPicker?.Destroy();
             ColorPicker = null;
-
-            Hitsounds.Y = 200;
-            Layers.Y = -200;
         }
 
         /// <summary>
