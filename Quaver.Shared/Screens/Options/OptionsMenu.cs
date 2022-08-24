@@ -242,12 +242,7 @@ namespace Quaver.Shared.Screens.Options
                        new OptionsItemCheckbox(containerRect, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                        new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
                        new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
-                    }),
-                    // new OptionsSubcategory("Multiplayer", new List<OptionsItem>()
-                    // {
-                    //     new OptionsItemCheckbox(containerRect, "Enable Battle Royale Alerts", ConfigManager.EnableBattleRoyaleAlerts),
-                    //     new OptionsItemCheckbox(containerRect, "Enable Battle Royale Background Flashing", ConfigManager.EnableBattleRoyaleBackgroundFlashing)
-                    // })
+                    })
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
                 {
