@@ -415,7 +415,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
-            if (ImGui.MenuItem("Manual Snap Color Panel", "", Screen.EnableSnapColorPanel.Value))
+            if (ImGui.MenuItem("Snap Color Override Panel", "", Screen.EnableSnapColorPanel.Value))
                 Screen.EnableSnapColorPanel.Value = !Screen.EnableSnapColorPanel.Value;
 
             ImGui.Separator();

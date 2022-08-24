@@ -123,6 +123,7 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.DisplayGameplayPreview.ValueChanged += OnDisplayGameplayPreviewChanged;
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
+            EditScreen.EnableSnapColorPanel.ValueChanged += OnEnableSnapColorPanelChanged;
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             Footer.Parent = Container;
         }
@@ -434,6 +435,30 @@ namespace Quaver.Shared.Screens.Edit
             MapPreview?.Destroy();
             MapPreview = null;
             Playfield.X = 0;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnEnableSnapColorPanelChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (e.Value)
+            {
+                CreateColorPickerPanel();
+
+                Hitsounds.Y = 275;
+                Layers.Y = -275;
+
+                ResetPanelParents();
+                return;
+            }
+
+            ColorPicker?.Destroy();
+            ColorPicker = null;
+
+            Hitsounds.Y = 200;
+            Layers.Y = -200;
         }
 
         /// <summary>
