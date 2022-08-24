@@ -917,6 +917,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             InitializeInfoPool(Ruleset.Map, true);
             InitializeObjectPool();
+
+            foreach (var timingLineManager in Ruleset.TimingLineManager)
+            {
+                timingLineManager.InitializeObjectPool();
+            }
+
             Update(new GameTime());
         }
 
