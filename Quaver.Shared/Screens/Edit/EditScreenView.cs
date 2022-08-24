@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Edit
     {
         /// <summary>
         /// </summary>
-        private EditScreen EditScreen => (EditScreen) Screen;
+        private EditScreen EditScreen => (EditScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -197,7 +197,8 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
             EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer,
-            EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform, EditScreen.AudioDirection, EditScreen.WaveformFilter) { Parent = Container};
+            EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform, EditScreen.AudioDirection, EditScreen.WaveformFilter)
+        { Parent = Container };
 
         /// <summary>
         /// </summary>
@@ -394,7 +395,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             MapPreview = new EditorMapPreview(EditScreen.ActionManager, new Bindable<bool>(false), EditScreen.ActiveLeftPanel,
-                (int) WindowManager.Height - MenuBorder.HEIGHT - 34, EditScreen.Track, EditScreen.WorkingMap)
+                (int)WindowManager.Height - MenuBorder.HEIGHT - 34, EditScreen.Track, EditScreen.WorkingMap)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -447,18 +448,19 @@ namespace Quaver.Shared.Screens.Edit
             {
                 CreateColorPickerPanel();
 
-                Hitsounds.MoveToPosition(new Vector2(0, 275), Easing.Linear, 0);
-                Layers.MoveToPosition(new Vector2(0, 275), Easing.Linear, 0);
+                Hitsounds.Position = new ScalableVector2(0, 275);
+                Hitsounds.Alignment = Alignment.MidRight;
+
+                Layers.Position = new ScalableVector2(0, -275);
+                Layers.Alignment = Alignment.MidRight;
 
                 ResetPanelParents();
-                return;
             }
-
-            Hitsounds.MoveToPosition(new Vector2(0, 200), Easing.Linear, 0);
-            Layers.MoveToPosition(new Vector2(0, 200), Easing.Linear, 0);
-
-            ColorPicker?.Destroy();
-            ColorPicker = null;
+            else
+            {
+                ColorPicker?.Destroy();
+                ColorPicker = null;
+            }
         }
 
         /// <summary>

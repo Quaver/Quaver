@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
@@ -9,31 +8,23 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Colors.Add;
-using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
-using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
-using DrawingColor = System.Drawing.Color;
 
 namespace Quaver.Shared.Screens.Edit.UI.Panels
 {
     public class EditorPanelColorPicker : EditorPanel
     {
-        /// <summary>
-        /// </summary>
         private BindableList<HitObjectInfo> SelectedHitObjects { get; }
-
-        /// <summary>
-        /// </summary>
         private EditorActionManager ActionManager { get; }
 
-        /// <summary>
-        /// </summary>
-        private List<DrawableEditorColorPicker> SnapColorList { get; }
+        private Container LeftList;
+        private Container RightList;
+        private const float Padding = 15f;
 
         /// <inheritdoc />
         /// <summary>
@@ -48,40 +39,45 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
             Depth = 1;
 
-            SnapColorList = new List<DrawableEditorColorPicker>
-            {
-                new DrawableEditorColorPicker(SnapColor.Red, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.Blue, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.Purple, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.Yellow, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.Pink, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.Orange, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.Cyan, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.Green, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.White, SelectedHitObjects, ActionManager),
-                new DrawableEditorColorPicker(SnapColor.None, SelectedHitObjects, ActionManager)
-            };
-
-            AlignColorList();
+            CreateLeftList();
+            CreateRightList();
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy() => base.Destroy();
-
-        /// <summary>
-        /// </summary>
-        private void AlignColorList()
+        private void CreateLeftList()
         {
-            for (var i = 0; i < SnapColorList.Count; i++)
+            LeftList = new Container()
             {
-                var color = SnapColorList[i];
+                Parent = Content,
+                Size = new ScalableVector2(Content.Width / 2 - 2 * Padding, Content.Height - 2 * Padding),
+                Position = new ScalableVector2(Padding, Padding)
+            };
 
-                color.Parent = Content;
-                color.Size = new ScalableVector2(Content.Width, (Content.Height / SnapColorList.Count) - 2.5f);
-                color.X = 4;
-                color.Y = 7f + (color.Height * i);
+            CreateSnapItems(LeftList, new[] { SnapColor.Red, SnapColor.Blue, SnapColor.Yellow, SnapColor.Orange, SnapColor.Green });
+        }
+
+        private void CreateRightList()
+        {
+            RightList = new Container()
+            {
+                Parent = Content,
+                Alignment = Alignment.TopRight,
+                Size = new ScalableVector2(Content.Width / 2 - 2 * Padding, Content.Height - 2 * Padding),
+                Position = new ScalableVector2(-Padding, Padding)
+            };
+
+            CreateSnapItems(RightList, new[] { SnapColor.Purple, SnapColor.Pink, SnapColor.Cyan, SnapColor.White, SnapColor.None });
+        }
+
+        private void CreateSnapItems(Container parent, SnapColor[] snaps)
+        {
+            for (var i = 0; i < snaps.Length; i++)
+            {
+                new DrawableEditorColorPicker(snaps[i], SelectedHitObjects, ActionManager)
+                {
+                    Parent = parent,
+                    Size = new ScalableVector2(parent.Width, (parent.Height / snaps.Length) - 2.5f),
+                    Y = i * parent.Height / snaps.Length,
+                };
             }
         }
     }
@@ -92,31 +88,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         public SnapColor Color { get; }
 
-        /// <summary>
-        /// </summary>
         private BindableList<HitObjectInfo> SelectedHitObjects { get; }
-
-        /// <summary>
-        /// </summary>
         private EditorActionManager ActionManager { get; }
-
-        /// <summary>
-        /// </summary>
-        private Sprite Icon { get; set; }
-
-        /// <summary>
-        /// </summary>
+        private Sprite Line { get; set; }
         private SpriteTextPlus Name { get; set; }
-
-        /// <summary>
-        /// </summary>
-        private Sprite BorderLine { get; set; }
+        private SpriteTextPlus SnapText { get; set; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="sound"></param>
-        /// <param name="selectedHitsounds"></param>
+        /// <param name="colorIndex"></param>
         /// <param name="selectedHitObjects"></param>
         /// <param name="manager"></param>
         public DrawableEditorColorPicker(SnapColor colorIndex, BindableList<HitObjectInfo> selectedHitObjects,
@@ -126,13 +107,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             SelectedHitObjects = selectedHitObjects;
             ActionManager = manager;
 
-            CreateIcon();
-            CreateName();
             CreateLine();
+            CreateName();
 
             Alpha = 0;
-            BorderLine.Alpha = 0;
-
             Clicked += OnClicked;
         }
 
@@ -159,38 +137,31 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         {
             if (IsHovered)
             {
-                Alpha = 0.45f;
+                Alpha = 0.75f;
                 Tint = ColorHelper.BeatSnapToColor((int)Color);
-                BorderLine.Alpha = Alpha;
+                Name.Tint = Tint;
             }
             else
             {
-                Tint = Microsoft.Xna.Framework.Color.White;
                 Alpha = 0;
-                BorderLine.Alpha = Alpha;
+                Tint = Microsoft.Xna.Framework.Color.White;
+                Name.Tint = Tint;
             }
-
-            Name.Tint = Tint;
-            Icon.Tint = Tint;
-
-            BorderLine.Height = Height;
-            BorderLine.Tint = Tint;
 
             base.Update(gameTime);
         }
 
         /// <summary>
         /// </summary>
-        private void CreateIcon()
+        private void CreateLine()
         {
-            Icon = new Sprite
+            Line = new Sprite
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = 17,
-                Size = new ScalableVector2(4, 24),
-                Tint = ColorHelper.BeatSnapToColor((int)Color)
-        };
+                Tint = ColorHelper.BeatSnapToColor((int)Color),
+                Size = new ScalableVector2(4, 26f)
+            };
         }
 
         /// <summary>
@@ -201,16 +172,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Icon.X + Icon.Width + 14
+                X = Line.X + Line.Width + 10f
             };
-        }
 
-        /// <summary>
-        /// </summary>
-        private void CreateLine() => BorderLine = new Sprite
-        {
-            Parent = this,
-            Size = new ScalableVector2(4, 0)
-        };
+            if (Color != SnapColor.None)
+            {
+                SnapText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoRegular), $"(1/{(int)Color})", 18)
+                {
+                    Parent = this,
+                    Alignment = Alignment.MidLeft,
+                    X = Name.X + Name.Width + 5f
+                };
+            }
+        }
     }
 }

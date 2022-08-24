@@ -183,10 +183,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="info"></param>
         /// <param name="timingPoint"></param>
         /// <returns></returns>
-        public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
+        public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint, bool isEditorObject = false)
         {
             // Check for Beat Snap Color Override
-            if (info.Color != 0 && ConfigManager.DisplaySnapColorOverrides.Value)
+            if (info.Color != 0 && ConfigManager.DisplaySnapColorOverrides.Value || info.Color != 0 && isEditorObject)
                 return BeatSnapToSnapIndex(info.Color);
 
             // Add 2ms offset buffer space to offset and get beat length

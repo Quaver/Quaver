@@ -111,6 +111,9 @@ namespace Quaver.Shared.Helpers
 
             switch (snap)
             {
+                case 0:
+                    color = HexToColor("#4C4C4C");
+                    break;
                 case 1:
                     color = HexToColor("#E53131");
                     break;
