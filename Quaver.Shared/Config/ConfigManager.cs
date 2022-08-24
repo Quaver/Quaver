@@ -282,6 +282,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayMenuAudioVisualizer { get; private set; }
 
         /// <summary>
+        ///     If true, the user will be able to see snap color overrides used by mappers in gameplay given that they are using ColorObjectsBySnapDistance
+        /// </summary>
+        internal static Bindable<bool> DisplaySnapColorOverrides { get; private set; }
+
+        /// <summary>
         ///     If true, hitsounds in gameplay will be played.
         /// </summary>
         internal static Bindable<bool> EnableHitsounds { get; private set; }
@@ -908,6 +913,7 @@ namespace Quaver.Shared.Config
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
+            DisplaySnapColorOverrides = ReadValue(@"DisplaySnapColorOverrides", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
             EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);
             KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
