@@ -67,6 +67,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Alpha = 0;
             CreateScrollbar();
 
+            AllowScrollbarDragging = true;
+
             ClickableArea = new Container()
             {
                 Parent = this,
