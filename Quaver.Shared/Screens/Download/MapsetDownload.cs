@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json.Linq;
-using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
@@ -93,7 +92,7 @@ namespace Quaver.Shared.Screens.Download
 
             try
             {
-                OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
+                /*OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
                 {
                     Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
                     MapsetImporter.Queue.Add(path);
@@ -101,7 +100,7 @@ namespace Quaver.Shared.Screens.Download
                     Completed.Value = e;
                     MapsetDownloadManager.CurrentDownloads.Remove(this);
                     Dispose();
-                });
+                });*/
             }
             catch (Exception e)
             {

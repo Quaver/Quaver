@@ -46,6 +46,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
                 // Change the color to its active one.
                 Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[Judgement];
+                Alpha = DefaultAlpha;
 
                 SpriteText.Text = value == 0
                     ? JudgementHelper.JudgementToShortName(Judgement)
@@ -63,6 +64,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// </summary>
         private Color InactiveColor { get; }
 
+        private float DefaultAlpha { get; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -77,6 +80,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
             ParentDisplay = parentDisplay;
 
             Size = new ScalableVector2(size.X, size.Y);
+            DefaultAlpha = Alpha;
 
             var skin = SkinManager.Skin.Keys[parentDisplay.Screen.Map.Mode];
 
@@ -84,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
-                Tint = skin.JudgementCounterFontColor,
+                Tint = skin.UseJudgementColorForNumbers ? color * 2 : skin.JudgementCounterFontColor,
                 X = 0,
                 FontSize = (int)(Width * 0.35f)
             };
@@ -99,7 +103,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         public override void Update(GameTime gameTime)
         {
             // Make sure the color is always tweening down back to its inactive one.
-            FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
+            if (SkinManager.Skin.Keys[ParentDisplay.Screen.Map.Mode].JudgementCounterFadeToAlpha)
+                FadeTo(0, Wobble.Graphics.Animations.Easing.Linear, 360);
+            else
+                FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
 
             base.Update(gameTime);
         }
