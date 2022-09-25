@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Download
 
             try
             {
-                /*OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
+                OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
                 {
                     Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
                     MapsetImporter.Queue.Add(path);
@@ -100,7 +100,7 @@ namespace Quaver.Shared.Screens.Download
                     Completed.Value = e;
                     MapsetDownloadManager.CurrentDownloads.Remove(this);
                     Dispose();
-                });*/
+                });
             }
             catch (Exception e)
             {
