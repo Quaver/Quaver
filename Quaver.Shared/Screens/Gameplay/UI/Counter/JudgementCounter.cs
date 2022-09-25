@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 {
@@ -31,6 +33,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// </summary>
         private Dictionary<Judgement, JudgementCounterItem> JudgementDisplays { get; }
 
+        /// <summary>
+        ///     The background of judgement displays.
+        /// </summary>
+        private Dictionary<Judgement, Sprite> JudgementDisplaysBackground { get; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -41,6 +48,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             // Create the judgement displays.
             JudgementDisplays = new Dictionary<Judgement, JudgementCounterItem>();
+            JudgementDisplaysBackground = new Dictionary<Judgement, Sprite>();
 
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             for (var i = 0; i < Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count; i++)
@@ -48,14 +56,30 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 var key = (Judgement)i;
                 var color = SkinManager.Skin.Keys[Screen.Map.Mode].JudgeColors[key];
 
+                if (SkinManager.Skin.JudgementOverlayBackground[key] != UserInterface.BlankBox)
+                {
+                    JudgementDisplaysBackground[key] = new Sprite()
+                    {
+                        Alignment = Alignment.MidRight,
+                        Parent = this,
+                        Image = SkinManager.Skin.JudgementOverlayBackground[key],
+                        Alpha = skin.JudgementCounterAlpha,
+                        X = skin.JudgementCounterPosX,
+                        Y = skin.JudgementCounterPosY,
+                        Size = new ScalableVector2(skin.JudgementCounterSize, skin.JudgementCounterSize)
+                    };
+                }
+
                 // Default it to an inactive color.
                 JudgementDisplays[key] = new JudgementCounterItem(this, key, new Color(color.R / 2, color.G / 2, color.B / 2),
                     new Vector2(skin.JudgementCounterSize, skin.JudgementCounterSize))
                 {
                     Alignment = Alignment.MidRight,
                     Parent = this,
-                    Image = SkinManager.Skin.JudgementOverlay,
-                    Alpha = skin.JudgementCounterAlpha
+                    Image = SkinManager.Skin.JudgementOverlay[key],
+                    Alpha = skin.JudgementCounterAlpha,
+                    X = skin.JudgementCounterPosX,
+                    Y = skin.JudgementCounterPosY
                 };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
@@ -65,7 +89,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                     continue;
                 }
 
-                JudgementDisplays[key].Y = JudgementDisplays[(Judgement)(i - 1)].Y + JudgementDisplays[key].Height + 5;
+                if (skin.JudgementCounterHorizontal)
+                    JudgementDisplays[key].X = JudgementDisplays[(Judgement)(i - 1)].X + JudgementDisplays[key].Width + 5 + skin.JudgementCounterPadding;
+                else
+                    JudgementDisplays[key].Y = JudgementDisplays[(Judgement)(i - 1)].Y + JudgementDisplays[key].Height + 5 + skin.JudgementCounterPadding;
+
+                if (SkinManager.Skin.JudgementOverlayBackground[key] != UserInterface.BlankBox)
+                    JudgementDisplaysBackground[key].Position = JudgementDisplays[key].Position;
             }
         }
 
