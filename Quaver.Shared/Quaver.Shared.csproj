@@ -6,6 +6,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Visual Tests|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;VISUAL_TESTS</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
     <ProjectReference Include="..\Quaver.Dependencies\TimeAgo\TimeAgo\TimeAgo.csproj" />
