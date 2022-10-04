@@ -453,7 +453,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 return;
 
             string path = MapManager.GetBackgroundPath(Screen.Map);
-            if (item == "Banner")
+            if (item.ToLower() == "banner")
                 path = MapManager.GetBannerPath(Screen.Map);
 
             if (string.IsNullOrEmpty(path))
