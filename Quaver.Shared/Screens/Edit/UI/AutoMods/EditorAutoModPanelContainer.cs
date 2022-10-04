@@ -6,8 +6,8 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.AutoMod.Issues;
 using Quaver.API.Maps.AutoMod.Issues.Audio;
 using Quaver.API.Maps.AutoMod.Issues.Autoplay;
-using Quaver.API.Maps.AutoMod.Issues.Background;
 using Quaver.API.Maps.AutoMod.Issues.HitObjects;
+using Quaver.API.Maps.AutoMod.Issues.Images;
 using Quaver.API.Maps.AutoMod.Issues.Map;
 using Quaver.API.Maps.AutoMod.Issues.Mapset;
 using Quaver.API.Maps.AutoMod.Issues.Metadata;
@@ -174,12 +174,12 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// <summary>
         /// </summary>
         /// <param name="issue"></param>
-        private void OnBackgroundResolution(AutoModIssueBackgroundResolution issue) => HighlightBackgroundFile();
+        private void OnImageResolution(AutoModIssueImageResolution issue) => HighlightImageFile(issue.Item);
 
         /// <summary>
         /// </summary>
         /// <param name="issue"></param>
-        private void OnBackgroundTooLarge(AutoModIssueBackgroundTooLarge issue) => HighlightBackgroundFile();
+        private void OnImageTooLarge(AutoModIssueImageTooLarge issue) => HighlightImageFile(issue.Item);
 
         /// <summary>
         /// </summary>
@@ -308,14 +308,28 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// <summary>
         /// </summary>
         /// <param name="issue"></param>
-        private void OnMismatchingMetadata(AutoModIssueMismatchingMetdata issue)
+        private void OnMismatchingMetadata(AutoModIssueMismatchingMetadata issue)
         {
         }
 
         /// <summary>
         /// </summary>
         /// <param name="issue"></param>
-        private void OnMultiModDiffName(AutoModIssueMultiModeDiffName issue)
+        private void OnMultiModeDiffName(AutoModIssueMultiModeDiffName issue)
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="issue"></param>
+        private void OnNonCommaSeparatedTags(AutoModIssueNonCommaSeparatedTags issue)
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="issue"></param>
+        private void OnNonStandardizedMetadata(AutoModIssueNonStandardizedMetadata issue)
         {
         }
 
@@ -405,38 +419,42 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// </summary>
         private void InitializeIssueClickMethods() => IssueMethods = new Dictionary<Type, Action<AutoModIssue>>
         {
-            {typeof(AutoModIssueAudioBitrate), e => OnAudioBitrate((AutoModIssueAudioBitrate) e)},
-            {typeof(AutoModIssueAudioFormat), e => OnAudioFormat((AutoModIssueAudioFormat) e)},
-            {typeof(AutoModIssueAutoplayFailure), e => OnAutoplayFailure((AutoModIssueAutoplayFailure) e)},
-            {typeof(AutoModIssueBackgroundResolution), e => OnBackgroundResolution((AutoModIssueBackgroundResolution) e)},
-            {typeof(AutoModIssueBackgroundTooLarge), e => OnBackgroundTooLarge((AutoModIssueBackgroundTooLarge) e)},
-            {typeof(AutoModIssueNoBackground), e => OnNoBackground((AutoModIssueNoBackground) e)},
-            {typeof(AutoModIssueExcessiveBreakTime), e => OnExcessiveBreakTime((AutoModIssueExcessiveBreakTime) e)},
-            {typeof(AutoModIssueObjectAfterAudioEnd), e => OnObjectAfterAudioEnd((AutoModIssueObjectAfterAudioEnd) e)},
-            {typeof(AutoModIssueObjectBeforeStart), e => OnObjectBeforeStart((AutoModIssueObjectBeforeStart) e)},
-            {typeof(AutoModIssueObjectInAllColumns), e => OnObjectInAllColumns((AutoModIssueObjectInAllColumns) e)},
-            {typeof(AutoModIssueOverlappingObjects), e => OnOverlappingObjects((AutoModIssueOverlappingObjects) e)},
-            {typeof(AutoModIssueShortLongNote), e => OnShortLongNote((AutoModIssueShortLongNote) e)},
-            {typeof(AutoModIssueMapLength), e => OnMapLength((AutoModIssueMapLength) e)},
-            {typeof(AutoModIssuePreviewPoint), e => OnMapPreviewPoint((AutoModIssuePreviewPoint) e)},
-            {typeof(AutoModIssueMapsetSpreadLength), e => OnMapsetSpreadLength((AutoModIssueMapsetSpreadLength) e)},
-            {typeof(AutoModIssueMismatchingMetdata), e => OnMismatchingMetadata((AutoModIssueMismatchingMetdata) e)},
-            {typeof(AutoModIssueMultiModeDiffName), e => OnMultiModDiffName((AutoModIssueMultiModeDiffName) e)},
-            {typeof(AutoModIssueNonRomanized), e => OnNonRomanized((AutoModIssueNonRomanized) e)},
-            {typeof(AutoModIssueScrollVelocityAfterEnd), e => OnScrollVelocityAfterEnd((AutoModIssueScrollVelocityAfterEnd) e)},
-            {typeof(AutoModIssueScrollVelocityOverlap), e => OnScrollVelocityOverlap((AutoModIssueScrollVelocityOverlap) e)},
-            {typeof(AutoModeIssueTimingPointOverlap), e => OnTimingPointOverlap((AutoModeIssueTimingPointOverlap) e)},
-            {typeof(AutoModIssueTimingPointAfterAudioEnd), e => OnTimingPointAfterAudioEnd((AutoModIssueTimingPointAfterAudioEnd) e)},
+            {typeof(AutoModIssueAudioBitrate), e => OnAudioBitrate((AutoModIssueAudioBitrate)e)},
+            {typeof(AutoModIssueAudioFormat), e => OnAudioFormat((AutoModIssueAudioFormat)e)},
+            {typeof(AutoModIssueAutoplayFailure), e => OnAutoplayFailure((AutoModIssueAutoplayFailure)e)},
+            {typeof(AutoModIssueImageResolution), e => OnImageResolution((AutoModIssueImageResolution)e)},
+            {typeof(AutoModIssueImageTooLarge), e => OnImageTooLarge((AutoModIssueImageTooLarge)e)},
+            {typeof(AutoModIssueNoBackground), e => OnNoBackground((AutoModIssueNoBackground)e)},
+            {typeof(AutoModIssueExcessiveBreakTime), e => OnExcessiveBreakTime((AutoModIssueExcessiveBreakTime)e)},
+            {typeof(AutoModIssueObjectAfterAudioEnd), e => OnObjectAfterAudioEnd((AutoModIssueObjectAfterAudioEnd)e)},
+            {typeof(AutoModIssueObjectBeforeStart), e => OnObjectBeforeStart((AutoModIssueObjectBeforeStart)e)},
+            {typeof(AutoModIssueObjectInAllColumns), e => OnObjectInAllColumns((AutoModIssueObjectInAllColumns)e)},
+            {typeof(AutoModIssueOverlappingObjects), e => OnOverlappingObjects((AutoModIssueOverlappingObjects)e)},
+            {typeof(AutoModIssueShortLongNote), e => OnShortLongNote((AutoModIssueShortLongNote)e)},
+            {typeof(AutoModIssueMapLength), e => OnMapLength((AutoModIssueMapLength)e)},
+            {typeof(AutoModIssuePreviewPoint), e => OnMapPreviewPoint((AutoModIssuePreviewPoint)e)},
+            {typeof(AutoModIssueMapsetSpreadLength), e => OnMapsetSpreadLength((AutoModIssueMapsetSpreadLength)e)},
+            {typeof(AutoModIssueMismatchingMetadata), e => OnMismatchingMetadata((AutoModIssueMismatchingMetadata)e)},
+            {typeof(AutoModIssueMultiModeDiffName), e => OnMultiModeDiffName((AutoModIssueMultiModeDiffName)e)},
+            {typeof(AutoModIssueNonRomanized), e => OnNonRomanized((AutoModIssueNonRomanized)e)},
+            {typeof(AutoModIssueScrollVelocityAfterEnd), e => OnScrollVelocityAfterEnd((AutoModIssueScrollVelocityAfterEnd)e)},
+            {typeof(AutoModIssueScrollVelocityOverlap), e => OnScrollVelocityOverlap((AutoModIssueScrollVelocityOverlap)e)},
+            {typeof(AutoModeIssueTimingPointOverlap), e => OnTimingPointOverlap((AutoModeIssueTimingPointOverlap)e)},
+            {typeof(AutoModIssueTimingPointAfterAudioEnd), e => OnTimingPointAfterAudioEnd((AutoModIssueTimingPointAfterAudioEnd)e)},
+            {typeof(AutoModIssueNonCommaSeparatedTags), e => OnNonCommaSeparatedTags((AutoModIssueNonCommaSeparatedTags)e)},
+            {typeof(AutoModIssueNonStandardizedMetadata), e => OnNonStandardizedMetadata((AutoModIssueNonStandardizedMetadata)e)},
         };
 
         /// <summary>
         /// </summary>
-        private void HighlightBackgroundFile()
+        private void HighlightImageFile(string item)
         {
             if (Screen.Map.Game != MapGame.Quaver)
                 return;
 
-            var path = MapManager.GetBackgroundPath(Screen.Map);
+            string path = MapManager.GetBackgroundPath(Screen.Map);
+            if (item == "Banner")
+                path = MapManager.GetBannerPath(Screen.Map);
 
             if (string.IsNullOrEmpty(path))
                 return;
