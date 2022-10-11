@@ -182,8 +182,8 @@ namespace Quaver.Shared.Database.Maps
                 currentlyCached.RemoveAll(x => x.OriginalGame == OtherGameMapDatabaseGame.Etterna);
 
             // Make sure there're no duplicate Checksums
-            osuMaps = ListHelper.DistinctBy(osuMaps, x => x.Md5Checksum).ToList();
-            etternaCharts = ListHelper.DistinctBy(etternaCharts, x => x.Md5Checksum).ToList();
+            osuMaps = ListHelper.DistinctionBy(osuMaps, x => x.Md5Checksum).ToList();
+            etternaCharts = ListHelper.DistinctionBy(etternaCharts, x => x.Md5Checksum).ToList();
 
             // Creating hash objects
             var osuMapsHash = osuMaps.ToDictionary(x => x.Md5Checksum);

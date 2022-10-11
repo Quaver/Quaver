@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json.Linq;
-using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
