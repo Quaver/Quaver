@@ -58,6 +58,12 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         private int DrawableHeight => Pool.Count > 0 ? Pool.First().HEIGHT : 0;
 
+        /// <summary>
+        ///    Controls when to stop updating the content of sprites for performance.
+        ///    Sprites only update content when position is within x units of scrolling animation start or end.
+        /// </summary>
+        protected int SpriteUpdateThreshold { get; set; } = Int32.MaxValue;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -165,7 +171,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         protected void HandlePoolShifting()
         {
-            if (AvailableItems == null || Pool.Count != PoolSize)
+            if (AvailableItems == null || Pool.Count != PoolSize || ContentContainer.Animations.Count == 0)
                 return;
 
             // Compute the index of the object currently in the middle of the container.
@@ -192,7 +198,13 @@ namespace Quaver.Shared.Graphics.Containers
 
                     var drawable = Pool.Last();
                     drawable.Y = objectIndex * DrawableHeight + PaddingTop;
-                    drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
+
+                    // Update content only if close to start or end of scroll animation
+                    if ((Math.Abs(ContentContainer.Animations.First().End - ContentContainer.Y) <= SpriteUpdateThreshold) ||
+                        (Math.Abs(ContentContainer.Animations.First().Start - ContentContainer.Y) <= SpriteUpdateThreshold))
+                    {
+                        drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
+                    }
 
                     // Circularly shift the list back one.
                     Pool.RemoveAt(Pool.Count - 1);
@@ -208,7 +220,13 @@ namespace Quaver.Shared.Graphics.Containers
 
                     var drawable = Pool.First();
                     drawable.Y = objectIndex * DrawableHeight + PaddingTop;
-                    drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
+
+                    // Update content only if close to start or end of scroll animation
+                    if ((Math.Abs(ContentContainer.Animations.First().End - ContentContainer.Y) <= SpriteUpdateThreshold) ||
+                        (Math.Abs(ContentContainer.Animations.First().Start - ContentContainer.Y) <= SpriteUpdateThreshold))
+                    {
+                        drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
+                    }
 
                     // Circularly shift the list forward one.
                     Pool.RemoveAt(0);

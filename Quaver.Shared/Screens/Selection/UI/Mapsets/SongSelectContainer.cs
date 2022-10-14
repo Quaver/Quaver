@@ -62,6 +62,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 320;
+            SpriteUpdateThreshold = 5000;
 
             Alpha = 0;
             CreateScrollbar();
