@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
@@ -17,6 +17,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 {
     public class EditorAutoModPanel : DraggableButton
     {
+        public EditorAutoModPanelContainer Container { get; set; }
+
         public Qua Map { get; }
 
         public List<Qua> Mapset { get; }
