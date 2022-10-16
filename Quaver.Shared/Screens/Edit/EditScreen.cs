@@ -476,6 +476,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressF6();
             HandleKeyPressF10();
             HandleKeyPressShiftH();
+            HandleToggleAutoMod();
         }
 
         /// <summary>
@@ -761,6 +762,20 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.I))
                 PlaceTimingPointOrScrollVelocity();
+
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorResetModifiers.Value))
+                ModManager.RemoveSpeedMods();
+        }
+
+        private void HandleToggleAutoMod()
+        {
+            var view = View as EditScreenView;
+
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorAutoMod.Value))
+            {
+                if (view != null)
+                    view.AutoMod.IsActive.Value = !view.AutoMod.IsActive.Value;
+            }
         }
 
         /// <summary>

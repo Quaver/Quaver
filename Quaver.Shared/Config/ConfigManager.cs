@@ -761,6 +761,16 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
+        /// The key to reset modifiers in editor
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorResetModifiers { get; private set; }
+
+        /// <summary>
+        ///     The key to open and close automod in editor
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorAutoMod { get; private set; }
+
+        /// <summary>
         /// </summary>
         internal static Bindable<Keys> KeyScreenshot { get; private set; }
 
@@ -970,6 +980,8 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            KeyEditorAutoMod = ReadValue(@"KeyEditorAutoMod", Keys.M, data);
+            KeyEditorResetModifiers = ReadValue(@"KeyEditorResetModifiers", Keys.D0, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);

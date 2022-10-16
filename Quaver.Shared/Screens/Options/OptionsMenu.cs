@@ -358,7 +358,9 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemKeybind(containerRect, "Pause/Play Track", ConfigManager.KeyEditorPausePlay),
                         new OptionsItemKeybind(containerRect, "Decrease Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
-                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
+                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate),
+                        new OptionsItemKeybind(containerRect, "Toggle AutoMod", ConfigManager.KeyEditorAutoMod),
+                        new OptionsItemKeybind(containerRect, "Resets modifiers", ConfigManager.KeyEditorResetModifiers)
                     }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {
