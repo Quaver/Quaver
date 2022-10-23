@@ -4,7 +4,7 @@ using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
 {
-    public class EditorActionSetColor : IEditorAction
+    public class EditorActionSetColors : IEditorAction
     {
         /// <inheritdoc />
         /// <summary>
@@ -16,8 +16,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
         private EditorActionManager ActionManager { get; }
 
         /// <summary>
+        /// Used to derive colors from the original HitObjectInfo
         /// </summary>
-        public List<int> OriginalHitObjectColors = new List<int>();
+        private List<HitObjectInfo> OriginalHitObjects { get; }
 
         /// <summary>
         /// </summary>
@@ -25,19 +26,19 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
 
         /// <summary>
         /// </summary>
-        private int Color { get; }
+        private List<int> Colors { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="manager"></param>
         /// <param name="hitObjects"></param>
         /// <param name="color"></param>
-        public EditorActionSetColor(EditorActionManager manager, List<HitObjectInfo> hitObjects, int color)
+        public EditorActionSetColors(EditorActionManager manager, List<HitObjectInfo> hitObjects, List<int> colors)
         {
             ActionManager = manager;
             HitObjects = hitObjects;
-            HitObjects.ForEach(x => OriginalHitObjectColors.Add(x.Color));
-            Color = color;
+            OriginalHitObjects = hitObjects;
+            Colors = colors;
         }
 
         /// <inheritdoc />
@@ -45,15 +46,15 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
         /// </summary>
         public void Perform()
         {
-            foreach (var ho in HitObjects)
-                ho.Color = Color;
+            for (var i = 0; i < Colors.Count; i++)
+                HitObjects[i].Color = Colors[i];
 
-            ActionManager.TriggerEvent(EditorActionType.SetColor, new EditorColorSetEventArgs(HitObjects, Color));
+            ActionManager.TriggerEvent(EditorActionType.SetColor, new EditorColorSetEventArgs(HitObjects, 0));
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Undo() => new EditorActionSetColors(ActionManager, HitObjects, OriginalHitObjectColors).Perform();
+        public void Undo() => new EditorActionSetColor(ActionManager, HitObjects, 0).Perform();
     }
 }

@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
         private Container LeftList;
         private Container RightList;
-        private const float Padding = 15f;
+        private const float Padding = 14.5f;
 
         /// <inheritdoc />
         /// <summary>
@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 return;
             }
 
-            ActionManager.Perform(new EditorActionSetColor(ActionManager, new List<HitObjectInfo>(SelectedHitObjects.Value), new List<int>(), (int)Color));
+            ActionManager.Perform(new EditorActionSetColor(ActionManager, new List<HitObjectInfo>(SelectedHitObjects.Value), (int)Color));
         }
 
         /// <inheritdoc />

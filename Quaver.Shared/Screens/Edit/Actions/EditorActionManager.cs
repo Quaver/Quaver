@@ -139,7 +139,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         ///     Event invoked when a custom color has been added to a group of objects
         /// </summary>
-        public event EventHandler<EditorColorSetEventArgs> ColorSet;
+        public event EventHandler<EditorColorSetEventArgs> SnapColorSet;
 
         /// <summary>
         ///     Event invoked when a layer has been created
@@ -586,7 +586,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     HitsoundRemoved?.Invoke(this, (EditorHitSoundRemovedEventArgs)args);
                     break;
                 case EditorActionType.SetColor:
-                    ColorSet?.Invoke(this, (EditorColorSetEventArgs)args);
+                    SnapColorSet?.Invoke(this, (EditorColorSetEventArgs)args);
                     break;
                 case EditorActionType.CreateLayer:
                     LayerCreated?.Invoke(this, (EditorLayerCreatedEventArgs)args);
