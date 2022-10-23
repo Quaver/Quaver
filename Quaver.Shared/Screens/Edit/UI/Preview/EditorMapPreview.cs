@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
-            ActionManager.ColorSet += OnColorSet;
+            ActionManager.SnapColorSet += OnColorSet;
             ActionManager.LongNoteResized += OnLongNoteResized;
             ActionManager.ScrollVelocityAdded += OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
@@ -93,7 +93,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
-            ActionManager.ColorSet -= OnColorSet;
+            ActionManager.SnapColorSet -= OnColorSet;
             ActionManager.LongNoteResized -= OnLongNoteResized;
             ActionManager.ScrollVelocityAdded -= OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
