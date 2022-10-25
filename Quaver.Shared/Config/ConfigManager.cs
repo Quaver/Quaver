@@ -761,7 +761,7 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
-        /// The key to reset modifiers in editor
+        ///     The key to reset modifiers in editor
         /// </summary>
         internal static Bindable<Keys> KeyEditorResetModifiers { get; private set; }
 
