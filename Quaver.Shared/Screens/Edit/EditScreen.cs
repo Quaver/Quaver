@@ -30,6 +30,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
+using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Edit.UI;
@@ -240,6 +241,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private double TimeSinceLastPlayfieldZoom { get; set; }
 
+        private EditorInputManager EditorInputManager { get; }
+
         /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
@@ -279,6 +282,8 @@ namespace Quaver.Shared.Screens.Edit
 
             InitializeDiscordRichPresence();
             AddFileWatcher();
+
+            EditorInputManager = new EditorInputManager();
 
             View = new EditScreenView(this);
         }
