@@ -1305,6 +1305,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (ho == null)
                 return;
 
+            if (SelectedHitObjects.Value.Contains(ho.Info))
+            {
+                ActionManager.EditScreen.DeleteSelectedObjects();
+                return;
+            }
+
             ActionManager.RemoveHitObject(ho.Info);
         }
 

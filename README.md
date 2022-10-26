@@ -1,10 +1,10 @@
-# Quaver 
+# Quaver
 
 [![Build Status](https://travis-ci.com/Quaver/Quaver.svg?branch=develop)](https://travis-ci.com/Quaver/Quaver) [![CodeFactor](https://www.codefactor.io/repository/github/quaver/quaver/badge)](https://www.codefactor.io/repository/github/quaver/quaver) [![license](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-blue)](https://github.com/Quaver/Quaver/blob/develop/LICENSE)
 
 **Quaver** is a community-driven and open-source competitive vertical scrolling rhythm game with two game modes and online leaderboards. It also features an in-game editor and a flexible multiplayer mode.
 
-It is also available on [Steam](https://store.steampowered.com/app/980610/Quaver/) Early Access for Windows, Mac, and Linux—making it one of the most accessible community-driven rhythm games to date.
+It is also available on [Steam](https://store.steampowered.com/app/980610/Quaver/) for Windows, Mac, and Linux—making it one of the most accessible community-driven rhythm games to date.
 
 ## Building & Running
 
@@ -15,7 +15,7 @@ Getting started with **Quaver** development is extremely easy.
 * **Have Steam open and running**
 * Build & run Quaver with `dotnet run --project Quaver`
 
-## Contributing 
+## Contributing
 
 The best place to begin contributing to Quaver is through our [Discord server](https://discord.gg/quaver), where all of our developers, community, and testers are located.
 

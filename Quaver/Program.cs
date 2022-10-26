@@ -83,12 +83,12 @@ namespace Quaver
                 SendCrashLog(exception);
             };
 
-            ConfigManager.Initialize();
-            StartIpcServer();
-
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
+
+            ConfigManager.Initialize();
+            StartIpcServer();
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

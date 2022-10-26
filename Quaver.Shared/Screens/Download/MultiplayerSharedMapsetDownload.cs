@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Download
         public MultiplayerSharedMapsetDownload(int id, string artist, string title, bool download = true) : base(id, artist, title, download)
         {
         }
-        
+
         /// <summary>
         ///     Allows the user to download the mapset if shared in multiplayer
         /// </summary>
