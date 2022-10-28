@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Server.Client;
@@ -90,6 +91,88 @@ namespace Quaver.Shared.Database.Maps
         ///     Event invoked when a song request has been played
         /// </summary>
         public static event EventHandler<SongRequestPlayedEventArgs> SongRequestPlayed;
+
+        public static void SetMapFromMapset(Mapset mapset)
+        {
+            double target = ConfigManager.TargetMapDifficulty.Value / 10d;
+
+            switch (ConfigManager.TargetMapSelectionMethod.Value)
+            {
+                case MapSelectionMethod.Closest:
+                    SelectMapClosestToTarget(mapset, target, ModManager.Mods);
+                    return;
+                case MapSelectionMethod.AtLeast:
+                    SelectMapAtLeastTarget(mapset, target, ModManager.Mods);
+                    return;
+                case MapSelectionMethod.AtMost:
+                    SelectMapAtMostTarget(mapset, target, ModManager.Mods);
+                    return;
+            }
+        }
+
+        private static void SelectMapClosestToTarget(Mapset mapset, double target, ModIdentifier mods)
+        {
+            double delta = mapset.Maps.Min(x => Math.Abs(x.DifficultyFromMods(mods) - target));
+            Selected.Value = mapset.Maps.Find(x => Math.Abs(x.DifficultyFromMods(mods) - target) == delta);
+        }
+
+        private static void SelectMapAtLeastTarget(Mapset mapset, double target, ModIdentifier mods)
+        {
+            var candidates = mapset.Maps.FindAll(x => x.DifficultyFromMods(mods) >= target);
+
+            if (candidates.Count == 0)
+            {
+                SelectMapClosestToTarget(mapset, target, mods);
+                return;
+            }
+
+            if (candidates.Count == 1)
+            {
+                Selected.Value = candidates.First();
+                return;
+            }
+
+            // won't work for some reason
+            // Selected.Value = candidates.MinBy(x => x.DifficultyFromMods(mods));
+
+            Map min = candidates.First();
+            foreach (var map in candidates)
+            {
+                if (map.DifficultyFromMods(mods) < min.DifficultyFromMods(mods))
+                    min = map;
+            }
+
+            Selected.Value = min;
+        }
+
+        private static void SelectMapAtMostTarget(Mapset mapset, double target, ModIdentifier mods)
+        {
+            var candidates = mapset.Maps.FindAll(x => x.DifficultyFromMods(mods) <= target);
+
+            if (candidates.Count == 0)
+            {
+                SelectMapClosestToTarget(mapset, target, mods);
+                return;
+            }
+
+            if (candidates.Count == 1)
+            {
+                Selected.Value = candidates.First();
+                return;
+            }
+
+            // won't work for some reason
+            // Selected.Value = candidates.MaxBy(x => x.DifficultyFromMods(mods));
+
+            Map max = candidates.First();
+            foreach (var map in candidates)
+            {
+                if (map.DifficultyFromMods(mods) > max.DifficultyFromMods(mods))
+                    max = map;
+            }
+
+            Selected.Value = max;
+        }
 
         /// <summary>
         ///     Gets the background path for a given map.

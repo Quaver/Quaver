@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             // that is in the middle
             if ((KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Right)) && CanScrollToMiddleMapset())
             {
-                MapManager.Selected.Value = MiddleMapset.Item.Maps.First();
+                MapManager.SetMapFromMapset(MiddleMapset.Item);
                 SelectedIndex.Value = AvailableMapsets.Value.IndexOf(MiddleMapset.Item);
 
                 ScrollToSelected();
@@ -143,7 +143,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 if (SelectedIndex.Value + 1 >= AvailableMapsets.Value.Count)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value + 1].Maps.First();
+                MapManager.SetMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value + 1]);
                 SelectedIndex.Value++;
 
                 ScrollToSelected();
@@ -154,7 +154,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 if (SelectedIndex.Value - 1 < 0)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value - 1].Maps.First();
+                MapManager.SetMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value - 1]);
 
                 SelectedIndex.Value--;
                 ScrollToSelected();
@@ -184,7 +184,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         continue;
 
                     SelectedIndex.Value = AvailableMapsets.Value.IndexOf(mapset);
-                    MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value].Maps.First();
+                    MapManager.SetMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value]);
 
                     ScrollToSelected();
                     break;
@@ -215,7 +215,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         continue;
 
                     SelectedIndex.Value = AvailableMapsets.Value.IndexOf(mapset);
-                    MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value].Maps.First();
+                    MapManager.SetMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value]);
 
                     ScrollToSelected();
                     break;
