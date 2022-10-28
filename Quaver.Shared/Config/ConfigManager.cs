@@ -783,6 +783,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<MapSelectionMethod> TargetMapSelectionMethod { get; private set; }
 
         /// <summary>
+        ///     Prioritize which keymode when selecting a default map in a mapset.
+        /// </summary>
+        internal static Bindable<GameMode> TargetGameMode { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -1058,6 +1063,7 @@ namespace Quaver.Shared.Config
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
             TargetMapDifficulty = ReadInt(@"TargetMapDifficulty", 0, 0, 1000, data);
             TargetMapSelectionMethod = ReadValue(@"TargetMapSelectionMethod", MapSelectionMethod.Closest, data);
+            TargetGameMode = ReadValue(@"TargetGameMode", (GameMode)0, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))

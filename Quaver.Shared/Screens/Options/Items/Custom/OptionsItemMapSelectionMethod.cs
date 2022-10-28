@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using MonoGame.Extended;
 using Quaver.Shared.Config;
@@ -24,7 +25,7 @@ public class OptionsItemMapSelectionMethod : OptionsItemDropdown
 					"Closest" => MapSelectionMethod.Closest,
 					"At Least" => MapSelectionMethod.AtLeast,
 					"At Most" => MapSelectionMethod.AtMost,
-					_ => throw new ArgumentOutOfRangeException()
+					_ => throw new InvalidEnumArgumentException()
 				};
             };
 		}

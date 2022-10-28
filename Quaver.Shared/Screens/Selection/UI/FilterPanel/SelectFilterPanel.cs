@@ -296,7 +296,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                     }
                 }
 
-                MapManager.SetMapFromMapset(AvailableMapsets.Value.First());
+                MapManager.SelectMapFromMapset(AvailableMapsets.Value.First());
                 BackgroundHelper.Load(MapManager.Selected.Value);
             }
         }

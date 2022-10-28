@@ -591,7 +591,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             Logger.Important($"User opened mapset: {ParentMapset.Item.Artist} - {ParentMapset.Item.Title}", LogType.Runtime, false);
-            MapManager.SetMapFromMapset(ParentMapset.Item);
+            MapManager.SelectMapFromMapset(ParentMapset.Item);
         }
     }
 }

@@ -365,7 +365,7 @@ namespace Quaver.Shared.Database.Maps
             if (mapset == null)
             {
                 mapset = MapManager.Mapsets.First();
-                MapManager.SetMapFromMapset(mapset);
+                MapManager.SelectMapFromMapset(mapset);
             }
             else
                 MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == selectedMap?.Md5Checksum);

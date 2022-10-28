@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         public MultiplayerLobbyScreen()
         {
             if (MapManager.Selected.Value == null && MapManager.Mapsets.Count != 0)
-                MapManager.SetMapFromMapset(MapManager.Mapsets.First());
+                MapManager.SelectMapFromMapset(MapManager.Mapsets.First());
 
             CreateBindableVisibleGames();
             CreateBindableSelectedGame();
