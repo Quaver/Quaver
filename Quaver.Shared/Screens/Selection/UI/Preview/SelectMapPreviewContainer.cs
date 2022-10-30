@@ -281,8 +281,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                         if (playfield.Stage.HitError.Y < 0)
                             playfield.Stage.HitError.Y *= previewMultiplier;
 
-                        if (playfield.Stage.JudgementHitBurst.OriginalPosY < 0)
-                            playfield.Stage.JudgementHitBurst.OriginalPosY *= previewMultiplier;
+                        if (playfield.Stage.JudgementHitBursts[0].OriginalPosY < 0)
+                            for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
+                                playfield.Stage.JudgementHitBursts[i].OriginalPosY *= previewMultiplier;
 
                         if (playfield.Stage.OriginalComboDisplayY < 0)
                             playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
@@ -292,14 +293,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     case ScrollDirection.Up:
                         playfield.Container.Alignment = Alignment.TopLeft;
                         playfield.Stage.HitError.Y -= filterPanelHeight + MenuBorder.HEIGHT;
-                        playfield.Stage.JudgementHitBurst.OriginalPosY -= filterPanelHeight + MenuBorder.HEIGHT;
+                        for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
+                            playfield.Stage.JudgementHitBursts[i].OriginalPosY -= filterPanelHeight + MenuBorder.HEIGHT;
                         playfield.Stage.OriginalComboDisplayY -= filterPanelHeight + MenuBorder.HEIGHT;
 
                         if (playfield.Stage.HitError.Y < 0)
                             playfield.Stage.HitError.Y *= previewMultiplier;
 
-                        if (playfield.Stage.JudgementHitBurst.OriginalPosY < 0)
-                            playfield.Stage.JudgementHitBurst.OriginalPosY *= previewMultiplier;
+                        if (playfield.Stage.JudgementHitBursts[0].OriginalPosY < 0)
+                            for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
+                                playfield.Stage.JudgementHitBursts[i].OriginalPosY *= previewMultiplier;
 
                         if (playfield.Stage.OriginalComboDisplayY < 0)
                             playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
