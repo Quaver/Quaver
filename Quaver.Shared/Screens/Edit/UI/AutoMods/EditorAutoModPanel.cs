@@ -17,11 +17,11 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 {
     public class EditorAutoModPanel : DraggableButton
     {
-        public EditorAutoModPanelContainer Container { get; set; }
-
         public Qua Map { get; }
 
         public List<Qua> Mapset { get; }
+
+        public EditorAutoModPanelContainer Container { get; }
 
         public Bindable<AutoModMapset> AutoMod { get; }
 
@@ -41,10 +41,11 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private const int SpacingY = 16;
 
-        public EditorAutoModPanel(Qua map, List<Qua> mapset) : base(UserInterface.AutoModPanel)
+        public EditorAutoModPanel(Qua map, List<Qua> mapset, EditorAutoModPanelContainer container) : base(UserInterface.AutoModPanel)
         {
             Map = map;
             Mapset = mapset;
+            Container = container;
 
             FilterCategory = new Bindable<AutoModIssueCategory>(AutoModIssueCategory.None);
             AutoMod = new Bindable<AutoModMapset>(new AutoModMapset(Mapset));

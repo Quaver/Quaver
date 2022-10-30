@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Tests.AutoMods
         {
             var mapset = new List<Qua> {  };
 
-            _ = new EditorAutoModPanel(mapset.First(), mapset)
+            _ = new EditorAutoModPanel(mapset.First(), mapset, Container as EditorAutoModPanelContainer)
             {
                 Parent = Container,
                 Alignment = Alignment.MidLeft,
