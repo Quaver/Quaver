@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
@@ -64,7 +65,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 X = -Height / 2,
                 Size = Gear.Size,
                 Depth = -1,
-                Tint = new Microsoft.Xna.Framework.Color(249, 100, 93, 255)
+                Tint = new Color(249, 100, 93, 255)
             };
 
             CloseButton.Clicked += (sender, args) => Panel.Container.IsActive.Value = false;
