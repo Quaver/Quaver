@@ -70,7 +70,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 }
             });
 
-            Panel = new EditorAutoModPanel(Screen.WorkingMap, mapset)
+            Panel = new EditorAutoModPanel(Screen.WorkingMap, mapset, this)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight

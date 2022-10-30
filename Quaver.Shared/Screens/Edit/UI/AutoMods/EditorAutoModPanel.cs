@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
@@ -21,6 +21,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         public List<Qua> Mapset { get; }
 
+        public EditorAutoModPanelContainer Container { get; }
+
         public Bindable<AutoModMapset> AutoMod { get; }
 
         public Bindable<AutoModIssueCategory> FilterCategory { get; }
@@ -39,10 +41,11 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private const int SpacingY = 16;
 
-        public EditorAutoModPanel(Qua map, List<Qua> mapset) : base(UserInterface.AutoModPanel)
+        public EditorAutoModPanel(Qua map, List<Qua> mapset, EditorAutoModPanelContainer container) : base(UserInterface.AutoModPanel)
         {
             Map = map;
             Mapset = mapset;
+            Container = container;
 
             FilterCategory = new Bindable<AutoModIssueCategory>(AutoModIssueCategory.None);
             AutoMod = new Bindable<AutoModMapset>(new AutoModMapset(Mapset));
