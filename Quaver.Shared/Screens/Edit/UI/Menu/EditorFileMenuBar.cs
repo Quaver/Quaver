@@ -357,16 +357,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (ImGui.MenuItem(map.DifficultyName, "",
                         Screen.UneditableMap?.Value?.DifficultyName == map.DifficultyName))
                     {
-                        ThreadScheduler.Run(() =>
-                        {
-                            if (Screen.UneditableMap.Value != null)
-                            {
-                                lock (Screen.UneditableMap.Value)
-                                    Screen.UneditableMap.Value = map.LoadQua();
-                            }
-                            else
-                                Screen.UneditableMap.Value = map.LoadQua();
-                        });
+                        Screen.ChangeReferenceDifficultyTo(map);
                     }
 
                     ImGui.PopStyleColor();

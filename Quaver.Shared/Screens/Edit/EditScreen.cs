@@ -28,12 +28,15 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Edit.UI;
+using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay;
@@ -233,13 +236,6 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         private FileSystemWatcher FileWatcher { get; set; }
-
-        /// <summary>
-        ///     The amount of time that has elapsed since the playfield has zoomed.
-        ///     Used to create a 'textbox-like' function to change playfield zoom when
-        ///     holding down the key.
-        /// </summary>
-        private double TimeSinceLastPlayfieldZoom { get; set; }
 
         private EditorInputManager EditorInputManager { get; }
 
@@ -453,156 +449,24 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             EditorInputManager.HandleInput();
-
-            // HandleKeyPressHome();
-            // HandleKeyPressEnd();
-            //
-            // // To not conflict with the volume controller
-            // if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
-            // {
-            //     HandleSeekingBackwards();
-            //     HandleSeekingForwards();
-            //     HandleKeyPressUp();
-            //     HandleKeyPressDown();
-            //     HandleKeyPressShiftUpDown();
-            // }
-            //
-            // HandleBeatSnapChanges();
-            // HandleCompositionToolChanges();
-            // HandlePlaybackRateChanges();
-            // HandleTemporaryHitObjectPlacement();
-            // HandleCtrlInput();
-            // HandleKeyPressDelete();
-            // HandleKeyPressEscape();
-            // HandleKeyPressF1();
-            // HandleKeyPressF4();
-            // HandleKeyPressF5();
-            // HandleKeyPressF6();
-            // HandleKeyPressF10();
-            // HandleKeyPressShiftH();
         }
 
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressEscape()
+        public void ToggleBuiltInPlugin(EditorBuiltInPlugin pluginType)
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                return;
-
-            LeaveEditor();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressF1()
-        {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
-                DialogManager.Show(new EditorMetadataDialog(this));
-        }
-
-        private void HandleKeyPressF4()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F4))
-                return;
-
-            ExitToTestPlay();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressF5()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
-                return;
-
-            var plugin = BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
+            var plugin = BuiltInPlugins[pluginType];
             plugin.IsActive = !plugin.IsActive;
 
             if (plugin.IsActive)
                 plugin.Initialize();
         }
 
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressF6()
+        public void ChangeToolTo(EditorCompositionTool tool) => CompositionTool.Value = tool;
+
+        public void ChangeTool(Direction direction)
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F6))
-                return;
-
-            var plugin = BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
-            plugin.IsActive = !plugin.IsActive;
-
-            if (plugin.IsActive)
-                plugin.Initialize();
-        }
-
-        private void HandleKeyPressF10()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F10))
-                return;
-
-            ExitToTestPlay(true);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressUp()
-        {
-            // Shift+Up is switching layers
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up) || KeyboardManager.IsShiftDown())
-                return;
-
-            var index = (int)CompositionTool.Value;
-
-            if (index - 1 >= 0)
-                CompositionTool.Value = (EditorCompositionTool)index - 1;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressDown()
-        {
-            // Shift+Down is switching layers
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down) || KeyboardManager.IsShiftDown())
-                return;
-
-            var index = (int)CompositionTool.Value;
-
-            // - 1 because mines aren't implemented yet
-            if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
-                CompositionTool.Value = (EditorCompositionTool)index + 1;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressShiftUpDown()
-        {
-            if ((!KeyboardManager.IsUniqueKeyPress(Keys.Up) && !KeyboardManager.IsUniqueKeyPress(Keys.Down))
-                || !KeyboardManager.IsShiftDown())
-                return;
-
-            // Pressing Up and Down at the same time will give Down precedence
-            var step = KeyboardManager.IsUniqueKeyPress(Keys.Down) ? 1 : -1;
-
-            // Default layer will be handled as index -1
-            var currentLayerIndex = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value);
-            var nextLayerIndex = Math.Min(currentLayerIndex + step, WorkingMap.EditorLayers.Count() - 1);
-            var nextLayer = nextLayerIndex < 0 ? DefaultLayer : WorkingMap.EditorLayers[nextLayerIndex];
-
-            SelectedLayer.Value = nextLayer;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressShiftH()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.H) || !KeyboardManager.IsShiftDown())
-                return;
-
-            if (SelectedLayer.Value == null)
-                SelectedLayer.Value = DefaultLayer;
-
-            SelectedLayer.Value.Hidden = !SelectedLayer.Value.Hidden;
+            var index = StepAndWrapNumber(direction, (int)CompositionTool.Value,
+                Enum.GetValues(typeof(EditorCompositionTool)).Length);
+            CompositionTool.Value = (EditorCompositionTool)index;
         }
 
         /// <summary>
@@ -628,8 +492,10 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         /// <param name="direction"></param>
-        private void HandleSeeking(Direction direction)
+        public void SeekInDirection(Direction direction)
         {
+            if (Track == null || Track.IsDisposed || !CanSeek()) return;
+
             var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, BeatSnap.Value, Track.Time);
 
             if (Track.IsPlaying)
@@ -648,182 +514,43 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
-        /// </summary>
-        private void HandleSeekingBackwards()
-        {
-            var leftPressed = KeyboardManager.IsUniqueKeyPress(Keys.Left);
-
-            if (!leftPressed && MouseManager.CurrentState.ScrollWheelValue <= MouseManager.PreviousState.ScrollWheelValue)
-                return;
-
-            if (Track == null || Track.IsDisposed || (!CanSeek() && !leftPressed))
-                return;
-
-            HandleSeeking(Direction.Backward);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleSeekingForwards()
-        {
-            var rightPressed = KeyboardManager.IsUniqueKeyPress(Keys.Right);
-
-            if (!rightPressed && MouseManager.CurrentState.ScrollWheelValue >= MouseManager.PreviousState.ScrollWheelValue)
-                return;
-
-            if (Track == null || Track.IsDisposed || (!CanSeek() && !rightPressed))
-                return;
-
-            HandleSeeking(Direction.Forward);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleBeatSnapChanges()
-        {
-            var scrolledForward = MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue;
-            var scrolledBackward = MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue;
-
-            if (KeyboardManager.IsCtrlDown() && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
-                ChangeBeatSnap(Direction.Forward);
-
-            if (KeyboardManager.IsCtrlDown() && (scrolledBackward || KeyboardManager.IsUniqueKeyPress(Keys.Up)))
-                ChangeBeatSnap(Direction.Backward);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandlePlaybackRateChanges()
-        {
-            if (!KeyboardManager.IsCtrlDown())
-                return;
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
-                ChangeAudioPlaybackRate(Direction.Backward);
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
-                ChangeAudioPlaybackRate(Direction.Forward);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleCtrlInput()
-        {
-            if (!KeyboardManager.IsCtrlDown())
-                return;
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
-                ActionManager.Undo();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Y))
-                ActionManager.Redo();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.C))
-                CopySelectedObjects();
-
-            // Add shift to paste without automatic resnapping
-            if (KeyboardManager.IsUniqueKeyPress(Keys.V))
-                PasteCopiedObjects(!KeyboardManager.IsShiftDown());
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.X))
-                CutSelectedObjects();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.U))
-                UploadMapset();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.E))
-                ExportToZip();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Q))
-                Map.OpenFile();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.W))
-                Map.OpenFolder();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.A))
-            {
-                if (KeyboardManager.IsAltDown())
-                    SelectAllObjectsInLayer();
-                else
-                    SelectAllObjects();
-            }
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.H))
-                FlipSelectedObjects();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.S))
-                Save();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.R))
-                RefreshFileCache();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.N))
-                DialogManager.Show(new EditorNewSongDialog());
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.I))
-                PlaceTimingPointOrScrollVelocity();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressDelete()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete))
-                return;
-
-            DeleteSelectedObjects();
-        }
-
-        /// <summary>
         ///     Places a note if a note at the current editor time and the given number key
         ///     lane doesn't exist, otherwise removes all instances of notes at that time and lane
         ///     (possible with overlaps).
         /// </summary>
-        private void HandleTemporaryHitObjectPlacement()
+        public void PlaceHitObject(int lane)
         {
-            if (!LiveMapping.Value)
-                return;
+            const int placementLenienceInMs = 2;
+            var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+            var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
 
-            // Clever way of handing key input with num keys since the enum values are 1 after each other.
-            for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
+            // Can be multiple if overlap
+            var hitObjectsAtTime = WorkingMap.HitObjects
+                .Where(h =>
+                    h.Lane == lane && (
+                        Math.Abs(h.StartTime - time) <= placementLenienceInMs // Is on time
+                        || h.StartTime <= time && h.EndTime >= time // Is pressed during a long note
+                    )
+                ).ToList();
+
+            if (hitObjectsAtTime.Count > 0)
             {
-                if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
-                    continue;
-
-                var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-
-                var lane = i + 1;
-
-                var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
-
-                // Can be multiple if overlap
-                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
-
-                if (hitObjectsAtTime.Count > 0)
-                {
-                    foreach (var note in hitObjectsAtTime)
-                        ActionManager.RemoveHitObject(note);
-                }
-                else
-                    ActionManager.PlaceHitObject(lane, time, 0, layer);
+                ActionManager.RemoveHitObjectBatch(hitObjectsAtTime);
+            }
+            else
+            {
+                // TODO Handle long note placement
+                ActionManager.PlaceHitObject(lane, time, 0, layer);
             }
         }
 
-        /// <summary>
-        ///     Switches the selected composition tool depending on the number key pressed
-        ///     Will only switch tools when live mapping is disabled
-        /// </summary>
-        private void HandleCompositionToolChanges()
-        {
-            if (LiveMapping.Value)
-                return;
+        public void ShowMetadata() => DialogManager.Show(new EditorMetadataDialog(this));
 
-            // Using i < 3 to prevent selecting the unimplemented Mine tool
-            for (var i = 0; i < Enum.GetNames(typeof(EditorCompositionTool)).Length; i++)
-            {
-                if (KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
-                    CompositionTool.Value = (EditorCompositionTool)i;
-            }
+        public void ToggleAutomod()
+        {
+            var view = View as EditScreenView;
+            if (view != null)
+                view.AutoMod.IsActive.Value = !view.AutoMod.IsActive.Value;
         }
 
         /// <summary>
@@ -895,23 +622,34 @@ namespace Quaver.Shared.Screens.Edit
             }
         }
 
+        public void SetPreviewPoint() => ActionManager.SetPreviewTime((int)Track.Time);
+
         /// <summary>
         /// </summary>
         /// <param name="direction"></param>
-        public void ChangeBeatSnap(Direction direction)
+        /// <param name="large"></param>
+        public void ChangeBeatSnap(Direction direction, bool large = false)
         {
             var index = BeatSnapIndex;
 
-            switch (direction)
+            if (large)
             {
-                case Direction.Forward:
-                    BeatSnap.Value = index + 1 < AvailableBeatSnaps.Count ? AvailableBeatSnaps[index + 1] : AvailableBeatSnaps.First();
-                    break;
-                case Direction.Backward:
-                    BeatSnap.Value = index - 1 >= 0 ? AvailableBeatSnaps[index - 1] : AvailableBeatSnaps.Last();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                switch (direction)
+                {
+                    case Direction.Forward:
+                        BeatSnap.Value *= 2;
+                        break;
+                    case Direction.Backward:
+                        BeatSnap.Value = Math.Max(BeatSnap.Value / 2, 1);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                }
+            }
+            else
+            {
+                index = StepAndWrapNumber(direction, index, AvailableBeatSnaps.Count);
+                BeatSnap.Value = AvailableBeatSnaps[index];
             }
         }
 
@@ -943,10 +681,101 @@ namespace Quaver.Shared.Screens.Edit
             Track.Rate = targetRate;
         }
 
+        public void ChangeSelectedLayer(Direction direction)
+        {
+            var index = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value);
+            index = StepAndWrapNumber(direction, index, WorkingMap.EditorLayers.Count);
+            SelectedLayer.Value = WorkingMap.EditorLayers[index];
+        }
+
+        public void ToggleSelectedLayerVisibility() => ActionManager.ToggleLayerVisibility(SelectedLayer.Value);
+
+        public void AddNewLayer()
+        {
+            var layer = new EditorLayerInfo
+            {
+                Name = $"Layer {WorkingMap.EditorLayers.Count + 1}",
+                ColorRgb = "255,255,255"
+            };
+
+            // FindIndex() returns -1 when the default layer is selected
+            int index = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 2;
+
+            ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer, index));
+        }
+
+        public void DeleteLayer()
+        {
+            if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default layer!");
+                return;
+            }
+
+            ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects, SelectedLayer.Value));
+        }
+
+        public void RenameLayer() => DialogManager.Show(new DialogRenameLayer(SelectedLayer.Value, ActionManager, WorkingMap));
+
+        public void RecolorLayer() => DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
+
+        public void ToggleGameplayPreview() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
+        public void ToggleHitsounds() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
+        public void ToggleMetronome() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
+        public void ToggleWaveform() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
+
+        public void TogglePitchWithRate()
+        {
+            // TODO
+        }
+
+        public void ToggleLivePlaytest()
+        {
+            // TODO
+        }
+
+        public void OpenGameplayModifiers() => DialogManager.Show(new EditorModifierMenuDialog());
+        public void OpenNewSong() => DialogManager.Show(new EditorNewSongDialog());
+        public void OpenCustomSnapDialog() => DialogManager.Show(new CustomBeatSnapDialog(BeatSnap, AvailableBeatSnaps));
+
+        public void ToggleReferenceDifficulty()
+        {
+            if (UneditableMap.Value != null)
+                UneditableMap.Value = null;
+            else
+                ChangeReferenceDifficultyTo(Map.Mapset.Maps[0]);
+        }
+
+        public void ChangeReferenceDifficultyTo(Map map)
+        {
+            ThreadScheduler.Run(() =>
+            {
+                if (UneditableMap.Value != null)
+                {
+                    lock (UneditableMap.Value)
+                        UneditableMap.Value = map.LoadQua();
+                }
+                else
+                    UneditableMap.Value = map.LoadQua();
+            });
+        }
+
+        public void ChangeReferenceDifficultyInDirection(Direction direction)
+        {
+            if (UneditableMap.Value == null) return;
+
+            var maps = Map.Mapset.Maps;
+            var index = maps.IndexOf(Map);
+            index = StepAndWrapNumber(direction, index, maps.Count);
+            ChangeReferenceDifficultyTo(maps[index]);
+        }
+
+        public void ToggleWaveformFilter(EditorPlayfieldWaveformFilter filter) => WaveformFilter.Value = WaveformFilter.Value == filter ? EditorPlayfieldWaveformFilter.None : WaveformFilter.Value = filter;
+
         /// <summary>
         ///     Loads any plugins for the editor
         /// </summary>
-        private void LoadPlugins()
+        public void LoadPlugins()
         {
             Plugins = new List<IEditorPlugin>();
 
@@ -1021,6 +850,18 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+        }
+
+        public void TogglePluginByName(string name)
+        {
+            var plugin = Plugins.Find(p => p.Name == name);
+            plugin.IsActive = !plugin.IsActive;
+        }
+
+        public void CloseAllPlugins()
+        {
+            foreach (var plugin in Plugins)
+                plugin.IsActive = false;
         }
 
         /// <summary>
@@ -1535,31 +1376,18 @@ namespace Quaver.Shared.Screens.Edit
             });
         }
 
-        /// <summary>
-        ///     Places a timing point or scroll velocity at the current point in time.
-        /// </summary>
-        private void PlaceTimingPointOrScrollVelocity()
+        public void PlaceTimingPoint() => ActionManager.PlaceTimingPoint(new TimingPointInfo
         {
-            if (!KeyboardManager.IsShiftDown())
+            StartTime = (float)Track.Time,
+            Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
+        });
+
+        public void PlaceScrollVelocity() =>
+            ActionManager.PlaceScrollVelocity(new SliderVelocityInfo
             {
-                ActionManager.PlaceScrollVelocity(new SliderVelocityInfo
-                {
-                    StartTime = (float)Track.Time,
-                    Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
-                });
-            }
-            else
-            {
-                if (WorkingMap.TimingPoints.Count != 0)
-                {
-                    ActionManager.PlaceTimingPoint(new TimingPointInfo
-                    {
-                        StartTime = (float)Track.Time,
-                        Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
-                    });
-                }
-            }
-        }
+                StartTime = (float)Track.Time,
+                Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
+            });
 
         /// <summary>
         /// </summary>
@@ -1675,6 +1503,30 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
+        }
+
+        private int StepAndWrapNumber(Direction direction, int i, int max)
+        {
+            Logger.Debug($"{i}", LogType.Runtime);
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    i += 1;
+                    break;
+                case Direction.Backward:
+                    i -= 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            i %= max;
+
+            if (i == -1)
+                i = max - 1;
+
+            return i;
         }
     }
 }
