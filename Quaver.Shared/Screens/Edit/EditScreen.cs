@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     All of the available beat snaps to use in the editor.
         /// </summary>
-        public List<int> AvailableBeatSnaps { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
+        public List<int> AvailableBeatSnaps { get; } = new List<int> {1, 2, 3, 4, 6, 8, 12, 16};
 
         /// <summary>
         /// </summary>
@@ -125,7 +125,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableMetronome { get; } = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> EnableMetronome { get; } = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableHitsounds { get; } = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> EnableHitsounds { get; } = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
@@ -141,11 +141,11 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ScaleScrollSpeedWithRate { get; } = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> ScaleScrollSpeedWithRate { get; } = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
@@ -283,7 +283,7 @@ namespace Quaver.Shared.Screens.Edit
             InitializeDiscordRichPresence();
             AddFileWatcher();
 
-            EditorInputManager = new EditorInputManager();
+            EditorInputManager = new EditorInputManager(this);
 
             View = new EditScreenView(this);
         }
@@ -433,7 +433,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void LoadSkin()
         {
-            Skin = new Bindable<SkinStore>(SkinManager.Skin) { Value = SkinManager.Skin };
+            Skin = new Bindable<SkinStore>(SkinManager.Skin) {Value = SkinManager.Skin};
 
             if (Skin.Value != null)
                 return;
@@ -449,38 +449,37 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             var view = (EditScreenView)View;
-
             if (view.IsImGuiHovered)
                 return;
 
-            HandleKeyPressSpace();
-            HandleKeyPressPlayfieldZoom();
-            HandleKeyPressHome();
-            HandleKeyPressEnd();
+            EditorInputManager.HandleInput();
 
-            // To not conflict with the volume controller
-            if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
-            {
-                HandleSeekingBackwards();
-                HandleSeekingForwards();
-                HandleKeyPressUp();
-                HandleKeyPressDown();
-                HandleKeyPressShiftUpDown();
-            }
-
-            HandleBeatSnapChanges();
-            HandleCompositionToolChanges();
-            HandlePlaybackRateChanges();
-            HandleTemporaryHitObjectPlacement();
-            HandleCtrlInput();
-            HandleKeyPressDelete();
-            HandleKeyPressEscape();
-            HandleKeyPressF1();
-            HandleKeyPressF4();
-            HandleKeyPressF5();
-            HandleKeyPressF6();
-            HandleKeyPressF10();
-            HandleKeyPressShiftH();
+            // HandleKeyPressHome();
+            // HandleKeyPressEnd();
+            //
+            // // To not conflict with the volume controller
+            // if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
+            // {
+            //     HandleSeekingBackwards();
+            //     HandleSeekingForwards();
+            //     HandleKeyPressUp();
+            //     HandleKeyPressDown();
+            //     HandleKeyPressShiftUpDown();
+            // }
+            //
+            // HandleBeatSnapChanges();
+            // HandleCompositionToolChanges();
+            // HandlePlaybackRateChanges();
+            // HandleTemporaryHitObjectPlacement();
+            // HandleCtrlInput();
+            // HandleKeyPressDelete();
+            // HandleKeyPressEscape();
+            // HandleKeyPressF1();
+            // HandleKeyPressF4();
+            // HandleKeyPressF5();
+            // HandleKeyPressF6();
+            // HandleKeyPressF10();
+            // HandleKeyPressShiftH();
         }
 
         /// <summary>
@@ -608,11 +607,8 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressSpace()
+        public void TogglePlayPause()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Space))
-                return;
-
             if (Track == null || Track.IsDisposed)
                 return;
 
@@ -840,8 +836,31 @@ namespace Quaver.Shared.Screens.Edit
             HitsoundObjectIndex++;
         }
 
+        public void AdjustZoom(int stepSize) => PlayfieldScrollSpeed.Value += stepSize;
+
         /// <summary>
         /// </summary>
+        private void HandleKeyPressHome()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Home))
+                return;
+
+            var time = WorkingMap.HitObjects.Count() == 0 ? 0.0d : WorkingMap.HitObjects.First().StartTime;
+            Track.Seek(time);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEnd()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.End))
+                return;
+
+            // Using the actual track length won't work (might be out of bounds?)
+            var time = WorkingMap.HitObjects.Count() == 0 ? Track.Length - 1 : WorkingMap.HitObjects.Last().StartTime;
+            Track.Seek(time);
+        }
+
         private void PlayHitsounds()
         {
             if (!Track.IsPlaying)
@@ -898,55 +917,6 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressPlayfieldZoom()
-        {
-            const int zoomTime = 100;
-            const Keys zoomInKey = Keys.PageUp;
-            const Keys zoomOutKey = Keys.PageDown;
-            TimeSinceLastPlayfieldZoom += GameBase.Game.TimeSinceLastFrame;
-            var canZoom = TimeSinceLastPlayfieldZoom >= zoomTime;
-
-            if (KeyboardManager.IsUniqueKeyPress(zoomInKey))
-                PlayfieldScrollSpeed.Value++;
-            else if (KeyboardManager.IsUniqueKeyPress(zoomOutKey))
-                PlayfieldScrollSpeed.Value--;
-            else if (KeyboardManager.CurrentState.IsKeyDown(zoomInKey) && canZoom)
-            {
-                PlayfieldScrollSpeed.Value++;
-                TimeSinceLastPlayfieldZoom = 0;
-            }
-            else if (KeyboardManager.CurrentState.IsKeyDown(zoomOutKey) && canZoom)
-            {
-                PlayfieldScrollSpeed.Value--;
-                TimeSinceLastPlayfieldZoom = 0;
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressHome()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Home))
-                return;
-
-            var time = WorkingMap.HitObjects.Count() == 0 ? 0.0d : WorkingMap.HitObjects.First().StartTime;
-            Track.Seek(time);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressEnd()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.End))
-                return;
-
-            // Using the actual track length won't work (might be out of bounds?)
-            var time = WorkingMap.HitObjects.Count() == 0 ? Track.Length - 1 : WorkingMap.HitObjects.Last().StartTime;
-            Track.Seek(time);
-        }
-
-        /// <summary>
-        /// </summary>
         /// <param name="direction"></param>
         public void ChangeAudioPlaybackRate(Direction direction)
         {
@@ -995,12 +965,18 @@ namespace Quaver.Shared.Screens.Edit
             {
                 {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
                 {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
-                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
-                    $"{dir}/BpmCalculator/plugin.lua", true)},
-                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
-                    $"{dir}/BpmDetector/plugin.lua", true)},
-                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
-                    $"{dir}/GoToObjects/plugin.lua", true)}
+                {
+                    EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
+                        $"{dir}/BpmCalculator/plugin.lua", true)
+                },
+                {
+                    EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
+                        $"{dir}/BpmDetector/plugin.lua", true)
+                },
+                {
+                    EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
+                        $"{dir}/GoToObjects/plugin.lua", true)
+                }
             };
 
             foreach (var plugin in BuiltInPlugins)
@@ -1111,7 +1087,7 @@ namespace Quaver.Shared.Screens.Edit
             if (resnapObjects)
             {
                 // Don't add to undo stack
-                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> { 16, 12 }, clonedObjects, false);
+                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> {16, 12}, clonedObjects, false);
                 resnapAction.Perform();
             }
 
@@ -1423,7 +1399,7 @@ namespace Quaver.Shared.Screens.Edit
                 map.NewlyCreated = true;
 
                 // Create a new mapset from the map
-                var mapset = MapsetHelper.ConvertMapsToMapsets(new List<Map> { map }).First();
+                var mapset = MapsetHelper.ConvertMapsToMapsets(new List<Map> {map}).First();
                 map.Mapset = mapset;
 
                 // Make sure the mapset is loaded
