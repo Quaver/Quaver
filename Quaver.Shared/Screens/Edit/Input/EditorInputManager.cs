@@ -31,27 +31,13 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ZoomOut,
             KeybindActions.ZoomOutLarge,
             KeybindActions.SeekForwards,
-            KeybindActions.SeekForwardsWithSelection,
-            KeybindActions.SeekForwardsWithMove,
             KeybindActions.SeekBackwards,
-            KeybindActions.SeekBackwardsWithSelection,
-            KeybindActions.SeekBackwardsWithMove,
             KeybindActions.SeekForwards1ms,
-            KeybindActions.SeekForwards1msWithSelection,
-            KeybindActions.SeekForwards1msWithMove,
             KeybindActions.SeekBackwards1ms,
-            KeybindActions.SeekBackwards1msWithSelection,
-            KeybindActions.SeekBackwards1msWithMove,
             KeybindActions.SeekToStartOfSelection,
-            KeybindActions.SeekToStartOfSelectionWithMove,
             KeybindActions.SeekToEndOfSelection,
-            KeybindActions.SeekToEndOfSelectionWithMove,
             KeybindActions.SeekToBeginning,
-            KeybindActions.SeekToBeginningWithSelection,
-            KeybindActions.SeekToBeginningWithMove,
             KeybindActions.SeekToEnd,
-            KeybindActions.SeekToEndWithSelection,
-            KeybindActions.SeekToEndWithMove,
             KeybindActions.IncreasePlaybackRate,
             KeybindActions.DecreasePlaybackRate,
             KeybindActions.ChangeToolUp,
@@ -152,67 +138,25 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SeekForwards:
                     Screen.SeekInDirection(Direction.Forward);
                     break;
-                case KeybindActions.SeekForwardsWithSelection:
-                    // TODO
-                    break;
-                case KeybindActions.SeekForwardsWithMove:
-                    // TODO
-                    break;
                 case KeybindActions.SeekBackwards:
                     Screen.SeekInDirection(Direction.Backward);
                     break;
-                case KeybindActions.SeekBackwardsWithSelection:
-                    // TODO
-                    break;
-                case KeybindActions.SeekBackwardsWithMove:
-                    // TODO
-                    break;
                 case KeybindActions.SeekForwards1ms:
-                    // TODO
-                    break;
-                case KeybindActions.SeekForwards1msWithSelection:
-                    // TODO
-                    break;
-                case KeybindActions.SeekForwards1msWithMove:
                     // TODO
                     break;
                 case KeybindActions.SeekBackwards1ms:
                     // TODO
                     break;
-                case KeybindActions.SeekBackwards1msWithSelection:
-                    // TODO
-                    break;
-                case KeybindActions.SeekBackwards1msWithMove:
-                    // TODO
-                    break;
                 case KeybindActions.SeekToStartOfSelection:
-                    // TODO
-                    break;
-                case KeybindActions.SeekToStartOfSelectionWithMove:
                     // TODO
                     break;
                 case KeybindActions.SeekToEndOfSelection:
                     // TODO
                     break;
-                case KeybindActions.SeekToEndOfSelectionWithMove:
-                    // TODO
-                    break;
                 case KeybindActions.SeekToBeginning:
                     // TODO
                     break;
-                case KeybindActions.SeekToBeginningWithSelection:
-                    // TODO
-                    break;
-                case KeybindActions.SeekToBeginningWithMove:
-                    // TODO
-                    break;
                 case KeybindActions.SeekToEnd:
-                    // TODO
-                    break;
-                case KeybindActions.SeekToEndWithSelection:
-                    // TODO
-                    break;
-                case KeybindActions.SeekToEndWithMove:
                     // TODO
                     break;
                 case KeybindActions.IncreasePlaybackRate:
@@ -358,6 +302,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                     break;
                 case KeybindActions.SetPreviewPoint:
                     Screen.SetPreviewPoint();
+                    break;
+                case KeybindActions.AdjustOffset:
+                    DialogManager.Show(new EditorApplyOffsetDialog(Screen));
                     break;
                 case KeybindActions.SubmitForRanked:
                     Screen.SubmitForRank();

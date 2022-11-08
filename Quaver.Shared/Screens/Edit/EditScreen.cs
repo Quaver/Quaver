@@ -964,12 +964,14 @@ namespace Quaver.Shared.Screens.Edit
             ActionManager.RemoveHitObjectBatch(SelectedHitObjects.Value);
         }
 
+        public void DeselectAllObjects() => SelectedHitObjects.Value.Clear();
+
         /// <summary>
         ///     Selects every single object in the map
         /// </summary>
         public void SelectAllObjects()
         {
-            SelectedHitObjects.Value.Clear();
+            DeselectAllObjects();
             SelectedHitObjects.AddRange(WorkingMap.HitObjects);
         }
 
