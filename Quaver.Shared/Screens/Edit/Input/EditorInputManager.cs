@@ -371,9 +371,6 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.DeleteCurrentNotesOrSelection:
                     Screen.DeleteSelectedObjects();
                     break;
-                case KeybindActions.DeleteCurrentNotesOrSelectionAndMove:
-                    // TODO
-                    break;
                 case KeybindActions.SelectAll:
                     Screen.SelectAllObjects();
                     break;

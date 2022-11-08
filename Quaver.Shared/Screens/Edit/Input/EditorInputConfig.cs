@@ -184,8 +184,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {PasteNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.V), new Keybind(Keys.V), new Keybind(Keys.Insert),})},
             {PasteNoResnap, new KeybindList(new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.V))},
 
-            {DeleteCurrentNotesOrSelection, new KeybindList(new[] {new Keybind(Keys.Delete), new Keybind(Keys.OemClear)})},
-            {DeleteCurrentNotesOrSelectionAndMove, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.Delete), new Keybind(KeyModifiers.Ctrl, Keys.OemClear)})},
+            {DeleteCurrentNotesOrSelection, new KeybindList(new[] {new Keybind(Keys.Delete), new Keybind(Keys.Back)})},
 
             {SelectAll, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.A), new Keybind(Keys.A)})},
             {SelectAllInLayer, new KeybindList(new[] {new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.A), new Keybind(KeyModifiers.Shift, Keys.A)})},
