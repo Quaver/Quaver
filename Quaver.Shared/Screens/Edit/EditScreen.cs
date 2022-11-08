@@ -985,9 +985,11 @@ namespace Quaver.Shared.Screens.Edit
             if (SelectedHitObjects.Value.Count == 0)
                 return;
 
+            var count = SelectedHitObjects.Value.Count;
+
             Copy();
             DeleteSelectedObjects();
-            NotificationManager.Show(NotificationLevel.Info, $"Cut {SelectedHitObjects.Value.Count} objects");
+            NotificationManager.Show(NotificationLevel.Info, $"Cut {count} objects");
         }
 
         /// <summary>
@@ -1001,10 +1003,7 @@ namespace Quaver.Shared.Screens.Edit
             ActionManager.RemoveHitObjectBatch(SelectedHitObjects.Value);
         }
 
-        public void DeselectAllObjects()
-        {
-            SelectedHitObjects.Value.Clear();
-        }
+        public void DeselectAllObjects() => SelectedHitObjects.Clear();
 
         /// <summary>
         ///     Selects every single object in the map
