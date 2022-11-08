@@ -520,6 +520,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void PlaceHitObject(int lane)
         {
+            if (lane > WorkingMap.GetKeyCount())
+                return;
+
             const int placementLenienceInMs = 2;
             var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
             var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
@@ -720,9 +723,9 @@ namespace Quaver.Shared.Screens.Edit
         public void RecolorLayer() => DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
 
         public void ToggleGameplayPreview() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
-        public void ToggleHitsounds() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
-        public void ToggleMetronome() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
-        public void ToggleWaveform() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
+        public void ToggleHitsounds() => EnableHitsounds.Value = !EnableHitsounds.Value;
+        public void ToggleMetronome() => EnableMetronome.Value = !EnableMetronome.Value;
+        public void ToggleWaveform() => ShowWaveform.Value = !ShowWaveform.Value;
 
         public void TogglePitchWithRate()
         {

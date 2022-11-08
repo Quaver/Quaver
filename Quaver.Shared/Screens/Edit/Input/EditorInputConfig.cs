@@ -174,10 +174,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             {StartGameplayTest, new KeybindList(Keys.F4)},
             {StartGameplayTestFromBeginning, new KeybindList(KeyModifiers.Ctrl, Keys.F4)},
 
-            {CutNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.X), new Keybind(Keys.X), new Keybind(Keys.Insert),})},
-            {CopyNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.Z), new Keybind(Keys.Z),})},
-            {PasteNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.Z), new Keybind(Keys.Z), new Keybind(Keys.Insert),})},
-            {PasteNoResnap, new KeybindList(new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.Z))},
+            {CutNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.X), new Keybind(Keys.X), })},
+            {CopyNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.C), new Keybind(Keys.C),})},
+            {PasteNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.V), new Keybind(Keys.V), new Keybind(Keys.Insert),})},
+            {PasteNoResnap, new KeybindList(new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.V))},
 
             {DeleteCurrentNotesOrSelection, new KeybindList(new[] {new Keybind(Keys.Delete), new Keybind(Keys.OemClear)})},
             {DeleteCurrentNotesOrSelectionAndMove, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.Delete), new Keybind(KeyModifiers.Ctrl, Keys.OemClear)})},
