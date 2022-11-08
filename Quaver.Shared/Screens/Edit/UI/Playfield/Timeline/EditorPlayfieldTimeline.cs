@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
-using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
@@ -16,6 +14,8 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignature;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -110,9 +110,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
+            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
-            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
+            ActionManager.TimingPointSignatureChanged += OnTimingPointSignatureChanged;
+            ActionManager.TimingPointSignatureBatchChanged += OnTimingPointSignatureBatchChanged;
         }
 
         /// <inheritdoc />
@@ -145,9 +147,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
+            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
-            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
+            ActionManager.TimingPointSignatureChanged -= OnTimingPointSignatureChanged;
+            ActionManager.TimingPointSignatureBatchChanged -= OnTimingPointSignatureBatchChanged;
 
             base.Destroy();
         }
@@ -534,6 +538,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => ReInitialize();
 
         /// <summary>
@@ -546,6 +556,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => ReInitialize();
+        private void OnTimingPointSignatureChanged(object sender, EditorTimingPointSignatureChangedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointSignatureBatchChanged(object sender, EditorChangedTimingPointSignatureBatchEventArgs e) => ReInitialize();
     }
 }

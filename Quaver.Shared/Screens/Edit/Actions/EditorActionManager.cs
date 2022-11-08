@@ -41,13 +41,12 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignature;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Components;
-using Wobble.Bindables;
-using Wobble.Graphics;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -212,6 +211,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorTimingPointBpmChangedEventArgs> TimingPointBpmChanged;
 
         /// <summary>
+        ///     Event invoked when the Signature of a timing point has been changed
+        /// </summary>
+        public event EventHandler<EditorTimingPointSignatureChangedEventArgs> TimingPointSignatureChanged;
+
+        /// <summary>
         ///     Event invoked when the lines of a timing point have been hidden or unhidden
         /// </summary>
         public event EventHandler<EditorTimingPointHiddenChangedEventArgs> TimingPointHiddenChanged;
@@ -220,6 +224,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of timing points have had their BPM changed
         /// </summary>
         public event EventHandler<EditorChangedTimingPointBpmBatchEventArgs> TimingPointBpmBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when a batch of timing points have had their Signature changed
+        /// </summary>
+        public event EventHandler<EditorChangedTimingPointSignatureBatchEventArgs> TimingPointSignatureBatchChanged;
 
         /// <summary>
         ///     Event invoked when batch of timing points have had their offset changed
@@ -417,6 +426,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => Perform(new EditorActionChangeTimingPointBpm(this, WorkingMap, tp, bpm));
 
         /// <summary>
+        ///     Changes the Signature of an existing timing point
+        /// </summary>
+        /// <param name="tp"></param>
+        /// <param name="timeSig"></param>
+        public void ChangeTimingPointSignature(TimingPointInfo tp, int timeSig) => Perform(new EditorActionChangeTimingPointSignature(this, WorkingMap, tp, timeSig));
+
+        /// <summary>
         ///     Changes whether an existing timing point's lines are hidden or not
         /// </summary>
         /// <param name="tp"></param>
@@ -429,6 +445,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="tps"></param>
         /// <param name="bpm"></param>
         public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm) => Perform(new EditorActionChangeTimingPointBpmBatch(this, WorkingMap, tps, bpm));
+
+        /// <summary>
+        ///     Changes a batch of timing points to a new signature
+        /// </summary>
+        /// <param name="tps"></param>
+        /// <param name="sig"></param>
+        public void ChangeTimingPointSignatureBatch(List<TimingPointInfo> tps, int sig) => Perform(new EditorActionChangeTimingPointSignatureBatch(this, WorkingMap, tps, sig));
 
         /// <summary>
         ///     Moves a batch of timing points' offsets by a given value
@@ -625,11 +648,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ChangeTimingPointBpm:
                     TimingPointBpmChanged?.Invoke(this, (EditorTimingPointBpmChangedEventArgs)args);
                     break;
+                case EditorActionType.ChangeTimingPointSignature:
+                    TimingPointSignatureChanged?.Invoke(this, (EditorTimingPointSignatureChangedEventArgs)args);
+                    break;
                 case EditorActionType.ChangeTimingPointHidden:
                     TimingPointHiddenChanged?.Invoke(this, (EditorTimingPointHiddenChangedEventArgs)args);
                     break;
                 case EditorActionType.ChangeTimingPointBpmBatch:
                     TimingPointBpmBatchChanged?.Invoke(this, (EditorChangedTimingPointBpmBatchEventArgs)args);
+                    break;
+                case EditorActionType.ChangeTimingPointSignatureBatch:
+                    TimingPointSignatureBatchChanged?.Invoke(this, (EditorChangedTimingPointSignatureBatchEventArgs)args);
                     break;
                 case EditorActionType.ChangeTimingPointOffsetBatch:
                     TimingPointOffsetBatchChanged?.Invoke(this, (EditorChangedTimingPointOffsetBatchEventArgs)args);
@@ -677,8 +706,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
             PreviewTimeChanged = null;
             TimingPointOffsetChanged = null;
             TimingPointBpmChanged = null;
+            TimingPointSignatureChanged = null;
             TimingPointHiddenChanged = null;
             TimingPointBpmBatchChanged = null;
+            TimingPointSignatureBatchChanged = null;
             TimingPointOffsetBatchChanged = null;
             ScrollVelocityOffsetBatchChanged = null;
             ScrollVelocityMultiplierBatchChanged = null;
