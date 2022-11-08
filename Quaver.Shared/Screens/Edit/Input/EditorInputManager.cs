@@ -387,7 +387,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.FlipSelectedObjects();
                     break;
                 case KeybindActions.MirrorNotesUpDown:
-                    // TODO
+                    Screen.ReverseSelectedObjects();
                     break;
                 case KeybindActions.ResnapAllNotes:
                     // TODO

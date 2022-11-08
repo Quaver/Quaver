@@ -19,6 +19,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
@@ -235,6 +236,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of scroll velocities have had their multipliers changed
         /// </summary>
         public event EventHandler<EditorChangedScrollVelocityMultiplierBatchEventArgs> ScrollVelocityMultiplierBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their multipliers changed
+        /// </summary>
+        public event EventHandler<EditorHitObjectsReversedEventArgs> HitObjectsReversed;
 
         /// <summary>
         /// </summary>
@@ -643,6 +649,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ResnapHitObjects:
                     HitObjectsResnapped?.Invoke(this, (EditorActionHitObjectsResnappedEventArgs)args);
                     break;
+                case EditorActionType.ReverseHitObjects:
+                    HitObjectsReversed?.Invoke(this, (EditorHitObjectsReversedEventArgs)args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -683,6 +692,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             ScrollVelocityOffsetBatchChanged = null;
             ScrollVelocityMultiplierBatchChanged = null;
             HitObjectsResnapped = null;
+            HitObjectsReversed = null;
         }
     }
 }

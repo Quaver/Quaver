@@ -28,6 +28,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Dialogs;
@@ -1038,6 +1039,18 @@ namespace Quaver.Shared.Screens.Edit
 
             ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
             NotificationManager.Show(NotificationLevel.Info, $"Mirrored {SelectedHitObjects.Value.Count} objects");
+        }
+
+        /// <summary>
+        ///     Flips all objects that are currently selected
+        /// </summary>
+        public void ReverseSelectedObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            ActionManager.Perform(new EditorActionReverseHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+            NotificationManager.Show(NotificationLevel.Info, $"Reversed {SelectedHitObjects.Value.Count} objects");
         }
 
         /// <summary>
