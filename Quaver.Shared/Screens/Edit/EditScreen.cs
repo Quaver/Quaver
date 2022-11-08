@@ -967,7 +967,7 @@ namespace Quaver.Shared.Screens.Edit
             if (resnapObjects)
             {
                 // Don't add to undo stack
-                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> {16, 12}, clonedObjects, false);
+                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, clonedObjects, false);
                 resnapAction.Perform();
             }
 
@@ -1001,7 +1001,8 @@ namespace Quaver.Shared.Screens.Edit
             ActionManager.RemoveHitObjectBatch(SelectedHitObjects.Value);
         }
 
-        public void DeselectAllObjects() {
+        public void DeselectAllObjects()
+        {
             SelectedHitObjects.Value.Clear();
         }
 
@@ -1204,6 +1205,7 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             ModManager.RemoveAllMods();
+            EditorInputManager.InputConfig.SaveToConfig();
 
             Exit(() => new SelectionScreen());
         }

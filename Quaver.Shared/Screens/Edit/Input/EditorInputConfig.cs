@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Edit.Input
     {
         [YamlIgnore] public static string ConfigPath = ConfigManager.GameDirectory.Value + "/editor_keys.yaml";
 
-        public bool ReverseScrollSeekDirection = true;
+        public bool ReverseScrollSeekDirection { get; } = true;
         public Dictionary<KeybindActions, KeybindList> Keybinds { get; } = DefaultKeybinds;
         public Dictionary<string, KeybindList> PluginKeybinds { get; } = new Dictionary<string, KeybindList>();
 
@@ -41,7 +41,6 @@ namespace Quaver.Shared.Screens.Edit.Input
                 }
             }
 
-            config.SaveToConfig(); // Reformat on load
             return config;
         }
 
@@ -195,9 +194,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {MirrorNotesLeftRight, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.H), new Keybind(Keys.H)})},
             {MirrorNotesUpDown, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.G), new Keybind(Keys.G)})},
 
-            {ResnapAllNotes, new KeybindList()},
-
-            {ResnapModifiedOrSelectedNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.R), new Keybind(Keys.R)})},
+            {ResnapAllNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.R), new Keybind(Keys.R)})},
 
             {PlaceNoteLane1, new KeybindList(Keys.D1)},
             {PlaceNoteLane2, new KeybindList(Keys.D2)},

@@ -390,10 +390,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.ReverseSelectedObjects();
                     break;
                 case KeybindActions.ResnapAllNotes:
-                    // TODO
-                    break;
-                case KeybindActions.ResnapModifiedOrSelectedNotes:
-                    // TODO
+                    Screen.ActionManager.ResnapNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, Screen.SelectedHitObjects.Value);
                     break;
                 case KeybindActions.PlaceNoteLane1:
                     Screen.PlaceHitObject(1);

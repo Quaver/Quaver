@@ -96,7 +96,6 @@ namespace Quaver.Shared.Screens.Edit.Input
         MirrorNotesLeftRight,
         MirrorNotesUpDown,
         ResnapAllNotes,
-        ResnapModifiedOrSelectedNotes,
         PlaceNoteLane1,
         PlaceNoteLane2,
         PlaceNoteLane3,

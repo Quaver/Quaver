@@ -297,8 +297,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             {
                 if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
                     Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.WorkingMap.HitObjects);
-                if (ImGui.MenuItem("Resnap to 1/16 and 1/12 snaps"))
-                    Screen.ActionManager.ResnapNotes(new List<int> { 16, 12 }, Screen.WorkingMap.HitObjects);
+                if (ImGui.MenuItem("Resnap to common snaps"))
+                    Screen.ActionManager.ResnapNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, Screen.WorkingMap.HitObjects);
                 ImGui.EndMenu();
             }
 
@@ -306,8 +306,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             {
                 if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
                     Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
-                if (ImGui.MenuItem("Resnap to 1/16 and 1/12 snaps"))
-                    Screen.ActionManager.ResnapNotes(new List<int> { 16, 12 }, Screen.SelectedHitObjects.Value);
+                if (ImGui.MenuItem("Resnap to common snaps"))
+                    Screen.ActionManager.ResnapNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, Screen.SelectedHitObjects.Value);
                 ImGui.EndMenu();
             }
 
