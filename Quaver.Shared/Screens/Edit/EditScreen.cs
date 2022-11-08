@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using IniFileParser;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -26,6 +25,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
@@ -494,22 +494,45 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="direction"></param>
         public void SeekInDirection(Direction direction)
         {
-            if (Track == null || Track.IsDisposed || !CanSeek()) return;
+            var snap = BeatSnap.Value;
 
-            var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, BeatSnap.Value, Track.Time);
+            if (KeyboardManager.IsCtrlDown())
+                snap /= 4;
+
+            var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, snap, Track.Time);
 
             if (Track.IsPlaying)
             {
                 for (var i = 0; i < 3; i++)
-                    time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, BeatSnap.Value, time);
+                    time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, snap, time);
             }
 
-            if (time < 0)
-                time = 0;
+            SeekTo(time);
+        }
 
-            if (time > Track.Length)
-                time = Track.Length - 100;
+        public void SeekTo(double time)
+        {
+            if (Track == null || Track.IsDisposed || !CanSeek()) return;
 
+            var offset = time - Track.Time;
+
+            // Move semantics
+            if (KeyboardManager.IsAltDown())
+            {
+                new EditorActionMoveHitObjects(ActionManager, WorkingMap, SelectedHitObjects.Value, 0, (int)offset).Perform();
+            }
+            else if (KeyboardManager.IsShiftDown())
+            {
+                var start = Math.Min(time, Track.Time);
+                var end = Math.Max(time, Track.Time);
+
+                var hitObjectsInRange = WorkingMap.HitObjects
+                    .FindAll(h => h.StartTime >= start && h.StartTime <= end && !SelectedHitObjects.Value.Contains(h));
+
+                SelectedHitObjects.AddRange(hitObjectsInRange);
+            }
+
+            time = Math.Clamp(time, 0, Track.Length - 100);
             Track.Seek(time);
         }
 
@@ -570,25 +593,19 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressHome()
+        public void SeekToBeginning()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Home))
-                return;
-
             var time = WorkingMap.HitObjects.Count() == 0 ? 0.0d : WorkingMap.HitObjects.First().StartTime;
-            Track.Seek(time);
+            SeekTo(time);
         }
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressEnd()
+        public void SeekToEnd()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.End))
-                return;
-
             // Using the actual track length won't work (might be out of bounds?)
             var time = WorkingMap.HitObjects.Count() == 0 ? Track.Length - 1 : WorkingMap.HitObjects.Last().StartTime;
-            Track.Seek(time);
+            SeekTo(time);
         }
 
         private void PlayHitsounds()
@@ -983,7 +1000,9 @@ namespace Quaver.Shared.Screens.Edit
             ActionManager.RemoveHitObjectBatch(SelectedHitObjects.Value);
         }
 
-        public void DeselectAllObjects() => SelectedHitObjects.Value.Clear();
+        public void DeselectAllObjects() {
+            SelectedHitObjects.Value.Clear();
+        }
 
         /// <summary>
         ///     Selects every single object in the map
@@ -1533,7 +1552,7 @@ namespace Quaver.Shared.Screens.Edit
 
         private int StepAndWrapNumber(Direction direction, int i, int max)
         {
-            Logger.Debug($"{i}", LogType.Runtime);
+            if (max == 0) return i;
 
             switch (direction)
             {

@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Shared.Screens.Edit.Input;
 using Wobble.Input;
-using YamlDotNet.Core.Tokens;
 
 namespace Quaver.Shared.Screens.Edit.Input
 {

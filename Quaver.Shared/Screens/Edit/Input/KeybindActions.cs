@@ -93,8 +93,6 @@ namespace Quaver.Shared.Screens.Edit.Input
         SelectAll,
         SelectAllInLayer,
         DeselectAll,
-        SelectToEnd,
-        SelectToBeginning,
         MirrorNotesLeftRight,
         MirrorNotesUpDown,
         ResnapAllNotes,

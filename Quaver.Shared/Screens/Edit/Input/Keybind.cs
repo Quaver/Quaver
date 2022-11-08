@@ -23,11 +23,13 @@ namespace Quaver.Shared.Screens.Edit.Input
             var keys = notation.Trim().Split("+").Select(s => s.ToLower().Trim());
             foreach (var keyString in keys)
             {
-                if (keyString == "ctrl")
+                if (keyString == "free")
+                    Modifiers.Add(KeyModifiers.Free);
+                else if (keyString == "ctrl")
                     Modifiers.Add(KeyModifiers.Ctrl);
                 else if (keyString == "shift")
                     Modifiers.Add(KeyModifiers.Shift);
-                if (keyString == "alt")
+                else if (keyString == "alt")
                     Modifiers.Add(KeyModifiers.Alt);
                 else if (Key.KeyboardKey == Keys.None)
                 {
@@ -58,24 +60,59 @@ namespace Quaver.Shared.Screens.Edit.Input
             Modifiers = new HashSet<KeyModifiers>(mods);
         }
 
+        public HashSet<Keybind> MatchingKeybinds()
+        {
+            var set = new HashSet<Keybind>();
+
+            if (!Modifiers.Contains(KeyModifiers.Free))
+                set.Add(this);
+            else
+            {
+                var allModifiers = Enum.GetValues(typeof(KeyModifiers)).Cast<KeyModifiers>();
+                var freeModifiers = allModifiers.Except(Modifiers).ToList();
+                foreach (var modifiers in PowerSetOfModifiers(freeModifiers))
+                    set.Add(new Keybind(modifiers, Key));
+            }
+
+            return set;
+        }
+
+        private HashSet<HashSet<KeyModifiers>> PowerSetOfModifiers(List<KeyModifiers> modifiers)
+        {
+            var powerSetLength = (int)Math.Pow(2, modifiers.Count());
+            var powerSet = new HashSet<HashSet<KeyModifiers>>(powerSetLength);
+
+            for (int bitMask = 0; bitMask < powerSetLength; bitMask++)
+            {
+                var subSet = new HashSet<KeyModifiers>(modifiers.Where(x => ((1 << modifiers.IndexOf(x)) & bitMask) != 0));
+                powerSet.Add(subSet);
+            }
+
+            return powerSet;
+        }
+
         private bool ModifiersAreCorrect()
         {
-            return (Modifiers.Contains(KeyModifiers.Ctrl) == KeyboardManager.IsCtrlDown())
-                   && (Modifiers.Contains(KeyModifiers.Shift) == KeyboardManager.IsShiftDown())
-                   && (Modifiers.Contains(KeyModifiers.Alt) == KeyboardManager.IsAltDown());
+            var currentState = new HashSet<KeyModifiers>();
+
+            if (KeyboardManager.IsCtrlDown()) currentState.Add(KeyModifiers.Ctrl);
+            if (KeyboardManager.IsAltDown()) currentState.Add(KeyModifiers.Alt);
+            if (KeyboardManager.IsShiftDown()) currentState.Add(KeyModifiers.Shift);
+
+            if (!Modifiers.Contains(KeyModifiers.Free))
+            {
+                return Modifiers.SetEquals(currentState);
+            }
+            else
+            {
+                currentState.Add(KeyModifiers.Free);
+                return Modifiers.IsSubsetOf(currentState);
+            }
         }
 
-        public bool IsUniqueKeypress()
-        {
-            if (!ModifiersAreCorrect()) return false;
-            return GenericKeyManager.IsUniquePress(Key);
-        }
+        public bool IsUniqueKeypress() => ModifiersAreCorrect() && GenericKeyManager.IsUniquePress(Key);
 
-        public bool IsDown()
-        {
-            if (!ModifiersAreCorrect()) return false;
-            return GenericKeyManager.IsDown(Key);
-        }
+        public bool IsDown() => ModifiersAreCorrect() && GenericKeyManager.IsDown(Key);
 
         public bool IsUp() => !IsDown();
 

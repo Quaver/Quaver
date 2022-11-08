@@ -72,7 +72,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
             foreach (var (action, keybinds) in Keybinds)
             {
-                foreach (var keybind in keybinds)
+                foreach (var keybind in keybinds.MatchingKeybinds())
                 {
                     if (dict.ContainsKey(keybind))
                         dict[keybind].Add(action);
@@ -100,19 +100,19 @@ namespace Quaver.Shared.Screens.Edit.Input
         [YamlIgnore] public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
         {
             {ExitEditor, new KeybindList(Keys.Escape)},
-            {PlayPause, new KeybindList(new[] {new Keybind(Keys.Space), new Keybind(KeyModifiers.Ctrl, Keys.Space), new Keybind(KeyModifiers.Shift, Keys.Space), new Keybind(KeyModifiers.Alt, Keys.Space), new Keybind(Keys.Enter), new Keybind(KeyModifiers.Ctrl, Keys.Enter), new Keybind(KeyModifiers.Shift, Keys.Enter), new Keybind(KeyModifiers.Alt, Keys.Enter),})},
+            {PlayPause, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Space)})},
             {ZoomIn, new KeybindList(Keys.PageUp)},
             {ZoomInLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageUp)},
             {ZoomOut, new KeybindList(Keys.PageDown)},
             {ZoomOutLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageDown)},
-            {SeekForwards, new KeybindList(new[] {new Keybind(Keys.Up), new Keybind(Keys.I)})},
-            {SeekBackwards, new KeybindList(new[] {new Keybind(Keys.Down), new Keybind(Keys.K)})},
-            {SeekForwards1ms, new KeybindList(Keys.OemPeriod)},
-            {SeekBackwards1ms, new KeybindList(Keys.OemComma)},
-            {SeekToStartOfSelection, new KeybindList(Keys.U)},
-            {SeekToEndOfSelection, new KeybindList(Keys.O)},
-            {SeekToBeginning, new KeybindList(Keys.Home)},
-            {SeekToEnd, new KeybindList(Keys.End)},
+            {SeekForwards, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Up), new Keybind(KeyModifiers.Free, Keys.I)})},
+            {SeekBackwards, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Down), new Keybind(KeyModifiers.Free, Keys.K)})},
+            {SeekForwards1ms, new KeybindList(KeyModifiers.Free, Keys.OemPeriod)},
+            {SeekBackwards1ms, new KeybindList(KeyModifiers.Free, Keys.OemComma)},
+            {SeekToStartOfSelection, new KeybindList(KeyModifiers.Free, Keys.U)},
+            {SeekToEndOfSelection, new KeybindList(KeyModifiers.Free, Keys.O)},
+            {SeekToBeginning, new KeybindList(KeyModifiers.Free, Keys.Home)},
+            {SeekToEnd, new KeybindList(KeyModifiers.Free, Keys.End)},
             {IncreasePlaybackRate, new KeybindList(new[] {new Keybind(Keys.OemPlus), new Keybind(KeyModifiers.Ctrl, Keys.OemPlus)})},
             {DecreasePlaybackRate, new KeybindList(new[] {new Keybind(Keys.OemMinus), new Keybind(KeyModifiers.Ctrl, Keys.OemMinus)})},
             {ChangeToolUp, new KeybindList()},
@@ -191,8 +191,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             {SelectAll, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.A), new Keybind(Keys.A)})},
             {SelectAllInLayer, new KeybindList(new[] {new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.A), new Keybind(KeyModifiers.Shift, Keys.A)})},
             {DeselectAll, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.D), new Keybind(Keys.D)})},
-            {SelectToEnd, new KeybindList(new Keybind(KeyModifiers.Shift, Keys.End))},
-            {SelectToBeginning, new KeybindList(new Keybind(KeyModifiers.Shift, Keys.Home))},
 
             {MirrorNotesLeftRight, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.H), new Keybind(Keys.H)})},
             {MirrorNotesUpDown, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.G), new Keybind(Keys.G)})},

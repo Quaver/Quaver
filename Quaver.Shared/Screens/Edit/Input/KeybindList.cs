@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         new public void Add(Keybind keybind)
         {
-            if (keybind == Keybind.None) return;
+            if (Equals(keybind, Keybind.None)) return;
 
             if (Count == 1 && Contains(Keybind.None)) Remove(Keybind.None);
             base.Add(keybind);
@@ -36,12 +36,18 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         new public bool Remove(Keybind keybind)
         {
-            if (keybind == Keybind.None) return false;
+            if (Equals(keybind, Keybind.None)) return false;
 
             var result = base.Remove(keybind);
             if (Count == 0) Add(Keybind.None);
 
             return result;
+        }
+
+        public HashSet<Keybind> MatchingKeybinds() {
+            var binds = new HashSet<Keybind>();
+            foreach (var keybind in this) binds.UnionWith(keybind.MatchingKeybinds());
+            return binds;
         }
 
         public bool IsUniqueKeypress() => this.Any(k => k.IsUniqueKeypress());

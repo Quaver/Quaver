@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
+using System.Linq;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI;
@@ -142,22 +142,24 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.SeekInDirection(Direction.Backward);
                     break;
                 case KeybindActions.SeekForwards1ms:
-                    // TODO
+                    Screen.SeekTo(Screen.Track.Time + 1);
                     break;
                 case KeybindActions.SeekBackwards1ms:
-                    // TODO
+                    Screen.SeekTo(Screen.Track.Time - 1);
                     break;
                 case KeybindActions.SeekToStartOfSelection:
-                    // TODO
+                    if (Screen.SelectedHitObjects.Value.Count > 0)
+                        Screen.SeekTo(Screen.SelectedHitObjects.Value.Min(h => h.StartTime));
                     break;
                 case KeybindActions.SeekToEndOfSelection:
-                    // TODO
+                    if (Screen.SelectedHitObjects.Value.Count > 0)
+                        Screen.SeekTo(Screen.SelectedHitObjects.Value.Max(h => h.StartTime));
                     break;
                 case KeybindActions.SeekToBeginning:
-                    // TODO
+                    Screen.SeekToBeginning();
                     break;
                 case KeybindActions.SeekToEnd:
-                    // TODO
+                    Screen.SeekToEnd();
                     break;
                 case KeybindActions.IncreasePlaybackRate:
                     Screen.ChangeAudioPlaybackRate(Direction.Forward);
@@ -378,11 +380,8 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SelectAllInLayer:
                     Screen.SelectAllObjectsInLayer();
                     break;
-                case KeybindActions.SelectToEnd:
-                    // TODO
-                    break;
-                case KeybindActions.SelectToBeginning:
-                    // TODO
+                case KeybindActions.DeselectAll:
+                    Screen.DeselectAllObjects();
                     break;
                 case KeybindActions.MirrorNotesLeftRight:
                     Screen.FlipSelectedObjects();

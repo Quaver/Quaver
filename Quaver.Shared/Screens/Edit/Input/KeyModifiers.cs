@@ -7,6 +7,7 @@ namespace Quaver.Shared.Screens.Edit.Input
     {
         Ctrl,
         Shift,
-        Alt
+        Alt,
+        Free
     }
 }
