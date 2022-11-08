@@ -49,8 +49,6 @@ namespace Quaver.Shared.Screens.Edit.Input
         ToggleCurrentLayerVisibility,
         ToggleAllLayersVisibility,
         MoveSelectedNotesToCurrentLayer,
-        MoveSelectedNotesToLayerUp,
-        MoveSelectedNotesToLayerDown,
         CreateNewLayer,
         DeleteCurrentLayer,
         RenameCurrentLayer,

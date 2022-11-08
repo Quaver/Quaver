@@ -142,8 +142,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ToggleCurrentLayerVisibility, new KeybindList(KeyModifiers.Shift, Keys.H)},
             {ToggleAllLayersVisibility, new KeybindList(KeyModifiers.Shift, Keys.G)},
             {MoveSelectedNotesToCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.V)},
-            {MoveSelectedNotesToLayerUp, new KeybindList(new[] {new Keybind(new[] {KeyModifiers.Shift, KeyModifiers.Alt}, Keys.Up), new Keybind(new[] {KeyModifiers.Shift, KeyModifiers.Alt}, Keys.I)})},
-            {MoveSelectedNotesToLayerDown, new KeybindList(new[] {new Keybind(new[] {KeyModifiers.Shift, KeyModifiers.Alt}, Keys.Down), new Keybind(new[] {KeyModifiers.Shift, KeyModifiers.Alt}, Keys.K)})},
             {CreateNewLayer, new KeybindList(KeyModifiers.Shift, Keys.N)},
             {DeleteCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.Delete)},
             {RenameCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.R)},

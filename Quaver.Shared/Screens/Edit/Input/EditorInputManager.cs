@@ -234,7 +234,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.OpenCustomSnapDialog();
                     break;
                 case KeybindActions.ToggleLayerColorMode:
-                    Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
+                    Screen.ToggleViewLayers();
                     break;
                 case KeybindActions.ChangeSelectedLayerUp:
                     Screen.ChangeSelectedLayer(Direction.Backward);
@@ -249,13 +249,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     // TODO
                     break;
                 case KeybindActions.MoveSelectedNotesToCurrentLayer:
-                    // TODO
-                    break;
-                case KeybindActions.MoveSelectedNotesToLayerUp:
-                    // TODO
-                    break;
-                case KeybindActions.MoveSelectedNotesToLayerDown:
-                    // TODO
+                    Screen.MoveSelectedNotesToCurrentLayer();
                     break;
                 case KeybindActions.CreateNewLayer:
                     Screen.AddNewLayer();

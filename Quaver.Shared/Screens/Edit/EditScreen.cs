@@ -706,14 +706,23 @@ namespace Quaver.Shared.Screens.Edit
             Track.Rate = targetRate;
         }
 
-        public void ChangeSelectedLayer(Direction direction)
+        public void ChangeSelectedLayer(Direction direction) => SelectedLayer.Value = GetNextLayerInDirection(direction, SelectedLayer.Value);
+
+        private EditorLayerInfo GetNextLayerInDirection(Direction direction, EditorLayerInfo layer)
         {
-            var index = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value);
-            index = StepAndWrapNumber(direction, index, WorkingMap.EditorLayers.Count);
-            SelectedLayer.Value = WorkingMap.EditorLayers[index];
+            // Default layer will be handled as index -1
+            var index = WorkingMap.EditorLayers.IndexOf(layer);
+
+            var step = direction == Direction.Forward ? 1 : -1;
+            var nextIndex = Math.Min(index + step, WorkingMap.EditorLayers.Count() - 1);
+            var nextLayer = nextIndex < 0 ? DefaultLayer : WorkingMap.EditorLayers[nextIndex];
+
+            return nextLayer;
         }
 
         public void ToggleSelectedLayerVisibility() => ActionManager.ToggleLayerVisibility(SelectedLayer.Value);
+
+        public void MoveSelectedNotesToCurrentLayer() => ActionManager.MoveHitObjectsToLayer(SelectedLayer.Value, SelectedHitObjects.Value);
 
         public void AddNewLayer()
         {
@@ -754,6 +763,7 @@ namespace Quaver.Shared.Screens.Edit
         public void ToggleHitsounds() => ToggleValue(EnableHitsounds, "hitsounds");
         public void ToggleMetronome() => ToggleValue(EnableMetronome, "metronome");
         public void ToggleWaveform() => ToggleValue(ShowWaveform, "waveform");
+        public void ToggleViewLayers() => ToggleValue(ViewLayers, "layer color mode");
 
         public void TogglePitchWithRate()
         {
