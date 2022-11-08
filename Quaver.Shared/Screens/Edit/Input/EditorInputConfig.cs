@@ -14,6 +14,7 @@ namespace Quaver.Shared.Screens.Edit.Input
     {
         [YamlIgnore] public static string ConfigPath = ConfigManager.GameDirectory.Value + "/editor_keys.yaml";
 
+        public bool ReverseScrollSeekDirection = true;
         public Dictionary<KeybindActions, KeybindList> Keybinds { get; } = DefaultKeybinds;
         public Dictionary<string, KeybindList> PluginKeybinds { get; } = new Dictionary<string, KeybindList>();
 
@@ -63,6 +64,24 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             File.WriteAllText(ConfigPath, Serialize());
             Logger.Debug("Saved editor key config to file", LogType.Runtime);
+        }
+
+        public Dictionary<Keybind, HashSet<KeybindActions>> ReverseDictionary()
+        {
+            var dict = new Dictionary<Keybind, HashSet<KeybindActions>>();
+
+            foreach (var (action, keybinds) in Keybinds)
+            {
+                foreach (var keybind in keybinds)
+                {
+                    if (dict.ContainsKey(keybind))
+                        dict[keybind].Add(action);
+                    else
+                        dict[keybind] = new HashSet<KeybindActions>() {action};
+                }
+            }
+
+            return dict;
         }
 
         private string Serialize()
@@ -174,7 +193,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {StartGameplayTest, new KeybindList(Keys.F4)},
             {StartGameplayTestFromBeginning, new KeybindList(KeyModifiers.Ctrl, Keys.F4)},
 
-            {CutNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.X), new Keybind(Keys.X), })},
+            {CutNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.X), new Keybind(Keys.X),})},
             {CopyNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.C), new Keybind(Keys.C),})},
             {PasteNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.V), new Keybind(Keys.V), new Keybind(Keys.Insert),})},
             {PasteNoResnap, new KeybindList(new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.V))},

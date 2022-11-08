@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI;
@@ -14,6 +15,9 @@ namespace Quaver.Shared.Screens.Edit.Input
     {
         public EditorInputConfig InputConfig { get; }
         public EditScreen Screen { get; }
+
+        private Dictionary<Keybind, HashSet<KeybindActions>> KeybindDictionary;
+        private GenericKeyState PreviousKeyState;
 
         private const int HoldRepeatActionDelay = 250;
         private const int HoldRepeatActionInterval = 25;
@@ -69,6 +73,8 @@ namespace Quaver.Shared.Screens.Edit.Input
         public EditorInputManager(EditScreen screen)
         {
             InputConfig = EditorInputConfig.LoadFromConfig();
+            KeybindDictionary = InputConfig.ReverseDictionary();
+            PreviousKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
             Screen = screen;
         }
 
@@ -81,18 +87,30 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private void HandleKeypresses()
         {
-            foreach (var (action, keybinds) in InputConfig.Keybinds)
+            var keyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
+
+            var uniqueKeypresses = keyState.UniqueKeypresses(PreviousKeyState);
+            foreach (var pressedKeybind in keyState.PressedKeybinds())
             {
-                if (keybinds.IsUniqueKeypress())
+                HashSet<KeybindActions> actions;
+
+                if (!KeybindDictionary.TryGetValue(pressedKeybind, out actions)) continue;
+
+                foreach (var action in actions)
                 {
-                    HandleAction(action);
-                    LastActionPress[action] = GameBase.Game.TimeRunning;
-                }
-                else if (keybinds.IsDown() && CanRepeat(action))
-                {
-                    HandleAction(action);
+                    if (uniqueKeypresses.Contains(pressedKeybind))
+                    {
+                        HandleAction(action);
+                        LastActionPress[action] = GameBase.Game.TimeRunning;
+                    }
+                    else if (CanRepeat(action))
+                    {
+                        HandleAction(action);
+                    }
                 }
             }
+
+            PreviousKeyState = keyState;
         }
 
         private bool CanRepeat(KeybindActions action)
@@ -495,10 +513,14 @@ namespace Quaver.Shared.Screens.Edit.Input
                 if (scrolledForward) Screen.ChangeBeatSnap(Direction.Forward);
                 if (scrolledBackward) Screen.ChangeBeatSnap(Direction.Backward);
             }
-            else
+            else if (!KeyboardManager.IsAltDown() && (scrolledForward || scrolledBackward))
             {
-                if (scrolledForward) Screen.SeekInDirection(Direction.Forward);
-                if (scrolledBackward) Screen.SeekInDirection(Direction.Backward);
+                var forward = scrolledForward;
+                if (InputConfig.ReverseScrollSeekDirection)
+                    forward = !forward;
+
+                if (forward) Screen.SeekInDirection(Direction.Forward);
+                else Screen.SeekInDirection(Direction.Backward);
             }
         }
 

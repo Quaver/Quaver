@@ -46,9 +46,15 @@ namespace Quaver.Shared.Screens.Edit.Input
             Modifiers.Add(mod);
         }
 
-        public Keybind(IEnumerable<KeyModifiers> mods, Keys key)
+        public Keybind(ICollection<KeyModifiers> mods, Keys key)
         {
             Key = new GenericKey() {KeyboardKey = key};
+            Modifiers = new HashSet<KeyModifiers>(mods);
+        }
+
+        public Keybind(ICollection<KeyModifiers> mods, GenericKey key)
+        {
+            Key = key;
             Modifiers = new HashSet<KeyModifiers>(mods);
         }
 
@@ -79,6 +85,18 @@ namespace Quaver.Shared.Screens.Edit.Input
             keys.Add(Key.ToString());
             return String.Join('+', keys);
         }
+
+        protected bool Equals(Keybind other) => ToString() == other.ToString();
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Keybind)obj);
+        }
+
+        public override int GetHashCode() => ToString().GetHashCode();
     }
 
     internal sealed class KeybindYamlTypeConverter : IYamlTypeConverter
