@@ -680,6 +680,10 @@ namespace Quaver.Shared.Screens.Edit
                 NotificationManager.Show(NotificationLevel.Warning, "You cannot change the audio rate this way any further!");
                 return;
             }
+            else
+            {
+                NotificationManager.Show(NotificationLevel.Info, $"Changed audio rate to {targetRate}");
+            }
 
             Track.Rate = targetRate;
         }
@@ -722,10 +726,16 @@ namespace Quaver.Shared.Screens.Edit
 
         public void RecolorLayer() => DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
 
-        public void ToggleGameplayPreview() => DisplayGameplayPreview.Value = !DisplayGameplayPreview.Value;
-        public void ToggleHitsounds() => EnableHitsounds.Value = !EnableHitsounds.Value;
-        public void ToggleMetronome() => EnableMetronome.Value = !EnableMetronome.Value;
-        public void ToggleWaveform() => ShowWaveform.Value = !ShowWaveform.Value;
+        private void ToggleValue(Bindable<bool> boolean, string name)
+        {
+            boolean.Value = !boolean.Value;
+            NotificationManager.Show(NotificationLevel.Info, (boolean.Value ? "Enabled" : "Disabled") + " " + name);
+        }
+
+        public void ToggleGameplayPreview() => ToggleValue(DisplayGameplayPreview, "gameplay preview");
+        public void ToggleHitsounds() => ToggleValue(EnableHitsounds, "hitsounds");
+        public void ToggleMetronome() => ToggleValue(EnableMetronome, "metronome");
+        public void ToggleWaveform() => ToggleValue(ShowWaveform, "waveform");
 
         public void TogglePitchWithRate()
         {
@@ -760,6 +770,8 @@ namespace Quaver.Shared.Screens.Edit
                 }
                 else
                     UneditableMap.Value = map.LoadQua();
+
+                NotificationManager.Show(NotificationLevel.Info, $"Changed reference difficulty to '{UneditableMap.Value.DifficultyName}'");
             });
         }
 
@@ -872,6 +884,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void CopySelectedObjects()
         {
+            Copy();
+            NotificationManager.Show(NotificationLevel.Info, $"Copied {SelectedHitObjects.Value.Count} objects");
+        }
+
+        private void Copy()
+        {
             var cb = Wobble.Platform.Clipboard.NativeClipboard;
 
             // If no objects are selected, just select the time in the track instead
@@ -949,8 +967,9 @@ namespace Quaver.Shared.Screens.Edit
             if (SelectedHitObjects.Value.Count == 0)
                 return;
 
-            CopySelectedObjects();
+            Copy();
             DeleteSelectedObjects();
+            NotificationManager.Show(NotificationLevel.Info, $"Cut {SelectedHitObjects.Value.Count} objects");
         }
 
         /// <summary>
@@ -973,6 +992,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             DeselectAllObjects();
             SelectedHitObjects.AddRange(WorkingMap.HitObjects);
+            NotificationManager.Show(NotificationLevel.Info, $"Selected {SelectedHitObjects.Value.Count} objects");
         }
 
         /// <summary>
@@ -998,6 +1018,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+            NotificationManager.Show(NotificationLevel.Info, $"Mirrored {SelectedHitObjects.Value.Count} objects");
         }
 
         /// <summary>
