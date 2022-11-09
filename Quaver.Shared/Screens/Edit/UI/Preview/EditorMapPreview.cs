@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Quaver.API.Maps;
-using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -23,8 +21,9 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignature;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
-using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Preview;
 using Wobble.Audio.Tracks;
@@ -75,6 +74,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
             ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointSignatureChanged += OnTimingPointSignatureChanged;
+            ActionManager.TimingPointSignatureBatchChanged += OnTimingPointSignatureBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointHiddenChanged += OnTimingPointHiddenChanged;
         }
@@ -105,6 +106,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
             ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointSignatureChanged -= OnTimingPointSignatureChanged;
+            ActionManager.TimingPointSignatureBatchChanged -= OnTimingPointSignatureBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointHiddenChanged -= OnTimingPointHiddenChanged;
 
@@ -159,6 +162,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnTimingPointBpmBatchChanged(object sender, EditorChangedTimingPointBpmBatchEventArgs e) => Refresh();
 
         private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => Refresh();
+
+        private void OnTimingPointSignatureBatchChanged(object sender, EditorChangedTimingPointSignatureBatchEventArgs e) => Refresh();
+
+        private void OnTimingPointSignatureChanged(object sender, EditorTimingPointSignatureChangedEventArgs e) => Refresh();
 
         private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => Refresh();
 
