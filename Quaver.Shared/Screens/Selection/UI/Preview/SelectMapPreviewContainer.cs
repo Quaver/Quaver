@@ -98,9 +98,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         protected int DelayTime { get; set; } = 350;
 
         /// <summary>
+        ///     Whether the preview is displayed in the edtior
+        /// </summary>
+        private bool IsInEditor { get; }
+
+        /// <summary>
+        ///     If true, it will toggle the automod in the next update frame
+        /// </summary>
+        private bool QueueAutomodToggle;
+
+        /// <summary>
+        ///     Whether the preview automod is active right now
+        /// </summary>
+        public bool InReplayMode => LoadedGameplayScreen?.InReplayMode ?? false;
+
+        /// <summary>
         /// </summary>
         public SelectMapPreviewContainer(Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel, int height,
-            IAudioTrack track = null, Qua qua = null)
+            IAudioTrack track = null, Qua qua = null, bool isInEditor = false)
         {
             IsPlayTesting = isPlayTesting;
             ActiveLeftPanel = activeLeftPanel;
@@ -108,6 +123,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             Track = track;
             Size = new ScalableVector2(564, height);
             Alpha = 0f;
+            IsInEditor = isInEditor;
 
             LoadGameplayScreenTask = new TaskHandler<Map, GameplayScreen>(LoadGameplayScreen);
             LoadGameplayScreenTask.OnCompleted += OnLoadedGameplayScreen;
@@ -126,6 +142,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (Track != null)
                 Track.Seeked += OnTrackSeeked;
         }
+
+        public void ToggleAutoplay() => QueueAutomodToggle = true;
 
         /// <inheritdoc />
         /// <summary>
@@ -208,7 +226,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
 
                 var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
-                    false, null, null, true);
+                    false, null, null, true, false, IsInEditor);
 
                 gameplay.HandleReplaySeeking();
 
@@ -359,6 +377,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
                     LoadedGameplayScreen?.HandleAutoplayTabInput(gameTime);
+
+                if (QueueAutomodToggle)
+                {
+                    LoadedGameplayScreen?.ToggleAutoplay(gameTime);
+                    QueueAutomodToggle = false;
+                }
 
                 LoadedGameplayScreen?.Update(gameTime);
                 IsPlayTesting.Value = !LoadedGameplayScreen?.InReplayMode ?? false;

@@ -15,6 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Input
     {
         public EditorInputConfig InputConfig { get; }
         public EditScreen Screen { get; }
+        private EditScreenView View { get; }
 
         private Dictionary<Keybind, HashSet<KeybindActions>> KeybindDictionary;
         private GenericKeyState PreviousKeyState;
@@ -43,6 +44,11 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ChangeSelectedLayerDown,
         };
 
+        private static HashSet<KeybindActions> EnabledActionsDuringGameplayPreview = new HashSet<KeybindActions>()
+        {
+            KeybindActions.ToggleLivePlaytest
+        };
+
         public EditorInputManager(EditScreen screen)
         {
             InputConfig = EditorInputConfig.LoadFromConfig();
@@ -53,9 +59,14 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public void HandleInput()
         {
+            if (DialogManager.Dialogs.Count != 0) return;
+            var view = (EditScreenView)Screen.View;
+            if (view.IsImGuiHovered) return;
+
             HandleKeypresses();
-            HandleMouseInputs();
             HandlePluginKeypresses();
+
+            HandleMouseInputs();
         }
 
         private void HandleKeypresses()
@@ -71,6 +82,12 @@ namespace Quaver.Shared.Screens.Edit.Input
 
                 foreach (var action in actions)
                 {
+                    // Disable most keybinds when gameplay preview is active
+                    var view = (EditScreenView)Screen.View;
+                    if (view.MapPreview != null && !view.MapPreview.InReplayMode)
+                        if (!EditorInputManager.EnabledActionsDuringGameplayPreview.Contains(action))
+                            continue;
+
                     if (uniqueKeypresses.Contains(pressedKeybind))
                     {
                         HandleAction(action);

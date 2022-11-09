@@ -307,7 +307,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (!Exiting)
             {
-                HandleInput();
+                EditorInputManager.HandleInput();
 
                 if (EnableHitsounds.Value)
                     PlayHitsounds();
@@ -430,20 +430,6 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             Skin.Value = new SkinStore();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleInput()
-        {
-            if (DialogManager.Dialogs.Count != 0)
-                return;
-
-            var view = (EditScreenView)View;
-            if (view.IsImGuiHovered)
-                return;
-
-            EditorInputManager.HandleInput();
         }
 
         public void ToggleBuiltInPlugin(EditorBuiltInPlugin pluginType)
@@ -740,12 +726,12 @@ namespace Quaver.Shared.Screens.Edit
         public void ToggleMetronome() => ToggleValue(EnableMetronome, "metronome");
         public void ToggleWaveform() => ToggleValue(ShowWaveform, "waveform");
         public void ToggleViewLayers() => ToggleValue(ViewLayers, "layer color mode");
-
         public void TogglePitchWithRate() => ToggleValue(ConfigManager.Pitched, "audio pitch change on rate");
 
         public void ToggleLivePlaytest()
         {
-            // TODO
+            var view = (EditScreenView)View;
+            view.MapPreview.ToggleAutoplay();
         }
 
         public void OpenGameplayModifiers() => DialogManager.Show(new EditorModifierMenuDialog());

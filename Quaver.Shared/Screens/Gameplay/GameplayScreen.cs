@@ -125,6 +125,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool IsTestPlayingInNewEditor { get; }
 
         /// <summary>
+        ///     If the user is in the map preview of the new editor
+        /// </summary>
+        public bool IsGameplayPreviewInNewEditor { get; }
+
+        /// <summary>
         ///     The time in the audio the play test began.
         ///     Used for retries
         /// </summary>
@@ -172,7 +177,7 @@ namespace Quaver.Shared.Screens.Gameplay
                               && !OnlineManager.IsSpectatingSomeone
                               && !IsPlayTesting
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
-                              && Ruleset.ScoreProcessor.Health <= 0)
+                                  && Ruleset.ScoreProcessor.Health <= 0)
                               && !(this is TournamentGameplayScreen)
                               || ForceFail || Ruleset.ScoreProcessor.ForceFail;
 
@@ -366,7 +371,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="isTestPlayingInNewEditor"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
-            bool isTestPlayingInNewEditor = false)
+            bool isTestPlayingInNewEditor = false, bool isGameplayPreviewInNewEditor = false)
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -385,6 +390,7 @@ namespace Quaver.Shared.Screens.Gameplay
             LoadedReplay = replay;
             IsPlayTesting = isPlayTesting;
             IsTestPlayingInNewEditor = isTestPlayingInNewEditor;
+            IsGameplayPreviewInNewEditor = isGameplayPreviewInNewEditor;
             PlayTestAudioTime = playTestTime;
             IsCalibratingOffset = isCalibratingOffset;
             IsMultiplayerGame = OnlineManager.CurrentGame != null;
@@ -572,7 +578,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // CTRL+ input while play testing
             if (!IsSongSelectPreview && IsPlayTesting && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                                  KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+                                                          KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.P))
                 {
@@ -760,7 +766,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 if (Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                     PauseCount++;
-                
+
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 // Exit right away if playing a replay.
@@ -1502,57 +1508,9 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen)
-            {
-                var inputManager = (KeysInputManager) Ruleset.InputManager;
-
-                if (inputManager.ReplayInputManager != null)
-                    CachedReplayInputManager = inputManager.ReplayInputManager;
-
-                if (LoadedReplay == null || inputManager.ReplayInputManager == null)
-                {
-                    if (LoadedReplay == null)
-                    {
-                        LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
-                        CachedReplayInputManager = new ReplayInputManagerKeys(this);
-                        inputManager.ReplayInputManager = CachedReplayInputManager;
-                    }
-
-                    if (inputManager.ReplayInputManager == null)
-                        inputManager.ReplayInputManager = CachedReplayInputManager;
-
-                    inputManager.ReplayInputManager.HandleSkip();
-                    inputManager.ReplayInputManager.CurrentFrame++;
-                }
-
-                InReplayMode = !InReplayMode;
-
-                if (inputManager.ReplayInputManager != null)
-                {
-                    inputManager.ReplayInputManager.HandleSkip();
-                    inputManager.ReplayInputManager.CurrentFrame++;
-                }
-
-                if (!InReplayMode)
-                {
-                    inputManager.ReplayInputManager = null;
-                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
-
-                    for (var i = 0; i < Map.GetKeyCount(); i++)
-                    {
-                        inputManager.BindingStore[i].Pressed = false;
-                        inputManager.HandleInput(0);
-
-                        var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
-                        playfield.Stage.HitLightingObjects[i].StopHolding();
-                        playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
-                    }
-
-                    inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
-                }
-
-                NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.", null, true);
-            }
+            // Not handled in the editor gameplay preview, because the editor uses its own input management system
+            if (!IsGameplayPreviewInNewEditor && IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen)
+                ToggleAutoplay(gameTime);
 
             // Only allow offset changes if the map hasn't started or if we're on a break
             if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
@@ -1602,6 +1560,62 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
                 }
             }
+        }
+
+        /// <summary>
+        ///     Toggle autoplay mode
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public void ToggleAutoplay(GameTime gameTime)
+        {
+            var inputManager = (KeysInputManager) Ruleset.InputManager;
+
+            if (inputManager.ReplayInputManager != null)
+                CachedReplayInputManager = inputManager.ReplayInputManager;
+
+            if (LoadedReplay == null || inputManager.ReplayInputManager == null)
+            {
+                if (LoadedReplay == null)
+                {
+                    LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
+                    CachedReplayInputManager = new ReplayInputManagerKeys(this);
+                    inputManager.ReplayInputManager = CachedReplayInputManager;
+                }
+
+                if (inputManager.ReplayInputManager == null)
+                    inputManager.ReplayInputManager = CachedReplayInputManager;
+
+                inputManager.ReplayInputManager.HandleSkip();
+                inputManager.ReplayInputManager.CurrentFrame++;
+            }
+
+            InReplayMode = !InReplayMode;
+
+            if (inputManager.ReplayInputManager != null)
+            {
+                inputManager.ReplayInputManager.HandleSkip();
+                inputManager.ReplayInputManager.CurrentFrame++;
+            }
+
+            if (!InReplayMode)
+            {
+                inputManager.ReplayInputManager = null;
+                Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
+
+                for (var i = 0; i < Map.GetKeyCount(); i++)
+                {
+                    inputManager.BindingStore[i].Pressed = false;
+                    inputManager.HandleInput(0);
+
+                    var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+                    playfield.Stage.HitLightingObjects[i].StopHolding();
+                    playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
+                }
+
+                inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
+            }
+
+            NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.", null, true);
         }
 
         private void HandleOverlayToggleInput(GameTime gameTime)

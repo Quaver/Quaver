@@ -1,13 +1,10 @@
-using System;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Backgrounds;
-using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.UI.AutoMods;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
@@ -16,15 +13,10 @@ using Quaver.Shared.Screens.Edit.UI.Panels.Layers;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Selection;
 using Quaver.Shared.Screens.Edit.UI.Preview;
-using Quaver.Shared.Screens.Selection.UI;
-using Quaver.Shared.Screens.Selection.UI.Modifiers;
-using Quaver.Shared.Screens.Selection.UI.Preview;
-using TagLib.Matroska;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
-using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
@@ -81,7 +73,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private EditorMapPreview MapPreview { get; set; }
+        public EditorMapPreview MapPreview { get; private set; }
 
         /// <summary>
         /// </summary>
