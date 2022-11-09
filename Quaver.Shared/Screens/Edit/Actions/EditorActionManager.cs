@@ -118,6 +118,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorHitObjectsFlippedEventArgs> HitObjectsFlipped;
 
         /// <summary>
+        ///     Event invoked when a batch of hitobjects have been reversed
+        /// </summary>
+        public event EventHandler<EditorHitObjectsReversedEventArgs> HitObjectsReversed;
+
+        /// <summary>
         ///     Event invoked when a batch of hitobjects have been moved
         /// </summary>
         public event EventHandler<EditorHitObjectsMovedEventArgs> HitObjectsMoved;
@@ -236,11 +241,6 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of scroll velocities have had their multipliers changed
         /// </summary>
         public event EventHandler<EditorChangedScrollVelocityMultiplierBatchEventArgs> ScrollVelocityMultiplierBatchChanged;
-
-        /// <summary>
-        ///     Event invoked when a batch of scroll velocities have had their multipliers changed
-        /// </summary>
-        public event EventHandler<EditorHitObjectsReversedEventArgs> HitObjectsReversed;
 
         /// <summary>
         /// </summary>

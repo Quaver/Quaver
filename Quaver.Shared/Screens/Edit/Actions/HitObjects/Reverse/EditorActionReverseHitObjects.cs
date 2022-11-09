@@ -47,11 +47,19 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse
 
             foreach (var h in HitObjects)
             {
-                h.StartTime = end - (h.StartTime - start);
                 if (h.IsLongNote)
-                    h.EndTime = end - (h.EndTime - start);
+                {
+                    var lnStart = h.StartTime;
+                    h.StartTime = end - (h.EndTime - start);
+                    h.EndTime = end - (lnStart - start);
+                }
+                else
+                {
+                    h.StartTime = end - (h.StartTime - start);
+                }
             }
 
+            WorkingMap.Sort();
             ActionManager.TriggerEvent(EditorActionType.ReverseHitObjects, new EditorHitObjectsReversedEventArgs(HitObjects));
         }
 
