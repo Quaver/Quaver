@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         public bool IsUniqueKeypress() => this.Any(k => k.IsUniqueKeypress());
         public bool IsDown() => this.Any(k => k.IsDown());
         public bool IsUp() => this.Any(k => k.IsUp());
-        public override string ToString() => String.Join(", ", this.Select(k => k.ToString()));
+        public override string ToString() => String.Join(", ", this.Where(k => !k.Equals(Keybind.None)).Select(k => k.ToString()));
     }
 
     public class FlowStyleKeybinds : ChainedEventEmitter

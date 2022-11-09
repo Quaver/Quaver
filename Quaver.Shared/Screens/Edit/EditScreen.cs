@@ -189,10 +189,6 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> LiveMapping { get; } = ConfigManager.EditorLiveMapping ?? new Bindable<bool>(true);
-
-        /// <summary>
-        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -238,7 +234,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private FileSystemWatcher FileWatcher { get; set; }
 
-        private EditorInputManager EditorInputManager { get; }
+        public EditorInputManager EditorInputManager { get; }
 
         /// <summary>
         /// </summary>
@@ -378,9 +374,6 @@ namespace Quaver.Shared.Screens.Edit
 
             if (PlaceObjectsOnNearestTick != ConfigManager.EditorPlaceObjectsOnNearestTick)
                 PlaceObjectsOnNearestTick.Dispose();
-
-            if (LiveMapping != ConfigManager.EditorLiveMapping)
-                LiveMapping.Dispose();
 
             if (ShowWaveform != ConfigManager.EditorShowWaveform)
                 ShowWaveform.Dispose();

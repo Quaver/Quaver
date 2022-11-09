@@ -3,35 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ImGuiNET;
-using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics.Dialogs.Menu;
-using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
+using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Edit.Plugins;
-using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
-using Quaver.Shared.Screens.Editor;
 using Wobble;
 using Wobble.Audio.Samples;
-using Wobble.Audio.Tracks;
-using Wobble.Bindables;
+using Wobble.Graphics;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
-using Wobble.Window;
 using Utils = Wobble.Platform.Utils;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
@@ -43,6 +35,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <summary>
         /// </summary>
         private EditScreen Screen { get; }
+
+        private EditorInputConfig InputConfig { get; }
 
         /// <summary>
         /// </summary>
@@ -58,7 +52,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions())
+        {
+            Screen = screen;
+            InputConfig = Screen.EditorInputManager.InputConfig;
+        }
 
 
         /// <inheritdoc />
@@ -85,6 +83,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             CreateToolsSection();
             CreatePluginsSection();
             CreateHelpSection();
+            CreateKeybindsSection();
 
             ImGui.EndMenuBar();
             Button.IsGloballyClickable = !ImGui.IsAnyItemHovered();
@@ -102,15 +101,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("File"))
                 return;
 
-            if (ImGui.MenuItem("New Song", "CTRL + N"))
+            if (ImGui.MenuItem("New Song", InputConfig.GetOrDefault(KeybindActions.CreateNewMapset).ToString()))
                 DialogManager.Show(new EditorNewSongDialog());
 
             if (ImGui.BeginMenu("Create New Difficulty", Screen.Map.Game == MapGame.Quaver))
             {
-                if (ImGui.MenuItem("New Map"))
+                if (ImGui.MenuItem("New Map", InputConfig.GetOrDefault(KeybindActions.CreateNewDifficulty).ToString()))
                     Screen.CreateNewDifficulty(false);
 
-                if (ImGui.MenuItem("Copy Current Map"))
+                if (ImGui.MenuItem("Copy Current Map", InputConfig.GetOrDefault(KeybindActions.CreateNewDifficultyFromCurrent).ToString()))
                     Screen.CreateNewDifficulty();
 
                 if (ImGui.MenuItem("From .qua File"))
@@ -119,26 +118,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
-            if (ImGui.MenuItem("Save", "CTRL + S", false, Screen.ActionManager.HasUnsavedChanges))
+            if (ImGui.MenuItem("Save", InputConfig.GetOrDefault(KeybindActions.SaveMap).ToString(), false, Screen.ActionManager.HasUnsavedChanges))
                 Screen.Save();
 
-            if (ImGui.MenuItem("Refresh File Cache", "CTRL + R", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Refresh File Cache", InputConfig.GetOrDefault(KeybindActions.RefreshFileCache).ToString(), false, Screen.Map.Game == MapGame.Quaver))
                 Screen.RefreshFileCache();
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Upload", "CTRL + U", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Upload", InputConfig.GetOrDefault(KeybindActions.UploadMapset).ToString(), false, Screen.Map.Game == MapGame.Quaver))
             {
                 Screen.UploadMapset();
             }
 
-            if (ImGui.MenuItem("Submit For Rank", "", false, Screen.Map.Game == MapGame.Quaver
-                                                             && Screen.Map.RankedStatus != RankedStatus.Ranked && Screen.Map.MapId != -1))
+            if (ImGui.MenuItem("Submit For Rank", InputConfig.GetOrDefault(KeybindActions.SubmitForRanked).ToString(), false, Screen.Map.Game == MapGame.Quaver
+                                                                                                                              && Screen.Map.RankedStatus != RankedStatus.Ranked && Screen.Map.MapId != -1))
             {
                 Screen.SubmitForRank();
             }
 
-            if (ImGui.MenuItem("Export", "CTRL + E", false))
+            if (ImGui.MenuItem("Export", InputConfig.GetOrDefault(KeybindActions.Export).ToString(), false))
             {
                 Screen.ExportToZip();
             }
@@ -146,33 +145,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Open Song Folder", "CTRL + W", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Open Song Folder", InputConfig.GetOrDefault(KeybindActions.OpenMapDirectory).ToString(), false, Screen.Map.Game == MapGame.Quaver))
             {
-                try
-                {
-                    Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}");
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
+                Screen.Map.OpenFolder();
             }
 
-            if (ImGui.MenuItem("Open .qua File", "CTRL + Q", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Open .qua File", InputConfig.GetOrDefault(KeybindActions.OpenMapFile).ToString(), false, Screen.Map.Game == MapGame.Quaver))
             {
-                try
-                {
-                    Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}/{Screen.Map.Path}");
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
+                Screen.Map.OpenFile();
             }
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Exit", "ESC", false))
+            if (ImGui.MenuItem("Exit", InputConfig.GetOrDefault(KeybindActions.ExitEditor).ToString(), false))
                 Screen.LeaveEditor();
 
             ImGui.EndMenu();
@@ -187,47 +172,56 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Edit"))
                 return;
 
-            if (ImGui.MenuItem("Undo", "CTRL + Z", false, Screen.ActionManager.UndoStack.Count != 0))
+            if (ImGui.MenuItem("Undo", InputConfig.GetOrDefault(KeybindActions.UndoAction).ToString(), false, Screen.ActionManager.UndoStack.Count != 0))
                 Screen.ActionManager.Undo();
 
-            if (ImGui.MenuItem("Redo", "CTRL + Y", false, Screen.ActionManager.RedoStack.Count != 0))
+            if (ImGui.MenuItem("Redo", InputConfig.GetOrDefault(KeybindActions.RedoAction).ToString(), false, Screen.ActionManager.RedoStack.Count != 0))
                 Screen.ActionManager.Redo();
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Copy", "CTRL + C", false, Screen.SelectedHitObjects.Value.Count > 0))
+            if (ImGui.MenuItem("Copy", InputConfig.GetOrDefault(KeybindActions.CopyNotes).ToString(), false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.CopySelectedObjects();
 
-            if (ImGui.MenuItem("Cut", "CTRL + X", false, Screen.SelectedHitObjects.Value.Count > 0))
+            if (ImGui.MenuItem("Cut", InputConfig.GetOrDefault(KeybindActions.CutNotes).ToString(), false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.CutSelectedObjects();
 
-            if (ImGui.MenuItem("Paste (snapped)", "CTRL + V", false, Screen.Clipboard.Count > 0))
+            if (ImGui.MenuItem("Paste (snapped)", InputConfig.GetOrDefault(KeybindActions.PasteNotes).ToString(), false, Screen.Clipboard.Count > 0))
                 Screen.PasteCopiedObjects(true);
 
-            if (ImGui.MenuItem("Paste (unsnapped)", "CTRL + SHIFT + V", false, Screen.Clipboard.Count > 0))
+            if (ImGui.MenuItem("Paste (unsnapped)", InputConfig.GetOrDefault(KeybindActions.PasteNoResnap).ToString(), false, Screen.Clipboard.Count > 0))
                 Screen.PasteCopiedObjects(false);
 
-            if (ImGui.MenuItem("Delete", "DEL", false, Screen.SelectedHitObjects.Value.Count > 0))
+            if (ImGui.MenuItem("Delete", InputConfig.GetOrDefault(KeybindActions.DeleteCurrentNotesOrSelection).ToString(), false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.DeleteSelectedObjects();
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Select All", "CTRL + A", false))
+            if (ImGui.MenuItem("Select All", InputConfig.GetOrDefault(KeybindActions.SelectAll).ToString(), false))
                 Screen.SelectAllObjects();
 
-            if (ImGui.MenuItem("Select All In Layer", $"CTRL + ALT + A", false))
+            if (ImGui.MenuItem("Select All In Layer", InputConfig.GetOrDefault(KeybindActions.SelectAllInLayer).ToString(), false))
                 Screen.SelectAllObjectsInLayer();
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Flip Objects", "CTRL + H", false, Screen.SelectedHitObjects.Value.Count > 0))
+            if (ImGui.MenuItem("Mirror Objects", InputConfig.GetOrDefault(KeybindActions.MirrorNotesLeftRight).ToString(), false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.FlipSelectedObjects();
+
+            if (ImGui.MenuItem("Reverse Objects", InputConfig.GetOrDefault(KeybindActions.MirrorNotesUpDown).ToString(), false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.ReverseSelectedObjects();
 
             if (ImGui.BeginMenu($"Move Objects To Layer", Screen.SelectedHitObjects.Value.Count > 0))
             {
                 if (ImGui.MenuItem("Default Layer", ""))
                 {
                     Screen.ActionManager.Perform(new EditorActionMoveObjectsToLayer(Screen.ActionManager, Screen.WorkingMap, null,
+                        new List<HitObjectInfo>(Screen.SelectedHitObjects.Value)));
+                }
+
+                if (ImGui.MenuItem("Current Layer", InputConfig.GetOrDefault(KeybindActions.MoveSelectedNotesToCurrentLayer).ToString()))
+                {
+                    Screen.ActionManager.Perform(new EditorActionMoveObjectsToLayer(Screen.ActionManager, Screen.WorkingMap, Screen.SelectedLayer.Value,
                         new List<HitObjectInfo>(Screen.SelectedHitObjects.Value)));
                 }
 
@@ -247,27 +241,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Edit Metadata", "F1"))
+            if (ImGui.MenuItem("Edit Metadata", InputConfig.GetOrDefault(KeybindActions.ToggleMetadataPanel).ToString()))
                 DialogManager.Show(new EditorMetadataDialog(Screen));
 
             var timingPointPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
 
-            if (ImGui.MenuItem("Edit Timing Points", "F5", timingPointPlugin.IsActive))
+            if (ImGui.MenuItem("Edit Timing Points", InputConfig.GetOrDefault(KeybindActions.ToggleMetadataPanel).ToString(), timingPointPlugin.IsActive))
             {
-                timingPointPlugin.IsActive = !timingPointPlugin.IsActive;
-
-                if (timingPointPlugin.IsActive)
-                    timingPointPlugin.Initialize();
+                Screen.ToggleBuiltInPlugin(EditorBuiltInPlugin.TimingPointEditor);
             }
 
             var scrollVelocityPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
 
-            if (ImGui.MenuItem("Edit Scroll Velocities", "F6", scrollVelocityPlugin.IsActive))
+            if (ImGui.MenuItem("Edit Scroll Velocities", InputConfig.GetOrDefault(KeybindActions.ToggleScrollVelocityPanel).ToString(), scrollVelocityPlugin.IsActive))
             {
-                scrollVelocityPlugin.IsActive = !scrollVelocityPlugin.IsActive;
-
-                if (scrollVelocityPlugin.IsActive)
-                    scrollVelocityPlugin.Initialize();
+                Screen.ToggleBuiltInPlugin(EditorBuiltInPlugin.ScrollVelocityEditor);
             }
 
             ImGui.Separator();
@@ -275,29 +263,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Add Background Image"))
                 NotificationManager.Show(NotificationLevel.Info, "To add a background image, drag a .jpg or .png file into the window.");
 
-            if (ImGui.MenuItem("Set Song Select Preview Time"))
-                Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
+            if (ImGui.MenuItem("Set Song Select Preview Time", InputConfig.GetOrDefault(KeybindActions.SetPreviewPoint).ToString()))
+                Screen.ActionManager.SetPreviewTime((int)Screen.Track.Time);
 
             ImGui.Separator();
 
             var view = Screen.View as EditScreenView;
 
-            if (ImGui.MenuItem("Enable AutoMod", "", view?.AutoMod.IsActive.Value ?? false))
+            if (ImGui.MenuItem("Enable AutoMod", InputConfig.GetOrDefault(KeybindActions.ToggleAutomod).ToString(), view?.AutoMod.IsActive.Value ?? false))
             {
-                if (view != null)
-                    view.AutoMod.IsActive.Value = !view.AutoMod.IsActive.Value;
+                Screen.ToggleAutomod();
             }
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Apply Offset To Map"))
+            if (ImGui.MenuItem("Apply Offset To Map", InputConfig.GetOrDefault(KeybindActions.AdjustOffset).ToString()))
                 DialogManager.Show(new EditorApplyOffsetDialog(Screen));
 
             if (ImGui.BeginMenu("Resnap All Notes"))
             {
                 if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
-                    Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.WorkingMap.HitObjects);
-                if (ImGui.MenuItem("Resnap to common snaps"))
+                    Screen.ActionManager.ResnapNotes(new List<int> {Screen.BeatSnap.Value}, Screen.WorkingMap.HitObjects);
+                if (ImGui.MenuItem("Resnap to common snaps", InputConfig.GetOrDefault(KeybindActions.ResnapAllNotes).ToString()))
                     Screen.ActionManager.ResnapNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, Screen.WorkingMap.HitObjects);
                 ImGui.EndMenu();
             }
@@ -305,7 +292,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.BeginMenu("Resnap Selected Notes"))
             {
                 if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
-                    Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
+                    Screen.ActionManager.ResnapNotes(new List<int> {Screen.BeatSnap.Value}, Screen.SelectedHitObjects.Value);
                 if (ImGui.MenuItem("Resnap to common snaps"))
                     Screen.ActionManager.ResnapNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, Screen.SelectedHitObjects.Value);
                 ImGui.EndMenu();
@@ -340,8 +327,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("View"))
                 return;
 
-            if (ImGui.MenuItem("Display Gameplay Preview", "", Screen.DisplayGameplayPreview.Value))
-                Screen.DisplayGameplayPreview.Value = !Screen.DisplayGameplayPreview.Value;
+            if (ImGui.MenuItem("Display Gameplay Preview", InputConfig.GetOrDefault(KeybindActions.ToggleGameplayPreview).ToString(), Screen.DisplayGameplayPreview.Value))
+                Screen.ToggleGameplayPreview();
 
             if (ImGui.BeginMenu("Reference Difficulty"))
             {
@@ -350,12 +337,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 foreach (var map in Screen.Map.Mapset.Maps)
                 {
-                    var color = ColorHelper.DifficultyToColor((float) map.Difficulty10X);
+                    var color = ColorHelper.DifficultyToColor((float)map.Difficulty10X);
 
                     ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
 
                     if (ImGui.MenuItem(map.DifficultyName, "",
-                        Screen.UneditableMap?.Value?.DifficultyName == map.DifficultyName))
+                            Screen.UneditableMap?.Value?.DifficultyName == map.DifficultyName))
                     {
                         Screen.ChangeReferenceDifficultyTo(map);
                     }
@@ -391,6 +378,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                         Screen.BeatSnap.Value = snap;
                 }
 
+                if (ImGui.MenuItem($"Open custom snap dialog", InputConfig.GetOrDefault(KeybindActions.OpenCustomSnapDialog).ToString()))
+                    DialogManager.Show(new CustomBeatSnapDialog(Screen.BeatSnap, Screen.AvailableBeatSnaps));
+
                 ImGui.EndMenu();
             }
 
@@ -413,14 +403,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects On Nearest Tick", "", Screen.PlaceObjectsOnNearestTick.Value))
                 Screen.PlaceObjectsOnNearestTick.Value = !Screen.PlaceObjectsOnNearestTick.Value;
 
-            if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
-                Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
-
             ImGui.Separator();
 
             if (ImGui.BeginMenu("Waveform"))
             {
-                if (ImGui.MenuItem("Visible", "", Screen.ShowWaveform.Value))
+                if (ImGui.MenuItem("Visible", InputConfig.GetOrDefault(KeybindActions.ToggleWaveform).ToString(), Screen.ShowWaveform.Value))
                     Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
 
                 if (ImGui.BeginMenu("Brightness"))
@@ -451,8 +438,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 {
                     foreach (EditorPlayfieldWaveformFilter type in Enum.GetValues(typeof(EditorPlayfieldWaveformFilter)))
                     {
-                        if (ImGui.MenuItem($"{type}", "", Screen.WaveformFilter.Value == type))
-                            Screen.WaveformFilter.Value = type;
+                        var shortcut = "";
+                        if (type == EditorPlayfieldWaveformFilter.HighPass)
+                            shortcut = InputConfig.GetOrDefault(KeybindActions.ToggleWaveformHighPassFilter).ToString();
+                        else if (type == EditorPlayfieldWaveformFilter.LowPass)
+                            shortcut = InputConfig.GetOrDefault(KeybindActions.ToggleWaveformLowPassFilter).ToString();
+
+                        if (ImGui.MenuItem($"{type}", shortcut, Screen.WaveformFilter.Value == type))
+                            Screen.ToggleWaveformFilter(type);
                     }
 
                     ImGui.EndMenu();
@@ -483,7 +476,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 Screen.AnchorHitObjectsAtMidpoint.Value = !Screen.AnchorHitObjectsAtMidpoint.Value;
 
             if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
-                Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
+                Screen.ToggleViewLayers();
 
             ImGui.Separator();
 
@@ -582,6 +575,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                 }
 
+                if (ImGui.MenuItem("Open local plugins folder"))
+                {
+                    Utils.NativeUtils.OpenNatively($"{WobbleGame.WorkingDirectory}Plugins");
+                }
+
                 ImGui.EndMenu();
             }
 
@@ -635,6 +633,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Editor Functions"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/editor_functions");
 
+            // TODO: Editor keybind wiki link
+            if (ImGui.MenuItem("Editor Keybinds"))
+                NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!");
+
             if (ImGui.MenuItem("Plugins"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/plugins");
 
@@ -684,17 +686,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                         Screen.Track.Rate = value;
                 }
 
+                if (ImGui.MenuItem("Increase Playback Speed", InputConfig.GetOrDefault(KeybindActions.IncreasePlaybackRate).ToString()))
+                {
+                    Screen.ChangeAudioPlaybackRate(Direction.Forward);
+                }
+
+                if (ImGui.MenuItem("Decrease Playback Speed", InputConfig.GetOrDefault(KeybindActions.IncreasePlaybackRate).ToString()))
+                {
+                    Screen.ChangeAudioPlaybackRate(Direction.Forward);
+                }
+
                 ImGui.EndMenu();
             }
 
             if (ImGui.BeginMenu("Hitsounds"))
             {
-                if (ImGui.MenuItem("Enable", "", Screen.EnableHitsounds.Value))
-                    Screen.EnableHitsounds.Value = !Screen.EnableHitsounds.Value;
+                if (ImGui.MenuItem("Enable", InputConfig.GetOrDefault(KeybindActions.ToggleHitsounds).ToString(), Screen.EnableHitsounds.Value))
+                    Screen.ToggleHitsounds();
 
                 if (ImGui.BeginMenu("Volume"))
                 {
-                    if (ImGui.MenuItem($"Default ({(int) AudioSample.GlobalVolume}%)", "", Screen.HitsoundVolume.Value == -1))
+                    if (ImGui.MenuItem($"Default ({(int)AudioSample.GlobalVolume}%)", "", Screen.HitsoundVolume.Value == -1))
                         Screen.HitsoundVolume.Value = -1;
 
                     for (var i = 0; i < 10; i++)
@@ -713,13 +725,32 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Metronome"))
             {
-                if (ImGui.MenuItem($"Enable", "", Screen.EnableMetronome.Value))
-                    Screen.EnableMetronome.Value = !Screen.EnableMetronome.Value;
+                if (ImGui.MenuItem($"Enable", InputConfig.GetOrDefault(KeybindActions.ToggleMetronome).ToString(), Screen.EnableMetronome.Value))
+                    Screen.ToggleMetronome();
 
                 if (ImGui.MenuItem("Play Half Beats", "", Screen.MetronomePlayHalfBeats.Value))
                     Screen.MetronomePlayHalfBeats.Value = !Screen.MetronomePlayHalfBeats.Value;
 
                 ImGui.EndMenu();
+            }
+
+            ImGui.EndMenu();
+        }
+
+        private void CreateKeybindsSection()
+        {
+            ImGui.PushFont(Options.Fonts.First().Context);
+
+            if (!ImGui.BeginMenu("Keybinds"))
+                return;
+
+            // TODO: Editor keybind wiki link
+            if (ImGui.MenuItem("Editor Keybinds"))
+                NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!");
+
+            if (ImGui.MenuItem("Open keybind config file"))
+            {
+                InputConfig.OpenConfigFile();
             }
 
             ImGui.EndMenu();

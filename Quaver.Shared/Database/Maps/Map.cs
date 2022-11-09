@@ -577,7 +577,7 @@ namespace Quaver.Shared.Database.Maps
 
             try
             {
-                Process.Start("notepad.exe", "\"" + $"{ConfigManager.SongDirectory.Value}/{Directory}/{Path}".Replace("/", "\\") + "\"");
+                Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Directory}/{Path}");
             }
             catch (Exception e)
             {

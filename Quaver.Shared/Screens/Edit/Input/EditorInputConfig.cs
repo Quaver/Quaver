@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Wobble.Logging;
+using Wobble.Platform;
 using YamlDotNet.Serialization;
 using static Quaver.Shared.Screens.Edit.Input.KeybindActions;
 
@@ -49,6 +51,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             return config;
         }
 
+        public KeybindList GetOrDefault(KeybindActions action) => Keybinds.GetValueOrDefault(action, new KeybindList());
+
+        public KeybindList GetPluginKeybindOrDefault(string name) => PluginKeybinds.GetValueOrDefault(name, new KeybindList());
+
         public void AddKeybindToAction(KeybindActions action, Keybind keybind)
         {
             if (!Keybinds.ContainsKey(action))
@@ -68,6 +74,18 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             File.WriteAllText(ConfigPath, Serialize());
             Logger.Debug("Saved editor key config to file", LogType.Runtime);
+        }
+
+        public void OpenConfigFile()
+        {
+            try
+            {
+                Utils.NativeUtils.OpenNatively(ConfigPath);
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "An error occurred while opening the config file.");
+            }
         }
 
         public Dictionary<Keybind, HashSet<KeybindActions>> ReverseDictionary()
