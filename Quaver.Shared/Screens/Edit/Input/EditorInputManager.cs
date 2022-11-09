@@ -34,23 +34,13 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.SeekBackwards,
             KeybindActions.SeekForwards1ms,
             KeybindActions.SeekBackwards1ms,
-            KeybindActions.SeekToStartOfSelection,
-            KeybindActions.SeekToEndOfSelection,
-            KeybindActions.SeekToBeginning,
-            KeybindActions.SeekToEnd,
             KeybindActions.IncreasePlaybackRate,
             KeybindActions.DecreasePlaybackRate,
             KeybindActions.ChangeToolUp,
             KeybindActions.ChangeToolDown,
-            KeybindActions.IncreaseSnap,
-            KeybindActions.IncreaseSnapLarge,
-            KeybindActions.DecreaseSnap,
-            KeybindActions.DecreaseSnapLarge,
             KeybindActions.ToggleLayerColorMode,
             KeybindActions.ChangeSelectedLayerUp,
             KeybindActions.ChangeSelectedLayerDown,
-            KeybindActions.UndoAction,
-            KeybindActions.RedoAction,
         };
 
         public EditorInputManager(EditScreen screen)
@@ -115,7 +105,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             switch (action)
             {
                 case KeybindActions.ExitEditor:
-                    Screen.ExitToSongSelect();
+                    Screen.LeaveEditor();
                     break;
                 case KeybindActions.PlayPause:
                     Screen.TogglePlayPause();
@@ -139,18 +129,20 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.SeekInDirection(Direction.Backward);
                     break;
                 case KeybindActions.SeekForwards1ms:
-                    Screen.SeekTo(Screen.Track.Time + 1);
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time + 1);
                     break;
                 case KeybindActions.SeekBackwards1ms:
-                    Screen.SeekTo(Screen.Track.Time - 1);
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time - 1);
                     break;
                 case KeybindActions.SeekToStartOfSelection:
                     if (Screen.SelectedHitObjects.Value.Count > 0)
-                        Screen.SeekTo(Screen.SelectedHitObjects.Value.Min(h => h.StartTime));
+                        Screen.SeekTo(Screen.SelectedHitObjects.Value.Min(h => h.StartTime), false);
                     break;
                 case KeybindActions.SeekToEndOfSelection:
                     if (Screen.SelectedHitObjects.Value.Count > 0)
-                        Screen.SeekTo(Screen.SelectedHitObjects.Value.Max(h => h.StartTime));
+                        Screen.SeekTo(Screen.SelectedHitObjects.Value.Max(h => h.StartTime), false);
                     break;
                 case KeybindActions.SeekToBeginning:
                     Screen.SeekToBeginning();
@@ -182,14 +174,8 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.IncreaseSnap:
                     Screen.ChangeBeatSnap(Direction.Forward);
                     break;
-                case KeybindActions.IncreaseSnapLarge:
-                    Screen.ChangeBeatSnap(Direction.Forward, true);
-                    break;
                 case KeybindActions.DecreaseSnap:
                     Screen.ChangeBeatSnap(Direction.Backward);
-                    break;
-                case KeybindActions.DecreaseSnapLarge:
-                    Screen.ChangeBeatSnap(Direction.Backward, true);
                     break;
                 case KeybindActions.ChangeSnapTo1:
                     Screen.BeatSnap.Value = 1;

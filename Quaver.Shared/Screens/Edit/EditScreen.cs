@@ -113,7 +113,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private int BeatSnapIndex => AvailableBeatSnaps.FindIndex(x => x == BeatSnap.Value);
+        private int BeatSnapIndex => AvailableBeatSnaps.FindIndex(x => x >= BeatSnap.Value);
 
         /// <summary>
         /// </summary>
@@ -488,7 +488,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="direction"></param>
         public void SeekInDirection(Direction direction)
         {
-            var snap = BeatSnap.Value;
+            var snap = (float)BeatSnap.Value;
 
             if (KeyboardManager.IsCtrlDown())
                 snap /= 4;
@@ -504,14 +504,14 @@ namespace Quaver.Shared.Screens.Edit
             SeekTo(time);
         }
 
-        public void SeekTo(double time)
+        public void SeekTo(double time, bool enableMoving = true)
         {
             if (Track == null || Track.IsDisposed || !CanSeek()) return;
 
             var offset = time - Track.Time;
 
             // Move semantics
-            if (KeyboardManager.IsAltDown())
+            if (enableMoving && KeyboardManager.IsAltDown())
             {
                 new EditorActionMoveHitObjects(ActionManager, WorkingMap, SelectedHitObjects.Value, 0, (int)offset).Perform();
             }
@@ -642,29 +642,11 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <param name="direction"></param>
         /// <param name="large"></param>
-        public void ChangeBeatSnap(Direction direction, bool large = false)
+        public void ChangeBeatSnap(Direction direction)
         {
             var index = BeatSnapIndex;
-
-            if (large)
-            {
-                switch (direction)
-                {
-                    case Direction.Forward:
-                        BeatSnap.Value *= 2;
-                        break;
-                    case Direction.Backward:
-                        BeatSnap.Value = Math.Max(BeatSnap.Value / 2, 1);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-                }
-            }
-            else
-            {
-                index = StepAndWrapNumber(direction, index, AvailableBeatSnaps.Count);
-                BeatSnap.Value = AvailableBeatSnaps[index];
-            }
+            index = StepAndWrapNumber(direction, index, AvailableBeatSnaps.Count);
+            BeatSnap.Value = AvailableBeatSnaps[index];
         }
 
         /// <summary>
@@ -964,6 +946,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             var clonedObjects = new List<HitObjectInfo>();
+            var overlappedObjects = new List<HitObjectInfo>();
 
             var difference = (int)Math.Round(Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
 
@@ -985,6 +968,9 @@ namespace Quaver.Shared.Screens.Edit
                     continue;
 
                 clonedObjects.Add(hitObject);
+
+                overlappedObjects.AddRange(WorkingMap.HitObjects
+                    .FindAll(h => Math.Abs(h.StartTime - hitObject.StartTime) < 2 && h.Lane == hitObject.Lane));
             }
 
             if (resnapObjects)
