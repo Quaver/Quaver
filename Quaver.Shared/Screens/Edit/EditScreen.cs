@@ -237,6 +237,10 @@ namespace Quaver.Shared.Screens.Edit
 
         public EditorInputManager EditorInputManager { get; }
 
+        private const double PlacementLenienceInMs = 2;
+
+        private double LastSeekDistance = 0;
+
         /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
@@ -495,26 +499,35 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (Track == null || Track.IsDisposed || !CanSeek()) return;
 
-            var offset = time - Track.Time;
+            time = Math.Clamp(time, 0, Track.Length - 100);
+            LastSeekDistance = time - Track.Time;
 
             // Move semantics
             if (enableMoving && KeyboardManager.IsAltDown())
             {
-                new EditorActionMoveHitObjects(ActionManager, WorkingMap, SelectedHitObjects.Value, 0, (int)offset).Perform();
+                new EditorActionMoveHitObjects(ActionManager, WorkingMap, SelectedHitObjects.Value, 0, (int)LastSeekDistance).Perform();
             }
             else if (KeyboardManager.IsShiftDown())
             {
-                var start = Math.Min(time, Track.Time);
-                var end = Math.Max(time, Track.Time);
-
-                var hitObjectsInRange = WorkingMap.HitObjects
-                    .FindAll(h => h.StartTime >= start && h.StartTime <= end && !SelectedHitObjects.Value.Contains(h));
-
-                SelectedHitObjects.AddRange(hitObjectsInRange);
+                AddNotesInRangeToSelection(time, Track.Time);
             }
 
-            time = Math.Clamp(time, 0, Track.Length - 100);
             Track.Seek(time);
+        }
+
+        private void AddNotesInRangeToSelection(double offset1, double offset2, int lane = -1)
+        {
+            var start = Math.Min(offset1, offset2);
+            var end = Math.Max(offset1, offset2);
+
+            var hitObjectsInRange = WorkingMap.HitObjects
+                .FindAll(h =>
+                    h.StartTime >= start - PlacementLenienceInMs
+                    && h.StartTime <= end + PlacementLenienceInMs
+                    && (lane < 0 || h.Lane == lane)
+                );
+
+            SelectedHitObjects.AddRange(hitObjectsInRange);
         }
 
         public void ToolInputInLane(int lane, bool isKeypress)
@@ -522,26 +535,6 @@ namespace Quaver.Shared.Screens.Edit
             if (lane > WorkingMap.GetKeyCount())
                 return;
 
-            switch (CompositionTool.Value)
-            {
-                case EditorCompositionTool.Select:
-                    HandleLaneSelection(lane, isKeypress);
-                    break;
-                case EditorCompositionTool.Note:
-                case EditorCompositionTool.LongNote:
-                    HandleHitObjectPlacement(lane, isKeypress);
-                    break;
-            }
-        }
-
-        private void HandleLaneSelection(int lane, bool isKeypress)
-        {
-            // TODO
-        }
-
-        private void HandleHitObjectPlacement(int lane, bool isKeypress)
-        {
-            const int placementLenienceInMs = 2;
             var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
             var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
 
@@ -549,17 +542,34 @@ namespace Quaver.Shared.Screens.Edit
             var hitObjectsAtTime = WorkingMap.HitObjects
                 .Where(h =>
                     h.Lane == lane && (
-                        Math.Abs(h.StartTime - time) <= placementLenienceInMs // Is on time
+                        Math.Abs(h.StartTime - time) <= PlacementLenienceInMs // Is on time
                         || h.StartTime <= time && h.EndTime >= time // Is pressed during a long note
                     )
                 ).ToList();
 
             // Holding down the key should behave similar to Ctrl+LeftMouse input, so you can continuously
             // place notes while seeking
-            if (isKeypress && hitObjectsAtTime.Count > 0)
-                ActionManager.RemoveHitObjectBatch(hitObjectsAtTime);
-            else if (isKeypress || !Track.IsPlaying)
-                ActionManager.PlaceHitObject(lane, time, 0, layer);
+
+            if (CompositionTool.Value == EditorCompositionTool.Note)
+            {
+                if (isKeypress && hitObjectsAtTime.Count > 0)
+                    ActionManager.RemoveHitObjectBatch(hitObjectsAtTime);
+                else if (isKeypress || !Track.IsPlaying)
+                    ActionManager.PlaceHitObject(lane, time, 0, layer);
+            }
+            else if (CompositionTool.Value == EditorCompositionTool.Select)
+            {
+                if (isKeypress)
+                    foreach (var note in hitObjectsAtTime)
+                    {
+                        if (!SelectedHitObjects.Value.Contains(note))
+                            SelectedHitObjects.Add(note);
+                        else
+                            SelectedHitObjects.Remove(note);
+                    }
+                else
+                    AddNotesInRangeToSelection(Track.Time, Track.Time - LastSeekDistance, lane);
+            }
         }
 
         public void ShowMetadata() => DialogManager.Show(new EditorMetadataDialog(this));
