@@ -280,21 +280,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Apply Offset To Map", InputConfig.GetOrDefault(KeybindActions.AdjustOffset).ToString()))
                 DialogManager.Show(new EditorApplyOffsetDialog(Screen));
 
-            if (ImGui.BeginMenu("Resnap All Notes"))
+            var selectionNoteTypeString = Screen.SelectedHitObjects.Value.Count > 0 ? $"{Screen.SelectedHitObjects.Value.Count} Selected" : "All";
+            if (ImGui.BeginMenu($"Resnap {selectionNoteTypeString} notes"))
             {
-                if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
-                    Screen.ActionManager.ResnapNotes(new List<int> {Screen.BeatSnap.Value}, Screen.WorkingMap.HitObjects);
                 if (ImGui.MenuItem("Resnap to common snaps", InputConfig.GetOrDefault(KeybindActions.ResnapAllNotes).ToString()))
-                    Screen.ActionManager.ResnapNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, Screen.WorkingMap.HitObjects);
-                ImGui.EndMenu();
-            }
-
-            if (ImGui.BeginMenu("Resnap Selected Notes"))
-            {
+                    Screen.ResnapAllOrSelectedNotes();
                 if (ImGui.MenuItem($"Resnap to currently selected snap (1/{Screen.BeatSnap.Value})"))
-                    Screen.ActionManager.ResnapNotes(new List<int> {Screen.BeatSnap.Value}, Screen.SelectedHitObjects.Value);
-                if (ImGui.MenuItem("Resnap to common snaps"))
-                    Screen.ActionManager.ResnapNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15}, Screen.SelectedHitObjects.Value);
+                    Screen.ResnapAllOrSelectedNotes(new List<int> {Screen.BeatSnap.Value});
                 ImGui.EndMenu();
             }
 

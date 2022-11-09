@@ -1062,6 +1062,14 @@ namespace Quaver.Shared.Screens.Edit
             NotificationManager.Show(NotificationLevel.Info, $"Reversed {SelectedHitObjects.Value.Count} objects");
         }
 
+        public void ResnapAllOrSelectedNotes() => ResnapAllOrSelectedNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15});
+
+        public void ResnapAllOrSelectedNotes(List<int> snaps)
+        {
+            var notes = SelectedHitObjects.Value.Count > 0 ? SelectedHitObjects.Value : WorkingMap.HitObjects;
+            DialogManager.Show(new EditorResnapConfirmationDialog(this, snaps, notes));
+        }
+
         /// <summary>
         ///     Highlights notes and goes to a specific timestamp.
         ///     Acceptable inputs:
