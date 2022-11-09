@@ -898,7 +898,15 @@ namespace Quaver.Shared.Screens.Edit
         public void TogglePluginByName(string name)
         {
             var plugin = Plugins.Find(p => p.Name == name);
+            if (plugin == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, $"Plugin '{name}' not found");
+                return;
+            }
+
             plugin.IsActive = !plugin.IsActive;
+            if (plugin.IsActive)
+                plugin.Initialize();
         }
 
         public void CloseAllPlugins()
@@ -1214,7 +1222,6 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             ModManager.RemoveAllMods();
-            EditorInputManager.InputConfig.SaveToConfig();
 
             Exit(() => new SelectionScreen());
         }

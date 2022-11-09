@@ -46,14 +46,11 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.IncreaseSnapLarge,
             KeybindActions.DecreaseSnap,
             KeybindActions.DecreaseSnapLarge,
-            KeybindActions.OpenCustomSnapDialog,
             KeybindActions.ToggleLayerColorMode,
             KeybindActions.ChangeSelectedLayerUp,
             KeybindActions.ChangeSelectedLayerDown,
             KeybindActions.UndoAction,
             KeybindActions.RedoAction,
-            KeybindActions.ChangeReferenceDifficultyPrevious,
-            KeybindActions.ChangeReferenceDifficultyNext
         };
 
         public EditorInputManager(EditScreen screen)

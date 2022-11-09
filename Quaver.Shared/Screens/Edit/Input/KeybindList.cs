@@ -22,6 +22,10 @@ namespace Quaver.Shared.Screens.Edit.Input
         public KeybindList(KeyModifiers mod, Keys key) => Add(new Keybind(mod, key));
         public KeybindList(Keybind keybind) => Add(keybind);
 
+        public KeybindList(List<string> binds) : base(binds.Select(b => new Keybind(b)))
+        {
+        }
+
         public KeybindList(IEnumerable<Keybind> keybinds) : base(keybinds)
         {
         }
@@ -44,7 +48,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             return result;
         }
 
-        public HashSet<Keybind> MatchingKeybinds() {
+        public HashSet<Keybind> MatchingKeybinds()
+        {
             var binds = new HashSet<Keybind>();
             foreach (var keybind in this) binds.UnionWith(keybind.MatchingKeybinds());
             return binds;
@@ -53,6 +58,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         public bool IsUniqueKeypress() => this.Any(k => k.IsUniqueKeypress());
         public bool IsDown() => this.Any(k => k.IsDown());
         public bool IsUp() => this.Any(k => k.IsUp());
+        public override string ToString() => String.Join(", ", this.Select(k => k.ToString()));
     }
 
     public class FlowStyleKeybinds : ChainedEventEmitter

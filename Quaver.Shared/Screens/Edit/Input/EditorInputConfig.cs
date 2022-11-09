@@ -14,9 +14,16 @@ namespace Quaver.Shared.Screens.Edit.Input
     {
         [YamlIgnore] public static string ConfigPath = ConfigManager.GameDirectory.Value + "/editor_keys.yaml";
 
-        public bool ReverseScrollSeekDirection { get; } = true;
-        public Dictionary<KeybindActions, KeybindList> Keybinds { get; } = DefaultKeybinds;
-        public Dictionary<string, KeybindList> PluginKeybinds { get; } = new Dictionary<string, KeybindList>();
+        public bool ReverseScrollSeekDirection { get; private set; }
+        public Dictionary<KeybindActions, KeybindList> Keybinds { get; private set; }
+        public Dictionary<string, KeybindList> PluginKeybinds { get; private set; }
+
+        public EditorInputConfig()
+        {
+            ReverseScrollSeekDirection = true;
+            Keybinds = DefaultKeybinds;
+            PluginKeybinds = new Dictionary<string, KeybindList>();
+        }
 
         public static EditorInputConfig LoadFromConfig()
         {
@@ -24,22 +31,20 @@ namespace Quaver.Shared.Screens.Edit.Input
 
             if (!File.Exists(ConfigPath))
             {
-                Logger.Debug("No editor key config found, creating default", LogType.Runtime);
+                Logger.Debug("No editor key config found, using default", LogType.Runtime);
                 config = new EditorInputConfig();
             }
             else
             {
-                Logger.Debug("Loaded editor key config", LogType.Runtime);
-                var ds = new DeserializerBuilder()
-                    .WithTypeConverter(new KeybindYamlTypeConverter())
-                    .IgnoreUnmatchedProperties()
-                    .Build();
-
                 using (var file = File.OpenText(EditorInputConfig.ConfigPath))
                 {
-                    config = ds.Deserialize<EditorInputConfig>(file);
+                    config = EditorInputConfig.Deserialize(file);
                 }
+
+                Logger.Debug("Loaded editor key config", LogType.Runtime);
             }
+
+            config.SaveToConfig(); // Reformat after loading
 
             return config;
         }
@@ -81,6 +86,18 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
 
             return dict;
+        }
+
+        private static EditorInputConfig Deserialize(StreamReader file)
+        {
+            var ds = new DeserializerBuilder()
+                .WithTypeConverter(new KeybindYamlTypeConverter())
+                .IgnoreUnmatchedProperties()
+                .Build();
+
+            var config = ds.Deserialize<EditorInputConfig>(file);
+
+            return config;
         }
 
         private string Serialize()

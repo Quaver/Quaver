@@ -20,22 +20,19 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public Keybind(string notation)
         {
-            var keys = notation.Trim().Split("+").Select(s => s.ToLower().Trim());
+            var keys = notation.Trim().Split("+").Select(s => s.Trim());
             foreach (var keyString in keys)
             {
-                if (keyString == "free")
-                    Modifiers.Add(KeyModifiers.Free);
-                else if (keyString == "ctrl")
-                    Modifiers.Add(KeyModifiers.Ctrl);
-                else if (keyString == "shift")
-                    Modifiers.Add(KeyModifiers.Shift);
-                else if (keyString == "alt")
-                    Modifiers.Add(KeyModifiers.Alt);
+                KeyModifiers mod;
+                if (Enum.TryParse(keyString, out mod))
+                    Modifiers.Add(mod);
                 else if (Key.KeyboardKey == Keys.None)
                 {
                     GenericKey parsed;
                     if (GenericKey.TryParse(keyString, out parsed))
                         Key = parsed;
+                    else
+                        Logger.Error($"Encountered unknown key name {keyString} during keybind parsing", LogType.Runtime);
                 }
             }
         }
@@ -145,8 +142,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             if (!parser.Accept<Scalar>()) return Keybind.None;
             var scalar = parser.Current as Scalar;
             if (scalar == null) return Keybind.None;
-
-            Logger.Debug(scalar.Value, LogType.Runtime);
 
             var result = new Keybind(scalar.Value);
             parser.MoveNext();
