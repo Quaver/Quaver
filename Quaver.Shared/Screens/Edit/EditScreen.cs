@@ -741,10 +741,7 @@ namespace Quaver.Shared.Screens.Edit
         public void ToggleWaveform() => ToggleValue(ShowWaveform, "waveform");
         public void ToggleViewLayers() => ToggleValue(ViewLayers, "layer color mode");
 
-        public void TogglePitchWithRate()
-        {
-            // TODO
-        }
+        public void TogglePitchWithRate() => ToggleValue(ConfigManager.Pitched, "audio pitch change on rate");
 
         public void ToggleLivePlaytest()
         {
