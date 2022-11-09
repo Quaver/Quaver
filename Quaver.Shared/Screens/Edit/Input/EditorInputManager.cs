@@ -321,7 +321,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.ToggleWaveform();
                     break;
                 case KeybindActions.ToggleWaveformLowPassFilter:
-                    Screen.ToggleWaveformFilter(EditorPlayfieldWaveformFilter.HighPass);
+                    Screen.ToggleWaveformFilter(EditorPlayfieldWaveformFilter.LowPass);
                     break;
                 case KeybindActions.ToggleWaveformHighPassFilter:
                     Screen.ToggleWaveformFilter(EditorPlayfieldWaveformFilter.HighPass);

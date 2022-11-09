@@ -806,7 +806,19 @@ namespace Quaver.Shared.Screens.Edit
             ChangeReferenceDifficultyTo(maps[index]);
         }
 
-        public void ToggleWaveformFilter(EditorPlayfieldWaveformFilter filter) => WaveformFilter.Value = WaveformFilter.Value == filter ? EditorPlayfieldWaveformFilter.None : WaveformFilter.Value = filter;
+        public void ToggleWaveformFilter(EditorPlayfieldWaveformFilter filter)
+        {
+            if (WaveformFilter.Value == filter)
+            {
+                WaveformFilter.Value = EditorPlayfieldWaveformFilter.None;
+                NotificationManager.Show(NotificationLevel.Info, "Disabled waveform filters");
+            }
+            else
+            {
+                WaveformFilter.Value = filter;
+                NotificationManager.Show(NotificationLevel.Info, $"Enabled {filter.ToString()} waveform filter");
+            }
+        }
 
         /// <summary>
         ///     Loads any plugins for the editor
