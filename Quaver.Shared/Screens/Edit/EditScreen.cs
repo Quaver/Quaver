@@ -27,6 +27,7 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
@@ -969,8 +970,16 @@ namespace Quaver.Shared.Screens.Edit
 
                 clonedObjects.Add(hitObject);
 
+                // No special handling for long notes because it's unclear whether existing (long) notes should have precedence over pasted ones
                 overlappedObjects.AddRange(WorkingMap.HitObjects
                     .FindAll(h => Math.Abs(h.StartTime - hitObject.StartTime) < 2 && h.Lane == hitObject.Lane));
+            }
+
+            if (overlappedObjects.Count > 0)
+            {
+                // Don't add to undo stack
+                var removeOverlappedNotesAction = new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, overlappedObjects);
+                removeOverlappedNotesAction.Perform();
             }
 
             if (resnapObjects)
@@ -981,6 +990,8 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             ActionManager.Perform(new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, clonedObjects));
+
+            NotificationManager.Show(NotificationLevel.Info, $"Pasted {clonedObjects.Count} objects");
 
             SelectedHitObjects.Clear();
             SelectedHitObjects.AddRange(clonedObjects);
