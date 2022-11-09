@@ -760,7 +760,7 @@ namespace Quaver.Shared.Screens.Edit
             if (UneditableMap.Value != null)
                 UneditableMap.Value = null;
             else
-                ChangeReferenceDifficultyTo(Map.Mapset.Maps[0]);
+                ChangeReferenceDifficultyTo(Map);
         }
 
         public void ChangeReferenceDifficultyTo(Map map)
@@ -784,7 +784,7 @@ namespace Quaver.Shared.Screens.Edit
             if (UneditableMap.Value == null) return;
 
             var maps = Map.Mapset.Maps;
-            var index = maps.IndexOf(Map);
+            var index = maps.FindIndex(m => m.DifficultyName == UneditableMap.Value.DifficultyName);
             index = StepAndWrapNumber(direction, index, maps.Count);
             ChangeReferenceDifficultyTo(maps[index]);
         }
