@@ -354,12 +354,6 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
                     }),
-                    new OptionsSubcategory("Editor", new List<OptionsItem>()
-                    {
-                        new OptionsItemKeybind(containerRect, "Pause/Play Track", ConfigManager.KeyEditorPausePlay),
-                        new OptionsItemKeybind(containerRect, "Decrease Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
-                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
-                    }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {
                         new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot)
