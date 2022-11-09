@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             var timingPointPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
 
-            if (ImGui.MenuItem("Edit Timing Points", InputConfig.GetOrDefault(KeybindActions.ToggleMetadataPanel).ToString(), timingPointPlugin.IsActive))
+            if (ImGui.MenuItem("Edit Timing Points", InputConfig.GetOrDefault(KeybindActions.ToggleTimingPointPanel).ToString(), timingPointPlugin.IsActive))
             {
                 Screen.ToggleBuiltInPlugin(EditorBuiltInPlugin.TimingPointEditor);
             }
