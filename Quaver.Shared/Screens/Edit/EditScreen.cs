@@ -517,16 +517,30 @@ namespace Quaver.Shared.Screens.Edit
             Track.Seek(time);
         }
 
-        /// <summary>
-        ///     Places a note if a note at the current editor time and the given number key
-        ///     lane doesn't exist, otherwise removes all instances of notes at that time and lane
-        ///     (possible with overlaps).
-        /// </summary>
-        public void PlaceHitObject(int lane)
+        public void ToolInputInLane(int lane, bool isKeypress)
         {
             if (lane > WorkingMap.GetKeyCount())
                 return;
 
+            switch (CompositionTool.Value)
+            {
+                case EditorCompositionTool.Select:
+                    HandleLaneSelection(lane, isKeypress);
+                    break;
+                case EditorCompositionTool.Note:
+                case EditorCompositionTool.LongNote:
+                    HandleHitObjectPlacement(lane, isKeypress);
+                    break;
+            }
+        }
+
+        private void HandleLaneSelection(int lane, bool isKeypress)
+        {
+            // TODO
+        }
+
+        private void HandleHitObjectPlacement(int lane, bool isKeypress)
+        {
             const int placementLenienceInMs = 2;
             var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
             var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
@@ -540,15 +554,12 @@ namespace Quaver.Shared.Screens.Edit
                     )
                 ).ToList();
 
-            if (hitObjectsAtTime.Count > 0)
-            {
+            // Holding down the key should behave similar to Ctrl+LeftMouse input, so you can continuously
+            // place notes while seeking
+            if (isKeypress && hitObjectsAtTime.Count > 0)
                 ActionManager.RemoveHitObjectBatch(hitObjectsAtTime);
-            }
-            else
-            {
-                // TODO Handle long note placement
+            else if (isKeypress || !Track.IsPlaying)
                 ActionManager.PlaceHitObject(lane, time, 0, layer);
-            }
         }
 
         public void ShowMetadata() => DialogManager.Show(new EditorMetadataDialog(this));
@@ -628,7 +639,6 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         /// <param name="direction"></param>
-        /// <param name="large"></param>
         public void ChangeBeatSnap(Direction direction)
         {
             var index = BeatSnapIndex;
@@ -934,18 +944,18 @@ namespace Quaver.Shared.Screens.Edit
 
             var difference = (int)Math.Round(Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
 
-            foreach (var h in Clipboard)
+            foreach (var note in Clipboard)
             {
                 var hitObject = new HitObjectInfo()
                 {
-                    StartTime = h.StartTime + difference,
-                    EditorLayer = h.EditorLayer,
-                    HitSound = h.HitSound,
-                    Lane = h.Lane
+                    StartTime = note.StartTime + difference,
+                    EditorLayer = note.EditorLayer,
+                    HitSound = note.HitSound,
+                    Lane = note.Lane
                 };
 
-                if (h.IsLongNote)
-                    hitObject.EndTime = h.EndTime + difference;
+                if (note.IsLongNote)
+                    hitObject.EndTime = note.EndTime + difference;
 
                 // Don't paste notes past the end
                 if (hitObject.StartTime > Track.Length || hitObject.EndTime > Track.Length)
@@ -1282,7 +1292,7 @@ namespace Quaver.Shared.Screens.Edit
                     Artist = tagFile.Tag.FirstPerformer ?? "",
                     Title = tagFile.Tag.Title ?? "",
                     Source = tagFile.Tag.Album ?? "",
-                    Tags = string.Join(" ", tagFile.Tag.Genres) ?? "",
+                    Tags = string.Join(" ", tagFile.Tag.Genres),
                     Creator = ConfigManager.Username.Value,
                     DifficultyName = "",
                     Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",

@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         private Dictionary<KeybindActions, long> LastActionPress = new Dictionary<KeybindActions, long>();
         private Dictionary<KeybindActions, long> LastActionTime = new Dictionary<KeybindActions, long>();
 
-        private static HashSet<KeybindActions> HoldActions = new HashSet<KeybindActions>()
+        private static HashSet<KeybindActions> HoldRepeatActions = new HashSet<KeybindActions>()
         {
             KeybindActions.ZoomIn,
             KeybindActions.ZoomInLarge,
@@ -42,6 +42,17 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ToggleLayerColorMode,
             KeybindActions.ChangeSelectedLayerUp,
             KeybindActions.ChangeSelectedLayerDown,
+        };
+
+        private static HashSet<KeybindActions> HoldActions = new HashSet<KeybindActions>()
+        {
+            KeybindActions.PlaceNoteLane1,
+            KeybindActions.PlaceNoteLane2,
+            KeybindActions.PlaceNoteLane3,
+            KeybindActions.PlaceNoteLane4,
+            KeybindActions.PlaceNoteLane5,
+            KeybindActions.PlaceNoteLane6,
+            KeybindActions.PlaceNoteLane7,
         };
 
         private static HashSet<KeybindActions> EnabledActionsDuringGameplayPreview = new HashSet<KeybindActions>()
@@ -97,6 +108,10 @@ namespace Quaver.Shared.Screens.Edit.Input
                     {
                         HandleAction(action);
                     }
+                    else if (CanHold(action))
+                    {
+                        HandleAction(action, false);
+                    }
                 }
             }
 
@@ -105,7 +120,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private bool CanRepeat(KeybindActions action)
         {
-            if (!HoldActions.Contains(action))
+            if (!HoldRepeatActions.Contains(action))
                 return false;
 
             var currentTime = GameBase.Game.TimeRunning;
@@ -117,7 +132,18 @@ namespace Quaver.Shared.Screens.Edit.Input
             return timeSinceLastPress > HoldRepeatActionDelay && timeSinceLastAction > HoldRepeatActionInterval;
         }
 
-        private void HandleAction(KeybindActions action)
+        private bool CanHold(KeybindActions action)
+        {
+            if (!HoldActions.Contains(action))
+                return false;
+
+            var currentTime = GameBase.Game.TimeRunning;
+            var lastPress = LastActionPress.GetValueOrDefault(action, currentTime);
+            var timeSinceLastPress = currentTime - lastPress;
+            return timeSinceLastPress > HoldRepeatActionDelay;
+        }
+
+        private void HandleAction(KeybindActions action, bool isKeypress = true)
         {
             switch (action)
             {
@@ -384,25 +410,25 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.ResnapAllOrSelectedNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15});
                     break;
                 case KeybindActions.PlaceNoteLane1:
-                    Screen.PlaceHitObject(1);
+                    Screen.ToolInputInLane(1, isKeypress);
                     break;
                 case KeybindActions.PlaceNoteLane2:
-                    Screen.PlaceHitObject(2);
+                    Screen.ToolInputInLane(2, isKeypress);
                     break;
                 case KeybindActions.PlaceNoteLane3:
-                    Screen.PlaceHitObject(3);
+                    Screen.ToolInputInLane(3, isKeypress);
                     break;
                 case KeybindActions.PlaceNoteLane4:
-                    Screen.PlaceHitObject(4);
+                    Screen.ToolInputInLane(4, isKeypress);
                     break;
                 case KeybindActions.PlaceNoteLane5:
-                    Screen.PlaceHitObject(5);
+                    Screen.ToolInputInLane(5, isKeypress);
                     break;
                 case KeybindActions.PlaceNoteLane6:
-                    Screen.PlaceHitObject(6);
+                    Screen.ToolInputInLane(6, isKeypress);
                     break;
                 case KeybindActions.PlaceNoteLane7:
-                    Screen.PlaceHitObject(7);
+                    Screen.ToolInputInLane(7, isKeypress);
                     break;
                 case KeybindActions.PlaceTimingPoint:
                     Screen.PlaceTimingPoint();
