@@ -625,9 +625,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Editor Functions"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/editor_functions");
 
-            // TODO: Editor keybind wiki link
             if (ImGui.MenuItem("Editor Keybinds"))
-                NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!");
+                NotificationManager.Show(NotificationLevel.Error, "https://wiki.quavergame.com/docs/editor/editor_keybinds");
 
             if (ImGui.MenuItem("Plugins"))
                 BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/plugins");
@@ -736,14 +735,25 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Keybinds"))
                 return;
 
-            // TODO: Editor keybind wiki link
             if (ImGui.MenuItem("Editor Keybinds"))
-                NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!");
+                NotificationManager.Show(NotificationLevel.Error, "https://wiki.quavergame.com/docs/editor/editor_keybinds");
 
-            if (ImGui.MenuItem("Open keybind config file"))
-            {
+            if (ImGui.MenuItem("Open Config File"))
                 InputConfig.OpenConfigFile();
+
+            if (ImGui.BeginMenu("Fill missing keybind actions"))
+            {
+                if (ImGui.MenuItem("Fill with default keys"))
+                    DialogManager.Show(new EditorKeybindFillConfirmationDialog(Screen, true));
+
+                if (ImGui.MenuItem("Fill with unbound keys"))
+                    DialogManager.Show(new EditorKeybindFillConfirmationDialog(Screen, false));
+
+                ImGui.EndMenu();
             }
+
+            if (ImGui.MenuItem("Reset all keybinds"))
+                DialogManager.Show(new EditorKeybindResetConfirmationDialog(Screen));
 
             ImGui.EndMenu();
         }

@@ -88,6 +88,40 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
         }
 
+        public void FillMissingKeys(bool fillWithDefaultBinds)
+        {
+            var count = 0;
+
+            foreach (var (action, defaultBind) in DefaultKeybinds)
+            {
+                if (!Keybinds.ContainsKey(action))
+                {
+                    var bind = fillWithDefaultBinds ? defaultBind : new KeybindList();
+                    Keybinds.Add(action, bind);
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+                SaveToConfig();
+                Logger.Debug($"Filled {count} missing action keybinds in key config file", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Success, $"Filled {count} missing action keybinds");
+            }
+            else
+                NotificationManager.Show(NotificationLevel.Info, $"No actions keybinds are missing");
+        }
+
+        public void ResetConfigFile()
+        {
+            ReverseScrollSeekDirection = true;
+            Keybinds = DefaultKeybinds;
+            PluginKeybinds = new Dictionary<string, KeybindList>();
+            SaveToConfig();
+            NotificationManager.Show(NotificationLevel.Success, "Reset all editor keybinds");
+            Logger.Debug("Reset editor keybind config file", LogType.Runtime);
+        }
+
         public Dictionary<Keybind, HashSet<KeybindActions>> ReverseDictionary()
         {
             var dict = new Dictionary<Keybind, HashSet<KeybindActions>>();
