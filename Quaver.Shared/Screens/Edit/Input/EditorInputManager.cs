@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ChangeSelectedLayerDown,
         };
 
-        private static HashSet<KeybindActions> HoldActions = new HashSet<KeybindActions>()
+        private static HashSet<KeybindActions> HoldAndReleaseActions = new HashSet<KeybindActions>()
         {
             KeybindActions.PlaceNoteLane1,
             KeybindActions.PlaceNoteLane2,
@@ -75,6 +75,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             if (view.IsImGuiHovered) return;
 
             HandleKeypresses();
+            HandleKeyReleasesAfterHoldAction();
             HandlePluginKeypresses();
 
             HandleMouseInputs();
@@ -83,7 +84,6 @@ namespace Quaver.Shared.Screens.Edit.Input
         private void HandleKeypresses()
         {
             var keyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
-
             var uniqueKeypresses = keyState.UniqueKeypresses(PreviousKeyState);
             foreach (var pressedKeybind in keyState.PressedKeybinds())
             {
@@ -105,45 +105,47 @@ namespace Quaver.Shared.Screens.Edit.Input
                         LastActionPress[action] = GameBase.Game.TimeRunning;
                     }
                     else if (CanRepeat(action))
-                    {
                         HandleAction(action);
-                    }
                     else if (CanHold(action))
-                    {
                         HandleAction(action, false);
-                    }
                 }
             }
 
             PreviousKeyState = keyState;
         }
 
+        private void HandleKeyReleasesAfterHoldAction()
+        {
+            foreach (var action in HoldAndReleaseActions)
+            {
+                var binds = InputConfig.GetOrDefault(action);
+                if (binds.IsNotBound()) continue;
+
+                if (binds.IsUniqueRelease())
+                    HandleAction(action, false, true);
+            }
+        }
+
+        private long TimeSinceLastPress(KeybindActions action) => GameBase.Game.TimeRunning - LastActionPress.GetValueOrDefault(action, GameBase.Game.TimeRunning);
+        private long TimeSinceLastAction(KeybindActions action) => GameBase.Game.TimeRunning - LastActionTime.GetValueOrDefault(action, GameBase.Game.TimeRunning);
+
         private bool CanRepeat(KeybindActions action)
         {
             if (!HoldRepeatActions.Contains(action))
                 return false;
 
-            var currentTime = GameBase.Game.TimeRunning;
-            var lastPress = LastActionPress.GetValueOrDefault(action, currentTime);
-            var lastAction = LastActionTime.GetValueOrDefault(action, currentTime);
-            var timeSinceLastPress = currentTime - lastPress;
-            var timeSinceLastAction = currentTime - lastAction;
-
-            return timeSinceLastPress > HoldRepeatActionDelay && timeSinceLastAction > HoldRepeatActionInterval;
+            return TimeSinceLastAction(action) > HoldRepeatActionInterval && TimeSinceLastPress(action) > HoldRepeatActionDelay;
         }
 
         private bool CanHold(KeybindActions action)
         {
-            if (!HoldActions.Contains(action))
+            if (!HoldAndReleaseActions.Contains(action))
                 return false;
 
-            var currentTime = GameBase.Game.TimeRunning;
-            var lastPress = LastActionPress.GetValueOrDefault(action, currentTime);
-            var timeSinceLastPress = currentTime - lastPress;
-            return timeSinceLastPress > HoldRepeatActionDelay;
+            return TimeSinceLastAction(action) > HoldRepeatActionInterval;
         }
 
-        private void HandleAction(KeybindActions action, bool isKeypress = true)
+        private void HandleAction(KeybindActions action, bool isKeypress = true, bool isRelease = false)
         {
             switch (action)
             {
@@ -410,25 +412,25 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.ResnapAllOrSelectedNotes(new List<int> {16, 12, 5, 9, 7, 11, 13, 15});
                     break;
                 case KeybindActions.PlaceNoteLane1:
-                    Screen.ToolInputInLane(1, isKeypress);
+                    Screen.ToolInputInLane(1, isKeypress, isRelease);
                     break;
                 case KeybindActions.PlaceNoteLane2:
-                    Screen.ToolInputInLane(2, isKeypress);
+                    Screen.ToolInputInLane(2, isKeypress, isRelease);
                     break;
                 case KeybindActions.PlaceNoteLane3:
-                    Screen.ToolInputInLane(3, isKeypress);
+                    Screen.ToolInputInLane(3, isKeypress, isRelease);
                     break;
                 case KeybindActions.PlaceNoteLane4:
-                    Screen.ToolInputInLane(4, isKeypress);
+                    Screen.ToolInputInLane(4, isKeypress, isRelease);
                     break;
                 case KeybindActions.PlaceNoteLane5:
-                    Screen.ToolInputInLane(5, isKeypress);
+                    Screen.ToolInputInLane(5, isKeypress, isRelease);
                     break;
                 case KeybindActions.PlaceNoteLane6:
-                    Screen.ToolInputInLane(6, isKeypress);
+                    Screen.ToolInputInLane(6, isKeypress, isRelease);
                     break;
                 case KeybindActions.PlaceNoteLane7:
-                    Screen.ToolInputInLane(7, isKeypress);
+                    Screen.ToolInputInLane(7, isKeypress, isRelease);
                     break;
                 case KeybindActions.PlaceTimingPoint:
                     Screen.PlaceTimingPoint();
@@ -488,7 +490,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             foreach (var (pluginName, keybinds) in InputConfig.PluginKeybinds)
             {
-                if (keybinds.IsUniqueKeypress())
+                if (keybinds.IsUniquePress())
                     Screen.TogglePluginByName(pluginName);
             }
         }

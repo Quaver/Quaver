@@ -509,66 +509,107 @@ namespace Quaver.Shared.Screens.Edit
             }
             else if (KeyboardManager.IsShiftDown())
             {
-                AddNotesInRangeToSelection(time, Track.Time);
+                SelectedHitObjects.AddRange(GetNotesInRange(time, Track.Time));
             }
 
             Track.Seek(time);
         }
 
-        private void AddNotesInRangeToSelection(double offset1, double offset2, int lane = -1)
+        private List<HitObjectInfo> GetNotesInRange(double offset1, double offset2, int lane = -1)
         {
             var start = Math.Min(offset1, offset2);
             var end = Math.Max(offset1, offset2);
 
-            var hitObjectsInRange = WorkingMap.HitObjects
+            return WorkingMap.HitObjects
                 .FindAll(h =>
                     h.StartTime >= start - PlacementLenienceInMs
                     && h.StartTime <= end + PlacementLenienceInMs
                     && (lane < 0 || h.Lane == lane)
                 );
-
-            SelectedHitObjects.AddRange(hitObjectsInRange);
         }
 
-        public void ToolInputInLane(int lane, bool isKeypress)
+        private List<HitObjectInfo> GetCurrentNotes()
+        {
+            var time = Track.Time;
+            return WorkingMap.HitObjects
+                .FindAll(h =>
+                        Math.Abs(h.StartTime - time) <= PlacementLenienceInMs // Is on time
+                        || h.StartTime <= time && h.EndTime >= time // Is pressed during a long note
+                );
+        }
+
+        public void ToolInputInLane(int lane, bool isKeypress, bool isRelease)
         {
             if (lane > WorkingMap.GetKeyCount())
                 return;
 
-            var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-            var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
-
-            // Can be multiple if overlap
-            var hitObjectsAtTime = WorkingMap.HitObjects
-                .Where(h =>
-                    h.Lane == lane && (
-                        Math.Abs(h.StartTime - time) <= PlacementLenienceInMs // Is on time
-                        || h.StartTime <= time && h.EndTime >= time // Is pressed during a long note
-                    )
-                ).ToList();
-
-            // Holding down the key should behave similar to Ctrl+LeftMouse input, so you can continuously
-            // place notes while seeking
-
-            if (CompositionTool.Value == EditorCompositionTool.Note)
+            switch (CompositionTool.Value)
             {
-                if (isKeypress && hitObjectsAtTime.Count > 0)
-                    ActionManager.RemoveHitObjectBatch(hitObjectsAtTime);
-                else if (isKeypress || !Track.IsPlaying)
-                    ActionManager.PlaceHitObject(lane, time, 0, layer);
+                case EditorCompositionTool.Select:
+                    HandleSelectionInput(lane, isKeypress, isRelease);
+                    break;
+
+                case EditorCompositionTool.Note:
+                    HandleNotePlacement(lane, isKeypress, isRelease);
+                    break;
+
+                case EditorCompositionTool.LongNote:
+                    HandleLongNotePlacement(lane, isKeypress, isRelease);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            else if (CompositionTool.Value == EditorCompositionTool.Select)
+        }
+
+        private void HandleSelectionInput(int lane, bool isKeypress, bool isRelease)
+        {
+            var hitObjectsAtTime = GetCurrentNotes().FindAll(h => h.Lane == lane);
+
+            if (isKeypress)
+                foreach (var note in hitObjectsAtTime)
+                {
+                    if (!SelectedHitObjects.Value.Contains(note))
+                        SelectedHitObjects.Add(note);
+                    else
+                        SelectedHitObjects.Remove(note);
+                }
+            else
             {
-                if (isKeypress)
-                    foreach (var note in hitObjectsAtTime)
-                    {
-                        if (!SelectedHitObjects.Value.Contains(note))
-                            SelectedHitObjects.Add(note);
-                        else
-                            SelectedHitObjects.Remove(note);
-                    }
-                else
-                    AddNotesInRangeToSelection(Track.Time, Track.Time - LastSeekDistance, lane);
+                var notesInRange = GetNotesInRange(Track.Time, Track.Time - LastSeekDistance)
+                    .FindAll(h => h.Lane == lane);
+                SelectedHitObjects.AddRange(notesInRange);
+            }
+        }
+
+        private void HandleNotePlacement(int lane, bool isKeypress, bool isRelease)
+        {
+            var hitObjectsAtTime = GetCurrentNotes().FindAll(h => h.Lane == lane);
+
+            // Holding down the key should behave similar to Ctrl+LeftMouse input for notes,
+            // so you can continuously place notes while seeking
+            if (isKeypress && hitObjectsAtTime.Count > 0)
+                ActionManager.RemoveHitObjectBatch(hitObjectsAtTime);
+            else if (isKeypress)
+            {
+                var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+                var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
+                ActionManager.PlaceHitObject(lane, time, 0, layer);
+            }
+        }
+
+        private void HandleLongNotePlacement(int lane, bool isKeypress, bool isRelease)
+        {
+            if (isKeypress) // Key is pressed
+            {
+                NotificationManager.Show(NotificationLevel.Success, $"Lane {lane} was pressed");
+            }
+            else if (isRelease) // Key is released
+            {
+                NotificationManager.Show(NotificationLevel.Success, $"Lane {lane} was released");
+            }
+            else // Key is held
+            {
             }
         }
 

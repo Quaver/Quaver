@@ -107,7 +107,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
         }
 
-        public bool IsUniqueKeypress() => ModifiersAreCorrect() && GenericKeyManager.IsUniquePress(Key);
+        public bool IsUniquePress() => ModifiersAreCorrect() && GenericKeyManager.IsUniquePress(Key);
+        public bool IsUniqueRelease() => ModifiersAreCorrect() && GenericKeyManager.IsUniqueRelease(Key);
 
         public bool IsDown() => ModifiersAreCorrect() && GenericKeyManager.IsDown(Key);
 
