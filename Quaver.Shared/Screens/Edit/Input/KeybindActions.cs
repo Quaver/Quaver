@@ -85,6 +85,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         PasteNotes,
         PasteNoResnap,
         DeleteCurrentNotesOrSelection,
+        SelectCurrentNotes,
         SelectAll,
         SelectAllInLayer,
         DeselectAll,

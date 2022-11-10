@@ -541,7 +541,7 @@ namespace Quaver.Shared.Screens.Edit
                         || h.StartTime <= time && time < h.EndTime - PlacementLenienceInMs  // Is pressed during a long note
                 );
 
-        private List<HitObjectInfo> GetCurrentNotes() => GetNotesAtTime(Track.Time);
+        public List<HitObjectInfo> GetCurrentNotes() => GetNotesAtTime(Track.Time);
 
         private List<HitObjectInfo> GetCurrentNotesAtLane(int lane) => GetCurrentNotes().FindAll(h => h.Lane == lane);
 

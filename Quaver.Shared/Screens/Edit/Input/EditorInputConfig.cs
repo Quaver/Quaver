@@ -179,7 +179,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             {DeleteCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.Delete)},
             {RenameCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.R)},
             {RecolorCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.E)},
-
             {CreateNewMapset, new KeybindList()},
             {CreateNewDifficulty, new KeybindList(KeyModifiers.Ctrl, Keys.N)},
             {CreateNewDifficultyFromCurrent, new KeybindList(new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.N))},
@@ -209,23 +208,18 @@ namespace Quaver.Shared.Screens.Edit.Input
             {OpenGameplayTestModifiers, new KeybindList(Keys.F2)},
             {StartGameplayTest, new KeybindList(Keys.F4)},
             {StartGameplayTestFromBeginning, new KeybindList(KeyModifiers.Ctrl, Keys.F4)},
-
             {CutNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.X), new Keybind(Keys.X),})},
             {CopyNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.C), new Keybind(Keys.C),})},
             {PasteNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.V), new Keybind(Keys.V), new Keybind(Keys.Insert),})},
             {PasteNoResnap, new KeybindList(new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.V))},
-
             {DeleteCurrentNotesOrSelection, new KeybindList(new[] {new Keybind(Keys.Delete), new Keybind(Keys.Back)})},
-
+            {SelectCurrentNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.C)})},
             {SelectAll, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.A), new Keybind(Keys.A)})},
             {SelectAllInLayer, new KeybindList(new[] {new Keybind(new[] {KeyModifiers.Ctrl, KeyModifiers.Shift}, Keys.A), new Keybind(KeyModifiers.Shift, Keys.A)})},
             {DeselectAll, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.D), new Keybind(Keys.D)})},
-
             {MirrorNotesLeftRight, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.H), new Keybind(Keys.H)})},
             {MirrorNotesUpDown, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.G), new Keybind(Keys.G)})},
-
             {ResnapAllNotes, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.R), new Keybind(Keys.R)})},
-
             {PlaceNoteLane1, new KeybindList(Keys.D1)},
             {PlaceNoteLane2, new KeybindList(Keys.D2)},
             {PlaceNoteLane3, new KeybindList(Keys.D3)},
@@ -233,10 +227,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {PlaceNoteLane5, new KeybindList(Keys.D5)},
             {PlaceNoteLane6, new KeybindList(Keys.D6)},
             {PlaceNoteLane7, new KeybindList(Keys.D7)},
-
             {PlaceTimingPoint, new KeybindList(Keys.None)},
             {PlaceScrollVelocity, new KeybindList(Keys.None)},
-
             {ToggleMetadataPanel, new KeybindList(Keys.F1)},
             {ToggleTimingPointPanel, new KeybindList(Keys.F5)},
             {ToggleScrollVelocityPanel, new KeybindList(Keys.F6)},
