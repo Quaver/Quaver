@@ -832,6 +832,12 @@ namespace Quaver.Shared.Screens.Edit
 
         public void ToggleSelectedLayerVisibility() => ActionManager.ToggleLayerVisibility(SelectedLayer.Value);
 
+        public void ToggleAllLayerVisibility() {
+            foreach (var layer in WorkingMap.EditorLayers)
+                ActionManager.ToggleLayerVisibility(layer);
+            ActionManager.ToggleLayerVisibility(DefaultLayer);
+        }
+
         public void MoveSelectedNotesToCurrentLayer() => ActionManager.MoveHitObjectsToLayer(SelectedLayer.Value, SelectedHitObjects.Value);
 
         public void AddNewLayer()
@@ -844,7 +850,6 @@ namespace Quaver.Shared.Screens.Edit
 
             // FindIndex() returns -1 when the default layer is selected
             int index = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 2;
-
             ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer, index));
         }
 
@@ -857,6 +862,7 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects, SelectedLayer.Value));
+            NotificationManager.Show(NotificationLevel.Success, $"Deleted layer '{SelectedLayer.Value.Name}'");
         }
 
         public void RenameLayer() => DialogManager.Show(new DialogRenameLayer(SelectedLayer.Value, ActionManager, WorkingMap));

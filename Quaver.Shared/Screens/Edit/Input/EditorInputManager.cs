@@ -274,7 +274,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.ToggleSelectedLayerVisibility();
                     break;
                 case KeybindActions.ToggleAllLayersVisibility:
-                    // TODO
+                    Screen.ToggleAllLayerVisibility();
                     break;
                 case KeybindActions.MoveSelectedNotesToCurrentLayer:
                     Screen.MoveSelectedNotesToCurrentLayer();
