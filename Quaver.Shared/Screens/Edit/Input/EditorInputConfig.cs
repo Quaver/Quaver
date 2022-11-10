@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         private string Serialize()
         {
             var serializer = new SerializerBuilder()
-                .WithEventEmitter(next => new FlowStyleKeybinds(next))
+                .WithEventEmitter(next => new KeybindListYamlFlowStyle(next))
                 .WithTypeConverter(new KeybindYamlTypeConverter())
                 .DisableAliases()
                 .Build();

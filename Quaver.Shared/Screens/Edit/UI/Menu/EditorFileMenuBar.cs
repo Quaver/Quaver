@@ -678,14 +678,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 }
 
                 if (ImGui.MenuItem("Increase Playback Speed", InputConfig.GetOrDefault(KeybindActions.IncreasePlaybackRate).ToString()))
-                {
                     Screen.ChangeAudioPlaybackRate(Direction.Forward);
-                }
 
                 if (ImGui.MenuItem("Decrease Playback Speed", InputConfig.GetOrDefault(KeybindActions.IncreasePlaybackRate).ToString()))
-                {
                     Screen.ChangeAudioPlaybackRate(Direction.Forward);
-                }
 
                 ImGui.EndMenu();
             }

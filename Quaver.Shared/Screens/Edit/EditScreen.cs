@@ -537,8 +537,8 @@ namespace Quaver.Shared.Screens.Edit
         private List<HitObjectInfo> GetNotesAtTime(double time) =>
             WorkingMap.HitObjects
                 .FindAll(h =>
-                        Math.Abs(h.StartTime - time) <= PlacementLenienceInMs // Is on time
-                        || h.StartTime <= time && time < h.EndTime - PlacementLenienceInMs  // Is pressed during a long note
+                        (Math.Abs(h.StartTime - time) <= PlacementLenienceInMs) // Is on time
+                        || (h.StartTime <= time && time < h.EndTime - PlacementLenienceInMs)  // Is pressed during a long note
                 );
 
         public List<HitObjectInfo> GetCurrentNotes() => GetNotesAtTime(Track.Time);

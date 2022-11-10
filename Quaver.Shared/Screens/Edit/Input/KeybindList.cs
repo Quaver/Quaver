@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.EventEmitters;
 
 namespace Quaver.Shared.Screens.Edit.Input
 {
@@ -62,19 +58,5 @@ namespace Quaver.Shared.Screens.Edit.Input
         public bool IsDown() => this.Any(k => k.IsDown());
         public bool IsUp() => this.Any(k => k.IsUp());
         public override string ToString() => String.Join(", ", this.Where(k => !k.Equals(Keybind.None)).Select(k => k.ToString()));
-    }
-
-    public class FlowStyleKeybinds : ChainedEventEmitter
-    {
-        public FlowStyleKeybinds(IEventEmitter nextEmitter) : base(nextEmitter)
-        {
-        }
-
-        public override void Emit(SequenceStartEventInfo eventInfo, IEmitter emitter)
-        {
-            if (typeof(IEnumerable<Keybind>).IsAssignableFrom(eventInfo.Source.Type))
-                eventInfo = new SequenceStartEventInfo(eventInfo.Source) {Style = SequenceStyle.Flow};
-            nextEmitter.Emit(eventInfo, emitter);
-        }
     }
 }
