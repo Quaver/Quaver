@@ -28,6 +28,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
@@ -239,7 +240,10 @@ namespace Quaver.Shared.Screens.Edit
 
         private const double PlacementLenienceInMs = 2;
 
-        private double LastSeekDistance = 0;
+        private HitObjectInfo[] LongNotesInDrag;
+        private int[] OriginalLongNoteResizeEndTimes;
+
+        private double LastSeekDistance;
 
         /// <summary>
         /// </summary>
@@ -281,6 +285,8 @@ namespace Quaver.Shared.Screens.Edit
             InitializeDiscordRichPresence();
             AddFileWatcher();
 
+            LongNotesInDrag  = new HitObjectInfo[WorkingMap.GetKeyCount() + 1];
+            OriginalLongNoteResizeEndTimes  = new int[WorkingMap.GetKeyCount() + 1];
             EditorInputManager = new EditorInputManager(this);
 
             View = new EditScreenView(this);
@@ -528,15 +534,16 @@ namespace Quaver.Shared.Screens.Edit
                 );
         }
 
-        private List<HitObjectInfo> GetCurrentNotes()
-        {
-            var time = Track.Time;
-            return WorkingMap.HitObjects
+        private List<HitObjectInfo> GetNotesAtTime(double time) =>
+            WorkingMap.HitObjects
                 .FindAll(h =>
                         Math.Abs(h.StartTime - time) <= PlacementLenienceInMs // Is on time
-                        || h.StartTime <= time && h.EndTime >= time // Is pressed during a long note
+                        || h.StartTime <= time && time < h.EndTime - PlacementLenienceInMs  // Is pressed during a long note
                 );
-        }
+
+        private List<HitObjectInfo> GetCurrentNotes() => GetNotesAtTime(Track.Time);
+
+        private List<HitObjectInfo> GetCurrentNotesAtLane(int lane) => GetCurrentNotes().FindAll(h => h.Lane == lane);
 
         public void ToolInputInLane(int lane, bool isKeypress, bool isRelease)
         {
@@ -564,10 +571,8 @@ namespace Quaver.Shared.Screens.Edit
 
         private void HandleSelectionInput(int lane, bool isKeypress, bool isRelease)
         {
-            var hitObjectsAtTime = GetCurrentNotes().FindAll(h => h.Lane == lane);
-
             if (isKeypress)
-                foreach (var note in hitObjectsAtTime)
+                foreach (var note in GetCurrentNotesAtLane(lane))
                 {
                     if (!SelectedHitObjects.Value.Contains(note))
                         SelectedHitObjects.Add(note);
@@ -584,7 +589,7 @@ namespace Quaver.Shared.Screens.Edit
 
         private void HandleNotePlacement(int lane, bool isKeypress, bool isRelease)
         {
-            var hitObjectsAtTime = GetCurrentNotes().FindAll(h => h.Lane == lane);
+            var hitObjectsAtTime = GetCurrentNotesAtLane(lane);
 
             // Holding down the key should behave similar to Ctrl+LeftMouse input for notes,
             // so you can continuously place notes while seeking
@@ -593,24 +598,106 @@ namespace Quaver.Shared.Screens.Edit
             else if (isKeypress)
             {
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-                var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
+                var layer = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value) + 1;
                 ActionManager.PlaceHitObject(lane, time, 0, layer);
             }
         }
 
         private void HandleLongNotePlacement(int lane, bool isKeypress, bool isRelease)
         {
+            var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+
             if (isKeypress) // Key is pressed
             {
-                NotificationManager.Show(NotificationLevel.Success, $"Lane {lane} was pressed");
+                var hitObjectsAtTime = GetCurrentNotesAtLane(lane);
+                if (hitObjectsAtTime.Count == 0)
+                    InputPressLongNote(lane, time);
+                else
+                    ActionManager.RemoveHitObjectBatch(hitObjectsAtTime);
             }
             else if (isRelease) // Key is released
             {
-                NotificationManager.Show(NotificationLevel.Success, $"Lane {lane} was released");
+                InputReleaseLongNote(lane, time);
             }
             else // Key is held
             {
+                InputHoldLongNote(lane, time);
             }
+        }
+
+        private void InputPressLongNote(int lane, int time)
+        {
+            var note = WorkingMap.HitObjects.Find(h => h.IsLongNote && Math.Abs(h.EndTime - time) <= PlacementLenienceInMs);
+
+            if (note == null)
+            {
+                var layer = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value) + 1;
+                note = ActionManager.PlaceHitObject(lane, time, 0, layer);
+            }
+
+            LongNotesInDrag[lane] = note;
+            OriginalLongNoteResizeEndTimes[lane] = note.EndTime;
+        }
+
+        private void InputHoldLongNote(int lane, int time)
+        {
+            if (LongNotesInDrag[lane] == null) return;
+
+            // End dragged before start, don't handle backwards extension like mouse does right now
+            if (LongNotesInDrag[lane].IsLongNote && time < LongNotesInDrag[lane].StartTime)
+            {
+                InputDropLongNote(lane, time);
+                return;
+            }
+
+            // Resize when the time has changed
+            if (LongNotesInDrag[lane].EndTime != time)
+            {
+                new EditorActionResizeLongNote(ActionManager, WorkingMap,
+                        LongNotesInDrag[lane], LongNotesInDrag[lane].EndTime, time)
+                    .Perform();
+            }
+        }
+
+        private void InputDropLongNote(int lane, int time)
+        {
+            if (LongNotesInDrag[lane] != null)
+            {
+                ActionManager.RemoveHitObject(LongNotesInDrag[lane]);
+                LongNotesInDrag[lane] = null;
+                OriginalLongNoteResizeEndTimes[lane] = -1;
+            }
+        }
+
+        private void InputReleaseLongNote(int lane, int time)
+        {
+            // Long note was being dragged
+            if (LongNotesInDrag[lane] != null)
+            {
+                if (Math.Abs(LongNotesInDrag[lane].StartTime - LongNotesInDrag[lane].EndTime) < PlacementLenienceInMs && OriginalLongNoteResizeEndTimes[lane] != 0)
+                {
+                    // Long note was dragged from any length to length 0, resize to regular note to add to undo stack
+                    if (OriginalLongNoteResizeEndTimes[lane] != 0)
+                    {
+                        ActionManager.ResizeLongNote(LongNotesInDrag[lane], OriginalLongNoteResizeEndTimes[lane], 0);
+                    }
+                    else
+                    {
+                        // If the LN was created in this movement then we don't need to add the resize to the undo stack.
+                        // Just perform it to refresh the view is enough
+                        new EditorActionResizeLongNote(ActionManager, WorkingMap, LongNotesInDrag[lane], LongNotesInDrag[lane].EndTime, 0)
+                            .Perform();
+                    }
+                }
+                else if (LongNotesInDrag[lane].StartTime < LongNotesInDrag[lane].EndTime)
+                {
+                    // Long note was dragged to a different length
+                    ActionManager.ResizeLongNote(LongNotesInDrag[lane], OriginalLongNoteResizeEndTimes[lane], time);
+                }
+            }
+
+            LongNotesInDrag[lane] = null;
+            OriginalLongNoteResizeEndTimes[lane] = -1;
         }
 
         public void ShowMetadata() => DialogManager.Show(new EditorMetadataDialog(this));
