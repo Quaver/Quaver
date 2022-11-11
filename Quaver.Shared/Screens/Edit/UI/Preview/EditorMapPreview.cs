@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         /// <param name="track"></param>
         /// <param name="qua"></param>
         public EditorMapPreview(EditorActionManager manager, Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel,
-            int height, IAudioTrack track = null, Qua qua = null) : base(isPlayTesting, activeLeftPanel, height, track, qua, true)
+            int height, IAudioTrack track = null, Qua qua = null) : base(isPlayTesting, activeLeftPanel, height, track, qua)
         {
             HasSeekBar = false;
             DelayTime = 650;
