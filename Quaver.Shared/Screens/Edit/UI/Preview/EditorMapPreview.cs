@@ -10,6 +10,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -48,7 +49,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         /// <param name="track"></param>
         /// <param name="qua"></param>
         public EditorMapPreview(EditorActionManager manager, Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel,
-            int height, IAudioTrack track = null, Qua qua = null) : base(isPlayTesting, activeLeftPanel, height, track, qua)
+            int height, IAudioTrack track = null, Qua qua = null) : base(isPlayTesting, activeLeftPanel, height, track, qua, true)
         {
             HasSeekBar = false;
             DelayTime = 650;
@@ -58,6 +59,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectRemoved += OnHitObjectRemoved;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.HitObjectsReversed += OnHitObjectsReversed;
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
@@ -88,6 +90,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.HitObjectsReversed -= OnHitObjectsReversed;
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
@@ -129,6 +132,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e) => Refresh();
 
         private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => Refresh();
+
+        private void OnHitObjectsReversed(object sender, EditorHitObjectsReversedEventArgs e) => Refresh();
 
         private void OnHitObjectBatchPlaced(object sender, EditorHitObjectBatchPlacedEventArgs e) => Refresh();
 

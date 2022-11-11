@@ -2,15 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MoonSharp.Interpreter;
-using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Audio;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions.Batch;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
@@ -19,6 +14,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
@@ -45,9 +41,6 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Components;
-using Wobble.Bindables;
-using Wobble.Graphics;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -115,6 +108,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of hitobjects have been flipped
         /// </summary>
         public event EventHandler<EditorHitObjectsFlippedEventArgs> HitObjectsFlipped;
+
+        /// <summary>
+        ///     Event invoked when a batch of hitobjects have been reversed
+        /// </summary>
+        public event EventHandler<EditorHitObjectsReversedEventArgs> HitObjectsReversed;
 
         /// <summary>
         ///     Event invoked when a batch of hitobjects have been moved
@@ -643,6 +641,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ResnapHitObjects:
                     HitObjectsResnapped?.Invoke(this, (EditorActionHitObjectsResnappedEventArgs)args);
                     break;
+                case EditorActionType.ReverseHitObjects:
+                    HitObjectsReversed?.Invoke(this, (EditorHitObjectsReversedEventArgs)args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -683,6 +684,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             ScrollVelocityOffsetBatchChanged = null;
             ScrollVelocityMultiplierBatchChanged = null;
             HitObjectsResnapped = null;
+            HitObjectsReversed = null;
         }
     }
 }
