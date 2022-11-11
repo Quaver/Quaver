@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Quaver.Shared.Config;
-using Quaver.Shared.Graphics.Notifications;
 using Wobble.Logging;
 using Wobble.Platform;
 using YamlDotNet.Serialization;
@@ -82,7 +81,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
             catch (Exception e)
             {
-                NotificationManager.Show(NotificationLevel.Error, "An error occurred while opening the config file.");
                 Logger.Debug(e.ToString(), LogType.Runtime);
             }
         }
@@ -105,10 +103,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {
                 SaveToConfig();
                 Logger.Debug($"Filled {count} missing action keybinds in key config file", LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Success, $"Filled {count} missing action keybinds");
             }
-            else
-                NotificationManager.Show(NotificationLevel.Info, $"No actions keybinds are missing");
         }
 
         public void ResetConfigFile()
@@ -117,7 +112,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             Keybinds = DefaultKeybinds;
             PluginKeybinds = new Dictionary<string, KeybindList>();
             SaveToConfig();
-            NotificationManager.Show(NotificationLevel.Success, "Reset all editor keybinds");
             Logger.Debug("Reset editor keybind config file", LogType.Runtime);
         }
 
