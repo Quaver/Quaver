@@ -39,6 +39,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ChangeScrollVelocityMultiplierBatch,
         ApplyOffset,
         ResnapHitObjects,
-        Batch
+        Batch,
+        ReverseHitObjects,
     }
 }
