@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
 using Wobble.Logging;
 using Wobble.Platform;
@@ -158,6 +159,9 @@ namespace Quaver.Shared.Screens.Edit.Input
             return stringWriter.ToString();
         }
 
-        [YamlIgnore] public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>();
+        [YamlIgnore] public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
+        {
+            { KeybindActions.DebugAction, new KeybindList(KeyModifiers.Ctrl, Keys.Enter) }
+        };
     }
 }

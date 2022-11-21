@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI;
@@ -43,13 +44,13 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindDictionary = InputConfig.ReverseDictionary();
             PreviousKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
             Screen = screen;
+            View = (EditScreenView)screen.View;
         }
 
         public void HandleInput()
         {
             if (DialogManager.Dialogs.Count != 0) return;
-            var view = (EditScreenView)Screen.View;
-            if (view.IsImGuiHovered) return;
+            if (View.IsImGuiHovered) return;
 
             HandleKeypresses();
             HandleKeyReleasesAfterHoldAction();
@@ -121,7 +122,9 @@ namespace Quaver.Shared.Screens.Edit.Input
             switch (action)
             {
                 // Action cases
-
+                case KeybindActions.DebugAction:
+                    NotificationManager.Show(NotificationLevel.Info, "Debug action was activated");
+                    break;
                 default:
                     return;
             }
