@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
+using RestSharp;
 using Wobble.Logging;
 using Wobble.Platform;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
 namespace Quaver.Shared.Screens.Edit.Input
@@ -27,24 +29,30 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public static EditorInputConfig LoadFromConfig()
         {
-            EditorInputConfig config;
+            var config = new EditorInputConfig();
 
             if (!File.Exists(ConfigPath))
             {
                 Logger.Debug("No editor key config found, using default", LogType.Runtime);
-                config = new EditorInputConfig();
+                config.SaveToConfig();
             }
             else
             {
-                using (var file = File.OpenText(EditorInputConfig.ConfigPath))
+                try
                 {
-                    config = EditorInputConfig.Deserialize(file);
+                    using (var file = File.OpenText(ConfigPath))
+                    {
+                        config = Deserialize(file);
+                    }
+
+                    Logger.Debug("Loaded editor key config", LogType.Runtime);
+                    config.SaveToConfig(); // Reformat after loading
                 }
-
-                Logger.Debug("Loaded editor key config", LogType.Runtime);
+                catch (Exception e)
+                {
+                    Logger.Error($"Could not load editor key config, using default: {e.Message}", LogType.Runtime);
+                }
             }
-
-            config.SaveToConfig(); // Reformat after loading
 
             return config;
         }
@@ -141,7 +149,16 @@ namespace Quaver.Shared.Screens.Edit.Input
                 .IgnoreUnmatchedProperties()
                 .Build();
 
-            var config = ds.Deserialize<EditorInputConfig>(file);
+            EditorInputConfig config;
+
+            try
+            {
+                config = ds.Deserialize<EditorInputConfig>(file);
+            }
+            catch (YamlException e)
+            {
+                throw new Exception($"Failed to parse configuration in line {e.Start.Line}");
+            }
 
             return config;
         }
