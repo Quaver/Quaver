@@ -676,7 +676,7 @@ namespace Quaver.Shared.Online
                     continue;
 
                 var onlineUser = OnlineUsers[user.Key];
-                onlineUser.CurrentStatus = user.Value;
+                onlineUser.CurrentStatus = user.Value ?? new UserClientStatus(ClientStatus.InMenus, -1, "", 1, "", 0);
 
                 // ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
             }

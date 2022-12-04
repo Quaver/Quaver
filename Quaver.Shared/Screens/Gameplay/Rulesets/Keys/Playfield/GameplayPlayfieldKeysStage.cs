@@ -20,6 +20,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
@@ -128,7 +129,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     The JudgementHitBurst Sprite.
         /// </summary>
-        public JudgementHitBurst JudgementHitBurst { get; private set; }
+        public List<JudgementHitBurst> JudgementHitBursts { get; private set; }
 
         /// <summary>
         ///     When hitting an object, this is the sprite that will be shown at
@@ -541,6 +542,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void CreateJudgementHitBurst()
         {
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+            JudgementHitBursts = new List<JudgementHitBurst>(); 
+
             // Default the frames to miss.
             var frames = SkinManager.Skin.Judgements[Judgement.Miss];
 
@@ -550,11 +554,25 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Set size w/ scaling.
             var size = new Vector2(firstFrame.Width, firstFrame.Height) * Skin.JudgementHitBurstScale / firstFrame.Height;
 
-            JudgementHitBurst = new JudgementHitBurst(Screen, frames, size, Skin.JudgementBurstPosY)
+            var judgementBurstCount = skin.DisplayJudgementsInEachColumn ?
+                Screen.Map.GetKeyCount(Screen.Map.HasScratchKey) : 1;
+
+            var playfieldOffset = (Playfield.Width / 2) - (Playfield.LaneSize / 2);
+
+            for (var lane = 0; lane < judgementBurstCount; lane++)
             {
-                Parent = Playfield.ForegroundContainer,
-                Alignment = Alignment.MidCenter,
-            };
+                var judgementHitBurst = new JudgementHitBurst(Screen, frames, size, Skin.JudgementBurstPosY)
+                {
+                    Parent = Playfield.ForegroundContainer,
+                    Alignment = Alignment.MidCenter,
+                    X = skin.DisplayJudgementsInEachColumn ? Receptors[lane].X - playfieldOffset : 0
+                };
+
+                if (skin.RotateJudgements && skin.DisplayJudgementsInEachColumn)
+                    judgementHitBurst.Rotation = GameplayHitObjectKeys.GetObjectRotation(Screen.Map.Mode, lane);
+
+                JudgementHitBursts.Add(judgementHitBurst);
+            }
         }
 
         /// <summary>

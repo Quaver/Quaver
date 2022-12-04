@@ -29,14 +29,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ChangePreviewTime,
         ChangeTimingPointOffset,
         ChangeTimingPointBpm,
+        ChangeTimingPointSignature,
         ChangeTimingPointHidden,
         ResetTimingPoint,
         ChangeTimingPointBpmBatch,
+        ChangeTimingPointSignatureBatch,
         ChangeTimingPointOffsetBatch,
         ChangeScrollVelocityOffsetBatch,
         ChangeScrollVelocityMultiplierBatch,
         ApplyOffset,
         ResnapHitObjects,
-        Batch
+        Batch,
+        ReverseHitObjects,
     }
 }

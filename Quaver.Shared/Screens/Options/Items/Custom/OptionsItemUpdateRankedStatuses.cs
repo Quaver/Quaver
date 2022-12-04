@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Ranked;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -63,6 +64,9 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         public static void Run(bool fromOptions = true)
         {
+            // Don't run if client is not connected
+            if (!OnlineManager.Connected) return;
+
             var mapsets = new List<Mapset>(MapManager.Mapsets);
 
             ThreadScheduler.Run(() =>

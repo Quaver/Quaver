@@ -66,6 +66,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Alpha = 0;
             CreateScrollbar();
 
+            AllowScrollbarDragging = true;
+
             ClickableArea = new Container()
             {
                 Parent = this,
@@ -92,7 +94,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+            InputEnabled = MouseManager.CurrentState.Position.X >= ScreenRectangle.X
+                           && ScreenRectangle.Y <= MouseManager.CurrentState.Position.Y
+                           && MouseManager.CurrentState.Position.Y <= ScreenRectangle.Bottom
                            && DialogManager.Dialogs.Count == 0
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
