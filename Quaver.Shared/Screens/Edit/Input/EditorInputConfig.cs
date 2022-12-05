@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString(), LogType.Runtime);
+                Logger.Error(e.ToString(), LogType.Runtime);
             }
         }
 
