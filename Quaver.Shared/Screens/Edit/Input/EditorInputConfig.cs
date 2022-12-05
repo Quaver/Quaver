@@ -35,23 +35,19 @@ namespace Quaver.Shared.Screens.Edit.Input
             {
                 Logger.Debug("No editor key config found, using default", LogType.Runtime);
                 config.SaveToConfig();
+                return config;
             }
-            else
-            {
-                try
-                {
-                    using (var file = File.OpenText(ConfigPath))
-                    {
-                        config = Deserialize(file);
-                    }
 
-                    Logger.Debug("Loaded editor key config", LogType.Runtime);
-                    config.SaveToConfig(); // Reformat after loading
-                }
-                catch (Exception e)
-                {
-                    Logger.Error($"Could not load editor key config, using default: {e.Message}", LogType.Runtime);
-                }
+            try
+            {
+                using (var file = File.OpenText(ConfigPath))
+                    config = Deserialize(file);
+                Logger.Debug("Loaded editor key config", LogType.Runtime);
+                config.SaveToConfig(); // Reformat after loading
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Could not load editor key config, using default: {e.Message}", LogType.Runtime);
             }
 
             return config;
