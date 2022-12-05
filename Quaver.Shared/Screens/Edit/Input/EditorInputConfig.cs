@@ -78,8 +78,15 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public void SaveToConfig()
         {
-            File.WriteAllText(ConfigPath, Serialize());
-            Logger.Debug("Saved editor key config to file", LogType.Runtime);
+            try
+            {
+                File.WriteAllText(ConfigPath, Serialize());
+                Logger.Debug("Saved editor key config to file", LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString(), LogType.Runtime);
+            }
         }
 
         public void OpenConfigFile()
