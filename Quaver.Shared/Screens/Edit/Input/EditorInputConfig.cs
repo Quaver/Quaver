@@ -45,6 +45,10 @@ namespace Quaver.Shared.Screens.Edit.Input
                 Logger.Debug("Loaded editor key config", LogType.Runtime);
                 config.SaveToConfig(); // Reformat after loading
             }
+            catch (YamlException e)
+            {
+                Logger.Error($"Could not load editor key config, using default: Failed to parse configuration in line {e.Start.Line}", LogType.Runtime);
+            }
             catch (Exception e)
             {
                 Logger.Error($"Could not load editor key config, using default: {e.Message}", LogType.Runtime);
@@ -154,14 +158,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
             EditorInputConfig config;
 
-            try
-            {
-                config = ds.Deserialize<EditorInputConfig>(file);
-            }
-            catch (YamlException e)
-            {
-                throw new Exception($"Failed to parse configuration in line {e.Start.Line}");
-            }
+            config = ds.Deserialize<EditorInputConfig>(file);
 
             return config;
         }
