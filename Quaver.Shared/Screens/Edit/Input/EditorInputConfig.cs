@@ -179,7 +179,6 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         [YamlIgnore] public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
         {
-            { KeybindActions.DebugAction, new KeybindList(KeyModifiers.Ctrl, Keys.Enter) }
         };
     }
 }

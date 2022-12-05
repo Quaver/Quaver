@@ -122,9 +122,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             switch (action)
             {
                 // Action cases
-                case KeybindActions.DebugAction:
-                    NotificationManager.Show(NotificationLevel.Info, "Debug action was activated");
-                    break;
                 default:
                     return;
             }
