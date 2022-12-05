@@ -52,17 +52,17 @@ namespace Quaver.Shared.Screens.Edit.Input
             if (DialogManager.Dialogs.Count != 0) return;
             if (View.IsImGuiHovered) return;
 
-            HandleKeypresses();
+            HandleKeyPresses();
             HandleKeyReleasesAfterHoldAction();
-            HandlePluginKeypresses();
+            HandlePluginKeyPresses();
 
             HandleMouseInputs();
         }
 
-        private void HandleKeypresses()
+        private void HandleKeyPresses()
         {
             var keyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
-            var uniqueKeypresses = keyState.UniqueKeypresses(PreviousKeyState);
+            var uniqueKeyPresses = keyState.UniqueKeyPresses(PreviousKeyState);
             foreach (var pressedKeybind in keyState.PressedKeybinds())
             {
                 HashSet<KeybindActions> actions;
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
                 foreach (var action in actions)
                 {
-                    if (uniqueKeypresses.Contains(pressedKeybind))
+                    if (uniqueKeyPresses.Contains(pressedKeybind))
                     {
                         HandleAction(action);
                         LastActionPress[action] = GameBase.Game.TimeRunning;
@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             return TimeSinceLastAction(action) > HoldRepeatActionInterval;
         }
 
-        private void HandleAction(KeybindActions action, bool isKeypress = true, bool isRelease = false)
+        private void HandleAction(KeybindActions action, bool isKeyPress = true, bool isRelease = false)
         {
             switch (action)
             {
@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
         }
 
-        private void HandlePluginKeypresses()
+        private void HandlePluginKeyPresses()
         {
             foreach (var (pluginName, keybinds) in InputConfig.PluginKeybinds)
             {

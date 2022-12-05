@@ -36,10 +36,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             return set;
         }
 
-        public HashSet<Keybind> UniqueKeypresses(GenericKeyState previousState)
+        public HashSet<Keybind> UniqueKeyPresses(GenericKeyState previousState)
         {
-            var newKeypresses = Pressed.Except(previousState.Pressed);
-            var uniqueKeyState = new GenericKeyState(Modifiers, newKeypresses);
+            var newKeyPresses = Pressed.Except(previousState.Pressed);
+            var uniqueKeyState = new GenericKeyState(Modifiers, newKeyPresses);
             return uniqueKeyState.PressedKeybinds();
         }
 
