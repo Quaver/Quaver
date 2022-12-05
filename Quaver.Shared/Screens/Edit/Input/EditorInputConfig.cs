@@ -156,9 +156,10 @@ namespace Quaver.Shared.Screens.Edit.Input
                 .IgnoreUnmatchedProperties()
                 .Build();
 
-            EditorInputConfig config;
+            var config = ds.Deserialize<EditorInputConfig>(file);
 
-            config = ds.Deserialize<EditorInputConfig>(file);
+            if (config == null)
+                throw new Exception("Config file is empty");
 
             return config;
         }
