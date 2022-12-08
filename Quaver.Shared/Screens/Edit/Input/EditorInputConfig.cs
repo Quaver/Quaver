@@ -159,7 +159,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             var config = ds.Deserialize<EditorInputConfig>(file);
 
             if (config == null)
-                throw new Exception("Config file is empty");
+            {
+                Logger.Debug("Config file was empty, creating new default", LogType.Runtime);
+                config = new EditorInputConfig();
+            }
 
             return config;
         }
