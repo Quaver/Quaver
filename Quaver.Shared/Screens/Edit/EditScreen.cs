@@ -455,45 +455,6 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             InputManager.HandleInput();
-
-            HandleKeyPressSpace();
-            HandleKeyPressPlayfieldZoom();
-            HandleKeyPressHome();
-            HandleKeyPressEnd();
-
-            // To not conflict with the volume controller
-            if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
-            {
-                HandleSeekingBackwards();
-                HandleSeekingForwards();
-                HandleKeyPressUp();
-                HandleKeyPressDown();
-                HandleKeyPressShiftUpDown();
-            }
-
-            HandleBeatSnapChanges();
-            HandleCompositionToolChanges();
-            HandlePlaybackRateChanges();
-            HandleTemporaryHitObjectPlacement();
-            HandleCtrlInput();
-            HandleKeyPressDelete();
-            HandleKeyPressEscape();
-            HandleKeyPressF1();
-            HandleKeyPressF4();
-            HandleKeyPressF5();
-            HandleKeyPressF6();
-            HandleKeyPressF10();
-            HandleKeyPressShiftH();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressEscape()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                return;
-
-            LeaveEditor();
         }
 
         /// <summary>

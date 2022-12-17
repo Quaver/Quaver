@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
-using RestSharp;
 using Wobble.Logging;
 using Wobble.Platform;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
+using static Quaver.Shared.Screens.Edit.Input.KeybindActions;
 
 namespace Quaver.Shared.Screens.Edit.Input
 {
@@ -182,6 +182,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         [YamlIgnore] public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
         {
+            {ExitEditor, new KeybindList(Keys.Escape)},
         };
     }
 }

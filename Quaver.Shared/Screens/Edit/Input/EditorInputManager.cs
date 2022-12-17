@@ -121,7 +121,9 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             switch (action)
             {
-                // Action cases
+                case KeybindActions.ExitEditor:
+                    Screen.LeaveEditor();
+                    break;
                 default:
                     return;
             }
