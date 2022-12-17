@@ -124,6 +124,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ExitEditor:
                     Screen.LeaveEditor();
                     break;
+                case KeybindActions.PlayPause:
+                    Screen.TogglePlayPause();
+                    break;
                 default:
                     return;
             }

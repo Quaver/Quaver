@@ -572,7 +572,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressSpace()
+        public void TogglePlayPause()
         {
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Space))
                 return;

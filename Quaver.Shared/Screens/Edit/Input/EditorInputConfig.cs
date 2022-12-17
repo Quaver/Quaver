@@ -183,6 +183,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         [YamlIgnore] public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
         {
             {ExitEditor, new KeybindList(Keys.Escape)},
+            {PlayPause, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Space), new Keybind(KeyModifiers.Free, Keys.Enter)})},
         };
     }
 }
