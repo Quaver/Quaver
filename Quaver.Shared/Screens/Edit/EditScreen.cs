@@ -777,6 +777,8 @@ namespace Quaver.Shared.Screens.Edit
             }
         }
 
+        public void AdjustZoom(int stepSize) => PlayfieldScrollSpeed.Value += stepSize;
+
         /// <summary>
         ///     Switches the selected composition tool depending on the number key pressed
         ///     Will only switch tools when live mapping is disabled
@@ -803,6 +805,8 @@ namespace Quaver.Shared.Screens.Edit
             HitsoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= Track.Time);
             HitsoundObjectIndex++;
         }
+
+        public void AdjustZoom(int stepSize) => PlayfieldScrollSpeed.Value += stepSize;
 
         /// <summary>
         /// </summary>

@@ -6,6 +6,10 @@ namespace Quaver.Shared.Screens.Edit.Input
     public enum KeybindActions
     {
         ExitEditor,
-        PlayPause
+        PlayPause,
+        ZoomIn,
+        ZoomInLarge,
+        ZoomOut,
+        ZoomOutLarge,
     }
 }

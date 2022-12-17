@@ -28,6 +28,10 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private static HashSet<KeybindActions> HoldRepeatActions = new HashSet<KeybindActions>()
         {
+            KeybindActions.ZoomIn,
+            KeybindActions.ZoomInLarge,
+            KeybindActions.ZoomOut,
+            KeybindActions.ZoomOutLarge,
         };
 
         private static HashSet<KeybindActions> HoldAndReleaseActions = new HashSet<KeybindActions>()
@@ -126,6 +130,18 @@ namespace Quaver.Shared.Screens.Edit.Input
                     break;
                 case KeybindActions.PlayPause:
                     Screen.TogglePlayPause();
+                    break;
+                case KeybindActions.ZoomIn:
+                    Screen.AdjustZoom(1);
+                    break;
+                case KeybindActions.ZoomInLarge:
+                    Screen.AdjustZoom(5);
+                    break;
+                case KeybindActions.ZoomOut:
+                    Screen.AdjustZoom(-1);
+                    break;
+                case KeybindActions.ZoomOutLarge:
+                    Screen.AdjustZoom(-5);
                     break;
                 default:
                     return;

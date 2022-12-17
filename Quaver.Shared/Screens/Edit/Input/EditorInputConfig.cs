@@ -184,6 +184,10 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             {ExitEditor, new KeybindList(Keys.Escape)},
             {PlayPause, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Space), new Keybind(KeyModifiers.Free, Keys.Enter)})},
+            {ZoomIn, new KeybindList(Keys.PageUp)},
+            {ZoomInLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageUp)},
+            {ZoomOut, new KeybindList(Keys.PageDown)},
+            {ZoomOutLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageDown)},
         };
     }
 }
