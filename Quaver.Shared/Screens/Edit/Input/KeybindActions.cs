@@ -40,5 +40,6 @@ namespace Quaver.Shared.Screens.Edit.Input
         ChangeSnapTo10,
         ChangeSnapTo12,
         ChangeSnapTo16,
+        OpenCustomSnapDialog,
     }
 }

@@ -217,6 +217,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ChangeSnapTo10, new KeybindList()},
             {ChangeSnapTo12, new KeybindList()},
             {ChangeSnapTo16, new KeybindList()},
+            {OpenCustomSnapDialog, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D0), new Keybind(KeyModifiers.Shift, Keys.D0)})},
         };
     }
 }

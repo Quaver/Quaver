@@ -240,6 +240,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ChangeSnapTo16:
                     Screen.BeatSnap.Value = 16;
                     break;
+                case KeybindActions.OpenCustomSnapDialog:
+                    Screen.OpenCustomSnapDialog();
+                    break;
                 default:
                     return;
             }

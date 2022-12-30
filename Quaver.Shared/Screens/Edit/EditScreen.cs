@@ -693,6 +693,8 @@ namespace Quaver.Shared.Screens.Edit
             Track.Rate = targetRate;
         }
 
+        public void OpenCustomSnapDialog() => DialogManager.Show(new CustomBeatSnapDialog(BeatSnap, AvailableBeatSnaps));
+
         /// <summary>
         ///     Loads any plugins for the editor
         /// </summary>
