@@ -459,14 +459,53 @@ namespace Quaver.Shared.Screens.Edit
             InputManager.HandleInput();
         }
 
-        public void ChangeToolTo(EditorCompositionTool tool) => CompositionTool.Value = tool;
-
-        public void ChangeTool(Direction direction)
+        /// <summary>
+        ///     Sets the hitsounds object index, so we know which object to play sounds for.
+        ///     This is generally used when seeking through the map.
+        /// </summary>
+        private void SetHitSoundObjectIndex()
         {
-            var index = StepAndWrapNumber(direction, (int)CompositionTool.Value,
-                Enum.GetValues(typeof(EditorCompositionTool)).Length);
-            CompositionTool.Value = (EditorCompositionTool)index;
+            HitsoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= Track.Time);
+            HitsoundObjectIndex++;
         }
+
+        /// <summary>
+        /// </summary>
+        private void PlayHitsounds()
+        {
+            if (!Track.IsPlaying)
+                return;
+
+            for (var i = HitsoundObjectIndex; i < WorkingMap.HitObjects.Count; i++)
+            {
+                var obj = WorkingMap.HitObjects[i];
+
+                if (Track.Time >= obj.StartTime)
+                {
+                    if (obj.EditorLayer == 0 && DefaultLayer.Hidden)
+                        continue;
+
+                    try
+                    {
+                        var layer = WorkingMap.EditorLayers[obj.EditorLayer - 1];
+
+                        if (layer.Hidden)
+                            continue;
+                    }
+                    catch (Exception)
+                    {
+                        // ignore and play
+                    }
+
+                    HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
+                    HitsoundObjectIndex = i + 1;
+                }
+                else
+                    break;
+            }
+        }
+
+        #region SEEKING
 
         /// <summary>
         /// </summary>
@@ -548,150 +587,11 @@ namespace Quaver.Shared.Screens.Edit
             SeekTo(SelectedHitObjects.Value.Max(h => Math.Max(h.StartTime, h.EndTime)));
         }
 
-        /// <summary>
-        ///     Sets the hitsounds object index, so we know which object to play sounds for.
-        ///     This is generally used when seeking through the map.
-        /// </summary>
-        private void SetHitSoundObjectIndex()
-        {
-            HitsoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= Track.Time);
-            HitsoundObjectIndex++;
-        }
+        #endregion
 
-        public void AdjustZoom(int stepSize) => PlayfieldScrollSpeed.Value += stepSize;
+        #region LAYERS
 
-        /// <summary>
-        /// </summary>
-        private void PlayHitsounds()
-        {
-            if (!Track.IsPlaying)
-                return;
-
-            for (var i = HitsoundObjectIndex; i < WorkingMap.HitObjects.Count; i++)
-            {
-                var obj = WorkingMap.HitObjects[i];
-
-                if (Track.Time >= obj.StartTime)
-                {
-                    if (obj.EditorLayer == 0 && DefaultLayer.Hidden)
-                        continue;
-
-                    try
-                    {
-                        var layer = WorkingMap.EditorLayers[obj.EditorLayer - 1];
-
-                        if (layer.Hidden)
-                            continue;
-                    }
-                    catch (Exception)
-                    {
-                        // ignore and play
-                    }
-
-                    HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
-                    HitsoundObjectIndex = i + 1;
-                }
-                else
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="direction"></param>
-        public void ChangeBeatSnap(Direction direction)
-        {
-            var index = BeatSnapIndex;
-
-            switch (direction)
-            {
-                case Direction.Forward:
-                    BeatSnap.Value = index + 1 < AvailableBeatSnaps.Count ? AvailableBeatSnaps[index + 1] : AvailableBeatSnaps.First();
-                    break;
-                case Direction.Backward:
-                    BeatSnap.Value = index - 1 >= 0 ? AvailableBeatSnaps[index - 1] : AvailableBeatSnaps.Last();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressPlayfieldZoom()
-        {
-            const int zoomTime = 100;
-            const Keys zoomInKey = Keys.PageUp;
-            const Keys zoomOutKey = Keys.PageDown;
-            TimeSinceLastPlayfieldZoom += GameBase.Game.TimeSinceLastFrame;
-            var canZoom = TimeSinceLastPlayfieldZoom >= zoomTime;
-
-            if (KeyboardManager.IsUniqueKeyPress(zoomInKey))
-                PlayfieldScrollSpeed.Value++;
-            else if (KeyboardManager.IsUniqueKeyPress(zoomOutKey))
-                PlayfieldScrollSpeed.Value--;
-            else if (KeyboardManager.CurrentState.IsKeyDown(zoomInKey) && canZoom)
-            {
-                PlayfieldScrollSpeed.Value++;
-                TimeSinceLastPlayfieldZoom = 0;
-            }
-            else if (KeyboardManager.CurrentState.IsKeyDown(zoomOutKey) && canZoom)
-            {
-                PlayfieldScrollSpeed.Value--;
-                TimeSinceLastPlayfieldZoom = 0;
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressHome()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Home))
-                return;
-
-            var time = WorkingMap.HitObjects.Count() == 0 ? 0.0d : WorkingMap.HitObjects.First().StartTime;
-            Track.Seek(time);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleKeyPressEnd()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.End))
-                return;
-
-            // Using the actual track length won't work (might be out of bounds?)
-            var time = WorkingMap.HitObjects.Count() == 0 ? Track.Length - 1 : WorkingMap.HitObjects.Last().StartTime;
-            Track.Seek(time);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="direction"></param>
-        public void ChangeAudioPlaybackRate(Direction direction)
-        {
-            float targetRate;
-
-            switch (direction)
-            {
-                case Direction.Forward:
-                    targetRate = Track.Rate + 0.25f;
-                    break;
-                case Direction.Backward:
-                    targetRate = Track.Rate - 0.25f;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
-
-            if (targetRate <= 0 || targetRate > 2.0f)
-            {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot change the audio rate this way any further!");
-                return;
-            }
-
-            Track.Rate = targetRate;
-        }
+        public void ToggleViewLayers() => ToggleBindableBool(ViewLayers, "view layer mode");
 
         private EditorLayerInfo GetNextLayerInDirection(Direction direction, EditorLayerInfo layer)
         {
@@ -707,14 +607,15 @@ namespace Quaver.Shared.Screens.Edit
 
         public void ChangeSelectedLayer(Direction direction) => SelectedLayer.Value = GetNextLayerInDirection(direction, SelectedLayer.Value);
 
-        private void ToggleBindableBool(Bindable<bool> boolean, string name)
-        {
-            boolean.Value = !boolean.Value;
-            NotificationManager.Show(NotificationLevel.Info, (boolean.Value ? "Enabled" : "Disabled") + " " + name);
-        }
+        #endregion
+
+        #region DIALOGS
 
         public void OpenCustomSnapDialog() => DialogManager.Show(new CustomBeatSnapDialog(BeatSnap, AvailableBeatSnaps));
-        public void ToggleViewLayers() => ToggleBindableBool(ViewLayers, "view layer mode");
+
+        #endregion
+
+        #region PLUGINS
 
         /// <summary>
         ///     Loads any plugins for the editor
@@ -738,12 +639,18 @@ namespace Quaver.Shared.Screens.Edit
             {
                 {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
                 {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
-                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
-                    $"{dir}/BpmCalculator/plugin.lua", true)},
-                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
-                    $"{dir}/BpmDetector/plugin.lua", true)},
-                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
-                    $"{dir}/GoToObjects/plugin.lua", true)}
+                {
+                    EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
+                        $"{dir}/BpmCalculator/plugin.lua", true)
+                },
+                {
+                    EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
+                        $"{dir}/BpmDetector/plugin.lua", true)
+                },
+                {
+                    EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
+                        $"{dir}/GoToObjects/plugin.lua", true)
+                }
             };
 
             foreach (var plugin in BuiltInPlugins)
@@ -789,6 +696,10 @@ namespace Quaver.Shared.Screens.Edit
                 }
             }
         }
+
+        #endregion
+
+        #region MAP ACTIONS
 
         /// <summary>
         ///     Copies any objects that are currently selected to the clipboard
@@ -919,6 +830,95 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+        }
+
+        /// <summary>
+        ///     Places a timing point or scroll velocity at the current point in time.
+        /// </summary>
+        private void PlaceTimingPointOrScrollVelocity()
+        {
+            if (!KeyboardManager.IsShiftDown())
+            {
+                ActionManager.PlaceScrollVelocity(new SliderVelocityInfo
+                {
+                    StartTime = (float)Track.Time,
+                    Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
+                });
+            }
+            else
+            {
+                if (WorkingMap.TimingPoints.Count != 0)
+                {
+                    ActionManager.PlaceTimingPoint(new TimingPointInfo
+                    {
+                        StartTime = (float)Track.Time,
+                        Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
+                    });
+                }
+            }
+        }
+
+        #endregion
+
+        #region EDITOR ACTIONS
+
+        public void AdjustZoom(int stepSize) => PlayfieldScrollSpeed.Value += stepSize;
+
+        public void ChangeToolTo(EditorCompositionTool tool) => CompositionTool.Value = tool;
+
+        public void ChangeTool(Direction direction)
+        {
+            var index = StepAndWrapNumber(direction, (int)CompositionTool.Value,
+                Enum.GetValues(typeof(EditorCompositionTool)).Length);
+            CompositionTool.Value = (EditorCompositionTool)index;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="direction"></param>
+        public void ChangeBeatSnap(Direction direction)
+        {
+            var index = BeatSnapIndex;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    BeatSnap.Value = index + 1 < AvailableBeatSnaps.Count ? AvailableBeatSnaps[index + 1] : AvailableBeatSnaps.First();
+                    break;
+                case Direction.Backward:
+                    BeatSnap.Value = index - 1 >= 0 ? AvailableBeatSnaps[index - 1] : AvailableBeatSnaps.Last();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="direction"></param>
+        public void ChangeAudioPlaybackRate(Direction direction)
+        {
+            float targetRate;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    targetRate = Track.Rate + 0.25f;
+                    break;
+                case Direction.Backward:
+                    targetRate = Track.Rate - 0.25f;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            if (targetRate <= 0 || targetRate > 2.0f)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot change the audio rate this way any further!");
+                return;
+            }
+
+            Track.Rate = targetRate;
         }
 
         /// <summary>
@@ -1302,104 +1302,15 @@ namespace Quaver.Shared.Screens.Edit
             });
         }
 
-        /// <summary>
-        ///     Places a timing point or scroll velocity at the current point in time.
-        /// </summary>
-        private void PlaceTimingPointOrScrollVelocity()
-        {
-            if (!KeyboardManager.IsShiftDown())
-            {
-                ActionManager.PlaceScrollVelocity(new SliderVelocityInfo
-                {
-                    StartTime = (float)Track.Time,
-                    Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
-                });
-            }
-            else
-            {
-                if (WorkingMap.TimingPoints.Count != 0)
-                {
-                    ActionManager.PlaceTimingPoint(new TimingPointInfo
-                    {
-                        StartTime = (float)Track.Time,
-                        Bpm = WorkingMap.GetTimingPointAt(Track.Time)?.Bpm ?? WorkingMap.TimingPoints.First().Bpm
-                    });
-                }
-            }
-        }
+        #endregion
+
+        #region EVENT HANDLERS
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTrackSeeked(object sender, TrackSeekedEventArgs e) => SetHitSoundObjectIndex();
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, Map.MapId, "",
-            (byte)WorkingMap.Mode, $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", 0);
-
-        /// <summary>
-        ///     Returns if the user is able to seek through the track
-        ///     If the user is hovering over a scroll container, it prevents them from seeking.
-        /// </summary>
-        /// <returns></returns>
-        private bool CanSeek()
-        {
-            var view = (EditScreenView)View;
-            return !view.Layers.IsHovered() && !view.AutoMod.Panel.IsHovered();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void InitializeDiscordRichPresence()
-        {
-            try
-            {
-                DiscordHelper.Presence.StartTimestamp = (long)(TimeHelper.GetUnixTimestampMilliseconds() / 1000);
-                DiscordHelper.Presence.EndTimestamp = 0;
-                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
-                DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
-                DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
-
-                RichPresenceHelper.UpdateRichPresence("Editing", WorkingMap.ToString());
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private void AddFileWatcher()
-        {
-            if (Map.Game != MapGame.Quaver || ConfigManager.SongDirectory == null)
-                return;
-
-            var dir = $"{ConfigManager.SongDirectory}/{Map.Directory}";
-
-            if (!Directory.Exists(dir))
-                return;
-
-            FileWatcher = new FileSystemWatcher(dir)
-            {
-                NotifyFilter = NotifyFilters.LastWrite,
-                Filter = $"{Map.Path}"
-            };
-
-            FileWatcher.Changed += (sender, args) =>
-            {
-                if (DialogManager.Dialogs.Count != 0)
-                    return;
-
-                DialogManager.Show(new EditorManualChangesDialog(this));
-            };
-
-            FileWatcher.EnableRaisingEvents = true;
-        }
 
         /// <summary>
         /// </summary>
@@ -1444,6 +1355,39 @@ namespace Quaver.Shared.Screens.Edit
             DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
         }
 
+        #endregion
+
+        #region HELPERS
+
+        /// <summary>
+        /// </summary>
+        private void AddFileWatcher()
+        {
+            if (Map.Game != MapGame.Quaver || ConfigManager.SongDirectory == null)
+                return;
+
+            var dir = $"{ConfigManager.SongDirectory}/{Map.Directory}";
+
+            if (!Directory.Exists(dir))
+                return;
+
+            FileWatcher = new FileSystemWatcher(dir)
+            {
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = $"{Map.Path}"
+            };
+
+            FileWatcher.Changed += (sender, args) =>
+            {
+                if (DialogManager.Dialogs.Count != 0)
+                    return;
+
+                DialogManager.Show(new EditorManualChangesDialog(this));
+            };
+
+            FileWatcher.EnableRaisingEvents = true;
+        }
+
         private int StepAndWrapNumber(Direction direction, int i, int max)
         {
             if (max == 0) return i;
@@ -1467,5 +1411,51 @@ namespace Quaver.Shared.Screens.Edit
 
             return i;
         }
+
+        private void ToggleBindableBool(Bindable<bool> boolean, string name)
+        {
+            boolean.Value = !boolean.Value;
+            NotificationManager.Show(NotificationLevel.Info, (boolean.Value ? "Enabled" : "Disabled") + " " + name);
+        }
+
+        /// <summary>
+        ///     Returns if the user is able to seek through the track
+        ///     If the user is hovering over a scroll container, it prevents them from seeking.
+        /// </summary>
+        /// <returns></returns>
+        private bool CanSeek()
+        {
+            var view = (EditScreenView)View;
+            return !view.Layers.IsHovered() && !view.AutoMod.Panel.IsHovered();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void InitializeDiscordRichPresence()
+        {
+            try
+            {
+                DiscordHelper.Presence.StartTimestamp = (long)(TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+                DiscordHelper.Presence.EndTimestamp = 0;
+                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+                DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
+                DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
+
+                RichPresenceHelper.UpdateRichPresence("Editing", WorkingMap.ToString());
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        #endregion
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, Map.MapId, "",
+            (byte)WorkingMap.Mode, $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", 0);
     }
 }
