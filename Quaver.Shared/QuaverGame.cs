@@ -268,6 +268,7 @@ namespace Quaver.Shared
         /// </summary>
         protected override void Initialize()
         {
+            QuaverScreenManager.Initialize();
             WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
 
@@ -310,7 +311,7 @@ namespace Quaver.Shared
             new InitializationScreen().OnFirstUpdate();
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ChangeScreen(new InitializationScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new InitializationScreen(), true);
 #endif
         }
 
@@ -364,7 +365,6 @@ namespace Quaver.Shared
             HandleGlobalInput(gameTime);
             HandleOnlineHubInput();
 
-            QuaverScreenManager.Update(gameTime);
             NotificationManager.Update(gameTime);
             VolumeController?.Update(gameTime);
             Transitioner.Update(gameTime);
