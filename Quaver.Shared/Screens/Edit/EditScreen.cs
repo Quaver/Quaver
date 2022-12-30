@@ -616,6 +616,8 @@ namespace Quaver.Shared.Screens.Edit
             ActionManager.ToggleLayerVisibility(DefaultLayer);
         }
 
+        public void MoveSelectedNotesToCurrentLayer() => ActionManager.MoveHitObjectsToLayer(SelectedLayer.Value, SelectedHitObjects.Value);
+
         #endregion
 
         #region DIALOGS
