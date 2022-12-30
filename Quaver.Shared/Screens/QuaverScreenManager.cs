@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Transitions;
@@ -14,6 +15,7 @@ using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
+using Wobble.Scheduling;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens
@@ -21,106 +23,83 @@ namespace Quaver.Shared.Screens
     public static class QuaverScreenManager
     {
         /// <summary>
-        ///     The screen that's currently queued to load
-        /// </summary>
-        public static QuaverScreen QueuedScreen { get; private set; }
-
-        /// <summary>
-        ///     The type of screen change to perform
-        /// </summary>
-        public static QuaverScreenChangeType ChangeType { get; private set; }
-
-        /// <summary>
         ///     The previous screen that the user was on.
         /// </summary>
         public static QuaverScreenType LastScreen { get; private set; } = QuaverScreenType.None;
 
         /// <summary>
-        ///     If delaying a screen change, this is the amount of time that will have
-        ///     to elapse for it to start the fade
+        ///     Task that's ran when fetching for leaderboard scores
         /// </summary>
-        public static int DelayedScreenChangeTime { get; private set; }
+        private static TaskHandler<Func<QuaverScreen>, QuaverScreen> ScreenLoadTask { get; set; }
 
-        /// <summary>
-        ///     After scheduling a delayed screen change, this keeps track of the amount of
-        ///     time that has elapsed. It will take <see cref="DelayedScreenChangeTime"/> amount
-        ///     of time for it to begin the fade.
-        /// </summary>
-        public static double TimeElapsedSinceDelayStarted { get; private set; }
-
-        /// <summary>
-        ///     Updates the screen manager
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public static void Update(GameTime gameTime)
+        public static void Initialize()
         {
-            var game = GameBase.Game as QuaverGame;
-
-            if (QueuedScreen == game?.CurrentScreen || QueuedScreen == null)
-                return;
-
-            // Handle delayed screen changes.
-            if (DelayedScreenChangeTime != 0)
-            {
-                TimeElapsedSinceDelayStarted += GameBase.Game.TimeSinceLastFrame;
-
-                if (!(TimeElapsedSinceDelayStarted >= DelayedScreenChangeTime))
-                    return;
-
-                Transitioner.FadeIn();
-                TimeElapsedSinceDelayStarted = 0;
-                DelayedScreenChangeTime = 0;
-
-                return;
-            }
-
-            // Wait for fades to complete first.
-            if (Transitioner.Blackness.Animations.Count != 0)
-                return;
-
-            var oldScreen = game.CurrentScreen;
-
-            switch (ChangeType)
-            {
-                case QuaverScreenChangeType.CompleteChange:
-                    ChangeScreen(QueuedScreen);
-                    Button.IsGloballyClickable = true;
-                    break;
-                case QuaverScreenChangeType.AddToStack:
-                    AddScreen(QueuedScreen);
-                    break;
-                case QuaverScreenChangeType.RemoveTopScreen:
-                    RemoveTopScreen();
-
-                    Button.IsGloballyClickable = true;
-                    var screen = (QuaverScreen) ScreenManager.Screens.Peek();
-                    screen.Exiting = false;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            Transitioner.FadeOut();
+            ScreenLoadTask = new TaskHandler<Func<QuaverScreen>, QuaverScreen>(LoadScreen);
+            ScreenLoadTask.OnCompleted += OnCompleted;
         }
 
         /// <summary>
-        ///     Changes to a different screen.
-        ///     Adds extra functionality such as setting the current screen.
+        ///     Schedules a new screen to be loaded.
         /// </summary>
-        /// <param name="screen"></param>
-        public static void ChangeScreen(QuaverScreen screen)
+        /// <param name="newScreen"></param>
+        /// <param name="switchImmediately"></param>
+        /// <param name="delay"></param>
+        public static void ScheduleScreenChange(Func<QuaverScreen> newScreen, bool switchImmediately = false, int delay = 0)
         {
-            Logger.Important($"Changed to Screen '{screen.Type}'", LogType.Runtime);
+            Logger.Important($"Scheduled Screen Change", LogType.Runtime);
 
             var game = (QuaverGame) GameBase.Game;
 
             if (game.CurrentScreen != null)
                 LastScreen = game.CurrentScreen.Type;
 
-            game.CurrentScreen = screen;
+            if (LastScreen == QuaverScreenType.None || switchImmediately)
+            {
+                ChangeScreen(newScreen());
+                return;
+            }
+
+            ScreenLoadTask.Run(newScreen, delay);
+        }
+
+        /// <summary>
+        ///     Loads the new screen in a task.
+        /// </summary>
+        /// <param name="newScreen"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private static QuaverScreen LoadScreen(Func<QuaverScreen> newScreen, CancellationToken token)
+        {
+            Transitioner.FadeIn();
+            var screen = newScreen();
+
+            Logger.Important($"Screen `{screen.Type}` has been loaded proceeding to switch.", LogType.Runtime);
+            return screen;
+        }
+
+        /// <summary>
+        ///     Called when the screen has finished loading.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="screen"></param>
+        private static void OnCompleted(object sender, TaskCompleteEventArgs<Func<QuaverScreen>, QuaverScreen> e)
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            // Wait for the transitioner to fully fade to black.
+            while (Transitioner.Blackness.Animations.Count != 0)
+                Thread.Sleep(16);
+
+            // Run this on the next game loop on the main thread.
+            game.ScheduledRenderTargetDraws.Add(() => ChangeScreen(e.Result));
+        }
+
+        private static void ChangeScreen(QuaverScreen screen)
+        {
+            var game = (QuaverGame) GameBase.Game;
 
             ScreenManager.ChangeScreen(screen);
-            QueuedScreen = screen;
+            game.CurrentScreen = screen;
 
             // Update client status on the server.
             var status = screen.GetClientStatus();
@@ -130,98 +109,9 @@ namespace Quaver.Shared.Screens
 
             OtherGameMapDatabaseCache.RunThread();
             GC.Collect();
-        }
-
-        /// <summary>
-        ///     Adds a screen to the stack (only adds and doesn't destroy ones under it)
-        /// </summary>
-        /// <param name="screen"></param>
-        public static void AddScreen(QuaverScreen screen)
-        {
-            Logger.Important($"Changed to Screen '{screen.Type}'", LogType.Runtime);
-
-            var game = (QuaverGame) GameBase.Game;
-
-            if (game.CurrentScreen != null)
-                LastScreen = game.CurrentScreen.Type;
-
-            game.CurrentScreen = screen;
-
-            ScreenManager.AddScreen(screen);
-            QueuedScreen = screen;
-
-            // Update client status on the server.
-            var status = screen.GetClientStatus();
-
-            if (status != null)
-                OnlineManager.Client?.UpdateClientStatus(status);
-
-            OtherGameMapDatabaseCache.RunThread();
-        }
-
-        /// <summary>
-        ///     Removes the top screen from the stack
-        /// </summary>
-        public static void RemoveTopScreen()
-        {
-            var game = (QuaverGame) GameBase.Game;
-
-            if (game.CurrentScreen != null)
-                LastScreen = game.CurrentScreen.Type;
-
-            ScreenManager.RemoveScreen();
-
-            var screen = (QuaverScreen) ScreenManager.Screens.Peek();
-            game.CurrentScreen = screen;
-            QueuedScreen = screen;
-
-            // Update client status on the server.
-            var status = screen.GetClientStatus();
-
-            if (status != null)
-                OnlineManager.Client?.UpdateClientStatus(status);
-
-            OtherGameMapDatabaseCache.RunThread();
-        }
-
-        /// <summary>
-        ///     Schedules the current screen to start changing to the next
-        /// </summary>
-        /// <param name="newScreen"></param>
-        /// <param name="delayFade"></param>
-        /// <param name="type"></param>
-        public static void ScheduleScreenChange(Func<QuaverScreen> newScreen, bool delayFade = false, QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
-        {
-            ChangeType = type;
-
-            if (!delayFade)
-                Transitioner.FadeIn();
-
-            ThreadScheduler.Run(() =>
-            {
-                if (QueuedScreen != null)
-                {
-                    lock (QueuedScreen)
-                        QueuedScreen = newScreen();
-                }
-                else
-                {
-                    QueuedScreen = newScreen();
-                }
-
-                Logger.Important($"Scheduled screen change to: '{QueuedScreen.Type}'. w/ {DelayedScreenChangeTime} ms delay", LogType.Runtime);
-            });
-        }
-
-        /// <summary>
-        ///     Schedule a screen change with a delay before doing so
-        /// </summary>
-        /// <param name="newScreen"></param>
-        /// <param name="delay"></param>
-        public static void ScheduleScreenChange(Func<QuaverScreen> newScreen, int delay, QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
-        {
-            DelayedScreenChangeTime = delay;
-            ScheduleScreenChange(newScreen, true, type);
+            Transitioner.FadeOut();
+            Logger.Important($"Screen has been switched to type: `{screen.Type}`", LogType.Runtime);
+            Button.IsGloballyClickable = true;
         }
     }
 }

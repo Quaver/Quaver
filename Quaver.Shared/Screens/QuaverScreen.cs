@@ -110,9 +110,9 @@ namespace Quaver.Shared.Screens
             ScreenExiting?.Invoke(this, new ScreenExitingEventArgs());
 
             if (delay > 0)
-                QuaverScreenManager.ScheduleScreenChange(screen, delay, type);
+                QuaverScreenManager.ScheduleScreenChange(screen, false, delay);
             else
-                QuaverScreenManager.ScheduleScreenChange(screen, false, type);
+                QuaverScreenManager.ScheduleScreenChange(screen, false, delay);
 
             ScreenExiting = null;
         }
