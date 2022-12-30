@@ -173,6 +173,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SeekToEnd:
                     Screen.SeekToEndOfSelection();
                     break;
+                case KeybindActions.IncreasePlaybackRate:
+                    Screen.ChangeAudioPlaybackRate(Direction.Forward);
+                    break;
+                case KeybindActions.DecreasePlaybackRate:
+                    Screen.ChangeAudioPlaybackRate(Direction.Backward);
+                    break;
                 default:
                     return;
             }
