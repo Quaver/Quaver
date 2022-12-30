@@ -446,6 +446,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleInput()
         {
+            if (Exiting)
+                return;
+
             if (DialogManager.Dialogs.Count != 0)
                 return;
 

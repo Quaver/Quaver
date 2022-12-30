@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -32,6 +33,11 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 
         private void HandleInput(GameTime gameTime)
         {
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen is {Exiting: true})
+                return;
+
             if (DialogManager.Dialogs.Count != 0 || KeyboardManager.IsAltDown())
                 return;
 

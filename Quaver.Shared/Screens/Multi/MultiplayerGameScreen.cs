@@ -217,6 +217,9 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         private void HandleInput()
         {
+            if (Exiting)
+                return;
+
             if (DialogManager.Dialogs.Count != 0)
                 return;
 

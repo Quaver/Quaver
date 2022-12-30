@@ -461,6 +461,9 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void HandleInput()
         {
+            if (Exiting)
+                return;
+
             if (DialogManager.Dialogs.Count > 0)
                 return;
 
