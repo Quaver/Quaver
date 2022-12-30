@@ -44,5 +44,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         ToggleLayerViewMode,
         ChangeSelectedLayerUp,
         ChangeSelectedLayerDown,
+        ToggleCurrentLayerVisibility,
+        ToggleAllLayersVisibility,
     }
 }

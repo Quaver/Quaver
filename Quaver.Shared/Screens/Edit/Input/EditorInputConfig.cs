@@ -221,6 +221,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ToggleLayerViewMode, new KeybindList(KeyModifiers.Shift, Keys.D)},
             {ChangeSelectedLayerUp, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.Q)})},
             {ChangeSelectedLayerDown, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.W)})},
+            {ToggleCurrentLayerVisibility, new KeybindList(KeyModifiers.Shift, Keys.H)},
+            {ToggleAllLayersVisibility, new KeybindList(KeyModifiers.Shift, Keys.G)},
         };
     }
 }

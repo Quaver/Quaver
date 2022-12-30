@@ -252,6 +252,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ChangeSelectedLayerDown:
                     Screen.ChangeSelectedLayer(Direction.Forward);
                     break;
+                case KeybindActions.ToggleCurrentLayerVisibility:
+                    Screen.ToggleSelectedLayerVisibility();
+                    break;
+                case KeybindActions.ToggleAllLayersVisibility:
+                    Screen.ToggleAllLayerVisibility();
+                    break;
                 default:
                     return;
             }

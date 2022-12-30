@@ -607,6 +607,15 @@ namespace Quaver.Shared.Screens.Edit
 
         public void ChangeSelectedLayer(Direction direction) => SelectedLayer.Value = GetNextLayerInDirection(direction, SelectedLayer.Value);
 
+        public void ToggleSelectedLayerVisibility() => ActionManager.ToggleLayerVisibility(SelectedLayer.Value);
+
+        public void ToggleAllLayerVisibility()
+        {
+            foreach (var layer in WorkingMap.EditorLayers)
+                ActionManager.ToggleLayerVisibility(layer);
+            ActionManager.ToggleLayerVisibility(DefaultLayer);
+        }
+
         #endregion
 
         #region DIALOGS
