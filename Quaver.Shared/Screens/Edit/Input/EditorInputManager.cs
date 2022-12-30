@@ -36,6 +36,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.SeekBackwards,
             KeybindActions.SeekForwards1ms,
             KeybindActions.SeekBackwards1ms,
+            KeybindActions.IncreasePlaybackRate,
+            KeybindActions.DecreasePlaybackRate,
+            KeybindActions.ChangeToolUp,
+            KeybindActions.ChangeToolDown,
         };
 
         private static HashSet<KeybindActions> HoldAndReleaseActions = new HashSet<KeybindActions>()
