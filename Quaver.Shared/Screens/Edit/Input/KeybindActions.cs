@@ -21,5 +21,10 @@ namespace Quaver.Shared.Screens.Edit.Input
         SeekToEnd,
         IncreasePlaybackRate,
         DecreasePlaybackRate,
+        ChangeToolUp,
+        ChangeToolDown,
+        ChangeToolToSelect,
+        ChangeToolToNote,
+        ChangeToolToLongNote,
     }
 }

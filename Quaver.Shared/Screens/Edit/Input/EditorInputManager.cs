@@ -179,6 +179,21 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.DecreasePlaybackRate:
                     Screen.ChangeAudioPlaybackRate(Direction.Backward);
                     break;
+                case KeybindActions.ChangeToolUp:
+                    Screen.ChangeTool(Direction.Backward);
+                    break;
+                case KeybindActions.ChangeToolDown:
+                    Screen.ChangeTool(Direction.Forward);
+                    break;
+                case KeybindActions.ChangeToolToSelect:
+                    Screen.ChangeToolTo(EditorCompositionTool.Select);
+                    break;
+                case KeybindActions.ChangeToolToNote:
+                    Screen.ChangeToolTo(EditorCompositionTool.Note);
+                    break;
+                case KeybindActions.ChangeToolToLongNote:
+                    Screen.ChangeToolTo(EditorCompositionTool.LongNote);
+                    break;
                 default:
                     return;
             }

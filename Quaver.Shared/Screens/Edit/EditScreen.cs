@@ -459,6 +459,15 @@ namespace Quaver.Shared.Screens.Edit
             InputManager.HandleInput();
         }
 
+        public void ChangeToolTo(EditorCompositionTool tool) => CompositionTool.Value = tool;
+
+        public void ChangeTool(Direction direction)
+        {
+            var index = StepAndWrapNumber(direction, (int)CompositionTool.Value,
+                Enum.GetValues(typeof(EditorCompositionTool)).Length);
+            CompositionTool.Value = (EditorCompositionTool)index;
+        }
+
         /// <summary>
         /// </summary>
         public void TogglePlayPause()
@@ -1410,6 +1419,30 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
+        }
+
+        private int StepAndWrapNumber(Direction direction, int i, int max)
+        {
+            if (max == 0) return i;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    i += 1;
+                    break;
+                case Direction.Backward:
+                    i -= 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            i %= max;
+
+            if (i == -1)
+                i = max - 1;
+
+            return i;
         }
     }
 }
