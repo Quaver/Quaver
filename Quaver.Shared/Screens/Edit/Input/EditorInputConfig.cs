@@ -226,6 +226,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {MoveSelectedNotesToCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.V)},
             {CreateNewLayer, new KeybindList(KeyModifiers.Shift, Keys.N)},
             {DeleteCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.Delete)},
+            {RenameCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.R)},
+            {RecolorCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.E)},
         };
     }
 }

@@ -267,6 +267,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.DeleteCurrentLayer:
                     Screen.DeleteLayer();
                     break;
+                case KeybindActions.RenameCurrentLayer:
+                    Screen.RenameLayer();
+                    break;
+                case KeybindActions.RecolorCurrentLayer:
+                    Screen.RecolorLayer();
+                    break;
                 default:
                     return;
             }

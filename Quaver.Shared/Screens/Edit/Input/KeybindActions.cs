@@ -49,5 +49,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         MoveSelectedNotesToCurrentLayer,
         CreateNewLayer,
         DeleteCurrentLayer,
+        RenameCurrentLayer,
+        RecolorCurrentLayer,
     }
 }
