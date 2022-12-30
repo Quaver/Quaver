@@ -69,6 +69,9 @@ namespace Quaver.Shared.Screens.Theater
         /// </summary>
         private void HandleInput()
         {
+            if (Exiting)
+                return;
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
                 Exit(() => new MainMenuScreen());

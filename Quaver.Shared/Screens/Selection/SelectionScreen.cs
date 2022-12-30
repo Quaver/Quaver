@@ -250,6 +250,9 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
+            if (Exiting)
+                return;
+
             if (DialogManager.Dialogs.Count != 0)
                 return;
 

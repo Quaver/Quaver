@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Main
 
             GameBase.Game.GlobalUserInterface.Cursor.Show(1);
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
-            
+
             base.OnFirstUpdate();
         }
 
@@ -113,6 +113,9 @@ namespace Quaver.Shared.Screens.Main
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
+            if (Exiting)
+                return;
+
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
