@@ -693,7 +693,14 @@ namespace Quaver.Shared.Screens.Edit
             Track.Rate = targetRate;
         }
 
+        private void ToggleBindableBool(Bindable<bool> boolean, string name)
+        {
+            boolean.Value = !boolean.Value;
+            NotificationManager.Show(NotificationLevel.Info, (boolean.Value ? "Enabled" : "Disabled") + " " + name);
+        }
+
         public void OpenCustomSnapDialog() => DialogManager.Show(new CustomBeatSnapDialog(BeatSnap, AvailableBeatSnaps));
+        public void ToggleViewLayers() => ToggleBindableBool(ViewLayers, "view layer mode");
 
         /// <summary>
         ///     Loads any plugins for the editor

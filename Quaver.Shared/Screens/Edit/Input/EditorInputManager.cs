@@ -243,6 +243,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.OpenCustomSnapDialog:
                     Screen.OpenCustomSnapDialog();
                     break;
+                case KeybindActions.ToggleLayerViewMode:
+                    Screen.ToggleViewLayers();
+                    break;
                 default:
                     return;
             }

@@ -41,5 +41,6 @@ namespace Quaver.Shared.Screens.Edit.Input
         ChangeSnapTo12,
         ChangeSnapTo16,
         OpenCustomSnapDialog,
+        ToggleLayerViewMode,
     }
 }
