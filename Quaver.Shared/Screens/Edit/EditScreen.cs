@@ -693,6 +693,20 @@ namespace Quaver.Shared.Screens.Edit
             Track.Rate = targetRate;
         }
 
+        private EditorLayerInfo GetNextLayerInDirection(Direction direction, EditorLayerInfo layer)
+        {
+            // Default layer will be handled as index -1
+            var index = WorkingMap.EditorLayers.IndexOf(layer);
+
+            var step = direction == Direction.Forward ? 1 : -1;
+            var nextIndex = Math.Min(index + step, WorkingMap.EditorLayers.Count() - 1);
+            var nextLayer = nextIndex < 0 ? DefaultLayer : WorkingMap.EditorLayers[nextIndex];
+
+            return nextLayer;
+        }
+
+        public void ChangeSelectedLayer(Direction direction) => SelectedLayer.Value = GetNextLayerInDirection(direction, SelectedLayer.Value);
+
         private void ToggleBindableBool(Bindable<bool> boolean, string name)
         {
             boolean.Value = !boolean.Value;

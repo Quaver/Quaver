@@ -246,6 +246,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ToggleLayerViewMode:
                     Screen.ToggleViewLayers();
                     break;
+                case KeybindActions.ChangeSelectedLayerUp:
+                    Screen.ChangeSelectedLayer(Direction.Backward);
+                    break;
+                case KeybindActions.ChangeSelectedLayerDown:
+                    Screen.ChangeSelectedLayer(Direction.Forward);
+                    break;
                 default:
                     return;
             }
