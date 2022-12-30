@@ -198,6 +198,48 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ChangeToolToLongNote:
                     Screen.ChangeToolTo(EditorCompositionTool.LongNote);
                     break;
+                case KeybindActions.IncreaseSnap:
+                    Screen.ChangeBeatSnap(Direction.Forward);
+                    break;
+                case KeybindActions.DecreaseSnap:
+                    Screen.ChangeBeatSnap(Direction.Backward);
+                    break;
+                case KeybindActions.ChangeSnapTo1:
+                    Screen.BeatSnap.Value = 1;
+                    break;
+                case KeybindActions.ChangeSnapTo2:
+                    Screen.BeatSnap.Value = 2;
+                    break;
+                case KeybindActions.ChangeSnapTo3:
+                    Screen.BeatSnap.Value = 3;
+                    break;
+                case KeybindActions.ChangeSnapTo4:
+                    Screen.BeatSnap.Value = 4;
+                    break;
+                case KeybindActions.ChangeSnapTo5:
+                    Screen.BeatSnap.Value = 5;
+                    break;
+                case KeybindActions.ChangeSnapTo6:
+                    Screen.BeatSnap.Value = 6;
+                    break;
+                case KeybindActions.ChangeSnapTo7:
+                    Screen.BeatSnap.Value = 7;
+                    break;
+                case KeybindActions.ChangeSnapTo8:
+                    Screen.BeatSnap.Value = 8;
+                    break;
+                case KeybindActions.ChangeSnapTo9:
+                    Screen.BeatSnap.Value = 9;
+                    break;
+                case KeybindActions.ChangeSnapTo10:
+                    Screen.BeatSnap.Value = 10;
+                    break;
+                case KeybindActions.ChangeSnapTo12:
+                    Screen.BeatSnap.Value = 12;
+                    break;
+                case KeybindActions.ChangeSnapTo16:
+                    Screen.BeatSnap.Value = 16;
+                    break;
                 default:
                     return;
             }

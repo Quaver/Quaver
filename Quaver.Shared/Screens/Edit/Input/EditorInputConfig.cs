@@ -203,6 +203,20 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ChangeToolToSelect, new KeybindList(Keys.Q)},
             {ChangeToolToNote, new KeybindList(Keys.W)},
             {ChangeToolToLongNote, new KeybindList(Keys.E)},
+            {IncreaseSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Right), new Keybind(KeyModifiers.Free, Keys.L)})},
+            {DecreaseSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Left), new Keybind(KeyModifiers.Free, Keys.J)})},
+            {ChangeSnapTo1, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D1), new Keybind(KeyModifiers.Shift, Keys.D1)})},
+            {ChangeSnapTo2, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D2), new Keybind(KeyModifiers.Shift, Keys.D2)})},
+            {ChangeSnapTo3, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D3), new Keybind(KeyModifiers.Shift, Keys.D3)})},
+            {ChangeSnapTo4, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D4), new Keybind(KeyModifiers.Shift, Keys.D4)})},
+            {ChangeSnapTo5, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D5), new Keybind(KeyModifiers.Shift, Keys.D5)})},
+            {ChangeSnapTo6, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D6), new Keybind(KeyModifiers.Shift, Keys.D6)})},
+            {ChangeSnapTo7, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D7), new Keybind(KeyModifiers.Shift, Keys.D7)})},
+            {ChangeSnapTo8, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D8), new Keybind(KeyModifiers.Shift, Keys.D8)})},
+            {ChangeSnapTo9, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D9), new Keybind(KeyModifiers.Shift, Keys.D9)})},
+            {ChangeSnapTo10, new KeybindList()},
+            {ChangeSnapTo12, new KeybindList()},
+            {ChangeSnapTo16, new KeybindList()},
         };
     }
 }
