@@ -760,7 +760,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 if (Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                     PauseCount++;
-                
+
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 // Exit right away if playing a replay.
@@ -1053,13 +1053,12 @@ namespace Quaver.Shared.Screens.Gameplay
             SkinManager.Skin.SoundRetry.CreateChannel().Play();
             CustomAudioSampleCache.StopAll();
 
-            // Use ChangeScreen here to give instant feedback. Can't be threaded
             if (IsPlayTesting)
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor));
+                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor), true);
             else if (InReplayMode)
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay), true);
             else
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
+                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(Map, MapHash, LocalScores), true);
         }
 
         /// <summary>
