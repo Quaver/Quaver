@@ -261,6 +261,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.MoveSelectedNotesToCurrentLayer:
                     Screen.MoveSelectedNotesToCurrentLayer();
                     break;
+                case KeybindActions.CreateNewLayer:
+                    Screen.AddNewLayer();
+                    break;
+                case KeybindActions.DeleteCurrentLayer:
+                    Screen.DeleteLayer();
+                    break;
                 default:
                     return;
             }

@@ -28,6 +28,8 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
@@ -617,6 +619,31 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         public void MoveSelectedNotesToCurrentLayer() => ActionManager.MoveHitObjectsToLayer(SelectedLayer.Value, SelectedHitObjects.Value);
+
+        public void AddNewLayer()
+        {
+            var layer = new EditorLayerInfo
+            {
+                Name = $"Layer {WorkingMap.EditorLayers.Count + 1}",
+                ColorRgb = "255,255,255"
+            };
+
+            // FindIndex() returns -1 when the default layer is selected
+            int index = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 2;
+            ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer, index));
+        }
+
+        public void DeleteLayer()
+        {
+            if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default layer!");
+                return;
+            }
+
+            ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects, SelectedLayer.Value));
+            NotificationManager.Show(NotificationLevel.Success, $"Deleted layer '{SelectedLayer.Value.Name}'");
+        }
 
         #endregion
 

@@ -47,5 +47,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         ToggleCurrentLayerVisibility,
         ToggleAllLayersVisibility,
         MoveSelectedNotesToCurrentLayer,
+        CreateNewLayer,
+        DeleteCurrentLayer,
     }
 }
