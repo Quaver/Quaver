@@ -188,6 +188,14 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ZoomInLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageUp)},
             {ZoomOut, new KeybindList(Keys.PageDown)},
             {ZoomOutLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageDown)},
+            {SeekForwards, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Up), new Keybind(KeyModifiers.Free, Keys.I)})},
+            {SeekBackwards, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Down), new Keybind(KeyModifiers.Free, Keys.K)})},
+            {SeekForwards1ms, new KeybindList(KeyModifiers.Free, Keys.OemPeriod)},
+            {SeekBackwards1ms, new KeybindList(KeyModifiers.Free, Keys.OemComma)},
+            {SeekToStartOfSelection, new KeybindList(new [] {new Keybind(Keys.U), new Keybind(KeyModifiers.Shift, Keys.U)})},
+            {SeekToEndOfSelection, new KeybindList(new [] {new Keybind(Keys.O), new Keybind(KeyModifiers.Shift, Keys.O)})},
+            {SeekToStart, new KeybindList(KeyModifiers.Free, Keys.Home)},
+            {SeekToEnd, new KeybindList(KeyModifiers.Free, Keys.End)},
         };
     }
 }

@@ -238,6 +238,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private FileSystemWatcher FileWatcher { get; set; }
 
+        private double LastSeekDistance;
+
         /// <summary>
         ///     The amount of time that has elapsed since the playfield has zoomed.
         ///     Used to create a 'textbox-like' function to change playfield zoom when
@@ -478,6 +480,63 @@ namespace Quaver.Shared.Screens.Edit
                 if (wasStopped)
                     SetHitSoundObjectIndex();
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="direction"></param>
+        public void SeekInDirection(Direction direction)
+        {
+            var snap = (float)BeatSnap.Value;
+
+            if (KeyboardManager.IsCtrlDown())
+                snap /= 4;
+
+            var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, snap, Track.Time);
+
+            if (Track.IsPlaying)
+            {
+                for (var i = 0; i < 3; i++)
+                    time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, snap, time);
+            }
+
+            SeekTo(time);
+        }
+
+        public void SeekTo(double time, bool enableMoving = true)
+        {
+            if (Track == null || Track.IsDisposed || !CanSeek()) return;
+
+            time = Math.Clamp(time, 0, Track.Length - 100);
+            LastSeekDistance = time - Track.Time;
+
+            // TODO: Implement selection with shift and move with alt
+
+            Track.Seek(time);
+        }
+
+        public void SeekToStart()
+        {
+            if (WorkingMap.HitObjects.Count == 0) SeekTo(0);
+            SeekTo(WorkingMap.HitObjects.Min(h => h.StartTime));
+        }
+
+        public void SeekToEnd()
+        {
+            if (WorkingMap.HitObjects.Count == 0) SeekTo(Track.Length);
+            SeekTo(WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)));
+        }
+
+        public void SeekToStartOfSelection()
+        {
+            if (SelectedHitObjects.Value.Count == 0) return;
+            SeekTo(SelectedHitObjects.Value.Min(h => h.StartTime));
+        }
+
+        public void SeekToEndOfSelection()
+        {
+            if (SelectedHitObjects.Value.Count == 0) return;
+            SeekTo(SelectedHitObjects.Value.Max(h => Math.Max(h.StartTime, h.EndTime)));
         }
 
         /// <summary>

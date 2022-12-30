@@ -142,7 +142,7 @@ namespace Quaver.Shared.Audio
         /// <exception cref="AudioEngineException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static double GetNearestSnapTimeFromTime(Qua map, Direction direction, int snap, double time)
+        public static double GetNearestSnapTimeFromTime(Qua map, Direction direction, float snap, double time)
         {
             if (map == null)
                 throw new ArgumentNullException(nameof(map));
@@ -171,15 +171,19 @@ namespace Quaver.Shared.Audio
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
-            var nearestTick = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) * snapTimePerBeat + point.StartTime;
+            var snapTime = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat);
+            var nearestTick = (snapTime * snapTimePerBeat) + point.StartTime;
 
-            if ((int) Math.Abs(nearestTick - time) <= (int) snapTimePerBeat)
-                return nearestTick;
+            if ((int) Math.Abs(nearestTick - time) > (int) snapTimePerBeat)
+            {
+                if (direction == Direction.Backward)
+                    snapTime = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) + 1;
+                else
+                    snapTime = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) - 1;
+            }
 
-            if (direction == Direction.Backward)
-                return (Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) + 1) * snapTimePerBeat + point.StartTime;
+            return (snapTime * snapTimePerBeat) + point.StartTime;
 
-            return (Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) - 1) * snapTimePerBeat + point.StartTime;
         }
 
         public static IAudioTrack LoadMapAudioTrack(Map map)

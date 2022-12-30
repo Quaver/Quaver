@@ -11,5 +11,13 @@ namespace Quaver.Shared.Screens.Edit.Input
         ZoomInLarge,
         ZoomOut,
         ZoomOutLarge,
+        SeekForwards,
+        SeekBackwards,
+        SeekForwards1ms,
+        SeekBackwards1ms,
+        SeekToStartOfSelection,
+        SeekToEndOfSelection,
+        SeekToStart,
+        SeekToEnd,
     }
 }

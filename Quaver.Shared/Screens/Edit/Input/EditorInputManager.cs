@@ -32,6 +32,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ZoomInLarge,
             KeybindActions.ZoomOut,
             KeybindActions.ZoomOutLarge,
+            KeybindActions.SeekForwards,
+            KeybindActions.SeekBackwards,
+            KeybindActions.SeekForwards1ms,
+            KeybindActions.SeekBackwards1ms,
         };
 
         private static HashSet<KeybindActions> HoldAndReleaseActions = new HashSet<KeybindActions>()
@@ -142,6 +146,32 @@ namespace Quaver.Shared.Screens.Edit.Input
                     break;
                 case KeybindActions.ZoomOutLarge:
                     Screen.AdjustZoom(-5);
+                    break;
+                case KeybindActions.SeekForwards:
+                    Screen.SeekInDirection(Direction.Forward);
+                    break;
+                case KeybindActions.SeekBackwards:
+                    Screen.SeekInDirection(Direction.Backward);
+                    break;
+                case KeybindActions.SeekForwards1ms:
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time + 1);
+                    break;
+                case KeybindActions.SeekBackwards1ms:
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time - 1);
+                    break;
+                case KeybindActions.SeekToStartOfSelection:
+                    Screen.SeekToStart();
+                    break;
+                case KeybindActions.SeekToEndOfSelection:
+                    Screen.SeekToEnd();
+                    break;
+                case KeybindActions.SeekToStart:
+                    Screen.SeekToStartOfSelection();
+                    break;
+                case KeybindActions.SeekToEnd:
+                    Screen.SeekToEndOfSelection();
                     break;
                 default:
                     return;
