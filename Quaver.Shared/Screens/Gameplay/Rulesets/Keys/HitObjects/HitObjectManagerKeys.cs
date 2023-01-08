@@ -124,13 +124,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
         ///     TODO: Update upon scroll speed changes
         /// </summary>
-        public float CreateObjectPosition { get; private set; }
+        public float CreateObjectThreshold { get; private set; }
 
         /// <summary>
         ///     The position at which the earliest Hit Object must be at before its recycled.
         ///     TODO: Update upon scroll speed changes
         /// </summary>
-        public float RecycleObjectPosition { get; private set; }
+        public float RecycleObjectThreshold { get; private set; }
 
         /// <summary>
         ///     Current position for Hit Objects.
@@ -474,7 +474,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add more hit objects to the pool if necessary
             foreach (var lane in HitObjectQueueLanes)
             {
-                while (lane.Count > 0 && CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime) > CreateObjectPosition)
+                while (lane.Count > 0 && Math.Abs(CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime)) < CreateObjectThreshold)
                 {
                     CreatePoolObject(lane.Dequeue());
                 }
@@ -631,7 +631,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in DeadNoteLanes)
             {
                 while (lane.Count > 0 &&
-                    (CurrentTrackPosition - lane.Peek().LatestTrackPosition > RecycleObjectPosition))
+                    Math.Abs(CurrentTrackPosition - lane.Peek().LatestTrackPosition) > RecycleObjectThreshold)
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
@@ -672,8 +672,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void UpdatePoolingPositions()
         {
-            RecycleObjectPosition = (ObjectPositionMagnitude / 4) / ScrollSpeed;
-            CreateObjectPosition = -ObjectPositionMagnitude / ScrollSpeed;
+            RecycleObjectThreshold = ObjectPositionMagnitude / ScrollSpeed;
+            CreateObjectThreshold = ObjectPositionMagnitude / ScrollSpeed;
         }
 
         /// <summary>
