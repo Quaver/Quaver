@@ -480,8 +480,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add more hit objects to the pool if necessary
             foreach (var lane in HitObjectQueueLanes)
             {
-                while (lane.Count > 0 && (Math.Abs(CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime)) < CreateObjectPositionThreshold ||
-                       lane.Peek().StartTime - CurrentAudioPosition < CreateObjectTimeThreshold))
+                while (lane.Count > 0 && ((Math.Abs(CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime)) < CreateObjectPositionThreshold) ||
+                      (lane.Peek().StartTime - CurrentAudioPosition < CreateObjectTimeThreshold)))
                 {
                     CreatePoolObject(lane.Dequeue());
                 }
