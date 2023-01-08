@@ -120,7 +120,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                     var offset = HitObjectManager.GetPositionFromTime(songPos);
 
                     // Do not initialize any timing lines that do not appear in gameplay
-                    if (!(HitObjectManager.CurrentTrackPosition - offset > HitObjectManager.RecycleObjectThreshold && songPos < HitObjectManager.CurrentAudioPosition))
+                    if (!(HitObjectManager.CurrentTrackPosition - offset > HitObjectManager.RecycleObjectPositionThreshold && songPos < HitObjectManager.CurrentAudioPosition))
                         temp.Add(new TimingLineInfo(songPos, offset));
                 }
             }
@@ -145,9 +145,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             while (Info.Count > 0)
             {
-                if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.RecycleObjectThreshold)
+                if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.RecycleObjectPositionThreshold)
                     Info.Dequeue();
-                else if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset < HitObjectManager.CreateObjectThreshold)
+                else if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset < HitObjectManager.CreateObjectPositionThreshold)
                     CreatePoolObject(Info.Dequeue());
                 else
                     break;
@@ -167,7 +167,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             }
 
             // Recycle necessary pool objects
-            while (Pool.Count > 0 && Pool.Peek().CurrentTrackPosition > HitObjectManager.RecycleObjectThreshold && Pool.Peek().Info.StartTime < HitObjectManager.CurrentAudioPosition)
+            while (Pool.Count > 0 && Pool.Peek().CurrentTrackPosition > HitObjectManager.RecycleObjectPositionThreshold && Pool.Peek().Info.StartTime < HitObjectManager.CurrentAudioPosition)
             {
                 var line = Pool.Dequeue();
                 if (Info.Count > 0)
@@ -179,7 +179,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             }
 
             // Create new pool objects if they are in range
-            while (Info.Count > 0 && HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset < HitObjectManager.CreateObjectThreshold)
+            while (Info.Count > 0 && HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset < HitObjectManager.CreateObjectPositionThreshold)
                 CreatePoolObject(Info.Dequeue());
         }
 

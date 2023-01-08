@@ -124,13 +124,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
         ///     TODO: Update upon scroll speed changes
         /// </summary>
-        public float CreateObjectThreshold { get; private set; }
+        public float CreateObjectPositionThreshold { get; private set; }
 
         /// <summary>
         ///     The position at which the earliest Hit Object must be at before its recycled.
         ///     TODO: Update upon scroll speed changes
         /// </summary>
-        public float RecycleObjectThreshold { get; private set; }
+        public float RecycleObjectPositionThreshold { get; private set; }
+
+        /// <summary>
+        ///     A new hitobject is added to the pool if the next one is needs to be hit within this many milliseconds
+        ///     TODO: Update upon scroll speed changes
+        /// </summary>
+        public float CreateObjectTimeThreshold { get; private set; }
 
         /// <summary>
         ///     Current position for Hit Objects.
@@ -474,7 +480,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add more hit objects to the pool if necessary
             foreach (var lane in HitObjectQueueLanes)
             {
-                while (lane.Count > 0 && Math.Abs(CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime)) < CreateObjectThreshold)
+                while (lane.Count > 0 && (Math.Abs(CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime)) < CreateObjectPositionThreshold) ||
+                       lane.Peek().StartTime - CurrentAudioPosition < CreateObjectTimeThreshold)
                 {
                     CreatePoolObject(lane.Dequeue());
                 }
@@ -631,7 +638,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in DeadNoteLanes)
             {
                 while (lane.Count > 0 &&
-                    Math.Abs(CurrentTrackPosition - lane.Peek().LatestTrackPosition) > RecycleObjectThreshold)
+                    Math.Abs(CurrentTrackPosition - lane.Peek().LatestTrackPosition) > RecycleObjectPositionThreshold)
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
@@ -672,8 +679,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void UpdatePoolingPositions()
         {
-            RecycleObjectThreshold = ObjectPositionMagnitude / ScrollSpeed;
-            CreateObjectThreshold = ObjectPositionMagnitude / ScrollSpeed;
+            RecycleObjectPositionThreshold = ObjectPositionMagnitude / ScrollSpeed;
+            CreateObjectPositionThreshold = ObjectPositionMagnitude / ScrollSpeed;
+
+            CreateObjectTimeThreshold = ObjectPositionMagnitude / ScrollSpeed / TrackRounding;
         }
 
         /// <summary>
