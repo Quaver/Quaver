@@ -684,17 +684,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             // Get user's current country
             if (!Score.Item.IsOnline)
             {
-                try
-                {
-                    var regionInfo = RegionInfo.CurrentRegion;
-                    var name = regionInfo.Name;
-
-                    Flag.Image = Flags.Get(name);
-                }
-                catch (Exception)
-                {
-                    Flag.Image = Flags.Get("XX");
-                }
+                Flag.Image = Flags.Get("XX");
                 return;
             }
 

@@ -14,6 +14,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -98,6 +99,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.HitObjectsReversed += OnHitObjectsReversed;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
             ActionManager.LongNoteResized += OnLongNoteResized;
@@ -118,6 +120,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.HitObjectsReversed -= OnHitObjectsReversed;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
             ActionManager.LongNoteResized -= OnLongNoteResized;
@@ -294,6 +297,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnHitObjectsReversed(object sender, EditorHitObjectsReversedEventArgs e) => UpdateObjects();
 
         /// <summary>
         /// </summary>

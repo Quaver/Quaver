@@ -210,7 +210,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     if (judgement != Judgement.Miss)
                         playfield.Stage.HitError.AddJudgement(judgement, VirtualPlayer.ScoreProcessor.Stats[i].HitDifference);
 
-                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                    var lane = Math.Clamp(VirtualPlayer.ScoreProcessor.Stats[i].HitObject.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1);
+                    playfield.Stage.JudgementHitBursts[lane].PerformJudgementAnimation(judgement);
 
                     CurrentVirtualReplayStat++;
                 }

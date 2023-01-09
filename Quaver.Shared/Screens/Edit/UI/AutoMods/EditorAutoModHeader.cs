@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
@@ -20,6 +21,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private SpriteTextPlus Text { get; set; }
 
+        private IconButton CloseButton { get; set; }
+
         public EditorAutoModHeader(EditorAutoModPanel panel)
         {
             Panel = panel;
@@ -29,6 +32,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
             CreateGearIcon();
             CreateText();
+            CreateCloseButton();
         }
 
         private void CreateGearIcon() => Gear = new Sprite
@@ -48,6 +52,23 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 Alignment = Alignment.MidLeft,
                 X = Gear.X + Gear.Width + 10
             };
+        }
+
+        private void CreateCloseButton()
+        {
+            var img = FontAwesome.Get(FontAwesomeIcon.fa_times);
+
+            CloseButton = new IconButton(img)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -Height / 2,
+                Size = Gear.Size,
+                Depth = -1,
+                Tint = new Color(249, 100, 93, 255)
+            };
+
+            CloseButton.Clicked += (sender, args) => Panel.Container.IsActive.Value = false;
         }
     }
 }

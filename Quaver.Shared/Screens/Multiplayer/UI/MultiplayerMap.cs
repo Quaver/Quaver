@@ -387,7 +387,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             var game = GameBase.Game as QuaverGame;
 
-            if (game.CurrentScreen.Type == QuaverScreenType.Select || QuaverScreenManager.QueuedScreen?.Type == QuaverScreenType.Select)
+            if (game.CurrentScreen.Type == QuaverScreenType.Select)
                 return;
 
             UpdateContent();
@@ -404,7 +404,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             var game = GameBase.Game as QuaverGame;
 
-            if (game.CurrentScreen.Type == QuaverScreenType.Select || QuaverScreenManager.QueuedScreen?.Type == QuaverScreenType.Select)
+            if (game.CurrentScreen.Type == QuaverScreenType.Select)
                 return;
 
             UpdateContent();

@@ -528,7 +528,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (im?.ReplayInputManager == null)
                     {
                         playfield.Stage.ComboDisplay.MakeVisible();
-                        playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+                        playfield.Stage.JudgementHitBursts[Math.Clamp(hitObject.Info.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1)].PerformJudgementAnimation(Judgement.Miss);
                     }
 
                     // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
@@ -611,7 +611,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (im?.ReplayInputManager == null)
                     {
                         stage.ComboDisplay.MakeVisible();
-                        stage.JudgementHitBurst.PerformJudgementAnimation(missedReleaseJudgement);
+                        stage.JudgementHitBursts[Math.Clamp(hitObject.Info.Lane - 1, 0, stage.JudgementHitBursts.Count - 1)].PerformJudgementAnimation(missedReleaseJudgement);
                     }
 
                     stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
@@ -917,6 +917,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             InitializeInfoPool(Ruleset.Map, true);
             InitializeObjectPool();
+
+            foreach (var timingLineManager in Ruleset.TimingLineManager)
+            {
+                timingLineManager.InitializeObjectPool();
+            }
+
             Update(new GameTime());
         }
 

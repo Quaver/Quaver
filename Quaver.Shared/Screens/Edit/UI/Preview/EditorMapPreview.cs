@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Quaver.API.Maps;
-using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -10,6 +8,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -23,8 +22,9 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignature;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
-using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Preview;
 using Wobble.Audio.Tracks;
@@ -58,6 +58,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectRemoved += OnHitObjectRemoved;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.HitObjectsReversed += OnHitObjectsReversed;
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
@@ -75,6 +76,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
             ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointSignatureChanged += OnTimingPointSignatureChanged;
+            ActionManager.TimingPointSignatureBatchChanged += OnTimingPointSignatureBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointHiddenChanged += OnTimingPointHiddenChanged;
         }
@@ -88,6 +91,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.HitObjectsReversed -= OnHitObjectsReversed;
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
@@ -105,6 +109,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
             ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
             ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointSignatureChanged -= OnTimingPointSignatureChanged;
+            ActionManager.TimingPointSignatureBatchChanged -= OnTimingPointSignatureBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointHiddenChanged -= OnTimingPointHiddenChanged;
 
@@ -129,6 +135,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e) => Refresh();
 
         private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => Refresh();
+
+        private void OnHitObjectsReversed(object sender, EditorHitObjectsReversedEventArgs e) => Refresh();
 
         private void OnHitObjectBatchPlaced(object sender, EditorHitObjectBatchPlacedEventArgs e) => Refresh();
 
@@ -159,6 +167,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnTimingPointBpmBatchChanged(object sender, EditorChangedTimingPointBpmBatchEventArgs e) => Refresh();
 
         private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => Refresh();
+
+        private void OnTimingPointSignatureBatchChanged(object sender, EditorChangedTimingPointSignatureBatchEventArgs e) => Refresh();
+
+        private void OnTimingPointSignatureChanged(object sender, EditorTimingPointSignatureChangedEventArgs e) => Refresh();
 
         private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => Refresh();
 
