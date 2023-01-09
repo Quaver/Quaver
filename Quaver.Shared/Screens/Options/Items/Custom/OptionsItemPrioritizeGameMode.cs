@@ -17,10 +17,10 @@ public class OptionsItemPrioritizedGameMode : OptionsItemDropdown
     {
         Dropdown.ItemSelected += (sender, args) =>
         {
-            if (ConfigManager.TargetGameMode== null)
+            if (ConfigManager.PrioritizedGameMode== null)
                 return;
 
-            ConfigManager.TargetGameMode.Value = args.Text switch
+            ConfigManager.PrioritizedGameMode.Value = args.Text switch
             {
                 "None" => (GameMode)0,
 				"4 Keys" => GameMode.Keys4,
@@ -34,9 +34,9 @@ public class OptionsItemPrioritizedGameMode : OptionsItemDropdown
 
     private static int GetSelectedIndex()
     {
-        if (ConfigManager.TargetGameMode == null)
+        if (ConfigManager.PrioritizedGameMode == null)
             return 0;
 
-        return (int)ConfigManager.TargetGameMode.Value;
+        return (int)ConfigManager.PrioritizedGameMode.Value;
     }
 }

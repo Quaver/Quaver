@@ -1,4 +1,5 @@
 using MonoGame.Extended;
+using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online;
@@ -36,10 +37,13 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 if (!OnlineManager.Connected || OnlineManager.Self == null)
 					return;
 
-                var rating = OnlineManager.Self.Stats[ConfigManager.SelectedGameMode.Value].OverallPerformanceRating;
+                var rating = OnlineManager.Self.Stats[GameMode.Keys4].OverallPerformanceRating;
                 var diff = rating / 20f;
+				ConfigManager.PrioritizedMapDifficulty4K.Value = (int)(diff * 10);
 
-				ConfigManager.TargetMapDifficulty.Value = (int)(diff * 10);
+                rating = OnlineManager.Self.Stats[GameMode.Keys7].OverallPerformanceRating;
+                diff = rating / 20f;
+                ConfigManager.PrioritizedMapDifficulty7K.Value = (int)(diff * 10);
             };
         }
     }

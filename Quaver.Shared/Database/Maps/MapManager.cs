@@ -98,24 +98,46 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public static void SelectMapFromMapset(Mapset mapset)
         {
-            // select map closest to target difficulty
-            static Map Select(List<Map> maps, double target, ModIdentifier mods)
+            // local function to select map closest to target difficulty
+            Map Select(List<Map> maps, ModIdentifier mods)
             {
                 if (maps.Count == 0) return null;
 
-                double delta = maps.Min(x => Math.Abs(x.DifficultyFromMods(mods) - target));
-                return maps.Find(x => Math.Abs(x.DifficultyFromMods(mods) - target) == delta);
+                // target difficulty
+                double target4K = ConfigManager.PrioritizedMapDifficulty4K.Value / 10d;
+                double target7K = ConfigManager.PrioritizedMapDifficulty7K.Value / 10d;
+
+                // find closest map to target
+                var minDelta = Double.PositiveInfinity;
+                Map selection = null;
+
+                foreach (var map in maps)
+                {
+                    var target = map.Mode switch
+                    {
+                        GameMode.Keys4 => target4K,
+                        GameMode.Keys7 => target7K,
+                        _ => throw new InvalidOperationException("Map is an invalid game mode")
+                    };
+
+                    double delta = maps.Min(x => Math.Abs(x.DifficultyFromMods(mods) - target));
+
+                    if (delta < minDelta)
+                    {
+                        selection = map;
+                        minDelta = delta;
+                    }
+                }
+
+                return selection;
             }
 
-            // target difficulty
-            double target = ConfigManager.TargetMapDifficulty.Value / 10d;
-
             // prioritize a gamemode
-            List<Map> prioritized = mapset.Maps.FindAll(x => x.Mode == ConfigManager.TargetGameMode.Value);
+            List<Map> prioritized = mapset.Maps.FindAll(x => x.Mode == ConfigManager.PrioritizedGameMode.Value);
 
             // select a map from the prioritized maps
             // if no valid selection from prioritized maps, select from all maps instead
-            Selected.Value = Select(prioritized, target, ModManager.Mods) ?? Select(mapset.Maps, target, ModManager.Mods);
+            Selected.Value = Select(prioritized, ModManager.Mods) ?? Select(mapset.Maps, ModManager.Mods);
         }
 
         /// <summary>

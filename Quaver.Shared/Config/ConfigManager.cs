@@ -775,12 +775,19 @@ namespace Quaver.Shared.Config
         ///     Target difficulty used for selecting a default map in a mapset.
         ///     Stored as an integer, divide by 10 for actual target difficulty.
         /// </summary>
-        internal static BindableInt TargetMapDifficulty { get; private set; }
+        internal static BindableInt PrioritizedMapDifficulty4K { get; private set; }
+
+        /// <summary>
+        ///     Target difficulty used for selecting a default map in a mapset.
+        ///     Stored as an integer, divide by 10 for actual target difficulty.
+        /// </summary>
+        internal static BindableInt PrioritizedMapDifficulty7K { get; private set; }
+
 
         /// <summary>
         ///     Prioritize which keymode when selecting a default map in a mapset.
         /// </summary>
-        internal static Bindable<GameMode> TargetGameMode { get; private set; }
+        internal static Bindable<GameMode> PrioritizedGameMode { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -1056,8 +1063,9 @@ namespace Quaver.Shared.Config
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
-            TargetMapDifficulty = ReadInt(@"TargetMapDifficulty", 0, 0, 1000, data);
-            TargetGameMode = ReadValue(@"TargetGameMode", (GameMode)0, data);
+            PrioritizedMapDifficulty4K = ReadInt(@"PrioritizedMapDifficulty4K", 0, 0, 1000, data);
+            PrioritizedMapDifficulty7K = ReadInt(@"PrioritizedMapDifficulty7K", 0, 0, 1000, data);
+            PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
