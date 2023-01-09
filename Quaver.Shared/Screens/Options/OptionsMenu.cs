@@ -418,9 +418,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
-                        new OptionsItemMapSelectionMethod(containerRect, "Default Map Selection Method"),
                         new OptionsItemPrioritizedGameMode(containerRect, "Prioritized Game Mode"),
-                        new OptionsSlider(containerRect, "Default Selected Map Difficulty", ConfigManager.TargetMapDifficulty, i => $"{i / 10f:0.0}"),
+                        new OptionsSlider(containerRect, "Prioritized Map Difficulty", ConfigManager.TargetMapDifficulty, i => $"{i / 10f:0.0}"),
                     }),
                     new OptionsSubcategory("Leaderboard", new List<OptionsItem>()
                     {

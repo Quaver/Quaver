@@ -98,72 +98,24 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public static void SelectMapFromMapset(Mapset mapset)
         {
+            // select map closest to target difficulty
+            static Map Select(List<Map> maps, double target, ModIdentifier mods)
+            {
+                if (maps.Count == 0) return null;
+
+                double delta = maps.Min(x => Math.Abs(x.DifficultyFromMods(mods) - target));
+                return maps.Find(x => Math.Abs(x.DifficultyFromMods(mods) - target) == delta);
+            }
+
             // target difficulty
             double target = ConfigManager.TargetMapDifficulty.Value / 10d;
 
-            // selection method
-            Func<List<Map>, double, ModIdentifier, Map> select = ConfigManager.TargetMapSelectionMethod.Value switch
-            {
-                MapSelectionMethod.Closest => FindMapClosestToTarget,
-                MapSelectionMethod.AtLeast => FindMapAtLeastTarget,
-                MapSelectionMethod.AtMost => FindMapAtMostTarget,
-                _ => throw new InvalidEnumArgumentException()
-            };
-
-            // prioritized maps
+            // prioritize a gamemode
             List<Map> prioritized = mapset.Maps.FindAll(x => x.Mode == ConfigManager.TargetGameMode.Value);
 
             // select a map from the prioritized maps
             // if no valid selection from prioritized maps, select from all maps instead
-            Selected.Value = select(prioritized, target, ModManager.Mods) ?? select(mapset.Maps, target, ModManager.Mods);
-        }
-
-        private static Map FindMapClosestToTarget(List<Map> maps, double target, ModIdentifier mods)
-        {
-            if (maps.Count == 0) return null;
-
-            double delta = maps.Min(x => Math.Abs(x.DifficultyFromMods(mods) - target));
-            return maps.Find(x => Math.Abs(x.DifficultyFromMods(mods) - target) == delta);
-        }
-
-        private static Map FindMapAtLeastTarget(List<Map> maps, double target, ModIdentifier mods)
-        {
-            // find all maps at least target difficulty
-            var candidates = maps.FindAll(x => x.DifficultyFromMods(mods) >= target);
-
-            // if no maps at least target difficulty, find closest map instead
-            if (candidates.Count == 0)
-                return FindMapClosestToTarget(maps, target, mods);
-
-            // select map with the lowest difficulty, which is closest to target
-            Map min = candidates.First();
-            foreach (var map in candidates)
-            {
-                if (map.DifficultyFromMods(mods) < min.DifficultyFromMods(mods))
-                    min = map;
-            }
-
-            return min;
-        }
-
-        private static Map FindMapAtMostTarget(List<Map> maps, double target, ModIdentifier mods)
-        {
-            // find all maps at most target difficulty
-            var candidates = maps.FindAll(x => x.DifficultyFromMods(mods) <= target);
-
-            // if no maps at most target difficulty, find closest map instead
-            if (candidates.Count == 0)
-                return FindMapClosestToTarget(maps, target, mods);
-
-            // select map with the highest difficulty, which is closest to target
-            Map max = candidates.First();
-            foreach (var map in candidates)
-            {
-                if (map.DifficultyFromMods(mods) > max.DifficultyFromMods(mods))
-                    max = map;
-            }
-
-            return max;
+            Selected.Value = Select(prioritized, target, ModManager.Mods) ?? Select(mapset.Maps, target, ModManager.Mods);
         }
 
         /// <summary>

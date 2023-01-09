@@ -778,11 +778,6 @@ namespace Quaver.Shared.Config
         internal static BindableInt TargetMapDifficulty { get; private set; }
 
         /// <summary>
-        ///     Method of deciding which map to select by default in a mapset.
-        /// </summary>
-        internal static Bindable<MapSelectionMethod> TargetMapSelectionMethod { get; private set; }
-
-        /// <summary>
         ///     Prioritize which keymode when selecting a default map in a mapset.
         /// </summary>
         internal static Bindable<GameMode> TargetGameMode { get; private set; }
@@ -1062,7 +1057,6 @@ namespace Quaver.Shared.Config
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
             TargetMapDifficulty = ReadInt(@"TargetMapDifficulty", 0, 0, 1000, data);
-            TargetMapSelectionMethod = ReadValue(@"TargetMapSelectionMethod", MapSelectionMethod.Closest, data);
             TargetGameMode = ReadValue(@"TargetGameMode", (GameMode)0, data);
 
             // Have to do this manually.
