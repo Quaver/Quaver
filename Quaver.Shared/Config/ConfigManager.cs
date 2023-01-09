@@ -783,7 +783,6 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static BindableInt PrioritizedMapDifficulty7K { get; private set; }
 
-
         /// <summary>
         ///     Prioritize which keymode when selecting a default map in a mapset.
         /// </summary>
