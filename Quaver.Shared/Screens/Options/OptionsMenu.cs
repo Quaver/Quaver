@@ -420,6 +420,7 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemPrioritizedGameMode(containerRect, "Prioritized Game Mode"),
                         new OptionsSlider(containerRect, "Prioritized Map Difficulty", ConfigManager.TargetMapDifficulty, i => $"{i / 10f:0.0}"),
+                        new OptionsItemSuggestDifficulty(containerRect, "Suggest Difficulty")
                     }),
                     new OptionsSubcategory("Leaderboard", new List<OptionsItem>()
                     {
