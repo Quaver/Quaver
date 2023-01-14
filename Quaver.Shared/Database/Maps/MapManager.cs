@@ -120,7 +120,7 @@ namespace Quaver.Shared.Database.Maps
                         _ => throw new InvalidOperationException("Map is an invalid game mode")
                     };
 
-                    double delta = maps.Min(x => Math.Abs(x.DifficultyFromMods(mods) - target));
+                    double delta = Math.Abs(map.DifficultyFromMods(mods) - target);
 
                     if (delta < minDelta)
                     {
