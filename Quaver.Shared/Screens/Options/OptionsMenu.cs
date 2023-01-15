@@ -418,6 +418,13 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
+                        new OptionsItemPrioritizedGameMode(containerRect, "Prioritized Game Mode"),
+                        new OptionsSlider(containerRect, "Prioritized 4K Difficulty", ConfigManager.PrioritizedMapDifficulty4K, i => $"{i / 10f:0.0}"),
+                        new OptionsSlider(containerRect, "Prioritized 7K Difficulty", ConfigManager.PrioritizedMapDifficulty7K, i => $"{i / 10f:0.0}"),
+                        new OptionsItemSuggestDifficulty(containerRect, "Suggest Difficulty from Overall Rating")
+                    }),
+                    new OptionsSubcategory("Leaderboard", new List<OptionsItem>()
+                    {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
                     }),
                     // new OptionsSubcategory("Beta", new List<OptionsItem>()
