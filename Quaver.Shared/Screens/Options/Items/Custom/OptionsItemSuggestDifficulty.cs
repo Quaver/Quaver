@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             profile.PopulateStats();
 
             var rating = profile.Stats[mode].OverallRating;
-            var diff = (int) (rating / 20f) * 10;
+            var diff = (int) (rating / 20f * 10);
 
             switch (mode)
             {
