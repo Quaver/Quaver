@@ -434,7 +434,7 @@ namespace Quaver.Shared
                 AudioSample.GlobalVolume = e.Value * ConfigManager.VolumeEffect.Value / 100f;
             };
             ConfigManager.VolumeMusic.ValueChanged += (sender, e) => AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
-            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value * e.Value / 100f;
+            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
 
             ConfigManager.Pitched.ValueChanged += (sender, e) =>
             {
