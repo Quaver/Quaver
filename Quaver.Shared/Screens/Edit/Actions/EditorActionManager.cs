@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Batch;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
@@ -246,6 +247,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         public event EventHandler<EditorChangedScrollVelocityMultiplierBatchEventArgs> ScrollVelocityMultiplierBatchChanged;
 
+        /// <summary>
+        ///     Event invoked when a bookmark has been added.
+        /// </summary>
+        public event EventHandler<EditorActionBookmarkAddedEventArgs> BookmarkAdded;
+        
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
@@ -676,6 +682,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ReverseHitObjects:
                     HitObjectsReversed?.Invoke(this, (EditorHitObjectsReversedEventArgs)args);
                     break;
+                case EditorActionType.AddBookmark:
+                    BookmarkAdded?.Invoke(this, (EditorActionBookmarkAddedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -719,6 +728,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             ScrollVelocityMultiplierBatchChanged = null;
             HitObjectsResnapped = null;
             HitObjectsReversed = null;
+            BookmarkAdded = null;
         }
     }
 }
