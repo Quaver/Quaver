@@ -12,6 +12,7 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Managers;
+using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Edit.UI.Footer
 {
@@ -25,6 +26,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// </summary>
         private EditorFooterSeekBar SeekBar { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private EditorFooterBookmarks BookmarkDisplay { get; set; }
+        
         /// <summary>
         /// </summary>
         private EditorFooterTime CurrentTime { get; set; }
@@ -73,7 +78,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         public EditorFooter(EditScreen screen, IAudioTrack track) : base(MenuBorderType.Footer, new List<Drawable>()
         {
             new IconTextButtonExit(screen),
-            new IconTextButtonOptions()
+            new IconTextButtonOptions(),
+            new IconTextButtonAddBookmark(screen)
         }, new List<Drawable>()
         {
             new IconTextButtonTestPlay(screen),
@@ -87,19 +93,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             ForegroundLine.Visible = false;
 
             CreateSeekBar();
+            CreateEditorBookmarks(screen);
             CreateTimeTexts();
             CreatePausePlayButton();
             CreateFastForwardButton();
             CreateBackwardButton();
             CreateRestartButton();
             CreateSkipToEndButton();
-
             Height = HEIGHT;
 
             LeftAlignedItems.ForEach(x => x.Parent = this);
             RightAlignedItems.ForEach(x => x.Parent = this);
         }
-
+        
         /// <summary>
         /// </summary>
         private void CreateSeekBar()
@@ -112,6 +118,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             SeekBar.Y -= SeekBar.Height;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="screen"></param>
+        private void CreateEditorBookmarks(EditScreen screen)
+        {
+            BookmarkDisplay = new EditorFooterBookmarks(screen)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Y = SeekBar.Y
+            };
+
+            BookmarkDisplay.Y -= BookmarkDisplay.Height;
+        }
+        
         /// <summary>
         /// </summary>
         private void CreateTimeTexts()
