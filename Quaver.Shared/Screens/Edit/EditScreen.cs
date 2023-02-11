@@ -987,7 +987,10 @@ namespace Quaver.Shared.Screens.Edit
             Plugins = new List<IEditorPlugin>();
 
             LoadPluginsFromDirectory($"{WobbleGame.WorkingDirectory}/Plugins", false);
-            LoadPluginsFromDirectory($"{ConfigManager.SteamWorkshopDirectory.Value}", true);
+
+            if (ConfigManager.SteamWorkshopDirectory != null)
+                LoadPluginsFromDirectory($"{ConfigManager.SteamWorkshopDirectory.Value}", true);
+
             LoadBuiltInPlugins();
         }
 

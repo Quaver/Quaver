@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Edit.Input
     [Serializable]
     public class EditorInputConfig
     {
-        [YamlIgnore] public static string ConfigPath = ConfigManager.GameDirectory.Value + "/editor_keys.yaml";
+        [YamlIgnore] public static string ConfigPath = ConfigManager.GameDirectory?.Value + "/editor_keys.yaml";
 
         public bool ReverseScrollSeekDirection { get; private set; }
         public Dictionary<KeybindActions, KeybindList> Keybinds { get; private set; }
