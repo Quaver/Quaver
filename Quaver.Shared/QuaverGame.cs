@@ -291,6 +291,9 @@ namespace Quaver.Shared
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
 
+#if VISUAL_TESTS
+            HotLoaderGame.Font = FontsBitmap.CodeProBold;
+#endif
             base.Initialize();
         }
 
@@ -710,7 +713,7 @@ namespace Quaver.Shared
         private void HandleKeyPressAltEnter()
         {
             // Don't allow to change to fullscreen when playing
-            if (CurrentScreen.Type == QuaverScreenType.Gameplay)
+            if (CurrentScreen?.Type == QuaverScreenType.Gameplay)
                 return;
 
             // Check for modifier keys
@@ -719,6 +722,7 @@ namespace Quaver.Shared
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
+
 
             ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
         }
