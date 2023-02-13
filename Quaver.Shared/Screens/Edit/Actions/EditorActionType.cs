@@ -13,6 +13,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         AddHitsound,
         RemoveHitsound,
         SetColor,
+        SetColorBatch,
         CreateLayer,
         RemoveLayer,
         RenameLayer,
