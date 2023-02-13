@@ -32,9 +32,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks
         }
 
         [MoonSharpVisible(false)]
-        public void Undo()
-        {
-            
-        }
+        public void Undo() => new EditorActionRemoveBookmark(ActionManager, WorkingMap, Bookmark).Perform();
     }
 }
