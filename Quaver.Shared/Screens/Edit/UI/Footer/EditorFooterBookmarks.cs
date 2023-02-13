@@ -97,6 +97,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             };
             
             LeftHover += (sender, args) => screen.DeactivateTooltip();
+            RightClicked += (sender, args) => screen.ActionManager.RemoveBookmark(Bookmark);
         }
 
         public override void Destroy()
