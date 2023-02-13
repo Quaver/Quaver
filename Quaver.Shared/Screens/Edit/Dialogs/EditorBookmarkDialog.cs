@@ -15,11 +15,18 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
     {
         private EditScreen Screen { get; }
 
+        /// <summary>
+        ///     The book mark that's currently being edited. If none is provided in the constructor,
+        ///     then the purpose of the dialog will be to add a new one.
+        /// </summary>
+        private BookmarkInfo EditingBookmark { get; }
         protected Textbox Textbox { get; set; }
 
-        public EditorBookmarkDialog(EditScreen screen) : base("ADD BOOKMARK", "Add a custom note for your bookmark...")
+        public EditorBookmarkDialog(EditScreen screen, BookmarkInfo editingBookmark) 
+            : base(editingBookmark == null ? "ADD BOOKMARK" : "EDIT BOOKMARK", "Add a custom note for your bookmark...")
         {
             Screen = screen;
+            EditingBookmark = editingBookmark;
             CreateTextbox();
 
             Panel.Height += 50;
@@ -41,7 +48,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
-                20, "", "Add a bookmark note...", OnSubmit)
+                20, EditingBookmark?.Note ?? "", "Add a bookmark note...", OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,
@@ -54,6 +61,15 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);    
         }
         
-        private void OnSubmit(string note) => Screen.ActionManager.AddBookmark((int)Screen.Track.Time, note);
+        private void OnSubmit(string note)
+        {
+            if (EditingBookmark != null)
+            {
+                Screen.ActionManager.EditBookmark(EditingBookmark, note);
+                return;
+            }
+            
+            Screen.ActionManager.AddBookmark((int)Screen.Track.Time, note);
+        }
     }
 }

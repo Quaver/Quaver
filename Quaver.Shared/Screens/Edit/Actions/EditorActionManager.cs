@@ -256,6 +256,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a bookmark has been removed.
         /// </summary>
         public event EventHandler<EditorActionBookmarkRemovedEventArgs> BookmarkRemoved;
+
+        /// <summary>
+        ///     Event invoked whe na bookmark has been edited.
+        /// </summary>
+        public event EventHandler<EditorActionBookmarkEditedEventArgs> BookmarkEdited;
         
         /// <summary>
         /// </summary>
@@ -593,6 +598,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void RemoveBookmark(BookmarkInfo bookmark) => Perform(new EditorActionRemoveBookmark(this, WorkingMap, bookmark));
         
         /// <summary>
+        ///     Edits the note of an existing bookmark
+        /// </summary>
+        /// <param name="bookmark"></param>
+        /// <param name="note"></param>
+        public void EditBookmark(BookmarkInfo bookmark, string note) => Perform(new EditorActionEditBookmark(this, WorkingMap, bookmark, note));
+        
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -706,6 +718,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveBookmark:
                     BookmarkRemoved?.Invoke(this, (EditorActionBookmarkRemovedEventArgs) args);
                     break;
+                case EditorActionType.EditBookmark:
+                    BookmarkEdited?.Invoke(this, (EditorActionBookmarkEditedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -751,6 +766,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             HitObjectsReversed = null;
             BookmarkAdded = null;
             BookmarkRemoved = null;
+            BookmarkEdited = null;
         }
     }
 }

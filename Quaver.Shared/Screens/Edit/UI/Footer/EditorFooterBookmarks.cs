@@ -5,9 +5,11 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
+using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Edit.UI.Footer
@@ -29,12 +31,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 
             Screen.ActionManager.BookmarkAdded += OnBookmarkAdded;
             Screen.ActionManager.BookmarkRemoved += OnBookmarkRemoved;
+            Screen.ActionManager.BookmarkEdited += OnBookmarkEdited;
         }
         
         public override void Destroy()
         {
             Screen.ActionManager.BookmarkAdded -= OnBookmarkAdded;
             Screen.ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
+            Screen.ActionManager.BookmarkEdited -= OnBookmarkEdited;
             base.Destroy();
         }
 
@@ -69,6 +73,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         
         private void OnBookmarkAdded(object sender, EditorActionBookmarkAddedEventArgs e) => AddBookmark(e.Bookmark);
         private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e) => RemoveBookmark(e.Bookmark);
+        
+        private void OnBookmarkEdited(object sender, EditorActionBookmarkEditedEventArgs e)
+        {
+            RemoveBookmark(e.Bookmark);
+            AddBookmark(e.Bookmark);
+        }
     }
 
     /// <summary>
@@ -97,6 +107,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             };
             
             LeftHover += (sender, args) => screen.DeactivateTooltip();
+            Clicked += (sender, args) => DialogManager.Show(new EditorBookmarkDialog(Screen, Bookmark)); 
             RightClicked += (sender, args) => screen.ActionManager.RemoveBookmark(Bookmark);
         }
 

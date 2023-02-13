@@ -772,6 +772,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.I))
                 PlaceTimingPointOrScrollVelocity();
+            
+            if (KeyboardManager.IsUniqueKeyPress(Keys.B))
+                DialogManager.Show(new EditorBookmarkDialog(this, null));
         }
 
         /// <summary>

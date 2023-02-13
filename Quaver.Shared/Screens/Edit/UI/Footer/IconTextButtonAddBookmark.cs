@@ -13,12 +13,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     {
         public IconTextButtonAddBookmark(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol), 
             FontManager.GetWobbleFont(Fonts.LatoBlack), "ADD BOOKMARK", 
-            (o, e) => DialogManager.Show(new EditorBookmarkDialog(screen)))
+            (o, e) => DialogManager.Show(new EditorBookmarkDialog(screen, null)))
         {
             var tooltip = new Tooltip("Adds a bookmark at the current position the timeline.\n" + 
                                       "- Hover over a bookmark tick to view the note associated with it.\n" + 
                                       "- Left click a bookmark tick in the bottom timeline to edit it.\n" +
-                                      "- Right click a bookmark tick in the bottom timeline to delete it.", ColorHelper.HexToColor("#808080"));
+                                      "- Right click a bookmark tick in the bottom timeline to delete it.\n" +
+                                      "Hotkey: CTRL+B", ColorHelper.HexToColor("#808080"));
 
             Hovered += (sender, args) => screen?.ActivateTooltip(tooltip);
             LeftHover += (sender, args) => screen?.DeactivateTooltip();
