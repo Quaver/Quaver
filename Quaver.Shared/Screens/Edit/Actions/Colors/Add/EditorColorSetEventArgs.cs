@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
@@ -8,12 +9,12 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
     {
         public List<HitObjectInfo> HitObjects { get; }
 
-        public int Color { get; }
+        public List<SnapColor> OriginalHitObjectColors { get; }
 
-        public EditorColorSetEventArgs(List<HitObjectInfo> hitObjects, int color)
+        public EditorColorSetEventArgs(List<HitObjectInfo> hitObjects, List<SnapColor> colors)
         {
             HitObjects = hitObjects;
-            Color = color;
+            OriginalHitObjectColors = colors;
         }
     }
 }

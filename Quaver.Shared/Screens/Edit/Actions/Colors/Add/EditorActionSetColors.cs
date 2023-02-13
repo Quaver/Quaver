@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
@@ -9,7 +10,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorActionType Type { get; } = EditorActionType.SetColor;
+        public EditorActionType Type { get; } = EditorActionType.SetColorBatch;
 
         /// <summary>
         /// </summary>
@@ -18,7 +19,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
         /// <summary>
         /// Used to derive colors from the original HitObjectInfo
         /// </summary>
-        private List<HitObjectInfo> OriginalHitObjects { get; }
+        private List<SnapColor> OriginalHitObjectColors { get; }
 
         /// <summary>
         /// </summary>
@@ -26,18 +27,18 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
 
         /// <summary>
         /// </summary>
-        private List<int> Colors { get; }
+        private List<SnapColor> Colors { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="manager"></param>
         /// <param name="hitObjects"></param>
         /// <param name="color"></param>
-        public EditorActionSetColors(EditorActionManager manager, List<HitObjectInfo> hitObjects, List<int> colors)
+        public EditorActionSetColors(EditorActionManager manager, List<HitObjectInfo> hitObjects, List<SnapColor> colors)
         {
             ActionManager = manager;
             HitObjects = hitObjects;
-            OriginalHitObjects = hitObjects;
+            OriginalHitObjectColors = HitObjects.Select(x => (SnapColor)x.Color).ToList();
             Colors = colors;
         }
 
@@ -47,14 +48,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
         public void Perform()
         {
             for (var i = 0; i < Colors.Count; i++)
-                HitObjects[i].Color = Colors[i];
+                HitObjects[i].Color = (int)Colors[i];
 
-            ActionManager.TriggerEvent(EditorActionType.SetColor, new EditorColorSetEventArgs(HitObjects, 0));
+            ActionManager.TriggerEvent(EditorActionType.SetColorBatch, new EditorColorSetEventArgs(HitObjects, OriginalHitObjectColors));
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Undo() => new EditorActionSetColor(ActionManager, HitObjects, 0).Perform();
+        public void Undo() => new EditorActionSetColors(ActionManager, HitObjects, OriginalHitObjectColors).Perform();
     }
 }

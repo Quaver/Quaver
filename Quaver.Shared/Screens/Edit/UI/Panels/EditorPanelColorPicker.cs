@@ -97,13 +97,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="colorIndex"></param>
+        /// <param name="color"></param>
         /// <param name="selectedHitObjects"></param>
         /// <param name="manager"></param>
-        public DrawableEditorColorPicker(SnapColor colorIndex, BindableList<HitObjectInfo> selectedHitObjects,
+        public DrawableEditorColorPicker(SnapColor color, BindableList<HitObjectInfo> selectedHitObjects,
             EditorActionManager manager) : base(UserInterface.OptionsSidebarButtonBackground)
         {
-            Color = colorIndex;
+            Color = color;
             SelectedHitObjects = selectedHitObjects;
             ActionManager = manager;
 
@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 return;
             }
 
-            ActionManager.Perform(new EditorActionSetColor(ActionManager, new List<HitObjectInfo>(SelectedHitObjects.Value), (int)Color));
+            ActionManager.Perform(new EditorActionSetColor(ActionManager, new List<HitObjectInfo>(SelectedHitObjects.Value), Color));
         }
 
         /// <inheritdoc />

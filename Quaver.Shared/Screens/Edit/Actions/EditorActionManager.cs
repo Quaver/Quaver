@@ -137,7 +137,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorHitSoundRemovedEventArgs> HitsoundRemoved;
 
         /// <summary>
-        ///     Event invoked when a custom color has been added to a group of objects
+        ///     Event invoked when a custom snap color has been set for a group of hitobjects
         /// </summary>
         public event EventHandler<EditorColorSetEventArgs> SnapColorSet;
 
@@ -586,6 +586,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     HitsoundRemoved?.Invoke(this, (EditorHitSoundRemovedEventArgs)args);
                     break;
                 case EditorActionType.SetColor:
+                case EditorActionType.SetColorBatch:
                     SnapColorSet?.Invoke(this, (EditorColorSetEventArgs)args);
                     break;
                 case EditorActionType.CreateLayer:

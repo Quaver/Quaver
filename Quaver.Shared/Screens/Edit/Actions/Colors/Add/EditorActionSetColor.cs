@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
@@ -17,7 +18,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
 
         /// <summary>
         /// </summary>
-        public List<int> OriginalHitObjectColors = new List<int>();
+        public List<SnapColor> OriginalHitObjectColors { get; }
 
         /// <summary>
         /// </summary>
@@ -25,18 +26,18 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
 
         /// <summary>
         /// </summary>
-        private int Color { get; }
+        private SnapColor Color { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="manager"></param>
         /// <param name="hitObjects"></param>
         /// <param name="color"></param>
-        public EditorActionSetColor(EditorActionManager manager, List<HitObjectInfo> hitObjects, int color)
+        public EditorActionSetColor(EditorActionManager manager, List<HitObjectInfo> hitObjects, SnapColor color)
         {
             ActionManager = manager;
             HitObjects = hitObjects;
-            HitObjects.ForEach(x => OriginalHitObjectColors.Add(x.Color));
+            OriginalHitObjectColors = HitObjects.Select(x => (SnapColor)x.Color).ToList();
             Color = color;
         }
 
@@ -46,9 +47,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.Colors.Add
         public void Perform()
         {
             foreach (var ho in HitObjects)
-                ho.Color = Color;
+                ho.Color = (int)Color;
 
-            ActionManager.TriggerEvent(EditorActionType.SetColor, new EditorColorSetEventArgs(HitObjects, Color));
+            ActionManager.TriggerEvent(EditorActionType.SetColor, new EditorColorSetEventArgs(HitObjects, new List<SnapColor> { SnapColor.None }));
         }
 
         /// <inheritdoc />
