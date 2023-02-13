@@ -59,12 +59,10 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private void OnSubmit(string note)
         {
             if (Bookmark == null)
-            {
-                // Add new bookmark
-            }
+                Screen.ActionManager.AddBookmark((int) Screen.Track.Time, note);
             else
             {
-                // Update existing bookmark
+                
             }
         }
     }

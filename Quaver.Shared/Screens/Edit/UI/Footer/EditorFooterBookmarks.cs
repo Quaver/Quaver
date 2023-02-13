@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
@@ -16,11 +19,23 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     {
         private EditScreen Screen { get; }
 
+        private Dictionary<BookmarkInfo, EditorFooterBookmark> Bookmarks { get; } = new Dictionary<BookmarkInfo, EditorFooterBookmark>();
+
         public EditorFooterBookmarks(EditScreen screen)
         {
             Screen = screen;
             Size = new ScalableVector2(WindowManager.Width, 14);
             CreateBookmarks();
+
+            Screen.ActionManager.BookmarkAdded += OnBookmarkAdded;
+            Screen.ActionManager.BookmarkRemoved += OnBookmarkRemoved;
+        }
+        
+        public override void Destroy()
+        {
+            Screen.ActionManager.BookmarkAdded -= OnBookmarkAdded;
+            Screen.ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
+            base.Destroy();
         }
 
         /// <summary>
@@ -28,21 +43,32 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// </summary>
         private void CreateBookmarks()
         {
-            for (var i = 0; i < 80; i++)
-            {
-                var bookmark = new BookmarkInfo { StartTime = i * 1000 };
-
-                if (i % 2 == 0)
-                    bookmark.Note = "This section is for when the music gets more intense, so I put jumptrills here";
-                
-                new EditorFooterBookmark(bookmark)
-                {
-                    Parent = this,
-                    X = (float) (bookmark.StartTime / Screen.Track.Length) * Width,
-                    Size = new ScalableVector2(4, Height)
-                };
-            }
+            foreach (var bookmark in Screen.WorkingMap.Bookmarks)
+                AddBookmark(bookmark);
         }
+
+        private void AddBookmark(BookmarkInfo bookmark)
+        {
+            Bookmarks.Add(bookmark, new EditorFooterBookmark(Screen, bookmark)
+            {
+                Parent = this,
+                X = (float) (bookmark.StartTime / Screen.Track.Length) * Width,
+                Size = new ScalableVector2(4, Height)
+            });
+        }
+
+        private void RemoveBookmark(BookmarkInfo bookmark)
+        {
+            if (!Bookmarks.ContainsKey(bookmark))
+                return;
+
+            var bm = Bookmarks[bookmark];
+            Bookmarks.Remove(bookmark);
+            bm.Destroy();
+        }
+        
+        private void OnBookmarkAdded(object sender, EditorActionBookmarkAddedEventArgs e) => AddBookmark(e.Bookmark);
+        private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e) => RemoveBookmark(e.Bookmark);
     }
 
     /// <summary>
@@ -50,12 +76,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     /// </summary>
     public class EditorFooterBookmark : ImageButton
     {
+        private EditScreen Screen { get; }
         private BookmarkInfo Bookmark { get; }
 
         private Tooltip Tooltip { get; }
 
-        public EditorFooterBookmark(BookmarkInfo bookmark) : base(UserInterface.BlankBox)
+        public EditorFooterBookmark(EditScreen screen, BookmarkInfo bookmark) : base(UserInterface.BlankBox)
         {
+            Screen = screen;
             Bookmark = bookmark;
             SetColor();
             Tooltip = new Tooltip(Bookmark.Note, Tint) { DestroyIfParentIsNull = false };
@@ -65,15 +93,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
                 if (string.IsNullOrEmpty(Bookmark.Note))
                     return;
                 
-                var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen?.ActivateTooltip(Tooltip);
+                screen.ActivateTooltip(Tooltip);
             };
-
-            LeftHover += (sender, args) =>
-            {
-                var game = (QuaverGame)GameBase.Game;
-                game.CurrentScreen?.DeactivateTooltip();
-            };
+            
+            LeftHover += (sender, args) => screen.DeactivateTooltip();
         }
 
         public override void Destroy()
