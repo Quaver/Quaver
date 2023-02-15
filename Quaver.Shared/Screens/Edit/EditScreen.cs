@@ -778,6 +778,12 @@ namespace Quaver.Shared.Screens.Edit
             
             if (KeyboardManager.IsUniqueKeyPress(Keys.B))
                 DialogManager.Show(new EditorBookmarkDialog(this, null));
+            
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
+                SeekToNearestBookmark(Direction.Backward);
+            
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+                SeekToNearestBookmark(Direction.Forward);
         }
 
         /// <summary>
