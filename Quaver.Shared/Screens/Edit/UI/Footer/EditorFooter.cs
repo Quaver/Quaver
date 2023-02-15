@@ -5,6 +5,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.UI.Footer.Time;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using TagLib.Matroska;
@@ -18,6 +19,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 {
     public class EditorFooter : MenuBorder
     {
+        private EditScreen Screen { get; }
+
         /// <summary>
         /// </summary>
         private IAudioTrack Track { get; }
@@ -87,6 +90,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             new IconTextButtonPlaybackSpeed(screen, track)
         })
         {
+            Screen = screen;
             Track = track;
 
             AnimatedLine.Visible = false;
@@ -180,10 +184,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
                 X = BUTTON_SIZE + BUTTON_SPACING
             };
 
-            FastForwardButton.Clicked += (sender, args) =>
-            {
-                Track.Seek(MathHelper.Clamp((float) (Track.Time + 10000), 0, (float) Track.Length - 100));
-            };
+            FastForwardButton.Clicked += (o, e) => Screen.SeekToNearestBookmark(Direction.Forward);
+            FastForwardButton.Hovered += (o, e) => Screen.ActivateTooltip(new Tooltip("Seek to the next bookmark in the timeline.", ColorHelper.HexToColor("#808080")));
+            FastForwardButton.LeftHover += (o, e) => Screen.DeactivateTooltip();
         }
 
         /// <summary>
@@ -199,10 +202,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
                 X = -BUTTON_SIZE - BUTTON_SPACING
             };
 
-            BackwardButton.Clicked += (sender, args) =>
-            {
-                Track.Seek(MathHelper.Clamp((float) (Track.Time - 10000), 0, (float) Track.Length - 100));
-            };
+            BackwardButton.Clicked += (sender, args) => Screen.SeekToNearestBookmark(Direction.Backward);
+            BackwardButton.Hovered += (o, e) => Screen.ActivateTooltip(new Tooltip("Seek to the previous bookmark in the timeline.", ColorHelper.HexToColor("#808080")));
+            BackwardButton.LeftHover += (o, e) => Screen.DeactivateTooltip();
         }
 
         /// <summary>
