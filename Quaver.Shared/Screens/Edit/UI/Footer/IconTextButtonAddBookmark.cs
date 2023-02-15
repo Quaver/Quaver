@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
                                       "- Hover over a bookmark tick to view the note associated with it.\n" + 
                                       "- Left click a bookmark tick in the bottom timeline to edit it.\n" +
                                       "- Right click a bookmark tick in the bottom timeline to delete it.\n" +
-                                      "Hotkey: CTRL+B", ColorHelper.HexToColor("#808080"));
+                                      "Hotkey: CTRL + B", ColorHelper.HexToColor("#808080"));
 
             Hovered += (sender, args) => screen?.ActivateTooltip(tooltip);
             LeftHover += (sender, args) => screen?.DeactivateTooltip();
