@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         {
             Screen = screen;
             Bookmark = bookmark;
-            SetColor();
+            Tint = Color.Yellow;
             Tooltip = new Tooltip(Bookmark.Note, Tint) { DestroyIfParentIsNull = false };
 
             Hovered += (sender, args) =>
@@ -116,7 +116,5 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             Tooltip.Destroy();
             base.Destroy();
         }
-
-        private void SetColor() => Tint = string.IsNullOrEmpty(Bookmark.Note) ? Colors.MainBlue : Color.Yellow;
     }
 }
