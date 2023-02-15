@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using MoreLinq.Extensions;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
@@ -78,8 +79,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.PreviewTimeChanged += OnPreviewTimeChanged;
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
+            ActionManager.BookmarkAdded += OnBookmarkAdded;
+            ActionManager.BookmarkRemoved += OnBookmarkRemoved;
         }
-
+        
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -141,6 +144,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.PreviewTimeChanged -= OnPreviewTimeChanged;
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
+            ActionManager.BookmarkAdded -= OnBookmarkAdded;
+            ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
 
             base.Destroy();
         }
@@ -154,13 +159,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             var timingPointIndex = 0;
             var svIndex = 0;
-
+            
             // SV & Timing points are guaranteed to already be sorted, so there's no need to resort.
             while (Lines.Count != Map.TimingPoints.Count + Map.SliderVelocities.Count)
             {
                 var pointExists = timingPointIndex < Map.TimingPoints.Count;
                 var svExists = svIndex < Map.SliderVelocities.Count;
-
+                
                 if (pointExists && svExists)
                 {
                     if (Map.TimingPoints[timingPointIndex].StartTime < Map.SliderVelocities[svIndex].StartTime)
@@ -186,6 +191,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 }
             }
 
+            foreach (var bookmark in Map.Bookmarks)
+                Lines.Add(new DrawableEditorLineBookmark(Playfield, bookmark));
+            
             PreviewLine = new DrawableEditorLinePreview(Playfield, Map.SongPreviewTime);
             InitializeLinePool();
         }
@@ -369,5 +377,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnPreviewTimeChanged(object sender, EditorChangedPreviewTimeEventArgs e) => PreviewLine.Time = e.Time;
+        
+        private void OnBookmarkAdded(object sender, EditorActionBookmarkAddedEventArgs e)
+        {
+            Lines.Add(new DrawableEditorLineBookmark(Playfield, e.Bookmark));
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+        
+        private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e)
+        {
+            Lines.RemoveAll(x => x is DrawableEditorLineBookmark line && line.Bookmark == e.Bookmark);
+            InitializeLinePool();
+        }
     }
 }
