@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks;
 using Quaver.Shared.Screens.Edit.UI.Footer.Time;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using TagLib.Matroska;
@@ -31,7 +32,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 
         /// <summary>
         /// </summary>
-        private EditorFooterBookmarks BookmarkDisplay { get; set; }
+        private EditorFooterBookmarkContainer BookmarkContainerDisplay { get; set; }
         
         /// <summary>
         /// </summary>
@@ -127,14 +128,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// <param name="screen"></param>
         private void CreateEditorBookmarks(EditScreen screen)
         {
-            BookmarkDisplay = new EditorFooterBookmarks(screen)
+            BookmarkContainerDisplay = new EditorFooterBookmarkContainer(screen)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Y = SeekBar.Y
             };
 
-            BookmarkDisplay.Y -= BookmarkDisplay.Height;
+            BookmarkContainerDisplay.Y -= BookmarkContainerDisplay.Height;
         }
         
         /// <summary>

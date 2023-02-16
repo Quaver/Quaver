@@ -410,8 +410,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                     return found;
                 });
             }
-               
-
+            
             InitializeLinePool();
         }
 

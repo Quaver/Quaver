@@ -722,8 +722,7 @@ namespace Quaver.Shared
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
-
-
+            
             ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
         }
 

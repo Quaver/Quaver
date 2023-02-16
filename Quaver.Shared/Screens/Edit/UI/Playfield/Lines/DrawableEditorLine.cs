@@ -14,7 +14,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         protected EditorPlayfield Playfield { get; }
 
         protected static ScalableVector2 DefaultSize { get; } = new ScalableVector2(40, 2);
-
         
         public DrawableEditorLine(EditorPlayfield playfield) : base(UserInterface.BlankBox)
         {
