@@ -777,7 +777,7 @@ namespace Quaver.Shared.Screens.Edit
                 PlaceTimingPointOrScrollVelocity();
             
             if (KeyboardManager.IsUniqueKeyPress(Keys.B))
-                DialogManager.Show(new EditorBookmarkDialog(this, null));
+                DialogManager.Show(new EditorBookmarkDialog(ActionManager, Track, null));
             
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
                 SeekToNearestBookmark(Direction.Backward);

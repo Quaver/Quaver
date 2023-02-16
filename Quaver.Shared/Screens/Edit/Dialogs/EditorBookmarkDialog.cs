@@ -5,6 +5,8 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Actions;
+using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
 using Wobble.Managers;
@@ -13,8 +15,10 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class EditorBookmarkDialog : YesNoDialog
     {
-        private EditScreen Screen { get; }
+        private EditorActionManager ActionManager { get; }
 
+        private IAudioTrack Track { get; }
+        
         /// <summary>
         ///     The book mark that's currently being edited. If none is provided in the constructor,
         ///     then the purpose of the dialog will be to add a new one.
@@ -22,10 +26,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private BookmarkInfo EditingBookmark { get; }
         protected Textbox Textbox { get; set; }
 
-        public EditorBookmarkDialog(EditScreen screen, BookmarkInfo editingBookmark) 
+        public EditorBookmarkDialog(EditorActionManager manager, IAudioTrack track, BookmarkInfo editingBookmark) 
             : base(editingBookmark == null ? "ADD BOOKMARK" : "EDIT BOOKMARK", "Add a custom note for your bookmark...")
         {
-            Screen = screen;
+            ActionManager = manager;
+            Track = track;
             EditingBookmark = editingBookmark;
             CreateTextbox();
 
@@ -65,11 +70,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         {
             if (EditingBookmark != null)
             {
-                Screen.ActionManager.EditBookmark(EditingBookmark, note);
+                ActionManager.EditBookmark(EditingBookmark, note);
                 return;
             }
             
-            Screen.ActionManager.AddBookmark((int)Screen.Track.Time, note);
+            ActionManager.AddBookmark((int)Track.Time, note);
         }
     }
 }

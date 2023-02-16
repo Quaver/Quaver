@@ -392,7 +392,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         
         private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e)
         {
-            Lines.RemoveAll(x => x is DrawableEditorLineBookmark line && line.Bookmark == e.Bookmark);
+            var line = Lines.Find(x => x is DrawableEditorLineBookmark line && line.Bookmark == e.Bookmark);
+            line.Destroy();
+            Lines.Remove(line);
             InitializeLinePool();
         }
         

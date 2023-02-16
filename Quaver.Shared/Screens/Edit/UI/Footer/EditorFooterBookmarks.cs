@@ -122,7 +122,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             };
             
             LeftHover += (sender, args) => screen.DeactivateTooltip();
-            Clicked += (sender, args) => DialogManager.Show(new EditorBookmarkDialog(Screen, Bookmark)); 
+            Clicked += (sender, args) => DialogManager.Show(new EditorBookmarkDialog(Screen.ActionManager, Screen.Track, Bookmark)); 
             RightClicked += (sender, args) => screen.ActionManager.RemoveBookmark(Bookmark);
         }
 
