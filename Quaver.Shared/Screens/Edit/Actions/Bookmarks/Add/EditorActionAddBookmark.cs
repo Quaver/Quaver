@@ -1,8 +1,9 @@
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 
-namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks
+namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add
 {
     public class EditorActionAddBookmark : IEditorAction
     {

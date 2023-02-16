@@ -1,7 +1,7 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
-namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks
+namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit
 {
     public class EditorActionEditBookmark : IEditorAction
     {

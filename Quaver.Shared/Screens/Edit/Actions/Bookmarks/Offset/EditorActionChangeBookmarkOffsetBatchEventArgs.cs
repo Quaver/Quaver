@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Quaver.API.Maps.Structures;
 
-namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks
+namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
 {
     public class EditorActionChangeBookmarkOffsetBatchEventArgs : EventArgs
     {

@@ -1,7 +1,8 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
 
-namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks
+namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
 {
     public class EditorActionRemoveBookmark : IEditorAction
     {
