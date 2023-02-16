@@ -261,6 +261,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked whe na bookmark has been edited.
         /// </summary>
         public event EventHandler<EditorActionBookmarkEditedEventArgs> BookmarkEdited;
+
+        /// <summary>
+        ///     Event invoked when a batch of bookmark's offsets have been changed.
+        /// </summary>
+        public event EventHandler<EditorActionChangeBookmarkOffsetBatchEventArgs> BookmarkBatchOffsetChanged;
         
         /// <summary>
         /// </summary>
@@ -721,6 +726,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.EditBookmark:
                     BookmarkEdited?.Invoke(this, (EditorActionBookmarkEditedEventArgs) args);
                     break;
+                case EditorActionType.ChangeBookmarkOffsetBatch:
+                    BookmarkBatchOffsetChanged?.Invoke(this, (EditorActionChangeBookmarkOffsetBatchEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -767,6 +775,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             BookmarkAdded = null;
             BookmarkRemoved = null;
             BookmarkEdited = null;
+            BookmarkBatchOffsetChanged = null;
         }
     }
 }

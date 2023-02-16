@@ -43,6 +43,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ReverseHitObjects,
         AddBookmark,
         EditBookmark,
-        RemoveBookmark
+        RemoveBookmark,
+        ChangeBookmarkOffsetBatch
     }
 }
