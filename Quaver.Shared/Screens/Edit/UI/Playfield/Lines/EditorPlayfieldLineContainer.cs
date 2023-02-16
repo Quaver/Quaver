@@ -7,6 +7,7 @@ using Quaver.API.Maps;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
@@ -83,6 +84,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             ActionManager.BookmarkAdded += OnBookmarkAdded;
             ActionManager.BookmarkRemoved += OnBookmarkRemoved;
+            ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
         }
         
         /// <inheritdoc />
@@ -148,7 +150,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             ActionManager.BookmarkAdded -= OnBookmarkAdded;
             ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
-
+            ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
+            
             base.Destroy();
         }
 
@@ -390,6 +393,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e)
         {
             Lines.RemoveAll(x => x is DrawableEditorLineBookmark line && line.Bookmark == e.Bookmark);
+            InitializeLinePool();
+        }
+        
+        private void OnBookmarkBatchOffsetChanged(object sender, EditorActionChangeBookmarkOffsetBatchEventArgs e)
+        {
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
             InitializeLinePool();
         }
     }
