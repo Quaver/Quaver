@@ -154,7 +154,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             
             base.Destroy();
         }
-
+        
         /// <summary>
         ///     Initializes and positions all the timing point/sv lines
         /// </summary>
@@ -285,7 +285,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="e"></param>
         private void OnScrollVelocityRemoved(object sender, EditorScrollVelocityRemovedEventArgs e)
         {
-            Lines.RemoveAll(x => x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == e.ScrollVelocity);
+            Lines.RemoveAll(x =>
+            {
+                var found = x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == e.ScrollVelocity;
+                
+                if (found)
+                    x.Destroy();
+
+                return found;
+            });
             InitializeLinePool();
         }
 
@@ -296,8 +304,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private void OnScrollVelocityBatchRemoved(object sender, EditorScrollVelocityBatchRemovedEventArgs e)
         {
             foreach (var sv in e.ScrollVelocities)
-                Lines.RemoveAll(x => x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == sv);
+            {
+                Lines.RemoveAll(x =>
+                {
+                    var found = x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == sv;
+                    
+                    if (found)
+                        x.Destroy();
 
+                    return found;
+                });
+            }
+            
             InitializeLinePool();
         }
 
@@ -348,7 +366,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="e"></param>
         private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e)
         {
-            Lines.RemoveAll(x => x is DrawableEditorLineTimingPoint line && line.TimingPoint == e.TimingPoint);
+            Lines.RemoveAll(x =>
+            {
+                var found = x is DrawableEditorLineTimingPoint line && line.TimingPoint == e.TimingPoint;
+                
+                if (found)
+                    x.Destroy();
+
+                return found;
+            });
+            
             InitializeLinePool();
         }
 
@@ -372,7 +399,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private void OnTimingPointBatchRemoved(object sender, EditorTimingPointBatchRemovedEventArgs e)
         {
             foreach (var tp in e.TimingPoints)
-                Lines.RemoveAll(x => x is DrawableEditorLineTimingPoint line && line.TimingPoint == tp);
+            {
+                Lines.RemoveAll(x =>
+                {
+                    var found = x is DrawableEditorLineTimingPoint line && line.TimingPoint == tp;
+                    
+                    if (found)
+                        x.Destroy();
+                    
+                    return found;
+                });
+            }
+               
 
             InitializeLinePool();
         }
