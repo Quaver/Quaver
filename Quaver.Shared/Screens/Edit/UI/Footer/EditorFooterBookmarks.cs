@@ -32,6 +32,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             Screen.ActionManager.BookmarkAdded += OnBookmarkAdded;
             Screen.ActionManager.BookmarkRemoved += OnBookmarkRemoved;
             Screen.ActionManager.BookmarkEdited += OnBookmarkEdited;
+            Screen.ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
         }
         
         public override void Destroy()
@@ -39,6 +40,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             Screen.ActionManager.BookmarkAdded -= OnBookmarkAdded;
             Screen.ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
             Screen.ActionManager.BookmarkEdited -= OnBookmarkEdited;
+            Screen.ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
             base.Destroy();
         }
 
@@ -78,6 +80,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         {
             RemoveBookmark(e.Bookmark);
             AddBookmark(e.Bookmark);
+        }
+        
+        private void OnBookmarkBatchOffsetChanged(object sender, EditorActionChangeBookmarkOffsetBatchEventArgs e)
+        {
+            foreach (var bookmark in e.Bookmarks)
+            {
+                RemoveBookmark(bookmark);
+                AddBookmark(bookmark);
+            }
         }
     }
 
