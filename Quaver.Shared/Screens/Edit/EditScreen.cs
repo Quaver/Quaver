@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -44,10 +45,12 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
+using Wobble.Discord.RPC.Logging;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using YamlDotNet.Serialization.NodeTypeResolvers;
 
 namespace Quaver.Shared.Screens.Edit
 {
@@ -772,6 +775,15 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.I))
                 PlaceTimingPointOrScrollVelocity();
+            
+            if (KeyboardManager.IsUniqueKeyPress(Keys.B))
+                DialogManager.Show(new EditorBookmarkDialog(ActionManager, Track, null));
+            
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
+                SeekToNearestBookmark(Direction.Backward);
+            
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+                SeekToNearestBookmark(Direction.Forward);
         }
 
         /// <summary>
@@ -987,7 +999,10 @@ namespace Quaver.Shared.Screens.Edit
             Plugins = new List<IEditorPlugin>();
 
             LoadPluginsFromDirectory($"{WobbleGame.WorkingDirectory}/Plugins", false);
-            LoadPluginsFromDirectory($"{ConfigManager.SteamWorkshopDirectory.Value}", true);
+
+            if (ConfigManager.SteamWorkshopDirectory != null)
+                LoadPluginsFromDirectory($"{ConfigManager.SteamWorkshopDirectory.Value}", true);
+
             LoadBuiltInPlugins();
         }
 
@@ -1383,6 +1398,41 @@ namespace Quaver.Shared.Screens.Edit
             });
         }
 
+        /// <summary>
+        ///     Seeks to the nearest bookmark in a given direction
+        /// </summary>
+        /// <param name="direction"></param>
+        public void SeekToNearestBookmark(Direction direction)
+        {
+            BookmarkInfo nextBookmark = null;
+
+            var closest = WorkingMap.Bookmarks.OrderBy(x => Math.Abs(x.StartTime - Track.Time)).First();
+            var index = WorkingMap.Bookmarks.IndexOf(closest);
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    if (closest.StartTime > Track.Time && Math.Abs(closest.StartTime - Track.Time) > 0.1)
+                        nextBookmark = closest;
+                    else if (index + 1 < WorkingMap.Bookmarks.Count)
+                        nextBookmark = WorkingMap.Bookmarks[index + 1];
+                    break;
+                case Direction.Backward:
+                    if (closest.StartTime < Track.Time && Math.Abs(closest.StartTime - Track.Time) > 0.1)
+                        nextBookmark = closest;
+                    else if (index - 1 >= 0)
+                        nextBookmark = WorkingMap.Bookmarks[index - 1];
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            if (nextBookmark == null)
+                return;
+            
+            Track.Seek(Math.Clamp(nextBookmark.StartTime, 0, Track.Length));
+        }
+        
         /// <summary>
         ///     Creates a new mapset from an audio file
         /// </summary>
