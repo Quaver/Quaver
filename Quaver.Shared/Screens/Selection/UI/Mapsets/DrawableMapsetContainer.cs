@@ -260,7 +260,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26, false)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -274,7 +274,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(Title.Font, "Artist", 20)
+            Artist = new SpriteTextPlus(Title.Font, "Artist", 20, false)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
@@ -310,7 +310,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Creator = new SpriteTextPlus(Title.Font, "Creator", Artist.FontSize)
+            Creator = new SpriteTextPlus(Title.Font, "Creator", Artist.FontSize, false)
             {
                 Parent = this,
                 Position = new ScalableVector2(ByText.X + ByText.Width + ArtistCreatorSpacingX, Artist.Y),
@@ -368,7 +368,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
+            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20, false)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Artist.Y),
@@ -591,7 +591,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             Logger.Important($"User opened mapset: {ParentMapset.Item.Artist} - {ParentMapset.Item.Title}", LogType.Runtime, false);
-            MapManager.Selected.Value = ParentMapset.Item.Maps.First();
+            MapManager.SelectMapFromMapset(ParentMapset.Item);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private EditorActionManager ActionManager { get; }
+        public EditorActionManager ActionManager { get; }
 
         /// <summary>
         /// </summary>
@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private IAudioTrack Track { get; }
+        public IAudioTrack Track { get; }
 
         /// <summary>
         /// </summary>
@@ -1474,7 +1474,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private Vector2 GetRelativeMousePosition()
+        public Vector2 GetRelativeMousePosition()
         {
             var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
             return new Vector2(MouseManager.CurrentState.X, relativeY);

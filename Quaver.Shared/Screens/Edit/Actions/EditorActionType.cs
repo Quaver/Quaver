@@ -41,5 +41,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ResnapHitObjects,
         Batch,
         ReverseHitObjects,
+        AddBookmark,
+        EditBookmark,
+        RemoveBookmark,
+        ChangeBookmarkOffsetBatch
     }
 }

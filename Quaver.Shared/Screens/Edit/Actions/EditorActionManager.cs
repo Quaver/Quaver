@@ -6,6 +6,11 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Batch;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
@@ -246,6 +251,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         public event EventHandler<EditorChangedScrollVelocityMultiplierBatchEventArgs> ScrollVelocityMultiplierBatchChanged;
 
+        /// <summary>
+        ///     Event invoked when a bookmark has been added.
+        /// </summary>
+        public event EventHandler<EditorActionBookmarkAddedEventArgs> BookmarkAdded;
+
+        /// <summary>
+        ///     Event invoked when a bookmark has been removed.
+        /// </summary>
+        public event EventHandler<EditorActionBookmarkRemovedEventArgs> BookmarkRemoved;
+
+        /// <summary>
+        ///     Event invoked whe na bookmark has been edited.
+        /// </summary>
+        public event EventHandler<EditorActionBookmarkEditedEventArgs> BookmarkEdited;
+
+        /// <summary>
+        ///     Event invoked when a batch of bookmark's offsets have been changed.
+        /// </summary>
+        public event EventHandler<EditorActionChangeBookmarkOffsetBatchEventArgs> BookmarkBatchOffsetChanged;
+        
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
@@ -569,6 +594,33 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void SetPreviewTime(int time) => Perform(new EditorActionChangePreviewTime(this, WorkingMap, time));
 
         /// <summary>
+        ///     Adds a bookmark to the map
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="note"></param>
+        public void AddBookmark(int time, string note) => Perform(new EditorActionAddBookmark(this, WorkingMap, new BookmarkInfo { StartTime = time, Note = note }));
+
+        /// <summary>
+        ///     Removes a bookmark from the map.
+        /// </summary>
+        /// <param name="bookmark"></param>
+        public void RemoveBookmark(BookmarkInfo bookmark) => Perform(new EditorActionRemoveBookmark(this, WorkingMap, bookmark));
+        
+        /// <summary>
+        ///     Edits the note of an existing bookmark
+        /// </summary>
+        /// <param name="bookmark"></param>
+        /// <param name="note"></param>
+        public void EditBookmark(BookmarkInfo bookmark, string note) => Perform(new EditorActionEditBookmark(this, WorkingMap, bookmark, note));
+
+        /// <summary>
+        ///     Adjusts the offset of a batch of bookmarks
+        /// </summary>
+        /// <param name="bookmarks"></param>
+        /// <param name="offset"></param>
+        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset)); 
+        
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -676,6 +728,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ReverseHitObjects:
                     HitObjectsReversed?.Invoke(this, (EditorHitObjectsReversedEventArgs)args);
                     break;
+                case EditorActionType.AddBookmark:
+                    BookmarkAdded?.Invoke(this, (EditorActionBookmarkAddedEventArgs) args);
+                    break;
+                case EditorActionType.RemoveBookmark:
+                    BookmarkRemoved?.Invoke(this, (EditorActionBookmarkRemovedEventArgs) args);
+                    break;
+                case EditorActionType.EditBookmark:
+                    BookmarkEdited?.Invoke(this, (EditorActionBookmarkEditedEventArgs) args);
+                    break;
+                case EditorActionType.ChangeBookmarkOffsetBatch:
+                    BookmarkBatchOffsetChanged?.Invoke(this, (EditorActionChangeBookmarkOffsetBatchEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -719,6 +783,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
             ScrollVelocityMultiplierBatchChanged = null;
             HitObjectsResnapped = null;
             HitObjectsReversed = null;
+            BookmarkAdded = null;
+            BookmarkRemoved = null;
+            BookmarkEdited = null;
+            BookmarkBatchOffsetChanged = null;
         }
     }
 }

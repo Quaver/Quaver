@@ -207,5 +207,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="hitObjectsToResnap"></param>
         public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) =>
             ActionManager.ResnapNotes(snaps, hitObjectsToResnap);
+
+        public void AddBookmark(int time, string note) => ActionManager.AddBookmark(time, note);
+
+        public void RemoveBookmark(BookmarkInfo bookmark) => ActionManager.RemoveBookmark(bookmark);
+
+        public void EditBookmark(BookmarkInfo bookmark, string note) => ActionManager.EditBookmark(bookmark, note);
+
+        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => ActionManager.ChangeBookmarkBatchOffset(bookmarks, offset);
     }
 }

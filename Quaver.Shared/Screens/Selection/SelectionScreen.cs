@@ -901,7 +901,7 @@ namespace Quaver.Shared.Screens.Selection
                 // Change the map
                 if (index != -1)
                 {
-                    MapManager.Selected.Value = AvailableMapsets.Value[index].Maps.First();
+                    MapManager.SelectMapFromMapset(AvailableMapsets.Value[index]);
                     return;
                 }
 
@@ -930,7 +930,7 @@ namespace Quaver.Shared.Screens.Selection
 
                 if (mapsetIndex == -1 && AvailableMapsets.Value.Count != 0)
                 {
-                    MapManager.Selected.Value = AvailableMapsets.Value.First().Maps.First();
+                    MapManager.SelectMapFromMapset(AvailableMapsets.Value.First());
                     return;
                 }
 
