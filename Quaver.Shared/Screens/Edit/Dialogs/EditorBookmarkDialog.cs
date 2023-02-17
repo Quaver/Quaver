@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private IAudioTrack Track { get; }
         
         /// <summary>
-        ///     The book mark that's currently being edited. If none is provided in the constructor,
+        ///     The bookmark that's currently being edited. If none is provided in the constructor,
         ///     then the purpose of the dialog will be to add a new one.
         /// </summary>
         private BookmarkInfo EditingBookmark { get; }
