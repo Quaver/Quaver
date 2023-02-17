@@ -612,6 +612,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="bookmark"></param>
         /// <param name="note"></param>
         public void EditBookmark(BookmarkInfo bookmark, string note) => Perform(new EditorActionEditBookmark(this, WorkingMap, bookmark, note));
+
+        /// <summary>
+        ///     Adjusts the offset of a batch of bookmarks
+        /// </summary>
+        /// <param name="bookmarks"></param>
+        /// <param name="offset"></param>
+        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset)); 
         
         /// <summary>
         ///     Triggers an event of a specific action type
