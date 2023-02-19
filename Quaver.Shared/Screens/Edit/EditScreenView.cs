@@ -393,6 +393,9 @@ namespace Quaver.Shared.Screens.Edit
             
             // Makes it so that the playfield bookmark tooltips appear above preview.
             Playfield.Parent = Container;
+            
+            // Makes it so the selector goes above editor after enabling preview.
+            Selector.Parent = Container;
 
             ResetPanelParents();
         }
