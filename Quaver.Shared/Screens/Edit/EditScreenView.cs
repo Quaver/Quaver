@@ -395,8 +395,7 @@ namespace Quaver.Shared.Screens.Edit
             Playfield.Parent = Container;
             
             // Makes it so the selector goes above editor after enabling preview.
-            if(Selector != null)
-                Selector.Parent = Container;
+            Selector.Parent = Container;
 
             ResetPanelParents();
         }
