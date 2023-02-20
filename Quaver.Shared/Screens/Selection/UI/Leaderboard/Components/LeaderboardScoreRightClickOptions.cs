@@ -135,7 +135,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                         DialogManager.Show(new DeleteScoreDialog(Score));
                         break;
                     case PlayerProfile:
-                        BrowserHelper.OpenURL($"https://quavergame.com/profile/{Score.Name}");
+                        BrowserHelper.OpenURL($"https://quavergame.com/profile/{Score.PlayerId}");
                         break;
                     case SteamProfile:
                         BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{Score.SteamId}");
