@@ -59,6 +59,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
                 var path = MapManager.Selected.Value.Mapset.ExportToZip(false);
                 var response = OnlineManager.Client.UploadMapset(path);
+                
+                Logger.Important(response.ToString(), LogType.Network);
 
                 var folderPath = $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}";
 
