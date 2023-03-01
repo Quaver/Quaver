@@ -49,7 +49,8 @@ namespace Quaver.Shared.Database.Maps
             "zetoban - Flowering Night",
             "Plum - Fantasy Collision",
             "Lollipop - vibing oustide the supermarket at 1am",
-            "HyuN feat. Yuri - Disorder"
+            "HyuN feat. Yuri - Disorder",
+            "Rabbit House - Dead Rabbit And Witch's Blood"
         };
 
         /// <summary>
