@@ -115,10 +115,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             TimeElapsedUntilInitializationRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
             InitializeMapsets(false);
 
-            // disable caching of frequently changing text if scrolling fast enough
+            // Disable caching of frequently changing text if scrolling fast enough
+            // Caching stays disabled until scrolling stops to prevent repeated recaching when scroll speed fluctuates
             var deltaY = CurrentY - PreviousY;
             var speed = Math.Abs(deltaY) / gameTime.ElapsedGameTime.TotalMilliseconds;
-            IsCached = speed <= CacheThreshold;
+            IsCached = !(speed > CacheThreshold || (!IsCached && speed != 0));
 
             base.Update(gameTime);
         }
