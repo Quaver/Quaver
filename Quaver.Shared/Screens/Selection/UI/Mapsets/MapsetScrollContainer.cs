@@ -63,6 +63,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
         }
 
+        /// <summary>
+        ///     Whether frequently changing text is being cached or not
+        /// </summary>
+        private bool _isCached = true;
+        public bool IsCached
+        {
+            get => _isCached;
+            private set
+            {
+                if (value == _isCached)
+                    return;
+
+                SetCaching(value);
+                _isCached = value;
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -88,6 +105,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             TimeElapsedUntilInitializationRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
             InitializeMapsets(false);
+
+            IsCached = !IsMiddleMouseDragging;
 
             base.Update(gameTime);
         }
@@ -349,5 +368,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             var mapsetNotSelected = MiddleMapset != null && MiddleMapset.Item.Maps.First() != MapManager.Selected.Value;
             return mapsetNotSelected && GetCurrentlySelectedMapset() == null;
         }
+
+        private void SetCaching(bool cache) => Pool.ForEach(mapset => ((DrawableMapset)mapset).DrawableContainer.IsCached = cache);
     }
 }
