@@ -80,6 +80,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
         }
 
+        /// <summary>
+        ///     Caching is disabled when the scroll speed exceeds this value.
+        ///     This value should be low enough to disable caching when selecting a random mapset, absolute scrolling, mashing PgUp/PgDn,
+        ///     but should be high enough to avoid disabling caching when up/down are mashed.
+        ///
+        ///     Units: change in y-position / milliseconds since last update
+        /// </summary>
+        public double CacheThreshold { get; } = 100;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -106,7 +115,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             TimeElapsedUntilInitializationRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
             InitializeMapsets(false);
 
-            IsCached = !IsMiddleMouseDragging;
+            // disable caching of frequently changing text if scrolling fast enough
+            var deltaY = CurrentY - PreviousY;
+            var speed = Math.Abs(deltaY) / gameTime.ElapsedGameTime.TotalMilliseconds;
+            IsCached = speed <= CacheThreshold;
 
             base.Update(gameTime);
         }
