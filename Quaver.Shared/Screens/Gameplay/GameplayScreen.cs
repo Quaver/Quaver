@@ -1445,7 +1445,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
-            hitobjectManager.DestroyAllObjects();
+            // hitobjectManager.DestroyAllObjects(); // don't get why this line is here when objects are destroyed on skip anyway
 
             if (time != -1)
             {
