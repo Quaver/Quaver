@@ -460,9 +460,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
 
-                if (HitObjectManager.SnapIndices.ContainsKey(Info))
+                // do some jank to get the keys to have the same type so that they equal according to the by-value comparer
+                // there has to be a better way to do this
+                var key = new HitObjectInfo { StartTime = Info.StartTime, Lane = Info.Lane, EndTime = Info.EndTime, HitSound = Info.HitSound, KeySounds = Info.KeySounds, EditorLayer = Info.EditorLayer, IsEditableInLuaScript = Info.IsEditableInLuaScript };
+
+                if (HitObjectManager.SnapIndices.ContainsKey(key))
                 {
-                    var snap = HitObjectManager.SnapIndices[Info];
+                    var snap = HitObjectManager.SnapIndices[key];
                     return snap < objects.Count ? objects[snap] : objects[objects.Count - 1];
                 }
 
