@@ -240,7 +240,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 }
             }
 
-            Tint = Color.White;
+            Tint = info.State == HitObjectState.Dead ? SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor : Color.White;
             var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
             tint.A = 255;
 
@@ -475,18 +475,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     When the object itself dies, we want to change it to a dead color.
         /// </summary>
-        // public void Kill()
-        // {
-        //     Tint = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
-        //     var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
-        //     tint.A = 255;
-        //     HitObjectSprite.Tint = tint;
-        //     if (Info.IsLongNote)
-        //     {
-        //         LongNoteBodySprite.Tint = tint;
-        //         LongNoteEndSprite.Tint = tint;
-        //     }
-        // }
+        public void Kill()
+        {
+            Tint = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
+            var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
+            tint.A = 255;
+            HitObjectSprite.Tint = tint;
+            if (Info.IsLongNote)
+            {
+                LongNoteBodySprite.Tint = tint;
+                LongNoteEndSprite.Tint = tint;
+            }
+        }
 
         /// <summary>
         ///     Fades out the object. Usually used for failure.

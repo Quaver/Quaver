@@ -7,7 +7,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
 	public class GameplayHitObjectInfo : HitObjectInfo
 	{
-		public HitObjectState State { get; set; }
+        private HitObjectState _state;
+		public HitObjectState State
+        {
+            get => _state;
+            set
+            {
+                // do it in setter? or have a separate kill method? or use an event model?
+                if (value == HitObjectState.Dead && HitObject != null)
+                    HitObject.Kill();
+
+                _state = value;
+            }
+        }
 
 		public GameplayHitObjectKeys HitObject { get; private set; }
 
