@@ -413,7 +413,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 HeldLongNoteLanes.Add(new Queue<GameplayHitObjectInfo>());
             }
 
-            var infos = map.HitObjects.Select(info => new GameplayHitObjectInfo(info, this));
+            var infos = map.HitObjects.Select(info => new GameplayHitObjectInfo(info, this)).ToList();
 
             // Sort Hit Object Info into their respective lanes
             foreach (var info in infos)
@@ -489,7 +489,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // UpdateAndScoreActiveObjects();
             ScoreHitObjects();
-            UpdateAndScoreHeldObjects();
+            // UpdateAndScoreHeldObjects();
+            ScoreHeldObjects();
             // UpdateDeadObjects();
         }
 
@@ -666,11 +667,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ScoreHeldObjects();
 
             // Update the currently held long notes.
-            foreach (var lane in HeldLongNoteLanes)
-            {
-                foreach (var info in lane)
-                    info.HitObject?.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
-            }
+            // foreach (var lane in HeldLongNoteLanes)
+            // {
+            //     foreach (var info in lane)
+            //         info.HitObject?.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
+            // }
         }
 
         /// <summary>
@@ -852,8 +853,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void ChangeHitObjectToHeld(GameplayHitObjectInfo info)
         {
             // Add to the held long notes.
-            HeldLongNoteLanes[info.Lane - 1].Enqueue(info);
             info.State = HitObjectState.Held;
+            HeldLongNoteLanes[info.Lane - 1].Enqueue(info);
         }
 
         /// <summary>
