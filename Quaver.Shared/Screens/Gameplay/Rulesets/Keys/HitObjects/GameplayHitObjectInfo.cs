@@ -58,8 +58,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
 		public bool CurrentlyBeingHeld => State == HitObjectState.Held;
 
-		public GameplayHitObjectInfo(HitObjectInfo info, HitObjectManagerKeys manager, HitObjectState state = HitObjectState.Alive, GameplayHitObjectKeys hitObject = null) : base(info)
+		public GameplayHitObjectInfo(HitObjectInfo info, HitObjectManagerKeys manager, HitObjectState state = HitObjectState.Alive, GameplayHitObjectKeys hitObject = null)
 		{
+            StartTime = info.StartTime;
+            Lane = info.Lane;
+            EndTime = info.EndTime;
+            HitSound = info.HitSound;
+            KeySounds = info.KeySounds;
+            EditorLayer = info.EditorLayer;
+            IsEditableInLuaScript = info.IsEditableInLuaScript;
+
 			Manager = manager;
 			State = state;
 			HitObject = hitObject;
