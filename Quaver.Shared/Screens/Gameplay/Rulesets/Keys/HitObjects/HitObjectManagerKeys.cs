@@ -1041,7 +1041,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
-            DestroyAllObjects();
+            // DestroyAllObjects();
+            ResetHitObjectPools();
 
             CurrentSvIndex = 0;
             UpdateCurrentTrackPosition();
@@ -1088,6 +1089,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 playfield.Stage.HitObjectContainer.Children[i].Destroy();
 
             playfield.Stage.HitObjectContainer.Children.Clear();
+        }
+
+        private void ResetHitObjectPools()
+        {
+            foreach (var info in RenderedHitObjectInfos)
+            {
+                HitObjectPools[info.Lane - 1].Add(info.Unlink());
+            }
         }
 
         /// <summary>
