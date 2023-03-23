@@ -719,8 +719,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                     // Update Pooling
                     // RecyclePoolObject(hitObject);
-                    HitObjectPools[info.Lane - 1].Add(info.Unlink());
-                    info.State = HitObjectState.Removed;
+                    RemoveHitObject(info);
                 }
             }
         }
