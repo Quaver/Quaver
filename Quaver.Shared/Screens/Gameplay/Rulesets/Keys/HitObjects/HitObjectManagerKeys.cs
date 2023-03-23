@@ -385,7 +385,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (inputManager == null)
                 return;
 
-            HitStats = new Dictionary<HitObjectInfo, List<HitStat>>();
+            HitStats = new Dictionary<HitObjectInfo, List<HitStat>>(HitObjectInfo.ByValueComparer);
 
             foreach (var hitStat in inputManager.VirtualPlayer.ScoreProcessor.Stats)
             {

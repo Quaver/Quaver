@@ -302,10 +302,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (HitObjectManager.HitStats == null)
                 return;
 
-            if (!HitObjectManager.HitStats.ContainsKey(Info))
+            // do the dirty hack here for now
+            var key = new HitObjectInfo { StartTime = Info.StartTime, Lane = Info.Lane, EndTime = Info.EndTime, HitSound = Info.HitSound, KeySounds = Info.KeySounds, EditorLayer = Info.EditorLayer };
+
+            if (!HitObjectManager.HitStats.ContainsKey(key))
                 return;
 
-            var hitStats = HitObjectManager.HitStats[Info];
+            var hitStats = HitObjectManager.HitStats[key];
 
             foreach (var hitStat in hitStats)
             {
@@ -525,6 +528,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Visible = false;
             LongNoteBodySprite.Visible = false;
             LongNoteEndSprite.Visible = false;
+
+            PressHit.Visible = false;
+            ReleaseHit.Visible = false;
         }
 
         /// <summary>
