@@ -19,6 +19,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         public long TrackOffset { get; set; }
 
+        public TimingLine Line { get; private set; }
+
         /// <summary>
         ///     information used for the lines representing every 4 beats on the playfield
         /// </summary>
@@ -28,6 +30,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         {
             StartTime = startTime;
             TrackOffset = offset;
+        }
+
+        public void Link(TimingLine line)
+        {
+            Line = line;
+            Line.InitalizeInfo(this);
+        }
+
+        public TimingLine Unlink()
+        {
+            Line.Visible = false;
+            var temp = Line;
+            Line = null;
+            return temp;
         }
     }
 }

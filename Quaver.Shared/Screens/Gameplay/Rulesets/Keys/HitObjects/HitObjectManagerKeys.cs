@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         public List<GameplayHitObjectInfo> RenderedHitObjectInfos { get; private set; }
 
-        public SpatialHash SpatialHash { get; private set; }
+        public SpatialHash<GameplayHitObjectInfo> SpatialHash { get; private set; }
 
         /// <summary>
         ///     List of added hit object positions calculated from SV. Used for optimization
@@ -406,8 +406,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             ResetInfoPool();
 
-            SpatialHash = new SpatialHash(2 * RenderThreshold);
-            HitObjectInfos.ForEach(info => SpatialHash.AddValue(info));
+            SpatialHash = new SpatialHash<GameplayHitObjectInfo>(2 * RenderThreshold);
+            foreach (var info in HitObjectInfos)
+            {
+                if (!info.IsLongNote)
+                {
+                    SpatialHash.Add(info.InitialTrackPosition, info);
+                }
+                else
+                {
+                    SpatialHash.Add(info.EarliestTrackPosition, info.LatestTrackPosition, info);
+                }
+            }
         }
 
         private void ResetInfoPool()
