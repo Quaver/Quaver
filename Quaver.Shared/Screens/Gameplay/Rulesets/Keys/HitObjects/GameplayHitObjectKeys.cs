@@ -149,6 +149,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
 
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
+            Hide();
         }
 
         /// <summary>
