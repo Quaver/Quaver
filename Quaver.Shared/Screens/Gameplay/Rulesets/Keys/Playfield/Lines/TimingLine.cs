@@ -64,6 +64,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].TimingLineColor;
         }
 
+        /// <summary>
+        ///     Create a new timing line object without asssociated timing line info
+        /// </summary>
+        /// <param name="ruleset"></param>
+        /// <param name="direction"></param>
+        /// <param name="targetY"></param>
+        /// <param name="size"></param>
+        /// <param name="offsetX"></param>
         public TimingLine(GameplayRulesetKeys ruleset, ScrollDirection direction, float targetY, float size, float offsetX)
         {
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
@@ -81,6 +89,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             Visible = false;
         }
 
+        /// <summary>
+        ///     Associate timing line info with this object
+        /// </summary>
+        /// <param name="info"></param>
         public void InitalizeInfo(TimingLineInfo info)
         {
             Info = info;

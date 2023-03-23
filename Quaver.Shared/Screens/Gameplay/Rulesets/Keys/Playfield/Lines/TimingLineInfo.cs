@@ -19,6 +19,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         public long TrackOffset { get; set; }
 
+        /// <summary>
+        ///     Timing line sprite that is associated with this object
+        /// </summary>
         public TimingLine Line { get; private set; }
 
         /// <summary>
@@ -32,12 +35,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             TrackOffset = offset;
         }
 
+        /// <summary>
+        ///     Associate the given timing line sprite with this object
+        /// </summary>
+        /// <param name="line"></param>
         public void Link(TimingLine line)
         {
             Line = line;
             Line.InitalizeInfo(this);
         }
 
+        /// <summary>
+        ///     Stop associating the linked timing line sprite with this object
+        /// </summary>
+        /// <returns></returns>
         public TimingLine Unlink()
         {
             Line.Visible = false;

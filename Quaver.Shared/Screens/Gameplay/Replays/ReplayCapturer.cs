@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
         private void AddFrame(ReplayKeyPressState state)
         {
             var manager = Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;
-            Replay.AddFrame((int)manager.CurrentAudioPosition, state);
+            Replay.AddFrame((int)manager.CurrentAudioOffset, state);
         }
 
         /// <summary>

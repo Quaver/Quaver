@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             // This should be _after_ base.Update, since this uses HitObjectManager.CurrentTrackPosition,
             // which is updated in base.Update.
             if (TimingLineManagers != null)
-                foreach (var manager in TimingLineManagers) manager.UpdateObjectPool();
+                foreach (var manager in TimingLineManagers) manager.UpdateTimingLines();
         }
 
         /// <inheritdoc />

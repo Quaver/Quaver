@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
-using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
-	public class GameplayHitObjectInfo : HitObjectInfo
+	public class GameplayHitObjectKeysInfo : HitObjectInfo
 	{
+        /// <summary>
+        ///     Whether a hit object has been hit, held, missed, or not yet hit
+        /// </summary>
         private HitObjectState _state;
 		public HitObjectState State
         {
             get => _state;
             set
             {
-                // do it in setter? or have a separate kill method? or use an event model?
                 if (value == HitObjectState.Dead && HitObject != null)
                     HitObject.Kill();
 
@@ -21,8 +22,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
         }
 
+        /// <summary>
+        ///     Reference to the object that draws the hitobject on screen
+        /// </summary>
 		public GameplayHitObjectKeys HitObject { get; private set; }
 
+        /// <summary>
+        ///     Reference to the hitobject manager that this belongs to
+        /// </summary>
+        /// <value></value>
 		private HitObjectManagerKeys Manager { get; set; }
 
         /// <summary>
@@ -33,7 +41,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public List<SVDirectionChange> SVDirectionChanges { get; private set; }
 
         /// <summary>
-        ///     Y-offset from the origin?
+        ///     Y-offset from the origin
         /// </summary>
         public long InitialTrackPosition { get; private set; }
 
@@ -45,20 +53,25 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Latest position of this object.
         ///
-        ///     For LNs with negative SVs, this can be larger than EndTrackPosition for example.
+        ///     For LNs with negative SVs, this can be larger than EndTrackPosition.
         /// </summary>
         public long LatestTrackPosition { get; private set; }
 
         /// <summary>
         ///     Earliest position of this object.
         ///
-        ///     For LNs with negative SVs, this can be earlier than InitialTrackPosition for example.
+        ///     For LNs with negative SVs, this can be earlier than InitialTrackPosition.
         /// </summary>
         public long EarliestTrackPosition { get; private set; }
 
-		public bool CurrentlyBeingHeld => State == HitObjectState.Held;
-
-		public GameplayHitObjectInfo(HitObjectInfo info, HitObjectManagerKeys manager, HitObjectState state = HitObjectState.Alive, GameplayHitObjectKeys hitObject = null)
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="manager"></param>
+        /// <param name="state"></param>
+        /// <param name="hitObject"></param>
+		public GameplayHitObjectKeysInfo(HitObjectInfo info, HitObjectManagerKeys manager, HitObjectState state = HitObjectState.Alive, GameplayHitObjectKeys hitObject = null)
 		{
             StartTime = info.StartTime;
             Lane = info.Lane;
@@ -75,11 +88,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 			InitializePositions();
 		}
 
+        /// <summary>
+        ///     Calculates all relevant positions
+        /// </summary>
 		private void InitializePositions()
 		{
 			InitialTrackPosition = Manager.GetPositionFromTime(StartTime);
 
-            // Update Hit Object State depending if its an LN or not
             if (!IsLongNote)
             {
                 LatestTrackPosition = InitialTrackPosition;
@@ -100,16 +115,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 EarliestTrackPosition = earliestPosition;
                 LatestTrackPosition = latestPosition;
-                // CurrentLongNoteBodySize = (LatestTrackPosition - EarliestTrackPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
             }
 		}
 
+        /// <summary>
+        ///     Associate a GameplayHitObjectKeys to start drawing this hitobject.
+        /// </summary>
+        /// <param name="hitObject"></param>
         public void Link(GameplayHitObjectKeys hitObject)
         {
 			HitObject = hitObject;
 			HitObject.InitializeObject(Manager, this);
         }
 
+        /// <summary>
+        ///     Dissaociate the currently linked GameplayHitObjectKeys to stop drawing this hitobject.
+        /// </summary>
+        /// <returns>The linked GameplayHitObjectKeys to add back to the pool.</returns>
 		public GameplayHitObjectKeys Unlink()
 		{
 			if (HitObject is null)
@@ -122,11 +144,32 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 		}
 	}
 
+    /// <summary>
+    ///     Hitobjects can be alive, held, dead, or removed.
+    /// </summary>
 	public enum HitObjectState
 	{
+        /// <summary>
+        ///     Hitobject has not been hit yet.
+        ///     Sprite should appear as normal.
+        /// </summary>
 		Alive,
+        /// <summary>
+        ///     Hitobject is a long note and is currently being held.
+        ///     Long note length should be changing over time.
+        /// </summary>
 		Held,
+        /// <summary>
+        ///     Note has been late-missed,
+        ///     or long note has been early or late-missed,
+        ///     or long note was released very early.
+        ///     Sprite should be tinted to show that it was missed.
+        /// </summary>
 		Dead,
+        /// <summary>
+        ///     The note has been hit, or the long note has been properly released.
+        ///     There should no longer be a visible sprite representing the hitobject.
+        /// </summary>
 		Removed
 	}
 }

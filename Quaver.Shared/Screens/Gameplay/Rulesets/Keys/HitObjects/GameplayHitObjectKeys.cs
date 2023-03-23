@@ -6,7 +6,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,7 +25,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
     public class GameplayHitObjectKeys : GameplayHitObject
     {
-        public GameplayHitObjectInfo Info { get; private set; }
+        new public GameplayHitObjectKeysInfo Info { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -37,9 +36,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private HitObjectManagerKeys HitObjectManager { get; }
 
-        public long EarliestTrackPosition { get; private set; }
+        /// <summary>
+        ///     Earliest position of this object, can change while the long note is held.
+        ///     Note that this is different from <see cref="Info"/>'s EarliestTrackPosition.
+        /// </summary>
+        public long EarliestHeldPosition { get; private set; }
 
-        public long LatestTrackPosition { get; private set; }
+        /// <summary>
+        ///     Latest position of this object, can change while the long note is held.
+        ///     Note that this is different from <see cref="Info"/>'s LatestTrackPosition.
+        /// </summary>
+        public long LatestHeldPosition { get; private set; }
 
         /// <summary>
         ///     Current size of the LN body sprite.
@@ -123,7 +130,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public GameplayHitObjectKeys(GameplayHitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
+        public GameplayHitObjectKeys(GameplayHitObjectKeysInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
         {
             Info = info;
             HitObjectManager = manager;
@@ -138,6 +145,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             InitializeObject(manager, info);
         }
 
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="ruleset"></param>
+        /// <param name="manager"></param>
         public GameplayHitObjectKeys(int lane, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
         {
             Info = null;
@@ -153,7 +166,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Initialize HitObject Sprite used for Object Pooling. Only gets initialized once upon object creation.
+        ///     Initialize HitObject Sprites used for Object Pooling. Only gets initialized once upon object creation.
         /// </summary>
         /// <param name="info"></param>
         /// <param name="ruleset"></param>
@@ -214,11 +227,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Initialize Object when created/recycled within its object pool.
+        ///     Initialize Object when created/reused from its object pool
         /// </summary>
         /// <param name="info"></param>
         /// <param name="manager"></param>
-        public void InitializeObject(HitObjectManagerKeys manager, GameplayHitObjectInfo info)
+        public void InitializeObject(HitObjectManagerKeys manager, GameplayHitObjectKeysInfo info)
         {
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
@@ -245,12 +258,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
             tint.A = 255;
 
-            // Update Hit Object State
+            // Update hitobject sprites
             HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = tint;
-            // InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
-            // CurrentlyBeingHeld = false;
             StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
@@ -259,22 +270,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteEndSprite.Width = laneSize;
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
-            // Update Hit Object State depending if its an LN or not
+            // Update hitobject sprites depending on LN or not
             if (!Info.IsLongNote)
             {
                 LongNoteEndSprite.Visible = false;
                 LongNoteBodySprite.Visible = false;
-                LatestTrackPosition = info.InitialTrackPosition;
+                LatestHeldPosition = info.InitialTrackPosition;
             }
             else
             {
-                // SVDirectionChanges = HitObjectManager.GetSVDirectionChanges(info.StartTime, info.EndTime);
-
                 LongNoteBodySprite.Tint = tint;
                 LongNoteEndSprite.Tint = tint;
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
-                // EndTrackPosition = manager.GetPositionFromTime(Info.EndTime);
+
                 UpdateLongNoteSize(Info.InitialTrackPosition, Info.StartTime);
 
                 var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
@@ -288,7 +297,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             InitializeHits();
 
             // Update Positions
-            UpdateSpritePositions(manager.CurrentTrackPosition, manager.CurrentVisualPosition);
+            UpdateSpritePositions(manager.CurrentTrackPosition, manager.CurrentVisualAudioOffset);
         }
 
         /// <summary>
@@ -371,8 +380,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 latestPosition = Math.Max(latestPosition, change.Position);
             }
 
-            EarliestTrackPosition = earliestPosition;
-            LatestTrackPosition = latestPosition;
+            EarliestHeldPosition = earliestPosition;
+            LatestHeldPosition = latestPosition;
             CurrentLongNoteBodySize = (latestPosition - earliestPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
         }
 
@@ -401,7 +410,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // the end.
             float spritePosition;
 
-            if (Info.CurrentlyBeingHeld && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
+            if (Info.State == HitObjectState.Held && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
                 UpdateLongNoteSize(offset, curTime);
 
@@ -428,17 +437,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteBodySize;
 
-            var earliestSpritePosition = GetSpritePosition(offset, EarliestTrackPosition);
+            var earliestSpritePosition = GetSpritePosition(offset, EarliestHeldPosition);
             if (ScrollDirection.Equals(ScrollDirection.Down))
                 LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset - CurrentLongNoteBodySize;
             else
                 LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset;
 
-            LongNoteEndSprite.Y = GetEndSpritePosition(offset, LatestTrackPosition);
+            LongNoteEndSprite.Y = GetEndSpritePosition(offset, LatestHeldPosition);
 
             // Stop drawing LN body + end if the ln reaches half the height of the hitobject
             // (prevents body + end extending below this point)
-            if (CurrentLongNoteBodySize + LongNoteSizeDifference <= HitObjectSprite.Height / 2f || CurrentLongNoteBodySize <= 0 || curTime >= Info.EndTime && Info.CurrentlyBeingHeld)
+            if (CurrentLongNoteBodySize + LongNoteSizeDifference <= HitObjectSprite.Height / 2f || CurrentLongNoteBodySize <= 0 || curTime >= Info.EndTime && Info.State == HitObjectState.Held)
             {
                 LongNoteEndSprite.Visible = false;
                 LongNoteBodySprite.Visible = false;
@@ -523,6 +532,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
 
+        /// <summary>
+        ///     Hide all sprites associated with the hitobject.
+        /// </summary>
         public void Hide()
         {
             HitObjectSprite.Visible = false;
