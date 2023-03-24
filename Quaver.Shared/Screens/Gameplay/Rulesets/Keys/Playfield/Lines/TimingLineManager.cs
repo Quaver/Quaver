@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <summary>
         ///     List of timing lines that are being rendered to screen
         /// </summary>
-		private List<TimingLineInfo> RenderedLineInfos { get; set; }
+		private HashSet<TimingLineInfo> RenderedLineInfos { get; set; }
 
         /// <summary>
         ///     Reference to the HitObjectManager
@@ -132,9 +132,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void InitializeObjectPool()
         {
             Pool = new ConcurrentBag<TimingLine>();
-			RenderedLineInfos = new List<TimingLineInfo>();
+            RenderedLineInfos = new HashSet<TimingLineInfo>();
 
-			for (int i = 0; i < InitialPoolSize; i++)
+            for (int i = 0; i < InitialPoolSize; i++)
 			{
 				Pool.Add(new TimingLine(Ruleset, ScrollDirection, TrackOffset, SizeX, PositionX));
 			}
@@ -145,30 +145,31 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         public void UpdateTimingLines()
         {
-            // determine which lines are in render range
-            IEnumerable<TimingLineInfo> inRangeLines = SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition - HitObjectManager.RenderThreshold);
-			inRangeLines = inRangeLines.Concat(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition + HitObjectManager.RenderThreshold));
-			inRangeLines = inRangeLines.Distinct().ToList();
-
             // stop rendering lines that exited the range
-			var outsideLines = RenderedLineInfos.Except(inRangeLines).ToList();
-			foreach (var info in outsideLines)
-			{
-				Pool.Add(info.Unlink());
-				RenderedLineInfos.Remove(info);
-			}
+            bool shouldRemove(TimingLineInfo info)
+            {
+                if (!TimingLineInRange(info))
+                {
+                    Pool.Add(info.Unlink());
+                    return true;
+                }
+
+                return false;
+            }
+
+            RenderedLineInfos.RemoveWhere(info => shouldRemove(info));
 
             // start rendering lines that entered the range
-			foreach (var info in inRangeLines)
-			{
-				if (info.Line != null)
-					continue;
+            var inRangeLines = new HashSet<TimingLineInfo>();
+            inRangeLines.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition - HitObjectManager.RenderThreshold));
+            inRangeLines.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition + HitObjectManager.RenderThreshold));
+            inRangeLines.RemoveWhere(info => info.Line != null || !TimingLineInRange(info));
 
+            foreach (var info in inRangeLines)
+			{
 				TimingLine line;
 				if (!Pool.TryTake(out line))
-				{
 					line = new TimingLine(Ruleset, ScrollDirection, TrackOffset, SizeX, PositionX);
-				}
 
 				info.Link(line);
 				RenderedLineInfos.Add(info);
@@ -179,6 +180,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 			{
 				info.Line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
 			}
+        }
+
+        private bool TimingLineInRange(TimingLineInfo info)
+        {
+            return Math.Abs(info.TrackOffset - HitObjectManager.CurrentTrackPosition) <= HitObjectManager.RenderThreshold;
         }
     }
 }

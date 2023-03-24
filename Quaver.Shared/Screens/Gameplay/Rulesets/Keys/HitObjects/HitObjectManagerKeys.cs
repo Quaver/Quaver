@@ -101,9 +101,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public List<ConcurrentBag<GameplayHitObjectKeys>> HitObjectPools { get; private set; }
 
         /// <summary>
-        ///     List of all hitobjects that are currently rendered on screen.
+        ///      All hitobjects that are currently rendered on screen.
         /// </summary>
-        public List<GameplayHitObjectKeysInfo> RenderedHitObjectInfos { get; private set; }
+        public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos { get; private set; }
 
         /// <summary>
         ///     Allows for quickly finding all hitobjects close to some position.
@@ -396,7 +396,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // reset collections that change during gameplay
             HitObjectQueueLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
             HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
-            RenderedHitObjectInfos = new List<GameplayHitObjectKeysInfo>();
+            RenderedHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>();
 
             for (int i = 0; i < KeyCount; i++)
             {
@@ -472,26 +472,28 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void UpdateHitObjects()
         {
-            // find all hitobjects within range
-            IEnumerable<GameplayHitObjectKeysInfo> inRangeHitObjects = SpatialHashMap.GetValues(CurrentTrackPosition - RenderThreshold);
-            inRangeHitObjects = inRangeHitObjects.Concat(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
-            inRangeHitObjects = inRangeHitObjects.Distinct();
-            inRangeHitObjects = inRangeHitObjects.Where(info => info.State != HitObjectState.Removed && HitObjectInRange(info));
-
             // stop rendering hitobjects outside range
-            var outsideHitObjects = RenderedHitObjectInfos.Except(inRangeHitObjects).ToList();
-            foreach (var info in outsideHitObjects)
+            bool shouldRemove(GameplayHitObjectKeysInfo info)
             {
-                HitObjectPools[info.Lane - 1].Add(info.Unlink());
-                RenderedHitObjectInfos.Remove(info);
+                if (info.State == HitObjectState.Removed || !HitObjectInRange(info))
+                {
+                    HitObjectPools[info.Lane - 1].Add(info.Unlink());
+                    return true;
+                }
+
+                return false;
             }
 
+            RenderedHitObjectInfos.RemoveWhere(info => shouldRemove(info));
+
             // start rendering new hitobjects in range
+            var inRangeHitObjects = new HashSet<GameplayHitObjectKeysInfo>();
+            inRangeHitObjects.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition - RenderThreshold));
+            inRangeHitObjects.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
+            inRangeHitObjects.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
+
             foreach (var info in inRangeHitObjects)
             {
-                if (info.HitObject != null)
-                    continue;
-
                 GameplayHitObjectKeys hitObject;
                 if (!HitObjectPools[info.Lane - 1].TryTake(out hitObject))
                     hitObject = new GameplayHitObjectKeys(info.Lane - 1, Ruleset, this);
@@ -650,7 +652,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     stage.HitLightingObjects[info.Lane - 1].StopHolding();
 
                     // Update the object
-                    RemoveHitObject(info);
+                    info.State = HitObjectState.Removed;
                 }
             }
         }
@@ -683,21 +685,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void UpdatePoolingPositions()
         {
             RenderThreshold = (long)(ObjectPositionMagnitude / ScrollSpeed);
-        }
-
-        /// <summary>
-        ///     Stop rendering the given hitobject.
-        /// </summary>
-        /// <param name="info"></param>
-        public void RemoveHitObject(GameplayHitObjectKeysInfo info)
-        {
-            info.State = HitObjectState.Removed;
-
-            if (info.HitObject != null)
-            {
-                RenderedHitObjectInfos.Remove(info);
-                HitObjectPools[info.Lane - 1].Add(info.Unlink());
-            }
         }
 
         /// <summary>

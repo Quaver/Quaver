@@ -233,7 +233,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     break;
                 // Handle miss cases.
                 case Judgement.Miss:
-                    manager.RemoveHitObject(info);
+                    info.State = HitObjectState.Removed;
                     break;
                 // Handle non-miss cases. Perform Hit Lighting Animation and Handle Object pooling.
                 default:
@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                         info.HitObject?.StartLongNoteAnimation();
                     }
                     else
-                        manager.RemoveHitObject(info);
+                        info.State = HitObjectState.Removed;
                     break;
             }
         }
@@ -312,7 +312,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 if (judgement == Judgement.Miss || judgement == Judgement.Okay)
                     info.State = HitObjectState.Dead;
                 else
-                    manager.RemoveHitObject(info);
+                    info.State = HitObjectState.Removed;
 
                 return;
             }
