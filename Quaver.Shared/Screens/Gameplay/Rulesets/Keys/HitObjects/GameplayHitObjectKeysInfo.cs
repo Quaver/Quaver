@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
-	public class GameplayHitObjectKeysInfo : HitObjectInfo
+	public class GameplayHitObjectKeysInfo
 	{
         /// <summary>
         ///     Whether a hit object has been hit, held, missed, or not yet hit
@@ -23,7 +24,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Reference to the object that draws the hitobject on screen
+        ///     Original hitobject info
+        /// </summary>
+        public HitObjectInfo HitObjectInfo { get; private set;  }
+
+        public int StartTime => HitObjectInfo.StartTime;
+        public int Lane => HitObjectInfo.Lane;
+        public int EndTime => HitObjectInfo.EndTime;
+        public bool IsLongNote => HitObjectInfo.IsLongNote;
+
+        /// <summary>
+        ///     Represents the hitobject on screen
         /// </summary>
 		public GameplayHitObjectKeys HitObject { get; private set; }
 
@@ -73,15 +84,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="hitObject"></param>
 		public GameplayHitObjectKeysInfo(HitObjectInfo info, HitObjectManagerKeys manager, HitObjectState state = HitObjectState.Alive, GameplayHitObjectKeys hitObject = null)
 		{
-            StartTime = info.StartTime;
-            Lane = info.Lane;
-            EndTime = info.EndTime;
-            HitSound = info.HitSound;
-            KeySounds = info.KeySounds;
-            EditorLayer = info.EditorLayer;
-            IsEditableInLuaScript = info.IsEditableInLuaScript;
-
-			Manager = manager;
+            HitObjectInfo = info;
+            Manager = manager;
 			State = state;
 			HitObject = hitObject;
 

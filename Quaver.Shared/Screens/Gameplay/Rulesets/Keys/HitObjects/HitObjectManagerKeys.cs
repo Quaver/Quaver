@@ -251,14 +251,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                     if (nextHitObject is null)
                     {
-                        nextHitObject = lane.Peek();
+                        nextHitObject = lane.Peek().HitObjectInfo;
                         continue;
                     }
 
                     var hitObject = lane.Peek();
                     if (hitObject.StartTime < nextHitObject.StartTime)
                     {
-                        nextHitObject = hitObject;
+                        nextHitObject = hitObject.HitObjectInfo;
                     }
                 }
 
@@ -557,7 +557,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     screenView.UpdateScoreboardUsers();
 
                     // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info, info.StartTime, Judgement.Miss,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info.HitObjectInfo, info.StartTime, Judgement.Miss,
                                             int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -623,7 +623,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var missedReleaseJudgement = Judgement.Good;
 
                     // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info, info.EndTime, missedReleaseJudgement,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info.HitObjectInfo, info.EndTime, missedReleaseJudgement,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
 
                     Ruleset.ScoreProcessor.Stats.Add(stat);

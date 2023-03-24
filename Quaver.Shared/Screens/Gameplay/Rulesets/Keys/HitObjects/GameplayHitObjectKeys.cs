@@ -311,13 +311,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (HitObjectManager.HitStats == null)
                 return;
 
-            // do the dirty hack here for now
-            var key = new HitObjectInfo { StartTime = Info.StartTime, Lane = Info.Lane, EndTime = Info.EndTime, HitSound = Info.HitSound, KeySounds = Info.KeySounds, EditorLayer = Info.EditorLayer };
-
-            if (!HitObjectManager.HitStats.ContainsKey(key))
+            if (!HitObjectManager.HitStats.ContainsKey(Info.HitObjectInfo))
                 return;
 
-            var hitStats = HitObjectManager.HitStats[key];
+            var hitStats = HitObjectManager.HitStats[Info.HitObjectInfo];
 
             foreach (var hitStat in hitStats)
             {

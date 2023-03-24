@@ -157,9 +157,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (game?.CurrentScreen?.Type != QuaverScreenType.Editor)
             {
                 if (ConfigManager.EnableHitsounds.Value)
-                    HitObjectManager.PlayObjectHitSounds(info);
+                    HitObjectManager.PlayObjectHitSounds(info.HitObjectInfo);
                 if (ConfigManager.EnableKeysounds.Value)
-                    HitObjectManager.PlayObjectKeySounds(info);
+                    HitObjectManager.PlayObjectKeySounds(info.HitObjectInfo);
             }
 
             // Get Judgement and references
@@ -181,7 +181,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 new HitStat(
                     HitStatType.Hit,
                     KeyPressType.Press,
-                    info, time,
+                    info.HitObjectInfo, time,
                     judgement,
                     hitDifference,
                     Ruleset.ScoreProcessor.Accuracy,
@@ -217,7 +217,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                         new HitStat(
                             HitStatType.Miss,
                             KeyPressType.Press,
-                            info, time,
+                            info.HitObjectInfo, time,
                             Judgement.Miss,
                             time,
                             Ruleset.ScoreProcessor.Accuracy,
@@ -283,7 +283,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     new HitStat(
                         HitStatType.Hit,
                         KeyPressType.Release,
-                        info,
+                        info.HitObjectInfo,
                         time,
                         judgement,
                         hitDifference,
@@ -324,7 +324,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 new HitStat(
                     HitStatType.Hit,
                     KeyPressType.Release,
-                    info,
+                    info.HitObjectInfo,
                     time,
                     Judgement.Miss,
                     hitDifference,
