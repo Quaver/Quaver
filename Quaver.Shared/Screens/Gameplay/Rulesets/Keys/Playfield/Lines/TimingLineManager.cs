@@ -35,6 +35,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 		private HashSet<TimingLineInfo> RenderedLineInfos { get; set; }
 
         /// <summary>
+        ///     Used by <see cref="UpdateTimingLines"/> to avoid instantiating a new hash set every update
+        /// </summary>
+        public HashSet<TimingLineInfo> InRangeTimingLineInfos { get; private set; }
+
+        /// <summary>
+        ///     Loose upper bound of the number of timing lines on screen at one time.
+        /// </summary>
+        public int MaxTimingLineCount { get; private set; }
+
+        /// <summary>
         ///     Reference to the HitObjectManager
         /// </summary>
         public HitObjectManagerKeys HitObjectManager { get; }
@@ -43,11 +53,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         ///     Reference to the current Ruleset
         /// </summary>
         public GameplayRulesetKeys Ruleset { get; }
-
-        /// <summary>
-        ///     Initial size for the object pool
-        /// </summary>
-        private int InitialPoolSize { get; } = 6;
 
         /// <summary>
         ///     The Scroll Direction of every Timing Line
@@ -82,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             ScrollDirection = direction;
             Ruleset = ruleset;
             HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
-            GenerateTimingLineInfo(ruleset.Map);
+            InitializeTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
 
@@ -90,7 +95,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         ///     Generate Timing Line Information for the map
         /// </summary>
         /// <param name="map"></param>
-        public void GenerateTimingLineInfo(Qua map)
+        public void InitializeTimingLineInfo(Qua map)
         {
             // Using cell size equal to render area guarantees a consistent two cells accessed per update
             SpatialHashMap = new SpatialHashMap<TimingLineInfo>(HitObjectManager.RenderThreshold * 2);
@@ -124,6 +129,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 					SpatialHashMap.Add(offset, new TimingLineInfo(songPos, offset));
                 }
             }
+
+            // find an upper bound for number of timing lines on screen at one time
+            // each frame will always use the contents of two cells, so multiply the max by two for a loose upper bound
+            MaxTimingLineCount = SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2;
+
+            InRangeTimingLineInfos = new HashSet<TimingLineInfo>(MaxTimingLineCount);
         }
 
         /// <summary>
@@ -132,9 +143,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void InitializeObjectPool()
         {
             Pool = new ConcurrentBag<TimingLine>();
-            RenderedLineInfos = new HashSet<TimingLineInfo>();
+            RenderedLineInfos = new HashSet<TimingLineInfo>(MaxTimingLineCount);
 
-            for (int i = 0; i < InitialPoolSize; i++)
+            for (int i = 0; i < MaxTimingLineCount; i++)
 			{
 				Pool.Add(new TimingLine(Ruleset, ScrollDirection, TrackOffset, SizeX, PositionX));
 			}
@@ -160,12 +171,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             RenderedLineInfos.RemoveWhere(info => shouldRemove(info));
 
             // start rendering lines that entered the range
-            var inRangeLines = new HashSet<TimingLineInfo>();
-            inRangeLines.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition - HitObjectManager.RenderThreshold));
-            inRangeLines.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition + HitObjectManager.RenderThreshold));
-            inRangeLines.RemoveWhere(info => info.Line != null || !TimingLineInRange(info));
+            InRangeTimingLineInfos.Clear();
+            InRangeTimingLineInfos.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition - HitObjectManager.RenderThreshold));
+            InRangeTimingLineInfos.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition + HitObjectManager.RenderThreshold));
+            InRangeTimingLineInfos.RemoveWhere(info => info.Line != null || !TimingLineInRange(info));
 
-            foreach (var info in inRangeLines)
+            foreach (var info in InRangeTimingLineInfos)
 			{
 				TimingLine line;
 				if (!Pool.TryTake(out line))

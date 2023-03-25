@@ -111,14 +111,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public SpatialHashMap<GameplayHitObjectKeysInfo> SpatialHashMap { get; private set; }
 
         /// <summary>
+        ///     Used by <see cref="UpdateHitObjects"/> to avoid instantiating a new hash set every update
+        /// </summary>
+        public HashSet<GameplayHitObjectKeysInfo> InRangeHitObjectInfos { get; private set; }
+
+        /// <summary>
         ///     List of added hit object positions calculated from SV. Used for optimization
         /// </summary>
         public List<long> VelocityPositionMarkers { get; set; } = new List<long>();
 
         /// <summary>
-        ///     The object pool size.
+        ///     Loose upper bound of the number of hitobjects on screen at one time.
         /// </summary>
-        public int InitialPoolSizePerLane { get; } = 2;
+        public int MaxHitObjectCount { get; private set; }
 
         /// <summary>
         ///     Only objects within this distance of the <see cref="CurrentTrackPosition"/> are rendered.
@@ -306,8 +311,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Initialize HitObjects
             InitializeHitObjectInfo(map);
-            ResetHitObjects();
             InitializeObjectPool();
+            ResetHitObjectInfo();
 
             AudioEngine.Track.RateChanged += OnRateChanged;
             ConfigManager.ScrollSpeed4K.ValueChanged += On4KScrollSpeedChanged;
@@ -371,32 +376,38 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     SpatialHashMap.Add(info.EarliestTrackPosition, info.LatestTrackPosition, info);
                 }
             }
+
+            // find an upper bound for number of hitobjects on screen at one time
+            // each frame will always use the contents of two cells, so multiply the max by two for a loose upper bound
+            MaxHitObjectCount = SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2;
+
+            HitObjectQueueLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
+            HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
+            RenderedHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>(MaxHitObjectCount);
+            InRangeHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>(MaxHitObjectCount);
+
+            for (int i = 0; i < KeyCount; i++)
+            {
+                HitObjectQueueLanes.Add(new Queue<GameplayHitObjectKeysInfo>(HitObjectInfos.Count));
+                HeldLongNoteLanes.Add(new Queue<GameplayHitObjectKeysInfo>(1));
+            }
         }
 
         /// <summary>
         ///     Initialize collections that change between resets.
         /// </summary>
-        private void ResetHitObjects()
+        private void ResetHitObjectInfo()
         {
             // stop rendering hitobjects
-            if (RenderedHitObjectInfos != null)
+            foreach (var info in RenderedHitObjectInfos)
             {
-                foreach (var info in RenderedHitObjectInfos)
-                {
-                    HitObjectPools[info.Lane - 1].Add(info.Unlink());
-                }
+                HitObjectPools[info.Lane - 1].Add(info.Unlink());
             }
 
             // reset collections that change during gameplay
-            HitObjectQueueLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
-            HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
-            RenderedHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>();
-
-            for (int i = 0; i < KeyCount; i++)
-            {
-                HitObjectQueueLanes.Add(new Queue<GameplayHitObjectKeysInfo>());
-                HeldLongNoteLanes.Add(new Queue<GameplayHitObjectKeysInfo>());
-            }
+            HitObjectQueueLanes.ForEach(lane => lane.Clear());
+            HeldLongNoteLanes.ForEach(lane => lane.Clear());
+            RenderedHitObjectInfos.Clear();
 
             // populate hitobject queues
             foreach (var info in HitObjectInfos)
@@ -419,12 +430,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void InitializeObjectPool()
         {
-            HitObjectPools = new List<ConcurrentBag<GameplayHitObjectKeys>>();
+            HitObjectPools = new List<ConcurrentBag<GameplayHitObjectKeys>>(KeyCount);
 
             for (int lane = 0; lane < HitObjectQueueLanes.Count; lane++)
             {
                 var pool = new ConcurrentBag<GameplayHitObjectKeys>();
-                for (int i = 0; i < InitialPoolSizePerLane; i++)
+
+                // assuming a roughly equal distribution of hitobjects across the lanes for a rough upper bound per lane
+                // if its too low, more will be allocated during gameplay
+                for (int i = 0; i < MaxHitObjectCount / KeyCount; i++)
                 {
                     pool.Add(new GameplayHitObjectKeys(lane, Ruleset, this));
                 }
@@ -481,12 +495,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             RenderedHitObjectInfos.RemoveWhere(info => shouldRemove(info));
 
             // start rendering new hitobjects in range
-            var inRangeHitObjects = new HashSet<GameplayHitObjectKeysInfo>();
-            inRangeHitObjects.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition - RenderThreshold));
-            inRangeHitObjects.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
-            inRangeHitObjects.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
+            InRangeHitObjectInfos.Clear();
+            InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition - RenderThreshold));
+            InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
+            InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
 
-            foreach (var info in inRangeHitObjects)
+            foreach (var info in InRangeHitObjectInfos)
             {
                 GameplayHitObjectKeys hitObject;
                 if (!HitObjectPools[info.Lane - 1].TryTake(out hitObject))
@@ -856,7 +870,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             CurrentSvIndex = 0;
             UpdateCurrentTrackPosition();
 
-            ResetHitObjects();
+            ResetHitObjectInfo();
 
             Update(new GameTime());
         }

@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Multi-value dictionary used for storing multiple objects in the same cell.
         /// </summary>
-		private MultiValueDictionary<long, T> Dictionary { get; set; }
+		public MultiValueDictionary<long, T> Dictionary { get; private set; }
 
         /// <summary>
         ///     Determines the size of each cell.
@@ -88,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Multiple values per key are supported through the use of a list as a value in the backing dictionary.
         /// </summary>
-        private Dictionary<TKey, List<TValue>> Dictionary { get; set; }
+        public Dictionary<TKey, List<TValue>> Dictionary { get; private set; }
 
         /// <summary>
         ///     Constructor
