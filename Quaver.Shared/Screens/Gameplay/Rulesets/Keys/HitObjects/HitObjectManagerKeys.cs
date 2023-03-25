@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public static float TrackRounding { get; } = 100;
 
         /// <summary>
-        ///     The speed at which objects fall down from the screen.
+        ///     The speed at which objects travel across the screen.
         /// </summary>
         public static float ScrollSpeed
         {
@@ -121,14 +121,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public int InitialPoolSizePerLane { get; } = 2;
 
         /// <summary>
-        ///     Used to determine the max distance for object rendering.
-        /// </summary>
-        private long ObjectPositionMagnitude { get; } = 300000;
-
-        /// <summary>
         ///     Only objects within this distance of the <see cref="CurrentTrackPosition"/> are rendered.
         /// </summary>
-        public long RenderThreshold { get; private set; }
+        public long RenderThreshold => (long)(WindowManager.Height * TrackRounding / ScrollSpeed);
 
         /// <summary>
         ///     Current position of the receptors
@@ -304,7 +299,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             KeyCount = Map.GetKeyCount(Map.HasScratchKey);
 
             // Initialize SV
-            UpdatePoolingPositions();
             InitializePositionMarkers();
             UpdateCurrentTrackPosition();
 
@@ -662,9 +656,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void ForceUpdateLNSize()
         {
-            // Update Object Reference Positions with new scroll speed
-            UpdatePoolingPositions();
-
             foreach (var info in RenderedHitObjectInfos)
             {
                 info.HitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualAudioOffset);
@@ -677,14 +668,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     info.HitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualAudioOffset);
                 }
             }
-        }
-
-        /// <summary>
-        ///     Update Hitobject pooling positions to compensate for scroll speed.
-        /// </summary>
-        private void UpdatePoolingPositions()
-        {
-            RenderThreshold = (long)(ObjectPositionMagnitude / ScrollSpeed);
         }
 
         /// <summary>
