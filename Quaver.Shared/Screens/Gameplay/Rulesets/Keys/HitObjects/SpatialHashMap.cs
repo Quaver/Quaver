@@ -75,7 +75,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="position"></param>
         /// <returns></returns>
 		private long GetKey(long position) => position / CellSize;
-
 	}
 
     /// <summary>
@@ -133,5 +132,4 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             return new List<TValue>();
         }
     }
-
 }

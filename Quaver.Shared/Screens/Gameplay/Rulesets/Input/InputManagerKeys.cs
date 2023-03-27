@@ -224,7 +224,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                             Ruleset.ScoreProcessor.Health
                         ));
 
-
                     view.UpdateScoreboardUsers();
                     view.UpdateScoreAndAccuracyDisplays();
                     playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
