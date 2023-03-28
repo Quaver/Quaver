@@ -132,7 +132,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             // find an upper bound for number of timing lines on screen at one time
             // each frame will always use the contents of two cells, so multiply the max by two for a loose upper bound
-            MaxTimingLineCount = SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2;
+            MaxTimingLineCount = SpatialHashMap.Dictionary.Dictionary.Count > 0 ? SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() : 0;
+            MaxTimingLineCount *= 2;
 
             InRangeTimingLineInfos = new HashSet<TimingLineInfo>(MaxTimingLineCount);
         }
