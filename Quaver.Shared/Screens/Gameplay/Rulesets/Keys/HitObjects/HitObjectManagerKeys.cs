@@ -106,9 +106,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos { get; private set; }
 
         /// <summary>
-        ///     Allows for quickly finding all hitobjects close to some position.
+        ///     Allows for quickly finding hitobjects close to some position.
         /// </summary>
         public SpatialHashMap<GameplayHitObjectKeysInfo> SpatialHashMap { get; private set; }
+
+        /// <summary>
+        ///     Really long LNs that would take up all the memory in the universe if they were added to the spatial hash map.
+        /// </summary>
+        public HashSet<GameplayHitObjectKeysInfo> LongLNs { get; private set; }
 
         /// <summary>
         ///     Used by <see cref="UpdateHitObjects"/> to avoid instantiating a new hash set every update
@@ -365,6 +370,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Using cell size equal to render area guarantees a consistent two cells accessed per update
             SpatialHashMap = new SpatialHashMap<GameplayHitObjectKeysInfo>(2 * RenderThreshold);
+            LongLNs = new HashSet<GameplayHitObjectKeysInfo>();
+
             foreach (var info in HitObjectInfos)
             {
                 if (!info.IsLongNote)
@@ -373,12 +380,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 }
                 else
                 {
-                    SpatialHashMap.Add(info.EarliestTrackPosition, info.LatestTrackPosition, info);
+                    // Long LNs need to be added to multiple cells.
+                    // If they're _really_ long, they need to be added a _really_ large number of times to the spatial hash map,
+                    // which would require an insane amount of memory, so don't do that.
+                    if (info.LatestTrackPosition - info.EarliestTrackPosition > SpatialHashMap.CellSize * 10)
+                    {
+                        LongLNs.Add(info);
+                    }
+                    else
+                    {
+                        SpatialHashMap.Add(info.EarliestTrackPosition, info.LatestTrackPosition, info);
+                    }
                 }
             }
 
             // find an upper bound for number of hitobjects on screen at one time
-            // each frame will always use the contents of two cells, so multiply the max by two for a loose upper bound
+            // each frame will always use the contents of two cells, so multiply the max by two for an approximate upper bound
             MaxHitObjectCount = SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2;
 
             HitObjectQueueLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
@@ -498,6 +515,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             InRangeHitObjectInfos.Clear();
             InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition - RenderThreshold));
             InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
+            InRangeHitObjectInfos.UnionWith(LongLNs);
             InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
 
             foreach (var info in InRangeHitObjectInfos)

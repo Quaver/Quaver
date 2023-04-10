@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Determines the size of each cell.
         /// </summary>
-		private long CellSize { get; set; }
+		public long CellSize { get; private set; }
 
         /// <summary>
         ///     Constructor
