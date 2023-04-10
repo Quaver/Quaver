@@ -184,7 +184,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         {
             var grade = Processor.Value.Failed ? Grade.F : GradeHelper.GetGradeFromAccuracy(Processor.Value.Accuracy);
 
-            GradeSprite.Image = TextureManager.Load($@"Quaver.Resources/Textures/UI/Results/grade-large-{grade.ToString().ToLower()}.png");
+            GradeSprite.Image = SkinManager.Skin.GradesLarge[grade];
 
             const int width = 110;
 
