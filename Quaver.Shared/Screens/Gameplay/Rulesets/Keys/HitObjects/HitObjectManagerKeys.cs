@@ -502,6 +502,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 if (info.State == HitObjectState.Removed || !HitObjectInRange(info))
                 {
+                    // remove dead objects when they become out of range
+                    if (info.State == HitObjectState.Dead)
+                        info.State = HitObjectState.Removed;
+
                     HitObjectPools[info.Lane - 1].Add(info.Unlink());
                     return true;
                 }
