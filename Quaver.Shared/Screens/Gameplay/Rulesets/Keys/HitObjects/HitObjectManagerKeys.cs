@@ -500,7 +500,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void UpdateHitObjects()
         {
             // stop rendering hitobjects outside range
-            bool shouldRemove(GameplayHitObjectKeysInfo info)
+            bool removeIfNotVisible(GameplayHitObjectKeysInfo info)
             {
                 if (info.State == HitObjectState.Removed || !HitObjectInRange(info))
                 {
@@ -515,7 +515,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 return false;
             }
 
-            RenderedHitObjectInfos.RemoveWhere(info => shouldRemove(info));
+            RenderedHitObjectInfos.RemoveWhere(info => removeIfNotVisible(info));
 
             // start rendering new hitobjects in range
             InRangeHitObjectInfos.Clear();

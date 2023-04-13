@@ -158,7 +158,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void UpdateTimingLines()
         {
             // stop rendering lines that exited the range
-            bool shouldRemove(TimingLineInfo info)
+            bool removeIfNotVisible(TimingLineInfo info)
             {
                 if (!TimingLineInRange(info))
                 {
@@ -169,7 +169,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 return false;
             }
 
-            RenderedLineInfos.RemoveWhere(info => shouldRemove(info));
+            RenderedLineInfos.RemoveWhere(info => removeIfNotVisible(info));
 
             // start rendering lines that entered the range
             InRangeTimingLineInfos.Clear();
