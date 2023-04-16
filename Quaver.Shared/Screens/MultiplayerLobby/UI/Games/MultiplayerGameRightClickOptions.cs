@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
@@ -35,7 +36,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                         BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{game.GameId}");
                         break;
                     case SpectateGame:
-                        if (!OnlineManager.IsDonator)
+                        bool enableTournamentModePrivilege = OnlineManager.Self.OnlineUser.UserGroups.HasFlag((UserGroups)(1 << 11));
+                        if (!(OnlineManager.IsDonator || enableTournamentModePrivilege))
                         {
                             NotificationManager.Show(NotificationLevel.Warning, "You must be a donator in order to spectate multiplayer games!");
                             return;
