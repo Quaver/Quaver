@@ -136,6 +136,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Dissaociate the currently linked GameplayHitObjectKeys to stop drawing this hitobject.
         /// </summary>
         /// <returns>The linked GameplayHitObjectKeys to add back to the pool.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
 		public GameplayHitObjectKeys Unlink()
 		{
 			if (HitObject is null)

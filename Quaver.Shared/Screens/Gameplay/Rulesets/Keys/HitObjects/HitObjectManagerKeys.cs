@@ -18,6 +18,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
@@ -26,6 +27,7 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
@@ -420,7 +422,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // stop rendering hitobjects
             foreach (var info in RenderedHitObjectInfos)
             {
-                HitObjectPools[info.Lane - 1].Add(info.Unlink());
+                UnlinkInfo(info);
             }
 
             // reset collections that change during gameplay
@@ -442,6 +444,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 info.State = HitObjectState.Alive;
                 HitObjectQueueLanes[info.Lane - 1].Enqueue(info);
             }
+        }
+
+        /// <summary>
+        ///     Unlink GameplayHitObjectKeys from GameplayHitObjectKeysInfo and return it to the pool
+        /// </summary>
+        private void UnlinkInfo(GameplayHitObjectKeysInfo info)
+        {
+            if (info.HitObject is null)
+            {
+                Logger.Warning("Attempted to unlink a GameplayHitObjectInfo that is not linked", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "An error occurred during gameplay. Check logs for details.");
+                return;
+            }
+
+            HitObjectPools[info.Lane - 1].Add(info.Unlink());
         }
 
         /// <summary>
@@ -508,7 +525,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (info.State == HitObjectState.Dead)
                         info.State = HitObjectState.Removed;
 
-                    HitObjectPools[info.Lane - 1].Add(info.Unlink());
+                    UnlinkInfo(info);
                     return true;
                 }
 
