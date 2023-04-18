@@ -1445,7 +1445,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
-            hitobjectManager.DestroyAllObjects();
 
             if (time != -1)
             {
