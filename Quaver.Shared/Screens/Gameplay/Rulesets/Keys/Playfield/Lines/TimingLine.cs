@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <summary>
         ///     Timing Line position and time information
         /// </summary>
-        public TimingLineInfo Info { get; set; }
+        public TimingLineInfo Info { get; private set; }
 
         /// <summary>
         ///     Track Position of this Timing Line. >0 = this object hasnt passed receptors.
@@ -62,6 +62,42 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             Height = 2;
             Parent = playfield.Stage.TimingLineContainer;
             Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].TimingLineColor;
+        }
+
+        /// <summary>
+        ///     Create a new timing line object without asssociated timing line info
+        /// </summary>
+        /// <param name="ruleset"></param>
+        /// <param name="direction"></param>
+        /// <param name="targetY"></param>
+        /// <param name="size"></param>
+        /// <param name="offsetX"></param>
+        public TimingLine(GameplayRulesetKeys ruleset, ScrollDirection direction, float targetY, float size, float offsetX)
+        {
+            var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
+            TrackOffset = targetY;
+            Ruleset = ruleset;
+            ScrollDirection = direction;
+
+            // Initialize Sprite
+            Alignment = Alignment.TopLeft;
+            Width = size;
+            X = offsetX;
+            Height = 2;
+            Parent = playfield.Stage.TimingLineContainer;
+            Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].TimingLineColor;
+            Visible = false;
+        }
+
+        /// <summary>
+        ///     Associate timing line info with this object
+        /// </summary>
+        /// <param name="info"></param>
+        public void InitalizeInfo(TimingLineInfo info)
+        {
+            Info = info;
+            UpdateSpritePosition(Info.TrackOffset);
+            Visible = true;
         }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         ///     This is a list because multiple scroll directions require multiple Timing Line Managers.
         ///
         /// </summary>
-        public List<TimingLineManager> TimingLineManager { get; } = new List<TimingLineManager>();
+        public List<TimingLineManager> TimingLineManagers { get; } = new List<TimingLineManager>();
 
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="direction"></param>
         private void InitializeTimingLines()
         {
-            // Do not create timing lines if DisplayTiminbgLines config is turned off.
+            // Do not create timing lines if DisplayTimingLines config is turned off.
             if (!ConfigManager.DisplayTimingLines.Value)
                 return;
 
@@ -89,11 +89,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             {
                 var halfIndex = (int)Math.Ceiling(keys / 2.0) - 1;
                 var halfPos = playfield.Stage.Receptors[halfIndex].X + playfield.Stage.Receptors[halfIndex].Width;
-                TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.TimingLinePositionY[0], halfPos, 0));
-                TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Up, playfield.TimingLinePositionY[halfIndex + 1], playfield.Width - halfPos, halfPos));
+                TimingLineManagers.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.TimingLinePositionY[0], halfPos, 0));
+                TimingLineManagers.Add(new TimingLineManager(this, ScrollDirection.Up, playfield.TimingLinePositionY[halfIndex + 1], playfield.Width - halfPos, halfPos));
                 return;
             }
-            TimingLineManager.Add(new TimingLineManager(this, direction, playfield.TimingLinePositionY[0], playfield.Width, 0));
+            TimingLineManagers.Add(new TimingLineManager(this, direction, playfield.TimingLinePositionY[0], playfield.Width, 0));
         }
 
         /// <inheritdoc />
@@ -107,8 +107,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 
             // This should be _after_ base.Update, since this uses HitObjectManager.CurrentTrackPosition,
             // which is updated in base.Update.
-            if (TimingLineManager != null)
-                foreach (var manager in TimingLineManager) manager.UpdateObjectPool();
+            if (TimingLineManagers != null)
+                foreach (var manager in TimingLineManagers) manager.UpdateTimingLines();
         }
 
         /// <inheritdoc />

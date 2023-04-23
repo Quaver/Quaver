@@ -42,9 +42,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         private static int[] BeatSnaps { get; } = { 48, 24, 16, 12, 8, 6, 4, 3 };
 
         /// <summary>
-        ///     The beat snap index of each object in the map.
+        ///     Precomputed beat snap indices at hitobject times
         /// </summary>
-        public Dictionary<HitObjectInfo, int> SnapIndices { get; set; }
+        public Dictionary<int, int> SnapIndices { get; set; }
 
         /// <summary>
         ///     Ctor -
@@ -52,10 +52,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="map"></param>
         public HitObjectManager(Qua map)
         {
-            SnapIndices = new Dictionary<HitObjectInfo, int>();
+            SnapIndices = new Dictionary<int, int>();
 
             foreach (var hitObject in map.HitObjects)
-                SnapIndices.Add(hitObject, GetBeatSnap(hitObject, hitObject.GetTimingPoint(map.TimingPoints)));
+            {
+                if (!SnapIndices.ContainsKey(hitObject.StartTime))
+                    SnapIndices.Add(hitObject.StartTime, GetBeatSnap(hitObject, hitObject.GetTimingPoint(map.TimingPoints)));
+            }
         }
 
         /// <summary>
@@ -157,8 +160,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <returns></returns>
         public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
         {
-            // Add 2ms offset buffer space to offset and get beat length
-            var pos = info.StartTime - timingPoint.StartTime + 0;
+            // Get beat length
+            var pos = info.StartTime - timingPoint.StartTime;
             var beatlength = 60000 / timingPoint.Bpm;
 
             // Calculate Note's snap index

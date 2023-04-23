@@ -95,6 +95,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public Sprite OnlineGrade { get; set; }
 
+        private bool _isCached = true;
+        public bool IsCached
+        {
+            get => _isCached;
+            set
+            {
+                if (value == _isCached)
+                    return;
+
+                SetCaching(value);
+                _isCached = value;
+            }
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
@@ -260,7 +274,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26, false)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -274,7 +288,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(Title.Font, "Artist", 20, false)
+            Artist = new SpriteTextPlus(Title.Font, "Artist", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
@@ -310,7 +324,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Creator = new SpriteTextPlus(Title.Font, "Creator", Artist.FontSize, false)
+            Creator = new SpriteTextPlus(Title.Font, "Creator", Artist.FontSize)
             {
                 Parent = this,
                 Position = new ScalableVector2(ByText.X + ByText.Width + ArtistCreatorSpacingX, Artist.Y),
@@ -368,7 +382,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20, false)
+            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Artist.Y),
@@ -592,6 +606,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             Logger.Important($"User opened mapset: {ParentMapset.Item.Artist} - {ParentMapset.Item.Title}", LogType.Runtime, false);
             MapManager.SelectMapFromMapset(ParentMapset.Item);
+        }
+
+        /// <summary>
+        ///     Enables/disables caching of frequently changed strings
+        /// </summary>
+        private void SetCaching(bool cache)
+        {
+            Title.IsCached = cache;
+            Artist.IsCached = cache;
+            Creator.IsCached = cache;
+            DifficultyName.IsCached = cache;
         }
     }
 }
