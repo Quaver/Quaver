@@ -36,8 +36,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                         BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{game.GameId}");
                         break;
                     case SpectateGame:
-                        bool enableTournamentModePrivilege = OnlineManager.Self.OnlineUser.UserGroups.HasFlag((UserGroups)(1 << 11));
-                        if (!(OnlineManager.IsDonator || enableTournamentModePrivilege))
+                        var isContributor = OnlineManager.Self.OnlineUser.UserGroups.HasFlag(UserGroups.Contributor);
+                        if (!(OnlineManager.IsDonator || isContributor))
                         {
                             NotificationManager.Show(NotificationLevel.Warning, "You must be a donator in order to spectate multiplayer games!");
                             return;
