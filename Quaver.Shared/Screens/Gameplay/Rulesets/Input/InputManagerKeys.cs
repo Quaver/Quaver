@@ -381,8 +381,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             NotificationManager.Show(NotificationLevel.Info, $"Scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}",
                 null, true);
-
-            ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
         }
 
         /// <summary>
