@@ -400,7 +400,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // find an upper bound for number of hitobjects on screen at one time
             // each frame will always use the contents of two cells, so multiply the max by two for an approximate upper bound
-            MaxHitObjectCount = SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2;
+            MaxHitObjectCount = HitObjectInfos.Count > 0 ? SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2 : 0;
 
             HitObjectQueueLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
             HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
