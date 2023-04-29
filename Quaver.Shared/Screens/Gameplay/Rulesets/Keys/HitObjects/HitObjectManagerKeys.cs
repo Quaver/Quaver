@@ -536,9 +536,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // start rendering new hitobjects in range
             InRangeHitObjectInfos.Clear();
-            InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition - RenderThreshold));
+
+            // find hitobjects in all visible cells
+            for (long position = CurrentTrackPosition - RenderThreshold; position < CurrentTrackPosition + RenderThreshold; position += SpatialHashMap.CellSize)
+            {
+                InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(position));
+            }
             InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
+
+            // really long LNs aren't added to the spatial hash map to avoid using all the memory in the universe
             InRangeHitObjectInfos.UnionWith(LongLNs);
+
+            // filter out hitobjects that aren't visible
             InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
 
             foreach (var info in InRangeHitObjectInfos)
