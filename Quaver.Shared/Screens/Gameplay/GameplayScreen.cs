@@ -1553,7 +1553,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // Only allow offset changes if the map hasn't started or if we're on a break
-            if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
+            if (!IsSongSelectPreview && !(this is EditScreen) && (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip))
             {
                 var change = 5;
                 if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
