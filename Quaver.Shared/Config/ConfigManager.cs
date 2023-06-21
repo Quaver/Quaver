@@ -298,6 +298,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> TapToPause { get; private set; }
 
         /// <summary>
+        ///     If enabled, the user will be able to tap to restart instead of having to hold for 200ms to restart.
+        /// </summary>
+        internal static Bindable<bool> TapToRestart { get; private set; }
+
+        /// <summary>
         ///     The top lane cover's adjustable height between levels 0-50
         /// </summary>
         internal static BindableInt LaneCoverTopHeight { get; private set; }
@@ -983,6 +988,7 @@ namespace Quaver.Shared.Config
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
+            TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
