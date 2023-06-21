@@ -200,6 +200,8 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float SongTimeProgressScale { get; private set; }
 
+        internal bool SongTimeProgressPositionAtTop { get; private set; }
+
         internal float JudgementCounterAlpha { get; private set; }
 
         internal Color JudgementCounterFontColor { get; private set; }
@@ -513,6 +515,7 @@ namespace Quaver.Shared.Skinning
             ComboDisplayScale = ConfigHelper.ReadInt32((int) ComboDisplayScale, ini["ComboDisplayScale"]);
             KpsDisplayScale = ConfigHelper.ReadInt32((int) KpsDisplayScale, ini["KpsDisplayScale"]);
             SongTimeProgressScale = ConfigHelper.ReadInt32((int) SongTimeProgressScale, ini["SongTimeProgressScale"]);
+            SongTimeProgressPositionAtTop = ConfigHelper.ReadBool(SongTimeProgressPositionAtTop, ini["SongTimeProgressPositionAtTop"]);
             DeadNoteColor = ConfigHelper.ReadColor(DeadNoteColor, ini["DeadNoteColor"]);
             BattleRoyaleAlertPosX = ConfigHelper.ReadInt32((int) BattleRoyaleAlertPosX, ini["BattleRoyaleAlertPosX"]);
             BattleRoyaleAlertPosY = ConfigHelper.ReadInt32((int) BattleRoyaleAlertPosY, ini["BattleRoyaleAlertPosY"]);
