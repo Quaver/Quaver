@@ -357,6 +357,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause),
+                    new SettingsBool(this, "Tap to Restart", ConfigManager.TapToRestart),
                     new SettingsBool(this, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit),
                     new SettingsSlider(this, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight, x => $"{x}%"),
                     new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight, x => $"{x}%"),
