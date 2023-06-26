@@ -565,7 +565,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     Parent = Playfield.ForegroundContainer,
                     Alignment = Alignment.MidCenter,
-                    X = skin.DisplayJudgementsInEachColumn ? Receptors[lane].X - playfieldOffset : 0
+                    X = skin.DisplayJudgementsInEachColumn ? (Receptors[lane].X - playfieldOffset) : skin.JudgementBurstPosX
                 };
 
                 if (skin.RotateJudgements && skin.DisplayJudgementsInEachColumn)

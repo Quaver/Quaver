@@ -166,6 +166,9 @@ namespace Quaver.Shared.Skinning
         internal float ComboDisplayScale { get; private set; }
 
         [FixedScale]
+        internal float JudgementBurstPosX { get; private set; }
+
+        [FixedScale]
         internal float JudgementBurstPosY { get; private set; }
 
         internal bool DisplayJudgementsInEachColumn { get; private set; }
@@ -484,6 +487,7 @@ namespace Quaver.Shared.Skinning
             KpsDisplayPosY = ConfigHelper.ReadInt32((int) KpsDisplayPosY, ini["KpsDisplayPosY"]);
             ComboPosX = ConfigHelper.ReadInt32((int) ComboPosX, ini["ComboPosX"]);
             ComboPosY = ConfigHelper.ReadInt32((int) ComboPosY, ini["ComboPosY"]);
+            JudgementBurstPosX = ConfigHelper.ReadInt32((int)JudgementBurstPosX, ini["JudgementBurstPosX"]);
             JudgementBurstPosY = ConfigHelper.ReadInt32((int) JudgementBurstPosY, ini["JudgementBurstPosY"]);
             DisplayJudgementsInEachColumn = ConfigHelper.ReadBool(DisplayJudgementsInEachColumn, ini["DisplayJudgementsInEachColumn"]);
             RotateJudgements = ConfigHelper.ReadBool(RotateJudgements, ini["RotateJudgements"]);
