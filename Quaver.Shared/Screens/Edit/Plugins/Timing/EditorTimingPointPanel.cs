@@ -459,13 +459,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         if (point.StartTime < min)
                         {
                             var pointsInRange = Screen.WorkingMap.TimingPoints
-                                .Where(v => v.StartTime >= point.StartTime && v.StartTime <= min);
+                                .Where(v => v.StartTime >= point.StartTime && v.StartTime < min);
                             SelectedTimingPoints.AddRange(pointsInRange);
                         }
                         else if (point.StartTime > max)
                         {
                             var pointsInRange = Screen.WorkingMap.TimingPoints
-                                .Where(v => v.StartTime >= min && v.StartTime <= point.StartTime);
+                                .Where(v => v.StartTime > max && v.StartTime <= point.StartTime);
                             SelectedTimingPoints.AddRange(pointsInRange);
                         }
                     }
