@@ -579,7 +579,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 {
                     StartTime = obj.StartTime + difference,
                     Bpm = obj.Bpm,
-                    Signature = obj.Signature
+                    Signature = obj.Signature,
+                    Hidden = obj.Hidden
                 };
 
                 clonedObjects.Add(point);
