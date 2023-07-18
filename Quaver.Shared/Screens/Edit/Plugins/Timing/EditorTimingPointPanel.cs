@@ -578,7 +578,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var point = new TimingPointInfo()
                 {
                     StartTime = obj.StartTime + difference,
-                    Bpm = obj.Bpm
+                    Bpm = obj.Bpm,
+                    Signature = obj.Signature,
+                    Hidden = obj.Hidden
                 };
 
                 clonedObjects.Add(point);
