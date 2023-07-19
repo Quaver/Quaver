@@ -134,7 +134,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         }
 
         /// <summary>
-        ///     Polls <see cref="ScoreProcessor"/> and updates <see cref="StandardizedReplayPlayer"/>
+        ///     Polls <see cref="ReplayCapturer"/> and updates <see cref="StandardizedReplayPlayer"/>
         ///     with the standardized scoring values
         /// </summary>
         public void UpdateStandardizedScoreProcessor(bool force = false)
