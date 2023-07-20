@@ -212,21 +212,25 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // Handle early miss cases here.
                 case Judgement.Miss when info.IsLongNote:
                     // Add another miss when hit missing LNS
-                    ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true);
-                    Ruleset.ScoreProcessor.Stats.Add(
-                        new HitStat(
-                            HitStatType.Miss,
-                            KeyPressType.Press,
-                            info.HitObjectInfo, time,
-                            Judgement.Miss,
-                            time,
-                            Ruleset.ScoreProcessor.Accuracy,
-                            Ruleset.ScoreProcessor.Health
-                        ));
+                    if (ReplayInputManager == null)
+                    {
+                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true);
 
-                    view.UpdateScoreboardUsers();
-                    view.UpdateScoreAndAccuracyDisplays();
-                    playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+                        Ruleset.ScoreProcessor.Stats.Add(
+                            new HitStat(
+                                HitStatType.Miss,
+                                KeyPressType.Press,
+                                info.HitObjectInfo, time,
+                                Judgement.Miss,
+                                int.MinValue,
+                                Ruleset.ScoreProcessor.Accuracy,
+                                Ruleset.ScoreProcessor.Health
+                            ));
+
+                        view.UpdateScoreboardUsers();
+                        view.UpdateScoreAndAccuracyDisplays();
+                        playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+                    }
 
                     info.State = HitObjectState.Dead;
                     break;

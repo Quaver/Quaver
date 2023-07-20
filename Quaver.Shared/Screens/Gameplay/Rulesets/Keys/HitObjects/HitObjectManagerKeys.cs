@@ -671,7 +671,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // The release window. (Window * Multiplier)
             var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
 
-            // Check to see if any LN releases were missed (Counts as an okay instead of a miss.)
+            // Check to see if any LN releases were missed (Counts as a good instead of a miss.)
             foreach (var lane in HeldLongNoteLanes)
             {
                 while (lane.Count > 0 && (int)CurrentAudioOffset > lane.Peek().EndTime + window)
