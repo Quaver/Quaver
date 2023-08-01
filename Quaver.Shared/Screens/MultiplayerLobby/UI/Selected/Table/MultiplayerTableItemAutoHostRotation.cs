@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 ClickAction = () => checkbox?.FireButtonClickEvent();
         }
 
-        public override string GetName() => "Auto Host Rotation";
+        public override string GetName() => "Host Rotation";
 
         public override string GetValue() => SelectedGame.Value.HostRotation ? "Yes" : "No";
     }

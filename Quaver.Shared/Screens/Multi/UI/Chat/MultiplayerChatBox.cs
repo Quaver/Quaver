@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -10,6 +11,7 @@ using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Multi.UI.Chat
 {
@@ -38,6 +40,16 @@ namespace Quaver.Shared.Screens.Multi.UI.Chat
 
             CreateTextbox();
             CreateMessageContainer();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            Textbox.AlwaysFocused = DialogManager.Dialogs.Count == 0;
+
+            if (DialogManager.Dialogs.Count == 0)
+                Textbox.Focused = false;
+            
+            base.Update(gameTime);
         }
 
         /// <summary>
