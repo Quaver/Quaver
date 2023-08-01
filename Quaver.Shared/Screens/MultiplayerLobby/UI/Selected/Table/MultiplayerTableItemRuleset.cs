@@ -25,8 +25,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             {
                 case MultiplayerGameRuleset.Free_For_All:
                     return "Free-For-All";
-                case MultiplayerGameRuleset.Team:
-                    return "Team";
+                // case MultiplayerGameRuleset.Team:
+                //     return "Team";
                 //case MultiplayerGameRuleset.Battle_Royale:
                 //    return "Battle Royale";
                 default:
@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         public MultiplayerRulesetDropdown(Bindable<MultiplayerGame> game) : base(new List<string>()
         {
             "Free-For-All",
-            "Team",
+            //"Team",
             //"Battle Royale"
         }, new ScalableVector2(170, 36), 22, Colors.MainAccent, 0)
         {

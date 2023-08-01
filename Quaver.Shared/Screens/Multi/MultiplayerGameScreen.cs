@@ -105,6 +105,8 @@ namespace Quaver.Shared.Screens.Multi
                 OnlineManager.Client?.StopSpectating();
 
             MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
+            OnlineManager.SendGameDifficultyRatings(OnlineManager.CurrentGame.MapMd5, OnlineManager.CurrentGame.AlternativeMd5);
+            
             base.OnFirstUpdate();
         }
 
