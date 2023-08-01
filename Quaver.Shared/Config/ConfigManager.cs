@@ -913,7 +913,7 @@ namespace Quaver.Shared.Config
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
-            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
+            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -500, 500, data);
             Skin = ReadValue(@"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
@@ -1053,7 +1053,7 @@ namespace Quaver.Shared.Config
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
             EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
             EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
-            VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
+            VisualOffset = ReadInt(@"VisualOffset", 0, -500, 500, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);

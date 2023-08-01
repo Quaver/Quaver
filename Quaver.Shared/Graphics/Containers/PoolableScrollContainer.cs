@@ -147,12 +147,12 @@ namespace Quaver.Shared.Graphics.Containers
         /// <returns></returns>
         protected int DesiredPoolStartingIndex(int middleObjectIndex)
         {
-            if (middleObjectIndex < PoolSize / 2)
+            if ((middleObjectIndex + 1) < (float)PoolSize / 2)
                 return 0;
 
             int index;
 
-            if (middleObjectIndex + PoolSize / 2 > AvailableItems.Count)
+            if ((middleObjectIndex + 1) + (float)PoolSize / 2 > AvailableItems.Count)
                 index = AvailableItems.Count - PoolSize;
             else
                 index = middleObjectIndex - PoolSize / 2;
