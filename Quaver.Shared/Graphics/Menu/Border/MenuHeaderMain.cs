@@ -20,8 +20,6 @@ namespace Quaver.Shared.Graphics.Menu.Border
                 new MenuBorderLogo(),
                 new IconTextButtonHome(),
                 new IconTextButtonDownloadMaps(),
-                new IconTextButtonMusicPlayer(),
-                new IconTextButtonTheater(),
                 new IconTextButtonSkins(),
                 new IconTextButtonDonate()
             },

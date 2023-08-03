@@ -64,10 +64,6 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
-        private DrawableListenerList ListenerList { get; set; }
-
-        /// <summary>
-        /// </summary>
         private MusicPlayerSidebar Sidebar { get; set; }
 
         /// <inheritdoc />
@@ -81,13 +77,10 @@ namespace Quaver.Shared.Screens.Music
             CreateBackground();
             CreateMenuHeader();
             CreateMenuFooter();
-
-            CreateListenerList();
-
+            
             ContentContainer = new Container
             {
                 Parent = Container,
-                X = ListenerList.Width
             };
 
             CreateMusicControllerContainer();
@@ -140,17 +133,7 @@ namespace Quaver.Shared.Screens.Music
             Parent = Container,
             Alignment = Alignment.BotLeft
         };
-
-        /// <summary>
-        /// </summary>
-        private void CreateListenerList() => ListenerList = new DrawableListenerList(new ScalableVector2(310,
-            WindowManager.Height - Footer.Height * 2))
-        {
-            Parent = Container,
-            Alignment = Alignment.TopLeft,
-            Y = Header.Height
-        };
-
+        
         /// <summary>
         /// </summary>
         private void CreateMusicControllerContainer() => ControllerContainer = new MusicControllerContainer(Jukebox)
