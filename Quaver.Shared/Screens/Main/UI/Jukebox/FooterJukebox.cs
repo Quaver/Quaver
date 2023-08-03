@@ -113,8 +113,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             CreatePreviousButton();
             CreateNextButton();
             CreateSongInfo();
-            CreateInfoIcon();
-            CreateGoToJukeboxScreenButton();
+            //CreateInfoIcon();
             CreateProgressBar();
 
             Clicked += (sender, args) => HandleClickSeeking();
@@ -185,7 +184,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             SongInfo = new FooterJukeboxSongInfo()
             {
                 Parent = this,
-                X = 22
+                X = 22,
             };
         }
 
