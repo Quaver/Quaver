@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Online;
@@ -37,6 +38,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             Game = game;
 
             Clicked += (sender, args) => { OnlineManager.Client.ChangeAutoHost(BindedValue.Value); };
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            BindedValue.Value = Game?.Value?.IsAutoHost ?? false;
         }
     }
 }
