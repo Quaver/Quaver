@@ -978,7 +978,7 @@ namespace Quaver.Shared.Online
                     case QuaverScreenType.Download:
                     case QuaverScreenType.Lobby:
                         DialogManager.Show(new JoinGameDialog(null, null, true));
-                        ThreadScheduler.RunAfter(() => Client?.AcceptGameInvite(e.MatchId), 800);
+                        Client?.AcceptGameInvite(e.MatchId);
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before accepting this game invite.");

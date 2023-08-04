@@ -320,9 +320,15 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             {
                 if (!IsMultiplayer)
                     return;
-
+                
+                // Download the map if they don't already have it.
+                if (MapManager.Selected.Value == null || MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.MapMd5
+                    && MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.AlternativeMd5)
+                {
+                    DownloadMapset();
+                }
                 // Have the host select the map
-                if (SelectedGame.Value.HostId == OnlineManager.Self?.OnlineUser?.Id)
+                else if (SelectedGame.Value.HostId == OnlineManager.Self?.OnlineUser?.Id)
                 {
                     var game = (QuaverGame) GameBase.Game;
 
@@ -331,11 +337,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                     multi.DontLeaveGameUponScreenSwitch = true;
 
                     multi.Exit(() => new SelectionScreen());
-                }
-                else if (MapManager.Selected.Value == null || MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.MapMd5
-                         && MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.AlternativeMd5)
-                {
-                    DownloadMapset();
                 }
                 else if (SelectedGame.Value.MapId != -1)
                     BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{SelectedGame.Value.MapId}");
