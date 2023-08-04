@@ -71,9 +71,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
                 OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
                 OnlineManager.Client.OnGamePlayerTeamChanged += OnPlayerTeamChanged;
                 OnlineManager.Client.OnGameSetReferee += OnRefereeChanged;
+                OnlineManager.Client.OnUserDisconnected += OnUserDisconnected;
             }
         }
-
+        
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -100,6 +101,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
                 OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;
                 OnlineManager.Client.OnGamePlayerTeamChanged -= OnPlayerTeamChanged;
                 OnlineManager.Client.OnGameSetReferee -= OnRefereeChanged;
+                OnlineManager.Client.OnUserDisconnected -= OnUserDisconnected;
             }
 
             base.Destroy();
@@ -132,7 +134,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <param name="user"></param>
         public void RemovePlayer(User user)
         {
-            var players = Players.FindAll(x => x is MultiplayerPlayer p && p.User == user);
+            var players = Players.FindAll(x => x is MultiplayerPlayer p && p.User.OnlineUser.Id == user.OnlineUser.Id);
 
             foreach (var player in players)
             {
@@ -339,6 +341,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
             AddScheduledUpdate(() => RemovePlayer(player.User));
         }
+
+        private void OnUserDisconnected(object sender, UserDisconnectedEventArgs e) =>
+            OnUserLeftGame(sender, new UserLeftGameEventArgs(e.UserId));
+        
 
         /// <summary>
         /// </summary>
