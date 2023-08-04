@@ -54,6 +54,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// </summary>
         public override void OnFirstUpdate()
         {
+            OnlineManager.MultiplayerGames?.Clear();
             OnlineManager.Client?.JoinLobby();
             base.OnFirstUpdate();
         }
