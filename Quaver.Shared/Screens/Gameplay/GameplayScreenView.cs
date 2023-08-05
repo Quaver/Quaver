@@ -391,7 +391,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 skin.SongTimeProgressInactiveColor, skin.SongTimeProgressActiveColor)
             {
                 Parent = Container,
-                Alignment = Alignment.BotLeft,
+                Alignment = skin.SongTimeProgressPositionAtTop ? Alignment.TopLeft : Alignment.BotLeft,
                 DestroyIfParentIsNull = false
             };
         }

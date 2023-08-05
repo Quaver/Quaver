@@ -298,6 +298,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> TapToPause { get; private set; }
 
         /// <summary>
+        ///     If enabled, the user will be able to tap to restart instead of having to hold for 200ms to restart.
+        /// </summary>
+        internal static Bindable<bool> TapToRestart { get; private set; }
+
+        /// <summary>
         ///     The top lane cover's adjustable height between levels 0-50
         /// </summary>
         internal static BindableInt LaneCoverTopHeight { get; private set; }
@@ -908,7 +913,7 @@ namespace Quaver.Shared.Config
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
-            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
+            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -500, 500, data);
             Skin = ReadValue(@"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
@@ -983,6 +988,7 @@ namespace Quaver.Shared.Config
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
+            TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
@@ -1047,7 +1053,7 @@ namespace Quaver.Shared.Config
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
             EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
             EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
-            VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
+            VisualOffset = ReadInt(@"VisualOffset", 0, -500, 500, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);

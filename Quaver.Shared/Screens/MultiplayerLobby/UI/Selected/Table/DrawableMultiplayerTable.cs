@@ -106,13 +106,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 
             if (!isMultiplayer)
                 items.Add(new MultiplayerTableItemInProgress(game, false));
-
+            
             items.AddRange(new List<MultiplayerTableItem>()
             {
                 new MultiplayerTableItemFreeMod(game, isMultiplayer),
                 new MultiplayerTableItemFreeRate(game, isMultiplayer),
+                new MultiplayerTableItemAutoHost(game, isMultiplayer),
                 new MultiplayerTableItemAutoHostRotation(game, isMultiplayer),
-                new MultiplayerTableItemHealthType(game, isMultiplayer),
             });
 
             if (isMultiplayer)
@@ -120,7 +120,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 
             items.AddRange(new List<MultiplayerTableItem>()
             {
-                new MultiplayerTableItemLifeCount(game, isMultiplayer),
                 new MultiplayerTableItemSongLength(game, isMultiplayer),
                 new MultiplayerTableItemDifficultyRange(game, isMultiplayer),
                 new MultiplayerTableItemLongNotePercentageRange(game, isMultiplayer)

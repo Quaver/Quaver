@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             Jukebox = jukebox;
 
             Alpha = 0;
-            Size = new ScalableVector2(WindowManager.Width - 310, 220);
+            Size = new ScalableVector2(WindowManager.Width, 220);
             Depth = 1;
 
             CreateBackground();

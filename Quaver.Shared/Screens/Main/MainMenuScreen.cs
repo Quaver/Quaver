@@ -17,6 +17,7 @@ using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Main.Cheats;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.MultiplayerLobby;
@@ -54,6 +55,8 @@ namespace Quaver.Shared.Screens.Main
         ///	</summary>
         private bool FlaggedForOsuImport { get; set; }
 
+        private CheatCodeTheater TheaterCheat { get; set; }
+
         /// <summary>
         /// </summary>
         public MainMenuScreen()
@@ -65,7 +68,8 @@ namespace Quaver.Shared.Screens.Main
 
             OriginalAutoLoadOsuBeatmapsValue = ConfigManager.AutoLoadOsuBeatmaps.Value;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
-
+            TheaterCheat = new CheatCodeTheater();
+            
             View = new MainMenuScreenView(this);
         }
 
@@ -104,6 +108,7 @@ namespace Quaver.Shared.Screens.Main
         public override void Destroy()
         {
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
+            TheaterCheat.Destroy();
             base.Destroy();
         }
 
@@ -121,6 +126,7 @@ namespace Quaver.Shared.Screens.Main
 
             HandleKeyPressEscape();
             HandleKeyPressF5();
+            TheaterCheat.Update(gameTime);
         }
 
         /// <summary>

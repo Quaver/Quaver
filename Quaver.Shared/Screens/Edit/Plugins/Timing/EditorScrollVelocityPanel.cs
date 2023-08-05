@@ -422,13 +422,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         if (sv.StartTime < min)
                         {
                             var svsInRange = Screen.WorkingMap.SliderVelocities
-                                .Where(v => v.StartTime >= sv.StartTime && v.StartTime <= min);
+                                .Where(v => v.StartTime >= sv.StartTime && v.StartTime < min);
                             SelectedScrollVelocities.AddRange(svsInRange);
                         }
                         else if (sv.StartTime > max)
                         {
                             var svsInRange = Screen.WorkingMap.SliderVelocities
-                                .Where(v => v.StartTime >= max && v.StartTime <= sv.StartTime);
+                                .Where(v => v.StartTime > max && v.StartTime <= sv.StartTime);
                             SelectedScrollVelocities.AddRange(svsInRange);
                         }
                     }

@@ -211,6 +211,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Input", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Enable Tap To Pause", ConfigManager.TapToPause),
+                        new OptionsItemCheckbox(containerRect, "Enable Tap To Restart", ConfigManager.TapToRestart),
                         new OptionsItemCheckbox(containerRect, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit)
                     }),
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()

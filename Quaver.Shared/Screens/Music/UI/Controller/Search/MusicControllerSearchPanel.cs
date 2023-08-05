@@ -30,11 +30,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         ///     Items that are aligned from right to left
         /// </summary>
         private List<Drawable> RightItems { get; }
-
-        /// <summary>
-        /// </summary>
-        private MusicControllerPrivacyDropdown PrivacyDropdown { get; set; }
-
+        
         /// <summary>
         /// </summary>
         private MusicControllerSortDropdown SortDropdown { get; set; }
@@ -67,7 +63,6 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
             RightItems = new List<Drawable>();
 
-            CreatePrivacyDropdown();
             CreateSortDropdown();
             CreatePlaylistDropdown();
             CreateSearchBox();
@@ -123,20 +118,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
                     item.X = RightItems[i - 1].X - RightItems[i - 1].Width - spacing;
             }
         }
-
-        /// <summary>
-        /// </summary>
-        private void CreatePrivacyDropdown()
-        {
-            PrivacyDropdown = new MusicControllerPrivacyDropdown
-            {
-                Parent = this,
-                Alignment = Alignment.MidRight
-            };
-
-            RightItems.Add(PrivacyDropdown);
-        }
-
+        
         /// <summary>
         /// </summary>
         private void CreateSortDropdown()

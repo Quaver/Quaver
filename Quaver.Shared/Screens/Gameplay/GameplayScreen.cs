@@ -1021,7 +1021,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
 
                 // Restart the map if the user has held it down for
-                if (RestartKeyHoldTime >= 200)
+                if (RestartKeyHoldTime >= 200 || ConfigManager.TapToRestart.Value)
                 {
                     SkinManager.Skin.SoundRetry.CreateChannel().Play();
                     Retry();
