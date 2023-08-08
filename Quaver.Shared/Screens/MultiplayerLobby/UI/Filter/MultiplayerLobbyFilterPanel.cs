@@ -75,7 +75,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
             FilterTask = new TaskHandler<int, int>(StartFilterTask);
             CreateBanner();
-            CreateRulesetDropdown();
+            //CreateRulesetDropdown();
             CreateModeDropdown();
             CreateMapDropdown();
             CreateVisibilityDropdown();
