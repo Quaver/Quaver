@@ -23,6 +23,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         public JoinGameDialog(MultiplayerGame game, string password = null, bool isCreating = false, bool isSpectating = false) : base("JOINING GAME",
             "Connecting to multiplayer game. Please wait...", Load(game, password, isCreating, isSpectating))
         {
+
             OnlineManager.Client.OnJoinedMultiplayerGame += OnJoinedMultiplayerGame;
             OnlineManager.Client.OnSpectateMultiplayerGame += OnSpectateMultiplayerGame;
             OnlineManager.Client.OnJoinGameFailed += OnJoinGameFailed;

@@ -18,6 +18,7 @@ using IniFileParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Helpers;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -295,6 +296,11 @@ namespace Quaver.Shared.Config
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
+
+        /// <summary>
+        ///     If enabled, the user will be able to tap to restart instead of having to hold for 200ms to restart.
+        /// </summary>
+        internal static Bindable<bool> TapToRestart { get; private set; }
 
         /// <summary>
         ///     The top lane cover's adjustable height between levels 0-50
@@ -771,6 +777,23 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> AudioOutputDevice { get; private set; }
 
         /// <summary>
+        ///     Target difficulty used for selecting a default map in a mapset.
+        ///     Stored as an integer, divide by 10 for actual target difficulty.
+        /// </summary>
+        internal static BindableInt PrioritizedMapDifficulty4K { get; private set; }
+
+        /// <summary>
+        ///     Target difficulty used for selecting a default map in a mapset.
+        ///     Stored as an integer, divide by 10 for actual target difficulty.
+        /// </summary>
+        internal static BindableInt PrioritizedMapDifficulty7K { get; private set; }
+
+        /// <summary>
+        ///     Prioritize which keymode when selecting a default map in a mapset.
+        /// </summary>
+        internal static Bindable<GameMode> PrioritizedGameMode { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -890,7 +913,7 @@ namespace Quaver.Shared.Config
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
-            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
+            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -500, 500, data);
             Skin = ReadValue(@"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
@@ -965,6 +988,7 @@ namespace Quaver.Shared.Config
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
+            TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
@@ -1029,7 +1053,7 @@ namespace Quaver.Shared.Config
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
             EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
             EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
-            VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
+            VisualOffset = ReadInt(@"VisualOffset", 0, -500, 500, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
@@ -1044,6 +1068,9 @@ namespace Quaver.Shared.Config
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
+            PrioritizedMapDifficulty4K = ReadInt(@"PrioritizedMapDifficulty4K", 0, 0, 1000, data);
+            PrioritizedMapDifficulty7K = ReadInt(@"PrioritizedMapDifficulty7K", 0, 0, 1000, data);
+            PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))

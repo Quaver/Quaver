@@ -118,6 +118,11 @@ namespace Quaver.Shared.Skinning
         internal Dictionary<Grade, Texture2D> Grades { get; } = new Dictionary<Grade, Texture2D>();
 
         /// <summary>
+        ///     Grade Textures for Results.
+        /// </summary>
+        internal Dictionary<Grade, Texture2D> GradesLarge { get; } = new Dictionary<Grade, Texture2D>();
+
+        /// <summary>
         ///     Judgement animation elements
         /// </summary>
         internal Dictionary<Judgement, List<Texture2D>> Judgements { get; } = new Dictionary<Judgement, List<Texture2D>>();
@@ -463,43 +468,8 @@ namespace Quaver.Shared.Skinning
                 if (grade == Grade.None)
                     continue;
 
-                var element = $"grade-small-{grade.ToString().ToLower()}";
-
-                string defaultGrade = null;
-
-                switch (grade)
-                {
-                    case Grade.None:
-                        break;
-                    case Grade.A:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-a.png";
-                        break;
-                    case Grade.B:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-b.png";
-                        break;
-                    case Grade.C:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-c.png";
-                        break;
-                    case Grade.D:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-d.png";
-                        break;
-                    case Grade.F:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-f.png";
-                        break;
-                    case Grade.S:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-s.png";
-                        break;
-                    case Grade.SS:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-ss.png";
-                        break;
-                    case Grade.X:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-x.png";
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                Grades[grade] = LoadSingleTexture($"{Dir}/Grades/{element}", defaultGrade);
+                Grades[grade] = LoadSingleTexture($"{Dir}/Grades/grade-small-{grade.ToString().ToLower()}", $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-{grade.ToString().ToLower()}.png");
+                GradesLarge[grade] = LoadSingleTexture($"{Dir}/Grades/grade-large-{grade.ToString().ToLower()}", $"Quaver.Resources/Textures/UI/Results/grade-large-{grade.ToString().ToLower()}.png");
             }
         }
 

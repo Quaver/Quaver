@@ -95,6 +95,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public Sprite OnlineGrade { get; set; }
 
+        private bool _isCached = true;
+        public bool IsCached
+        {
+            get => _isCached;
+            set
+            {
+                if (value == _isCached)
+                    return;
+
+                SetCaching(value);
+                _isCached = value;
+            }
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
@@ -591,7 +605,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             Logger.Important($"User opened mapset: {ParentMapset.Item.Artist} - {ParentMapset.Item.Title}", LogType.Runtime, false);
-            MapManager.Selected.Value = ParentMapset.Item.Maps.First();
+            MapManager.SelectMapFromMapset(ParentMapset.Item);
+        }
+
+        /// <summary>
+        ///     Enables/disables caching of frequently changed strings
+        /// </summary>
+        private void SetCaching(bool cache)
+        {
+            Title.IsCached = cache;
+            Artist.IsCached = cache;
+            Creator.IsCached = cache;
+            DifficultyName.IsCached = cache;
         }
     }
 }

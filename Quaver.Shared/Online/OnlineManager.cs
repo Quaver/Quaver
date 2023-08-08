@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -295,8 +296,10 @@ namespace Quaver.Shared.Online
             Client.OnGameCountdownStart += OnGameCountdownStarted;
             Client.OnGameCountdownStop += OnGameCountdownStopped;
             Client.OnTournamentModeChanged += OnTournamentModeChanged;
+            Client.OnGameNeedDifficultyRatings += OnNeedsDifficultyRatings;
+            Client.OnAutoHostChanged += OnAutoHostChanged;
         }
-
+        
         /// <summary>
         ///     Called when the connection status of the user has changed.
         /// </summary>
@@ -701,10 +704,10 @@ namespace Quaver.Shared.Online
                 e.Game.Host = OnlineUsers[e.Game.HostId].OnlineUser;
 
             var game = (QuaverGame) GameBase.Game;
-
+            
             if (game.CurrentScreen.Type != QuaverScreenType.Lobby || game.CurrentScreen.Exiting)
                 return;
-
+            
             Logger.Important($"Received multiplayer game info: ({MultiplayerGames.Count}) - {e.Game.Id} | {e.Game.Name} " +
                              $"| {e.Game.HasPassword} | {e.Game.Password}", LogType.Network);
         }
@@ -975,7 +978,7 @@ namespace Quaver.Shared.Online
                     case QuaverScreenType.Download:
                     case QuaverScreenType.Lobby:
                         DialogManager.Show(new JoinGameDialog(null, null, true));
-                        ThreadScheduler.RunAfter(() => Client?.AcceptGameInvite(e.MatchId), 800);
+                        Client?.AcceptGameInvite(e.MatchId);
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before accepting this game invite.");
@@ -1736,6 +1739,28 @@ namespace Quaver.Shared.Online
             Logger.Debug($"Tournament Mode Updated: {CurrentGame.TournamentMode}", LogType.Network, false);
         }
 
+        private static void OnNeedsDifficultyRatings(object sender, GameNeedDifficultyRatingsEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.NeedsDifficultyRatings = e.Needs;
+            
+            if (CurrentGame.NeedsDifficultyRatings)
+                SendGameDifficultyRatings(e.Md5, e.AlternativeMd5);
+            
+            Logger.Debug($"Game Needs Difficulty Ratings: {CurrentGame.NeedsDifficultyRatings}", LogType.Runtime);
+        }
+        
+        private static void OnAutoHostChanged(object sender, AutoHostChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.IsAutoHost = e.Enabled;
+            Logger.Debug($"AutoHost has been changed to: {CurrentGame.IsAutoHost}", LogType.Network);
+        }
+        
         /// <summary>
         ///     Leaves the current multiplayer game if any
         /// </summary>
@@ -1749,6 +1774,23 @@ namespace Quaver.Shared.Online
 
             MultiplayerGames.Clear();
             CurrentGame = null;
+        }
+
+        public static void SendGameDifficultyRatings(string md5, string alternativeMd5)
+        {
+            if (CurrentGame == null)
+                return;
+
+            var map = MapManager.FindMapFromMd5(md5) ?? MapManager.FindMapFromMd5(alternativeMd5);
+
+            if (map == null)
+                return;
+
+            if (map.DifficultyProcessorVersion != DifficultyProcessorKeys.Version)
+                return;
+            
+            Client?.SendGameDifficultyRatings(map.Md5Checksum, map.GetAlternativeMd5(), map.GetDifficultyRatings());
+            CurrentGame.NeedsDifficultyRatings = false;
         }
 
         /// <summary>

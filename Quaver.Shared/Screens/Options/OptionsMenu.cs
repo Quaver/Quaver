@@ -211,6 +211,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Input", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Enable Tap To Pause", ConfigManager.TapToPause),
+                        new OptionsItemCheckbox(containerRect, "Enable Tap To Restart", ConfigManager.TapToRestart),
                         new OptionsItemCheckbox(containerRect, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit)
                     }),
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
@@ -417,6 +418,13 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                     }),
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
+                    {
+                        new OptionsItemPrioritizedGameMode(containerRect, "Prioritized Game Mode"),
+                        new OptionsSlider(containerRect, "Prioritized 4K Difficulty", ConfigManager.PrioritizedMapDifficulty4K, i => $"{i / 10f:0.0}"),
+                        new OptionsSlider(containerRect, "Prioritized 7K Difficulty", ConfigManager.PrioritizedMapDifficulty7K, i => $"{i / 10f:0.0}"),
+                        new OptionsItemSuggestDifficulty(containerRect, "Suggest Difficulty from Overall Rating")
+                    }),
+                    new OptionsSubcategory("Leaderboard", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
                     }),

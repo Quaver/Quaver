@@ -119,10 +119,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             HandleScoring();
 
-            if (!forceInput && CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioPosition >= Replay.Frames[CurrentFrame].Time) || !Screen.InReplayMode)
+            if (!forceInput && CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioOffset >= Replay.Frames[CurrentFrame].Time) || !Screen.InReplayMode)
                 return;
 
-            if (Math.Abs(Manager.CurrentAudioPosition - Replay.Frames[CurrentFrame].Time) >= 200)
+            if (Math.Abs(Manager.CurrentAudioOffset - Replay.Frames[CurrentFrame].Time) >= 200)
             {
                 CurrentFrame = Replay.Frames.FindLastIndex(x => x.Time < AudioEngine.Track.Time);
                 Logger.Important($"Skipped to replay frame: {CurrentFrame}", LogType.Runtime, false);
@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             {
                 var hom = Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;
 
-                if (hom?.CurrentAudioPosition >= VirtualPlayer.ScoreProcessor.Stats[i].SongPosition)
+                if (hom?.CurrentAudioOffset >= VirtualPlayer.ScoreProcessor.Stats[i].SongPosition)
                 {
                     var judgement = VirtualPlayer.ScoreProcessor.Stats[i].Judgement;
 

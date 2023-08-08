@@ -28,7 +28,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         private const string RemoveFriend = "Remove Friend";
 
-        private const string JoinListeningParty = "Join Listening Party";
+        // private const string JoinListeningParty = "Join Listening Party";
 
         private const string InviteToGame = "Invite To Game";
 
@@ -65,9 +65,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                     case RemoveFriend:
                         OnlineManager.RemoveFriend(user);
                         break;
-                    case JoinListeningParty:
-                        HandleJoinListeningParty(user);
-                        break;
+                    // case JoinListeningParty:
+                    //     HandleJoinListeningParty(user);
+                    //     break;
                     case InviteToGame:
                         HandleInviteToGame(user);
                         break;
@@ -135,9 +135,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 options.Add(InviteToGame, ColorHelper.HexToColor("#9B51E0"));
             }
 
-            // Join Listening Party
-            if (user.CurrentStatus.Status == ClientStatus.Listening)
-                options.Add(JoinListeningParty, ColorHelper.HexToColor("#F2994A"));
+            // // Join Listening Party
+            // if (user.CurrentStatus.Status == ClientStatus.Listening)
+            //     options.Add(JoinListeningParty, ColorHelper.HexToColor("#F2994A"));
 
             // Chat
             options.Add(Chat, ColorHelper.HexToColor("#b48bff"));

@@ -282,6 +282,9 @@ namespace Quaver.Shared.Screens.Edit
 
             Playfield.ResetObjectPositions();
             UnEditablePlayfield.ResetObjectPositions();
+            
+            // Makes it so that the playfield bookmark tooltips appear above reference difficulty
+            Playfield.Parent = Container;
         }
 
         /// <summary>
@@ -387,6 +390,12 @@ namespace Quaver.Shared.Screens.Edit
 
             Playfield.X = -Playfield.Width / 2 - spacing;
             MapPreview.X = Playfield.Width / 2 + spacing;
+            
+            // Makes it so that the playfield bookmark tooltips appear above preview.
+            Playfield.Parent = Container;
+            
+            // Makes it so the selector goes above editor after enabling preview.
+            Selector.Parent = Container;
 
             ResetPanelParents();
         }

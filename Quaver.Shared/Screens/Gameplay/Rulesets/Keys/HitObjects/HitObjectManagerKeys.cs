@@ -6,7 +6,7 @@
 */
 
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -18,12 +18,10 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics.Menu.Border;
-using Quaver.Shared.Modifiers;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
-using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -42,7 +40,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public static float TrackRounding { get; } = 100;
 
         /// <summary>
-        ///     The speed at which objects fall down from the screen.
+        ///     The speed at which objects travel across the screen.
         /// </summary>
         public static float ScrollSpeed
         {
@@ -77,33 +75,52 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private Qua Map;
 
         /// <summary>
-        ///     Length of the Map.
+        ///     Number of lanes
         /// </summary>
-        private int MapLength { get; }
+        private int KeyCount { get; }
 
         /// <summary>
-        ///     Hit Object info used for object pool and gameplay
-        ///     Every hit object in the pool is split by the hit object's lane
+        ///     Used for constructing <see cref="HitObjectQueueLanes"/>
         /// </summary>
-        public List<Queue<HitObjectInfo>> HitObjectQueueLanes { get; set; }
+        public List<GameplayHitObjectKeysInfo> HitObjectInfos { get; private set; }
 
         /// <summary>
-        ///     Object pool for every hit object.
-        ///     Every hit object in the pool is split by the hit object's lane
+        ///     Hitobject info queues used for input and scoring.
+        ///     One queue for each lane.
         /// </summary>
-        public List<Queue<GameplayHitObjectKeys>> ActiveNoteLanes { get; set; }
+        public List<Queue<GameplayHitObjectKeysInfo>> HitObjectQueueLanes { get; set; }
 
         /// <summary>
-        ///     The list of dead notes (grayed out LN's)
-        ///     Every hit object in the pool is split by the hit object's lane
+        ///     Queues for held long notes used for input and scoring.
+        ///     One queue for each lane.
         /// </summary>
-        public List<Queue<GameplayHitObjectKeys>> DeadNoteLanes { get; private set; }
+        public List<Queue<GameplayHitObjectKeysInfo>> HeldLongNoteLanes { get; private set; }
 
         /// <summary>
-        ///     The list of currently held long notes.
-        ///     Every hit object in the pool is split by the hit object's lane
+        ///     Pools of reusable GameplayHitObjectKeys's for drawing hitobjects on screen.
+        ///     One pool for each lane.
         /// </summary>
-        public List<Queue<GameplayHitObjectKeys>> HeldLongNoteLanes { get; private set; }
+        public List<ConcurrentBag<GameplayHitObjectKeys>> HitObjectPools { get; private set; }
+
+        /// <summary>
+        ///      All hitobjects that are currently rendered on screen.
+        /// </summary>
+        public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos { get; private set; }
+
+        /// <summary>
+        ///     Allows for quickly finding hitobjects close to some position.
+        /// </summary>
+        public SpatialHashMap<GameplayHitObjectKeysInfo> SpatialHashMap { get; private set; }
+
+        /// <summary>
+        ///     Really long LNs that would take up all the memory in the universe if they were added to the spatial hash map.
+        /// </summary>
+        public HashSet<GameplayHitObjectKeysInfo> LongLNs { get; private set; }
+
+        /// <summary>
+        ///     Used by <see cref="UpdateHitObjects"/> to avoid instantiating a new hash set every update
+        /// </summary>
+        public HashSet<GameplayHitObjectKeysInfo> InRangeHitObjectInfos { get; private set; }
 
         /// <summary>
         ///     List of added hit object positions calculated from SV. Used for optimization
@@ -111,29 +128,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public List<long> VelocityPositionMarkers { get; set; } = new List<long>();
 
         /// <summary>
-        ///     The object pool size.
+        ///     Loose upper bound of the number of hitobjects on screen at one time.
         /// </summary>
-        public int InitialPoolSizePerLane { get; } = 2;
+        public int MaxHitObjectCount { get; private set; }
 
         /// <summary>
-        ///     Used to determine the max position for object pooling recycling/creation.
+        ///     Only objects within this distance of the <see cref="CurrentTrackPosition"/> are rendered.
         /// </summary>
-        private float ObjectPositionMagnitude { get; } = 300000;
+        public long RenderThreshold => (long)(WindowManager.Height * TrackRounding / ScrollSpeed);
 
         /// <summary>
-        ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
-        ///     TODO: Update upon scroll speed changes
-        /// </summary>
-        public float CreateObjectPosition { get; private set; }
-
-        /// <summary>
-        ///     The position at which the earliest Hit Object must be at before its recycled.
-        ///     TODO: Update upon scroll speed changes
-        /// </summary>
-        public float RecycleObjectPosition { get; private set; }
-
-        /// <summary>
-        ///     Current position for Hit Objects.
+        ///     Current position of the receptors
         /// </summary>
         public long CurrentTrackPosition { get; private set; }
 
@@ -144,14 +149,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private int CurrentSvIndex { get; set; } = 0;
 
         /// <summary>
-        ///     Current audio position with song and user offset values applied.
+        ///     Current audio position relative to start of audio, with song and user offset values applied.
+        ///     Used for things related to timing that are unaffected by screen latency.
         /// </summary>
-        public double CurrentAudioPosition { get; private set; }
+        public double CurrentAudioOffset { get; private set; }
 
         /// <summary>
-        ///     Current audio position with song, user and visual offset values applied.
+        ///     Current audio position relative to start of audio, with song, user, and visual offset values applied.
+        ///     Used for things related to timing that are affected by screen latency.
         /// </summary>
-        public double CurrentVisualPosition { get; private set; }
+        public double CurrentVisualAudioOffset { get; private set; }
 
         /// <summary>
         ///     A mapping from hit objects to the associated hit stats from a replay.
@@ -179,7 +186,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 _showHits = value;
 
-                foreach (GameplayHitObjectKeys hitObject in ActiveNoteLanes.Concat(DeadNoteLanes).Concat(HeldLongNoteLanes).Flatten())
+                foreach (GameplayHitObjectKeys hitObject in RenderedHitObjectInfos.Select(info => info.HitObject).Concat(HitObjectPools.SelectMany(lane => lane)))
                 {
                     var tint = hitObject.Tint * (_showHits ? 1 : SHOW_HITS_NOTE_ALPHA);
                     var newTint = hitObject.Tint * (_showHits ? SHOW_HITS_NOTE_ALPHA : 1);
@@ -224,22 +231,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             get
             {
                 // If there are objects to hit, we're not done.
-                if (ActiveNoteLanes.Any(lane => lane.Any()))
+                if (HitObjectQueueLanes.Any(lane => lane.Any()))
                     return false;
 
                 // If there are held LNs, we're not done.
                 if (HeldLongNoteLanes.Any(lane => lane.Any()))
                     return false;
 
-                // If there are dead LNs, we're done when we're past the map length.
-                if (DeadNoteLanes.Any(lane => lane.Any()))
-                    // If this is "return false;" then the game never ends if the map ends with an LN and a 0× SV
-                    // and the LN is missed. This is because it never leaves DeadNoteLanes since the playfield doesn't
-                    // move.
-                    return CurrentVisualPosition > MapLength;
-
-                // If there are no objects left, we're done.
-                return true;
+                // Wait for dead LNs to finish scrolling
+                return CurrentVisualAudioOffset > Map.Length;
             }
         }
 
@@ -250,40 +250,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             get
             {
-                HitObjectInfo nextObject = null;
-
-                var earliestObjectTime = int.MaxValue;
-
-                // Some objects are already queued in ActiveNoteLanes, check that first.
-                foreach (var objectsInLane in ActiveNoteLanes)
+                HitObjectInfo nextHitObject = null;
+                foreach (var lane in HitObjectQueueLanes)
                 {
-                    if (objectsInLane.Count == 0)
+                    if (lane.Count == 0)
                         continue;
 
-                    var hitObject = objectsInLane.Peek();
-
-                    if (hitObject.Info.StartTime >= earliestObjectTime)
+                    if (nextHitObject is null)
+                    {
+                        nextHitObject = lane.Peek().HitObjectInfo;
                         continue;
+                    }
 
-                    earliestObjectTime = hitObject.Info.StartTime;
-                    nextObject = hitObject.Info;
+                    var hitObject = lane.Peek();
+                    if (hitObject.StartTime < nextHitObject.StartTime)
+                    {
+                        nextHitObject = hitObject.HitObjectInfo;
+                    }
                 }
 
-                foreach (var objectsInLane in HitObjectQueueLanes)
-                {
-                    if (objectsInLane.Count == 0)
-                        continue;
-
-                    var hitObject = objectsInLane.Peek();
-
-                    if (hitObject.StartTime >= earliestObjectTime)
-                        continue;
-
-                    earliestObjectTime = hitObject.StartTime;
-                    nextObject = hitObject;
-                }
-
-                return nextObject;
+                return nextHitObject;
             }
         }
 
@@ -309,7 +295,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     isHoldingAnyNotes = true;
                 }
 
-                return !(nextObject.StartTime - CurrentAudioPosition < GameplayAudioTiming.StartDelay + 5000) && !isHoldingAnyNotes;
+                return !(nextObject.StartTime - CurrentAudioOffset < GameplayAudioTiming.StartDelay + 5000) && !isHoldingAnyNotes;
             }
         }
 
@@ -322,18 +308,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Ruleset = ruleset;
             Map = map.WithNormalizedSVs();
-            MapLength = Map.Length;
+            KeyCount = Map.GetKeyCount(Map.HasScratchKey);
 
             // Initialize SV
-            UpdatePoolingPositions();
             InitializePositionMarkers();
             UpdateCurrentTrackPosition();
 
             InitializeHitStats();
 
-            // Initialize Object Pool
-            InitializeInfoPool(map);
+            // Initialize HitObjects
+            InitializeHitObjectInfo(map);
             InitializeObjectPool();
+            ResetHitObjectInfo();
 
             AudioEngine.Track.RateChanged += OnRateChanged;
             ConfigManager.ScrollSpeed4K.ValueChanged += On4KScrollSpeedChanged;
@@ -365,7 +351,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (inputManager == null)
                 return;
 
-            HitStats = new Dictionary<HitObjectInfo, List<HitStat>>();
+            HitStats = new Dictionary<HitObjectInfo, List<HitStat>>(HitObjectInfo.ByValueComparer);
 
             foreach (var hitStat in inputManager.VirtualPlayer.ScoreProcessor.Stats)
             {
@@ -377,47 +363,102 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Initialize Info Pool. Info pool is used to pass info around to Hit Objects.
+        ///     Initialize collections of hitobject info that don't change between resets.
         /// </summary>
         /// <param name="map"></param>
-        private void InitializeInfoPool(Qua map, bool skipObjects = false)
+        private void InitializeHitObjectInfo(Qua map)
         {
-            // Initialize collections
-            var keyCount = Ruleset.Map.GetKeyCount(map.HasScratchKey);
-            HitObjectQueueLanes = new List<Queue<HitObjectInfo>>(keyCount);
-            ActiveNoteLanes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
-            DeadNoteLanes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
-            HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
+            HitObjectInfos = map.HitObjects.Select(info => new GameplayHitObjectKeysInfo(info, this)).ToList();
 
-            // Add HitObject Info to Info pool
-            for (var i = 0; i < keyCount; i++)
-            {
-                HitObjectQueueLanes.Add(new Queue<HitObjectInfo>());
-                ActiveNoteLanes.Add(new Queue<GameplayHitObjectKeys>(InitialPoolSizePerLane));
-                DeadNoteLanes.Add(new Queue<GameplayHitObjectKeys>());
-                HeldLongNoteLanes.Add(new Queue<GameplayHitObjectKeys>());
-            }
+            // Using cell size equal to render area guarantees a consistent two cells accessed per update
+            SpatialHashMap = new SpatialHashMap<GameplayHitObjectKeysInfo>(2 * RenderThreshold);
+            LongLNs = new HashSet<GameplayHitObjectKeysInfo>();
 
-            // Sort Hit Object Info into their respective lanes
-            foreach (var info in map.HitObjects)
+            foreach (var info in HitObjectInfos)
             {
-                // Skip objects that aren't a second within range
-                if (skipObjects)
+                if (!info.IsLongNote)
                 {
-                    if (!info.IsLongNote)
+                    SpatialHashMap.Add(info.InitialTrackPosition, info);
+                }
+                else
+                {
+                    // Long LNs need to be added to multiple cells.
+                    // If they're _really_ long, they need to be added a _really_ large number of times to the spatial hash map,
+                    // which would require an insane amount of memory, so don't do that.
+                    // Negative length LNs (such as those in Cheat Code) cause the same problem.
+                    long length = info.LatestTrackPosition - info.EarliestTrackPosition;
+                    if (length > SpatialHashMap.CellSize * 10 || length < 0)
                     {
-                        if (info.StartTime < CurrentAudioPosition)
-                            continue;
+                        LongLNs.Add(info);
                     }
                     else
                     {
-                        if (info.StartTime < CurrentAudioPosition && info.EndTime < CurrentAudioPosition)
-                            continue;
+                        SpatialHashMap.Add(info.EarliestTrackPosition, info.LatestTrackPosition, info);
                     }
                 }
+            }
 
+            // find an upper bound for number of hitobjects on screen at one time
+            // each frame will always use the contents of two cells, so multiply the max by two for an approximate upper bound
+            MaxHitObjectCount = HitObjectInfos.Count > 0 ? SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2 : 0;
+
+            HitObjectQueueLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
+            HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
+            RenderedHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>(MaxHitObjectCount);
+            InRangeHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>(MaxHitObjectCount);
+
+            for (int i = 0; i < KeyCount; i++)
+            {
+                HitObjectQueueLanes.Add(new Queue<GameplayHitObjectKeysInfo>(HitObjectInfos.Count));
+                HeldLongNoteLanes.Add(new Queue<GameplayHitObjectKeysInfo>(1));
+            }
+        }
+
+        /// <summary>
+        ///     Initialize collections that change between resets.
+        /// </summary>
+        private void ResetHitObjectInfo()
+        {
+            // stop rendering hitobjects
+            foreach (var info in RenderedHitObjectInfos)
+            {
+                UnlinkInfo(info);
+            }
+
+            // reset collections that change during gameplay
+            HitObjectQueueLanes.ForEach(lane => lane.Clear());
+            HeldLongNoteLanes.ForEach(lane => lane.Clear());
+            RenderedHitObjectInfos.Clear();
+
+            // populate hitobject queues
+            foreach (var info in HitObjectInfos)
+            {
+                // skip hitobjects that we're already past
+                if ((info.IsLongNote ? info.EndTime : info.StartTime) < CurrentAudioOffset)
+                {
+                    info.State = HitObjectState.Removed;
+                    continue;
+                }
+
+                // reset hitobject states before queueing them back up
+                info.State = HitObjectState.Alive;
                 HitObjectQueueLanes[info.Lane - 1].Enqueue(info);
             }
+        }
+
+        /// <summary>
+        ///     Unlink GameplayHitObjectKeys from GameplayHitObjectKeysInfo and return it to the pool
+        /// </summary>
+        private void UnlinkInfo(GameplayHitObjectKeysInfo info)
+        {
+            if (info.HitObject is null)
+            {
+                Logger.Warning("Attempted to unlink a GameplayHitObjectInfo that is not linked", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "An error occurred during gameplay. Check logs for details.");
+                return;
+            }
+
+            HitObjectPools[info.Lane - 1].Add(info.Unlink());
         }
 
         /// <summary>
@@ -425,20 +466,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void InitializeObjectPool()
         {
-            foreach (var lane in HitObjectQueueLanes)
+            HitObjectPools = new List<ConcurrentBag<GameplayHitObjectKeys>>(KeyCount);
+
+            for (int lane = 0; lane < HitObjectQueueLanes.Count; lane++)
             {
-                for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
+                var pool = new ConcurrentBag<GameplayHitObjectKeys>();
+
+                // assuming a roughly equal distribution of hitobjects across the lanes for a rough upper bound per lane
+                // if its too low, more will be allocated during gameplay
+                for (int i = 0; i < MaxHitObjectCount / KeyCount; i++)
                 {
-                    CreatePoolObject(lane.Dequeue());
+                    pool.Add(new GameplayHitObjectKeys(lane, Ruleset, this));
                 }
+
+                HitObjectPools.Add(pool);
             }
         }
-
-        /// <summary>
-        ///     Create new Hit Object and add it into the pool with respect to its lane
-        /// </summary>
-        /// <param name="info"></param>
-        private void CreatePoolObject(API.Maps.Structures.HitObjectInfo info) => ActiveNoteLanes[info.Lane - 1].Enqueue(new GameplayHitObjectKeys(info, Ruleset, this));
 
         /// <inheritdoc />
         /// <summary>
@@ -447,9 +490,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public override void Update(GameTime gameTime)
         {
             UpdateCurrentTrackPosition();
-            UpdateAndScoreActiveObjects();
-            UpdateAndScoreHeldObjects();
-            UpdateDeadObjects();
+
+            ScoreMissedHitObjects();
+            ScoreMissedReleases();
+
+            UpdateHitObjects();
         }
 
         /// <summary>
@@ -457,60 +502,122 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="laneIndex"></param>
         /// <returns></returns>
-        public GameplayHitObjectKeys GetClosestTap(int lane) => ActiveNoteLanes[lane].Count > 0 ? ActiveNoteLanes[lane].Peek() : null;
+        public GameplayHitObjectKeysInfo GetClosestTap(int lane) => HitObjectQueueLanes[lane].Count > 0 ? HitObjectQueueLanes[lane].Peek() : null;
 
         /// <summary>
         ///     Returns the earliest active Long Note
         /// </summary>
         /// <param name="laneIndex"></param>
         /// <returns></returns>
-        public GameplayHitObjectKeys GetClosestRelease(int lane) => HeldLongNoteLanes[lane].Count > 0 ? HeldLongNoteLanes[lane].Peek() : null;
+        public GameplayHitObjectKeysInfo GetClosestRelease(int lane) => HeldLongNoteLanes[lane].Count > 0 ? HeldLongNoteLanes[lane].Peek() : null;
 
         /// <summary>
-        ///     Updates the active objects in the pool + adds to score when applicable.
+        ///     Determine which hitobjects to render and update rendered hitobjects' sprite positions.
         /// </summary>
-        private void UpdateAndScoreActiveObjects()
+        private void UpdateHitObjects()
         {
-            // Add more hit objects to the pool if necessary
-            foreach (var lane in HitObjectQueueLanes)
+            // stop rendering hitobjects outside range
+            bool removeIfNotVisible(GameplayHitObjectKeysInfo info)
             {
-                while (lane.Count > 0 && CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime) > CreateObjectPosition)
+                if (info.State == HitObjectState.Removed || !HitObjectInRange(info))
                 {
-                    CreatePoolObject(lane.Dequeue());
+                    // remove dead objects when they become out of range
+                    if (info.State == HitObjectState.Dead)
+                        info.State = HitObjectState.Removed;
+
+                    UnlinkInfo(info);
+                    return true;
                 }
+
+                return false;
             }
 
-            ScoreActiveObjects();
+            RenderedHitObjectInfos.RemoveWhere(info => removeIfNotVisible(info));
 
-            // Update active objects.
-            foreach (var lane in ActiveNoteLanes)
+            // start rendering new hitobjects in range
+            InRangeHitObjectInfos.Clear();
+
+            // find hitobjects in all visible cells
+            for (long position = CurrentTrackPosition - RenderThreshold; position < CurrentTrackPosition + RenderThreshold; position += SpatialHashMap.CellSize)
             {
-                foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
+                InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(position));
+            }
+            InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
+
+            // really long LNs aren't added to the spatial hash map to avoid using all the memory in the universe
+            InRangeHitObjectInfos.UnionWith(LongLNs);
+
+            // filter out hitobjects that aren't visible
+            InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
+
+            foreach (var info in InRangeHitObjectInfos)
+            {
+                GameplayHitObjectKeys hitObject;
+                if (!HitObjectPools[info.Lane - 1].TryTake(out hitObject))
+                    hitObject = new GameplayHitObjectKeys(info.Lane - 1, Ruleset, this);
+
+                info.Link(hitObject);
+                RenderedHitObjectInfos.Add(info);
+            }
+
+            // update sprite positions
+            foreach (var info in RenderedHitObjectInfos)
+            {
+                info.HitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualAudioOffset);
             }
         }
 
         /// <summary>
+        ///     Determine if the hitobject is inside rendering range.
         /// </summary>
-        private void ScoreActiveObjects()
+        /// <param name="info"></param>
+        /// <returns>true if the hitobject should be rendered, otherwise false.</returns>
+        private bool HitObjectInRange(GameplayHitObjectKeysInfo info)
+        {
+            if (!info.IsLongNote)
+            {
+                return Math.Abs(info.InitialTrackPosition - CurrentTrackPosition) <= RenderThreshold;
+            }
+            else
+            {
+                if (Math.Abs(info.EarliestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
+                    return true;
+
+                if (Math.Abs(info.LatestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
+                    return true;
+
+                if (info.EarliestTrackPosition <= CurrentTrackPosition - RenderThreshold && CurrentTrackPosition - RenderThreshold <= info.LatestTrackPosition)
+                    return true;
+
+                if (info.EarliestTrackPosition <= CurrentTrackPosition + RenderThreshold && CurrentTrackPosition + RenderThreshold <= info.LatestTrackPosition)
+                    return true;
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Check if any hitobjects were missed from lack of input
+        /// </summary>
+        private void ScoreMissedHitObjects()
         {
             if (Ruleset.Screen.Failed)
                 return;
 
             // Check to see if the player missed any active notes
-            foreach (var lane in ActiveNoteLanes)
+            foreach (var lane in HitObjectQueueLanes)
             {
-                while (lane.Count > 0 && (int)CurrentAudioPosition > lane.Peek().Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
+                while (lane.Count > 0 && (int)CurrentAudioOffset > lane.Peek().StartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
                 {
                     // Current hit object
-                    var hitObject = lane.Dequeue();
+                    var info = lane.Dequeue();
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.UpdateScoreboardUsers();
 
                     // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.StartTime, Judgement.Miss,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info.HitObjectInfo, info.StartTime, Judgement.Miss,
                                             int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -528,14 +635,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (im?.ReplayInputManager == null)
                     {
                         playfield.Stage.ComboDisplay.MakeVisible();
-                        playfield.Stage.JudgementHitBursts[Math.Clamp(hitObject.Info.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1)].PerformJudgementAnimation(Judgement.Miss);
+                        playfield.Stage.JudgementHitBursts[Math.Clamp(info.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1)].PerformJudgementAnimation(Judgement.Miss);
                     }
 
                     // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
                     // - missing an LN counts as two misses
-                    if (hitObject.Info.IsLongNote)
+                    if (info.IsLongNote)
                     {
-                        KillPoolObject(hitObject);
+                        info.State = HitObjectState.Dead;
 
                         if (im?.ReplayInputManager == null)
                             Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true);
@@ -547,30 +654,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Otherwise just kill the object.
                     else
                     {
-                        KillPoolObject(hitObject);
+                        info.State = HitObjectState.Dead;
                     }
                 }
             }
         }
 
         /// <summary>
-        ///     Updates the held long note objects in the pool + adds to score when applicable.
+        ///     Check if any long note releases were missed from not releasing the input
         /// </summary>
-        private void UpdateAndScoreHeldObjects()
-        {
-            ScoreHeldObjects();
-
-            // Update the currently held long notes.
-            foreach (var lane in HeldLongNoteLanes)
-            {
-                foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private void ScoreHeldObjects()
+        private void ScoreMissedReleases()
         {
             if (Ruleset.Screen.Failed)
                 return;
@@ -578,19 +671,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // The release window. (Window * Multiplier)
             var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
 
-            // Check to see if any LN releases were missed (Counts as an okay instead of a miss.)
+            // Check to see if any LN releases were missed (Counts as a good instead of a miss.)
             foreach (var lane in HeldLongNoteLanes)
             {
-                while (lane.Count > 0 && (int)CurrentAudioPosition > lane.Peek().Info.EndTime + window)
+                while (lane.Count > 0 && (int)CurrentAudioOffset > lane.Peek().EndTime + window)
                 {
                     // Current hit object
-                    var hitObject = lane.Dequeue();
+                    var info = lane.Dequeue();
 
                     // The judgement that is given when a user completely fails to release.
                     var missedReleaseJudgement = Judgement.Good;
 
                     // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.EndTime, missedReleaseJudgement,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info.HitObjectInfo, info.EndTime, missedReleaseJudgement,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
 
                     Ruleset.ScoreProcessor.Stats.Add(stat);
@@ -611,38 +704,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (im?.ReplayInputManager == null)
                     {
                         stage.ComboDisplay.MakeVisible();
-                        stage.JudgementHitBursts[Math.Clamp(hitObject.Info.Lane - 1, 0, stage.JudgementHitBursts.Count - 1)].PerformJudgementAnimation(missedReleaseJudgement);
+                        stage.JudgementHitBursts[Math.Clamp(info.Lane - 1, 0, stage.JudgementHitBursts.Count - 1)].PerformJudgementAnimation(missedReleaseJudgement);
                     }
 
-                    stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
+                    stage.HitLightingObjects[info.Lane - 1].StopHolding();
 
-                    // Update Pooling
-                    RecyclePoolObject(hitObject);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Updates all of the dead objects in the pool.
-        /// </summary>
-        private void UpdateDeadObjects()
-        {
-            // Check to see if dead object is ready for recycle
-            foreach (var lane in DeadNoteLanes)
-            {
-                while (lane.Count > 0 &&
-                    (CurrentTrackPosition - lane.Peek().LatestTrackPosition > RecycleObjectPosition))
-                {
-                    RecyclePoolObject(lane.Dequeue());
-                }
-            }
-
-            // Update dead objects.
-            foreach (var lane in DeadNoteLanes)
-            {
-                foreach (var hitObject in lane)
-                {
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualPosition);
+                    // Update the object
+                    info.State = HitObjectState.Removed;
                 }
             }
         }
@@ -652,59 +720,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void ForceUpdateLNSize()
         {
-            // Update Object Reference Positions with new scroll speed
-            UpdatePoolingPositions();
-
-            // Update HitObject LN size
-            for (var i = 0; i < ActiveNoteLanes.Count; i++)
+            foreach (var info in RenderedHitObjectInfos)
             {
-                foreach (var hitObject in ActiveNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
-                foreach (var hitObject in DeadNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
-                foreach (var hitObject in HeldLongNoteLanes[i])
-                    hitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualPosition);
+                info.HitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualAudioOffset);
             }
-        }
 
-        /// <summary>
-        ///     Update Hitobject pooling positions to compensate for scroll speed.
-        /// </summary>
-        private void UpdatePoolingPositions()
-        {
-            RecycleObjectPosition = (ObjectPositionMagnitude / 4) / ScrollSpeed;
-            CreateObjectPosition = -ObjectPositionMagnitude / ScrollSpeed;
-        }
-
-        /// <summary>
-        ///     Kills a note at a specific index of the object pool.
-        /// </summary>
-        /// <param name="index"></param>
-        public void KillPoolObject(GameplayHitObjectKeys gameplayHitObject)
-        {
-            // Change the sprite color to dead.
-            gameplayHitObject.Kill();
-
-            // Add to dead notes pool
-            DeadNoteLanes[gameplayHitObject.Info.Lane - 1].Enqueue(gameplayHitObject);
-        }
-
-        /// <summary>
-        ///     Recycles a pool object.
-        /// </summary>
-        /// <param name="index"></param>
-        public void RecyclePoolObject(GameplayHitObjectKeys gameplayHitObject)
-        {
-            var lane = HitObjectQueueLanes[gameplayHitObject.Info.Lane - 1];
-            if (lane.Count > 0)
+            foreach (var lane in HeldLongNoteLanes)
             {
-                var info = lane.Dequeue();
-                gameplayHitObject.InitializeObject(this, info);
-                ActiveNoteLanes[info.Lane - 1].Enqueue(gameplayHitObject);
-            }
-            else
-            {
-                gameplayHitObject.Destroy();
+                foreach (var info in lane)
+                {
+                    info.HitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualAudioOffset);
+                }
             }
         }
 
@@ -712,31 +738,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Changes a pool object to a long note that is held at the receptors.
         /// </summary>
         /// <param name="index"></param>
-        public void ChangePoolObjectStatusToHeld(GameplayHitObjectKeys gameplayHitObject)
+        public void ChangeHitObjectToHeld(GameplayHitObjectKeysInfo info)
         {
             // Add to the held long notes.
-            HeldLongNoteLanes[gameplayHitObject.Info.Lane - 1].Enqueue(gameplayHitObject);
-            gameplayHitObject.CurrentlyBeingHeld = true;
+            info.State = HitObjectState.Held;
+            HeldLongNoteLanes[info.Lane - 1].Enqueue(info);
         }
-
-        /// <summary>
-        ///     Kills a hold pool object.
-        /// </summary>
-        /// <param name="gameplayHitObject"></param>
-        public void KillHoldPoolObject(GameplayHitObjectKeys gameplayHitObject, bool setTint = true)
-        {
-            // Change start time and LN size.
-            gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentVisualPosition);
-            gameplayHitObject.CurrentlyBeingHeld = false;
-            gameplayHitObject.UpdateLongNoteSize(CurrentTrackPosition, CurrentVisualPosition);
-
-            if (setTint)
-                gameplayHitObject.Kill();
-
-            // Add to dead notes pool
-            DeadNoteLanes[gameplayHitObject.Info.Lane - 1].Enqueue(gameplayHitObject);
-        }
-
 
         /// <summary>
         ///     Create SV-position points for computation optimization
@@ -892,17 +899,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="audioTime"></param>
         public void UpdateCurrentTrackPosition()
         {
-            CurrentAudioPosition = Ruleset.Screen.Timing.Time + ConfigManager.GlobalAudioOffset.Value * AudioEngine.Track.Rate
+            CurrentAudioOffset = Ruleset.Screen.Timing.Time + ConfigManager.GlobalAudioOffset.Value * AudioEngine.Track.Rate
                                    - MapManager.Selected.Value.LocalOffset - MapManager.Selected.Value.OnlineOffset;
 
-            CurrentVisualPosition = CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate;
+            CurrentVisualAudioOffset = CurrentAudioOffset + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate;
 
             // Update SV index if necessary. Afterwards update Position.
-            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentVisualPosition >= Map.SliderVelocities[CurrentSvIndex].StartTime)
+            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentVisualAudioOffset >= Map.SliderVelocities[CurrentSvIndex].StartTime)
             {
                 CurrentSvIndex++;
             }
-            CurrentTrackPosition = GetPositionFromTime(CurrentVisualPosition, CurrentSvIndex);
+            CurrentTrackPosition = GetPositionFromTime(CurrentVisualAudioOffset, CurrentSvIndex);
         }
 
         /// <summary>
@@ -910,48 +917,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
-            DestroyAllObjects();
-
             CurrentSvIndex = 0;
             UpdateCurrentTrackPosition();
 
-            InitializeInfoPool(Ruleset.Map, true);
-            InitializeObjectPool();
-
-            foreach (var timingLineManager in Ruleset.TimingLineManager)
-            {
-                timingLineManager.InitializeObjectPool();
-            }
+            ResetHitObjectInfo();
 
             Update(new GameTime());
-        }
-
-        /// <summary>
-        /// </summary>
-        public void DestroyAllObjects()
-        {
-            DestroyPoolList(ActiveNoteLanes);
-            DestroyPoolList(HeldLongNoteLanes);
-            DestroyPoolList(DeadNoteLanes);
-
-            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-
-            for (var i = playfield.Stage.HitObjectContainer.Children.Count - 1; i >= 0; i--)
-                playfield.Stage.HitObjectContainer.Children[i].Destroy();
-
-            playfield.Stage.HitObjectContainer.Children.Clear();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="objects"></param>
-        private void DestroyPoolList(List<Queue<GameplayHitObjectKeys>> objects)
-        {
-            foreach (var lane in objects)
-            {
-                while (lane.Count > 0)
-                    lane.Dequeue().Destroy();
-            }
         }
 
         private void OnRateChanged(object sender, TrackRateChangedEventArgs e) => ForceUpdateLNSize();

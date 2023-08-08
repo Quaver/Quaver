@@ -12,6 +12,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public DrawableEditorLineScrollVelocity(EditorPlayfield playfield, SliderVelocityInfo sv) : base(playfield)
         {
             ScrollVelocity = sv;
+            IsClickable = false;
         }
 
         public override Color GetColor() => ColorHelper.HexToColor("#56FE6E");

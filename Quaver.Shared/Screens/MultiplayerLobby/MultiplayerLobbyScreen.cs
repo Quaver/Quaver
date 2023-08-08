@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         public MultiplayerLobbyScreen()
         {
             if (MapManager.Selected.Value == null && MapManager.Mapsets.Count != 0)
-                MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
+                MapManager.SelectMapFromMapset(MapManager.Mapsets.First());
 
             CreateBindableVisibleGames();
             CreateBindableSelectedGame();
@@ -54,6 +54,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// </summary>
         public override void OnFirstUpdate()
         {
+            OnlineManager.MultiplayerGames?.Clear();
             OnlineManager.Client?.JoinLobby();
             base.OnFirstUpdate();
         }

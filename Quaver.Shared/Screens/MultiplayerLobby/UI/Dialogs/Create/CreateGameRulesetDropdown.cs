@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
         private static List<string> GetOptions() => new List<string>()
         {
             "Free-For-All",
-            "Team",
+            // "Team",
             //"Battle Royale"
         };
     }

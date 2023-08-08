@@ -312,6 +312,7 @@ namespace Quaver.Shared.Database.Scores
             {
                 IsOnline = true,
                 Id = score.Id,
+                PlayerId = score.UserId,
                 SteamId = score.SteamId,
                 MapMd5 = score.MapMd5,
                 Name = score.Username,

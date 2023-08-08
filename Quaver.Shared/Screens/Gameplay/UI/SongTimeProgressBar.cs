@@ -62,9 +62,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                     new Vector2(skin.SongTimeProgressScale / 100f, skin.SongTimeProgressScale / 100f))
                 {
                     Parent = this,
-                    Alignment = Alignment.TopLeft,
+                    Alignment = skin.SongTimeProgressPositionAtTop ? Alignment.TopLeft : Alignment.BotLeft,
                     X = 10,
-                    Y = -Height - 25
+                    Y = skin.SongTimeProgressPositionAtTop ? Height + 5 : -Height - 5
                 };
 
                 var startText = (new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.MaxValue)).ToString("mm:ss");
@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                     new Vector2(skin.SongTimeProgressScale / 100f, skin.SongTimeProgressScale / 100f))
                 {
                     Parent = this,
-                    Alignment = Alignment.TopRight,
+                    Alignment = skin.SongTimeProgressPositionAtTop ? Alignment.TopRight : Alignment.BotRight,
                     X = -10,
                     Y = CurrentTime.Y
                 };

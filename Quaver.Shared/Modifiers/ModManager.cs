@@ -403,7 +403,7 @@ namespace Quaver.Shared.Modifiers
                 if (!isHost)
                     return;
 
-                var difficulty = MapManager.Selected.Value.DifficultyFromMods(Mods);
+                var difficulty = MapManager.Selected.Value?.DifficultyFromMods(Mods) ?? 0;
                 OnlineManager.Client?.MultiplayerChangeGameModifiers((long) Mods, difficulty);
             }
             // Only free mod is enabled, so if the user is host, they have to enable the rate and host changeable
@@ -424,7 +424,7 @@ namespace Quaver.Shared.Modifiers
 
                     globalMods |= (ModIdentifier) hostChangeableMods.Sum(x => (long) x.ModIdentifier);
 
-                    var difficulty = MapManager.Selected.Value.DifficultyFromMods(globalMods);
+                    var difficulty = MapManager.Selected.Value?.DifficultyFromMods(globalMods) ?? 0;
                     OnlineManager.Client?.MultiplayerChangeGameModifiers((long) globalMods, difficulty);
                 }
             }
@@ -442,7 +442,7 @@ namespace Quaver.Shared.Modifiers
                     globalMods |= (ModIdentifier) hostChangeableMods.Sum(x => (long) x.ModIdentifier);
                     globalMods |= (ModIdentifier) otherMods.Sum(x => (long) x.ModIdentifier);
 
-                    var difficulty = MapManager.Selected.Value.DifficultyFromMods(globalMods);
+                    var difficulty = MapManager.Selected.Value?.DifficultyFromMods(globalMods) ?? 0;
                     OnlineManager.Client?.MultiplayerChangeGameModifiers((long) globalMods, difficulty);
                 }
             }
@@ -465,7 +465,7 @@ namespace Quaver.Shared.Modifiers
                 {
                     var globalMods = (ModIdentifier) hostChangeableMods.Sum(x => (long) x.ModIdentifier);
 
-                    var difficulty = MapManager.Selected.Value.DifficultyFromMods(globalMods);
+                    var difficulty = MapManager.Selected.Value?.DifficultyFromMods(globalMods) ?? 0;
                     OnlineManager.Client?.MultiplayerChangeGameModifiers((long) globalMods, difficulty);
                 }
             }

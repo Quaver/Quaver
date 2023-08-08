@@ -63,6 +63,32 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
         }
 
+        /// <summary>
+        ///     Whether frequently changing text is being cached or not
+        /// </summary>
+        private bool _isCached = true;
+        public bool IsCached
+        {
+            get => _isCached;
+            private set
+            {
+                if (value == _isCached)
+                    return;
+
+                SetCaching(value);
+                _isCached = value;
+            }
+        }
+
+        /// <summary>
+        ///     Caching is disabled when the scroll speed exceeds this value.
+        ///     This value should be low enough to disable caching when selecting a random mapset, absolute scrolling, mashing PgUp/PgDn,
+        ///     but should be high enough to avoid disabling caching when up/down are mashed.
+        ///
+        ///     Units: change in y-position / milliseconds since last update
+        /// </summary>
+        public double CacheThreshold { get; } = 100;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -88,6 +114,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             TimeElapsedUntilInitializationRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
             InitializeMapsets(false);
+
+            // Disable caching of frequently changing text if scrolling fast enough
+            // Caching stays disabled until scrolling stops to prevent repeated recaching when scroll speed fluctuates
+            var deltaY = CurrentY - PreviousY;
+            var speed = Math.Abs(deltaY) / gameTime.ElapsedGameTime.TotalMilliseconds;
+            IsCached = !(speed > CacheThreshold || (!IsCached && speed != 0));
 
             base.Update(gameTime);
         }
@@ -132,7 +164,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             // that is in the middle
             if ((KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Right)) && CanScrollToMiddleMapset())
             {
-                MapManager.Selected.Value = MiddleMapset.Item.Maps.First();
+                MapManager.SelectMapFromMapset(MiddleMapset.Item);
                 SelectedIndex.Value = AvailableMapsets.Value.IndexOf(MiddleMapset.Item);
 
                 ScrollToSelected();
@@ -143,7 +175,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 if (SelectedIndex.Value + 1 >= AvailableMapsets.Value.Count)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value + 1].Maps.First();
+                MapManager.SelectMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value + 1]);
                 SelectedIndex.Value++;
 
                 ScrollToSelected();
@@ -154,7 +186,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 if (SelectedIndex.Value - 1 < 0)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value - 1].Maps.First();
+                MapManager.SelectMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value - 1]);
 
                 SelectedIndex.Value--;
                 ScrollToSelected();
@@ -184,7 +216,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         continue;
 
                     SelectedIndex.Value = AvailableMapsets.Value.IndexOf(mapset);
-                    MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value].Maps.First();
+                    MapManager.SelectMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value]);
 
                     ScrollToSelected();
                     break;
@@ -215,7 +247,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         continue;
 
                     SelectedIndex.Value = AvailableMapsets.Value.IndexOf(mapset);
-                    MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value].Maps.First();
+                    MapManager.SelectMapFromMapset(AvailableMapsets.Value[SelectedIndex.Value]);
 
                     ScrollToSelected();
                     break;
@@ -349,5 +381,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             var mapsetNotSelected = MiddleMapset != null && MiddleMapset.Item.Maps.First() != MapManager.Selected.Value;
             return mapsetNotSelected && GetCurrentlySelectedMapset() == null;
         }
+
+        private void SetCaching(bool cache) => Pool.ForEach(mapset => ((DrawableMapset)mapset).DrawableContainer.IsCached = cache);
     }
 }

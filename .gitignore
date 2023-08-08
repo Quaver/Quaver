@@ -308,3 +308,6 @@ Quaver/Content/*
 
 # Custom user VSCode settings
 .vscode/settings.json
+
+# .DS_Store file
+.DS_Store
