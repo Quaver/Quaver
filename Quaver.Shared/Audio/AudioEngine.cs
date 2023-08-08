@@ -173,7 +173,7 @@ namespace Quaver.Shared.Audio
 
             var nearestTick = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) * snapTimePerBeat + point.StartTime;
 
-            if ((int) Math.Abs(nearestTick - time) <= (int) snapTimePerBeat)
+            if (Math.Abs(nearestTick - time) - snapTimePerBeat <= snapTimePerBeat / 2)
                 return nearestTick;
 
             if (direction == Direction.Backward)
