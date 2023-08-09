@@ -412,6 +412,13 @@ namespace Quaver.Shared.Online
             {
                 OnlineUsers.Clear();
                 OnlineUsers[e.Self.OnlineUser.Id] = e.Self;
+                Spectators.Clear();
+                SpectatorClients.Clear();
+                MultiplayerGames.Clear();
+                ListeningParty = null;
+                FriendsList.Clear();
+                SpectatorClients = new Dictionary<int, SpectatorClient>();
+                Spectators = new Dictionary<int, User>();
             }
 
             // Make sure the config username is changed.
