@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         public void AddPlayer(User user, bool sort = false)
         {
             // Player already exists
-            if (Players.Any(x => x is MultiplayerPlayer p && p.User == user))
+            if (Players.Any(x => x is MultiplayerPlayer p && p.User.OnlineUser.Id == user.OnlineUser.Id))
                 return;
 
             var player = new MultiplayerPlayer(Game, this, user);
@@ -323,8 +323,11 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <param name="e"></param>
         private void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e)
         {
-            if (OnlineManager.OnlineUsers.ContainsKey(e.UserId))
-                AddScheduledUpdate(() => AddPlayer(OnlineManager.OnlineUsers[e.UserId], true));
+            AddScheduledUpdate(() =>
+            {
+                if (OnlineManager.OnlineUsers.ContainsKey(e.UserId))
+                    AddPlayer(OnlineManager.OnlineUsers[e.UserId], true);
+            });
         }
 
         /// <summary>
@@ -333,13 +336,15 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <param name="e"></param>
         private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
         {
-            var player = Players.Find(x => x is MultiplayerPlayer p && p.User.OnlineUser.Id == e.UserId)
-                as MultiplayerPlayer;
+            AddScheduledUpdate(() =>
+            {
+                var player = Players.Find(x => x is MultiplayerPlayer p && p.User.OnlineUser.Id == e.UserId) as MultiplayerPlayer;
 
-            if (player == null)
-                return;
-
-            AddScheduledUpdate(() => RemovePlayer(player.User));
+                if (player == null)
+                    return;
+                
+                RemovePlayer(player.User);
+            });
         }
 
         private void OnUserDisconnected(object sender, UserDisconnectedEventArgs e) =>
