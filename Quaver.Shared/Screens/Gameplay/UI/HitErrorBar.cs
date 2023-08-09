@@ -49,6 +49,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public Sprite LastHitCheveron { get; }
 
+        /// <summary>
+        ///    The initial alpha of the hit error lines.
+        /// </summary>
+        public float Alpha { get; set; } = 0.5f;
+
         /// <inheritdoc />
         /// <summary>
         ///   Ctor -
@@ -125,7 +130,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
 
             LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods);
-            LineObjectPool[CurrentLinePoolIndex].Alpha = 0.5f;
+            LineObjectPool[CurrentLinePoolIndex].Alpha = Alpha;
         }
     }
 }
