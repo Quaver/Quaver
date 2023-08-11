@@ -224,7 +224,7 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateRatingDisplay();
             CreateAccuracyDisplay();
 
-            if (ConfigManager.DisplayComboAlerts.Value)
+            if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
 
             // Create judgement status display
