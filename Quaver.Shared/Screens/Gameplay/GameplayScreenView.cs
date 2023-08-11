@@ -775,7 +775,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         Screen.Ruleset.UpdateStandardizedScoreProcessor(true);
                         Screen.SendJudgementsToServer(true);
 
-                        OnlineManager.Client.FinishMultiplayerGameSession();
+                        OnlineManager.Client?.FinishMultiplayerGameSession();
                         ResultsScreenLoadInitiated = true;
                     }
                     catch (Exception e)
