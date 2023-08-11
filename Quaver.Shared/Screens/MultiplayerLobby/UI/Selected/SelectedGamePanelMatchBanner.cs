@@ -6,6 +6,7 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
@@ -20,6 +21,9 @@ using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
+using Quaver.Shared.Screens.Selection.UI.Maps;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Management.Maps;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -27,6 +31,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Managers;
 
@@ -342,6 +347,29 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                     BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{SelectedGame.Value.MapId}");
                 else if (SelectedGame.Value.MapId == -1)
                     NotificationManager.Show(NotificationLevel.Warning, "Cannot view online listing because this map is not submitted online!");
+            };
+
+            Button.RightClicked += (sender, args) =>
+            {
+                if (!IsMultiplayer)
+                    return;
+
+                if (MapManager.Selected.Value == null)
+                    return;
+
+                if (MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.MapMd5 &&
+                    MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.AlternativeMd5)
+                    return;
+                
+                var game = (QuaverGame) GameBase.Game;
+                
+                if (PlaylistManager.Playlists.FindAll(x => x.PlaylistGame == MapGame.Quaver).Count == 0)
+                {
+                    DialogManager.Show(new CreatePlaylistDialog());
+                    return;
+                }
+
+                game.CurrentScreen?.ActivateCheckboxContainer(new AddMapToPlaylistCheckboxContainer(MapManager.Selected.Value));
             };
         }
 
