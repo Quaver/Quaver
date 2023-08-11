@@ -312,16 +312,17 @@ namespace Quaver.Shared.Online
             if (Status.Value == ConnectionStatus.Connected)
                 return;
 
+            ClearOnlineData();
+            
             var game = (QuaverGame) GameBase.Game;
 
-            if (game.CurrentScreen?.Type == QuaverScreenType.Lobby || CurrentGame != null)
+            switch (game.CurrentScreen?.Type)
             {
-                LeaveLobby();
-                CurrentGame = null;
-                game.CurrentScreen?.Exit(() => new MainMenuScreen());
+                case QuaverScreenType.Multiplayer:
+                case QuaverScreenType.Lobby:
+                    game.CurrentScreen?.Exit(() => new MainMenuScreen());
+                    break;
             }
-
-            ListeningParty = null;
         }
 
         /// <summary>
@@ -392,9 +393,8 @@ namespace Quaver.Shared.Online
                     NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate to the server");
                     return;
             }
-
-            // Remove the active listening party
-            ListeningParty = null;
+            
+            ClearOnlineData();
         }
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace Quaver.Shared.Online
 
             lock (OnlineUsers)
             {
-                OnlineUsers.Clear();
+                ClearOnlineData();
                 OnlineUsers[e.Self.OnlineUser.Id] = e.Self;
                 Spectators.Clear();
                 SpectatorClients.Clear();
@@ -1963,6 +1963,20 @@ namespace Quaver.Shared.Online
 
             ScoresHelper.SetRatingProcessors(scores);
             return scores;
+        }
+
+        private static void ClearOnlineData()
+        {
+            OnlineUsers.Clear();
+            Spectators.Clear();
+            SpectatorClients.Clear();
+            MultiplayerGames.Clear();
+            ListeningParty = null;
+            FriendsList.Clear();
+            SpectatorClients = new Dictionary<int, SpectatorClient>();
+            Spectators = new Dictionary<int, User>();
+            CurrentGame = null;
+            ListeningParty = null;
         }
     }
 }
