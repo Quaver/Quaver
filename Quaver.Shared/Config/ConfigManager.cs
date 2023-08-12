@@ -340,6 +340,11 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
+        
+        /// <summary>
+        ///     If enabled, scoring will count down from the highest score instead of up from 0.
+        /// </summary>
+        internal static Bindable<bool> InverseScoring { get; private set; }
 
         /// <summary>
         ///     The scroll speed used in the editor.
@@ -1007,6 +1012,7 @@ namespace Quaver.Shared.Config
             HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
+            InverseScoring = ReadValue(@"InverseScoring", false, data);
             LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
             LaneCoverBottomHeight = ReadInt(@"LaneCoverBottomHeight", 25, 0, 75, data);
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);

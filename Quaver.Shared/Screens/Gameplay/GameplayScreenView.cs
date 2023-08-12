@@ -403,7 +403,8 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
-            ScoreDisplay = new GameplayNumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0),
+            ScoreDisplay = new GameplayNumberDisplay(NumberDisplayType.Score, 
+                ConfigManager.InverseScoring.Value ? StringHelper.ScoreToString(1000000) : StringHelper.ScoreToString(0),
                 new Vector2(skin.ScoreDisplayScale / 100f, skin.ScoreDisplayScale / 100f))
             {
                 Parent = Container,
@@ -453,7 +454,10 @@ namespace Quaver.Shared.Screens.Gameplay
         public void UpdateScoreAndAccuracyDisplays()
         {
             // Update score and accuracy displays
-            ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
+            if (ConfigManager.InverseScoring.Value)
+                ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.InverseScore);
+            else
+                ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
 
             RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
 
