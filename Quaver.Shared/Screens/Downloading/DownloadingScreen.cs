@@ -265,7 +265,7 @@ namespace Quaver.Shared.Screens.Downloading
 
         public override void OnFirstUpdate()
         {
-            if (!HasRecommendedDifficulty)
+            if (!HasRecommendedDifficulty && ConfigManager.DisplayRecommendDifficultyDialog.Value)
             {
                 ShowRecommendedDifficultyDialog();
                 HasRecommendedDifficulty = true;

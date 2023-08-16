@@ -428,6 +428,10 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
                     }),
+                    new OptionsSubcategory("Downloads", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Display Recommend Difficulty Dialog", ConfigManager.DisplayRecommendDifficultyDialog),
+                    }),
                     // new OptionsSubcategory("Beta", new List<OptionsItem>()
                     // {
                     //     new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),

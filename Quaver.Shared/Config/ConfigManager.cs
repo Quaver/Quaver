@@ -331,6 +331,11 @@ namespace Quaver.Shared.Config
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
+        
+        /// <summary>
+        ///     If enabled, show the recommend difficulty dialog when entering the download screen for the first time.
+        /// </summary>
+        internal static Bindable<bool> DisplayRecommendDifficultyDialog { get; private set; }
 
         /// <summary>
         ///	    If enabled, automatically skip the beta splash screen.
@@ -990,6 +995,7 @@ namespace Quaver.Shared.Config
             TapToPause = ReadValue(@"TapToPause", false, data);
             TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
+            DisplayRecommendDifficultyDialog = ReadValue(@"DisplayRecommendDifficultyDialog", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
