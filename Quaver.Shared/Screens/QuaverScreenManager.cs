@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens
 
             if (LastScreen == QuaverScreenType.None || switchImmediately)
             {
-                ChangeScreen(newScreen());
+                ChangeScreen(newScreen(), true);
                 return;
             }
 
@@ -91,14 +91,14 @@ namespace Quaver.Shared.Screens
                 Thread.Sleep(16);
 
             // Run this on the next game loop on the main thread.
-            game.ScheduledRenderTargetDraws.Add(() => ChangeScreen(e.Result));
+            game.ScheduledRenderTargetDraws.Add(() => ChangeScreen(e.Result, false));
         }
 
-        private static void ChangeScreen(QuaverScreen screen)
+        private static void ChangeScreen(QuaverScreen screen, bool switchImmediately)
         {
             var game = (QuaverGame) GameBase.Game;
 
-            ScreenManager.ChangeScreen(screen);
+            ScreenManager.ChangeScreen(screen, switchImmediately);
             game.CurrentScreen = screen;
 
             // Update client status on the server.
