@@ -18,6 +18,9 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// </summary>
         protected Textbox Textbox { get; set; }
 
+        /// <summary>
+        ///     The action to be performed when the user submits the text.
+        /// </summary>
         public Action<string> SubmitAction { get; set; }
 
         /// <inheritdoc />

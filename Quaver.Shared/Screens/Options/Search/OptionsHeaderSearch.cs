@@ -22,6 +22,7 @@ namespace Quaver.Shared.Screens.Options.Search
         private Bindable<string> CurrentSearchQuery { get; }
 
         /// <summary>
+        ///    Whether or not an option is currently focused
         /// </summary>
         private Bindable<bool> IsOptionFocused { get; }
 

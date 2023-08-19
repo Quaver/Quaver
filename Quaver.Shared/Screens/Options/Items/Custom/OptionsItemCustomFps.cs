@@ -28,6 +28,9 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
 {
+    /// <summary>
+    ///    The options item for custom FPS.
+    /// </summary>
     public class OptionsItemCustomFps : OptionsItem
     {
         /// <summary>

@@ -57,6 +57,7 @@ namespace Quaver.Shared.Screens.Options
         private Dictionary<OptionsSection, OptionsContentContainer> ContentContainers { get; set; }
 
         /// <summary>
+        ///     Whether or not an option is currently focused
         /// </summary>
         public Bindable<bool> IsOptionFocused { get; } = new Bindable<bool>(false) {Value = false};
 
