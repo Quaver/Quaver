@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens
             var game = (QuaverGame) GameBase.Game;
 
             // Wait for the transitioner to fully fade to black.
-            while (Transitioner.Blackness.Animations.Count != 0)
+            while (Transitioner.Blackness?.Animations.Count != 0)
                 Thread.Sleep(16);
 
             // Run this on the next game loop on the main thread.
