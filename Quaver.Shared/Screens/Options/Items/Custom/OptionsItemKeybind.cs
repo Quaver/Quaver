@@ -35,10 +35,6 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        public bool Focused { get; private set; }
-
-        /// <summary>
-        /// </summary>
         private Keys[] PreviousPressedKeys { get; set; }
 
         /// <summary>
@@ -47,7 +43,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="name"></param>
         /// <param name="bindedKeys"></param>
         /// <param name="bindedKey"></param>
-        /// <param name="isKeybindFocused"></param>
+        /// <param name="isOptionFocused"></param>
         public OptionsItemKeybind(RectangleF containerRect, string name, Bindable<Keys> bindedKey) : base(containerRect, name)
         {
             BindedKey = bindedKey;

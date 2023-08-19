@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
-        private Bindable<bool> IsKeybindFocused { get; }
+        private Bindable<bool> IsOptionFocused { get; }
 
         /// <summary>
         /// </summary>
@@ -51,12 +51,12 @@ namespace Quaver.Shared.Screens.Options
         /// <param name="width"></param>
         /// <param name="sidebarWidth"></param>
         /// <param name="searchQuery"></param>
-        /// <param name="isKeybindFocused"></param>
+        /// <param name="isOptionFocused"></param>
         public OptionsHeader(Bindable<OptionsSection> selectedSection, float width, float sidebarWidth,
-            Bindable<string> searchQuery, Bindable<bool> isKeybindFocused)
+            Bindable<string> searchQuery, Bindable<bool> isOptionFocused)
         {
             SelectedSection = selectedSection;
-            IsKeybindFocused = isKeybindFocused;
+            IsOptionFocused = isOptionFocused;
             SidebarWidth = sidebarWidth;
             CurrentSearchQuery = searchQuery;
 
@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new OptionsHeaderSearch(CurrentSearchQuery, IsKeybindFocused)
+            SearchBox = new OptionsHeaderSearch(CurrentSearchQuery, IsOptionFocused)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

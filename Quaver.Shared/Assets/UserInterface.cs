@@ -115,6 +115,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D CreateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/create-button.png");
         public static Texture2D SureButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/sure-button.png");
         public static Texture2D AcceptButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/accept-button.png");
+        public static Texture2D SaveButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/save-button.png");
         public static Texture2D DeclineButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/decline-button.png");
         public static Texture2D LegalPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/legal-panel.png");
         public static Texture2D CancelButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/cancel-button.png");
@@ -195,6 +196,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D ReplayControllerInactiveBar => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-inactive-bar.png");
         public static Texture2D ReplayControllerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-panel.png");
         public static Texture2D ReplayControllerSpeedPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-speed-panel.png");
+        public static Texture2D OptionsCustomFpsButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/custom-fps-button.png");
         public static Texture2D OptionsCalibrateOffsetButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/calibrate-offset-button.png");
         public static Texture2D OptionsUpdateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-update-button.png");
         public static Texture2D OptionsExportSkinButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/export-skin-button.png");

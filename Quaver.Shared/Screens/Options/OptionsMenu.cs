@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> IsKeybindFocused { get; } = new Bindable<bool>(false) {Value = false};
+        public Bindable<bool> IsOptionFocused { get; } = new Bindable<bool>(false) {Value = false};
 
         /// <summary>
         /// </summary>
@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Options
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            SetKeybindFocusedState();
+            SetOptionFocusedState();
             SkinManager.HandleSkinReloading();
 
             base.Update(gameTime);
@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Options
             SelectedSection.ValueChanged -= OnSectionChanged;
             SelectedSection?.Dispose();
             CurrentSearchQuery?.Dispose();
-            IsKeybindFocused?.Dispose();
+            IsOptionFocused?.Dispose();
 
             // Make sure to destroy everything that's not visible
             foreach (var section in Sections)
@@ -141,6 +141,7 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> {"fps", "limited", "unlimited", "vsync", "wayland"}
                         },
+                        new OptionsItemCustomFps(containerRect, "Set Custom FPS"),
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter),
                         new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
                         new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority)
@@ -441,7 +442,7 @@ namespace Quaver.Shared.Screens.Options
         /// <summary>
         /// </summary>
         private void CreateHeader() => Header = new OptionsHeader(SelectedSection, Width, Sidebar.Width, CurrentSearchQuery,
-            IsKeybindFocused)
+            IsOptionFocused)
         {
             Parent = this,
             Alignment = Alignment.TopLeft
@@ -583,7 +584,7 @@ namespace Quaver.Shared.Screens.Options
         ///     Looks through each section and checks if any of the keybinds are currently focused.
         ///     This sets the bindable, so that the search textbox knows when to become always active or not
         /// </summary>
-        private void SetKeybindFocusedState()
+        private void SetOptionFocusedState()
         {
             var isFocused = false;
 
@@ -593,8 +594,7 @@ namespace Quaver.Shared.Screens.Options
                 {
                     foreach (var item in category.Items)
                     {
-                        if (item is OptionsItemKeybind keybind && keybind.Focused
-                            || item is OptionsItemKeybindMultiple keybindMultiple && keybindMultiple.Focused)
+                        if (item.Focused)
                         {
                             isFocused = true;
                         }
@@ -602,7 +602,7 @@ namespace Quaver.Shared.Screens.Options
                 }
             }
 
-            IsKeybindFocused.Value = isFocused;
+            IsOptionFocused.Value = isFocused;
         }
     }
 }
