@@ -737,7 +737,8 @@ namespace Quaver.Shared.Online
 
             CurrentGame = MultiplayerGames[e.GameId];
             CurrentGame.Players.Add(Self.OnlineUser);
-            CurrentGame.PlayerIds.Add(Self.OnlineUser.Id);
+            if (!CurrentGame.PlayerIds.Contains(Self.OnlineUser.Id))
+                CurrentGame.PlayerIds.Add(Self.OnlineUser.Id);
             CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = Self.OnlineUser.Id, Modifiers = "0"});
 
             // Get the current screen
