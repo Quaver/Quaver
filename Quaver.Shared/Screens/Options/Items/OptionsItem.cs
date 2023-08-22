@@ -29,6 +29,11 @@ namespace Quaver.Shared.Screens.Options.Items
         public List<string> Tags { get; set; } = new List<string>();
 
         /// <summary>
+        ///     Used to determine if the options search bar should be focused.
+        /// </summary>
+        public bool Focused { get; protected set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="containerRect"></param>
         /// <param name="name"></param>
