@@ -220,7 +220,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableMapsets, IsPlayTesting, ActiveLeftPanel,
                     "Type to search...")
             {
-                Parent = this
+                Parent = this,
+                AllowCursorMovement = false,
             };
 
             RightItems.Add(SearchBox);
