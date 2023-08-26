@@ -22,8 +22,9 @@ namespace Quaver.Shared.Screens.Options.Search
         private Bindable<string> CurrentSearchQuery { get; }
 
         /// <summary>
+        ///    Whether or not an option is currently focused
         /// </summary>
-        private Bindable<bool> IsKeybindFocused { get; }
+        private Bindable<bool> IsOptionFocused { get; }
 
         /// <summary>
         /// </summary>
@@ -33,13 +34,13 @@ namespace Quaver.Shared.Screens.Options.Search
         /// <summary>
         /// </summary>
         /// <param name="currentSearchQuery"></param>
-        /// <param name="isKeybindFocused"></param>
-        public OptionsHeaderSearch(Bindable<string> currentSearchQuery, Bindable<bool> isKeybindFocused)
+        /// <param name="isOptionFocused"></param>
+        public OptionsHeaderSearch(Bindable<string> currentSearchQuery, Bindable<bool> isOptionFocused)
             : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.LatoBlack),20, "",
                 "Search for options...")
         {
             CurrentSearchQuery = currentSearchQuery;
-            IsKeybindFocused = isKeybindFocused;
+            IsOptionFocused = isOptionFocused;
 
             AllowSubmission = false;
             Tint = ColorHelper.HexToColor("#2F2F2F");
@@ -58,8 +59,8 @@ namespace Quaver.Shared.Screens.Options.Search
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            AlwaysFocused = !IsKeybindFocused.Value;
-            Focused = !IsKeybindFocused.Value;
+            AlwaysFocused = !IsOptionFocused.Value;
+            Focused = !IsOptionFocused.Value;
 
             HandleSearchIconAnimations(gameTime);
             base.Update(gameTime);

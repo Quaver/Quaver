@@ -1404,6 +1404,9 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="direction"></param>
         public void SeekToNearestBookmark(Direction direction)
         {
+            if (WorkingMap.Bookmarks.Count == 0)
+                return;
+            
             BookmarkInfo nextBookmark = null;
 
             var closest = WorkingMap.Bookmarks.OrderBy(x => Math.Abs(x.StartTime - Track.Time)).First();

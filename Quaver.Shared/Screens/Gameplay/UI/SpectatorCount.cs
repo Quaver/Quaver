@@ -5,6 +5,8 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Gameplay.UI
 {
@@ -26,19 +28,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 SetChildrenVisibility = true
             };
 
-            SpectatorsText = new SpriteTextBitmap(FontsBitmap.GothamRegular,
-                $" ")
+            SpectatorsText = new SpriteTextBitmap(FontsBitmap.GothamRegular, $" ", false)
             {
-                Parent = Eye,
-                Alignment = Alignment.MidLeft,
-                FontSize = 14,
+                Parent = this,
+                FontSize = 16,
                 X = Eye.X + Eye.Width + 10
             };
-
+            
             UpdateSpectatorText();
-
-            Size = new ScalableVector2(Eye.X + Eye.Width + 10 + SpectatorsText.Width, SpectatorsText.Height);
-
+            
             if (OnlineManager.Client != null)
             {
                 OnlineManager.Client.OnSpectatorJoined += OnSpectatorJoined;
@@ -76,7 +74,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
         private void UpdateSpectatorText()
         {
-            SpectatorsText.Text = $"Spectators ({OnlineManager.Spectators.Count})";
+            var text = $"Spectators ({OnlineManager.Spectators.Count})\n\n";
+
+            foreach (var spectator in OnlineManager.Spectators)
+                text += $"- {spectator.Value.OnlineUser?.Username ?? $"User {spectator.Key}"}\n";
+
+            SpectatorsText.Text = text;
+            Size = new ScalableVector2(Eye.X + Eye.Width + 10 + SpectatorsText.Width, SpectatorsText.Height);
         }
     }
 }

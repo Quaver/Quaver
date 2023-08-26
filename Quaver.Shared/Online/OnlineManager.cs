@@ -312,16 +312,17 @@ namespace Quaver.Shared.Online
             if (Status.Value == ConnectionStatus.Connected)
                 return;
 
+            ClearOnlineData();
+            
             var game = (QuaverGame) GameBase.Game;
 
-            if (game.CurrentScreen?.Type == QuaverScreenType.Lobby || CurrentGame != null)
+            switch (game.CurrentScreen?.Type)
             {
-                LeaveLobby();
-                CurrentGame = null;
-                game.CurrentScreen?.Exit(() => new MainMenuScreen());
+                case QuaverScreenType.Multiplayer:
+                case QuaverScreenType.Lobby:
+                    game.CurrentScreen?.Exit(() => new MainMenuScreen());
+                    break;
             }
-
-            ListeningParty = null;
         }
 
         /// <summary>
@@ -392,9 +393,8 @@ namespace Quaver.Shared.Online
                     NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate to the server");
                     return;
             }
-
-            // Remove the active listening party
-            ListeningParty = null;
+            
+            ClearOnlineData();
         }
 
         /// <summary>
@@ -410,8 +410,15 @@ namespace Quaver.Shared.Online
 
             lock (OnlineUsers)
             {
-                OnlineUsers.Clear();
+                ClearOnlineData();
                 OnlineUsers[e.Self.OnlineUser.Id] = e.Self;
+                Spectators.Clear();
+                SpectatorClients.Clear();
+                MultiplayerGames.Clear();
+                ListeningParty = null;
+                FriendsList.Clear();
+                SpectatorClients = new Dictionary<int, SpectatorClient>();
+                Spectators = new Dictionary<int, User>();
             }
 
             // Make sure the config username is changed.
@@ -729,9 +736,12 @@ namespace Quaver.Shared.Online
             }
 
             CurrentGame = MultiplayerGames[e.GameId];
-            CurrentGame.Players.Add(Self.OnlineUser);
-            CurrentGame.PlayerIds.Add(Self.OnlineUser.Id);
-            CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = Self.OnlineUser.Id, Modifiers = "0"});
+            if (!CurrentGame.Players.Contains(Self.OnlineUser))
+                CurrentGame.Players.Add(Self.OnlineUser);
+            if (!CurrentGame.PlayerIds.Contains(Self.OnlineUser.Id))
+                CurrentGame.PlayerIds.Add(Self.OnlineUser.Id);
+            if (!CurrentGame.PlayerMods.Any(x => x.UserId == Self.OnlineUser.Id))
+                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = Self.OnlineUser.Id, Modifiers = "0"});
 
             // Get the current screen
             var game = (QuaverGame) GameBase.Game;
@@ -1956,6 +1966,20 @@ namespace Quaver.Shared.Online
 
             ScoresHelper.SetRatingProcessors(scores);
             return scores;
+        }
+
+        private static void ClearOnlineData()
+        {
+            OnlineUsers.Clear();
+            Spectators.Clear();
+            SpectatorClients.Clear();
+            MultiplayerGames.Clear();
+            ListeningParty = null;
+            FriendsList.Clear();
+            SpectatorClients = new Dictionary<int, SpectatorClient>();
+            Spectators = new Dictionary<int, User>();
+            CurrentGame = null;
+            ListeningParty = null;
         }
     }
 }
