@@ -128,7 +128,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// </summary>
         private void CreateSearchBar()
         {
-            SearchBox = new DownloadSearchBox(SearchQuery, new ScalableVector2(280, 40));
+            SearchBox = new DownloadSearchBox(SearchQuery, new ScalableVector2(280, 40))
+            {
+                AllowCursorMovement = false
+            };
             RightItems.Add(SearchBox);
         }
 

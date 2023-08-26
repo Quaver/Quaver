@@ -14,6 +14,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             : base(new ScalableVector2(122, 32), font, fontSize, initialText, placeHolderText, onSubmit, onStoppedTyping)
         {
             AllowSubmission = false;
+            AllowCursorMovement = false;
 
             Tint = ColorHelper.HexToColor("#2F2F2F");
             AddBorder(ColorHelper.HexToColor("#5B5B5B"), 2);
