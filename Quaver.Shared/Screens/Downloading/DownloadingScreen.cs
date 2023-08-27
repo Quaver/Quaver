@@ -245,6 +245,8 @@ namespace Quaver.Shared.Screens.Downloading
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
             SortBy.ValueChanged += OnSortByChanged;
 
+            ScreenExiting += OnScreenExiting;
+
             SearchTask = new TaskHandler<int, int>(SearchMapsets);
 
 #if !VISUAL_TESTS
@@ -270,6 +272,11 @@ namespace Quaver.Shared.Screens.Downloading
                 ShowRecommendedDifficultyDialog();
                 HasRecommendedDifficulty = true;
             }
+        }
+
+        public void OnScreenExiting(object sender, ScreenExitingEventArgs e)
+        {
+            ShouldPreviewPlay = false;
         }
 
         /// <inheritdoc />
