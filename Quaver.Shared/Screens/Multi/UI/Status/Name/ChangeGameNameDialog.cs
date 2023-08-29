@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Name
 {
     public class ChangeGameNameDialog : JoinPasswordGameDialog
     {
-        public ChangeGameNameDialog(MultiplayerGame game) : base(game)
+        public ChangeGameNameDialog(MultiplayerGame game) : base(game, initialText: game.Name)
         {
             Textbox.OnSubmit = null;
 
@@ -17,8 +17,6 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Name
             Confirmation.Text = $"Enter a new name for the multiplayer game...";
 
             Textbox.PlaceholderText = "Enter a name...";
-            Textbox.RawText = game.Name;
-            Textbox.InputText.Text = game.Name;
             Textbox.MaxCharacters = 50;
 
             HandleEnterPress = false;

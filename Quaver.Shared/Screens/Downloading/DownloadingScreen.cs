@@ -218,9 +218,6 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         private void Initialize()
         {
-            if (AudioEngine.Track != null)
-                AudioEngine.Track?.Stop();
-
             ModManager.RemoveSpeedMods();
 
             CurrentSearchQuery.ValueChanged += OnSearchQueryChanged;
@@ -248,6 +245,8 @@ namespace Quaver.Shared.Screens.Downloading
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
             SortBy.ValueChanged += OnSortByChanged;
 
+            ScreenExiting += OnScreenExiting;
+
             SearchTask = new TaskHandler<int, int>(SearchMapsets);
 
 #if !VISUAL_TESTS
@@ -265,11 +264,19 @@ namespace Quaver.Shared.Screens.Downloading
 
         public override void OnFirstUpdate()
         {
+            if (AudioEngine.Track != null)
+                AudioEngine.Track?.Stop();
+
             if (!HasRecommendedDifficulty)
             {
                 ShowRecommendedDifficultyDialog();
                 HasRecommendedDifficulty = true;
             }
+        }
+
+        public void OnScreenExiting(object sender, ScreenExitingEventArgs e)
+        {
+            ShouldPreviewPlay = false;
         }
 
         /// <inheritdoc />
