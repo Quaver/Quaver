@@ -259,7 +259,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         private void CreateButtonCreate()
         {
-            CreateButton = new IconButton(Dialog.Playlist == null ? UserInterface.CreateButton : UserInterface.EditPlayButton, OnSubmit)
+            CreateButton = new IconButton(Dialog.Playlist == null ? UserInterface.CreateButton : UserInterface.SaveButton, OnSubmit)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
