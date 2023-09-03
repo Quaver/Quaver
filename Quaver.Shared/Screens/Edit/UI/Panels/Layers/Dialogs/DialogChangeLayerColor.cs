@@ -75,7 +75,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
                 X = 24,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
-                MaxCharacters = 11,
                 StoppedTypingActionCalltime = 100
             };
 
