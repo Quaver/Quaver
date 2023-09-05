@@ -299,7 +299,7 @@ namespace Quaver.Shared.Online
             Client.OnGameNeedDifficultyRatings += OnNeedsDifficultyRatings;
             Client.OnAutoHostChanged += OnAutoHostChanged;
         }
-        
+
         /// <summary>
         ///     Called when the connection status of the user has changed.
         /// </summary>
@@ -313,7 +313,7 @@ namespace Quaver.Shared.Online
                 return;
 
             ClearOnlineData();
-            
+
             var game = (QuaverGame) GameBase.Game;
 
             switch (game.CurrentScreen?.Type)
@@ -386,14 +386,14 @@ namespace Quaver.Shared.Online
             {
                 // Error ocurred while connecting.
                 case 1006:
-                    NotificationManager.Show(NotificationLevel.Error, "Unable to connect to the server");
+                    NotificationManager.Show(NotificationLevel.Error, "You have been disconnected from the server.");
                     return;
                 // Authentication Failed
                 case 1002:
-                    NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate to the server");
+                    NotificationManager.Show(NotificationLevel.Error, "You have failed to authenticate to the server.");
                     return;
             }
-            
+
             ClearOnlineData();
         }
 
@@ -711,10 +711,10 @@ namespace Quaver.Shared.Online
                 e.Game.Host = OnlineUsers[e.Game.HostId].OnlineUser;
 
             var game = (QuaverGame) GameBase.Game;
-            
+
             if (game.CurrentScreen.Type != QuaverScreenType.Lobby || game.CurrentScreen.Exiting)
                 return;
-            
+
             Logger.Important($"Received multiplayer game info: ({MultiplayerGames.Count}) - {e.Game.Id} | {e.Game.Name} " +
                              $"| {e.Game.HasPassword} | {e.Game.Password}", LogType.Network);
         }
@@ -1755,13 +1755,13 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.NeedsDifficultyRatings = e.Needs;
-            
+
             if (CurrentGame.NeedsDifficultyRatings)
                 SendGameDifficultyRatings(e.Md5, e.AlternativeMd5);
-            
+
             Logger.Debug($"Game Needs Difficulty Ratings: {CurrentGame.NeedsDifficultyRatings}", LogType.Runtime);
         }
-        
+
         private static void OnAutoHostChanged(object sender, AutoHostChangedEventArgs e)
         {
             if (CurrentGame == null)
@@ -1770,7 +1770,7 @@ namespace Quaver.Shared.Online
             CurrentGame.IsAutoHost = e.Enabled;
             Logger.Debug($"AutoHost has been changed to: {CurrentGame.IsAutoHost}", LogType.Network);
         }
-        
+
         /// <summary>
         ///     Leaves the current multiplayer game if any
         /// </summary>
@@ -1798,7 +1798,7 @@ namespace Quaver.Shared.Online
 
             if (map.DifficultyProcessorVersion != DifficultyProcessorKeys.Version)
                 return;
-            
+
             Client?.SendGameDifficultyRatings(map.Md5Checksum, map.GetAlternativeMd5(), map.GetDifficultyRatings());
             CurrentGame.NeedsDifficultyRatings = false;
         }
