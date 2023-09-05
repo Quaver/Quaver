@@ -326,10 +326,10 @@ namespace Quaver.Shared
         protected override void UnloadContent()
         {
             ConfigManager.WriteConfigFileAsync().Wait();
-            OnlineManager.Client?.Disconnect();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
             base.UnloadContent();
+            OnlineManager.Client?.Disconnect();
         }
 
         /// <inheritdoc />
@@ -723,7 +723,7 @@ namespace Quaver.Shared
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
-            
+
             ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
         }
 
