@@ -24,6 +24,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database;
+using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
@@ -420,6 +421,7 @@ namespace Quaver.Shared
             QuaverSettingsDatabaseCache.Initialize();
             JudgementWindowsDatabaseCache.Load();
             UserProfileDatabaseCache.Load();
+            BlockedUsers.Load ();
 
             // Force garabge collection.
             GC.Collect();
