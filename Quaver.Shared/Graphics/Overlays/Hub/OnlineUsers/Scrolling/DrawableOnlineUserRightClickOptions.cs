@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
@@ -27,6 +28,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         private const string AddFriend = "Add Friend";
 
         private const string RemoveFriend = "Remove Friend";
+
+        private const string BlockUser = "Block User";
+
+        private const string UnblockUser = "Unblock User";
 
         // private const string JoinListeningParty = "Join Listening Party";
 
@@ -64,6 +69,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                         break;
                     case RemoveFriend:
                         OnlineManager.RemoveFriend(user);
+                        break;
+                    case BlockUser:
+                        BlockedUsers.Block(user.OnlineUser.Id, user.OnlineUser.Username);
+                        break;
+                    case UnblockUser:
+                        BlockedUsers.Unblock(user.OnlineUser.Id, user.OnlineUser.Username);
                         break;
                     // case JoinListeningParty:
                     //     HandleJoinListeningParty(user);
@@ -125,6 +136,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 options.Add(RemoveFriend, ColorHelper.HexToColor($"#FF6868"));
             else
                 options.Add(AddFriend, ColorHelper.HexToColor("#27B06E"));
+
+            // Block User
+            if (!user.OnlineUser.UserGroups.HasFlag(UserGroups.Bot) && !user.OnlineUser.UserGroups.HasFlag(UserGroups.Developer))
+                options.Add(BlockedUsers.IsUserBlocked(user.OnlineUser.Id) ? UnblockUser : BlockUser, ColorHelper.HexToColor($"#FF6868"));
 
             // Invite To Multiplayer
             if (OnlineManager.CurrentGame != null
