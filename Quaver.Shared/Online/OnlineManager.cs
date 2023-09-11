@@ -26,6 +26,7 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
@@ -968,33 +969,43 @@ namespace Quaver.Shared.Online
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private static void OnGameInvite(object sender, GameInviteEventArgs e)
-            => NotificationManager.Show(NotificationLevel.Info, $"{e.Sender} invited you to a game. Click here to join!",
-            (o, args) =>
-            {
-                if (CurrentGame != null)
-                {
-                    NotificationManager.Show(NotificationLevel.Error, "You already in a multiplayer game. Please leave it before joining another.");
-                    return;
-                }
+        {
+            var user = OnlineUsers.Values.ToList().Find(x => x.OnlineUser.Username == e.Sender);
 
-                var game = (QuaverGame) GameBase.Game;
-                var screen = game.CurrentScreen;
+            // Ignore message because they're blocked.
+            if (user != null && BlockedUsers.IsUserBlocked(user.OnlineUser.Id))
+                return;
 
-                switch (screen.Type)
+            NotificationManager.Show(NotificationLevel.Info, $"{e.Sender} invited you to a game. Click here to join!",
+                (o, args) =>
                 {
-                    case QuaverScreenType.Menu:
-                    case QuaverScreenType.Results:
-                    case QuaverScreenType.Select:
-                    case QuaverScreenType.Download:
-                    case QuaverScreenType.Lobby:
-                        DialogManager.Show(new JoinGameDialog(null, null, true));
-                        Client?.AcceptGameInvite(e.MatchId);
-                        break;
-                    default:
-                        NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before accepting this game invite.");
-                        break;
-                }
-            });
+                    if (CurrentGame != null)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error,
+                            "You already in a multiplayer game. Please leave it before joining another.");
+                        return;
+                    }
+
+                    var game = (QuaverGame)GameBase.Game;
+                    var screen = game.CurrentScreen;
+
+                    switch (screen.Type)
+                    {
+                        case QuaverScreenType.Menu:
+                        case QuaverScreenType.Results:
+                        case QuaverScreenType.Select:
+                        case QuaverScreenType.Download:
+                        case QuaverScreenType.Lobby:
+                            DialogManager.Show(new JoinGameDialog(null, null, true));
+                            Client?.AcceptGameInvite(e.MatchId);
+                            break;
+                        default:
+                            NotificationManager.Show(NotificationLevel.Error,
+                                "Finish what you're doing before accepting this game invite.");
+                            break;
+                    }
+                });
+        }
 
         /// <summary>
         /// </summary>
