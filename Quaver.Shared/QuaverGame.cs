@@ -421,7 +421,7 @@ namespace Quaver.Shared
             QuaverSettingsDatabaseCache.Initialize();
             JudgementWindowsDatabaseCache.Load();
             UserProfileDatabaseCache.Load();
-            BlockedUsers.Load ();
+            BlockedUsers.Load();
 
             // Force garabge collection.
             GC.Collect();
