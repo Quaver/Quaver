@@ -8,6 +8,7 @@ using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
+using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Online;
@@ -182,7 +183,12 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 lock (MessageHistoryQueue)
                 {
                     foreach (var message in history.Messages)
+                    {
+                        if (BlockedUsers.IsUserBlocked(message.User.Id))
+                            continue;
+
                         MessageHistoryQueue.Add(message.Message.ToChatMessage(message.User.ToUser()));
+                    }
                 }
             }
 
@@ -392,6 +398,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
         {
             if (!HasRequestedMessageHistory)
+                return;
+
+            if (BlockedUsers.IsUserBlocked(e.Message.SenderId))
                 return;
 
             // Public Chats

@@ -7,6 +7,7 @@ using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
@@ -282,6 +283,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
         private void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
         {
             if (e.Message.SenderId == OnlineManager.Self.OnlineUser.Id)
+                return;
+
+            if (BlockedUsers.IsUserBlocked(e.Message.SenderId))
                 return;
 
             // Private message
