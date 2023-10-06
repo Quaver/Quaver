@@ -794,6 +794,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<GameMode> PrioritizedGameMode { get; private set; }
 
         /// <summary>
+        ///     Change the language of the game.
+        /// </summary>
+        internal static Bindable<Language> ChangeLanguage { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -1071,6 +1076,7 @@ namespace Quaver.Shared.Config
             PrioritizedMapDifficulty4K = ReadInt(@"PrioritizedMapDifficulty4K", 0, 0, 1000, data);
             PrioritizedMapDifficulty7K = ReadInt(@"PrioritizedMapDifficulty7K", 0, 0, 1000, data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
+            ChangeLanguage = ReadValue(@"ChangeLanguage", (Language)0, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
