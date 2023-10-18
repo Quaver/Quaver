@@ -229,7 +229,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 else
                 {
                     Avatar.Image = ConfigManager.Username?.Value == UsernameRaw
-                        ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
+                        ? SteamManager.GetAvatarOrUnknown(SteamUser.GetSteamID().m_SteamID)
                         : UserInterface.UnknownAvatar;
                 }
             }

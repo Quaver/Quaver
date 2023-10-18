@@ -366,6 +366,19 @@ namespace Quaver.Shared.Online
         }
 
         /// <summary>
+        ///     Gets a user's avatar from <see cref="UserAvatars"/> or returns <see cref="UserInterface.UnknownAvatar"/> if it doesn't exist.
+        /// </summary>
+        /// <param name="steamId"></param>
+        /// <returns></returns>
+        public static Texture2D GetAvatarOrUnknown(ulong steamId)
+        {
+            if (UserAvatars.ContainsKey(steamId))
+                return UserAvatars[steamId];
+
+            return UserInterface.UnknownAvatar;
+        }
+
+        /// <summary>
         /// </summary>
         public static void RefreshWorkshopSkins()
         {
