@@ -478,7 +478,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer != null)
                 ReplayCapturer.Replay.TimePlayed = TimePlayed;
 
-            if (!InReplayMode)
+            if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
 
             base.OnFirstUpdate();
