@@ -38,6 +38,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> ReachedEnd { get; }
+
+        /// <summary>
+        /// </summary>
         private TaskHandler<int, int> SearchTask { get; }
 
         /// <summary>
@@ -52,12 +56,13 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="page"></param>
         /// <param name="searchTask"></param>
         public DownloadableMapsetContainer(BindableList<DownloadableMapset> mapsets,
-            Bindable<DownloadableMapset> selectedMapset, Bindable<int> page, TaskHandler<int, int> searchTask)
+            Bindable<DownloadableMapset> selectedMapset, Bindable<int> page, Bindable<bool> reachedEnd, TaskHandler<int, int> searchTask)
             : base(mapsets.Value, int.MaxValue)
         {
             AvailableMapsets = mapsets;
             SelectedMapset = selectedMapset;
             Page = page;
+            ReachedEnd = reachedEnd;
             SearchTask = searchTask;
 
             CreateLoadingWheel();
@@ -77,7 +82,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         {
             // Handle infinite scrolling
             if (ContentContainer.Height - Math.Abs(ContentContainer.Y) - Height < 500 && !SearchTask.IsRunning
-                && ContentContainer.Y != 0)
+                && !ReachedEnd.Value)
             {
                 Page.Value++;
             }
