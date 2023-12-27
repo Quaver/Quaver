@@ -155,6 +155,11 @@ namespace Quaver.Shared.Screens.Downloading
         public Bindable<int> Page { get; } = new Bindable<int>(0) { Value = 0};
 
         /// <summary>
+        ///     Determines if the user has reached the end of the mapset list
+        /// </summary>
+        public Bindable<bool> ReachedEnd { get; } = new Bindable<bool>(false) { Value = false };
+
+        /// <summary>
         /// </summary>
         public Bindable<DownloadSortBy> SortBy { get; } = new Bindable<DownloadSortBy>(DownloadSortBy.Newest)
         {
@@ -507,7 +512,10 @@ namespace Quaver.Shared.Screens.Downloading
                 PreviousPageMapsets = new List<DownloadableMapset>();
             }
             else if (PreviousPageMapsets.Count < 50)
+            {
+                ReachedEnd.Value = true;
                 return;
+            }
 
             if (SearchTask.IsRunning)
                 SearchTask.Cancel();
@@ -671,6 +679,7 @@ namespace Quaver.Shared.Screens.Downloading
         {
             PreviousSearchQuery = e.Value;
             Page.Value = 0;
+            ReachedEnd.Value = false;
         }
 
         /// <summary>

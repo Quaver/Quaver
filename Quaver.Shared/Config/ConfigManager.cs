@@ -407,6 +407,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
 
         /// <summary>
+        /// If true, the windows key is locked during gameplay
+        /// </summary>
+        internal static Bindable<bool> LockWinkeyDuringGameplay { get; private set; }
+
+        /// <summary>
         ///     If true, it'll use hitobjects specifically for viewing layers in the editor.
         /// </summary>
         internal static Bindable<bool> EditorViewLayers { get; private set; }
@@ -1006,6 +1011,7 @@ namespace Quaver.Shared.Config
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
+            LockWinkeyDuringGameplay = ReadValue(@"LockWinkeyDuringGameplay", true, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
             LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
             LaneCoverBottomHeight = ReadInt(@"LaneCoverBottomHeight", 25, 0, 75, data);

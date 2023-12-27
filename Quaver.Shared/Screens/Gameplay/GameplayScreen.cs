@@ -478,7 +478,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer != null)
                 ReplayCapturer.Replay.TimePlayed = TimePlayed;
 
-            if (!InReplayMode)
+            if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
 
             base.OnFirstUpdate();
@@ -1500,7 +1500,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen)
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
 
