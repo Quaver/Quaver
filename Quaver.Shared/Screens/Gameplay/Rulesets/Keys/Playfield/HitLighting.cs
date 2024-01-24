@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         /// </summary>
         public HitLighting(GameplayPlayfieldKeys playfield, int columnIndex)
-            : base(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting)
+            : base(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].NoteHitLighting[columnIndex])
         {
             Playfield = playfield;
             ColumnIndex = columnIndex;
@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Tint = Color.White;
 
             // First begin by replacing the frames
-            ReplaceFrames(IsHoldingLongNote ? skin.HoldLighting : skin.HitLighting);
+            ReplaceFrames(IsHoldingLongNote ? skin.NoteHoldLighting[ColumnIndex] : skin.NoteHitLighting[ColumnIndex]);
 
             // Go to the first frame and reset each of the properties
             ChangeTo(0);

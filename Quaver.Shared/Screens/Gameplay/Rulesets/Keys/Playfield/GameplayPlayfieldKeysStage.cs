@@ -594,7 +594,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
                 var scale = Skin.HitLightingScale / 100;
 
-                hl.Image = Skin.HitLighting.First();
+                hl.Image = Skin.NoteHitLighting[i].First();
                 hl.Size = new ScalableVector2(hl.Image.Width * scale, hl.Image.Height * scale);
 
                 var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, hl.RelativeRectangle,
