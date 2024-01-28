@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
@@ -673,7 +674,7 @@ namespace Quaver.Shared.Skinning
         private string GetResourcePath(string element) => $"{element}";
 
         /// <summary>
-        ///     Loads hit and holdlights
+        ///     Loads hit and holdlights.
         /// </summary>
         /// <param name="lightingOjects"></param>
         /// <param name="type">Either hitlighting or holdlighting</param>
@@ -683,20 +684,21 @@ namespace Quaver.Shared.Skinning
         {
             var mode = ModeHelper.ToShortHand(Mode).ToLower();
 
-            if (!Directory.Exists($"{Store.Dir}/{mode}"))
-                return;
-            
-            var folder = $"{Store.Dir}/{mode}/Lighting";
+            // If the skin supports the gamemode.
+            if (Directory.Exists($"{Store.Dir}/{mode}"))
+            {
+                var folder = $"{Store.Dir}/{mode}/Lighting";
+                var pattern = type + @"-" + lane + @"@\dx\d\.png$";
 
-            // Check for lane-specific lighting; otherwise, load general lighting for the lane
-            if (Directory.EnumerateFiles(folder).Any(f => f.Contains($"{type}-{lane}")))
-            {
-                lightingObjects.Add(LoadSpritesheet(SkinKeysFolder.Lighting, $"{type}-{lane}", false, 0, 0));
+                // Check for lane-specific lighting.
+                if (Directory.EnumerateFiles(folder).Any(f => Regex.IsMatch(f, pattern)))
+                {
+                    lightingObjects.Add(LoadSpritesheet(SkinKeysFolder.Lighting, $"{type}-{lane}", false, 0, 0));
+                    return;
+                }
             }
-            else
-            {
-                lightingObjects.Add(LoadSpritesheet(SkinKeysFolder.Lighting, $"{type}", false, 0, 0));
-            }
+            // Load normal/legacy lighting if neither previous statements were true.
+            lightingObjects.Add(LoadSpritesheet(SkinKeysFolder.Lighting, type, false, 0, 0));
         }
 
 
