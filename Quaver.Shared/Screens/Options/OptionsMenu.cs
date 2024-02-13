@@ -375,6 +375,7 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
+                        new OptionsItemKeybind(containerRect, "Toggle Mirror Mod", ConfigManager.KeyToggleMirror),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {
