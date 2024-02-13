@@ -720,6 +720,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
+        ///     The key to toggle the mirror mod while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyToggleMirror { get; private set; }
+
+        /// <summary>
         ///     The key to decrease the gameplay rate while in song select
         /// </summary>
         internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
@@ -982,6 +987,7 @@ namespace Quaver.Shared.Config
             KeySkipIntro = ReadGenericKey(@"KeySkipIntro", new GenericKey { KeyboardKey = Keys.Space }, data);
             KeyPause = ReadGenericKey(@"KeyPause", new GenericKey { KeyboardKey = Keys.Escape }, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
+            KeyToggleMirror = ReadValue(@"KeyToggleMirror", Keys.H, data);
             KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
             KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemPlus, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
