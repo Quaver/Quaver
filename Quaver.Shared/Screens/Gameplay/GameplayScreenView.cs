@@ -788,6 +788,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 Screen.Exit(() =>
                 {
+
+                    if (Screen.IsNoFailAddedInGameplay)
+                        ModManager.RemoveMod(ModIdentifier.NoFail);
                     if (Screen.HasQuit && ConfigManager.SkipResultsScreenAfterQuit.Value)
                     {
                         if (ModManager.Mods.HasFlag(ModIdentifier.Paused))

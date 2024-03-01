@@ -195,6 +195,10 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If the user quit the game themselves.
         /// </summary>
         public bool HasQuit { get; set; }
+        /// <summary>
+        ///     If the no-fail mod is added during gameplay, when the player dies
+        /// </summary>
+        public bool IsNoFailAddedInGameplay { get; set; }
 
         /// <summary>
         ///     Flag that dictates if the user is currently restarting the play.
@@ -427,6 +431,10 @@ namespace Quaver.Shared.Screens.Gameplay
             // Remove paused modifier if enabled.
             if (ModManager.IsActivated(ModIdentifier.Paused))
                 ModManager.RemoveMod(ModIdentifier.Paused);
+
+            // Remove NF if enabled upon dying
+            if (IsNoFailAddedInGameplay)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
 
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
@@ -969,6 +977,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 ModManager.AddMod(ModIdentifier.NoFail);
                 ReplayCapturer.Replay.Mods |= ModIdentifier.NoFail;
                 Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
+                IsNoFailAddedInGameplay = true;
                 FailureHandled = true;
                 return;
             }
@@ -1064,6 +1073,10 @@ namespace Quaver.Shared.Screens.Gameplay
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             SkinManager.Skin.SoundRetry.CreateChannel().Play();
             CustomAudioSampleCache.StopAll();
+
+
+            if (IsNoFailAddedInGameplay)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
 
             if (IsPlayTesting)
                 QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor), true);
