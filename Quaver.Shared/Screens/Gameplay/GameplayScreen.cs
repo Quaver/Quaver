@@ -969,6 +969,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
+            // NoMiss mod should take priority: gameplay is expected to restart when NM is on
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+                return;
             if (!IsNoFailAddedInGameplay
                 && OnlineManager.CurrentGame == null
                 && !OnlineManager.IsSpectatingSomeone
@@ -989,7 +992,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
                 IsNoFailAddedInGameplay = true;
             }
-            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+            if (!Failed || FailureHandled)
                 return;
 
 
