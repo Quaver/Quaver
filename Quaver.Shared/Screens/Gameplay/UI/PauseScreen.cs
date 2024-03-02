@@ -291,7 +291,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (Screen.Failed && !ConfigManager.AutoNoFail.Value || Screen.SpectatorClient != null)
+            if (Screen.Failed || Screen.SpectatorClient != null)
                 Visible = false;
 
             Continue.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;

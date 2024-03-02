@@ -172,7 +172,8 @@ namespace Quaver.Shared.Screens.Gameplay
                               && !OnlineManager.IsSpectatingSomeone
                               && !IsPlayTesting
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
-                              && Ruleset.ScoreProcessor.Health <= 0)
+                              && Ruleset.ScoreProcessor.Health <= 0
+                              && !ConfigManager.AutoNoFail.Value)
                               && !(this is TournamentGameplayScreen)
                               || ForceFail || Ruleset.ScoreProcessor.ForceFail;
 
@@ -535,6 +536,8 @@ namespace Quaver.Shared.Screens.Gameplay
             QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
         {
             Utils.NativeUtils.EnableWindowsKey();
+            if (IsNoFailAddedInGameplay)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
             base.Exit(screen, delay, type);
         }
 
@@ -966,21 +969,28 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
-            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
-                return;
-            // Add no fail mod upon dying when AutoNoFail is on.
-            if (ConfigManager.AutoNoFail.Value && !ModManager.IsActivated(ModIdentifier.NoFail))
+            if (!IsNoFailAddedInGameplay
+                && OnlineManager.CurrentGame == null
+                && !OnlineManager.IsSpectatingSomeone
+                && !IsPlayTesting
+                && (!ModManager.IsActivated(ModIdentifier.NoFail)
+                    && Ruleset.ScoreProcessor.Health <= 0
+                    && ConfigManager.AutoNoFail.Value)
+                && !(this is TournamentGameplayScreen)
+                && !ForceFail && !Ruleset.ScoreProcessor.ForceFail)
             {
+                // Add no fail mod upon dying when AutoNoFail is on.
                 // Add the no fail mod to their score.
                 NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to dying " +
-                                                                        "during gameplay!", null, true);
+                                                                    "during gameplay!", null, true);
                 ModManager.AddMod(ModIdentifier.NoFail);
                 ReplayCapturer.Replay.Mods |= ModIdentifier.NoFail;
                 Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
                 IsNoFailAddedInGameplay = true;
-                FailureHandled = true;
-                return;
             }
+            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+                return;
+
 
             try
             {
