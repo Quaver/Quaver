@@ -446,7 +446,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsKeybind(this, "Interface - Navigate Down", ConfigManager.KeyNavigateDown),
                     new SettingsKeybind(this, "Editor - Pause/Play Track", ConfigManager.KeyEditorPausePlay),
                     new SettingsKeybind(this, "Editor - Decrease Audio Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
-                    new SettingsKeybind(this, "Editor - Increase Audio Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
+                    new SettingsKeybind(this, "Editor - Increase Audio Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate),
+                    new SettingsBool(this, "Editor - Invert Scrolling", ConfigManager.EditorInvertScrolling)
                 }),
                 // Misc
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), "Miscellaneous", new List<Drawable>
