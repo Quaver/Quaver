@@ -536,8 +536,6 @@ namespace Quaver.Shared.Screens.Gameplay
             QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
         {
             Utils.NativeUtils.EnableWindowsKey();
-            if (IsNoFailAddedInGameplay)
-                ModManager.RemoveMod(ModIdentifier.NoFail);
             base.Exit(screen, delay, type);
         }
 
