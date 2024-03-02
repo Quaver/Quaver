@@ -704,7 +704,13 @@ namespace Quaver.Shared.Screens.Results
             }
 
             ThreadScheduler.Run(() => SubmitLocalScore(screen, replay));
-            ThreadScheduler.Run(() => IsSubmittingScore.Value = SubmitOnlineScore(screen, replay));
+            ThreadScheduler.Run(() =>
+            {
+                IsSubmittingScore.Value = SubmitOnlineScore(screen, replay);
+                // Remove added No Fail mod
+                if (screen.IsNoFailAddedInGameplay)
+                    ModManager.RemoveMod(ModIdentifier.NoFail);
+            });
         }
 
         /// <summary>
