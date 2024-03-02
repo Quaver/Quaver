@@ -973,6 +973,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 && OnlineManager.CurrentGame == null
                 && !OnlineManager.IsSpectatingSomeone
                 && !IsPlayTesting
+                && !IsCalibratingOffset
                 && (!ModManager.IsActivated(ModIdentifier.NoFail)
                     && Ruleset.ScoreProcessor.Health <= 0
                     && ConfigManager.AutoNoFail.Value)
