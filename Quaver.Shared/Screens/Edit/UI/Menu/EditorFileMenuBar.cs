@@ -227,12 +227,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             {
                 for (var i = 1; i <= Screen.WorkingMap.GetKeyCount(); i++)
                 {
-                    for (var j = i + 1; j <= Screen.WorkingMap.GetKeyCount(); j++)
-                    {
-                        if (ImGui.MenuItem($"Lane {i} and {j}", $"ALT + {i} + {j}"))
+                    if (ImGui.BeginMenu($"Lane {i}"))
+                    { 
+                        for (var j = 1; j <= Screen.WorkingMap.GetKeyCount(); j++)
                         {
-                            Screen.SwapSelectedObjects(i, j);
+                            if (i == j) continue;
+                            if (ImGui.MenuItem($"Lane {j}", $"ALT + {i} + {j}"))
+                            {
+                                Screen.SwapSelectedObjects(i, j);
+                            }
                         }
+
+                        ImGui.EndMenu();
                     }
                 }
                 ImGui.EndMenu();
