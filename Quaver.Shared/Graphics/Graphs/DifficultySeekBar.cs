@@ -10,6 +10,7 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens;
 using Wobble;
@@ -125,9 +126,9 @@ namespace Quaver.Shared.Graphics.Graphs
                     (game?.CurrentScreen?.Type == QuaverScreenType.Select ||
                      game?.CurrentScreen?.Type == QuaverScreenType.Multiplayer))
             {
-                if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
+                if (MouseManager.IsScrollingUp(ConfigManager.EditorInvertScrolling.Value))
                     SeekInDirection(Direction.Forward);
-                else if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue)
+                else if (MouseManager.IsScrollingDown(ConfigManager.EditorInvertScrolling.Value))
                     SeekInDirection(Direction.Backward);
             }
 
