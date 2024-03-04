@@ -774,7 +774,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Whether scrolling in editor is inverted.
         /// </summary>
-        internal static Bindable<bool> EditorInvertScrolling { get; private set; }
+        internal static Bindable<bool> InvertScrolling { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1004,7 +1004,7 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
-            EditorInvertScrolling = ReadValue(@"EditorInvertScrolling", false, data);
+            InvertScrolling = ReadValue(@"EditorInvertScrolling", false, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);

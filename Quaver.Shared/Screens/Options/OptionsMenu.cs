@@ -381,7 +381,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Pause/Play Track", ConfigManager.KeyEditorPausePlay),
                         new OptionsItemKeybind(containerRect, "Decrease Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
                         new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate),
-                        new OptionsItemCheckbox(containerRect, "Invert Scrolling", ConfigManager.EditorInvertScrolling)
+                        new OptionsItemCheckbox(containerRect, "Invert Scrolling", ConfigManager.InvertScrolling)
                     }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {

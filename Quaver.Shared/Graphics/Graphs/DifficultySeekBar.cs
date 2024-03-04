@@ -126,9 +126,9 @@ namespace Quaver.Shared.Graphics.Graphs
                     (game?.CurrentScreen?.Type == QuaverScreenType.Select ||
                      game?.CurrentScreen?.Type == QuaverScreenType.Multiplayer))
             {
-                if (MouseManager.IsScrollingUp(ConfigManager.EditorInvertScrolling.Value))
+                if (MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value))
                     SeekInDirection(Direction.Forward);
-                else if (MouseManager.IsScrollingDown(ConfigManager.EditorInvertScrolling.Value))
+                else if (MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value))
                     SeekInDirection(Direction.Backward);
             }
 
