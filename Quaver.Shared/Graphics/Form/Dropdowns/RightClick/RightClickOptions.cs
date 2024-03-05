@@ -19,7 +19,11 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
         /// <param name="options"></param>
         /// <param name="size"></param>
         /// <param name="fontSize"></param>
-        public RightClickOptions(Dictionary<string, Color> options, ScalableVector2 size, int fontSize) : base(options.Keys.ToList(), size, fontSize, Color.White)
+        /// <param name="maxWidth"></param>
+        /// <param name="maxHeight"></param>
+        public RightClickOptions(Dictionary<string, Color> options, ScalableVector2 size, int fontSize, 
+            int maxWidth = 0, int maxHeight = 0) 
+            : base(options.Keys.ToList(), size, fontSize, Color.White, 0, maxWidth, maxHeight)
         {
             Options = options;
 
