@@ -28,6 +28,7 @@ using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
+using Wobble.Graphics.Sprites;
 using Wobble.Input;
 using Wobble.Logging;
 
@@ -1084,6 +1085,9 @@ namespace Quaver.Shared.Config
             PrioritizedMapDifficulty7K = ReadInt(@"PrioritizedMapDifficulty7K", 0, 0, 1000, data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
 
+            // Bind global inverted scrolling so ScrollContainers get InvertScrolling setting too
+            ScrollContainer.GlobalInvertedScrolling = InvertScrolling;
+            
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
