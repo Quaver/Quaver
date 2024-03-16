@@ -1004,7 +1004,7 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
-            InvertScrolling = ReadValue(@"EditorInvertScrolling", false, data);
+            InvertScrolling = ReadValue(@"InvertScrolling", false, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
