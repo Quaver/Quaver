@@ -29,6 +29,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
@@ -223,6 +224,9 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateScoreDisplay();
             CreateRatingDisplay();
             CreateAccuracyDisplay();
+
+            if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
+                new StoryboardScript(Screen.Map.GetAnimationScriptPath());
 
             if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
