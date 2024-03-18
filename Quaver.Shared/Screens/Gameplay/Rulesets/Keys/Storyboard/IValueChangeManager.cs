@@ -1,4 +1,4 @@
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.ValueManager;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
 public interface IValueChangeManager
 {

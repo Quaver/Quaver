@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.ValueManager;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
 public class ValueVertex<T> : IEqualityComparer<ValueVertex<T>>
 {

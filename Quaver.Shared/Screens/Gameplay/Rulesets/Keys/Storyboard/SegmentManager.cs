@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Intrinsics;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.ValueManager;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
 public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISegmentPayload
 {

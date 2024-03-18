@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.ValueManager;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
 public class TriggerManager<TPayload> : IValueChangeManager where TPayload : ITriggerPayload
 {
