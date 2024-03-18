@@ -32,7 +32,12 @@ public class SegmentManager : IValueChangeManager
     private void UpdateIndex(float curTime)
     {
         if (_vertices.Count == 0) return;
-        if (curTime < _vertices[0].Time) return;
+        if (curTime < _vertices[0].Time)
+        {
+            _currentIndex = 0;
+            _activeVertices.Clear();
+            return;
+        }
         if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)

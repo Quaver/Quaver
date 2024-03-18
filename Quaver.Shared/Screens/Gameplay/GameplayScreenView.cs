@@ -199,6 +199,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         /// </summary>
         private ReplayController ReplayController { get; }
+        
+        public SegmentManager SegmentManager { get; set; }
+        public TriggerManager TriggerManager { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -225,8 +228,10 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateRatingDisplay();
             CreateAccuracyDisplay();
 
+            TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
+            SegmentManager = new SegmentManager(new HashSet<Segment>());
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
-                new StoryboardScript(Screen.Map.GetAnimationScriptPath());
+                new StoryboardScript(Screen.Map.GetAnimationScriptPath(), this);
 
             if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
@@ -327,6 +332,10 @@ namespace Quaver.Shared.Screens.Gameplay
             HandleWaitingForPlayersDialog();
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
+            
+            SegmentManager.Update((float)Screen.Timing.Time);
+            TriggerManager.Update((float)Screen.Timing.Time);
+            
             BattleRoyaleBackgroundAlerter?.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);

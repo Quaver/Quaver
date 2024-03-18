@@ -12,17 +12,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
 public class StoryboardScript
 {
-    protected Script WorkingScript { get; set; }
+    public Script WorkingScript { get; set; }
     protected string FilePath { get; set; }
     protected bool IsResource { get; set; }
     protected string ScriptText { get; set; }
     protected LuaStoryboardState State { get; set; }
 
-    public StoryboardScript(string path)
+    public StoryboardScript(string path, GameplayScreenView screenView)
     {
         FilePath = path;
-        
-        
+
+        ActionManager = new StoryboardActionManager();
+        ActionManager.GameplayScreenView = screenView;
+        ActionManager.Script = this;
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
@@ -31,6 +33,8 @@ public class StoryboardScript
         RegisterAllVectors();
         LoadScript();
     }
+    
+    public StoryboardActionManager ActionManager { get; set; }
 
     public void LoadScript()
     {
@@ -38,8 +42,8 @@ public class StoryboardScript
         State = new LuaStoryboardState();
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
         
-        WorkingScript.Globals["actions"] = new StoryboardActionManager();
-        WorkingScript.Globals["state"] = State;
+        WorkingScript.Globals["actions"] = ActionManager;
+        WorkingScript.Globals["states"] = State;
         
         try
         {
