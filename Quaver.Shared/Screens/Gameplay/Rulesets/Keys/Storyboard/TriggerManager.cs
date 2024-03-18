@@ -2,15 +2,15 @@ using System.Collections.Generic;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
-public class TriggerManager<TPayload> : IValueChangeManager where TPayload : ITriggerPayload
+public class TriggerManager : IValueChangeManager
 {
-    private readonly List<ValueVertex<TPayload>> _vertices;
+    private readonly List<ValueVertex<ITriggerPayload>> _vertices;
     private int _currentIndex;
 
-    public TriggerManager(List<ValueVertex<TPayload>> vertices)
+    public TriggerManager(List<ValueVertex<ITriggerPayload>> vertices)
     {
         _vertices = vertices;
-        _vertices.Sort(ValueVertex<TPayload>.TimeComparer);
+        _vertices.Sort(ValueVertex<ITriggerPayload>.TimeComparer);
     }
 
     private void UpdateIndex(float curTime)
@@ -38,9 +38,9 @@ public class TriggerManager<TPayload> : IValueChangeManager where TPayload : ITr
         UpdateIndex(curTime);
     }
 
-    public void AddVertex(ValueVertex<TPayload> vertex)
+    public void AddVertex(ValueVertex<ITriggerPayload> vertex)
     {
-        var insert = _vertices.BinarySearch(vertex, ValueVertex<TPayload>.TimeComparer);
+        var insert = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeComparer);
         if (insert < 0)
             insert = ~insert;
         else if (_vertices.Contains(vertex))
@@ -55,7 +55,7 @@ public class TriggerManager<TPayload> : IValueChangeManager where TPayload : ITr
         
     }
 
-    public void RemoveVertex(ValueVertex<TPayload> vertex)
+    public void RemoveVertex(ValueVertex<ITriggerPayload> vertex)
     {
         var index = _vertices.BinarySearch(vertex);
         if (index < 0) return;

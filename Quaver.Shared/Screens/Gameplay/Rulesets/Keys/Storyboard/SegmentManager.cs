@@ -2,14 +2,14 @@ using System.Collections.Generic;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
-public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISegmentPayload
+public class SegmentManager : IValueChangeManager
 {
-    private readonly HashSet<Segment<TPayload>> _segments;
-    private readonly List<ValueVertex<TPayload>> _vertices = new();
+    private readonly HashSet<Segment> _segments;
+    private readonly List<ValueVertex<ISegmentPayload>> _vertices = new();
     private int _currentIndex;
-    private readonly HashSet<TPayload> _activeVertices = new();
+    private readonly HashSet<ISegmentPayload> _activeVertices = new();
 
-    public SegmentManager(HashSet<Segment<TPayload>> segments)
+    public SegmentManager(HashSet<Segment> segments)
     {
         _segments = segments;
         GenerateVertices();
@@ -25,7 +25,7 @@ public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISe
             _vertices.Add(v2);
         }
 
-        _vertices.Sort(ValueVertex<TPayload>.TimeComparer);
+        _vertices.Sort(ValueVertex<ISegmentPayload>.TimeComparer);
         _currentIndex = 0;
     }
 
@@ -37,7 +37,7 @@ public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISe
 
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
         {
-            AlternateVertex(_vertices[_currentIndex].Payload);
+            AlternateVertex(_vertices[_currentIndex]);
 
             _currentIndex++;
         }
@@ -45,16 +45,17 @@ public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISe
         while (_currentIndex > 0 && curTime < _vertices[_currentIndex - 1].Time)
         {
             _currentIndex--;
-            AlternateVertex(_vertices[_currentIndex].Payload);
+            AlternateVertex(_vertices[_currentIndex]);
         }
     }
 
-    private void AlternateVertex(TPayload payload)
+    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex)
     {
-        if (!_activeVertices.Add(payload))
+        if (!_activeVertices.Add(vertex.Payload))
         {
-            _activeVertices.Remove(payload);
+            _activeVertices.Remove(vertex.Payload);
         }
+        vertex.Payload.Update(vertex.Time);
     }
 
     public void Update(float curTime)
@@ -66,9 +67,9 @@ public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISe
         }
     }
 
-    private void InsertVertex(ValueVertex<TPayload> vertex)
+    private void InsertVertex(ValueVertex<ISegmentPayload> vertex)
     {
-        var insert = _vertices.BinarySearch(vertex, ValueVertex<TPayload>.TimeComparer);
+        var insert = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeComparer);
         if (insert < 0)
             insert = ~insert;
         else if (_vertices.Contains(vertex))
@@ -77,13 +78,13 @@ public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISe
         if (insert < _currentIndex)
         {
             _currentIndex++;
-            AlternateVertex(vertex.Payload);
+            AlternateVertex(vertex);
         }
         _vertices.Insert(insert, vertex);
         
     }
 
-    private void RemoveVertex(ValueVertex<TPayload> vertex)
+    private void RemoveVertex(ValueVertex<ISegmentPayload> vertex)
     {
         var index = _vertices.BinarySearch(vertex);
         if (index < 0) return;
@@ -93,12 +94,12 @@ public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISe
         }
         else
         {
-            AlternateVertex(vertex.Payload);
+            AlternateVertex(vertex);
         }
         _vertices.RemoveAt(index);
     }
 
-    public void Add(Segment<TPayload> segment)
+    public void Add(Segment segment)
     {
         if (!_segments.Add(segment)) return;
         var (v1, v2) = segment.CreateVertexPair();
@@ -106,7 +107,7 @@ public class SegmentManager<TPayload> : IValueChangeManager where TPayload : ISe
         InsertVertex(v2);
     }
 
-    public void Remove(Segment<TPayload> segment)
+    public void Remove(Segment segment)
     {
         if (!_segments.Remove(segment)) return;
         var (v1, v2) = segment.CreateVertexPair();
