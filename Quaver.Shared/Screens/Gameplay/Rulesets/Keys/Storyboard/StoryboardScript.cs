@@ -68,7 +68,11 @@ public class StoryboardScript
                 ScriptText = File.ReadAllText(FilePath);
             }
 
-            WorkingScript.DoString(ScriptText);
+            WorkingScript.DoString(ScriptText, codeFriendlyName: Path.GetFileName(FilePath));
+        }
+        catch (ScriptRuntimeException e)
+        {
+            Logger.Error(e.DecoratedMessage, LogType.Runtime);
         }
         catch (Exception e)
         {

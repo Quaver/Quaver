@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
@@ -44,6 +46,7 @@ public class SegmentManager : IValueChangeManager
             _activeSegments.Clear();
             return;
         }
+
         if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
@@ -66,27 +69,33 @@ public class SegmentManager : IValueChangeManager
         var segment = _segments[vertex.Id];
         if (!_activeSegments.TryAdd(vertex.Id, segment))
         {
-            Logger.Debug($"Alternate: Remove active {vertex.Id}", LogType.Runtime);
             _activeSegments.Remove(vertex.Id);
             if (segment.IsDynamic)
             {
                 Remove(segment);
-                Logger.Debug($"Removed dynamic segment {segment.Id}", LogType.Runtime);
             }
         }
-        else
-        {
-            Logger.Debug($"Alternate: Set active {vertex.Id}", LogType.Runtime);
-        }
+
         vertex.Payload.Update(vertex.Time, progress);
     }
 
     public void Update(int curTime)
     {
-        UpdateIndex(curTime);
-        foreach (var (id, segment) in _activeSegments)
+        try
         {
-            segment.Payload.Update(curTime, segment.Progress(curTime));
+            UpdateIndex(curTime);
+            foreach (var (id, segment) in _activeSegments)
+            {
+                segment.Payload.Update(curTime, segment.Progress(curTime));
+            }
+        }
+        catch (ScriptRuntimeException e)
+        {
+            Logger.Error(e.DecoratedMessage, LogType.Runtime);
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, LogType.Runtime);
         }
     }
 
@@ -101,6 +110,7 @@ public class SegmentManager : IValueChangeManager
             AlternateVertex(vertex, 1);
             _currentIndex++;
         }
+
         _vertices.Insert(insert, vertex);
         return true;
     }
@@ -119,6 +129,7 @@ public class SegmentManager : IValueChangeManager
         {
             AlternateVertex(vertex, 0);
         }
+
         _vertices.RemoveAt(index);
         return true;
     }
@@ -146,6 +157,5 @@ public class SegmentManager : IValueChangeManager
         _segments.Remove(segment.Id);
         _activeSegments.Remove(segment.Id);
         return result;
-        // _vertices.RemoveAll(v => v.Segment.Id == segment.Id);
     }
 }

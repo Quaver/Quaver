@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
@@ -28,6 +31,7 @@ public class TriggerManager : IValueChangeManager
             _currentIndex = 0;
             return;
         }
+
         if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
@@ -53,7 +57,18 @@ public class TriggerManager : IValueChangeManager
 
     public void Update(int curTime)
     {
-        UpdateIndex(curTime);
+        try
+        {
+            UpdateIndex(curTime);
+        }
+        catch (ScriptRuntimeException e)
+        {
+            Logger.Error(e.DecoratedMessage, LogType.Runtime);
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, LogType.Runtime);
+        }
     }
 
     public bool AddVertex(ValueVertex<ITriggerPayload> vertex)
@@ -70,6 +85,7 @@ public class TriggerManager : IValueChangeManager
             {
                 return true;
             }
+
             _currentIndex++;
         }
 
