@@ -124,6 +124,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private DrawableReplayHit ReleaseHit { get; set; }
 
+        private GameplayPlayfieldKeys Playfield => (GameplayPlayfieldKeys)Ruleset.Playfield;
+        private float PositionX => Playfield.Stage.Receptors[Info.Lane - 1].X;
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -423,6 +426,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Update HitBody
             HitObjectSprite.Y = spritePosition;
+            HitObjectSprite.X = PositionX;
 
             PressHit.UpdateSpritePositions(offset);
             ReleaseHit.UpdateSpritePositions(offset);
@@ -433,7 +437,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteBodySize;
-
+            LongNoteBodySprite.X = PositionX;
+            
             var earliestSpritePosition = GetSpritePosition(offset, EarliestHeldPosition);
             if (ScrollDirection.Equals(ScrollDirection.Down))
                 LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset - CurrentLongNoteBodySize;
@@ -441,6 +446,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset;
 
             LongNoteEndSprite.Y = GetEndSpritePosition(offset, LatestHeldPosition);
+            LongNoteEndSprite.X = PositionX;
 
             // Stop drawing LN body + end if the ln reaches half the height of the hitobject
             // (prevents body + end extending below this point)
