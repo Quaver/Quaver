@@ -350,7 +350,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                StoryboardScript.Update();
+                StoryboardScript?.Update();
                 SegmentManager.Update((int)Screen.Timing.Time);
                 TriggerManager.Update((int)Screen.Timing.Time);
             }
