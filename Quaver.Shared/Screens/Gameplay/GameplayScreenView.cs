@@ -229,7 +229,7 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateAccuracyDisplay();
 
             TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
-            SegmentManager = new SegmentManager(new HashSet<Segment>());
+            SegmentManager = new SegmentManager(new ());
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
                 new StoryboardScript(Screen.Map.GetAnimationScriptPath(), this);
 

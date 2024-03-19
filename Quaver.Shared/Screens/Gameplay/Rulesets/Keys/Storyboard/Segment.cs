@@ -5,9 +5,35 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
 public class Segment
 {
-    public float StartTime { get; set; }
-    public float EndTime { get; set; }
+    public int Id { get; set; }
+    public int StartTime { get; set; }
+    public int EndTime { get; set; }
+    public bool IsDynamic { get; set; }
     public ISegmentPayload Payload { get; set; }
+    
+    public ValueVertex<ISegmentPayload> StartVertex { get; }
+    public ValueVertex<ISegmentPayload> EndVertex { get; }
+
+    public Segment(int id, int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false)
+    {
+        Id = id;
+        StartTime = startTime;
+        EndTime = endTime;
+        Payload = payload;
+        IsDynamic = isDynamic;
+        StartVertex = new ValueVertex<ISegmentPayload>
+        {
+            Payload = Payload,
+            Time = StartTime,
+            Segment = this
+        };
+        EndVertex = new ValueVertex<ISegmentPayload>
+        {
+            Payload = Payload,
+            Time = EndTime,
+            Segment = this
+        };
+    }
 
     protected bool Equals(Segment other)
     {
@@ -27,17 +53,22 @@ public class Segment
         return HashCode.Combine(StartTime, EndTime, Payload);
     }
 
-    public (ValueVertex<ISegmentPayload> Start, ValueVertex<ISegmentPayload> End) CreateVertexPair()
+    private sealed class IdEqualityComparer : IEqualityComparer<Segment>
     {
-        return (new ValueVertex<ISegmentPayload>
-            {
-                Payload = Payload,
-                Time = StartTime
-            },
-            new ValueVertex<ISegmentPayload>
-            {
-                Payload = Payload,
-                Time = EndTime
-            });
+        public bool Equals(Segment x, Segment y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.Id == y.Id;
+        }
+
+        public int GetHashCode(Segment obj)
+        {
+            return obj.Id;
+        }
     }
+
+    public static IEqualityComparer<Segment> IdComparer { get; } = new IdEqualityComparer();
 }

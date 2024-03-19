@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
-public class ValueVertex<T> : IEqualityComparer<ValueVertex<T>>
+public class ValueVertex<T>
 {
-    public float Time { get; set; }
+    public int Time { get; set; }
     public T Payload { get; set; }
+    public Segment Segment { get; set; }
 
     private sealed class TimeRelationalComparer : IComparer<ValueVertex<T>>
     {
@@ -22,17 +23,18 @@ public class ValueVertex<T> : IEqualityComparer<ValueVertex<T>>
 
     public static IComparer<ValueVertex<T>> TimeComparer { get; } = new TimeRelationalComparer();
 
+
     public bool Equals(ValueVertex<T> x, ValueVertex<T> y)
     {
         if (ReferenceEquals(x, y)) return true;
         if (ReferenceEquals(x, null)) return false;
         if (ReferenceEquals(y, null)) return false;
         if (x.GetType() != y.GetType()) return false;
-        return x.Time.Equals(y.Time) && EqualityComparer<T>.Default.Equals(x.Payload, y.Payload);
+        return x.Time == y.Time && EqualityComparer<T>.Default.Equals(x.Payload, y.Payload) && Equals(x.Segment, y.Segment);
     }
 
     public int GetHashCode(ValueVertex<T> obj)
     {
-        return HashCode.Combine(obj.Time, obj.Payload);
+        return HashCode.Combine(obj.Time, obj.Payload, obj.Segment);
     }
 }
