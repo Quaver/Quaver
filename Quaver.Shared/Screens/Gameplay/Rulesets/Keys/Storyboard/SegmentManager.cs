@@ -30,7 +30,7 @@ public class SegmentManager : IValueChangeManager
             _vertices.Add(segment.EndVertex);
         }
 
-        _vertices.Sort(ValueVertex<ISegmentPayload>.TimeComparer);
+        _vertices.Sort(ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
         _currentIndex = 0;
     }
 
@@ -67,8 +67,7 @@ public class SegmentManager : IValueChangeManager
             _activeSegments.Remove(vertex.Segment.Id);
             if (vertex.Segment.IsDynamic)
             {
-                _vertices.RemoveAll(v => v.Segment.Id == vertex.Segment.Id);
-                _segments.Remove(vertex.Segment.Id);
+                Remove(vertex.Segment);
             }
         }
         vertex.Payload.Update(vertex.Time);
@@ -85,7 +84,7 @@ public class SegmentManager : IValueChangeManager
 
     private void InsertVertex(ValueVertex<ISegmentPayload> vertex)
     {
-        var insert = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeComparer);
+        var insert = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
         if (insert < 0)
             insert = ~insert;
         // TODO not O(n)
@@ -103,10 +102,10 @@ public class SegmentManager : IValueChangeManager
 
     private void RemoveVertex(ValueVertex<ISegmentPayload> vertex)
     {
-        // var index = _vertices.BinarySearch(vertex);
-        // if (index < 0) return;
-        var index = _vertices.FindIndex(v => v.Time == vertex.Time && v.Segment.Id == vertex.Segment.Id);
-        if (index == -1) return;
+        var index = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
+        if (index < 0) return;
+        // var index = _vertices.FindIndex(v => v.Time == vertex.Time && v.Segment.Id == vertex.Segment.Id);
+        // if (index == -1) return;
         if (index < _currentIndex)
         {
             _currentIndex--;

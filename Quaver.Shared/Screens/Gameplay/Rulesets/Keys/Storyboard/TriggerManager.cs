@@ -10,7 +10,7 @@ public class TriggerManager : IValueChangeManager
     public TriggerManager(List<ValueVertex<ITriggerPayload>> vertices)
     {
         _vertices = vertices;
-        _vertices.Sort(ValueVertex<ITriggerPayload>.TimeComparer);
+        _vertices.Sort(ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
     }
 
     private void UpdateIndex(float curTime)
@@ -40,7 +40,7 @@ public class TriggerManager : IValueChangeManager
 
     public void AddVertex(ValueVertex<ITriggerPayload> vertex)
     {
-        var insert = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeComparer);
+        var insert = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
         if (insert < 0)
             insert = ~insert;
         else if (_vertices.Contains(vertex))
@@ -57,7 +57,7 @@ public class TriggerManager : IValueChangeManager
 
     public void RemoveVertex(ValueVertex<ITriggerPayload> vertex)
     {
-        var index = _vertices.BinarySearch(vertex);
+        var index = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
         if (index < 0) return;
         if (index < _currentIndex)
         {

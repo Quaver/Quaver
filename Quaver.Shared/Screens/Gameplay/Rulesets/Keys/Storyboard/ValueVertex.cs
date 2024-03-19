@@ -9,20 +9,20 @@ public class ValueVertex<T>
     public T Payload { get; set; }
     public Segment Segment { get; set; }
 
-    private sealed class TimeRelationalComparer : IComparer<ValueVertex<T>>
+    private sealed class TimeSegmentIdRelationalComparer : IComparer<ValueVertex<T>>
     {
         public int Compare(ValueVertex<T> x, ValueVertex<T> y)
         {
             if (ReferenceEquals(x, y)) return 0;
             if (ReferenceEquals(null, y)) return 1;
             if (ReferenceEquals(null, x)) return -1;
-            return x.Time.CompareTo(y.Time);
+            var timeComparison = x.Time.CompareTo(y.Time);
+            if (timeComparison != 0) return timeComparison;
+            return x.Segment.Id.CompareTo(y.Segment.Id);
         }
     }
-    
 
-    public static IComparer<ValueVertex<T>> TimeComparer { get; } = new TimeRelationalComparer();
-
+    public static IComparer<ValueVertex<T>> TimeSegmentIdComparer { get; } = new TimeSegmentIdRelationalComparer();
 
     public bool Equals(ValueVertex<T> x, ValueVertex<T> y)
     {
