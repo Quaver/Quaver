@@ -57,18 +57,7 @@ public class TriggerManager : IValueChangeManager
 
     public void Update(int curTime)
     {
-        try
-        {
-            UpdateIndex(curTime);
-        }
-        catch (ScriptRuntimeException e)
-        {
-            Logger.Error(e.DecoratedMessage, LogType.Runtime);
-        }
-        catch (Exception e)
-        {
-            Logger.Error(e, LogType.Runtime);
-        }
+        UpdateIndex(curTime);
     }
 
     public bool AddVertex(ValueVertex<ITriggerPayload> vertex)

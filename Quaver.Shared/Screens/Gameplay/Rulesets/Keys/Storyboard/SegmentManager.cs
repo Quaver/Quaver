@@ -81,21 +81,10 @@ public class SegmentManager : IValueChangeManager
 
     public void Update(int curTime)
     {
-        try
+        UpdateIndex(curTime);
+        foreach (var (id, segment) in _activeSegments)
         {
-            UpdateIndex(curTime);
-            foreach (var (id, segment) in _activeSegments)
-            {
-                segment.Payload.Update(curTime, segment.Progress(curTime));
-            }
-        }
-        catch (ScriptRuntimeException e)
-        {
-            Logger.Error(e.DecoratedMessage, LogType.Runtime);
-        }
-        catch (Exception e)
-        {
-            Logger.Error(e, LogType.Runtime);
+            segment.Payload.Update(curTime, segment.Progress(curTime));
         }
     }
 
