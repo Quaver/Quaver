@@ -44,6 +44,10 @@ public class StoryboardActionManager
         return id;
     }
 
+    public int GenerateTriggerId() => GameplayScreenView.TriggerManager.GenerateNextId();
+
+    public int GenerateSegmentId() => GameplayScreenView.SegmentManager.GenerateNextId();
+
     public void Debug(string str)
     {
         Logger.Debug(str, LogType.Runtime);
