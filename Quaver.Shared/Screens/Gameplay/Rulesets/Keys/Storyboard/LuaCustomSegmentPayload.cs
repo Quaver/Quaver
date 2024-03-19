@@ -7,8 +7,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 [MoonSharpUserData]
 public class LuaCustomSegmentPayload : ISegmentPayload
 {
-    public Closure Updater;
-    public Script Script;
+    public Closure Updater { get; set; }
+    public Script Script { get; set; }
 
     public LuaCustomSegmentPayload(Closure updater, Script script)
     {

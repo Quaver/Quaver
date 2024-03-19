@@ -34,7 +34,7 @@ public class SegmentManager : IValueChangeManager
         _currentIndex = 0;
     }
 
-    private void UpdateIndex(float curTime)
+    private void UpdateIndex(int curTime)
     {
         if (_vertices.Count == 0) return;
         if (curTime < _vertices[0].Time)
@@ -62,18 +62,19 @@ public class SegmentManager : IValueChangeManager
     private void AlternateVertex(ValueVertex<ISegmentPayload> vertex)
     {
         if (!_vertices.Contains(vertex)) return;
-        if (!_activeSegments.TryAdd(vertex.Segment.Id, vertex.Segment))
+        var segment = _segments[vertex.Id];
+        if (!_activeSegments.TryAdd(vertex.Id, segment))
         {
-            _activeSegments.Remove(vertex.Segment.Id);
-            if (vertex.Segment.IsDynamic)
+            _activeSegments.Remove(vertex.Id);
+            if (segment.IsDynamic)
             {
-                Remove(vertex.Segment);
+                Remove(segment);
             }
         }
         vertex.Payload.Update(vertex.Time);
     }
 
-    public void Update(float curTime)
+    public void Update(int curTime)
     {
         UpdateIndex(curTime);
         foreach (var (id, segment) in _activeSegments)
@@ -82,14 +83,14 @@ public class SegmentManager : IValueChangeManager
         }
     }
 
-    private void InsertVertex(ValueVertex<ISegmentPayload> vertex)
+    private bool InsertVertex(ValueVertex<ISegmentPayload> vertex)
     {
         var insert = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
         if (insert < 0)
             insert = ~insert;
         // TODO not O(n)
         else if (_vertices.Contains(vertex))
-            return;
+            return false;
 
         if (insert < _currentIndex)
         {
@@ -97,13 +98,13 @@ public class SegmentManager : IValueChangeManager
             _currentIndex++;
         }
         _vertices.Insert(insert, vertex);
-        
+        return true;
     }
 
-    private void RemoveVertex(ValueVertex<ISegmentPayload> vertex)
+    private bool RemoveVertex(ValueVertex<ISegmentPayload> vertex)
     {
         var index = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
-        if (index < 0) return;
+        if (index < 0) return false;
         // var index = _vertices.FindIndex(v => v.Time == vertex.Time && v.Segment.Id == vertex.Segment.Id);
         // if (index == -1) return;
         if (index < _currentIndex)
@@ -115,13 +116,13 @@ public class SegmentManager : IValueChangeManager
             AlternateVertex(vertex);
         }
         _vertices.RemoveAt(index);
+        return true;
     }
 
-    public void Add(Segment segment)
+    public bool Add(Segment segment)
     {
-        if (!_segments.TryAdd(segment.Id, segment)) return;
-        InsertVertex(segment.StartVertex);
-        InsertVertex(segment.EndVertex);
+        if (!_segments.TryAdd(segment.Id, segment)) return false;
+        return InsertVertex(segment.StartVertex) && InsertVertex(segment.EndVertex);
     }
 
     public void UpdateSegment(Segment segment)
@@ -134,12 +135,11 @@ public class SegmentManager : IValueChangeManager
         Add(segment);
     }
 
-    public void Remove(Segment segment)
+    public bool Remove(Segment segment)
     {
-        if (!_segments.ContainsKey(segment.Id)) return;
+        if (!_segments.ContainsKey(segment.Id)) return false;
         _segments.Remove(segment.Id);
-        RemoveVertex(segment.StartVertex);
-        RemoveVertex(segment.EndVertex);
+        return RemoveVertex(segment.StartVertex) && RemoveVertex(segment.EndVertex);
         // _vertices.RemoveAll(v => v.Segment.Id == segment.Id);
     }
 }

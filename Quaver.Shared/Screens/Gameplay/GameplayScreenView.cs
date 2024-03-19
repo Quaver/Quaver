@@ -333,8 +333,8 @@ namespace Quaver.Shared.Screens.Gameplay
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
             
-            SegmentManager.Update((float)Screen.Timing.Time);
-            TriggerManager.Update((float)Screen.Timing.Time);
+            SegmentManager.Update((int)Screen.Timing.Time);
+            TriggerManager.Update((int)Screen.Timing.Time);
             
             BattleRoyaleBackgroundAlerter?.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);

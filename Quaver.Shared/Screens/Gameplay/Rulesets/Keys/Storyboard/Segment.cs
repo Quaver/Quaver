@@ -25,13 +25,15 @@ public class Segment
         {
             Payload = Payload,
             Time = StartTime,
-            Segment = this
+            Id = Id,
+            IsDynamic = IsDynamic
         };
         EndVertex = new ValueVertex<ISegmentPayload>
         {
             Payload = Payload,
             Time = EndTime,
-            Segment = this
+            Id = Id,
+            IsDynamic = IsDynamic
         };
     }
 
@@ -40,18 +42,6 @@ public class Segment
         return StartTime.Equals(other.StartTime) && EndTime.Equals(other.EndTime) && EqualityComparer<ISegmentPayload>.Default.Equals(Payload, other.Payload);
     }
 
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((Segment)obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(StartTime, EndTime, Payload);
-    }
 
     private sealed class IdEqualityComparer : IEqualityComparer<Segment>
     {

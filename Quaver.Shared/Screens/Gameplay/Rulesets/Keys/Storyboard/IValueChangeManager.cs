@@ -2,7 +2,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
 public interface IValueChangeManager
 {
-    void Update(float curTime);
+    void Update(int curTime);
 
     // private void UpdateIndex(int curTime)
     // {
