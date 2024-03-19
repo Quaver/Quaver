@@ -85,15 +85,6 @@ public class StoryboardActionManager
 
     public int GenerateSegmentId() => GameplayScreenView.SegmentManager.GenerateNextId();
 
-    public int GetKeyCount() => GameplayScreen.Map.GetKeyCount();
-
-    public int GetMapLength() => GameplayScreen.Map.Length;
-
-    public List<TimingPointInfo> GetTimingPoints()
-    {
-        return GameplayScreen.Map.TimingPoints;
-    }
-
     public float GetLaneSize()
     {
         return GameplayPlayfieldKeys.LaneSize;

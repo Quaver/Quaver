@@ -4,8 +4,10 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using MoonSharp.Interpreter;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -20,8 +22,12 @@ public class StoryboardScript
     protected bool IsResource { get; set; }
     protected string ScriptText { get; set; }
     protected LuaStoryboardState State { get; set; }
-    
+
     protected GameplayScreenView GameplayScreenView { get; set; }
+    public StoryboardActionManager ActionManager { get; set; }
+    public TweenSetters TweenSetters { get; set; }
+
+    public StoryboardConstants StoryboardConstants { get; set; }
 
     public StoryboardScript(string path, GameplayScreenView screenView)
     {
@@ -36,18 +42,23 @@ public class StoryboardScript
         TweenSetters.GameplayScreenView = screenView;
         TweenSetters.Script = this;
 
+        StoryboardConstants = new StoryboardConstants();
+
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterType<Easing>();
         UserData.RegisterType<TweenPayload.SetterDelegate>();
+        UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
+        UserData.RegisterProxyType<HitObjectInfoProxy, HitObjectInfo>(hitObjectInfo =>
+            new HitObjectInfoProxy(hitObjectInfo));
+        UserData.RegisterProxyType<TimingPointInfoProxy, TimingPointInfo>(
+            tp => new TimingPointInfoProxy(tp));
 
 
         RegisterAllVectors();
         LoadScript();
     }
 
-    public StoryboardActionManager ActionManager { get; set; }
-    public TweenSetters TweenSetters { get; set; }
 
     public void LoadScript()
     {
@@ -58,6 +69,8 @@ public class StoryboardScript
         WorkingScript.Globals["states"] = State;
         WorkingScript.Globals["tweens"] = TweenSetters;
         WorkingScript.Globals["easing"] = typeof(Easing);
+        WorkingScript.Globals["constants"] = StoryboardConstants;
+        WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
 
         try
         {
