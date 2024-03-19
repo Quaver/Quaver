@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble.Graphics;
@@ -85,7 +87,14 @@ public class StoryboardActionManager
 
     public int GetKeyCount() => GameplayScreen.Map.GetKeyCount();
 
-    public float GetReceptorLaneSize()
+    public int GetMapLength() => GameplayScreen.Map.Length;
+
+    public List<TimingPointInfo> GetTimingPoints()
+    {
+        return GameplayScreen.Map.TimingPoints;
+    }
+
+    public float GetLaneSize()
     {
         return GameplayPlayfieldKeys.LaneSize;
     }
