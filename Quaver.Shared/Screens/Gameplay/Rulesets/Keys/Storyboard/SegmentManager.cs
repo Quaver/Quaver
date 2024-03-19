@@ -48,7 +48,7 @@ public class SegmentManager : IValueChangeManager
 
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
         {
-            AlternateVertex(_vertices[_currentIndex]);
+            AlternateVertex(_vertices[_currentIndex], 1);
 
             _currentIndex++;
         }
@@ -56,11 +56,11 @@ public class SegmentManager : IValueChangeManager
         while (_currentIndex > 0 && curTime < _vertices[_currentIndex - 1].Time)
         {
             _currentIndex--;
-            AlternateVertex(_vertices[_currentIndex]);
+            AlternateVertex(_vertices[_currentIndex], 0);
         }
     }
 
-    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex)
+    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float progress = -1)
     {
         if (!_vertices.Contains(vertex)) return;
         var segment = _segments[vertex.Id];
@@ -78,7 +78,7 @@ public class SegmentManager : IValueChangeManager
         {
             Logger.Debug($"Alternate: Set active {vertex.Id}", LogType.Runtime);
         }
-        vertex.Payload.Update(vertex.Time, -1);
+        vertex.Payload.Update(vertex.Time, progress);
     }
 
     public void Update(int curTime)
@@ -95,13 +95,10 @@ public class SegmentManager : IValueChangeManager
         var insert = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
         if (insert < 0)
             insert = ~insert;
-        // // TODO not O(n)
-        // else if (_vertices.Contains(vertex))
-        //     return false;
 
         if (_currentIndex != _vertices.Count && insert <= _currentIndex)
         {
-            AlternateVertex(vertex);
+            AlternateVertex(vertex, 1);
             _currentIndex++;
         }
         _vertices.Insert(insert, vertex);
@@ -120,7 +117,7 @@ public class SegmentManager : IValueChangeManager
         }
         else
         {
-            AlternateVertex(vertex);
+            AlternateVertex(vertex, 0);
         }
         _vertices.RemoveAt(index);
         return true;
