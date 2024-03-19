@@ -138,8 +138,9 @@ public class SegmentManager : IValueChangeManager
     public bool Remove(Segment segment)
     {
         if (!_segments.ContainsKey(segment.Id)) return false;
+        var result = RemoveVertex(segment.StartVertex) && RemoveVertex(segment.EndVertex);
         _segments.Remove(segment.Id);
-        return RemoveVertex(segment.StartVertex) && RemoveVertex(segment.EndVertex);
+        return result;
         // _vertices.RemoveAll(v => v.Segment.Id == segment.Id);
     }
 }
