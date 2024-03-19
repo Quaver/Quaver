@@ -199,9 +199,21 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         /// </summary>
         private ReplayController ReplayController { get; }
-        
+
+        /// <summary>
+        ///     Manages continuous segments of updates from storyboard
+        /// </summary>
         public SegmentManager SegmentManager { get; set; }
+
+        /// <summary>
+        ///     Manages one-shot event firing for storyboard
+        /// </summary>
         public TriggerManager TriggerManager { get; set; }
+
+        /// <summary>
+        ///     The script loaded that controls the storyboard
+        /// </summary>
+        public StoryboardScript StoryboardScript { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -231,7 +243,7 @@ namespace Quaver.Shared.Screens.Gameplay
             TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
             SegmentManager = new SegmentManager(new ());
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
-                new StoryboardScript(Screen.Map.GetAnimationScriptPath(), this);
+                StoryboardScript = new StoryboardScript(Screen.Map.GetAnimationScriptPath(), this);
 
             if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
@@ -323,6 +335,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.OnGameEnded += OnGameEnded;
         }
 
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -333,6 +346,7 @@ namespace Quaver.Shared.Screens.Gameplay
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
             
+            StoryboardScript.Update();
             SegmentManager.Update((int)Screen.Timing.Time);
             TriggerManager.Update((int)Screen.Timing.Time);
             

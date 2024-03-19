@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Numerics;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
+using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
@@ -11,7 +14,13 @@ public class LuaStoryboardState
     /// <summary>
     ///     Any state that the user wants to store for their plugin
     /// </summary>
-    public Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
+    public Dictionary<string, object> Values { get; } = new();
+    
+    public double SongTime { get; set; }
+    public TimingPointInfo CurrentTimingPoint { get; internal set; }
+    
+    public Vector2 WindowSize { get; internal set; }
+    public long UnixTime { get; set; }
 
     /// <summary>
     ///     Gets a value at a particular key
