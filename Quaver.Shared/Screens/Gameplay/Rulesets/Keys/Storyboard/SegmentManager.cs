@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 
@@ -65,13 +66,19 @@ public class SegmentManager : IValueChangeManager
         var segment = _segments[vertex.Id];
         if (!_activeSegments.TryAdd(vertex.Id, segment))
         {
+            Logger.Debug($"Alternate: Remove active {vertex.Id}", LogType.Runtime);
             _activeSegments.Remove(vertex.Id);
             if (segment.IsDynamic)
             {
                 Remove(segment);
+                Logger.Debug($"Removed dynamic segment {segment.Id}", LogType.Runtime);
             }
         }
-        vertex.Payload.Update(vertex.Time);
+        else
+        {
+            Logger.Debug($"Alternate: Set active {vertex.Id}", LogType.Runtime);
+        }
+        vertex.Payload.Update(vertex.Time, -1);
     }
 
     public void Update(int curTime)
@@ -79,7 +86,7 @@ public class SegmentManager : IValueChangeManager
         UpdateIndex(curTime);
         foreach (var (id, segment) in _activeSegments)
         {
-            segment.Payload.Update(curTime);
+            segment.Payload.Update(curTime, segment.Progress(curTime));
         }
     }
 
@@ -88,11 +95,11 @@ public class SegmentManager : IValueChangeManager
         var insert = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
         if (insert < 0)
             insert = ~insert;
-        // TODO not O(n)
-        else if (_vertices.Contains(vertex))
-            return false;
+        // // TODO not O(n)
+        // else if (_vertices.Contains(vertex))
+        //     return false;
 
-        if (insert < _currentIndex)
+        if (_currentIndex != _vertices.Count && insert <= _currentIndex)
         {
             AlternateVertex(vertex);
             _currentIndex++;
@@ -107,7 +114,7 @@ public class SegmentManager : IValueChangeManager
         if (index < 0) return false;
         // var index = _vertices.FindIndex(v => v.Time == vertex.Time && v.Segment.Id == vertex.Segment.Id);
         // if (index == -1) return;
-        if (index < _currentIndex)
+        if (index <= _currentIndex)
         {
             _currentIndex--;
         }
@@ -125,14 +132,14 @@ public class SegmentManager : IValueChangeManager
         return InsertVertex(segment.StartVertex) && InsertVertex(segment.EndVertex);
     }
 
-    public void UpdateSegment(Segment segment)
+    public bool UpdateSegment(Segment segment)
     {
         if (_segments.TryGetValue(segment.Id, out var foundSegment))
         {
             Remove(foundSegment);
         }
 
-        Add(segment);
+        return Add(segment);
     }
 
     public bool Remove(Segment segment)
@@ -140,6 +147,7 @@ public class SegmentManager : IValueChangeManager
         if (!_segments.ContainsKey(segment.Id)) return false;
         var result = RemoveVertex(segment.StartVertex) && RemoveVertex(segment.EndVertex);
         _segments.Remove(segment.Id);
+        _activeSegments.Remove(segment.Id);
         return result;
         // _vertices.RemoveAll(v => v.Segment.Id == segment.Id);
     }

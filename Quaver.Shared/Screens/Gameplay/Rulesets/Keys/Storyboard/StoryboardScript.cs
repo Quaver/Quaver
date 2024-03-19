@@ -7,6 +7,7 @@ using MoonSharp.Interpreter;
 using Quaver.API.Maps.Structures;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
@@ -27,8 +28,14 @@ public class StoryboardScript
         ActionManager.GameplayScreenView = screenView;
         ActionManager.Script = this;
 
+        TweenSetters = new TweenSetters();
+        TweenSetters.GameplayScreenView = screenView;
+        TweenSetters.Script = this;
+
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+        UserData.RegisterType<Easing>();
+        UserData.RegisterType<TweenPayload.SetterDelegate>();
         
         
         RegisterAllVectors();
@@ -36,6 +43,7 @@ public class StoryboardScript
     }
     
     public StoryboardActionManager ActionManager { get; set; }
+    public TweenSetters TweenSetters { get; set; }
 
     public void LoadScript()
     {
@@ -45,6 +53,8 @@ public class StoryboardScript
         
         WorkingScript.Globals["actions"] = ActionManager;
         WorkingScript.Globals["states"] = State;
+        WorkingScript.Globals["tweens"] = TweenSetters;
+        WorkingScript.Globals["easing"] = typeof(Easing);
         
         try
         {

@@ -63,7 +63,7 @@ public class TriggerManager : IValueChangeManager
         if (insert < 0)
             insert = ~insert;
 
-        if (insert < _currentIndex)
+        if (_currentIndex != _vertices.Count && insert <= _currentIndex)
         {
             vertex.Payload.Trigger(vertex.Time);
             if (vertex.IsDynamic)
@@ -86,7 +86,7 @@ public class TriggerManager : IValueChangeManager
     {
         var index = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
         if (index < 0) return false;
-        if (index < _currentIndex)
+        if (index <= _currentIndex)
         {
             _currentIndex--;
         }

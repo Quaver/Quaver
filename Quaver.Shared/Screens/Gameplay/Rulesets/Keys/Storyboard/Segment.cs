@@ -39,7 +39,8 @@ public class Segment
 
     protected bool Equals(Segment other)
     {
-        return StartTime.Equals(other.StartTime) && EndTime.Equals(other.EndTime) && EqualityComparer<ISegmentPayload>.Default.Equals(Payload, other.Payload);
+        return StartTime.Equals(other.StartTime) && EndTime.Equals(other.EndTime) &&
+               EqualityComparer<ISegmentPayload>.Default.Equals(Payload, other.Payload);
     }
 
 
@@ -61,4 +62,8 @@ public class Segment
     }
 
     public static IEqualityComparer<Segment> IdComparer { get; } = new IdEqualityComparer();
+
+    public float Progress(int curTime) => (float)(curTime - StartTime) / Length;
+
+    public int Length => EndTime - StartTime;
 }

@@ -16,8 +16,8 @@ public class LuaCustomSegmentPayload : ISegmentPayload
         Script = script;
     }
 
-    public void Update(float curTime)
+    public void Update(float curTime, float progress)
     {
-        Script.Call(Updater, curTime);
+        Script.Call(Updater, curTime, progress);
     }
 }
