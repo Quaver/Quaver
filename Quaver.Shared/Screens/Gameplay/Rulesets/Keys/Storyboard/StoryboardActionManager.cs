@@ -5,6 +5,7 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
@@ -15,13 +16,14 @@ public class StoryboardActionManager
     [MoonSharpVisible(false)] public GameplayScreenView GameplayScreenView { get; set; }
 
     [MoonSharpVisible(false)] public StoryboardScript Script { get; set; }
+    [MoonSharpVisible(false)] public GameplayScreen GameplayScreen => GameplayScreenView.Screen;
 
-    public GameplayScreen GameplayScreen => GameplayScreenView.Screen;
-
+    [MoonSharpVisible(false)]
     public GameplayPlayfieldKeys GameplayPlayfieldKeys => (GameplayPlayfieldKeys)GameplayScreen.Ruleset.Playfield;
 
+    [MoonSharpVisible(false)]
     public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
-    
+
     public int AddCustomSegment(int id, int startTime, int endTime, Closure updater, bool isDynamic = false)
     {
         if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
@@ -49,9 +51,32 @@ public class StoryboardActionManager
     public int SetCustomSegment(int id, int startTime, int endTime, Closure updater, bool isDynamic = false)
     {
         if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
-        GameplayScreenView.SegmentManager.UpdateSegment(new Segment(id, startTime, endTime,
-            new LuaCustomSegmentPayload(updater, Script.WorkingScript), isDynamic));
-        return id;
+        return GameplayScreenView.SegmentManager.UpdateSegment(
+            new Segment(id, startTime, endTime,
+                new LuaCustomSegmentPayload(updater, Script.WorkingScript), isDynamic))
+            ? id
+            : 0;
+    }
+
+    public int SetTweenSegment(int id,
+        int startTime, int endTime,
+        int startValue, int endValue,
+        TweenPayload.SetterDelegate setter,
+        Easing easing = Easing.Linear,
+        bool isDynamic = false)
+    {
+        if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
+        return GameplayScreenView.SegmentManager.UpdateSegment(
+            new Segment(id, startTime, endTime,
+                new TweenPayload
+                {
+                    Easing = easing,
+                    StartValue = startValue,
+                    EndValue = endValue,
+                    Setter = setter
+                }, isDynamic))
+            ? id
+            : -1;
     }
 
     public int GenerateTriggerId() => GameplayScreenView.TriggerManager.GenerateNextId();
