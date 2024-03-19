@@ -6,6 +6,7 @@ using System.Text;
 using MoonSharp.Interpreter;
 using Quaver.API.Maps.Structures;
 using Wobble;
+using Wobble.Graphics;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
@@ -84,6 +85,29 @@ public class StoryboardScript
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var dynVal = DynValue.NewTable(script, x, y);
+                    return dynVal;
+                }
+            );
+            
+            // Scalable Vector 2
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(ScalableVector2),
+                dynVal => {
+                    var table = dynVal.Table;
+                    var x = (float)(double)table[1];
+                    var y = (float)(double)table[2];
+                    var sx = (float)(double)table[3];
+                    var sy = (float)(double)table[4];
+                    return new ScalableVector2(x, y, sx, sy);
+                }
+            );
+
+            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<ScalableVector2>(
+                (script, vector) => {
+                    var x = DynValue.NewNumber(vector.X.Value);
+                    var y = DynValue.NewNumber(vector.Y.Value);
+                    var sx = DynValue.NewNumber(vector.X.Scale);
+                    var sy = DynValue.NewNumber(vector.Y.Scale);
+                    var dynVal = DynValue.NewTable(script, x, y, sx, sy);
                     return dynVal;
                 }
             );
