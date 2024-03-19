@@ -47,7 +47,6 @@ public class SegmentManager : IValueChangeManager
             return;
         }
 
-        if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
         {
@@ -55,6 +54,7 @@ public class SegmentManager : IValueChangeManager
 
             _currentIndex++;
         }
+        if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
         while (_currentIndex > 0 && curTime < _vertices[_currentIndex - 1].Time)
         {
@@ -94,7 +94,7 @@ public class SegmentManager : IValueChangeManager
         if (insert < 0)
             insert = ~insert;
 
-        if (_currentIndex != _vertices.Count && insert <= _currentIndex)
+        if (_currentIndex < _vertices.Count && insert <= _currentIndex)
         {
             AlternateVertex(vertex, 1);
             _currentIndex++;
@@ -110,7 +110,7 @@ public class SegmentManager : IValueChangeManager
         if (index < 0) return false;
         // var index = _vertices.FindIndex(v => v.Time == vertex.Time && v.Segment.Id == vertex.Segment.Id);
         // if (index == -1) return;
-        if (index <= _currentIndex)
+        if (_currentIndex > 0 && index <= _currentIndex)
         {
             _currentIndex--;
         }
@@ -125,12 +125,14 @@ public class SegmentManager : IValueChangeManager
 
     public bool Add(Segment segment)
     {
+        if (segment.Id >= _nextId) return false; // No
         if (!_segments.TryAdd(segment.Id, segment)) return false;
         return InsertVertex(segment.StartVertex) && InsertVertex(segment.EndVertex);
     }
 
     public bool UpdateSegment(Segment segment)
     {
+        if (segment.Id >= _nextId) return false; // No
         if (_segments.TryGetValue(segment.Id, out var foundSegment))
         {
             Remove(foundSegment);
@@ -141,6 +143,7 @@ public class SegmentManager : IValueChangeManager
 
     public bool Remove(Segment segment)
     {
+        if (segment.Id >= _nextId) return false; // No
         if (!_segments.ContainsKey(segment.Id)) return false;
         var result = RemoveVertex(segment.StartVertex) && RemoveVertex(segment.EndVertex);
         _segments.Remove(segment.Id);
