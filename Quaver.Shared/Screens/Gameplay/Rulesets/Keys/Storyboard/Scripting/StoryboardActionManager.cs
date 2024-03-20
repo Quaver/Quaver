@@ -100,7 +100,7 @@ public class StoryboardActionManager
     /// <seealso cref="Easing"/>
     public int SetTweenSegment(int id,
         int startTime, int endTime,
-        int startValue, int endValue,
+        float startValue, float endValue,
         TweenPayload.SetterDelegate setter,
         TweenPayload.EasingDelegate easingFunction = null,
         bool isDynamic = false)
@@ -134,7 +134,7 @@ public class StoryboardActionManager
     /// <seealso cref="Easing"/>
     public int SetTweenSegment(int id,
         int startTime, int endTime,
-        int startValue, int endValue,
+        float startValue, float endValue,
         TweenPayload.SetterDelegate setter,
         Easing easing,
         bool isDynamic = false)
