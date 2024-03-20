@@ -25,6 +25,28 @@ public class TweenSetters
     {
         return v => sprite.X = v;
     }
+    public TweenPayload.SetterDelegate SpriteY(Sprite sprite)
+    {
+        return v => sprite.Y = v;
+    }
+    public TweenPayload.SetterDelegate SpriteRotation(Sprite sprite)
+    {
+        return v => sprite.Rotation = v;
+    }
+    
+    public TweenPayload.SetterDelegate SpriteAlpha(Sprite sprite)
+    {
+        return v => sprite.Alpha = v;
+    }
+    
+    public TweenPayload.SetterDelegate SpriteScaleX(Sprite sprite)
+    {
+        return v => sprite.WidthScale = v;
+    }
+    public TweenPayload.SetterDelegate SpriteScaleY(Sprite sprite)
+    {
+        return v => sprite.HeightScale = v;
+    }
     
     public TweenPayload.SetterDelegate ReceptorX(int lane)
     {
