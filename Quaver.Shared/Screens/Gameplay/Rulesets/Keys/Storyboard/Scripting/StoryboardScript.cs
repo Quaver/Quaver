@@ -12,6 +12,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
@@ -29,6 +30,8 @@ public class StoryboardScript
     public TweenSetters TweenSetters { get; set; }
 
     public StoryboardConstants StoryboardConstants { get; set; }
+    
+    public StoryboardSprites StoryboardSprites { get; set; }
 
     public StoryboardScript(string path, GameplayScreenView screenView)
     {
@@ -44,6 +47,10 @@ public class StoryboardScript
         TweenSetters.Script = this;
 
         StoryboardConstants = new StoryboardConstants();
+        
+        StoryboardSprites = new StoryboardSprites();
+        StoryboardSprites.GameplayScreenView = screenView;
+        StoryboardSprites.Script = this;
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
@@ -54,6 +61,7 @@ public class StoryboardScript
             new HitObjectInfoProxy(hitObjectInfo));
         UserData.RegisterProxyType<TimingPointInfoProxy, TimingPointInfo>(
             tp => new TimingPointInfoProxy(tp));
+        UserData.RegisterProxyType<SpriteProxy, Sprite>(s => new SpriteProxy(s));
 
 
         RegisterAllVectors();
@@ -64,7 +72,7 @@ public class StoryboardScript
     public void LoadScript()
     {
         State = new LuaStoryboardState();
-        WorkingScript = new MoonSharp.Interpreter.Script(CoreModules.Preset_HardSandbox);
+        WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
         WorkingScript.Globals["actions"] = ActionManager;
         WorkingScript.Globals["states"] = State;
@@ -72,6 +80,7 @@ public class StoryboardScript
         WorkingScript.Globals["easing"] = typeof(Easing);
         WorkingScript.Globals["constants"] = StoryboardConstants;
         WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
+        WorkingScript.Globals["sprites"] = StoryboardSprites;
 
         try
         {
@@ -88,6 +97,10 @@ public class StoryboardScript
             WorkingScript.DoString(ScriptText, codeFriendlyName: Path.GetFileName(FilePath));
         }
         catch (ScriptRuntimeException e)
+        {
+            Logger.Error(e.DecoratedMessage, LogType.Runtime);
+        }
+        catch (SyntaxErrorException e)
         {
             Logger.Error(e.DecoratedMessage, LogType.Runtime);
         }
