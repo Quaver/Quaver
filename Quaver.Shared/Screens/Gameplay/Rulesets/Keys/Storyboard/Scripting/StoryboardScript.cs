@@ -62,6 +62,8 @@ public class StoryboardScript
         UserData.RegisterProxyType<TimingPointInfoProxy, TimingPointInfo>(
             tp => new TimingPointInfoProxy(tp));
         UserData.RegisterProxyType<SpriteProxy, Sprite>(s => new SpriteProxy(s));
+        UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
+        UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
 
 
         RegisterAllVectors();

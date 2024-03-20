@@ -4,36 +4,24 @@ using Wobble.Graphics.Sprites;
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
 
 // TODO decide if this should be included
-public class SpriteProxy
+public class SpriteProxy : DrawableProxy
 {
-    private readonly Sprite _sprite;
+    private readonly Sprite _container;
 
-    public SpriteProxy(Sprite sprite)
+    public SpriteProxy(Sprite container) : base(container)
     {
-        _sprite = sprite;
+        _container = container;
     }
-
-    public ScalableVector2 Position
-    {
-        get => _sprite.Position;
-        set => _sprite.Position = value;
-    }
-
-    public ScalableVector2 Size
-    {
-        get => _sprite.Size;
-        set => _sprite.Size = value;
-    }
-
+    
     public float Rotation
     {
-        get => _sprite.Rotation;
-        set => _sprite.Rotation = value;
+        get => _container.Rotation;
+        set => _container.Rotation = value;
     }
 
     public float Alpha
     {
-        get => _sprite.Alpha;
-        set => _sprite.Alpha = value;
+        get => _container.Alpha;
+        set => _container.Alpha = value;
     }
 }
