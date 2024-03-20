@@ -33,6 +33,7 @@ public class StoryboardScript
     public StoryboardConstants StoryboardConstants { get; set; }
     
     public StoryboardSprites StoryboardSprites { get; set; }
+    public StoryboardTextures StoryboardTextures { get; set; }
 
     public StoryboardScript(string path, GameplayScreenView screenView)
     {
@@ -52,6 +53,8 @@ public class StoryboardScript
         StoryboardSprites = new StoryboardSprites();
         StoryboardSprites.GameplayScreenView = screenView;
         StoryboardSprites.Script = this;
+
+        StoryboardTextures = new StoryboardTextures(screenView, this);
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
@@ -85,6 +88,7 @@ public class StoryboardScript
         WorkingScript.Globals["constants"] = StoryboardConstants;
         WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
         WorkingScript.Globals["sprites"] = StoryboardSprites;
+        WorkingScript.Globals["textures"] = StoryboardTextures;
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try
