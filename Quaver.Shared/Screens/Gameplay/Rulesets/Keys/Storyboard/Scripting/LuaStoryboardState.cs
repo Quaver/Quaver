@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Numerics;
 using MoonSharp.Interpreter;
-using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps.Structures;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 
 [MoonSharpUserData]
 public class LuaStoryboardState

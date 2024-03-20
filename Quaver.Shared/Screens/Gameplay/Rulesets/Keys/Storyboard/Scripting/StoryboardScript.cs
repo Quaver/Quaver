@@ -14,11 +14,11 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 
 public class StoryboardScript
 {
-    public Script WorkingScript { get; set; }
+    public MoonSharp.Interpreter.Script WorkingScript { get; set; }
     protected string FilePath { get; set; }
     protected bool IsResource { get; set; }
     protected string ScriptText { get; set; }
@@ -64,7 +64,7 @@ public class StoryboardScript
     public void LoadScript()
     {
         State = new LuaStoryboardState();
-        WorkingScript = new Script(CoreModules.Preset_HardSandbox);
+        WorkingScript = new MoonSharp.Interpreter.Script(CoreModules.Preset_HardSandbox);
 
         WorkingScript.Globals["actions"] = ActionManager;
         WorkingScript.Globals["states"] = State;
@@ -111,7 +111,7 @@ public class StoryboardScript
     private void RegisterAllVectors()
     {
         // Vector 2
-        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector2),
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector2),
             dynVal =>
             {
                 var table = dynVal.Table;
@@ -121,7 +121,7 @@ public class StoryboardScript
             }
         );
 
-        Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
             (script, vector) =>
             {
                 var x = DynValue.NewNumber(vector.X);
@@ -132,7 +132,7 @@ public class StoryboardScript
         );
 
         // Scalable Vector 2
-        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(ScalableVector2),
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(ScalableVector2),
             dynVal =>
             {
                 var table = dynVal.Table;
@@ -144,7 +144,7 @@ public class StoryboardScript
             }
         );
 
-        Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<ScalableVector2>(
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<ScalableVector2>(
             (script, vector) =>
             {
                 var x = DynValue.NewNumber(vector.X.Value);
@@ -157,7 +157,7 @@ public class StoryboardScript
         );
 
         // Vector3
-        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector3),
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector3),
             dynVal =>
             {
                 var table = dynVal.Table;
@@ -168,7 +168,7 @@ public class StoryboardScript
             }
         );
 
-        Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
             (script, vector) =>
             {
                 var x = DynValue.NewNumber(vector.X);
@@ -180,7 +180,7 @@ public class StoryboardScript
         );
 
         // Vector4
-        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector4),
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector4),
             dynVal =>
             {
                 var table = dynVal.Table;
@@ -192,7 +192,7 @@ public class StoryboardScript
             }
         );
 
-        Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
+        MoonSharp.Interpreter.Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
             (script, vector) =>
             {
                 var w = DynValue.NewNumber(vector.W);

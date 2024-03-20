@@ -1,6 +1,7 @@
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;

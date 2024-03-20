@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
-using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
@@ -12,7 +7,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 
 [MoonSharpUserData]
 public class StoryboardActionManager
