@@ -2,6 +2,7 @@ using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
@@ -40,13 +41,13 @@ public class TweenSetters
         return v => sprite.Alpha = v;
     }
     
-    public TweenPayload.SetterDelegate SpriteScaleX(Sprite sprite)
+    public TweenPayload.SetterDelegate SpriteSizeX(Sprite sprite)
     {
-        return v => sprite.WidthScale = v;
+        return v => sprite.Size = new ScalableVector2(v, sprite.Size.Y.Value);
     }
-    public TweenPayload.SetterDelegate SpriteScaleY(Sprite sprite)
+    public TweenPayload.SetterDelegate SpriteSizeY(Sprite sprite)
     {
-        return v => sprite.HeightScale = v;
+        return v => sprite.Size = new ScalableVector2(sprite.Size.X.Value, v);
     }
     
     public TweenPayload.SetterDelegate ReceptorX(int lane)
