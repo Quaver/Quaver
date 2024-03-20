@@ -23,40 +23,30 @@ public class TweenSetters
     public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
 
 
-    public TweenPayload.SetterDelegate SpriteX(Sprite sprite)
+    public TweenPayload.SetterDelegate X(Drawable drawable)
     {
-        return v => sprite.X = v;
+        return v => drawable.X = v;
     }
-    public TweenPayload.SetterDelegate SpriteY(Sprite sprite)
+    public TweenPayload.SetterDelegate Y(Drawable drawable)
     {
-        return v => sprite.Y = v;
+        return v => drawable.Y = v;
     }
-    public TweenPayload.SetterDelegate SpriteRotation(Sprite sprite)
+    public TweenPayload.SetterDelegate Rotation(Sprite sprite)
     {
         return v => sprite.Rotation = v;
     }
     
-    public TweenPayload.SetterDelegate SpriteAlpha(Sprite sprite)
+    public TweenPayload.SetterDelegate Alpha(Sprite sprite)
     {
         return v => sprite.Alpha = v;
     }
     
-    public TweenPayload.SetterDelegate SpriteSizeX(Sprite sprite)
+    public TweenPayload.SetterDelegate SizeX(Drawable drawable)
     {
-        return v => sprite.Size = new ScalableVector2(v, sprite.Size.Y.Value);
+        return v => drawable.Size = new ScalableVector2(v, drawable.Size.Y.Value);
     }
-    public TweenPayload.SetterDelegate SpriteSizeY(Sprite sprite)
+    public TweenPayload.SetterDelegate SizeY(Drawable drawable)
     {
-        return v => sprite.Size = new ScalableVector2(sprite.Size.X.Value, v);
+        return v => drawable.Size = new ScalableVector2(drawable.Size.X.Value, v);
     }
-    
-    public TweenPayload.SetterDelegate ReceptorX(int lane)
-    {
-        return v => GameplayPlayfieldKeysStage.Receptors[lane - 1].X = v;
-    }
-    public TweenPayload.SetterDelegate ReceptorY(int lane)
-    {
-        return v => GameplayPlayfieldKeysStage.Receptors[lane - 1].Y = v;
-    }
-    
 }
