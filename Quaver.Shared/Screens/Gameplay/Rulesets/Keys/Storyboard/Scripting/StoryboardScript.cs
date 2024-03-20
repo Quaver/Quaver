@@ -3,6 +3,7 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
@@ -64,6 +65,7 @@ public class StoryboardScript
         UserData.RegisterProxyType<SpriteProxy, Sprite>(s => new SpriteProxy(s));
         UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
         UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
+        UserData.RegisterProxyType<Texture2DProxy, Texture2D>(t => new Texture2DProxy(t));
 
 
         RegisterAllVectors();
