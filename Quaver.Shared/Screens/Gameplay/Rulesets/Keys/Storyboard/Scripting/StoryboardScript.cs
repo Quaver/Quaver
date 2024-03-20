@@ -81,6 +81,7 @@ public class StoryboardScript
         WorkingScript.Globals["constants"] = StoryboardConstants;
         WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
         WorkingScript.Globals["sprites"] = StoryboardSprites;
+        WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try
         {
