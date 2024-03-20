@@ -1,8 +1,6 @@
-using System;
 using MoonSharp.Interpreter;
-using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 
 [MoonSharpUserData]
 public class LuaCustomSegmentPayload : ISegmentPayload

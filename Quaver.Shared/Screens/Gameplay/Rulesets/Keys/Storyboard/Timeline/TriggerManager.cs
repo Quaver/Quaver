@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using MoonSharp.Interpreter;
-using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 
 public class TriggerManager : IValueChangeManager
 {

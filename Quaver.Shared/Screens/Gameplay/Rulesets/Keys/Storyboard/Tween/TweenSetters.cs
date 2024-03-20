@@ -1,9 +1,9 @@
-using System;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
 
 [MoonSharpUserData]
 public class TweenSetters
@@ -21,6 +21,11 @@ public class TweenSetters
     public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
 
 
+    public TweenPayload.SetterDelegate SpriteX(Sprite sprite)
+    {
+        return v => sprite.X = v;
+    }
+    
     public TweenPayload.SetterDelegate ReceptorX(int lane)
     {
         return v => GameplayPlayfieldKeysStage.Receptors[lane - 1].X = v;

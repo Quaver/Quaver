@@ -6,6 +6,8 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Logging;
@@ -97,6 +99,40 @@ public class StoryboardActionManager
     /// <param name="startValue"></param>
     /// <param name="endValue"></param>
     /// <param name="setter">A function f(time: float, progress: float) called for updating the value. progress is [0..1] or -1 if weird things happen</param>
+    /// <param name="easingFunction">A function f(startValue: float, endValue: float, progress: float) that returns the value at progress</param>
+    /// <param name="isDynamic"></param>
+    /// <returns></returns>
+    /// <seealso cref="Easing"/>
+    public int SetTweenSegment(int id,
+        int startTime, int endTime,
+        int startValue, int endValue,
+        TweenPayload.SetterDelegate setter,
+        TweenPayload.EasingDelegate easingFunction = null,
+        bool isDynamic = false)
+    {
+        if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
+        return GameplayScreenView.SegmentManager.UpdateSegment(
+            new Segment(id, startTime, endTime,
+                new TweenPayload
+                {
+                    EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
+                    StartValue = startValue,
+                    EndValue = endValue,
+                    Setter = setter
+                }, isDynamic))
+            ? id
+            : -1;
+    }
+
+    /// <summary>
+    ///     Adds a tween segment that allows smooth transition of a value
+    /// </summary>
+    /// <param name="id">ID of the segment</param>
+    /// <param name="startTime"></param>
+    /// <param name="endTime"></param>
+    /// <param name="startValue"></param>
+    /// <param name="endValue"></param>
+    /// <param name="setter">A function f(time: float, progress: float) called for updating the value. progress is [0..1] or -1 if weird things happen</param>
     /// <param name="easing">Easing type</param>
     /// <param name="isDynamic"></param>
     /// <returns></returns>
@@ -105,22 +141,13 @@ public class StoryboardActionManager
         int startTime, int endTime,
         int startValue, int endValue,
         TweenPayload.SetterDelegate setter,
-        Easing easing = Easing.Linear,
+        Easing easing,
         bool isDynamic = false)
     {
-        if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
-        return GameplayScreenView.SegmentManager.UpdateSegment(
-            new Segment(id, startTime, endTime,
-                new TweenPayload
-                {
-                    Easing = easing,
-                    StartValue = startValue,
-                    EndValue = endValue,
-                    Setter = setter
-                }, isDynamic))
-            ? id
-            : -1;
+        return SetTweenSegment(id, startTime, endTime, startValue, endValue, setter,
+            EasingWrapperFunctions.FromEasing(easing), isDynamic);
     }
+
 
     /// <summary>
     ///     Generates a new trigger ID

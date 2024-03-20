@@ -8,6 +8,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;

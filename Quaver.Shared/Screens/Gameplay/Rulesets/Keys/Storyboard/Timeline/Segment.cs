@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 
 public class Segment
 {
