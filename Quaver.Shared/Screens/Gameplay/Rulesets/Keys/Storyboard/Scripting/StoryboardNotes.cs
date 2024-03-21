@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
@@ -20,6 +21,8 @@ public class StoryboardNotes
     public List<GameplayHitObjectKeysInfo> HitObjectInfos => HitObjectManagerKeys.HitObjectInfos;
     public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos => HitObjectManagerKeys.RenderedHitObjectInfos;
     public HitObjectInfo NextHitObject => HitObjectManagerKeys.NextHitObject;
+
+    public List<HitStat> GetHitStat(HitObjectInfo hitObjectInfo) => HitObjectManagerKeys.HitStats[hitObjectInfo];
 
     public List<GameplayHitObjectKeysInfo> AtTime(long time) => HitObjectManagerKeys.SpatialHashMap.GetValues(time);
 }
