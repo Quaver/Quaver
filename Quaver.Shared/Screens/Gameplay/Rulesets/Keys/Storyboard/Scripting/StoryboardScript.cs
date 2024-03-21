@@ -40,21 +40,15 @@ public class StoryboardScript
         FilePath = path;
 
         GameplayScreenView = screenView;
-        ActionManager = new StoryboardActionManager();
-        ActionManager.GameplayScreenView = screenView;
-        ActionManager.Script = this;
+        ActionManager = new StoryboardActionManager(screenView, this);
 
-        TweenSetters = new TweenSetters();
-        TweenSetters.GameplayScreenView = screenView;
-        TweenSetters.Script = this;
+        TweenSetters = new TweenSetters(screenView);
 
         StoryboardConstants = new StoryboardConstants();
-        
-        StoryboardSprites = new StoryboardSprites();
-        StoryboardSprites.GameplayScreenView = screenView;
-        StoryboardSprites.Script = this;
 
-        StoryboardTextures = new StoryboardTextures(screenView, this);
+        StoryboardSprites = new StoryboardSprites(screenView);
+
+        StoryboardTextures = new StoryboardTextures(screenView);
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);

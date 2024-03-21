@@ -23,6 +23,12 @@ public class StoryboardActionManager
     [MoonSharpVisible(false)]
     public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
 
+    public StoryboardActionManager(GameplayScreenView gameplayScreenView, StoryboardScript script)
+    {
+        GameplayScreenView = gameplayScreenView;
+        Script = script;
+    }
+
     /// <summary>
     ///     Keeps calling the updater between the specified time range
     /// </summary>

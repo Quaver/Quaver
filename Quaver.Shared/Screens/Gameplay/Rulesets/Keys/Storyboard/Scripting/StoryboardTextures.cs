@@ -10,28 +10,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 [MoonSharpUserData]
 public class StoryboardTextures
 {
-    [MoonSharpVisible(false)] public GameplayScreenView GameplayScreenView { get; set; }
-
-    [MoonSharpVisible(false)] public StoryboardScript Script { get; set; }
-    [MoonSharpVisible(false)] public GameplayScreen GameplayScreen => GameplayScreenView.Screen;
-
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeys GameplayPlayfieldKeys => (GameplayPlayfieldKeys)GameplayScreen.Ruleset.Playfield;
-
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
+    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
 
 
-    public StoryboardTextures(GameplayScreenView gameplayScreenView, StoryboardScript script)
+    public StoryboardTextures(GameplayScreenView gameplayScreenView)
     {
-        GameplayScreenView = gameplayScreenView;
-        Script = script;
+        Shortcut = new ElementAccessShortcut(gameplayScreenView);
     }
 
     [MoonSharpHidden]
     public string GetTexturePath(string path)
     {
-        return Path.Combine($"{Path.GetDirectoryName(GameplayScreen.Map.GetBackgroundPath())}", path);
+        return Path.Combine($"{Path.GetDirectoryName(Shortcut.GameplayScreen.Map.GetBackgroundPath())}", path);
     }
 
     public Texture2D LoadTexture(string relativePath)

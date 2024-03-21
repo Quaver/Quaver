@@ -10,18 +10,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
 [MoonSharpUserData]
 public class TweenSetters
 {
-    [MoonSharpVisible(false)] public GameplayScreenView GameplayScreenView { get; set; }
+    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
 
-    [MoonSharpVisible(false)] public StoryboardScript Script { get; set; }
-
-    [MoonSharpVisible(false)] public GameplayScreen GameplayScreen => GameplayScreenView.Screen;
-
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeys GameplayPlayfieldKeys => (GameplayPlayfieldKeys)GameplayScreen.Ruleset.Playfield;
-
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
-
+    public TweenSetters(GameplayScreenView gameplayScreenView)
+    {
+        Shortcut = new ElementAccessShortcut(gameplayScreenView);
+    }
 
     public TweenPayload.SetterDelegate X(Drawable drawable)
     {

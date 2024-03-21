@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -10,22 +11,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 [MoonSharpUserData]
 public class StoryboardSprites
 {
-    
-    [MoonSharpVisible(false)] public GameplayScreenView GameplayScreenView { get; set; }
+    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
 
-    [MoonSharpVisible(false)] public StoryboardScript Script { get; set; }
-    [MoonSharpVisible(false)] public GameplayScreen GameplayScreen => GameplayScreenView.Screen;
+    public StoryboardSprites(GameplayScreenView gameplayScreenView)
+    {
+        Shortcut = new ElementAccessShortcut(gameplayScreenView);
+    }
 
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeys GameplayPlayfieldKeys => (GameplayPlayfieldKeys)GameplayScreen.Ruleset.Playfield;
+    public Sprite Receptor(int lane) => Shortcut.GameplayPlayfieldKeysStage.Receptors[lane - 1];
+    public Sprite BgMask => Shortcut.GameplayPlayfieldKeysStage.BgMask;
+    public Sprite Background => Shortcut.GameplayScreenView.Background;
+    public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
 
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
-
-    public Sprite Receptor(int lane) => GameplayPlayfieldKeysStage.Receptors[lane - 1];
-    public Sprite BgMask => GameplayPlayfieldKeysStage.BgMask;
-    public Sprite Background => GameplayScreenView.Background;
-    public Container ForegroundContainer => GameplayPlayfieldKeys.ForegroundContainer;
+    public HitObjectManagerKeys HitObjectManagerKeys => (HitObjectManagerKeys)Shortcut.GameplayScreen.Ruleset.HitObjectManager;
 
     public Sprite CreateSprite(Drawable parent, Texture2D texture2D, ScalableVector2 position, ScalableVector2 size)
     {
