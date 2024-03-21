@@ -11,7 +11,8 @@ public class StoryboardNotes
 {
     [MoonSharpHidden] private ElementAccessShortcut Shortcut { get; set; }
 
-    public HitObjectManagerKeys HitObjectManagerKeys => (HitObjectManagerKeys)Shortcut.GameplayScreen.Ruleset.HitObjectManager;
+    public HitObjectManagerKeys HitObjectManagerKeys =>
+        (HitObjectManagerKeys)Shortcut.GameplayScreen.Ruleset.HitObjectManager;
 
     public StoryboardNotes(GameplayScreenView screenView)
     {
@@ -20,9 +21,32 @@ public class StoryboardNotes
 
     public List<GameplayHitObjectKeysInfo> HitObjectInfos => HitObjectManagerKeys.HitObjectInfos;
     public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos => HitObjectManagerKeys.RenderedHitObjectInfos;
-    public HitObjectInfo NextHitObject => HitObjectManagerKeys.NextHitObject;
 
-    public List<HitStat> GetHitStat(HitObjectInfo hitObjectInfo) => HitObjectManagerKeys.HitStats[hitObjectInfo];
+    public GameplayHitObjectKeysInfo NextHitObjectOnLane(int lane)
+    {
+        return HitObjectManagerKeys.HitObjectQueueLanes[lane - 1].TryPeek(out var peek)
+            ? peek
+            : null;
+    }
 
+    public GameplayHitObjectKeysInfo NextHitObject
+    {
+        get
+        {
+            GameplayHitObjectKeysInfo nextHitObject = null;
+            foreach (var queueLane in HitObjectManagerKeys.HitObjectQueueLanes)
+            {
+                if (!queueLane.TryPeek(out var peek)) continue;
+                if (nextHitObject == null || peek.StartTime < nextHitObject.StartTime)
+                {
+                    nextHitObject = peek;
+                }
+            }
+
+            return nextHitObject;
+        }
+    }
+
+    public bool IsInScreen(GameplayHitObjectKeysInfo info) => RenderedHitObjectInfos.Contains(info);
     public List<GameplayHitObjectKeysInfo> AtTime(long time) => HitObjectManagerKeys.SpatialHashMap.GetValues(time);
 }
