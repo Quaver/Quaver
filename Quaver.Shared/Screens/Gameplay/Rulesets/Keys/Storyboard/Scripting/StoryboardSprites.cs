@@ -22,9 +22,7 @@ public class StoryboardSprites
     public Sprite BgMask => Shortcut.GameplayPlayfieldKeysStage.BgMask;
     public Sprite Background => Shortcut.GameplayScreenView.Background;
     public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
-
-    public HitObjectManagerKeys HitObjectManagerKeys => (HitObjectManagerKeys)Shortcut.GameplayScreen.Ruleset.HitObjectManager;
-
+    
     public Sprite CreateSprite(Drawable parent, Texture2D texture2D, ScalableVector2 position, ScalableVector2 size)
     {
         return new Sprite

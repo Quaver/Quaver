@@ -16,4 +16,9 @@ public class GameplayHitObjectKeysInfoProxy
 
     public HitObjectInfo HitObjectInfo => _info.HitObjectInfo;
     public GameplayHitObjectKeys HitObject => _info.HitObject;
+    
+    public int StartTime => _info.StartTime;
+    public int EndTime => _info.EndTime;
+    public int Lane => _info.Lane;
+    public bool IsLongNote => _info.IsLongNote;
 }

@@ -8,6 +8,7 @@ using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Tween;
 using Wobble;
@@ -31,9 +32,10 @@ public class StoryboardScript
     public TweenSetters TweenSetters { get; set; }
 
     public StoryboardConstants StoryboardConstants { get; set; }
-    
+
     public StoryboardSprites StoryboardSprites { get; set; }
     public StoryboardTextures StoryboardTextures { get; set; }
+    public StoryboardNotes StoryboardNotes { get; set; }
 
     public StoryboardScript(string path, GameplayScreenView screenView)
     {
@@ -50,6 +52,8 @@ public class StoryboardScript
 
         StoryboardTextures = new StoryboardTextures(screenView);
 
+        StoryboardNotes = new StoryboardNotes(screenView);
+
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterType<Easing>();
@@ -63,6 +67,10 @@ public class StoryboardScript
         UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
         UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
         UserData.RegisterProxyType<Texture2DProxy, Texture2D>(t => new Texture2DProxy(t));
+        UserData.RegisterProxyType<GameplayHitObjectKeysProxy, GameplayHitObjectKeys>(s =>
+            new GameplayHitObjectKeysProxy(s));
+        UserData.RegisterProxyType<GameplayHitObjectKeysInfoProxy, GameplayHitObjectKeysInfo>(s =>
+            new GameplayHitObjectKeysInfoProxy(s));
 
 
         RegisterAllVectors();
@@ -83,6 +91,7 @@ public class StoryboardScript
         WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
         WorkingScript.Globals["sprites"] = StoryboardSprites;
         WorkingScript.Globals["textures"] = StoryboardTextures;
+        WorkingScript.Globals["notes"] = StoryboardNotes;
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try
