@@ -1,3 +1,4 @@
+using MoonSharp.Interpreter;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -8,6 +9,7 @@ public class SpriteProxy : DrawableProxy
 {
     private readonly Sprite _container;
 
+    [MoonSharpHidden]
     public SpriteProxy(Sprite container) : base(container)
     {
         _container = container;
