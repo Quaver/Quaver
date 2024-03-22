@@ -33,7 +33,7 @@ public class TriggerManager : IValueChangeManager
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
         {
             var vertex = _vertices[_currentIndex];
-            vertex.Payload.Trigger(curTime, vertex);
+            vertex.Payload.Trigger(vertex);
             if (vertex.IsDynamic)
             {
                 _vertexDictionary.Remove(vertex.Id);
@@ -50,7 +50,7 @@ public class TriggerManager : IValueChangeManager
         while (_currentIndex > 0 && curTime < _vertices[_currentIndex - 1].Time)
         {
             _currentIndex--;
-            _vertices[_currentIndex].Payload.Undo(curTime, _vertices[_currentIndex]);
+            _vertices[_currentIndex].Payload.Undo(_vertices[_currentIndex]);
         }
     }
 
@@ -75,7 +75,7 @@ public class TriggerManager : IValueChangeManager
 
         if (_currentIndex < _vertices.Count && insert <= _currentIndex)
         {
-            vertex.Payload.Trigger(vertex.Time, vertex);
+            vertex.Payload.Trigger(vertex);
             if (vertex.IsDynamic)
             {
                 return true;
@@ -105,7 +105,7 @@ public class TriggerManager : IValueChangeManager
         }
         else
         {
-            vertex.Payload.Undo(vertex.Time, vertex);
+            vertex.Payload.Undo(vertex);
         }
 
         _vertices.RemoveAt(index);

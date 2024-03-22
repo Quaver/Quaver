@@ -73,7 +73,7 @@ public class SegmentManager : IValueChangeManager
             }
         }
 
-        vertex.Payload.Update(vertex.Time, progress);
+        vertex.Payload.Update(progress, segment);
     }
 
     public void Update(int curTime)
@@ -81,7 +81,7 @@ public class SegmentManager : IValueChangeManager
         UpdateIndex(curTime);
         foreach (var (id, segment) in _activeSegments)
         {
-            segment.Payload.Update(curTime, segment.Progress(curTime));
+            segment.Payload.Update(segment.Progress(curTime), segment);
         }
     }
 

@@ -1,14 +1,16 @@
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 
+[MoonSharpUserData]
 public class Segment
 {
-    public int Id { get; set; }
-    public int StartTime { get; set; }
-    public int EndTime { get; set; }
-    public bool IsDynamic { get; set; }
-    public ISegmentPayload Payload { get; set; }
+    public int Id { get; }
+    public int StartTime { get; }
+    public int EndTime { get; }
+    public bool IsDynamic { get; }
+    public ISegmentPayload Payload { get; }
     
     public ValueVertex<ISegmentPayload> StartVertex { get; }
     public ValueVertex<ISegmentPayload> EndVertex { get; }

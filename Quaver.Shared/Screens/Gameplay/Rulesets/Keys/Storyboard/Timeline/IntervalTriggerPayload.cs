@@ -31,20 +31,20 @@ public class IntervalTriggerPayload : ITriggerPayload
     public int CurrentTriggerCount { get; private set; }
 
     [MoonSharpHidden]
-    public void Trigger(int exactTime, ValueVertex<ITriggerPayload> valueVertex)
+    public void Trigger(ValueVertex<ITriggerPayload> valueVertex)
     {
         CurrentTriggerCount++;
         if (CurrentTriggerCount >= TriggerCount) return;
-        OnTrigger?.Invoke(exactTime, valueVertex);
+        OnTrigger?.Invoke(valueVertex);
         UpdateTrigger();
     }
 
     [MoonSharpHidden]
-    public void Undo(int exactTime, ValueVertex<ITriggerPayload> valueVertex)
+    public void Undo(ValueVertex<ITriggerPayload> valueVertex)
     {
         CurrentTriggerCount--;
         if (CurrentTriggerCount < 0) return;
-        OnUndo?.Invoke(exactTime, valueVertex);
+        OnUndo?.Invoke(valueVertex);
         UpdateTrigger();
     }
 

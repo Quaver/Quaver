@@ -13,13 +13,13 @@ public class LuaCustomTriggerPayload: ITriggerPayload
         UndoClosure = undoClosure;
     }
 
-    public void Trigger(int exactTime, ValueVertex<ITriggerPayload> valueVertex)
+    public void Trigger(ValueVertex<ITriggerPayload> valueVertex)
     {
-        TriggerClosure?.Call(exactTime, valueVertex);
+        TriggerClosure?.Call(valueVertex);
     }
 
-    public void Undo(int exactTime, ValueVertex<ITriggerPayload> valueVertex)
+    public void Undo(ValueVertex<ITriggerPayload> valueVertex)
     {
-        UndoClosure?.Call(exactTime, valueVertex);
+        UndoClosure?.Call(valueVertex);
     }
 }

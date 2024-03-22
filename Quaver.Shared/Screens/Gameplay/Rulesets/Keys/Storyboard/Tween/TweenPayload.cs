@@ -10,7 +10,7 @@ public class TweenPayload : ISegmentPayload
     public float EndValue { get; set; }
     public SetterDelegate Setter { get; set; }
     public EasingDelegate EasingFunction { get; set; }
-    public void Update(float curTime, float progress)
+    public void Update(float progress, Segment segment)
     {
         if (progress is < 0 or > 1) return;
         Setter(EasingFunction(StartValue, EndValue, progress));
