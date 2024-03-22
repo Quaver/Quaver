@@ -61,6 +61,27 @@ public class StoryboardActionManager
             : -1;
     }
 
+    public int SetIntervalTrigger(int id, int time, float interval, int count, Closure trigger,
+        Closure undoTrigger = null)
+    {
+        if (id == -1) id = Shortcut.GameplayScreenView.TriggerManager.GenerateNextId();
+        return Shortcut.GameplayScreenView.TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
+        {
+            Id = id,
+            Payload = new IntervalTriggerPayload(Shortcut.GameplayScreenView.TriggerManager,
+                id,
+                time,
+                interval,
+                count,
+                v => trigger.Call(v),
+                v => undoTrigger?.Call(v)),
+            IsDynamic = false,
+            Time = time
+        })
+            ? id
+            : -1;
+    }
+
     /// <summary>
     ///     Adds the segment. If there is already a segment with the ID, removes the segment to add the new one
     /// </summary>
