@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.StateMachine;
 
+[MoonSharpUserData]
 public class StoryboardStateMachine
 {
     private readonly List<StoryboardStateMachineState> _states = new();
@@ -34,13 +36,20 @@ public class StoryboardStateMachine
         ChangeState(IdleStateId);
     }
 
-    public bool RegisterState(StoryboardStateMachineState state)
+    public int RegisterState(StoryboardStateMachineState state)
     {
         state.Id = _states.Count;
         _states.Add(state);
         state.OnInitialize();
         state.OnEnable();
-        return true;
+        return state.Id;
+    }
+    
+    public int RegisterState(Closure updater, Closure onInitialize, Closure onEnable,
+        Closure onDisable)
+    {
+        var state = new StoryboardStateMachineState(updater, onInitialize, onEnable, onDisable);
+        return RegisterState(state);
     }
 
     public void Update()

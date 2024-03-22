@@ -25,7 +25,10 @@ public class StoryboardScript
     protected string FilePath { get; set; }
     protected bool IsResource { get; set; }
     protected string ScriptText { get; set; }
+    
+    protected ElementAccessShortcut Shortcut { get; }
     protected LuaStoryboardState State { get; set; }
+    
 
     protected GameplayScreenView GameplayScreenView { get; set; }
     public StoryboardActionManager ActionManager { get; set; }
@@ -36,12 +39,17 @@ public class StoryboardScript
     public StoryboardSprites StoryboardSprites { get; set; }
     public StoryboardTextures StoryboardTextures { get; set; }
     public StoryboardNotes StoryboardNotes { get; set; }
+    
+    public LuaStoryboardStateMachine LuaStoryboardStateMachine { get; set; }
 
     public StoryboardScript(string path, GameplayScreenView screenView)
     {
         FilePath = path;
 
         GameplayScreenView = screenView;
+        
+        Shortcut = new ElementAccessShortcut(screenView);
+        
         ActionManager = new StoryboardActionManager(screenView);
 
         TweenSetters = new TweenSetters(screenView);
@@ -53,6 +61,8 @@ public class StoryboardScript
         StoryboardTextures = new StoryboardTextures(screenView);
 
         StoryboardNotes = new StoryboardNotes(screenView);
+
+        LuaStoryboardStateMachine = new LuaStoryboardStateMachine(screenView);
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
@@ -92,6 +102,7 @@ public class StoryboardScript
         WorkingScript.Globals["sprites"] = StoryboardSprites;
         WorkingScript.Globals["textures"] = StoryboardTextures;
         WorkingScript.Globals["notes"] = StoryboardNotes;
+        WorkingScript.Globals["sm"] = LuaStoryboardStateMachine;
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try
