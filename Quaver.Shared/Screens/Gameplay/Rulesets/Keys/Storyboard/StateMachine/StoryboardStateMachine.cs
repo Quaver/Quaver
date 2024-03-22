@@ -45,10 +45,10 @@ public class StoryboardStateMachine
         return state.Id;
     }
     
-    public int RegisterState(Closure updater, Closure onInitialize, Closure onEnable,
+    public int RegisterState(Closure onInitialize, Closure updater,  Closure onEnable,
         Closure onDisable)
     {
-        var state = new StoryboardStateMachineState(updater, onInitialize, onEnable, onDisable);
+        var state = new StoryboardStateMachineState(onInitialize, updater, onEnable, onDisable);
         return RegisterState(state);
     }
 

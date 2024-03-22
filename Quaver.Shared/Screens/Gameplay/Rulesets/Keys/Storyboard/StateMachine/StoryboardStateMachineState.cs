@@ -22,7 +22,7 @@ public class StoryboardStateMachineState
     
     public OnDisableDelegate OnDisable { get; set; }
 
-    public StoryboardStateMachineState(UpdateDelegate update, OnInitializeDelegate onInitialize, OnEnableDelegate onEnable, OnDisableDelegate onDisable)
+    public StoryboardStateMachineState(OnInitializeDelegate onInitialize, UpdateDelegate update,  OnEnableDelegate onEnable, OnDisableDelegate onDisable)
     {
         Id = -2;
         Update = update;
@@ -31,7 +31,7 @@ public class StoryboardStateMachineState
         OnDisable = onDisable;
     }
 
-    public StoryboardStateMachineState(Closure updater, Closure onInitialize, Closure onEnable, Closure onDisable)
+    public StoryboardStateMachineState(Closure onInitialize, Closure updater, Closure onEnable, Closure onDisable)
     {
         Id = -2;
         Update = () => updater.Call().ToObject<int>();
