@@ -8,6 +8,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Graphics.Notifications;
@@ -42,6 +44,36 @@ namespace Quaver.Shared.Online.Chat
                 case "help":
                     ExecuteHelpCommand();
                     break;
+                case "server":
+                    ExecuteServerCommand(args);
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Executes the `/server {server}` command.
+        ///
+        ///     Switches the server endpoint
+        /// </summary>
+        public async static void ExecuteServerCommand(string[] args)
+        {
+            if (args.Length > 1)
+            {
+                var server = args[1];
+
+                NotificationManager.Show(NotificationLevel.Info, $"Switching to {server}");
+
+                OnlineClient.SERVER_ENDPOINT = server;
+
+                OnlineManager.Client?.Disconnect();
+
+                await Task.Delay(1000);
+
+                OnlineManager.Login();
+            }
+            else
+            {
+                SendMessage(OnlineChat.Instance.ActiveChannel.Value, $"No server provided!");
             }
         }
 
