@@ -6,16 +6,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 public class LuaCustomSegmentPayload : ISegmentPayload
 {
     public Closure Updater { get; set; }
-    public Script Script { get; set; }
 
-    public LuaCustomSegmentPayload(Closure updater, Script script)
+    public LuaCustomSegmentPayload(Closure updater)
     {
         Updater = updater;
-        Script = script;
     }
 
     public void Update(float curTime, float progress)
     {
-        Script.Call(Updater, curTime, progress);
+        Updater.Call(curTime, progress);
     }
 }

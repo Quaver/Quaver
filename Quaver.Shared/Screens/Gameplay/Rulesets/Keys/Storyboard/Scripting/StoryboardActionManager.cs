@@ -12,21 +12,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 [MoonSharpUserData]
 public class StoryboardActionManager
 {
-    [MoonSharpVisible(false)] public GameplayScreenView GameplayScreenView { get; set; }
+    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
 
-    [MoonSharpVisible(false)] public StoryboardScript Script { get; set; }
-    [MoonSharpVisible(false)] public GameplayScreen GameplayScreen => GameplayScreenView.Screen;
-
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeys GameplayPlayfieldKeys => (GameplayPlayfieldKeys)GameplayScreen.Ruleset.Playfield;
-
-    [MoonSharpVisible(false)]
-    public GameplayPlayfieldKeysStage GameplayPlayfieldKeysStage => GameplayPlayfieldKeys.Stage;
-
-    public StoryboardActionManager(GameplayScreenView gameplayScreenView, StoryboardScript script)
+    public StoryboardActionManager(GameplayScreenView gameplayScreenView)
     {
-        GameplayScreenView = gameplayScreenView;
-        Script = script;
+        Shortcut = new ElementAccessShortcut(gameplayScreenView);
     }
 
     /// <summary>
@@ -40,9 +30,9 @@ public class StoryboardActionManager
     /// <returns>The ID for the segment. -1 if there's already a segment with the id specified</returns>
     public int AddCustomSegment(int id, int startTime, int endTime, Closure updater, bool isDynamic = false)
     {
-        if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
-        return GameplayScreenView.SegmentManager.Add(new Segment(id, startTime, endTime,
-            new LuaCustomSegmentPayload(updater, Script.WorkingScript), isDynamic))
+        if (id == -1) id = Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
+        return Shortcut.GameplayScreenView.SegmentManager.Add(new Segment(id, startTime, endTime,
+            new LuaCustomSegmentPayload(updater), isDynamic))
             ? id
             : -1;
     }
@@ -59,11 +49,11 @@ public class StoryboardActionManager
     public int SetCustomTrigger(int id, int time, Closure trigger, Closure undoTrigger = null,
         bool isDynamic = false)
     {
-        if (id == -1) id = GameplayScreenView.TriggerManager.GenerateNextId();
-        return GameplayScreenView.TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
+        if (id == -1) id = Shortcut.GameplayScreenView.TriggerManager.GenerateNextId();
+        return Shortcut.GameplayScreenView.TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
         {
             Id = id,
-            Payload = new LuaCustomTriggerPayload(Script.WorkingScript, trigger, undoTrigger),
+            Payload = new LuaCustomTriggerPayload(trigger, undoTrigger),
             IsDynamic = isDynamic,
             Time = time
         })
@@ -83,10 +73,10 @@ public class StoryboardActionManager
     /// <returns></returns>
     public int SetCustomSegment(int id, int startTime, int endTime, Closure updater, bool isDynamic = false)
     {
-        if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
-        return GameplayScreenView.SegmentManager.UpdateSegment(
+        if (id == -1) id = Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
+        return Shortcut.GameplayScreenView.SegmentManager.UpdateSegment(
             new Segment(id, startTime, endTime,
-                new LuaCustomSegmentPayload(updater, Script.WorkingScript), isDynamic))
+                new LuaCustomSegmentPayload(updater), isDynamic))
             ? id
             : 0;
     }
@@ -111,8 +101,8 @@ public class StoryboardActionManager
         TweenPayload.EasingDelegate easingFunction = null,
         bool isDynamic = false)
     {
-        if (id == -1) id = GameplayScreenView.SegmentManager.GenerateNextId();
-        return GameplayScreenView.SegmentManager.UpdateSegment(
+        if (id == -1) id = Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
+        return Shortcut.GameplayScreenView.SegmentManager.UpdateSegment(
             new Segment(id, startTime, endTime,
                 new TweenPayload
                 {
@@ -154,25 +144,25 @@ public class StoryboardActionManager
     ///     Generates a new trigger ID
     /// </summary>
     /// <returns></returns>
-    public int GenerateTriggerId() => GameplayScreenView.TriggerManager.GenerateNextId();
+    public int GenerateTriggerId() => Shortcut.GameplayScreenView.TriggerManager.GenerateNextId();
 
     /// <summary>
     ///     Generates a new segment ID
     /// </summary>
     /// <returns></returns>
-    public int GenerateSegmentId() => GameplayScreenView.SegmentManager.GenerateNextId();
+    public int GenerateSegmentId() => Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
 
     /// <summary>
     ///     Width of lane (receptor alone)
     /// </summary>
     /// <returns></returns>
-    public float LaneSize => GameplayPlayfieldKeys.LaneSize;
+    public float LaneSize => Shortcut.GameplayPlayfieldKeys.LaneSize;
 
     /// <summary>
     ///     Padding of receptor
     /// </summary>
     /// <returns></returns>
-    public float ReceptorPadding => GameplayPlayfieldKeys.ReceptorPadding;
+    public float ReceptorPadding => Shortcut.GameplayPlayfieldKeys.ReceptorPadding;
 
     /// <summary>
     ///     Separation between lanes
@@ -186,10 +176,10 @@ public class StoryboardActionManager
     /// <returns>Scalable vector (x, y, scale_x, scale_y) for each receptor</returns>
     public ScalableVector2[] GetReceptorPositions()
     {
-        var positions = new ScalableVector2[GameplayScreen.Map.GetKeyCount()];
-        for (var i = 0; i < GameplayScreen.Map.GetKeyCount(); i++)
+        var positions = new ScalableVector2[Shortcut.GameplayScreen.Map.GetKeyCount()];
+        for (var i = 0; i < Shortcut.GameplayScreen.Map.GetKeyCount(); i++)
         {
-            positions[i] = GameplayPlayfieldKeysStage.Receptors[i].Position;
+            positions[i] = Shortcut.GameplayPlayfieldKeysStage.Receptors[i].Position;
         }
 
         return positions;
@@ -202,7 +192,7 @@ public class StoryboardActionManager
     /// <param name="pos"></param>
     public void SetReceptorPosition(int lane, ScalableVector2 pos)
     {
-        GameplayPlayfieldKeysStage.Receptors[lane - 1].Position = pos;
+        Shortcut.GameplayPlayfieldKeysStage.Receptors[lane - 1].Position = pos;
     }
 
     /// <summary>

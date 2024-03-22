@@ -42,7 +42,7 @@ public class StoryboardScript
         FilePath = path;
 
         GameplayScreenView = screenView;
-        ActionManager = new StoryboardActionManager(screenView, this);
+        ActionManager = new StoryboardActionManager(screenView);
 
         TweenSetters = new TweenSetters(screenView);
 
@@ -122,9 +122,9 @@ public class StoryboardScript
         }
     }
 
-    public void Update()
+    public void Update(int time)
     {
-        State.SongTime = GameplayScreenView.Screen.Timing.Time;
+        State.SongTime = time;
         State.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         State.CurrentTimingPoint = GameplayScreenView.Screen.Map.GetTimingPointAt(State.SongTime);
         State.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
