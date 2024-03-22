@@ -10,7 +10,7 @@ public class StoryboardStateMachine
     private readonly List<IStateMachineState> _states = new();
 
     public const int IdleStateId = -1;
-    public int CurrentStateId { get; set; } = IdleStateId;
+    public int CurrentStateId { get; private set; } = IdleStateId;
     
     public void ChangeState(int id)
     {
