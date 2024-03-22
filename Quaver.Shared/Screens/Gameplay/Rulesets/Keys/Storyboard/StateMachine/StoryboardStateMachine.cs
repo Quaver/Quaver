@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.StateMachine;
 [MoonSharpUserData]
 public class StoryboardStateMachine
 {
-    private readonly List<StoryboardStateMachineState> _states = new();
+    private readonly List<IStateMachineState> _states = new();
 
     public const int IdleStateId = -1;
     public int CurrentStateId { get; set; } = IdleStateId;
@@ -36,7 +36,7 @@ public class StoryboardStateMachine
         ChangeState(IdleStateId);
     }
 
-    public int RegisterState(StoryboardStateMachineState state)
+    public int RegisterState(IStateMachineState state)
     {
         state.Id = _states.Count;
         _states.Add(state);
@@ -48,7 +48,7 @@ public class StoryboardStateMachine
     public int RegisterState(Closure onInitialize, Closure updater,  Closure onEnable,
         Closure onDisable)
     {
-        var state = new StoryboardStateMachineState(onInitialize, updater, onEnable, onDisable);
+        var state = new LuaStateMachineState(onInitialize, updater, onEnable, onDisable);
         return RegisterState(state);
     }
 
@@ -56,7 +56,7 @@ public class StoryboardStateMachine
     {
         if (CurrentStateId == IdleStateId) return;
         var state = _states[CurrentStateId];
-        var nextStateId = state.Update();
+        var nextStateId = state.OnUpdate();
         if (nextStateId == CurrentStateId) return;
         ChangeState(nextStateId);
     }
