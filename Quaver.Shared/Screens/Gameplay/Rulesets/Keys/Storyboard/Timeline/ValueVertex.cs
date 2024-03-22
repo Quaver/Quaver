@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 
+[MoonSharpUserData]
 public class ValueVertex<T>
 {
-    public int Time { get; set; }
-    public T Payload { get; set; }
-    public int Id { get; set; }
-    public bool IsDynamic { get; set; }
+    public int Time { get; init; }
+    public T Payload { get; init; }
+    public int Id { get; init; }
+    public bool IsDynamic { get; init; }
 
     private sealed class TimeSegmentIdRelationalComparer : IComparer<ValueVertex<T>>
     {
