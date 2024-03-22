@@ -103,7 +103,7 @@ public class TriggerManager : IValueChangeManager
         {
             _currentIndex--;
         }
-        else
+        if (index > _currentIndex)
         {
             vertex.Payload.Undo(vertex);
         }
