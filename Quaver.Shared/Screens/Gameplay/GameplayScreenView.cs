@@ -32,6 +32,7 @@ using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.StateMachine;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
@@ -214,10 +215,13 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public TriggerManager TriggerManager { get; set; }
 
+        public List<StoryboardStateMachine> StoryboardStateMachines { get; set; }
+        
         /// <summary>
         ///     The script loaded that controls the storyboard
         /// </summary>
         public StoryboardScript StoryboardScript { get; set; }
+        
 
         /// <inheritdoc />
         /// <summary>
@@ -246,6 +250,8 @@ namespace Quaver.Shared.Screens.Gameplay
 
             TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
             SegmentManager = new SegmentManager(new ());
+            StoryboardStateMachines = new List<StoryboardStateMachine>();
+            
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
                 StoryboardScript = new StoryboardScript(Screen.Map.GetAnimationScriptPath(), this);
 
@@ -352,9 +358,14 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                StoryboardScript?.Update();
-                SegmentManager.Update((int)Screen.Timing.Time);
-                TriggerManager.Update((int)Screen.Timing.Time);
+                var time = (int)Screen.Timing.Time;
+                StoryboardScript?.Update(time);
+                SegmentManager.Update(time);
+                TriggerManager.Update(time);
+                foreach (var machine in StoryboardStateMachines)
+                {
+                    machine.Update();
+                }
             }
             catch (ScriptRuntimeException e)
             {
