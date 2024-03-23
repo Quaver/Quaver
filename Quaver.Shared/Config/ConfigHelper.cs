@@ -215,6 +215,12 @@ namespace Quaver.Shared.Config
             try
             {
                 var colorSplit = newVal.Split(',');
+
+                if (colorSplit.Length > 3)
+                {
+                    return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]), byte.Parse(colorSplit[3]));
+                }
+
                 return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]));
             }
             catch (Exception)
