@@ -23,11 +23,11 @@ public class TriggerManager : IValueChangeManager
     private void UpdateIndex(int curTime)
     {
         if (_vertices.Count == 0) return;
-        if (curTime < _vertices[0].Time)
-        {
-            _currentIndex = 0;
-            return;
-        }
+        // if (curTime < _vertices[0].Time)
+        // {
+        //     _currentIndex = 0;
+        //     return;
+        // }
 
 
         while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
@@ -59,13 +59,13 @@ public class TriggerManager : IValueChangeManager
         UpdateIndex(curTime);
     }
 
-    public bool UpdateVertex(ValueVertex<ITriggerPayload> vertex)
+    public bool UpdateVertex(ValueVertex<ITriggerPayload> vertex, bool trigger = true)
     {
-        RemoveId(vertex.Id);
-        return AddVertex(vertex);
+        RemoveId(vertex.Id, trigger);
+        return AddVertex(vertex, trigger);
     }
 
-    public bool AddVertex(ValueVertex<ITriggerPayload> vertex)
+    public bool AddVertex(ValueVertex<ITriggerPayload> vertex, bool trigger = true)
     {
         if (vertex.Id >= _nextId) return false; // No
         if (_vertexDictionary.ContainsKey(vertex.Id)) return false;
@@ -73,9 +73,9 @@ public class TriggerManager : IValueChangeManager
         if (insert < 0)
             insert = ~insert;
 
-        if (_currentIndex < _vertices.Count && insert <= _currentIndex)
+        if (_currentIndex <= _vertices.Count && insert < _currentIndex)
         {
-            vertex.Payload.Trigger(vertex);
+            if (trigger) vertex.Payload.Trigger(vertex);
             if (vertex.IsDynamic)
             {
                 return true;
@@ -88,24 +88,21 @@ public class TriggerManager : IValueChangeManager
         return _vertexDictionary.TryAdd(vertex.Id, vertex);
     }
 
-    public bool RemoveId(int id)
+    public bool RemoveId(int id, bool trigger = true)
     {
         if (id >= _nextId) return false; // No
-        return _vertexDictionary.ContainsKey(id) && RemoveVertex(_vertexDictionary[id]);
+        return _vertexDictionary.ContainsKey(id) && RemoveVertex(_vertexDictionary[id], trigger);
     }
 
-    public bool RemoveVertex(ValueVertex<ITriggerPayload> vertex)
+    public bool RemoveVertex(ValueVertex<ITriggerPayload> vertex, bool trigger = true)
     {
         if (vertex.Id >= _nextId) return false; // No
         var index = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
         if (index < 0) return false;
-        if (_currentIndex > 0 && index <= _currentIndex)
+        if (_currentIndex > 0 && index < _currentIndex)
         {
             _currentIndex--;
-        }
-        if (index > _currentIndex)
-        {
-            vertex.Payload.Undo(vertex);
+            if (trigger) vertex.Payload.Undo(vertex);
         }
 
         _vertices.RemoveAt(index);
