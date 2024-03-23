@@ -66,9 +66,9 @@ namespace Quaver.Shared.Online.Chat
 
                 OnlineClient.SERVER_ENDPOINT = server;
 
-                OnlineManager.Client.Disconnect();
-
                 OnlineManager.Client.OnDisconnection += OnDisconnection;
+
+                OnlineManager.Client.Disconnect();
             }
             else
             {
