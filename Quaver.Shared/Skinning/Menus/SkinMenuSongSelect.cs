@@ -54,6 +54,10 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Color? PersonalBestRankColor { get; private set; }
 
+        public Texture2D SelectFilterPanelRight { get; private set; }
+
+        public Texture2D SelectFilterPanelLeft { get; private set; }
+
         #region MAPSET
 
         public Texture2D MapsetSelected { get; private set; }
@@ -194,6 +198,8 @@ namespace Quaver.Shared.Skinning.Menus
             StatusVarious = LoadSkinElement(folder, "status-various.png");
             LeaderboardPanel = LoadSkinElement(folder, "leaderboard-panel.png");
             PersonalBestPanel = LoadSkinElement(folder, "personalbest-panel.png");
+            SelectFilterPanelRight = LoadSkinElement(folder, "select-filter-panel-right.png");
+            SelectFilterPanelLeft = LoadSkinElement(folder, "select-filter-panel-left.png");
         }
     }
 }
