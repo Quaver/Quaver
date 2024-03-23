@@ -55,9 +55,9 @@ namespace Quaver.Shared.Online.Chat
         ///
         ///     Switches the server endpoint
         /// </summary>
-        public async static void ExecuteServerCommand(string[] args)
+        public static void ExecuteServerCommand(string[] args)
         {
-            if (args.Length > 1)
+            if (args.Length > 1 && OnlineManager.Client != null)
             {
                 var server = args[1];
 
@@ -65,11 +65,13 @@ namespace Quaver.Shared.Online.Chat
 
                 OnlineClient.SERVER_ENDPOINT = server;
 
-                OnlineManager.Client?.Disconnect();
+                OnlineManager.Client.Disconnect();
 
-                await Task.Delay(1000);
-
-                OnlineManager.Login();
+                OnlineManager.Client.OnDisconnection += async (sender, eventArgs) =>
+                {
+                    await Task.Delay(500);
+                    OnlineManager.Login();
+                };
             }
             else
             {
