@@ -86,6 +86,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D StatusStepmania { get; private set; }
 
+        public Texture2D StatusVarious { get; private set; }
+
  #endregion
 
 #region LEADERBOARD
@@ -189,6 +191,7 @@ namespace Quaver.Shared.Skinning.Menus
             StatusRanked = LoadSkinElement(folder, "status-ranked.png");
             StatusOsu = LoadSkinElement(folder, "status-osu.png");
             StatusStepmania = LoadSkinElement(folder, "status-sm.png");
+            StatusVarious = LoadSkinElement(folder, "status-various.png");
             LeaderboardPanel = LoadSkinElement(folder, "leaderboard-panel.png");
             PersonalBestPanel = LoadSkinElement(folder, "personalbest-panel.png");
         }
