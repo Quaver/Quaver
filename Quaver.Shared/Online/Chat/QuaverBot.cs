@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Quaver.Server.Client;
+using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Graphics.Notifications;
@@ -67,11 +68,7 @@ namespace Quaver.Shared.Online.Chat
 
                 OnlineManager.Client.Disconnect();
 
-                OnlineManager.Client.OnDisconnection += async (sender, eventArgs) =>
-                {
-                    await Task.Delay(500);
-                    OnlineManager.Login();
-                };
+                OnlineManager.Client.OnDisconnection += OnDisconnection;
             }
             else
             {
@@ -127,6 +124,13 @@ namespace Quaver.Shared.Online.Chat
             SendMessage(OnlineChat.Instance.ActiveChannel.Value, "Whoa there! Unfortunately you're muted for another: " +
                                              $"{OnlineManager.Self.GetMuteTimeLeftString()}.\n" +
                                             "You won't be able to speak 'till then. Check your profile for more details.");
+        }
+
+        private static async void OnDisconnection(object sender, DisconnectedEventArgs e)
+        {
+            await Task.Delay(500);
+            OnlineManager.Login();
+            OnlineManager.Client.OnDisconnection -= OnDisconnection;
         }
     }
 }
