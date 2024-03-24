@@ -377,7 +377,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             }
 
             if (Playlist.Item.Maps.Any(o => o.RankedStatus != Playlist.Item.Maps.First().RankedStatus))
-                return UserInterface.StatusVarious;
+                return SkinManager.Skin?.SongSelect?.StatusVarious ?? UserInterface.StatusVarious;
 
             switch (Playlist.Item.Maps.Max(x => x.RankedStatus))
             {

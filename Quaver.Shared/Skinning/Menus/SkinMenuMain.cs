@@ -47,6 +47,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Color? JukeboxProgressBarColor { get; private set; }
 
+        public Texture2D LogoBackground { get; private set; }
+
         public SkinMenuMain(SkinStore store, IniData config) : base(store, config)
         {
         }
@@ -104,6 +106,7 @@ namespace Quaver.Shared.Skinning.Menus
             NewsPanel = LoadSkinElement(folder, "news-panel.png");
             JukeboxOverlay = LoadSkinElement(folder, "jukebox-overlay.png");
             NoteVisualizer = LoadSkinElement(folder, "note-visualizer.png");
+            LogoBackground = LoadSkinElement(folder, "logo-background.png");
         }
     }
 }

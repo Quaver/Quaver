@@ -32,6 +32,7 @@ namespace Quaver.Shared.Discord
 		[System.Serializable]
 		public struct RichPresence
 		{
+			public const int MaxStateLength = 128, MaxDetailsLength = 128;
 			public string State; /* max 128 bytes */
 			public string Details; /* max 128 bytes */
 			public long StartTimestamp;

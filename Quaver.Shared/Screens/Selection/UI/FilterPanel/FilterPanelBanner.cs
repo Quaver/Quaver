@@ -4,6 +4,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -82,7 +83,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             {
                 Parent = this,
                 Size = Size,
-                Image = UserInterface.FilterPanelGradient
+                Image = SkinManager.Skin?.SongSelect?.SelectFilterPanelLeft ?? UserInterface.FilterPanelGradient
             };
         }
 
