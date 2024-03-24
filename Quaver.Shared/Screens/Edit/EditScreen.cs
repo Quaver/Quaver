@@ -29,6 +29,7 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
@@ -482,6 +483,7 @@ namespace Quaver.Shared.Screens.Edit
             HandlePlaybackRateChanges();
             HandleTemporaryHitObjectPlacement();
             HandleCtrlInput();
+            HandleAltInput();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
@@ -720,6 +722,27 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private void HandleAltInput()
+        {
+            if (!KeyboardManager.IsAltDown())
+                return;
+            var swapLane1 = -1;
+            var swapLane2 = -1;
+            // Clever way of handing key input with num keys since the enum values are 1 after each other.
+            for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                    swapLane2 = i;
+                else if (KeyboardManager.CurrentState.IsKeyDown(Keys.D1 + i))
+                    swapLane1 = i;
+                if (swapLane1 == -1 || swapLane2 == -1) continue;
+                SwapSelectedObjects(swapLane1 + 1, swapLane2 + 1); // 1-based
+                break;
+            }
+        }
+
+        /// <summary>
+        /// </summary>
         private void HandleCtrlInput()
         {
             if (!KeyboardManager.IsCtrlDown())
@@ -805,7 +828,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (!LiveMapping.Value)
                 return;
-
+            if (KeyboardManager.IsAltDown()) return; // Swapping lanes, not placing objects
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
@@ -1197,6 +1220,20 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+        }
+
+        /// <summary>
+        ///     Swap selected objects' lanes (2 of 4/7 lanes only)
+        /// </summary>
+        public void SwapSelectedObjects(int swapLane1, int swapLane2)
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            ActionManager.Perform(new EditorActionSwapLanes(ActionManager, WorkingMap,
+                new List<HitObjectInfo>(
+                    SelectedHitObjects.Value.Where(h => h.Lane == swapLane1 || h.Lane == swapLane2)),
+                swapLane1, swapLane2));
         }
 
         /// <summary>

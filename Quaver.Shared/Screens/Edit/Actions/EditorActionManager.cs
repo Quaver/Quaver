@@ -20,6 +20,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
@@ -115,6 +116,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of hitobjects have been flipped
         /// </summary>
         public event EventHandler<EditorHitObjectsFlippedEventArgs> HitObjectsFlipped;
+
+
+        /// <summary>
+        ///     Event invoked when a batch of hitobjects have been swapped between 2 lanes
+        /// </summary>
+        public event EventHandler<EditorLanesSwappedEventArgs> LanesSwapped;
 
         /// <summary>
         ///     Event invoked when a batch of hitobjects have been reversed
@@ -647,6 +654,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.FlipHitObjects:
                     HitObjectsFlipped?.Invoke(this, (EditorHitObjectsFlippedEventArgs)args);
                     break;
+                case EditorActionType.SwapLanes:
+                    LanesSwapped?.Invoke(this, (EditorLanesSwappedEventArgs)args);
+                    break;
                 case EditorActionType.MoveHitObjects:
                     HitObjectsMoved?.Invoke(this, (EditorHitObjectsMovedEventArgs)args);
                     break;
@@ -756,6 +766,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             HitObjectBatchRemoved = null;
             HitObjectBatchPlaced = null;
             HitObjectsFlipped = null;
+            LanesSwapped = null;
             HitObjectsMoved = null;
             HitsoundAdded = null;
             HitsoundRemoved = null;

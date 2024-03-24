@@ -12,6 +12,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 
@@ -30,6 +31,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
             ActionManager.HitObjectRemoved += OnHitObjectRemoved;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.LanesSwapped += OnLanesSwapped;
             ActionManager.HitObjectsReversed += OnHitObjectsReversed;
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
@@ -45,6 +47,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
             ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.LanesSwapped -= OnLanesSwapped;
             ActionManager.HitObjectsReversed -= OnHitObjectsReversed;
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
@@ -61,6 +64,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
         private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e) => Refresh();
 
         private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => Refresh();
+
+        private void OnLanesSwapped(object sender, EditorLanesSwappedEventArgs e) => Refresh();
 
         private void OnHitObjectsReversed(object sender, EditorHitObjectsReversedEventArgs e) => Refresh();
 

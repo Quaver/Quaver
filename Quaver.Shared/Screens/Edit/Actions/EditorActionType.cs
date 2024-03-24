@@ -9,6 +9,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         RemoveHitObjectBatch,
         PlaceHitObjectBatch,
         FlipHitObjects,
+        SwapLanes,
         MoveHitObjects,
         AddHitsound,
         RemoveHitsound,
