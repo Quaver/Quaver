@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
@@ -355,12 +356,12 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> HitLighting { get; private set; } = new List<Texture2D>();
+        internal List<List<Texture2D>> NoteHitLighting { get; } = new List<List<Texture2D>>();
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
+        internal List<List<Texture2D>> NoteHoldLighting { get; } = new List<List<Texture2D>>();
 
         // ----- Lane Covers ----- //
 
@@ -546,8 +547,6 @@ namespace Quaver.Shared.Skinning
         {
             #region LIGHTING
             ColumnLighting = LoadTexture(SkinKeysFolder.Lighting, "column-lighting", false);
-            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", false, 0, 0);
-            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", false, 0, 0);
             #endregion
 
             #region STAGE
@@ -675,6 +674,35 @@ namespace Quaver.Shared.Skinning
         private string GetResourcePath(string element) => $"{element}";
 
         /// <summary>
+        ///     Loads hit and holdlights.
+        /// </summary>
+        /// <param name="lightingOjects"></param>
+        /// <param name="type">Either hitlighting or holdlighting</param>
+        /// <param name="lane"></param>
+        /// <returns></returns>
+        private void LoadLighting(List<List<Texture2D>> lightingObjects, string type, int lane)
+        {
+            var mode = ModeHelper.ToShortHand(Mode).ToLower();
+
+            // If the skin supports the gamemode.
+            if (Directory.Exists($"{Store.Dir}/{mode}"))
+            {
+                var folder = $"{Store.Dir}/{mode}/Lighting";
+                var pattern = type + @"-" + lane + @"@\dx\d\.png$";
+
+                // Check for lane-specific lighting.
+                if (Directory.EnumerateFiles(folder).Any(f => Regex.IsMatch(f, pattern)))
+                {
+                    lightingObjects.Add(LoadSpritesheet(SkinKeysFolder.Lighting, $"{type}-{lane}", false, 0, 0));
+                    return;
+                }
+            }
+            // Load normal/legacy lighting if neither previous statements were true.
+            lightingObjects.Add(LoadSpritesheet(SkinKeysFolder.Lighting, type, false, 0, 0));
+        }
+
+
+        /// <summary>
         ///     Loads elements that rely on the lane.
         /// </summary>
         private void LoadLaneSpecificElements()
@@ -718,6 +746,10 @@ namespace Quaver.Shared.Skinning
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{i + 1}", false));
                 NoteReceptorsDown.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-down-{i + 1}", false));
+
+                // Hitlights
+                LoadLighting(NoteHitLighting, "hitlighting", i + 1);
+                LoadLighting(NoteHoldLighting, "holdlighting", i + 1);
 
                 // Editor
                 EditorLayerNoteHitObjects.Add(LoadTexture(SkinKeysFolder.Editor, $"note-hitobject-{i + 1}", false));
