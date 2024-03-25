@@ -29,6 +29,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
                 Tint = ColorHelper.DifficultyToColor(difficulty.OverallDifficulty);
 
             Text = Qua.DifficultyName;
+            TruncateWithEllipsis(Settings.MaxWidth.Value);
         }
     }
 }
