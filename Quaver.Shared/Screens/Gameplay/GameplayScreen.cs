@@ -782,8 +782,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Add the pause mod to their score.
                 if (!ModManager.IsActivated(ModIdentifier.Paused) && Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " +
-                                                                        "during gameplay!", null, true);
+                    if (ConfigManager.DisplayPauseWarning.Value)
+                        NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " + 
+                                                                            "during gameplay!", null, true);
 
                     ModManager.AddMod(ModIdentifier.Paused);
                     ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
