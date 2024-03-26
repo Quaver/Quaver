@@ -124,14 +124,14 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
             // Activate the volume control box.
             if (KeyboardManager.IsUniqueKeyPress(Keys.Up)|| KeyboardManager.IsUniqueKeyPress(Keys.Down) ||
                 KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Right)
-                || MouseManager.CurrentState.ScrollWheelValue != MouseManager.PreviousState.ScrollWheelValue)
+                || MouseManager.IsScrolling)
             {
                 TimeInactive = 0;
             }
 
-            if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue)
+            if (MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value))
                 UpdateVolume(5);
-            else if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
+            else if (MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value))
                 UpdateVolume(-5);
 
             if (KeyboardManager.CurrentState.IsKeyDown(Keys.Right))
