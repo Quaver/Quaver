@@ -215,7 +215,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Enable Tap To Pause", ConfigManager.TapToPause),
                         new OptionsItemCheckbox(containerRect, "Enable Tap To Restart", ConfigManager.TapToRestart),
                         new OptionsItemCheckbox(containerRect, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit),
-                        new OptionsItemCheckbox(containerRect, "Lock Windows Key during gameplay", ConfigManager.LockWinkeyDuringGameplay)
+                        new OptionsItemCheckbox(containerRect, "Lock Windows Key during gameplay", ConfigManager.LockWinkeyDuringGameplay),
+                        new OptionsItemCheckbox(containerRect, "Enable No Fail Upon Death", ConfigManager.AutoNoFail),
                     }),
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {

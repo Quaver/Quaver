@@ -172,7 +172,8 @@ namespace Quaver.Shared.Screens.Gameplay
                               && !OnlineManager.IsSpectatingSomeone
                               && !IsPlayTesting
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
-                              && Ruleset.ScoreProcessor.Health <= 0)
+                              && Ruleset.ScoreProcessor.Health <= 0
+                              && !ConfigManager.AutoNoFail.Value)
                               && !(this is TournamentGameplayScreen)
                               || ForceFail || Ruleset.ScoreProcessor.ForceFail;
 
@@ -195,6 +196,10 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If the user quit the game themselves.
         /// </summary>
         public bool HasQuit { get; set; }
+        /// <summary>
+        ///     If the no-fail mod is added during gameplay, when the player dies
+        /// </summary>
+        public bool IsNoFailAddedInGameplay { get; set; }
 
         /// <summary>
         ///     Flag that dictates if the user is currently restarting the play.
@@ -427,6 +432,10 @@ namespace Quaver.Shared.Screens.Gameplay
             // Remove paused modifier if enabled.
             if (ModManager.IsActivated(ModIdentifier.Paused))
                 ModManager.RemoveMod(ModIdentifier.Paused);
+
+            // Remove NF if enabled upon dying
+            if (IsNoFailAddedInGameplay)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
 
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
@@ -958,8 +967,32 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
-            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+            // NoMiss mod should take priority: gameplay is expected to restart when NM is on
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
                 return;
+            if (!IsNoFailAddedInGameplay
+                && OnlineManager.CurrentGame == null
+                && !OnlineManager.IsSpectatingSomeone
+                && !IsPlayTesting
+                && !IsCalibratingOffset
+                && (!ModManager.IsActivated(ModIdentifier.NoFail)
+                    && Ruleset.ScoreProcessor.Health <= 0
+                    && ConfigManager.AutoNoFail.Value)
+                && !(this is TournamentGameplayScreen)
+                && !ForceFail && !Ruleset.ScoreProcessor.ForceFail)
+            {
+                // Add no fail mod upon dying when AutoNoFail is on.
+                // Add the no fail mod to their score.
+                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to dying " +
+                                                                    "during gameplay!", null, true);
+                ModManager.AddMod(ModIdentifier.NoFail);
+                ReplayCapturer.Replay.Mods |= ModIdentifier.NoFail;
+                Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
+                IsNoFailAddedInGameplay = true;
+            }
+            if (!Failed || FailureHandled)
+                return;
+
 
             try
             {
@@ -1052,6 +1085,10 @@ namespace Quaver.Shared.Screens.Gameplay
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             SkinManager.Skin.SoundRetry.CreateChannel().Play();
             CustomAudioSampleCache.StopAll();
+
+
+            if (IsNoFailAddedInGameplay)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
 
             if (IsPlayTesting)
                 QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor), true);
