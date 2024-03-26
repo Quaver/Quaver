@@ -90,6 +90,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public Sprite LongNoteEndSprite { get; private set; }
 
+        private float MoveWithReceptorY(float y) => y - Playfield.ReceptorPositionY[Info.Lane - 1] +
+                                                    Playfield.Stage.Receptors[Info.Lane - 1].Y;
         /// <summary>
         ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
         /// </summary>
@@ -101,7 +103,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     ? Playfield.HoldHitPositionY[Info.Lane - 1]
                     : Playfield.HitPositionY[Info.Lane - 1];
                 var x = PositionX;
-                return new Vector2(x, y);
+                return new Vector2(x, MoveWithReceptorY(y));
             }
         }
 
@@ -114,7 +116,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 var y = Playfield.HoldEndHitPositionY[Info.Lane - 1];
                 var x = PositionX;
-                return new Vector2(x, y);
+                return new Vector2(x, MoveWithReceptorY(y));
             }
         }
 
