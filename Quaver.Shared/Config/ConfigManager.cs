@@ -911,8 +911,8 @@ namespace Quaver.Shared.Config
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
-            FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
-            CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, 5000, data);
+            FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Custom, data);
+            CustomFpsLimit = ReadInt(@"CustomFpsLimit", 1000, 60, 5000, data);
             SmoothAudioTimingGameplay = ReadValue(@"SmoothAudioTimingGameplay", false, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
