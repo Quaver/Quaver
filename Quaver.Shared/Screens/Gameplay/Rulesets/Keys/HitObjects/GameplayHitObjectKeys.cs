@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
@@ -92,12 +93,30 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
         /// </summary>
-        private float HitPosition { get; set; }
+        private Vector2 HitPosition
+        {
+            get
+            {
+                var y = Info.IsLongNote
+                    ? Playfield.HoldHitPositionY[Info.Lane - 1]
+                    : Playfield.HitPositionY[Info.Lane - 1];
+                var x = PositionX;
+                return new Vector2(x, y);
+            }
+        }
 
         /// <summary>
         ///     Position for LN ends.
         /// </summary>
-        private float HoldEndHitPosition { get; set; }
+        private Vector2 HoldEndHitPosition
+        {
+            get
+            {
+                var y = Playfield.HoldEndHitPositionY[Info.Lane - 1];
+                var x = PositionX;
+                return new Vector2(x, y);
+            }
+        }
 
         /// <summary>
         ///     Difference between the actual LN length and the LN body sprite length.
@@ -126,6 +145,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         private GameplayPlayfieldKeys Playfield => (GameplayPlayfieldKeys)Ruleset.Playfield;
         private float PositionX => Playfield.Stage.Receptors[Info.Lane - 1].X;
+
+        private Vector2 ReceptorUpUnit
+        {
+            get
+            {
+                var receptor = Playfield.Stage.Receptors[Info.Lane - 1];
+                var pos = new Vector2(0, 1).Rotate(receptor.Rotation);
+                if (ScrollDirection == ScrollDirection.Up) pos = -pos;
+                return pos;
+            }
+        }
+
+        private Vector2 Position(Vector2 basePosition, long offset, float initialPos)
+        {
+            var measure = ((initialPos - offset) *
+                (ScrollDirection == ScrollDirection.Down
+                    ? -HitObjectManagerKeys.ScrollSpeed
+                    : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+            return basePosition + measure * ReceptorUpUnit;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -237,8 +276,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void InitializeObject(HitObjectManagerKeys manager, GameplayHitObjectKeysInfo info)
         {
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
-            HoldEndHitPosition = playfield.HoldEndHitPositionY[info.Lane - 1];
             Info = info;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
@@ -351,13 +388,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset, float initialPos) => HitPosition + ((initialPos - offset) * (ScrollDirection == ScrollDirection.Down ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+        public Vector2 GetSpritePosition(long offset, float initialPos) => Position(HitPosition, offset, initialPos);
 
         /// <summary>
         ///     Calculates the position of the end Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetEndSpritePosition(long offset, float initialPos) => HoldEndHitPosition + ((initialPos - offset) * (ScrollDirection == ScrollDirection.Down ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+        public Vector2 GetEndSpritePosition(long offset, float initialPos) => Position(HoldEndHitPosition, offset, initialPos);
 
         /// <summary>
         ///     Updates the earliest and latest track positions as well as the current LN body size.
@@ -408,7 +445,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             //
             // If the LN end is not drawn, don't move the LN start up with time since it ends up sliding above the LN in
             // the end.
-            float spritePosition;
+            Vector2 spritePosition;
 
             if (Info.State == HitObjectState.Held && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
@@ -425,8 +462,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
 
             // Update HitBody
-            HitObjectSprite.Y = spritePosition;
-            HitObjectSprite.X = PositionX;
+            HitObjectSprite.Y = spritePosition.Y;
+            HitObjectSprite.X = spritePosition.X;
 
             PressHit.UpdateSpritePositions(offset);
             ReleaseHit.UpdateSpritePositions(offset);
@@ -441,12 +478,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             
             var earliestSpritePosition = GetSpritePosition(offset, EarliestHeldPosition);
             if (ScrollDirection.Equals(ScrollDirection.Down))
-                LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset - CurrentLongNoteBodySize;
+                earliestSpritePosition += (LongNoteBodyOffset - CurrentLongNoteBodySize) * ReceptorUpUnit;
             else
-                LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset;
+                earliestSpritePosition += LongNoteBodyOffset * ReceptorUpUnit;
+            LongNoteBodySprite.X = earliestSpritePosition.X;
+            LongNoteBodySprite.Y = earliestSpritePosition.Y;
 
-            LongNoteEndSprite.Y = GetEndSpritePosition(offset, LatestHeldPosition);
-            LongNoteEndSprite.X = PositionX;
+            var endSpritePosition = GetEndSpritePosition(offset, LatestHeldPosition);
+            LongNoteEndSprite.Y = endSpritePosition.Y;
+            LongNoteEndSprite.X = endSpritePosition.X;
 
             // Stop drawing LN body + end if the ln reaches half the height of the hitobject
             // (prevents body + end extending below this point)
