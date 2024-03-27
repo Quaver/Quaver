@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
@@ -15,6 +16,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
@@ -74,6 +76,7 @@ public class StoryboardScript
         UserData.RegisterProxyType<TimingPointInfoProxy, TimingPointInfo>(
             tp => new TimingPointInfoProxy(tp));
         UserData.RegisterProxyType<SpriteProxy, Sprite>(s => new SpriteProxy(s));
+        UserData.RegisterProxyType<SpriteTextPlusProxy, SpriteTextPlus>(t => new SpriteTextPlusProxy(t));
         UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
         UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
         UserData.RegisterProxyType<Texture2DProxy, Texture2D>(t => new Texture2DProxy(t));
@@ -103,6 +106,7 @@ public class StoryboardScript
         WorkingScript.Globals["textures"] = StoryboardTextures;
         WorkingScript.Globals["notes"] = StoryboardNotes;
         WorkingScript.Globals["sm"] = LuaStoryboardStateMachine;
+        WorkingScript.Globals["fonts"] = typeof(Fonts);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try

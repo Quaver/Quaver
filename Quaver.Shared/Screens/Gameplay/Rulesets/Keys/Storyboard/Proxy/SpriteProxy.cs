@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -25,5 +26,11 @@ public class SpriteProxy : DrawableProxy
     {
         get => _container.Alpha;
         set => _container.Alpha = value;
+    }
+
+    public Color Tint
+    {
+        get => _container.Tint;
+        set => _container.Tint = value;
     }
 }
