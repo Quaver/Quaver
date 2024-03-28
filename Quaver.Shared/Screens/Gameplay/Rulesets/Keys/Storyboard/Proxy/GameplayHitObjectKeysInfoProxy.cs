@@ -1,6 +1,7 @@
 using MoonSharp.Interpreter;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
 
@@ -21,4 +22,7 @@ public class GameplayHitObjectKeysInfoProxy
     public int EndTime => _info.EndTime;
     public int Lane => _info.Lane;
     public bool IsLongNote => _info.IsLongNote;
+    public Sprite Sprite => _info.HitObject.HitObjectSprite;
+    public Sprite LongNoteBodySprite => _info.HitObject.LongNoteBodySprite;
+    public Sprite LongNoteEndSprite => _info.HitObject.LongNoteEndSprite;
 }
