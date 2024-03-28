@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using System.Numerics;
 using System.Reflection;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using Quaver.API.Maps;
@@ -18,6 +18,9 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Logging;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 
@@ -220,6 +223,31 @@ public class StoryboardScript
                 var y = DynValue.NewNumber(vector.Y);
                 var z = DynValue.NewNumber(vector.Z);
                 var dynVal = DynValue.NewTable(script, x, y, z);
+                return dynVal;
+            }
+        );
+        
+        // Color
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Color),
+            dynVal =>
+            {
+                var table = dynVal.Table;
+                var r = (float)((double)table[1]);
+                var g = (float)((double)table[2]);
+                var b = (float)((double)table[3]);
+                var a = (float)((double)table[4]);
+                return new Color(r, g, b, a);
+            }
+        );
+
+        Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Color>(
+            (script, vector) =>
+            {
+                var r = DynValue.NewNumber(vector.R);
+                var g = DynValue.NewNumber(vector.G);
+                var b = DynValue.NewNumber(vector.B);
+                var a = DynValue.NewNumber(vector.A);
+                var dynVal = DynValue.NewTable(script, r, g, b, a);
                 return dynVal;
             }
         );
