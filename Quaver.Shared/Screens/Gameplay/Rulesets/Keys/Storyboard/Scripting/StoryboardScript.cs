@@ -232,10 +232,10 @@ public class StoryboardScript
             dynVal =>
             {
                 var table = dynVal.Table;
-                var r = (float)((double)table[1]);
-                var g = (float)((double)table[2]);
-                var b = (float)((double)table[3]);
-                var a = (float)((double)table[4]);
+                var r = (byte)(double)table[1];
+                var g = (byte)(double)table[2];
+                var b = (byte)(double)table[3];
+                var a = (byte)(double)table[4];
                 return new Color(r, g, b, a);
             }
         );
