@@ -5,6 +5,8 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
 
@@ -31,6 +33,15 @@ public class StoryboardSprites
             Image = texture2D,
             Position = position,
             Size = size
+        };
+    }
+
+    public SpriteTextPlus CreateText(string fontName, string content, int size, Drawable parent, ScalableVector2 position = default)
+    {
+        return new SpriteTextPlus(FontManager.GetWobbleFont(fontName), content, size)
+        {
+            Parent = parent,
+            Position = position
         };
     }
 }
