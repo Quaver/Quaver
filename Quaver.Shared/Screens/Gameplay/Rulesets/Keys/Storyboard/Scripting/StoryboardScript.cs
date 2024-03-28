@@ -76,6 +76,7 @@ public class StoryboardScript
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterType<Easing>();
+        UserData.RegisterType<Alignment>();
         UserData.RegisterType<TweenPayload.SetterDelegate>();
         UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
         UserData.RegisterProxyType<HitObjectInfoProxy, HitObjectInfo>(hitObjectInfo =>
@@ -115,6 +116,7 @@ public class StoryboardScript
         WorkingScript.Globals["sm"] = LuaStoryboardStateMachine;
         WorkingScript.Globals["fonts"] = typeof(Fonts);
         WorkingScript.Globals["events"] = StoryboardEvents;
+        WorkingScript.Globals["alignment"] = typeof(Alignment);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try

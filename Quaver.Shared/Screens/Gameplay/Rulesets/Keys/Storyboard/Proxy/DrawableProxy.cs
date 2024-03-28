@@ -34,5 +34,11 @@ public class DrawableProxy
         set => _container.Parent = value;
     }
 
+    public Alignment Alignment
+    {
+        get => _container.Alignment;
+        set => _container.Alignment = value;
+    }
+
     public List<Drawable> Children => _container.Children;
 }
