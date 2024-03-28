@@ -42,6 +42,8 @@ public class StoryboardScript
     public StoryboardTextures StoryboardTextures { get; set; }
     public StoryboardNotes StoryboardNotes { get; set; }
     
+    public StoryboardEvents StoryboardEvents { get; set; }
+    
     public LuaStoryboardStateMachine LuaStoryboardStateMachine { get; set; }
 
     public StoryboardScript(string path, GameplayScreenView screenView)
@@ -63,6 +65,8 @@ public class StoryboardScript
         StoryboardTextures = new StoryboardTextures(screenView);
 
         StoryboardNotes = new StoryboardNotes(screenView);
+
+        StoryboardEvents = new StoryboardEvents(screenView);
 
         LuaStoryboardStateMachine = new LuaStoryboardStateMachine(screenView);
 
@@ -107,6 +111,7 @@ public class StoryboardScript
         WorkingScript.Globals["notes"] = StoryboardNotes;
         WorkingScript.Globals["sm"] = LuaStoryboardStateMachine;
         WorkingScript.Globals["fonts"] = typeof(Fonts);
+        WorkingScript.Globals["events"] = StoryboardEvents;
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try
