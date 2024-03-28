@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -19,16 +21,20 @@ public class StoryboardEvents
     internal KeysInputManager InputManager => (KeysInputManager)HitObjectManagerKeys.Ruleset.InputManager;
 
 
-    public event Action<GameplayHitObjectKeysInfo> NoteEntry;
-    public event Action<GameplayHitObjectKeysInfo, int, Judgement> OnKeyPress;
-    public event Action<GameplayHitObjectKeysInfo, int, Judgement> OnKeyRelease;
-    private void CallNoteEntry(GameplayHitObjectKeysInfo info) => NoteEntry?.Invoke(info);
+    public StoryboardEvent NoteEntry = new();
+    public StoryboardEvent KeyPress = new();
+    public StoryboardEvent KeyRelease = new();
+    private void CallNoteEntry(GameplayHitObjectKeysInfo info) => NoteEntry.Invoke(info);
 
-    private void CallOnKeyPress(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement) =>
-        OnKeyPress?.Invoke(info, pressTime, judgement);
+    private void CallOnKeyPress(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
+    {
+        KeyPress.Invoke(info, pressTime, judgement);
+    }
 
-    private void CallOnKeyRelease(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement) =>
-        OnKeyRelease?.Invoke(info, pressTime, judgement);
+    private void CallOnKeyRelease(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
+    {
+        KeyRelease.Invoke(info, pressTime, judgement);
+    }
 
     public StoryboardEvents(GameplayScreenView gameplayScreenView)
     {
