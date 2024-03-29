@@ -5,11 +5,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
 
 public class ContainerProxy : DrawableProxy
 {
-    private Container _container;
+    private Container _drawable;
 
     [MoonSharpHidden]
-    public ContainerProxy(Container container) : base(container)
+    public ContainerProxy(Container drawable) : base(drawable)
     {
-        _container = container;
+        _drawable = drawable;
     }
 }

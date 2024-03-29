@@ -9,9 +9,9 @@ public class AnimatableSpriteProxy : SpriteProxy
 {
     private AnimatableSprite _sprite;
 
-    public AnimatableSpriteProxy(AnimatableSprite container) : base(container)
+    public AnimatableSpriteProxy(AnimatableSprite drawable) : base(drawable)
     {
-        _sprite = container;
+        _sprite = drawable;
     }
 
     public List<Texture2D> Frames => _sprite.Frames;
@@ -27,13 +27,13 @@ public class AnimatableSpriteProxy : SpriteProxy
     }
 
     public int TimesToLoop => _sprite.TimesToLoop;
-    public void ChangeTo(int i) => _sprite.ChangeTo(i);
-    public void ChangeToNext() => _sprite.ChangeToNext();
-    public void ChangeToPrevious() => _sprite.ChangeToPrevious();
+    public void To(int i) => _sprite.ChangeTo(i);
+    public void Next() => _sprite.ChangeToNext();
+    public void Previous() => _sprite.ChangeToPrevious();
 
-    public void StartLoop(Direction direction, int fps, int timesToLoop = 0) =>
+    public void Loop(Direction direction, int fps, int timesToLoop = 0) =>
         _sprite.StartLoop(direction, fps, timesToLoop);
 
-    public void StopLoop() => _sprite.StopLoop();
+    public void EndLoop() => _sprite.StopLoop();
     
 }

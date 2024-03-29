@@ -5,32 +5,37 @@ using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Proxy;
 
-// TODO decide if this should be included
 public class SpriteProxy : DrawableProxy
 {
-    private readonly Sprite _container;
+    private readonly Sprite _drawable;
 
     [MoonSharpHidden]
-    public SpriteProxy(Sprite container) : base(container)
+    public SpriteProxy(Sprite drawable) : base(drawable)
     {
-        _container = container;
+        _drawable = drawable;
+    }
+
+    public Sprite Rotate(float radian)
+    {
+        Rotation += radian;
+        return _drawable;
     }
     
     public float Rotation
     {
-        get => _container.Rotation;
-        set => _container.Rotation = value;
+        get => _drawable.Rotation;
+        set => _drawable.Rotation = value;
     }
 
     public float Alpha
     {
-        get => _container.Alpha;
-        set => _container.Alpha = value;
+        get => _drawable.Alpha;
+        set => _drawable.Alpha = value;
     }
 
     public Color Tint
     {
-        get => _container.Tint;
-        set => _container.Tint = value;
+        get => _drawable.Tint;
+        set => _drawable.Tint = value;
     }
 }
