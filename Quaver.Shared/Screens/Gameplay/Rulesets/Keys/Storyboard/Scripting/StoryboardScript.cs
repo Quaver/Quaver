@@ -43,7 +43,6 @@ public class StoryboardScript
     public StoryboardConstants StoryboardConstants { get; set; }
 
     public StoryboardSprites StoryboardSprites { get; set; }
-    public StoryboardTextures StoryboardTextures { get; set; }
     public StoryboardNotes StoryboardNotes { get; set; }
     
     public StoryboardEvents StoryboardEvents { get; set; }
@@ -65,8 +64,6 @@ public class StoryboardScript
         StoryboardConstants = new StoryboardConstants();
 
         StoryboardSprites = new StoryboardSprites(screenView);
-
-        StoryboardTextures = new StoryboardTextures(screenView);
 
         StoryboardNotes = new StoryboardNotes(screenView);
 
@@ -115,7 +112,6 @@ public class StoryboardScript
         WorkingScript.Globals["constants"] = StoryboardConstants;
         WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
         WorkingScript.Globals["sprites"] = StoryboardSprites;
-        WorkingScript.Globals["textures"] = StoryboardTextures;
         WorkingScript.Globals["notes"] = StoryboardNotes;
         WorkingScript.Globals["sm"] = LuaStoryboardStateMachine;
         WorkingScript.Globals["fonts"] = typeof(Fonts);
