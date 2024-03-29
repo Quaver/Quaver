@@ -132,6 +132,8 @@ public class StoryboardScript
                 ScriptText = File.ReadAllText(FilePath);
             }
 
+            // Update state at start
+            Update(int.MinValue);
             WorkingScript.DoString(ScriptText, codeFriendlyName: Path.GetFileName(FilePath));
         }
         catch (ScriptRuntimeException e)
