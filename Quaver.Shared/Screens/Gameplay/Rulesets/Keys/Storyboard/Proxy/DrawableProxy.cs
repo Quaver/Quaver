@@ -66,6 +66,18 @@ public class DrawableProxy
         set => _drawable.Position = value;
     }
 
+    public float X
+    {
+        get => _drawable.X;
+        set => _drawable.X = value;
+    }
+
+    public float Y
+    {
+        get => _drawable.Y;
+        set => _drawable.Y = value;
+    }
+
     public ScalableVector2 Size
     {
         get => _drawable.Size;
