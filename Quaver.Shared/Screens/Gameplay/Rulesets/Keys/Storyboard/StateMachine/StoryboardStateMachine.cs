@@ -12,7 +12,7 @@ public class StoryboardStateMachine
     public const int IdleStateId = -1;
     public int CurrentStateId { get; private set; } = IdleStateId;
     
-    public void ChangeState(int id)
+    public void To(int id)
     {
         if (CurrentStateId != IdleStateId)
         {
@@ -31,12 +31,12 @@ public class StoryboardStateMachine
         state.OnEnable();
     }
 
-    public void ExitToGlobal()
+    public void Idle()
     {
-        ChangeState(IdleStateId);
+        To(IdleStateId);
     }
 
-    public int RegisterState(IStateMachineState state)
+    public int Register(IStateMachineState state)
     {
         state.Id = _states.Count;
         _states.Add(state);
@@ -44,20 +44,14 @@ public class StoryboardStateMachine
         state.OnEnable();
         return state.Id;
     }
-    
-    public int RegisterState(Closure onInitialize, Closure updater,  Closure onEnable,
-        Closure onDisable)
-    {
-        var state = new LuaStateMachineState(onInitialize, updater, onEnable, onDisable);
-        return RegisterState(state);
-    }
 
+    [MoonSharpHidden]
     public void Update()
     {
         if (CurrentStateId == IdleStateId) return;
         var state = _states[CurrentStateId];
         var nextStateId = state.OnUpdate();
         if (nextStateId == CurrentStateId) return;
-        ChangeState(nextStateId);
+        To(nextStateId);
     }
 }
