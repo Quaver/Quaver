@@ -28,6 +28,7 @@ public class StoryboardSprites
     public Sprite BgMask => Shortcut.GameplayPlayfieldKeysStage.BgMask;
     public Sprite Background => Shortcut.GameplayScreenView.Background;
     public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
+    public Container PlayfieldContainer => Shortcut.GameplayPlayfieldKeys.Container;
     
     
     [MoonSharpHidden]
