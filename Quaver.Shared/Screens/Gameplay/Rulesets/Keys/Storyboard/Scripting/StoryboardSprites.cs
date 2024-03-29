@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
@@ -25,23 +26,26 @@ public class StoryboardSprites
     public Sprite Background => Shortcut.GameplayScreenView.Background;
     public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
     
-    public Sprite CreateSprite(Drawable parent, Texture2D texture2D, ScalableVector2 position, ScalableVector2 size)
+    public Sprite CreateSprite(Texture2D texture2D)
     {
         return new Sprite
         {
-            Parent = parent,
-            Image = texture2D,
-            Position = position,
-            Size = size
+            Image = texture2D
         };
     }
 
-    public SpriteTextPlus CreateText(string fontName, string content, int size, Drawable parent, ScalableVector2 position = default)
+    public SpriteTextPlus CreateText(string fontName, string content, int size)
     {
-        return new SpriteTextPlus(FontManager.GetWobbleFont(fontName), content, size)
-        {
-            Parent = parent,
-            Position = position
-        };
+        return new SpriteTextPlus(FontManager.GetWobbleFont(fontName), content, size);
+    }
+
+    public AnimatableSprite CreateAnimatableSprite(Texture2D spritesheet, int rows, int columns)
+    {
+        return new AnimatableSprite(spritesheet, rows, columns);
+    }
+
+    public AnimatableSprite CreateAnimatableSprite(List<Texture2D> frames)
+    {
+        return new AnimatableSprite(frames);
     }
 }

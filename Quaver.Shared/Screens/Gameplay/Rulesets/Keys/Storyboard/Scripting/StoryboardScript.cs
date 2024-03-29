@@ -79,6 +79,7 @@ public class StoryboardScript
         UserData.RegisterType<Easing>();
         UserData.RegisterType<Alignment>();
         UserData.RegisterType<Judgement>();
+        UserData.RegisterType<Direction>();
         UserData.RegisterType<TweenPayload.SetterDelegate>();
         UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
         UserData.RegisterProxyType<HitObjectInfoProxy, HitObjectInfo>(hitObjectInfo =>
@@ -86,6 +87,7 @@ public class StoryboardScript
         UserData.RegisterProxyType<TimingPointInfoProxy, TimingPointInfo>(
             tp => new TimingPointInfoProxy(tp));
         UserData.RegisterProxyType<SpriteProxy, Sprite>(s => new SpriteProxy(s));
+        UserData.RegisterProxyType<AnimatableSpriteProxy, AnimatableSprite>(s => new AnimatableSpriteProxy(s));
         UserData.RegisterProxyType<SpriteTextPlusProxy, SpriteTextPlus>(t => new SpriteTextPlusProxy(t));
         UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
         UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
@@ -119,6 +121,7 @@ public class StoryboardScript
         WorkingScript.Globals["fonts"] = typeof(Fonts);
         WorkingScript.Globals["events"] = StoryboardEvents;
         WorkingScript.Globals["alignment"] = typeof(Alignment);
+        WorkingScript.Globals["direction"] = typeof(Direction);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try
