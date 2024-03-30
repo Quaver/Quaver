@@ -206,6 +206,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
+                case EditorActionType.AddBookmark:
+                    return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>()); 
+                case EditorActionType.RemoveBookmark:
+                    return new EditorActionRemoveBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>());
+                case EditorActionType.AddBookmarkBatch:
+                    return new EditorActionAddBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>()); 
+                case EditorActionType.RemoveBookmarkBatch:
+                    return new EditorActionRemoveBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>());
+                case EditorActionType.EditBookmark:
+                    return new EditorActionEditBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>(), args[1].ToObject<string>());
+                case EditorActionType.ChangeBookmarkOffsetBatch:
+                    return new EditorActionChangeBookmarkOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>(), args[1].ToObject<int>());
                 case EditorActionType.ResnapHitObjects:
                     return new EditorActionResnapHitObjects(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<int>>(), args[1].ToObject<List<HitObjectInfo>>(), args[2].ToObject<bool>());
                 case EditorActionType.Batch:
