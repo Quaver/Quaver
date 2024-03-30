@@ -10,6 +10,12 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Batch;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
@@ -118,6 +124,22 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 Name = name,
                 Hidden = hidden,
                 ColorRgb = colorRgb
+            };
+
+            return layer;
+        }
+        
+        /// <summary>
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="note"></param>
+        /// <returns></returns>
+        public static BookmarkInfo CreateBookmark(int startTime, string note)
+        {
+            var layer = new BookmarkInfo
+            {
+                StartTime = startTime,
+                Note = note
             };
 
             return layer;
