@@ -286,6 +286,11 @@ namespace Quaver.Shared.Config
         ///     If true, hitsounds in gameplay will be played.
         /// </summary>
         internal static Bindable<bool> EnableHitsounds { get; private set; }
+        
+        /// <summary>
+        ///     If true, a hitsound will be played when releasing a long note
+        /// </summary>
+        internal static Bindable<bool> EnableLongNoteReleaseHitsounds { get; private set; }
 
         /// <summary>
         ///     If true, keysounds in gameplay will be played.
@@ -933,6 +938,7 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
+            EnableLongNoteReleaseHitsounds = ReadValue(@"EnableLongNoteReleaseHitsounds", false, data);
             EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);
             KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
             KeyNavigateRight = ReadValue(@"KeyNavigateRight", Keys.Right, data);

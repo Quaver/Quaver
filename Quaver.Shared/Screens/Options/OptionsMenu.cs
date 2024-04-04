@@ -208,6 +208,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Enable Hitsounds", ConfigManager.EnableHitsounds),
+                        new OptionsItemCheckbox(containerRect, "Enable Long Note Release Hitsounds", ConfigManager.EnableLongNoteReleaseHitsounds),
                         new OptionsItemCheckbox(containerRect, "Enable Keysounds", ConfigManager.EnableKeysounds)
                     }),
                     new OptionsSubcategory("Input", new List<OptionsItem>()
