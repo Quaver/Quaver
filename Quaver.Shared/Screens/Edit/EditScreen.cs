@@ -1513,6 +1513,43 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Switch to another difficulty of the mapset
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="force"></param>
+        public void SwitchToMap(Map map, bool force = false)
+        {
+            if (Map.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "You cannot create new difficulties for maps from other games. Create a new set!");
+
+                return;
+            }
+
+            if (ActionManager.HasUnsavedChanges && !force)
+            {
+                DialogManager.Show(new UnsavedChangesSwitchMapDialog(this, map));
+                return;
+            }
+
+            ThreadScheduler.Run(() =>
+            {
+                try
+                {
+                    var track = AudioEngine.LoadMapAudioTrack(map);
+
+                    Exit(() => new EditScreen(map, track));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while switching difficulty.");
+                }
+            });
+        }
+
+        /// <summary>
         ///     Creates a brand new map and reloads the editor
         /// </summary>
         /// <param name="copyCurrent"></param>
