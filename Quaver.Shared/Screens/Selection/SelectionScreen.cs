@@ -439,6 +439,16 @@ namespace Quaver.Shared.Screens.Selection
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
 
+            // Toggle Mirror
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
+            {
+                if (ModManager.IsActivated(ModIdentifier.Mirror))
+                    ModManager.RemoveMod(ModIdentifier.Mirror);
+                else
+                    ModManager.AddMod(ModIdentifier.Mirror);
+            }
+
+
             ChangeScrollSpeed();
         }
 
