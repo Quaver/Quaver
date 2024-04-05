@@ -1519,14 +1519,6 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="force"></param>
         public void SwitchToMap(Map map, bool force = false)
         {
-            if (Map.Game != MapGame.Quaver)
-            {
-                NotificationManager.Show(NotificationLevel.Warning,
-                    "You cannot create new difficulties for maps from other games. Create a new set!");
-
-                return;
-            }
-
             if (ActionManager.HasUnsavedChanges && !force)
             {
                 DialogManager.Show(new UnsavedChangesSwitchMapDialog(this, map));
