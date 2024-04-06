@@ -362,7 +362,6 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
                         new OptionsItemKeybind(containerRect, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),
                         new OptionsItemKeybind(containerRect, "Increase Map Offset", ConfigManager.KeyIncreaseMapOffset),
-                        new OptionsItemKeybind(containerRect, "Toggle Playtest Autoplay", ConfigManager.KeyTogglePlaytestAutoplay),
                     }),
                     new OptionsSubcategory("Gameplay User Interface", new List<OptionsItem>()
                     {
@@ -376,6 +375,7 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
+                        new OptionsItemKeybind(containerRect, "Toggle Playtest Autoplay", ConfigManager.KeyTogglePlaytestAutoplay),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {
