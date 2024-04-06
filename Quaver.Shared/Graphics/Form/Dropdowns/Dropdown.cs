@@ -100,6 +100,21 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         /// </summary>
         private int MaxHeight { get; }
+        
+        /// <summary>
+        ///     The height of the dropdown when opened
+        /// </summary>
+        public int OpenHeight
+        {
+            get
+            {
+                var height = (int) Height * Options.Count;
+
+                if (MaxHeight != 0 && height >= MaxHeight)
+                    height = MaxHeight;
+                return height;
+            }
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -270,10 +285,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
             ItemContainer.ClearAnimations();
 
-            var height = (int) Height * Options.Count;
-
-            if (MaxHeight != 0 && height >= MaxHeight)
-                height = MaxHeight;
+            var height = OpenHeight;
 
             ItemContainer.ChangeHeightTo(height, Easing.OutQuint, time);
 

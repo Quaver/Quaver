@@ -286,6 +286,11 @@ namespace Quaver.Shared.Config
         ///     If true, hitsounds in gameplay will be played.
         /// </summary>
         internal static Bindable<bool> EnableHitsounds { get; private set; }
+        
+        /// <summary>
+        ///     If true, a hitsound will be played when releasing a long note
+        /// </summary>
+        internal static Bindable<bool> EnableLongNoteReleaseHitsounds { get; private set; }
 
         /// <summary>
         ///     If true, keysounds in gameplay will be played.
@@ -720,6 +725,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
+        ///     The key to toggle the mirror mod while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyToggleMirror { get; private set; }
+
+        /// <summary>
         ///     The key to decrease the gameplay rate while in song select
         /// </summary>
         internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
@@ -938,6 +948,7 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
+            EnableLongNoteReleaseHitsounds = ReadValue(@"EnableLongNoteReleaseHitsounds", false, data);
             EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);
             KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
             KeyNavigateRight = ReadValue(@"KeyNavigateRight", Keys.Right, data);
@@ -987,6 +998,7 @@ namespace Quaver.Shared.Config
             KeySkipIntro = ReadGenericKey(@"KeySkipIntro", new GenericKey { KeyboardKey = Keys.Space }, data);
             KeyPause = ReadGenericKey(@"KeyPause", new GenericKey { KeyboardKey = Keys.Escape }, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
+            KeyToggleMirror = ReadValue(@"KeyToggleMirror", Keys.H, data);
             KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
             KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemPlus, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);

@@ -281,6 +281,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
+                var game = GameBase.Game as QuaverGame;
+                if (game?.CurrentScreen?.Type != QuaverScreenType.Editor)
+                {
+                    if (ConfigManager.EnableHitsounds.Value && ConfigManager.EnableLongNoteReleaseHitsounds.Value)
+                        HitObjectManager.PlayObjectHitSounds(info.HitObjectInfo);
+                }
+
                 // Update stats
                 Ruleset.ScoreProcessor.Stats.Add(
                     new HitStat(
