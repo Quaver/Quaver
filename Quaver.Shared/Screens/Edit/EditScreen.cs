@@ -149,10 +149,18 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
+        
+        /// <summary>
+        /// </summary>
+        public Bindable<bool> ShowSpectrogram { get; } = ConfigManager.EditorShowSpectrogram ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
         public BindableInt WaveformBrightness { get; } = ConfigManager.EditorWaveformBrightness ?? new BindableInt(50, 1, 100);
+
+        /// <summary>
+        /// </summary>
+        public BindableInt SpectrogramBrightness { get; } = ConfigManager.EditorSpectrogramBrightness ?? new BindableInt(50, 1, 100);
 
         /// <summary>
         /// </summary>
@@ -391,6 +399,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (ShowWaveform != ConfigManager.EditorShowWaveform)
                 ShowWaveform.Dispose();
+
+            if (ShowSpectrogram != ConfigManager.EditorShowSpectrogram)
+                ShowSpectrogram.Dispose();
 
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;

@@ -111,6 +111,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<bool> ShowWaveform { get; }
+        
+        /// <summary>
+        /// </summary>
+        private Bindable<bool> ShowSpectrogram { get; }
 
         /// <summary>
         /// </summary>
@@ -228,6 +232,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private LoadingWheelText LoadingWaveform { get; set; }
+        
+        /// <summary>
+        /// </summary>
+        private LoadingWheelText LoadingSpectrogram { get; set; }
 
         /// <summary>
         /// </summary>
@@ -311,12 +319,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="selectedHitObjects"></param>
         /// <param name="selectedLayer"></param>
         /// <param name="defaultLayer"></param>
+        /// <param name="placeObjectsOnNearestTick"></param>
+        /// <param name="showWaveform"></param>
+        /// <param name="showSpectrogram"></param>
+        /// <param name="waveFormAudioDirection"></param>
+        /// <param name="waveformFilter"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
             EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform,
+            Bindable<bool> showSpectrogram,
             Bindable<EditorPlayfieldWaveformAudioDirection> waveFormAudioDirection, Bindable<EditorPlayfieldWaveformFilter> waveformFilter,
             bool isUneditable = false)
         {
@@ -338,6 +352,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             DefaultLayer = defaultLayer;
             PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
             ShowWaveform = showWaveform;
+            ShowSpectrogram = showSpectrogram;
             WaveFormAudioDirection = waveFormAudioDirection;
             WaveformFilter = waveformFilter;
 
@@ -400,6 +415,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 LoadingWaveform.Position = new ScalableVector2(X + BorderLeft.Width / 2f, 200);
                 LoadingWaveform.Update(gameTime);
             }
+            
+            if (LoadingSpectrogram != null)
+            {
+                LoadingSpectrogram.Alignment = Alignment;
+                LoadingSpectrogram.Position = new ScalableVector2(X + BorderLeft.Width / 2f, 200);
+                LoadingSpectrogram.Update(gameTime);
+            }
 
             UpdateHitObjectPool();
             Waveform?.Update(gameTime);
@@ -437,8 +459,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (ShowWaveform.Value)
                 Waveform?.Draw(gameTime);
             
-            // TODO
-            Spectrogram?.Draw(gameTime);
+            if (ShowSpectrogram.Value)
+                Spectrogram?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
@@ -449,6 +471,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (ShowWaveform.Value)
                 LoadingWaveform?.Draw(gameTime);
+            
+            if (ShowSpectrogram.Value)
+                LoadingSpectrogram?.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -461,6 +486,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             WaveformLoadTask?.Dispose();
             Waveform?.Destroy();
             Spectrogram?.Destroy();
+            SpectrogramLoadTask?.Dispose();
 
             ThreadScheduler.Run(() =>
             {
@@ -611,8 +637,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            // TODO
-            LoadingWaveform = new LoadingWheelText(20, "Loading Spectrogram...")
+            LoadingSpectrogram = new LoadingWheelText(20, "Loading Spectrogram...")
             {
                 Alignment = Alignment.TopCenter,
                 Y = 200,
@@ -620,11 +645,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             SpectrogramLoadTask = new TaskHandler<int, int>(CreateSpectrogram);
 
-            SpectrogramLoadTask.OnCompleted += (sender, args) => LoadingWaveform.FadeOut();
+            SpectrogramLoadTask.OnCompleted += (sender, args) => LoadingSpectrogram.FadeOut();
             SpectrogramLoadTask.OnCancelled += (sender, args) =>
             {
                 Spectrogram?.Destroy();
-                LoadingWaveform.Destroy();
+                LoadingSpectrogram.Destroy();
             };
 
             SpectrogramLoadTask.Run(0);

@@ -537,6 +537,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<EditorPlayfieldWaveformAudioDirection> EditorAudioDirection { get; private set; }
 
         /// <summary>
@@ -554,6 +558,10 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static BindableInt EditorWaveformBrightness { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorSpectrogramBrightness { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1072,11 +1080,13 @@ namespace Quaver.Shared.Config
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
+            EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", true, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
             EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
             EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
+            EditorSpectrogramBrightness = ReadInt(@"EditorSpectrogramBrightness", 50, 0, 100, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -500, 500, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);

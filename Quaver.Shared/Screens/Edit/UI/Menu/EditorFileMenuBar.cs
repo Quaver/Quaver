@@ -430,7 +430,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.BeginMenu("Waveform"))
             {
                 if (ImGui.MenuItem("Visible", "", Screen.ShowWaveform.Value))
+                {
+                    if (!Screen.ShowWaveform.Value) Screen.ShowSpectrogram.Value = false;
                     Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
+                }
 
                 if (ImGui.BeginMenu("Brightness"))
                 {
@@ -469,6 +472,30 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 if (ImGui.MenuItem("Color"))
                     DialogManager.Show(new EditorChangeWaveformColorDialog());
+
+                ImGui.EndMenu();
+            }
+            
+            if (ImGui.BeginMenu("Spectrogram"))
+            {
+                if (ImGui.MenuItem("Visible", "", Screen.ShowSpectrogram.Value))
+                {
+                    if (!Screen.ShowSpectrogram.Value) Screen.ShowWaveform.Value = false;
+                    Screen.ShowSpectrogram.Value = !Screen.ShowSpectrogram.Value;
+                }
+
+                if (ImGui.BeginMenu("Brightness"))
+                {
+                    for (var i = 0; i < 11; i++)
+                    {
+                        var value = i * 10;
+
+                        if (ImGui.MenuItem($"{value}%", "", Screen.SpectrogramBrightness.Value == value))
+                            Screen.SpectrogramBrightness.Value = value;
+                    }
+
+                    ImGui.EndMenu();
+                }
 
                 ImGui.EndMenu();
             }

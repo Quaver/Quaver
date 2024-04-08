@@ -55,10 +55,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                             Height;
             SliceSprite.Height = LengthMs * Playfield.TrackSpeed;
             SliceSprite.Tint = new Color(
-                255,
-                255,
-                255,
-                255);
+                1.0f,
+                1.0f,
+                1.0f,
+                (float)ConfigManager.EditorSpectrogramBrightness.Value / 100);
             SliceSprite.Draw(gameTime);
         }
 
