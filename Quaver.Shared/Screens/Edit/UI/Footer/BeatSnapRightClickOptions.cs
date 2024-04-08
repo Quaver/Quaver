@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 
@@ -32,11 +34,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// <param name="beatSnap"></param>
         /// <param name="availableBeatSnaps"></param>
         public BeatSnapRightClickOptions(BindableInt beatSnap, List<int> availableBeatSnaps)
-            : base(GetOptions(availableBeatSnaps), new ScalableVector2(200, 40),
-            22)
+            : base(GetOptions(availableBeatSnaps), new ScalableVector2(200, 40), 22, maxHeight: 800)
         {
             BeatSnap = beatSnap;
             AvailableBeatSnaps = availableBeatSnaps;
+            ItemContainer.Scrollbar.Tint = Color.White;
+            ItemContainer.Scrollbar.Width = 2;
+            ItemContainer.EasingType = Easing.OutQuint;
+            ItemContainer.TimeToCompleteScroll = 1200;
+            ItemContainer.ScrollSpeed = 220;
 
             Items.ForEach(x =>
             {
@@ -72,6 +78,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             };
 
             BeatSnap.ValueChanged += OnBeatSnapChanged;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            ItemContainer.Scrollbar.Visible = Opened;
+            ItemContainer.InputEnabled = Opened;
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
