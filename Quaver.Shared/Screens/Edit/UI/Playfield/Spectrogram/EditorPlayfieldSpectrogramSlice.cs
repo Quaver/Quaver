@@ -92,15 +92,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                 {
                     var textureX = CalculateTextureXLinear(x);
                     if (textureX == -1) continue;
-                    var intensity =
-                        MathF.Sqrt(GetAverageData(sliceData, y, x)) * 3f; // scale it (sqrt to make low values more visible)
-                    intensity = Math.Clamp(intensity, 0, 1);
+                    var intensity = GetIntensity(sliceData, y, x);
                     var index = DataColorIndex(textureHeight, y, textureX);
                     var nextTextureX = CalculateTextureXLinear(x + 1);
                     if (nextTextureX == -1) nextTextureX = ReferenceWidth - 1;
-                    for (var i = index; i < DataColorIndex(textureHeight, y, nextTextureX) && i < dataColors.Length; i++)
+                    var nextIntensity = x == EditorPlayfieldSpectrogram.FftCount - 1
+                        ? intensity
+                        : GetIntensity(sliceData, y, x + 1);
+                    var curColor = SpectrogramColormap.GetColor(intensity);
+                    var nextColor = SpectrogramColormap.GetColor(nextIntensity);
+                    var nextDataColorIndex = DataColorIndex(textureHeight, y, nextTextureX);
+                    for (var i = index; i < nextDataColorIndex && i < dataColors.Length; i++)
                     {
-                        dataColors[i] = SpectrogramColormap.GetColor(intensity);
+                        dataColors[i] = Color.Lerp(curColor, nextColor, nextDataColorIndex == index ? 0 : (float)(i - index) / (nextDataColorIndex - index));
                     }
                     
                     // if (index + (int)Playfield.Width < dataColors.Length)
@@ -113,6 +117,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             SliceSprite.Width = (int)Playfield.Width;
             SliceSprite.Height = LengthMs;
             SliceSprite.FadeTo(1, Easing.Linear, 250);
+        }
+
+        private float GetIntensity(float[,] sliceData, int y, int x)
+        {
+            var intensity = MathF.Sqrt(GetAverageData(sliceData, y, x)) * 3; // scale it (sqrt to make low values more visible)
+            intensity = Math.Clamp(intensity, 0, 1);
+            return intensity;
         }
 
         private int CalculateTextureX(int x)
