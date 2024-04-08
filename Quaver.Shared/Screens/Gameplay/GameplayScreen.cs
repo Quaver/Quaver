@@ -1500,7 +1500,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
 

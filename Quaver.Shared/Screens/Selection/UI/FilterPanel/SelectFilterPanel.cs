@@ -16,6 +16,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -107,7 +108,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             ActiveLeftPanel = activeLeftPanel;
 
             Size = new ScalableVector2(WindowManager.Width, 88);
-            Tint = ColorHelper.HexToColor("#242424");
+
+            Image = SkinManager.Skin?.SongSelect?.SelectFilterPanelRight;
+
+            if (Image?.Width == null)
+            {
+                Tint = ColorHelper.HexToColor("#242424");
+            }
 
             Banner = new FilterPanelBanner(this)
             {

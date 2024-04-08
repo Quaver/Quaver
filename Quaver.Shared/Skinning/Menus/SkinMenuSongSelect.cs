@@ -54,6 +54,10 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Color? PersonalBestRankColor { get; private set; }
 
+        public Texture2D SelectFilterPanelRight { get; private set; }
+
+        public Texture2D SelectFilterPanelLeft { get; private set; }
+
         #region MAPSET
 
         public Texture2D MapsetSelected { get; private set; }
@@ -85,6 +89,8 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D StatusOsu { get; private set; }
 
         public Texture2D StatusStepmania { get; private set; }
+
+        public Texture2D StatusVarious { get; private set; }
 
  #endregion
 
@@ -189,8 +195,11 @@ namespace Quaver.Shared.Skinning.Menus
             StatusRanked = LoadSkinElement(folder, "status-ranked.png");
             StatusOsu = LoadSkinElement(folder, "status-osu.png");
             StatusStepmania = LoadSkinElement(folder, "status-sm.png");
+            StatusVarious = LoadSkinElement(folder, "status-various.png");
             LeaderboardPanel = LoadSkinElement(folder, "leaderboard-panel.png");
             PersonalBestPanel = LoadSkinElement(folder, "personalbest-panel.png");
+            SelectFilterPanelRight = LoadSkinElement(folder, "select-filter-panel-right.png");
+            SelectFilterPanelLeft = LoadSkinElement(folder, "select-filter-panel-left.png");
         }
     }
 }

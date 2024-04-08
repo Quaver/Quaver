@@ -274,6 +274,17 @@ namespace Quaver.Shared.Screens.Multi
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
                     ModManager.AddSpeedMods(SelectionScreen.GetNextRate(false, KeyboardManager.IsShiftDown()));
             }
+
+            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Regular))
+            {
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
+                {
+                    if (ModManager.IsActivated(ModIdentifier.Mirror))
+                        ModManager.RemoveMod(ModIdentifier.Mirror);
+                    else
+                        ModManager.AddMod(ModIdentifier.Mirror);
+                }
+            }
         }
 
         /// <summary>
