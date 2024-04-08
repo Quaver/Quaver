@@ -12,7 +12,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
-using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;

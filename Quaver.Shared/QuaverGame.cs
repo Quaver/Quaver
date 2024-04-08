@@ -60,7 +60,6 @@ using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
-using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Tests.AutoMods;
 using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Chat;
