@@ -538,6 +538,8 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
+        
+        internal static BindableInt EditorSpectrogramFftSize { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1080,7 +1082,8 @@ namespace Quaver.Shared.Config
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
-            EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", true, data);
+            EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", false, data);
+            EditorSpectrogramFftSize = ReadInt(@"EditorSpectrumFftSize", 256, 256, 16384, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);

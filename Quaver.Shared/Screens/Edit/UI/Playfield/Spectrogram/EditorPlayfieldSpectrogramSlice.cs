@@ -13,6 +13,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
     public class EditorPlayfieldSpectrogramSlice : Sprite
     {
         private EditorPlayfield Playfield { get; set; }
+        private EditorPlayfieldSpectrogram Spectrogram { get; set; }
 
         private Sprite SliceSprite { get; set; }
 
@@ -21,17 +22,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         private double SliceTimeMilliSeconds { get; }
 
         private Texture2D SliceTexture { get; set; }
-        
+
         private float LengthMs { get; set; }
-        
+
         private int SampleRate { get; set; }
 
         private int ReferenceWidth { get; } = 1024;
 
-        public EditorPlayfieldSpectrogramSlice(EditorPlayfield playfield, float lengthMs, int sliceSize,
+        public EditorPlayfieldSpectrogramSlice(EditorPlayfieldSpectrogram spectrogram, EditorPlayfield playfield, float lengthMs, int sliceSize,
             float[,] sliceData,
             double sliceTime, int sampleRate)
         {
+            Spectrogram = spectrogram;
             Playfield = playfield;
             SliceSize = sliceSize;
             SliceTimeMilliSeconds = sliceTime;
@@ -88,15 +90,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
             for (var y = 0; y < textureHeight; y++)
             {
-                for (var x = 0; x < EditorPlayfieldSpectrogram.FftCount; x++)
+                for (var x = 0; x < Spectrogram.FftCount; x++)
                 {
-                    var textureX = CalculateTextureXMel(x);
+                    var textureX = CalculateTextureXLinear(x);
                     if (textureX == -1) continue;
                     var intensity = GetIntensity(sliceData, y, x);
                     var index = DataColorIndex(textureHeight, y, textureX);
-                    var nextTextureX = CalculateTextureXMel(x + 1);
+                    var nextTextureX = CalculateTextureXLinear(x + 1);
                     if (nextTextureX == -1) nextTextureX = ReferenceWidth - 1;
-                    var nextIntensity = x == EditorPlayfieldSpectrogram.FftCount - 1
+                    var nextIntensity = x == Spectrogram.FftCount - 1
                         ? intensity
                         : GetIntensity(sliceData, y, x + 1);
                     var curColor = SpectrogramColormap.GetColor(intensity);
@@ -105,9 +107,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                     for (var i = index; i < nextDataColorIndex && i < dataColors.Length; i++)
                     {
                         // dataColors[i] = curColor;
-                        dataColors[i] = Color.Lerp(curColor, nextColor, nextDataColorIndex == index ? 0 : (float)(i - index) / (nextDataColorIndex - index));
+                        dataColors[i] = Color.Lerp(curColor, nextColor,
+                            nextDataColorIndex == index ? 0 : (float)(i - index) / (nextDataColorIndex - index));
                     }
-                    
+
                     // if (index + (int)Playfield.Width < dataColors.Length)
                     //     dataColors[index + (int)Playfield.Width] = new Color(intensity, 0, 0, 1);
                 }
@@ -123,40 +126,42 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         private float GetIntensity(float[,] sliceData, int y, int x)
         {
             // var intensity = MathF.Sqrt(GetAverageData(sliceData, y, x)) * 3; // scale it (sqrt to make low values more visible)
-            var intensity = Math.Clamp(1 + 40 * MathF.Log10(GetAverageData(sliceData, y, x)) / 100, 0f, 1f); // scale it (sqrt to make low values more visible)
+            var rawIntensity = GetAverageData(sliceData, y, x);
+            var intensity = MathF.Abs(rawIntensity) < 1e-4f ? 0 : 
+                Math.Clamp(1 + 20 * MathF.Log10(rawIntensity) / 100, 0f, 1f);
             // intensity = Sigmoid(Math.Clamp(intensity, 0, 1));
             return intensity;
         }
 
         private int CalculateTextureXLog(int x)
         {
-            var minFrequency = (float)SampleRate / EditorPlayfieldSpectrogram.FftCount;
+            var minFrequency = (float)SampleRate / Spectrogram.FftCount;
             const float maxFrequency = 20000;
             var a = 1 / MathF.Log(maxFrequency / minFrequency);
             var b = -a * MathF.Log(minFrequency);
-            var frequency = (float)x * SampleRate / EditorPlayfieldSpectrogram.FftCount;
+            var frequency = (float)x * SampleRate / Spectrogram.FftCount;
             if (frequency < minFrequency || frequency > maxFrequency) return -1;
             var processedProgress = a * MathF.Log(frequency) + b;
             return (int)(processedProgress * ReferenceWidth);
         }
-        
+
         private int CalculateTextureXMel(int x)
         {
             var maxMel = Mel(20000);
-            var frequency = (float)x * SampleRate / EditorPlayfieldSpectrogram.FftCount;
+            var frequency = (float)x * SampleRate / Spectrogram.FftCount;
             var mel = Mel(frequency);
             if (mel < 0 || mel > maxMel) return -1;
             var processedProgress = mel / maxMel;
             return (int)(processedProgress * ReferenceWidth);
         }
-        
+
         private int CalculateTextureXLinear(int x)
         {
-            var minFrequency = (float)SampleRate / EditorPlayfieldSpectrogram.FftCount;
+            var minFrequency = (float)SampleRate / Spectrogram.FftCount;
             const float maxFrequency = 20000;
-            var frequency = (float)x * SampleRate / EditorPlayfieldSpectrogram.FftCount;
+            var frequency = (float)x * SampleRate / Spectrogram.FftCount;
             if (frequency < minFrequency || frequency > maxFrequency) return -1;
-            
+
             return (int)((frequency - minFrequency) / (maxFrequency - minFrequency) * ReferenceWidth);
         }
 

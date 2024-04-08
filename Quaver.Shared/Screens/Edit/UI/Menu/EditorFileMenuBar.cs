@@ -497,6 +497,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     ImGui.EndMenu();
                 }
 
+                if (ImGui.BeginMenu("FFT Size"))
+                {
+                    for (var size = 256; size <= 16384; size *= 2)
+                    {
+                        if (ImGui.MenuItem($"{size}", "", Screen.SpectrogramFftSize.Value == size))
+                            Screen.SpectrogramFftSize.Value = size;
+                    }
+                    ImGui.EndMenu();
+                }
+
                 ImGui.EndMenu();
             }
 

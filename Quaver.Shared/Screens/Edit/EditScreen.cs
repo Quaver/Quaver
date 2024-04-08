@@ -162,6 +162,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public BindableInt SpectrogramBrightness { get; } = ConfigManager.EditorSpectrogramBrightness ?? new BindableInt(50, 1, 100);
 
+        public BindableInt SpectrogramFftSize { get; } =
+            ConfigManager.EditorSpectrogramFftSize ?? new BindableInt(256, 256, 16384);
+        
         /// <summary>
         /// </summary>
         public Bindable<EditorPlayfieldWaveformAudioDirection> AudioDirection { get; } = ConfigManager.EditorAudioDirection ?? new Bindable<EditorPlayfieldWaveformAudioDirection>(EditorPlayfieldWaveformAudioDirection.Both);

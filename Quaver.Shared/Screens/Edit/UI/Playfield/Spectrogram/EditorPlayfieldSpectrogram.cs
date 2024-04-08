@@ -32,8 +32,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private int Stream { get; set; }
 
-        public static int FftCount = 256;
-        public static int FftFlag = (int)DataFlags.FFT512;
+        public int FftCount { get; }
+        
+        public int FftFlag { get; }
         public int FftResultCount { get; set; }
 
         private int FftRoundsTaken { get; set; }
@@ -46,6 +47,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         {
             Playfield = playfield;
             Token = token;
+            FftCount = ConfigManager.EditorSpectrogramFftSize.Value;
+            FftFlag = (int)GetFftDataFlag(FftCount);
 
             Slices = new List<EditorPlayfieldSpectrogramSlice>();
             VisibleSlices = new List<EditorPlayfieldSpectrogramSlice>();
@@ -109,7 +112,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                     }
                 }
 
-                var slice = new EditorPlayfieldSpectrogramSlice(Playfield, (float)millisecondPerSlice, FftPerSlice,
+                var slice = new EditorPlayfieldSpectrogramSlice(this, Playfield, (float)millisecondPerSlice, FftPerSlice,
                     trackSliceData, t, sampleRate);
                 tempSlices.Add(slice);
             }
@@ -145,6 +148,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
             TrackByteLength = Bass.ChannelGetLength(Stream);
             TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
+        }
+
+        public static DataFlags GetFftDataFlag(int fftSize)
+        {
+            return fftSize switch
+            {
+                256 => DataFlags.FFT512,
+                512 => DataFlags.FFT1024,
+                1024 => DataFlags.FFT2048,
+                2048 => DataFlags.FFT4096,
+                4096 => DataFlags.FFT8192,
+                8192 => DataFlags.FFT16384,
+                16384 => DataFlags.FFT32768,
+                _ => throw new InvalidOperationException(
+                    $"Expected FFT sample size to be between 256 and 16384 and power of 2, found {fftSize}")
+            };
         }
 
         /// <summary>

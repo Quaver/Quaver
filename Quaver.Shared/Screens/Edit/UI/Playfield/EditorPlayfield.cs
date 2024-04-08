@@ -123,6 +123,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<EditorPlayfieldWaveformFilter> WaveformFilter { get; }
+        
+        /// <summary>
+        /// </summary>
+        private Bindable<int> SpectrogramFftSize { get; }
 
         /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
@@ -324,14 +328,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="showSpectrogram"></param>
         /// <param name="waveFormAudioDirection"></param>
         /// <param name="waveformFilter"></param>
+        /// <param name="spectrogramFftSize"></param>
         /// <param name="isUneditable"></param>
-        public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
+        public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track,
+            BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
-            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
-            BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
+            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers,
+            Bindable<EditorCompositionTool> tool,
+            BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects,
+            Bindable<EditorLayerInfo> selectedLayer,
             EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform,
             Bindable<bool> showSpectrogram,
-            Bindable<EditorPlayfieldWaveformAudioDirection> waveFormAudioDirection, Bindable<EditorPlayfieldWaveformFilter> waveformFilter,
+            Bindable<EditorPlayfieldWaveformAudioDirection> waveFormAudioDirection,
+            Bindable<EditorPlayfieldWaveformFilter> waveformFilter,
+            BindableInt spectrogramFftSize,
             bool isUneditable = false)
         {
             Map = map;
@@ -355,6 +365,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ShowSpectrogram = showSpectrogram;
             WaveFormAudioDirection = waveFormAudioDirection;
             WaveformFilter = waveformFilter;
+            SpectrogramFftSize = spectrogramFftSize;
 
             Alignment = Alignment.TopCenter;
             Tint = new Color(24,24,24);
@@ -397,6 +408,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Skin.ValueChanged += OnSkinChanged;
             WaveFormAudioDirection.ValueChanged += OnWaveFormAudioDirectionChanged;
             WaveformFilter.ValueChanged += OnWaveformFilterChanged;
+            SpectrogramFftSize.ValueChanged += OnSpectrogramFftSizeChanged;
         }
 
         /// <inheritdoc />
@@ -520,6 +532,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Skin.ValueChanged -= OnSkinChanged;
             WaveFormAudioDirection.ValueChanged -= OnWaveFormAudioDirectionChanged;
             WaveformFilter.ValueChanged -= OnWaveformFilterChanged;
+
+            SpectrogramFftSize.ValueChanged -= OnSpectrogramFftSizeChanged;
 
             base.Destroy();
         }
@@ -1589,6 +1603,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         private void OnWaveFormAudioDirectionChanged(object sender,
             BindableValueChangedEventArgs<EditorPlayfieldWaveformAudioDirection> e) => ReloadWaveform();
+
+        private void OnSpectrogramFftSizeChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
 
         private void ReloadWaveform()
         {
