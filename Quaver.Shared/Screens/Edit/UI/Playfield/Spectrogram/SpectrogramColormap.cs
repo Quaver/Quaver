@@ -268,17 +268,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             { 9.40015097e-01f, 9.75158357e-01f, 1.31325517e-01f },
         };
 
+        private static Color GetColorAt(int index)
+        {
+            return new Color(Data[index, 0], Data[index, 1], Data[index, 2]);
+        }
+
         public static Color GetColor(float progress)
         {
-            if (progress < 0 || progress > 1) return Color.Black;
+            if (progress <= 0) return GetColorAt(0);
             var dataCount = Data.GetLength(0);
-            if (progress == 1) return new Color(Data[dataCount - 1, 0], Data[dataCount - 1, 1], Data[dataCount - 1, 2]);
+            if (progress >= 1) return GetColorAt(dataCount - 1);
             var i = (int)(progress * (dataCount - 1));
             // var lerpWidth = 1f / Data.GetLength(0);
             var lerpProgress = progress * (dataCount - 1) - i;
-            return Color.Lerp(new Color(Data[i, 0], Data[i, 1], Data[i, 2]),
-                new Color(Data[i + 1, 0], Data[i + 1, 1], Data[i + 1, 2]),
-                lerpProgress);
+            return Color.Lerp(GetColorAt(i), GetColorAt(i + 1), lerpProgress);
         }
     }
 }
