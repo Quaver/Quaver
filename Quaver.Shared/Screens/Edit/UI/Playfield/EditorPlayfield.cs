@@ -465,14 +465,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
-
+            
+            if (ShowSpectrogram.Value)
+                Spectrogram?.Draw(gameTime);
+            
             Timeline.Draw(gameTime);
 
             if (ShowWaveform.Value)
                 Waveform?.Draw(gameTime);
-            
-            if (ShowSpectrogram.Value)
-                Spectrogram?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
