@@ -90,11 +90,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             {
                 for (var x = 0; x < EditorPlayfieldSpectrogram.FftCount; x++)
                 {
-                    var textureX = CalculateTextureXLinear(x);
+                    var textureX = CalculateTextureXMel(x);
                     if (textureX == -1) continue;
                     var intensity = GetIntensity(sliceData, y, x);
                     var index = DataColorIndex(textureHeight, y, textureX);
-                    var nextTextureX = CalculateTextureXLinear(x + 1);
+                    var nextTextureX = CalculateTextureXMel(x + 1);
                     if (nextTextureX == -1) nextTextureX = ReferenceWidth - 1;
                     var nextIntensity = x == EditorPlayfieldSpectrogram.FftCount - 1
                         ? intensity
@@ -104,6 +104,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                     var nextDataColorIndex = DataColorIndex(textureHeight, y, nextTextureX);
                     for (var i = index; i < nextDataColorIndex && i < dataColors.Length; i++)
                     {
+                        // dataColors[i] = curColor;
                         dataColors[i] = Color.Lerp(curColor, nextColor, nextDataColorIndex == index ? 0 : (float)(i - index) / (nextDataColorIndex - index));
                     }
                     
@@ -121,12 +122,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private float GetIntensity(float[,] sliceData, int y, int x)
         {
-            var intensity = MathF.Sqrt(GetAverageData(sliceData, y, x)) * 3; // scale it (sqrt to make low values more visible)
-            intensity = Math.Clamp(intensity, 0, 1);
+            // var intensity = MathF.Sqrt(GetAverageData(sliceData, y, x)) * 3; // scale it (sqrt to make low values more visible)
+            var intensity = Math.Clamp(1 + 40 * MathF.Log10(GetAverageData(sliceData, y, x)) / 100, 0f, 1f); // scale it (sqrt to make low values more visible)
+            // intensity = Sigmoid(Math.Clamp(intensity, 0, 1));
             return intensity;
         }
 
-        private int CalculateTextureX(int x)
+        private int CalculateTextureXLog(int x)
         {
             var minFrequency = (float)SampleRate / EditorPlayfieldSpectrogram.FftCount;
             const float maxFrequency = 20000;
@@ -137,6 +139,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             var processedProgress = a * MathF.Log(frequency) + b;
             return (int)(processedProgress * ReferenceWidth);
         }
+        
+        private int CalculateTextureXMel(int x)
+        {
+            var maxMel = Mel(20000);
+            var frequency = (float)x * SampleRate / EditorPlayfieldSpectrogram.FftCount;
+            var mel = Mel(frequency);
+            if (mel < 0 || mel > maxMel) return -1;
+            var processedProgress = mel / maxMel;
+            return (int)(processedProgress * ReferenceWidth);
+        }
+        
         private int CalculateTextureXLinear(int x)
         {
             var minFrequency = (float)SampleRate / EditorPlayfieldSpectrogram.FftCount;
@@ -145,6 +158,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             if (frequency < minFrequency || frequency > maxFrequency) return -1;
             
             return (int)((frequency - minFrequency) / (maxFrequency - minFrequency) * ReferenceWidth);
+        }
+
+        private float Mel(float frequency)
+        {
+            return 2595 * MathF.Log10(1 + frequency / 700);
+        }
+
+        private float Sigmoid(float x)
+        {
+            return x < 0.2f ? 0 : (MathF.Tanh(x * 2 - 1) + 1) / 2;
         }
 
 

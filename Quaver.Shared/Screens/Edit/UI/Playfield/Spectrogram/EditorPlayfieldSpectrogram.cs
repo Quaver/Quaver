@@ -32,7 +32,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private int Stream { get; set; }
 
-        public const int FftCount = 256;
+        public static int FftCount = 256;
+        public static int FftFlag = (int)DataFlags.FFT512;
         public int FftResultCount { get; set; }
 
         private int FftRoundsTaken { get; set; }
@@ -133,7 +134,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             var trackDataFft = new float[FftResultCount];
             FftRoundsTaken = 0;
             
-            while (Bass.ChannelGetData(Stream, trackDataFft, (int)DataFlags.FFT512) > 0)
+            while (Bass.ChannelGetData(Stream, trackDataFft, FftFlag) > 0)
             {
                 for (var i = 0; i < FftResultCount; i++)
                 {
