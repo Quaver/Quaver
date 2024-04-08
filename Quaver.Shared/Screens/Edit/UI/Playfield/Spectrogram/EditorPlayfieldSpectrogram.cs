@@ -137,7 +137,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             var trackDataFft = new float[FftResultCount];
             FftRoundsTaken = 0;
             
-            while (Bass.ChannelGetData(Stream, trackDataFft, FftFlag) > 0)
+            while (Bass.ChannelGetData(Stream, trackDataFft, FftFlag | (int)DataFlags.FFTRemoveDC) > 0)
             {
                 for (var i = 0; i < FftResultCount; i++)
                 {
