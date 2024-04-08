@@ -127,9 +127,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         {
             // var intensity = MathF.Sqrt(GetAverageData(sliceData, y, x)) * 3; // scale it (sqrt to make low values more visible)
             var rawIntensity = GetAverageData(sliceData, y, x);
-            var intensity = MathF.Abs(rawIntensity) < 1e-4f ? 0 : 
-                Math.Clamp(1 + 20 * MathF.Log10(rawIntensity) / 100, 0f, 1f);
-            // intensity = Sigmoid(Math.Clamp(intensity, 0, 1));
+            var db = MathF.Abs(rawIntensity) < 1e-4f ? -100 : 20 * MathF.Log10(rawIntensity);
+            var intensity = Math.Clamp(1 + db / 100, 0f, 1f);
+            
+            var cutoffFactor = 0.3f;
+            intensity = MathF.Max(intensity, cutoffFactor);
+            intensity = (intensity - cutoffFactor) * (1 - cutoffFactor);
+
+            intensity *= intensity * 7.5f;
+            intensity = Sigmoid(Math.Clamp(intensity, 0, 1));
             return intensity;
         }
 
