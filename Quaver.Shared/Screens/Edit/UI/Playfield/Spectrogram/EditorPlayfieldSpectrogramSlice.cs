@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private int SampleRate { get; set; }
 
-        private int ReferenceWidth { get; } = 1024;
+        private int ReferenceWidth { get; }
 
         public EditorPlayfieldSpectrogramSlice(EditorPlayfieldSpectrogram spectrogram, EditorPlayfield playfield, float lengthMs, int sliceSize,
             float[,] sliceData,
@@ -39,6 +39,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             SliceTimeMilliSeconds = sliceTime;
             LengthMs = lengthMs;
             SampleRate = sampleRate;
+            ReferenceWidth = spectrogram.FftCount;
 
             CreateSlice(sliceData);
         }
@@ -92,27 +93,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             {
                 for (var x = 0; x < Spectrogram.FftCount; x++)
                 {
-                    var textureX = CalculateTextureXLinear(x);
+                    var textureX = CalculateTextureX(x, Linear);
                     if (textureX == -1) continue;
                     var intensity = GetIntensity(sliceData, y, x);
                     var index = DataColorIndex(textureHeight, y, textureX);
-                    var nextTextureX = CalculateTextureXLinear(x + 1);
+                    var nextTextureX = CalculateTextureX(x + 1, Linear);
                     if (nextTextureX == -1) nextTextureX = ReferenceWidth - 1;
                     var nextIntensity = x == Spectrogram.FftCount - 1
                         ? intensity
                         : GetIntensity(sliceData, y, x + 1);
                     var curColor = SpectrogramColormap.GetColor(intensity);
-                    var nextColor = SpectrogramColormap.GetColor(nextIntensity);
                     var nextDataColorIndex = DataColorIndex(textureHeight, y, nextTextureX);
                     for (var i = index; i < nextDataColorIndex && i < dataColors.Length; i++)
                     {
-                        // dataColors[i] = curColor;
-                        dataColors[i] = Color.Lerp(curColor, nextColor,
-                            nextDataColorIndex == index ? 0 : (float)(i - index) / (nextDataColorIndex - index));
+                        dataColors[i] = curColor;
                     }
-
-                    // if (index + (int)Playfield.Width < dataColors.Length)
-                    //     dataColors[index + (int)Playfield.Width] = new Color(intensity, 0, 0, 1);
                 }
             }
 
@@ -142,7 +137,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         private int CalculateTextureXLog(int x)
         {
             var minFrequency = (float)SampleRate / Spectrogram.FftCount;
-            const float maxFrequency = 20000;
+            const float maxFrequency = 10000;
             var a = 1 / MathF.Log(maxFrequency / minFrequency);
             var b = -a * MathF.Log(minFrequency);
             var frequency = (float)x * SampleRate / Spectrogram.FftCount;
@@ -151,31 +146,33 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             return (int)(processedProgress * ReferenceWidth);
         }
 
-        private int CalculateTextureXMel(int x)
+        private int CalculateTextureX(int x, Func<float, float> transform)
         {
-            var maxMel = Mel(20000);
+            var minFrequency = transform(0);
+            var maxFrequency = transform(20000);
             var frequency = (float)x * SampleRate / Spectrogram.FftCount;
-            var mel = Mel(frequency);
-            if (mel < 0 || mel > maxMel) return -1;
-            var processedProgress = mel / maxMel;
-            return (int)(processedProgress * ReferenceWidth);
+            var transformedFrequency = transform(frequency);
+            if (transformedFrequency > maxFrequency || transformedFrequency < minFrequency) return -1;
+            return (int)((transformedFrequency - minFrequency) / (maxFrequency - minFrequency) * ReferenceWidth);
         }
 
-        private int CalculateTextureXLinear(int x)
-        {
-            var minFrequency = (float)SampleRate / Spectrogram.FftCount;
-            const float maxFrequency = 20000;
-            var frequency = (float)x * SampleRate / Spectrogram.FftCount;
-            if (frequency < minFrequency || frequency > maxFrequency) return -1;
-
-            return (int)((frequency - minFrequency) / (maxFrequency - minFrequency) * ReferenceWidth);
-        }
+        private float Linear(float x) => x;
 
         private float Mel(float frequency)
         {
             return 2595 * MathF.Log10(1 + frequency / 700);
         }
+        
+        private float Erb1(float frequency)
+        {
+            return 6.23f * frequency * frequency / 1000 / 1000 + 93.39f * frequency / 1000 + 28.52f;
+        }
 
+        private float Erb2(float frequency)
+        {
+            return 24.7f * (4.37f * frequency / 1000 + 1);
+        }
+        
         private float Sigmoid(float x)
         {
             return x < 0.2f ? 0 : (MathF.Tanh(x * 2 - 1) + 1) / 2;
