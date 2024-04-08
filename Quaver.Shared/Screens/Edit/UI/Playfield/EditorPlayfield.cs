@@ -35,6 +35,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
@@ -211,10 +212,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private TaskHandler<int, int> WaveformLoadTask { get; set; }
+        
+        /// <summary>
+        /// </summary>
+        private TaskHandler<int, int> SpectrogramLoadTask { get; set; }
 
         /// <summary>
         /// </summary>
         public EditorPlayfieldWaveform Waveform { get; set; }
+        
+        /// <summary>
+        /// </summary>
+        public EditorPlayfieldSpectrogram Spectrogram { get; set; }
 
         /// <summary>
         /// </summary>
@@ -341,6 +350,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateHitPositionLine();
             CreateTimeline();
             CreateWaveform();
+            CreateSpectrogram();
             CreateLineContainer();
             CreateHitObjects();
             CreateButton();
@@ -393,6 +403,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             UpdateHitObjectPool();
             Waveform?.Update(gameTime);
+            Spectrogram?.Update(gameTime);
             Timeline.Update(gameTime);
             LineContainer.Update(gameTime);
             HandleInput();
@@ -425,6 +436,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (ShowWaveform.Value)
                 Waveform?.Draw(gameTime);
+            
+            // TODO
+            Spectrogram?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
@@ -446,6 +460,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             WaveformLoadTask?.Dispose();
             Waveform?.Destroy();
+            Spectrogram?.Destroy();
 
             ThreadScheduler.Run(() =>
             {
@@ -589,6 +604,44 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             return 0;
         }
 
+        /// <summary>
+        /// </summary>
+        public void CreateSpectrogram()
+        {
+            if (IsUneditable)
+                return;
+
+            // TODO
+            LoadingWaveform = new LoadingWheelText(20, "Loading Spectrogram...")
+            {
+                Alignment = Alignment.TopCenter,
+                Y = 200,
+            };
+
+            SpectrogramLoadTask = new TaskHandler<int, int>(CreateSpectrogram);
+
+            SpectrogramLoadTask.OnCompleted += (sender, args) => LoadingWaveform.FadeOut();
+            SpectrogramLoadTask.OnCancelled += (sender, args) =>
+            {
+                Spectrogram?.Destroy();
+                LoadingWaveform.Destroy();
+            };
+
+            SpectrogramLoadTask.Run(0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int CreateSpectrogram(int arg1, CancellationToken token)
+        {
+            Spectrogram = new EditorPlayfieldSpectrogram(this, token);
+            return 0;
+        }
+
+        
         /// <summary>
         /// </summary>
         /// <param name="info"></param>
@@ -1517,6 +1570,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Waveform?.Destroy();
             LoadingWaveform.FadeIn();
             WaveformLoadTask.Run(0);
+        }
+
+        private void ReloadSpectrogram()
+        {
+            Spectrogram?.Destroy();
+            LoadingWaveform.FadeIn();
+            SpectrogramLoadTask.Run(0);
         }
     }
 }
