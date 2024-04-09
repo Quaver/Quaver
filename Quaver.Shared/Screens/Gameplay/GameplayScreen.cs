@@ -983,7 +983,7 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 // Add no fail mod upon dying when AutoNoFail is on.
                 // Add the no fail mod to their score.
-                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to dying " +
+                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to failing " +
                                                                     "during gameplay!", null, true);
                 IsNoFailAddedInGameplay = true;
             }
