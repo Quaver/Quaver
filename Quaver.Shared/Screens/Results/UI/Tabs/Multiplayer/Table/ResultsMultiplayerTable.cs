@@ -293,12 +293,26 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         {
             try
             {
+                var md5 = Map.Md5Checksum;
                 var gameInfoRequest = new APIRequestMultiplayerGameInformation(Game.GameId);
                 var gameInfoResponse = gameInfoRequest.ExecuteRequest();
 
-                var recentMatch = gameInfoResponse.Matches.MaxBy(x => x.TimePlayed);
+                MultiplayerGameInformationResponseMatch match = null;
+                foreach (var responseMatch in gameInfoResponse.Matches)
+                {
+                    if (responseMatch.Map.Md5 != md5) continue;
+                    match = responseMatch;
+                    break;
+                }
 
-                var matchInfoRequest = new APIRequestMultiplayerMatchInformation(recentMatch.Id);
+                if (match == null)
+                {
+                    Logger.Error("The match is not yet updated on server", LogType.Runtime);
+                    matchInfoResponse = null;
+                    return false;
+                }
+
+                var matchInfoRequest = new APIRequestMultiplayerMatchInformation(match.Id);
                 matchInfoResponse = matchInfoRequest.ExecuteRequest();
             }
             catch (JsonException jsonException)
