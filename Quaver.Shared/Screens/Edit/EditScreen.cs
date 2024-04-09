@@ -20,6 +20,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -47,6 +48,7 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Discord.RPC.Logging;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -470,8 +472,18 @@ namespace Quaver.Shared.Screens.Edit
             // To not conflict with the volume controller
             if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
             {
-                HandleSeekingBackwards();
-                HandleSeekingForwards();
+                var dropdownHovered = ButtonManager.Buttons.Any(
+                    x => x is DropdownItem item &&
+                        GraphicsHelper.RectangleContains(x.ScreenRectangle, MouseManager.CurrentState.Position) &&
+                        item.Dropdown.Opened
+                );
+
+                if (!dropdownHovered)
+                {
+                    HandleSeekingBackwards();
+                    HandleSeekingForwards();
+                }
+
                 HandleKeyPressUp();
                 HandleKeyPressDown();
                 HandleKeyPressShiftUpDown();
@@ -775,13 +787,13 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.I))
                 PlaceTimingPointOrScrollVelocity();
-            
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.B))
                 DialogManager.Show(new EditorBookmarkDialog(ActionManager, Track, null));
-            
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
                 SeekToNearestBookmark(Direction.Backward);
-            
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
                 SeekToNearestBookmark(Direction.Forward);
         }
@@ -1406,7 +1418,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (WorkingMap.Bookmarks.Count == 0)
                 return;
-            
+
             BookmarkInfo nextBookmark = null;
 
             var closest = WorkingMap.Bookmarks.OrderBy(x => Math.Abs(x.StartTime - Track.Time)).First();
@@ -1432,10 +1444,10 @@ namespace Quaver.Shared.Screens.Edit
 
             if (nextBookmark == null)
                 return;
-            
+
             Track.Seek(Math.Clamp(nextBookmark.StartTime, 0, Track.Length));
         }
-        
+
         /// <summary>
         ///     Creates a new mapset from an audio file
         /// </summary>
