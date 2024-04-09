@@ -215,6 +215,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         private int GetMatchScores(int val, CancellationToken cancellationToken)
         {
             var players = new List<ScoreProcessor>();
+            var qua = Map.LoadQua();
             
             var gameInfoRequest = new APIRequestMultiplayerGameInformation(Game.GameId);
             var gameInfoResponse = gameInfoRequest.ExecuteRequest();
@@ -252,7 +253,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
                 players.Add(processor);
             }
-            
+
+            players = players.OrderByDescending(x =>
+                    new RatingProcessorKeys(qua.SolveDifficulty(x.Mods, true).OverallDifficulty).CalculateRating(x))
+                .ToList();
             
             ScrollContainer = new ResultsMultiplayerScrollContainer(new ScalableVector2(Width, Height - HeaderContainer.Height),
                 players, Game, Headers, Map)
