@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Rating;
@@ -26,6 +25,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Scheduling;
+using Newtonsoft.Json;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 {
