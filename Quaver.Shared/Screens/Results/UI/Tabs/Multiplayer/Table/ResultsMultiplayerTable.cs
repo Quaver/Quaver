@@ -1,22 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MoreLinq;
+using System.Threading;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Multiplayer;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online.API.Multiplayer;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Logging;
 using Wobble.Managers;
+using Wobble.Scheduling;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 {
@@ -55,6 +61,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// <summary>
         /// </summary>
         private ResultsMultiplayerScrollContainer ScrollContainer { get; set; }
+        
+        private TaskHandler<int, int> GetScoresTask { get; set; } 
 
         /// <summary>
         /// </summary>
@@ -73,6 +81,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             Team2Players = team2;
 
             Width = ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X;
+            GetScoresTask = new TaskHandler<int, int>(GetMatchScores);
 
             switch (Game.Ruleset)
             {
@@ -172,14 +181,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private void CreateScrollContainer()
         {
-            var processors = GetOrderedUserList();
-
-            ScrollContainer = new ResultsMultiplayerScrollContainer(new ScalableVector2(Width, Height - HeaderContainer.Height),
-                processors, Game, Headers, Map)
-            {
-                Parent = this,
-                Y = HeaderContainer.Height
-            };
+            GetScoresTask.Run(0);
         }
 
         /// <summary>
@@ -187,6 +189,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// <returns></returns>
         private List<ScoreProcessor> GetOrderedUserList()
         {
+            
             var players = new List<ScoreProcessor>(Team1Players);
             players = players.Concat(Team2Players).ToList();
 
@@ -207,6 +210,64 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             }
 
             return players;
+        }
+
+        private int GetMatchScores(int val, CancellationToken cancellationToken)
+        {
+            var players = new List<ScoreProcessor>();
+            Logger.Important($"Requesting {Game.GameId} id={Game.Id}", LogType.Runtime);
+            var gameInfoRequest = new APIRequestMultiplayerGameInformation(Game.GameId);
+            var gameInfoResponse = gameInfoRequest.ExecuteRequest();
+
+            foreach (var match in gameInfoResponse.Matches)
+            {
+                Logger.Important($"Match {match.Id} played at {match.TimePlayed}", LogType.Runtime);
+            }
+
+            var recentMatch = gameInfoResponse.Matches.MaxBy(x => x.TimePlayed);
+
+            var matchInfoRequest = new APIRequestMultiplayerMatchInformation(recentMatch.Id);
+            var matchInfoResponse = matchInfoRequest.ExecuteRequest();
+
+            foreach (var playerScore in matchInfoResponse.Match.Scores)
+            {
+                var player = playerScore.Player;
+                var score = playerScore.Score;
+                var processor = new ScoreProcessorKeys(Map.Qua, score.Mods, new ScoreProcessorMultiplayer(MultiplayerHealthType.Lives, score.LivesLeft))
+                    {
+                        PlayerName = player.Username,
+                        UserId = player.Id,
+                        MultiplayerProcessor =
+                        {
+                            IsBattleRoyaleEliminated = score.BattleRoyaleRank is > 1
+                        },
+                        Accuracy = (float)score.Accuracy,
+                        MaxCombo = score.MaxCombo,
+                        Score = score.Score,
+                        CurrentJudgements =
+                        {
+                            [Judgement.Marv] = score.CountMarv,
+                            [Judgement.Perf] = score.CountPerf,
+                            [Judgement.Great] = score.CountGreat,
+                            [Judgement.Good] = score.CountGood,
+                            [Judgement.Okay] = score.CountOkay,
+                            [Judgement.Miss] = score.CountMiss
+                        }
+                    };
+
+                Logger.Debug($"{playerScore.Player.Username} scored {playerScore.Score.Score}", LogType.Runtime);
+                players.Add(processor);
+            }
+            
+            
+            ScrollContainer = new ResultsMultiplayerScrollContainer(new ScalableVector2(Width, Height - HeaderContainer.Height),
+                players, Game, Headers, Map)
+            {
+                Parent = this,
+                Y = HeaderContainer.Height
+            };
+            
+            return 0;
         }
 
         /// <summary>
