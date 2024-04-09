@@ -215,14 +215,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         private int GetMatchScores(int val, CancellationToken cancellationToken)
         {
             var players = new List<ScoreProcessor>();
-            Logger.Important($"Requesting {Game.GameId} id={Game.Id}", LogType.Runtime);
+            
             var gameInfoRequest = new APIRequestMultiplayerGameInformation(Game.GameId);
             var gameInfoResponse = gameInfoRequest.ExecuteRequest();
-
-            foreach (var match in gameInfoResponse.Matches)
-            {
-                Logger.Important($"Match {match.Id} played at {match.TimePlayed}", LogType.Runtime);
-            }
 
             var recentMatch = gameInfoResponse.Matches.MaxBy(x => x.TimePlayed);
 
@@ -255,7 +250,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                         }
                     };
 
-                Logger.Debug($"{playerScore.Player.Username} scored {playerScore.Score.Score}", LogType.Runtime);
                 players.Add(processor);
             }
             

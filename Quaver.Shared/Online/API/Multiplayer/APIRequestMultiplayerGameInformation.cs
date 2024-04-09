@@ -28,8 +28,6 @@ public class APIRequestMultiplayerGameInformation : APIRequest<MultiplayerGameIn
         var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
         var response = client.Execute(request);
-        
-        Logger.Important(response.Content, LogType.Runtime);
 
         var json = JObject.Parse(response.Content);
 
