@@ -65,6 +65,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private ResultsMultiplayerScrollContainer ScrollContainer { get; set; }
         
+        private LoadingWheelText ResultLoadingWheelText { get; set; }
+        
         private TaskHandler<int, int> GetScoresTask { get; set; } 
 
         /// <summary>
@@ -85,6 +87,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
             Width = ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X;
             GetScoresTask = new TaskHandler<int, int>(GetMatchScores);
+            GetScoresTask.OnCompleted += (_, _) => ResultLoadingWheelText.FadeOut();
+            GetScoresTask.OnCancelled += (_, _) => ResultLoadingWheelText.Destroy();
 
             switch (Game.Ruleset)
             {
@@ -104,7 +108,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             CreateHeaderContainer();
             CreateRulesetText();
             CreateColumnHeaders();
-            CreateScrollContainer();
+            CreateScoresLoadingWheelText();
             
             GetScoresTask.Run(0);
         }
@@ -184,9 +188,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
         /// <summary>
         /// </summary>
-        private void CreateScrollContainer()
+        private void CreateScoresLoadingWheelText()
         {
-            GetScoresTask.Run(0);
+            ResultLoadingWheelText = new LoadingWheelText(25, "Loading results")
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Y = HeaderContainer.Height + 25
+            };
         }
 
         /// <summary>
