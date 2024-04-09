@@ -109,8 +109,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             {
                 foreach (var map in Screen.Map.Mapset.Maps)
                 {
+                    var color = ColorHelper.DifficultyToColor((float)map.Difficulty10X);
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
+
                     if (ImGui.MenuItem(map.DifficultyName, map != Screen.Map))
                         Screen.SwitchToMap(map);
+                    ImGui.PopStyleColor();
                 }
                 ImGui.EndMenu();
             }
