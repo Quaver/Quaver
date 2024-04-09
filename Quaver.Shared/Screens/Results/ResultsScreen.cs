@@ -292,6 +292,10 @@ namespace Quaver.Shared.Screens.Results
             if (ModManager.IsActivated(ModIdentifier.Coop))
                 ModManager.RemoveMod(ModIdentifier.Coop);
 
+            // Remove NF if enabled upon dying
+            if (Gameplay.IsNoFailAddedInGameplay)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
+
             Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value));
         }
 
@@ -711,10 +715,7 @@ namespace Quaver.Shared.Screens.Results
             }
 
             ThreadScheduler.Run(() => SubmitLocalScore(screen, replay));
-            ThreadScheduler.Run(() =>
-            {
-                IsSubmittingScore.Value = SubmitOnlineScore(screen, replay);
-            });
+            ThreadScheduler.Run(() => IsSubmittingScore.Value = SubmitOnlineScore(screen, replay));
         }
 
         /// <summary>

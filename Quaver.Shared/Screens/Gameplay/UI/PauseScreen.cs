@@ -11,8 +11,6 @@ using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
 using System;
 using System.Collections.Generic;
-using Quaver.API.Enums;
-using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Graphics;
@@ -281,10 +279,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Visible = false;
             Screen.ForceFail = true;
             Screen.HasQuit = true;
-
-            // Remove added No Fail mod
-            if (Screen.IsNoFailAddedInGameplay)
-                ModManager.RemoveMod(ModIdentifier.NoFail);
 
             // Make sure the screen transitioner isn't faded out at all
             var screenView = (GameplayScreenView)Screen.View;

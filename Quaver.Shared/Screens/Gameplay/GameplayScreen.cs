@@ -433,10 +433,6 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ModManager.IsActivated(ModIdentifier.Paused))
                 ModManager.RemoveMod(ModIdentifier.Paused);
 
-            // Remove NF if enabled upon dying
-            if (IsNoFailAddedInGameplay)
-                ModManager.RemoveMod(ModIdentifier.NoFail);
-
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
                 LoadedReplay = ReplayHelper.GeneratePerfectReplay(map, MapHash);
@@ -990,7 +986,6 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!Failed || FailureHandled)
                 return;
 
-
             try
             {
                 if (!IsPaused && HasStarted)
@@ -1082,10 +1077,6 @@ namespace Quaver.Shared.Screens.Gameplay
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             SkinManager.Skin.SoundRetry.CreateChannel().Play();
             CustomAudioSampleCache.StopAll();
-
-
-            if (IsNoFailAddedInGameplay)
-                ModManager.RemoveMod(ModIdentifier.NoFail);
 
             if (IsPlayTesting)
                 QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor), true);
