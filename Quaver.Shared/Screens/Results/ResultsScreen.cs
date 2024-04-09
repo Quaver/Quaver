@@ -784,11 +784,11 @@ namespace Quaver.Shared.Screens.Results
             const string skipping = "Skipping online score submission due to:";
 
             // Don't submit scores if disconnected from the server completely.
-            // if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
-            // {
-            //     Logger.Important($"{skipping} being fully disconnected", LogType.Network);
-            //     return false;
-            // }
+            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
+            {
+                Logger.Important($"{skipping} being fully disconnected", LogType.Network);
+                return false;
+            }
 
             // Don't submit scores that have unranked modifiers
             if (ModManager.CurrentModifiersList.Any(x => !x.Ranked()))
