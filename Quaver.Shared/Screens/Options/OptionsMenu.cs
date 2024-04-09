@@ -380,12 +380,12 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemKeybind(containerRect, "Pause/Play Track", ConfigManager.KeyEditorPausePlay),
                         new OptionsItemKeybind(containerRect, "Decrease Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
-                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate),
-                        new OptionsItemCheckbox(containerRect, "Invert Scrolling", ConfigManager.InvertScrolling)
+                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
                     }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot)
+                        new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot),
+                        new OptionsItemCheckbox(containerRect, "Invert Scrolling", ConfigManager.InvertScrolling)
                     })
                 }),
                 new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
