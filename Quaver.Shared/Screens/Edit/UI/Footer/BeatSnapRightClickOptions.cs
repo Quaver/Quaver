@@ -12,6 +12,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Edit.UI.Footer
 {
@@ -39,6 +40,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             BeatSnap = beatSnap;
             AvailableBeatSnaps = availableBeatSnaps;
             ItemContainer.Scrollbar.Tint = Color.White;
+            ItemContainer.Scrollbar.Visible = Opened;
             ItemContainer.Scrollbar.Width = 2;
             ItemContainer.EasingType = Easing.OutQuint;
             ItemContainer.TimeToCompleteScroll = 1200;
@@ -82,8 +84,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 
         public override void Update(GameTime gameTime)
         {
-            ItemContainer.Scrollbar.Visible = Opened;
-            ItemContainer.InputEnabled = Opened;
+            ItemContainer.InputEnabled = GraphicsHelper.RectangleContains(
+                ItemContainer.ScreenRectangle,
+                MouseManager.CurrentState.Position
+            );
 
             base.Update(gameTime);
         }
