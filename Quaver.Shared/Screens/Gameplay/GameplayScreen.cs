@@ -985,9 +985,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Add the no fail mod to their score.
                 NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to dying " +
                                                                     "during gameplay!", null, true);
-                ModManager.AddMod(ModIdentifier.NoFail);
-                ReplayCapturer.Replay.Mods |= ModIdentifier.NoFail;
-                Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
                 IsNoFailAddedInGameplay = true;
             }
             if (!Failed || FailureHandled)

@@ -582,6 +582,13 @@ namespace Quaver.Shared.Screens.Results
 
             var inputManager = (KeysInputManager) screen.Ruleset.InputManager;
 
+            if (screen.IsNoFailAddedInGameplay)
+            {
+                ModManager.AddMod(ModIdentifier.NoFail);
+                screen.ReplayCapturer.Replay.Mods |= ModIdentifier.NoFail;
+                Processor.Value.Mods |= ModIdentifier.NoFail;
+            }
+
             if (screen.InReplayMode)
             {
                 Processor.Value.PlayerName = screen.LoadedReplay.PlayerName;
@@ -707,9 +714,6 @@ namespace Quaver.Shared.Screens.Results
             ThreadScheduler.Run(() =>
             {
                 IsSubmittingScore.Value = SubmitOnlineScore(screen, replay);
-                // Remove added No Fail mod
-                if (screen.IsNoFailAddedInGameplay)
-                    ModManager.RemoveMod(ModIdentifier.NoFail);
             });
         }
 
@@ -780,11 +784,11 @@ namespace Quaver.Shared.Screens.Results
             const string skipping = "Skipping online score submission due to:";
 
             // Don't submit scores if disconnected from the server completely.
-            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
-            {
-                Logger.Important($"{skipping} being fully disconnected", LogType.Network);
-                return false;
-            }
+            // if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
+            // {
+            //     Logger.Important($"{skipping} being fully disconnected", LogType.Network);
+            //     return false;
+            // }
 
             // Don't submit scores that have unranked modifiers
             if (ModManager.CurrentModifiersList.Any(x => !x.Ranked()))
