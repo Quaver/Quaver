@@ -108,7 +108,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             foreach (var snap in availableSnaps)
                 options.Add($"1/{StringHelper.AddOrdinal(snap)}", ColorHelper.BeatSnapToColor(snap));
 
-            options.Add("Custom", Color.White);
+            // You cannot add more snaps, so this option is redundant.
+            if (availableSnaps.Count is not 48)
+                options.Add("Custom", Color.White);
 
             return options;
         }
