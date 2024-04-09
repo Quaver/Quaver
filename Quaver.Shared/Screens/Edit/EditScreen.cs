@@ -666,7 +666,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             var leftPressed = KeyboardManager.IsUniqueKeyPress(Keys.Left);
 
-            if (!leftPressed && MouseManager.CurrentState.ScrollWheelValue <= MouseManager.PreviousState.ScrollWheelValue)
+            if (!leftPressed && !MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value))
                 return;
 
             if (Track == null || Track.IsDisposed || (!CanSeek() && !leftPressed))
@@ -681,7 +681,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             var rightPressed = KeyboardManager.IsUniqueKeyPress(Keys.Right);
 
-            if (!rightPressed && MouseManager.CurrentState.ScrollWheelValue >= MouseManager.PreviousState.ScrollWheelValue)
+            if (!rightPressed && !MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value))
                 return;
 
             if (Track == null || Track.IsDisposed || (!CanSeek() && !rightPressed))
@@ -694,8 +694,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleBeatSnapChanges()
         {
-            var scrolledForward = MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue;
-            var scrolledBackward = MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue;
+            var scrolledForward = MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value);
+            var scrolledBackward = MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value);
 
             if (KeyboardManager.IsCtrlDown() && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
                 ChangeBeatSnap(Direction.Forward);

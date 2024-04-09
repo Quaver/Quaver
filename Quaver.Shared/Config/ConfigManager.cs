@@ -28,6 +28,7 @@ using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
+using Wobble.Graphics.Sprites;
 using Wobble.Input;
 using Wobble.Logging;
 
@@ -787,6 +788,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
+        ///     Whether scrolling in editor is inverted.
+        /// </summary>
+        internal static Bindable<bool> InvertScrolling { get; private set; }
+
+        /// <summary>
         /// </summary>
         internal static Bindable<Keys> KeyScreenshot { get; private set; }
 
@@ -1017,6 +1023,7 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            InvertScrolling = ReadValue(@"InvertScrolling", false, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
@@ -1096,6 +1103,9 @@ namespace Quaver.Shared.Config
             PrioritizedMapDifficulty7K = ReadInt(@"PrioritizedMapDifficulty7K", 0, 0, 1000, data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
 
+            // Bind global inverted scrolling so ScrollContainers get InvertScrolling setting too
+            ScrollContainer.GlobalInvertedScrolling = InvertScrolling;
+            
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
