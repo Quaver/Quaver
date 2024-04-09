@@ -105,6 +105,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("New Song", "CTRL + N"))
                 DialogManager.Show(new EditorNewSongDialog());
 
+            if (ImGui.BeginMenu("Switch Difficulty"))
+            {
+                foreach (var map in Screen.Map.Mapset.Maps)
+                {
+                    var color = ColorHelper.DifficultyToColor((float)map.Difficulty10X);
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
+
+                    if (ImGui.MenuItem(map.DifficultyName, map != Screen.Map))
+                        Screen.SwitchToMap(map);
+                    ImGui.PopStyleColor();
+                }
+                ImGui.EndMenu();
+            }
+
             if (ImGui.BeginMenu("Create New Difficulty", Screen.Map.Game == MapGame.Quaver))
             {
                 if (ImGui.MenuItem("New Map"))
