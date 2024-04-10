@@ -238,6 +238,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Flip Objects", "CTRL + H", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.FlipSelectedObjects();
 
+            if (ImGui.BeginMenu("Swap Lanes of Objects", Screen.SelectedHitObjects.Value.Count > 0))
+            {
+                for (var i = 1; i <= Screen.WorkingMap.GetKeyCount(); i++)
+                {
+                    if (ImGui.BeginMenu($"Lane {i}"))
+                    { 
+                        for (var j = 1; j <= Screen.WorkingMap.GetKeyCount(); j++)
+                        {
+                            if (i == j) continue;
+                            if (ImGui.MenuItem($"Lane {j}", $"ALT + {i} + {j}"))
+                            {
+                                Screen.SwapSelectedObjects(i, j);
+                            }
+                        }
+
+                        ImGui.EndMenu();
+                    }
+                }
+                ImGui.EndMenu();
+            }
+
             if (ImGui.BeginMenu($"Move Objects To Layer", Screen.SelectedHitObjects.Value.Count > 0))
             {
                 if (ImGui.MenuItem("Default Layer", ""))
