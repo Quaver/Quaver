@@ -408,7 +408,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Beat Snap Divisor"))
             {
-                foreach (var snap in Screen.AvailableBeatSnaps)
+                foreach (var snap in EditScreen.AvailableBeatSnaps)
                 {
                     if (ImGui.MenuItem($"1/{StringHelper.AddOrdinal(snap)}", "", Screen.BeatSnap.Value == snap))
                         Screen.BeatSnap.Value = snap;

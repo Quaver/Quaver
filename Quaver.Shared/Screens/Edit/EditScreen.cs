@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     All of the available beat snaps to use in the editor.
         /// </summary>
-        public List<int> AvailableBeatSnaps { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
+        public static List<int> AvailableBeatSnaps { get; set; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
 
         /// <summary>
         /// </summary>
@@ -927,6 +927,11 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Removes All Custom Beat Snaps added by the user in CustomBeatSnapDialog.
+        /// </summary>
+        private void RemoveCustomBeatSnaps() => AvailableBeatSnaps = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
+
+        /// <summary>
         /// </summary>
         private void HandleKeyPressPlayfieldZoom()
         {
@@ -1341,7 +1346,7 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
-        ///     Exits the enditor and returns to song select
+        ///     Exits the editor and returns to song select
         /// </summary>
         public void LeaveEditor()
         {
@@ -1362,6 +1367,7 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             ModManager.RemoveAllMods();
+            RemoveCustomBeatSnaps();
 
             Exit(() => new SelectionScreen());
         }
