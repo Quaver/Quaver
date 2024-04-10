@@ -207,6 +207,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> InvertBeatSnapScroll { get; } = ConfigManager.EditorInvertBeatSnapScroll ?? new Bindable<bool>(false);
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -695,7 +699,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             var leftPressed = KeyboardManager.IsUniqueKeyPress(Keys.Left);
 
-            if (!leftPressed && !MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value))
+            if (!leftPressed && !MouseManager.IsScrollingDown(ConfigManager.InvertEditorScrolling.Value))
                 return;
 
             if (Track == null || Track.IsDisposed || (!CanSeek() && !leftPressed))
@@ -710,7 +714,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             var rightPressed = KeyboardManager.IsUniqueKeyPress(Keys.Right);
 
-            if (!rightPressed && !MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value))
+            if (!rightPressed && !MouseManager.IsScrollingUp(ConfigManager.InvertEditorScrolling.Value))
                 return;
 
             if (Track == null || Track.IsDisposed || (!CanSeek() && !rightPressed))
@@ -723,8 +727,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleBeatSnapChanges()
         {
-            var scrolledForward = MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value);
-            var scrolledBackward = MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value);
+            var scrolledForward = MouseManager.IsScrollingUp(InvertBeatSnapScroll.Value);
+            var scrolledBackward = MouseManager.IsScrollingDown(InvertBeatSnapScroll.Value);
 
             if (KeyboardManager.IsCtrlDown() && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
                 ChangeBeatSnap(Direction.Forward);
