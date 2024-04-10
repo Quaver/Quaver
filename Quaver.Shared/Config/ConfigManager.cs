@@ -647,7 +647,6 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayNotificationsInGameplay { get; private set; }
-        
 
         /// <summary>
         /// </summary>
