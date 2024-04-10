@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Force.DeepCloner;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -370,7 +371,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
-                var testingQua = ObjectHelper.DeepClone(map);
+                var testingQua = map.DeepClone();
                 testingQua.HitObjects.RemoveAll(x => x.StartTime + 2 < playTestTime);
                 Qua.RestoreDefaultValues(testingQua);
 

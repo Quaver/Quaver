@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Force.DeepCloner;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -200,7 +201,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 var qua = Qua ?? map.LoadQua();
 
                 if (qua == Qua)
-                    qua = ObjectHelper.DeepClone(qua);
+                    qua = qua.DeepClone();
 
                 map.Qua = qua;
                 map.Qua.ApplyMods(ModManager.Mods);

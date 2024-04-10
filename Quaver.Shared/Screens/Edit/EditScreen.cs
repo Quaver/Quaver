@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Force.DeepCloner;
 using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -260,7 +261,7 @@ namespace Quaver.Shared.Screens.Edit
             try
             {
                 OriginalQua = map.LoadQua();
-                WorkingMap = ObjectHelper.DeepClone(OriginalQua);
+                WorkingMap = OriginalQua.DeepClone();
             }
             catch (Exception e)
             {
@@ -1407,7 +1408,7 @@ namespace Quaver.Shared.Screens.Edit
                     NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
                 }
 
-                var map = ObjectHelper.DeepClone(WorkingMap);
+                var map = WorkingMap.DeepClone();
                 map.ApplyMods(ModManager.Mods);
 
                 var startTime = fromStart ? 0 : Track.Time;
@@ -1584,7 +1585,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 try
                 {
-                    var qua = ObjectHelper.DeepClone(WorkingMap);
+                    var qua = WorkingMap.DeepClone();
                     qua.DifficultyName = "";
                     qua.MapId = -1;
                     qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
