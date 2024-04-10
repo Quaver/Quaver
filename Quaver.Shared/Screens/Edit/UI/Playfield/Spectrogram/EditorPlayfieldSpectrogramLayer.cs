@@ -1,8 +1,9 @@
-namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
-
-public enum EditorPlayfieldSpectrogramLayer
+namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 {
-    BehindTimingLines,
-    BehindNotes,
-    FrontMost
+    public enum EditorPlayfieldSpectrogramLayer
+    {
+        BehindTimingLines,
+        BehindNotes,
+        FrontMost
+    }
 }

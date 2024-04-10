@@ -1,9 +1,10 @@
-namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
-
-public enum EditorPlayfieldSpectrogramFrequencyScale
+namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 {
-    Mel,
-    Erb1,
-    Erb2,
-    Linear
+    public enum EditorPlayfieldSpectrogramFrequencyScale
+    {
+        Mel,
+        Erb1,
+        Erb2,
+        Linear
+    }
 }
