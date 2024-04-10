@@ -247,6 +247,10 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                         new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
                         new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                    }),
+                    new OptionsSubcategory("Others", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing)
                     })
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>

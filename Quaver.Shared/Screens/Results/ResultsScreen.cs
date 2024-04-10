@@ -817,7 +817,7 @@ namespace Quaver.Shared.Screens.Results
             // User is playing on different windows (or multiplayer), so their score needs to be converted to Standard*.
             // This will validate if the user failed at any point during the play as well. Their score will need
             // to be submitted at the point of failure in both scenarios.
-            if (JudgementWindowsDatabaseCache.Selected.Value != JudgementWindowsDatabaseCache.Standard || screen.IsMultiplayerGame)
+            if (JudgementWindowsDatabaseCache.Selected.Value != JudgementWindowsDatabaseCache.Standard || screen.IsMultiplayerGame || screen.FailedDuringGameplay)
             {
                 var virtualPlayer = new VirtualReplayPlayer(screen.ReplayCapturer.Replay, screen.Map, new JudgementWindows(), true);
                 var originalProcessor = screen.Ruleset.ScoreProcessor;
