@@ -517,6 +517,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
+                
+                if (ImGui.BeginMenu("Frequency Scale"))
+                {
+                    foreach (var scale in Enum.GetValues<EditorPlayfieldSpectrogramFrequencyScale>())
+                    {
+                        if (ImGui.MenuItem($"{scale}", "", scale == ConfigManager.EditorSpectrogramFrequencyScale.Value))
+                            ConfigManager.EditorSpectrogramFrequencyScale.Value = scale;
+                    }
+                    ImGui.EndMenu();
+                }
 
                 if (ImGui.BeginMenu("Cutoff Factor"))
                 {
@@ -540,17 +550,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     ImGui.EndMenu();
                 }
                 
-                if (ImGui.BeginMenu("Maximum Frequency"))
-                {
-                    for (var f = 5000; f <= 10000; f += 1000)
-                    {
-                        if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMaximumFrequency.Value == f,
-                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f)) 
-                            ConfigManager.EditorSpectrogramMaximumFrequency.Value = f;
-                    }
-                    ImGui.EndMenu();
-                }
-                
                 if (ImGui.BeginMenu("Minimum Frequency"))
                 {
                     for (var f = 0; f <= 1500; f += 125)
@@ -562,6 +561,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     ImGui.EndMenu();
                 }
 
+                if (ImGui.BeginMenu("Maximum Frequency"))
+                {
+                    for (var f = 5000; f <= 10000; f += 1000)
+                    {
+                        if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMaximumFrequency.Value == f,
+                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f)) 
+                            ConfigManager.EditorSpectrogramMaximumFrequency.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+                
                 ImGui.EndMenu();
             }
 

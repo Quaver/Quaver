@@ -550,6 +550,8 @@ namespace Quaver.Shared.Config
         
         internal static Bindable<float> EditorSpectrogramIntensityFactor { get; private set; }
         
+        internal static Bindable<EditorPlayfieldSpectrogramFrequencyScale> EditorSpectrogramFrequencyScale { get; private set; }
+        
         internal static BindableInt EditorSpectrogramFftSize { get; private set; }
 
         /// <summary>
@@ -1099,6 +1101,7 @@ namespace Quaver.Shared.Config
             EditorSpectrogramLayer = ReadValue("EditorSpectrogramLayer", EditorPlayfieldSpectrogramLayer.BehindTimingLines, data);
             EditorSpectrogramCutoffFactor = ReadValue("EditorSpectrogramCutoffFactor", 0.3f, data);
             EditorSpectrogramIntensityFactor = ReadValue("EditorSpectrogramIntensityFactor", 7.5f, data);
+            EditorSpectrogramFrequencyScale = ReadValue("EditorSpectrogramFrequencyScale", EditorPlayfieldSpectrogramFrequencyScale.Linear, data);
             EditorSpectrogramFftSize = ReadInt(@"EditorSpectrumFftSize", 256, 256, 16384, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);

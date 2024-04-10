@@ -29,6 +29,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private int ReferenceWidth { get; }
 
+        private Func<float, float> FrequencyTransform =>
+            ConfigManager.EditorSpectrogramFrequencyScale.Value switch
+            {
+                EditorPlayfieldSpectrogramFrequencyScale.Mel => Mel,
+                EditorPlayfieldSpectrogramFrequencyScale.Erb1 => Erb1,
+                EditorPlayfieldSpectrogramFrequencyScale.Erb2 => Erb2,
+                EditorPlayfieldSpectrogramFrequencyScale.Linear => Linear,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
         public EditorPlayfieldSpectrogramSlice(EditorPlayfieldSpectrogram spectrogram, EditorPlayfield playfield,
             float lengthMs, int sliceSize,
             float[,] sliceData,
@@ -92,11 +102,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             {
                 for (var x = 0; x < Spectrogram.FftCount; x++)
                 {
-                    var textureX = CalculateTextureX(x, Linear);
+                    var textureX = CalculateTextureX(x, FrequencyTransform);
                     if (textureX == -1) continue;
                     var intensity = GetIntensity(sliceData, y, x);
                     var index = DataColorIndex(SliceSize, y, textureX);
-                    var nextTextureX = CalculateTextureX(x + 1, Linear);
+                    var nextTextureX = CalculateTextureX(x + 1, FrequencyTransform);
                     if (nextTextureX == -1) nextTextureX = ReferenceWidth - 1;
                     var nextIntensity = x == Spectrogram.FftCount - 1
                         ? intensity

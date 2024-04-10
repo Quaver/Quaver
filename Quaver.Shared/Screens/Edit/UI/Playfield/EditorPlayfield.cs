@@ -413,6 +413,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramMinimumFrequency.ValueChanged += OnSpectrogramMinimumFrequencyChanged;
             ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged += OnSpectrogramCutoffFactorChanged;
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged += OnSpectrogramIntensityFactorChanged;
+            ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged += OnSpectrogramFrequencyScaleChanged;
         }
 
         /// <inheritdoc />
@@ -552,6 +553,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramMinimumFrequency.ValueChanged -= OnSpectrogramMinimumFrequencyChanged;
             ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged -= OnSpectrogramCutoffFactorChanged;
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged -= OnSpectrogramIntensityFactorChanged;
+            ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged -= OnSpectrogramFrequencyScaleChanged;
 
             base.Destroy();
         }
@@ -1635,6 +1637,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             => ReloadSpectrogram();
 
         private void OnSpectrogramIntensityFactorChanged(object sender, BindableValueChangedEventArgs<float> e)
+            => ReloadSpectrogram();
+        
+        private void OnSpectrogramFrequencyScaleChanged(object sender, BindableValueChangedEventArgs<EditorPlayfieldSpectrogramFrequencyScale> e)
             => ReloadSpectrogram();
 
         private void ReloadWaveform()
