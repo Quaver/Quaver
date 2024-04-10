@@ -22,6 +22,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
@@ -538,6 +539,24 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
+        
+        internal static Bindable<int> EditorSpectrogramMaximumFrequency { get; private set; }
+        
+        internal static Bindable<int> EditorSpectrogramMinimumFrequency { get; private set; }
+        
+        internal static Bindable<EditorPlayfieldSpectrogramLayer> EditorSpectrogramLayer { get; private set; }
+        
+        internal static Bindable<float> EditorSpectrogramCutoffFactor { get; private set; }
+        
+        internal static Bindable<float> EditorSpectrogramIntensityFactor { get; private set; }
+        
+        internal static Bindable<EditorPlayfieldSpectrogramFrequencyScale> EditorSpectrogramFrequencyScale { get; private set; }
+        
+        internal static BindableInt EditorSpectrogramFftSize { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<EditorPlayfieldWaveformAudioDirection> EditorAudioDirection { get; private set; }
 
         /// <summary>
@@ -555,6 +574,10 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static BindableInt EditorWaveformBrightness { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt EditorSpectrogramBrightness { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1083,11 +1106,20 @@ namespace Quaver.Shared.Config
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
+            EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", false, data);
+            EditorSpectrogramMaximumFrequency = ReadInt(@"EditorSpectrogramMaximumFrequency", 7000, 5000, 10000, data);
+            EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 250, 0, 1500, data);
+            EditorSpectrogramLayer = ReadValue("EditorSpectrogramLayer", EditorPlayfieldSpectrogramLayer.BehindTimingLines, data);
+            EditorSpectrogramCutoffFactor = ReadValue("EditorSpectrogramCutoffFactor", 0.34f, data);
+            EditorSpectrogramIntensityFactor = ReadValue("EditorSpectrogramIntensityFactor", 9.5f, data);
+            EditorSpectrogramFrequencyScale = ReadValue("EditorSpectrogramFrequencyScale", EditorPlayfieldSpectrogramFrequencyScale.Linear, data);
+            EditorSpectrogramFftSize = ReadInt(@"EditorSpectrumFftSize", 512, 256, 16384, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
             EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
             EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
+            EditorSpectrogramBrightness = ReadInt(@"EditorSpectrogramBrightness", 50, 0, 100, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -500, 500, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
