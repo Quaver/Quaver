@@ -609,6 +609,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         private void CreateHitPositionLine() => HitPositionLine = new Sprite
         {
+            Parent = this,
             Alignment = Alignment.TopCenter,
             Y = HitPositionY,
             Size = new ScalableVector2(Width - BorderLeft.Width * 2, 6),
