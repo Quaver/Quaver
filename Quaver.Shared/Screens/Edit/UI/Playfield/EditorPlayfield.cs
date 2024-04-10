@@ -409,6 +409,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             WaveFormAudioDirection.ValueChanged += OnWaveFormAudioDirectionChanged;
             WaveformFilter.ValueChanged += OnWaveformFilterChanged;
             SpectrogramFftSize.ValueChanged += OnSpectrogramFftSizeChanged;
+            ConfigManager.EditorSpectrogramMaximumFrequency.ValueChanged += OnSpectrogramFrequencyWindowSizeChanged;
+            ConfigManager.EditorSpectrogramMinimumFrequency.ValueChanged += OnSpectrogramMinimumFrequencyChanged;
+            ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged += OnSpectrogramCutoffFactorChanged;
+            ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged += OnSpectrogramIntensityFactorChanged;
         }
 
         /// <inheritdoc />
@@ -465,17 +469,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
-            
-            if (ShowSpectrogram.Value)
+
+            if (ShowSpectrogram.Value && ConfigManager.EditorSpectrogramLayer.Value ==
+                EditorPlayfieldSpectrogramLayer.BehindTimingLines)
                 Spectrogram?.Draw(gameTime);
-            
+
             Timeline.Draw(gameTime);
+
+            if (ShowSpectrogram.Value &&
+                ConfigManager.EditorSpectrogramLayer.Value == EditorPlayfieldSpectrogramLayer.BehindNotes)
+                Spectrogram?.Draw(gameTime);
 
             if (ShowWaveform.Value)
                 Waveform?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
-            DrawHitObjects(gameTime);
+            if (ShowSpectrogram.Value &&
+                ConfigManager.EditorSpectrogramLayer.Value == EditorPlayfieldSpectrogramLayer.FrontMost)
+                Spectrogram?.Draw(gameTime);
+            else
+                DrawHitObjects(gameTime);
+            
             GameBase.Game.SpriteBatch.End();
 
             // Draw the button on top of the hitobjects because it serves as a dimming
@@ -534,6 +548,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             WaveformFilter.ValueChanged -= OnWaveformFilterChanged;
 
             SpectrogramFftSize.ValueChanged -= OnSpectrogramFftSizeChanged;
+            ConfigManager.EditorSpectrogramMaximumFrequency.ValueChanged -= OnSpectrogramFrequencyWindowSizeChanged;
+            ConfigManager.EditorSpectrogramMinimumFrequency.ValueChanged -= OnSpectrogramMinimumFrequencyChanged;
+            ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged -= OnSpectrogramCutoffFactorChanged;
+            ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged -= OnSpectrogramIntensityFactorChanged;
 
             base.Destroy();
         }
@@ -1605,6 +1623,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BindableValueChangedEventArgs<EditorPlayfieldWaveformAudioDirection> e) => ReloadWaveform();
 
         private void OnSpectrogramFftSizeChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramFrequencyWindowSizeChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramMinimumFrequencyChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramCutoffFactorChanged(object sender, BindableValueChangedEventArgs<float> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramIntensityFactorChanged(object sender, BindableValueChangedEventArgs<float> e)
             => ReloadSpectrogram();
 
         private void ReloadWaveform()

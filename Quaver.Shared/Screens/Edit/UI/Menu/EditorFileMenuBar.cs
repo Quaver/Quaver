@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
@@ -503,6 +504,60 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     {
                         if (ImGui.MenuItem($"{size}", "", Screen.SpectrogramFftSize.Value == size))
                             Screen.SpectrogramFftSize.Value = size;
+                    }
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Layer"))
+                {
+                    foreach (var layer in Enum.GetValues<EditorPlayfieldSpectrogramLayer>())
+                    {
+                        if (ImGui.MenuItem($"{layer}", "", layer == ConfigManager.EditorSpectrogramLayer.Value))
+                            ConfigManager.EditorSpectrogramLayer.Value = layer;
+                    }
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Cutoff Factor"))
+                {
+                    for (var i = 0; i <= 10; i++)
+                    {
+                        var f = 0.2f + 0.02f * i;
+                        if (ImGui.MenuItem($"{f:0.00}", "", Math.Abs(f - ConfigManager.EditorSpectrogramCutoffFactor.Value) < 0.01f))
+                            ConfigManager.EditorSpectrogramCutoffFactor.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+                
+                if (ImGui.BeginMenu("Intensity Factor"))
+                {
+                    for (var i = 0; i < 10; i++)
+                    {
+                        var f = 0.5f * i + 5.0f;
+                        if (ImGui.MenuItem($"{f}", "", Math.Abs(f - ConfigManager.EditorSpectrogramIntensityFactor.Value) < 0.01f))
+                            ConfigManager.EditorSpectrogramIntensityFactor.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+                
+                if (ImGui.BeginMenu("Maximum Frequency"))
+                {
+                    for (var f = 5000; f <= 10000; f += 1000)
+                    {
+                        if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMaximumFrequency.Value == f,
+                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f)) 
+                            ConfigManager.EditorSpectrogramMaximumFrequency.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+                
+                if (ImGui.BeginMenu("Minimum Frequency"))
+                {
+                    for (var f = 0; f <= 1500; f += 125)
+                    {
+                        if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMinimumFrequency.Value == f,
+                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f)) 
+                            ConfigManager.EditorSpectrogramMinimumFrequency.Value = f;
                     }
                     ImGui.EndMenu();
                 }

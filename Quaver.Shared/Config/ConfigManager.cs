@@ -22,6 +22,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
@@ -538,6 +539,16 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
+        
+        internal static Bindable<int> EditorSpectrogramMaximumFrequency { get; private set; }
+        
+        internal static Bindable<int> EditorSpectrogramMinimumFrequency { get; private set; }
+        
+        internal static Bindable<EditorPlayfieldSpectrogramLayer> EditorSpectrogramLayer { get; private set; }
+        
+        internal static Bindable<float> EditorSpectrogramCutoffFactor { get; private set; }
+        
+        internal static Bindable<float> EditorSpectrogramIntensityFactor { get; private set; }
         
         internal static BindableInt EditorSpectrogramFftSize { get; private set; }
 
@@ -1083,6 +1094,11 @@ namespace Quaver.Shared.Config
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", false, data);
+            EditorSpectrogramMaximumFrequency = ReadInt(@"EditorSpectrogramMaximumFrequency", 10000, 2500, 20000, data);
+            EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 0, 0, 17500, data);
+            EditorSpectrogramLayer = ReadValue("EditorSpectrogramLayer", EditorPlayfieldSpectrogramLayer.BehindTimingLines, data);
+            EditorSpectrogramCutoffFactor = ReadValue("EditorSpectrogramCutoffFactor", 0.3f, data);
+            EditorSpectrogramIntensityFactor = ReadValue("EditorSpectrogramIntensityFactor", 7.5f, data);
             EditorSpectrogramFftSize = ReadInt(@"EditorSpectrumFftSize", 256, 256, 16384, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
