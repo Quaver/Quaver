@@ -594,6 +594,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorInvertBeatSnapScroll { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static BindableInt EditorLongNoteOpacity { get; private set; }
 
         /// <summary>
@@ -643,7 +647,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayNotificationsInGameplay { get; private set; }
-        
+
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayPauseWarning { get; private set; }
@@ -820,9 +824,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
-        ///     Whether scrolling in editor is inverted.
+        ///     Whether global scrolling is inverted.
         /// </summary>
         internal static Bindable<bool> InvertScrolling { get; private set; }
+
+        /// <summary>
+        ///     Whether scrolling in editor is inverted.
+        /// </summary>
+        internal static Bindable<bool> InvertEditorScrolling { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1057,6 +1066,7 @@ namespace Quaver.Shared.Config
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
             InvertScrolling = ReadValue(@"InvertScrolling", false, data);
+            InvertEditorScrolling = ReadValue(@"InvertEditorScrolling", true, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
@@ -1109,6 +1119,7 @@ namespace Quaver.Shared.Config
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
+            EditorInvertBeatSnapScroll = ReadValue(@"EditorInvertBeatSnapScroll", false, data);
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
