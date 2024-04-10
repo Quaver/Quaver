@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Wobble.Graphics;
 using Wobble.Window;
 
@@ -25,7 +27,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
             CreateBookmarks();
 
             Screen.ActionManager.BookmarkAdded += OnBookmarkAdded;
+            Screen.ActionManager.BookmarkBatchAdded += OnBookmarkBatchAdded;
             Screen.ActionManager.BookmarkRemoved += OnBookmarkRemoved;
+            Screen.ActionManager.BookmarkBatchRemoved += OnBookmarkBatchRemoved;
             Screen.ActionManager.BookmarkEdited += OnBookmarkEdited;
             Screen.ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
         }
@@ -33,7 +37,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
         public override void Destroy()
         {
             Screen.ActionManager.BookmarkAdded -= OnBookmarkAdded;
+            Screen.ActionManager.BookmarkBatchAdded -= OnBookmarkBatchAdded;
             Screen.ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
+            Screen.ActionManager.BookmarkBatchRemoved -= OnBookmarkBatchRemoved;
             Screen.ActionManager.BookmarkEdited -= OnBookmarkEdited;
             Screen.ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
             base.Destroy();
@@ -69,8 +75,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
         }
         
         private void OnBookmarkAdded(object sender, EditorActionBookmarkAddedEventArgs e) => AddBookmark(e.Bookmark);
+        private void OnBookmarkBatchAdded(object sender, EditorActionBookmarkBatchAddedEventArgs e)
+        {
+            foreach (var bookmark in e.Bookmarks) 
+                AddBookmark(bookmark);
+        }
+
         private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e) => RemoveBookmark(e.Bookmark);
-        
+        private void OnBookmarkBatchRemoved(object sender, EditorActionBookmarkBatchRemovedEventArgs e)
+        {
+            foreach (var bookmark in e.Bookmarks) 
+                RemoveBookmark(bookmark);
+        }
+
         private void OnBookmarkEdited(object sender, EditorActionBookmarkEditedEventArgs e)
         {
             RemoveBookmark(e.Bookmark);

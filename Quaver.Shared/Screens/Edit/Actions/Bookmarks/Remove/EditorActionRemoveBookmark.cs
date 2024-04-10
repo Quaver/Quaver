@@ -1,3 +1,4 @@
+using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
@@ -14,6 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
 
         private BookmarkInfo Bookmark { get; }
 
+        [MoonSharpVisible(false)]
         public EditorActionRemoveBookmark(EditorActionManager manager, Qua map, BookmarkInfo bookmark)
         {
             ActionManager = manager;
@@ -21,6 +23,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
             Bookmark = bookmark;
         }
         
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             WorkingMap.Bookmarks.Remove(Bookmark);
@@ -29,6 +32,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
             ActionManager.TriggerEvent(Type, new EditorActionBookmarkRemovedEventArgs(Bookmark));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionAddBookmark(ActionManager, WorkingMap, Bookmark).Perform();
     }
 }
