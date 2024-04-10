@@ -461,6 +461,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
                 Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
 
+            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
+                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
+
             ImGui.Separator();
 
             if (ImGui.BeginMenu("Waveform"))
