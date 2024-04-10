@@ -54,9 +54,9 @@ namespace Quaver.Shared.Screens.Options.Content
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var dropdownHovered = ButtonManager.Buttons.Any(x => x is DropdownItem item &&
+            var dropdownHovered = ButtonManager.Buttons.Find(x => x is DropdownItem item &&
                                                  GraphicsHelper.RectangleContains(x.ScreenRectangle, MouseManager.CurrentState.Position) &&
-                                                 item.Dropdown.Opened);
+                                                 item.Dropdown.Opened) is not null;
 
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)

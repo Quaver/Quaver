@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
             if (Playfield.GetHoveredHitObject() != null)
                 return;
 
-            if (ButtonManager.Buttons.Any(x => x.IsHovered) && ! Playfield.Button.IsHovered)
+            if (ButtonManager.Buttons.Find(x => x.IsHovered) is not null && ! Playfield.Button.IsHovered)
                 return;
 
             var clickArea = new RectangleF(Playfield.ScreenRectangle.X - 300, Playfield.ScreenRectangle.Y,

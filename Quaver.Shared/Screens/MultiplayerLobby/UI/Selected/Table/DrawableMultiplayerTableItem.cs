@@ -173,7 +173,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// </summary>
         private void HandleClick()
         {
-            if (!IsHovered() || IsSelectorHovered() || DialogManager.Dialogs.Count != 0 || ButtonManager.Buttons.Any(x => x.IsHovered))
+            if (!IsHovered() || IsSelectorHovered() || DialogManager.Dialogs.Count != 0 || ButtonManager.Buttons.Find(x => x.IsHovered) is not null)
                 return;
 
             if (!MouseManager.IsUniqueClick(MouseButton.Left))
