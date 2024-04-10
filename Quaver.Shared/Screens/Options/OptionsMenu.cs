@@ -208,6 +208,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Enable Hitsounds", ConfigManager.EnableHitsounds),
+                        new OptionsItemCheckbox(containerRect, "Enable Long Note Release Hitsounds", ConfigManager.EnableLongNoteReleaseHitsounds),
                         new OptionsItemCheckbox(containerRect, "Enable Keysounds", ConfigManager.EnableKeysounds)
                     }),
                     new OptionsSubcategory("Input", new List<OptionsItem>()
@@ -246,6 +247,10 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                         new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
                         new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                    }),
+                    new OptionsSubcategory("Others", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing)
                     })
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
@@ -375,6 +380,8 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
+                        new OptionsItemKeybind(containerRect, "Toggle Mirror Mod", ConfigManager.KeyToggleMirror),
+                        new OptionsItemKeybind(containerRect, "Toggle Playtest Autoplay", ConfigManager.KeyTogglePlaytestAutoplay),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {
@@ -384,7 +391,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot)
+                        new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot),
+                        new OptionsItemCheckbox(containerRect, "Invert Scrolling", ConfigManager.InvertScrolling)
                     })
                 }),
                 new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
@@ -414,7 +422,8 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemCheckbox(containerRect, "Display Notifications From Bottom-To-Top", ConfigManager.DisplayNotificationsBottomToTop),
                         new OptionsItemCheckbox(containerRect, "Display Online Friend Notifications", ConfigManager.DisplayFriendOnlineNotifications),
-                        new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications)
+                        new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications),
+                        new OptionsItemCheckbox(containerRect, "Display Warning For Pausing", ConfigManager.DisplayPauseWarning)
                     }),
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
                     {

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Force.DeepCloner;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -172,7 +173,8 @@ namespace Quaver.Shared.Screens.Gameplay
                               && !OnlineManager.IsSpectatingSomeone
                               && !IsPlayTesting
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
-                              && Ruleset.ScoreProcessor.Health <= 0)
+                              && Ruleset.ScoreProcessor.Health <= 0
+                              && !ConfigManager.KeepPlayingUponFailing.Value)
                               && !(this is TournamentGameplayScreen)
                               || ForceFail || Ruleset.ScoreProcessor.ForceFail;
 
@@ -195,6 +197,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If the user quit the game themselves.
         /// </summary>
         public bool HasQuit { get; set; }
+
+        /// <summary>
+        ///     If the player fails during gameplay, but keeps playing because of the option
+        /// </summary>
+        public bool FailedDuringGameplay { get; set; }
 
         /// <summary>
         ///     Flag that dictates if the user is currently restarting the play.
@@ -370,7 +377,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
-                var testingQua = ObjectHelper.DeepClone(map);
+                var testingQua = map.DeepClone();
                 testingQua.HitObjects.RemoveAll(x => x.StartTime + 2 < playTestTime);
                 Qua.RestoreDefaultValues(testingQua);
 
@@ -782,8 +789,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Add the pause mod to their score.
                 if (!ModManager.IsActivated(ModIdentifier.Paused) && Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " +
-                                                                        "during gameplay!", null, true);
+                    if (ConfigManager.DisplayPauseWarning.Value)
+                        NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " + 
+                                                                            "during gameplay!", null, true);
 
                     ModManager.AddMod(ModIdentifier.Paused);
                     ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
@@ -958,7 +966,27 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
-            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+            // NoMiss mod should take priority: gameplay is expected to restart when NM is on
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+                return;
+            if (!FailedDuringGameplay
+                && OnlineManager.CurrentGame == null
+                && !OnlineManager.IsSpectatingSomeone
+                && !IsPlayTesting
+                && !IsCalibratingOffset
+                && (!ModManager.IsActivated(ModIdentifier.NoFail)
+                    && Ruleset.ScoreProcessor.Health <= 0
+                    && ConfigManager.KeepPlayingUponFailing.Value)
+                && !(this is TournamentGameplayScreen)
+                && !ForceFail && !Ruleset.ScoreProcessor.ForceFail)
+            {
+                // Add no fail mod upon dying when AutoNoFail is on.
+                // Add the no fail mod to their score.
+                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to failing " +
+                                                                    "during gameplay!", null, true);
+                FailedDuringGameplay = true;
+            }
+            if (!Failed || FailureHandled)
                 return;
 
             try
@@ -1500,7 +1528,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
 

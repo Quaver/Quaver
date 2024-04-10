@@ -15,6 +15,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -99,6 +100,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.LanesSwapped += OnLanesSwapped;
             ActionManager.HitObjectsReversed += OnHitObjectsReversed;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
@@ -120,6 +122,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.LanesSwapped -= OnLanesSwapped;
             ActionManager.HitObjectsReversed -= OnHitObjectsReversed;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
@@ -297,6 +300,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnLanesSwapped(object sender, EditorLanesSwappedEventArgs e) => UpdateObjects();
 
         /// <summary>
         /// </summary>

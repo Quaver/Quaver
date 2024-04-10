@@ -10,6 +10,12 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Batch;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
@@ -122,6 +128,22 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
             return layer;
         }
+        
+        /// <summary>
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="note"></param>
+        /// <returns></returns>
+        public static BookmarkInfo CreateBookmark(int startTime, string note)
+        {
+            var layer = new BookmarkInfo
+            {
+                StartTime = startTime,
+                Note = note
+            };
+
+            return layer;
+        }
 
         /// <summary>
         /// </summary>
@@ -184,6 +206,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
+                case EditorActionType.AddBookmark:
+                    return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>()); 
+                case EditorActionType.RemoveBookmark:
+                    return new EditorActionRemoveBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>());
+                case EditorActionType.AddBookmarkBatch:
+                    return new EditorActionAddBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>()); 
+                case EditorActionType.RemoveBookmarkBatch:
+                    return new EditorActionRemoveBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>());
+                case EditorActionType.EditBookmark:
+                    return new EditorActionEditBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>(), args[1].ToObject<string>());
+                case EditorActionType.ChangeBookmarkOffsetBatch:
+                    return new EditorActionChangeBookmarkOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>(), args[1].ToObject<int>());
                 case EditorActionType.ResnapHitObjects:
                     return new EditorActionResnapHitObjects(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<int>>(), args[1].ToObject<List<HitObjectInfo>>(), args[2].ToObject<bool>());
                 case EditorActionType.Batch:

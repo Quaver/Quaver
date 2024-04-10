@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
 {
+    [MoonSharpUserData]
     public class EditorActionChangeBookmarkOffsetBatch : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangeBookmarkOffsetBatch;
@@ -16,6 +19,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
 
         private int Offset { get; }
 
+        [MoonSharpVisible(false)]
         public EditorActionChangeBookmarkOffsetBatch(EditorActionManager manager, Qua map, List<BookmarkInfo> bookmarks, int offset)
         {
             ActionManager = manager;
@@ -24,6 +28,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
             Offset = offset;
         }
         
+        [MoonSharpVisible(false)]
         public void Perform()
         {
             foreach (var bookmark in Bookmarks)
@@ -33,6 +38,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
             ActionManager.TriggerEvent(Type, new EditorActionChangeBookmarkOffsetBatchEventArgs(Bookmarks, Offset));
         }
 
+        [MoonSharpVisible(false)]
         public void Undo() => new EditorActionChangeBookmarkOffsetBatch(ActionManager, WorkingMap, Bookmarks, -Offset).Perform();
     }
 }

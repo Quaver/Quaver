@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Force.DeepCloner;
 using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -20,6 +21,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -29,6 +31,7 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
@@ -47,6 +50,7 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Discord.RPC.Logging;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -108,7 +112,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     All of the available beat snaps to use in the editor.
         /// </summary>
-        public List<int> AvailableBeatSnaps { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
+        public static List<int> AvailableBeatSnaps { get; set; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
 
         /// <summary>
         /// </summary>
@@ -149,11 +153,22 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
+        
+        /// <summary>
+        /// </summary>
+        public Bindable<bool> ShowSpectrogram { get; } = ConfigManager.EditorShowSpectrogram ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
         public BindableInt WaveformBrightness { get; } = ConfigManager.EditorWaveformBrightness ?? new BindableInt(50, 1, 100);
 
+        /// <summary>
+        /// </summary>
+        public BindableInt SpectrogramBrightness { get; } = ConfigManager.EditorSpectrogramBrightness ?? new BindableInt(50, 1, 100);
+
+        public BindableInt SpectrogramFftSize { get; } =
+            ConfigManager.EditorSpectrogramFftSize ?? new BindableInt(256, 256, 16384);
+        
         /// <summary>
         /// </summary>
         public Bindable<EditorPlayfieldWaveformAudioDirection> AudioDirection { get; } = ConfigManager.EditorAudioDirection ?? new Bindable<EditorPlayfieldWaveformAudioDirection>(EditorPlayfieldWaveformAudioDirection.Both);
@@ -258,7 +273,7 @@ namespace Quaver.Shared.Screens.Edit
             try
             {
                 OriginalQua = map.LoadQua();
-                WorkingMap = ObjectHelper.DeepClone(OriginalQua);
+                WorkingMap = OriginalQua.DeepClone();
             }
             catch (Exception e)
             {
@@ -392,6 +407,9 @@ namespace Quaver.Shared.Screens.Edit
             if (ShowWaveform != ConfigManager.EditorShowWaveform)
                 ShowWaveform.Dispose();
 
+            if (ShowSpectrogram != ConfigManager.EditorShowSpectrogram)
+                ShowSpectrogram.Dispose();
+
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
 
@@ -470,8 +488,18 @@ namespace Quaver.Shared.Screens.Edit
             // To not conflict with the volume controller
             if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
             {
-                HandleSeekingBackwards();
-                HandleSeekingForwards();
+                var dropdownHovered = ButtonManager.Buttons.Any(
+                    x => x is DropdownItem item &&
+                        GraphicsHelper.RectangleContains(x.ScreenRectangle, MouseManager.CurrentState.Position) &&
+                        item.Dropdown.Opened
+                );
+
+                if (!dropdownHovered)
+                {
+                    HandleSeekingBackwards();
+                    HandleSeekingForwards();
+                }
+
                 HandleKeyPressUp();
                 HandleKeyPressDown();
                 HandleKeyPressShiftUpDown();
@@ -482,6 +510,7 @@ namespace Quaver.Shared.Screens.Edit
             HandlePlaybackRateChanges();
             HandleTemporaryHitObjectPlacement();
             HandleCtrlInput();
+            HandleAltInput();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
@@ -666,7 +695,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             var leftPressed = KeyboardManager.IsUniqueKeyPress(Keys.Left);
 
-            if (!leftPressed && MouseManager.CurrentState.ScrollWheelValue <= MouseManager.PreviousState.ScrollWheelValue)
+            if (!leftPressed && !MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value))
                 return;
 
             if (Track == null || Track.IsDisposed || (!CanSeek() && !leftPressed))
@@ -681,7 +710,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             var rightPressed = KeyboardManager.IsUniqueKeyPress(Keys.Right);
 
-            if (!rightPressed && MouseManager.CurrentState.ScrollWheelValue >= MouseManager.PreviousState.ScrollWheelValue)
+            if (!rightPressed && !MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value))
                 return;
 
             if (Track == null || Track.IsDisposed || (!CanSeek() && !rightPressed))
@@ -694,8 +723,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleBeatSnapChanges()
         {
-            var scrolledForward = MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue;
-            var scrolledBackward = MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue;
+            var scrolledForward = MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value);
+            var scrolledBackward = MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value);
 
             if (KeyboardManager.IsCtrlDown() && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
                 ChangeBeatSnap(Direction.Forward);
@@ -716,6 +745,27 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
                 ChangeAudioPlaybackRate(Direction.Forward);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleAltInput()
+        {
+            if (!KeyboardManager.IsAltDown())
+                return;
+            var swapLane1 = -1;
+            var swapLane2 = -1;
+            // Clever way of handing key input with num keys since the enum values are 1 after each other.
+            for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                    swapLane2 = i;
+                else if (KeyboardManager.CurrentState.IsKeyDown(Keys.D1 + i))
+                    swapLane1 = i;
+                if (swapLane1 == -1 || swapLane2 == -1) continue;
+                SwapSelectedObjects(swapLane1 + 1, swapLane2 + 1); // 1-based
+                break;
+            }
         }
 
         /// <summary>
@@ -775,13 +825,13 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.I))
                 PlaceTimingPointOrScrollVelocity();
-            
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.B))
                 DialogManager.Show(new EditorBookmarkDialog(ActionManager, Track, null));
-            
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
                 SeekToNearestBookmark(Direction.Backward);
-            
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
                 SeekToNearestBookmark(Direction.Forward);
         }
@@ -805,7 +855,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (!LiveMapping.Value)
                 return;
-
+            if (KeyboardManager.IsAltDown()) return; // Swapping lanes, not placing objects
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
@@ -913,6 +963,11 @@ namespace Quaver.Shared.Screens.Edit
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
         }
+
+        /// <summary>
+        ///     Removes All Custom Beat Snaps added by the user in CustomBeatSnapDialog.
+        /// </summary>
+        private void RemoveCustomBeatSnaps() => AvailableBeatSnaps = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
 
         /// <summary>
         /// </summary>
@@ -1200,6 +1255,20 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Swap selected objects' lanes (2 of 4/7 lanes only)
+        /// </summary>
+        public void SwapSelectedObjects(int swapLane1, int swapLane2)
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            ActionManager.Perform(new EditorActionSwapLanes(ActionManager, WorkingMap,
+                new List<HitObjectInfo>(
+                    SelectedHitObjects.Value.Where(h => h.Lane == swapLane1 || h.Lane == swapLane2)),
+                swapLane1, swapLane2));
+        }
+
+        /// <summary>
         ///     Highlights notes and goes to a specific timestamp.
         ///     Acceptable inputs:
         ///         - `1234|1,1255|3,1300|4` (selects notes and goes to the first timestamp)
@@ -1329,7 +1398,7 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
-        ///     Exits the enditor and returns to song select
+        ///     Exits the editor and returns to song select
         /// </summary>
         public void LeaveEditor()
         {
@@ -1350,6 +1419,7 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             ModManager.RemoveAllMods();
+            RemoveCustomBeatSnaps();
 
             Exit(() => new SelectionScreen());
         }
@@ -1389,7 +1459,7 @@ namespace Quaver.Shared.Screens.Edit
                     NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
                 }
 
-                var map = ObjectHelper.DeepClone(WorkingMap);
+                var map = WorkingMap.DeepClone();
                 map.ApplyMods(ModManager.Mods);
 
                 var startTime = fromStart ? 0 : Track.Time;
@@ -1406,7 +1476,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (WorkingMap.Bookmarks.Count == 0)
                 return;
-            
+
             BookmarkInfo nextBookmark = null;
 
             var closest = WorkingMap.Bookmarks.OrderBy(x => Math.Abs(x.StartTime - Track.Time)).First();
@@ -1432,10 +1502,10 @@ namespace Quaver.Shared.Screens.Edit
 
             if (nextBookmark == null)
                 return;
-            
+
             Track.Seek(Math.Clamp(nextBookmark.StartTime, 0, Track.Length));
         }
-        
+
         /// <summary>
         ///     Creates a new mapset from an audio file
         /// </summary>
@@ -1513,6 +1583,35 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Switch to another difficulty of the mapset
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="force"></param>
+        public void SwitchToMap(Map map, bool force = false)
+        {
+            if (ActionManager.HasUnsavedChanges && !force)
+            {
+                DialogManager.Show(new UnsavedChangesSwitchMapDialog(this, map));
+                return;
+            }
+
+            ThreadScheduler.Run(() =>
+            {
+                try
+                {
+                    var track = AudioEngine.LoadMapAudioTrack(map);
+
+                    Exit(() => new EditScreen(map, track));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while switching difficulty.");
+                }
+            });
+        }
+
+        /// <summary>
         ///     Creates a brand new map and reloads the editor
         /// </summary>
         /// <param name="copyCurrent"></param>
@@ -1537,7 +1636,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 try
                 {
-                    var qua = ObjectHelper.DeepClone(WorkingMap);
+                    var qua = WorkingMap.DeepClone();
                     qua.DifficultyName = "";
                     qua.MapId = -1;
                     qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
