@@ -1026,7 +1026,7 @@ namespace Quaver.Shared.Config
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
-            KeepPlayingUponFailing = ReadValue(@"KeepPlayingUponFailing", true, data);
+            KeepPlayingUponFailing = ReadValue(@"KeepPlayingUponFailing", false, data);
             TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
