@@ -172,7 +172,8 @@ namespace Quaver.Shared.Screens.Gameplay
                               && !OnlineManager.IsSpectatingSomeone
                               && !IsPlayTesting
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
-                              && Ruleset.ScoreProcessor.Health <= 0)
+                              && Ruleset.ScoreProcessor.Health <= 0
+                              && !ConfigManager.KeepPlayingUponFailing.Value)
                               && !(this is TournamentGameplayScreen)
                               || ForceFail || Ruleset.ScoreProcessor.ForceFail;
 
@@ -195,6 +196,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If the user quit the game themselves.
         /// </summary>
         public bool HasQuit { get; set; }
+
+        /// <summary>
+        ///     If the player fails during gameplay, but keeps playing because of the option
+        /// </summary>
+        public bool FailedDuringGameplay { get; set; }
 
         /// <summary>
         ///     Flag that dictates if the user is currently restarting the play.
@@ -959,7 +965,27 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
-            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+            // NoMiss mod should take priority: gameplay is expected to restart when NM is on
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+                return;
+            if (!FailedDuringGameplay
+                && OnlineManager.CurrentGame == null
+                && !OnlineManager.IsSpectatingSomeone
+                && !IsPlayTesting
+                && !IsCalibratingOffset
+                && (!ModManager.IsActivated(ModIdentifier.NoFail)
+                    && Ruleset.ScoreProcessor.Health <= 0
+                    && ConfigManager.KeepPlayingUponFailing.Value)
+                && !(this is TournamentGameplayScreen)
+                && !ForceFail && !Ruleset.ScoreProcessor.ForceFail)
+            {
+                // Add no fail mod upon dying when AutoNoFail is on.
+                // Add the no fail mod to their score.
+                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to failing " +
+                                                                    "during gameplay!", null, true);
+                FailedDuringGameplay = true;
+            }
+            if (!Failed || FailureHandled)
                 return;
 
             try
