@@ -471,7 +471,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
-            HitPositionLine.Y = HitPositionY - TrackPositionY;
+            HitPositionLine.Y = HitPositionY - TrackPositionY * WindowManager.Scale.M22;
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
 
             if (ShowSpectrogram.Value && ConfigManager.EditorSpectrogramLayer.Value ==
