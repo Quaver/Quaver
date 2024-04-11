@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
         private int GetMatchScores(int val, CancellationToken cancellationToken)
         {
-            const int maxRetryCount = 5;
+            const int maxRetryCount = 3;
             MultiplayerMatchInformationResponse matchInfoResponse = null;
 
             for (var retryCount = 0; retryCount < maxRetryCount; retryCount++)
