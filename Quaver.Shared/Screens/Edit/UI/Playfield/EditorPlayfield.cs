@@ -458,6 +458,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            HitPositionLine.Visible = false;
             base.Draw(gameTime);
 
             try
@@ -471,7 +472,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
-            HitPositionLine.Y = HitPositionY - TrackPositionY * WindowManager.Scale.M22;
+            HitPositionLine.Visible = true;
+            HitPositionLine.Y = HitPositionY - TrackPositionY;
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
 
             if (ShowSpectrogram.Value && ConfigManager.EditorSpectrogramLayer.Value ==
