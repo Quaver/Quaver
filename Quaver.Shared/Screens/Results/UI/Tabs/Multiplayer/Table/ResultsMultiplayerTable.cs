@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
         private int GetMatchScores(int val, CancellationToken cancellationToken)
         {
-            const int maxRetryCount = 5;
+            const int maxRetryCount = 3;
             MultiplayerMatchInformationResponse matchInfoResponse = null;
 
             for (var retryCount = 0; retryCount < maxRetryCount; retryCount++)
@@ -237,20 +237,23 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                 Thread.Sleep(500);
             }
 
+            List<ScoreProcessor> players;
             if (matchInfoResponse == null)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve players' scores!");
-                return 0;
+                players = GetOrderedUserList();
             }
-
-            List<ScoreProcessor> players = new();
-            var qua = Map.LoadQua();
-
-            foreach (var playerScore in matchInfoResponse.Match.Scores)
+            else
             {
-                var player = playerScore.Player;
-                var score = playerScore.Score;
-                var processor = new ScoreProcessorKeys(Map.Qua, score.Mods, new ScoreProcessorMultiplayer(MultiplayerHealthType.Lives, score.LivesLeft))
+                players = new List<ScoreProcessor>();
+                var qua = Map.LoadQua();
+
+                foreach (var playerScore in matchInfoResponse.Match.Scores)
+                {
+                    var player = playerScore.Player;
+                    var score = playerScore.Score;
+                    var processor = new ScoreProcessorKeys(Map.Qua, score.Mods,
+                        new ScoreProcessorMultiplayer(MultiplayerHealthType.Lives, score.LivesLeft))
                     {
                         PlayerName = player.Username,
                         UserId = player.Id,
@@ -272,12 +275,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                         }
                     };
 
-                players.Add(processor);
-            }
+                    players.Add(processor);
+                }
 
-            players = players.OrderByDescending(x =>
-                    new RatingProcessorKeys(qua.SolveDifficulty(x.Mods, true).OverallDifficulty).CalculateRating(x))
-                .ToList();
+                players = players.OrderByDescending(x =>
+                        new RatingProcessorKeys(qua.SolveDifficulty(x.Mods, true).OverallDifficulty).CalculateRating(x))
+                    .ToList();
+            }
             
             ScrollContainer = new ResultsMultiplayerScrollContainer(new ScalableVector2(Width, Height - HeaderContainer.Height),
                 players, Game, Headers, Map)
