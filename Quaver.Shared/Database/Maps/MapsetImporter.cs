@@ -299,9 +299,13 @@ namespace Quaver.Shared.Database.Maps
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
+                var extension = Path.GetExtension(file);
+                var isPartOfMapset = extension == ".sm";
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
 
-                var folderName = Path.GetFileNameWithoutExtension(file);
+                var folderName = isPartOfMapset
+                    ? Path.GetFileName(Path.GetDirectoryName(file))
+                    : Path.GetFileNameWithoutExtension(file);
                 folderName = folderName.Substring(0, Math.Min(folderName.Length, 100));
 
                 var extractDirectory = $@"{ConfigManager.SongDirectory}/{folderName} - {time}/";
