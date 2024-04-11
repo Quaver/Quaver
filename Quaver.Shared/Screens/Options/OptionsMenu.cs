@@ -387,7 +387,8 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemKeybind(containerRect, "Pause/Play Track", ConfigManager.KeyEditorPausePlay),
                         new OptionsItemKeybind(containerRect, "Decrease Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
-                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
+                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate),
+                        new OptionsItemCheckbox(containerRect, "Invert Editor Scrolling", ConfigManager.InvertEditorScrolling)
                     }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {
@@ -423,7 +424,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Notifications From Bottom-To-Top", ConfigManager.DisplayNotificationsBottomToTop),
                         new OptionsItemCheckbox(containerRect, "Display Online Friend Notifications", ConfigManager.DisplayFriendOnlineNotifications),
                         new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications),
-                        new OptionsItemCheckbox(containerRect, "Display Warning For Pausing", ConfigManager.DisplayPauseWarning)
+                        new OptionsItemCheckbox(containerRect, "Display Warning For Pausing", ConfigManager.DisplayPauseWarning),
+                        new OptionsItemCheckbox(containerRect, "Display Warning For Failing", ConfigManager.DisplayFailWarning)
                     }),
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
                     {
