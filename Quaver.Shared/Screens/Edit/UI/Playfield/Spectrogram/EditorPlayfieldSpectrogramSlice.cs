@@ -96,7 +96,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             SliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, ReferenceWidth, SliceSize);
 
             var dataColors = new Color[ReferenceWidth * SliceSize];
-            Logger.Debug($"Slice {ReferenceWidth} x {SliceSize}", LogType.Runtime);
 
             for (var y = 0; y < SliceSize; y++)
             {
