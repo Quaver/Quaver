@@ -654,6 +654,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> DisplayFailWarning { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<string> TournamentPlayer2Skin { get; private set; }
 
         /// <summary>
@@ -1150,6 +1154,7 @@ namespace Quaver.Shared.Config
             EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
             DisplayPauseWarning = ReadValue(@"DisplayPauseWarning", true, data);
+            DisplayFailWarning = ReadValue(@"DisplayFailWarning", true, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
