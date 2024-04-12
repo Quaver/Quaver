@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         public EditorPlayfieldSpectrogramSlice(EditorPlayfieldSpectrogram spectrogram, EditorPlayfield playfield,
             float lengthMs, int sliceSize,
-            float[,] sliceData,
+            float[][] sliceData,
             int trackDataYOffset,
             double sliceTime, int sampleRate)
         {
@@ -99,7 +99,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             base.Destroy();
         }
         
-        private void CreateSlice(float[,] sliceData)
+        private void CreateSlice(float[][] sliceData)
         {
             SliceSprite = new Sprite { Alpha = 0 };
 
@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             SliceSprite.FadeTo(1, Easing.Linear, 250);
         }
 
-        private float GetIntensity(float[,] sliceData, int y, int x)
+        private float GetIntensity(float[][] sliceData, int y, int x)
         {
             var rawIntensity = GetAverageData(sliceData, y, x);
             var db = MathF.Abs(rawIntensity) < 1e-4f ? -100 : 20 * MathF.Log10(rawIntensity);
@@ -182,10 +182,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         }
 
 
-        private float GetAverageData(float[,] data, int y, int x)
+        private float GetAverageData(float[][] data, int y, int x)
         {
-            if (_trackDataYOffset + y >= data.GetLength(0)) return 0;
-            return data[_trackDataYOffset + y, x];
+            if (_trackDataYOffset + y >= data.Length) return 0;
+            return data[_trackDataYOffset + y][x];
         }
 
         private int DataColorIndex(int textureHeight, int y, int x)

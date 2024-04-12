@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private EditorPlayfield Playfield { get; }
 
-        private float[,] TrackData { get; set; }
+        private float[][] _trackData;
 
         private long TrackByteLength { get; set; }
 
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                 var trackDataYOffset = fftRound * InterleaveCount;
 
                 var slice = new EditorPlayfieldSpectrogramSlice(this, Playfield, (float)millisecondPerSlice, InterleavedFftPerSlice,
-                    TrackData, trackDataYOffset, t, sampleRate);
+                    _trackData, trackDataYOffset, t, sampleRate);
                 tempSlices.Add(slice);
             }
 
@@ -128,23 +128,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             FftResultCount = FftCount;
             BytesReadPerFft = sizeof(float) * FftResultCount * Bass.ChannelGetInfo(Stream).Channels * 2;
             FftRoundsTaken = (int)(TrackByteLength / BytesReadPerFft);
-            TrackData = new float[(FftRoundsTaken + 1) * InterleaveCount, FftResultCount];
+            _trackData = new float[(FftRoundsTaken + 1) * InterleaveCount][];
 
             for (var interleaveRound = 0; interleaveRound < InterleaveCount; interleaveRound++)
             {
                 Bass.ChannelSetPosition(Stream, BytesReadPerFft / InterleaveCount * interleaveRound);
-                var trackDataFft = new float[FftResultCount];
                 var currentFftRound = 0;
-
-                while (Bass.ChannelGetData(Stream, trackDataFft, FftFlag | (int)DataFlags.FFTRemoveDC) > 0)
+                int row;
+                do
                 {
-                    for (var i = 0; i < FftResultCount; i++)
-                    {
-                        TrackData[currentFftRound * InterleaveCount + interleaveRound, i] = trackDataFft[i];
-                    }
-
+                    row = currentFftRound * InterleaveCount + interleaveRound;
+                    if (row >= _trackData.Length) break;
+                    _trackData[row] = GC.AllocateUninitializedArray<float>(FftResultCount);
+                    
                     currentFftRound++;
-                }
+                } while (Bass.ChannelGetData(Stream, _trackData[row], FftFlag | (int)DataFlags.FFTRemoveDC) > 0);
+                
             }
 
             TrackByteLength = Bass.ChannelGetLength(Stream);
