@@ -357,6 +357,8 @@ namespace Quaver.Shared.Config
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
+        
+        internal static Bindable<bool> EditorLiveMapSnap { get; private set; }
 
         /// <summary>
         ///     Whether or not to play hitsounds in the editor.
@@ -1071,6 +1073,7 @@ namespace Quaver.Shared.Config
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
             InvertScrolling = ReadValue(@"InvertScrolling", false, data);
             InvertEditorScrolling = ReadValue(@"InvertEditorScrolling", true, data);
+            EditorLiveMapSnap = ReadValue(@"EditorLiveMapSnap", false, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);

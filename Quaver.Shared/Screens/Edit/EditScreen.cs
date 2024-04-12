@@ -867,6 +867,11 @@ namespace Quaver.Shared.Screens.Edit
                     continue;
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+                
+                if (ConfigManager.EditorLiveMapSnap.Value)
+                {
+                    time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time, BeatSnap.Value);
+                }
 
                 var lane = i + 1;
 
