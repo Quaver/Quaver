@@ -1134,7 +1134,7 @@ namespace Quaver.Shared.Config
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", false, data);
             EditorSpectrogramMaximumFrequency = ReadInt(@"EditorSpectrogramMaximumFrequency", 7000, 5000, 10000, data);
-            EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 250, 0, 1500, data);
+            EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 125, 0, 1500, data);
             EditorSpectrogramLayer = ReadValue("EditorSpectrogramLayer", EditorPlayfieldSpectrogramLayer.BehindTimingLines, data);
             EditorSpectrogramCutoffFactor = ReadValue("EditorSpectrogramCutoffFactor", 0.34f, data);
             EditorSpectrogramIntensityFactor = ReadValue("EditorSpectrogramIntensityFactor", 9.5f, data);
