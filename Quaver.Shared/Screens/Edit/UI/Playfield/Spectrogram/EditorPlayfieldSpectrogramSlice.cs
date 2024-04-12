@@ -12,34 +12,29 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 {
     public class EditorPlayfieldSpectrogramSlice : Sprite
     {
-        private EditorPlayfield Playfield { get; set; }
-        private EditorPlayfieldSpectrogram Spectrogram { get; set; }
+        private readonly EditorPlayfield _playfield;
+        private readonly EditorPlayfieldSpectrogram _spectrogram;
 
         private Sprite SliceSprite { get; set; }
 
-        private int SliceSize { get; }
+        private readonly int _sliceSize;
 
-        private double SliceTimeMilliSeconds { get; }
+        private readonly double _sliceTimeMilliSeconds;
 
         private Texture2D SliceTexture { get; set; }
 
-        private float LengthMs { get; set; }
+        private readonly float _lengthMs;
 
-        private int SampleRate { get; set; }
+        private readonly int _sampleRate;
 
-        private int ReferenceWidth { get; }
-        
-        private int TrackDataYOffset { get; }
+        private readonly int _referenceWidth;
 
-        private Func<float, float> FrequencyTransform =>
-            ConfigManager.EditorSpectrogramFrequencyScale.Value switch
-            {
-                EditorPlayfieldSpectrogramFrequencyScale.Mel => Mel,
-                EditorPlayfieldSpectrogramFrequencyScale.Erb1 => Erb1,
-                EditorPlayfieldSpectrogramFrequencyScale.Erb2 => Erb2,
-                EditorPlayfieldSpectrogramFrequencyScale.Linear => Linear,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+        private readonly int _trackDataYOffset;
+
+        private readonly Func<float, float> _frequencyTransform;
+
+        private readonly int _minimumFrequency;
+        private readonly int _maximumFrequency;
 
         public EditorPlayfieldSpectrogramSlice(EditorPlayfieldSpectrogram spectrogram, EditorPlayfield playfield,
             float lengthMs, int sliceSize,
@@ -47,14 +42,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             int trackDataYOffset,
             double sliceTime, int sampleRate)
         {
-            Spectrogram = spectrogram;
-            Playfield = playfield;
-            SliceSize = sliceSize;
-            SliceTimeMilliSeconds = sliceTime;
-            LengthMs = lengthMs;
-            SampleRate = sampleRate;
-            ReferenceWidth = spectrogram.FftCount;
-            TrackDataYOffset = trackDataYOffset;
+            _spectrogram = spectrogram;
+            _playfield = playfield;
+            _sliceSize = sliceSize;
+            _sliceTimeMilliSeconds = sliceTime;
+            _lengthMs = lengthMs;
+            _sampleRate = sampleRate;
+            _referenceWidth = spectrogram.FftCount;
+            _trackDataYOffset = trackDataYOffset;
+
+            _frequencyTransform = ConfigManager.EditorSpectrogramFrequencyScale.Value switch
+            {
+                EditorPlayfieldSpectrogramFrequencyScale.Mel => Mel,
+                EditorPlayfieldSpectrogramFrequencyScale.Erb1 => Erb1,
+                EditorPlayfieldSpectrogramFrequencyScale.Erb2 => Erb2,
+                EditorPlayfieldSpectrogramFrequencyScale.Linear => Linear,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            
+            _minimumFrequency = (int)_frequencyTransform(ConfigManager.EditorSpectrogramMinimumFrequency.Value);
+            _maximumFrequency = (int)_frequencyTransform(ConfigManager.EditorSpectrogramMaximumFrequency.Value);
 
             CreateSlice(sliceData);
         }
@@ -68,10 +76,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         public override void Draw(GameTime gameTime)
         {
-            SliceSprite.X = Playfield.ScreenRectangle.X;
-            SliceSprite.Y = Playfield.HitPositionY - (float)(SliceTimeMilliSeconds + LengthMs) * Playfield.TrackSpeed -
+            SliceSprite.X = _playfield.ScreenRectangle.X;
+            SliceSprite.Y = _playfield.HitPositionY - (float)(_sliceTimeMilliSeconds + _lengthMs) * _playfield.TrackSpeed -
                             Height;
-            SliceSprite.Height = LengthMs * Playfield.TrackSpeed;
+            SliceSprite.Height = _lengthMs * _playfield.TrackSpeed;
             SliceSprite.Tint = new Color(
                 1.0f,
                 1.0f,
@@ -90,32 +98,30 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
             base.Destroy();
         }
-
-        public void UpdatePlayfield(EditorPlayfield playfield) => Playfield = playfield;
-
+        
         private void CreateSlice(float[,] sliceData)
         {
             SliceSprite = new Sprite { Alpha = 0 };
 
-            SliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, ReferenceWidth, SliceSize);
+            SliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, _referenceWidth, _sliceSize);
 
-            var dataColors = new Color[ReferenceWidth * SliceSize];
+            var dataColors = new Color[_referenceWidth * _sliceSize];
 
-            for (var y = 0; y < SliceSize; y++)
+            for (var y = 0; y < _sliceSize; y++)
             {
-                for (var x = 0; x < Spectrogram.FftCount; x++)
+                for (var x = 0; x < _spectrogram.FftCount; x++)
                 {
-                    var textureX = CalculateTextureX(x, FrequencyTransform);
+                    var textureX = CalculateTextureX(x);
                     if (textureX == -1) continue;
                     var intensity = GetIntensity(sliceData, y, x);
-                    var index = DataColorIndex(SliceSize, y, textureX);
-                    var nextTextureX = CalculateTextureX(x + 1, FrequencyTransform);
-                    if (nextTextureX == -1) nextTextureX = ReferenceWidth - 1;
-                    var nextIntensity = x == Spectrogram.FftCount - 1
+                    var index = DataColorIndex(_sliceSize, y, textureX);
+                    var nextTextureX = CalculateTextureX(x + 1);
+                    if (nextTextureX == -1) nextTextureX = _referenceWidth - 1;
+                    var nextIntensity = x == _spectrogram.FftCount - 1
                         ? intensity
                         : GetIntensity(sliceData, y, x + 1);
                     var curColor = SpectrogramColormap.GetColor(intensity);
-                    var nextDataColorIndex = DataColorIndex(SliceSize, y, nextTextureX);
+                    var nextDataColorIndex = DataColorIndex(_sliceSize, y, nextTextureX);
                     for (var i = index; i < nextDataColorIndex && i < dataColors.Length; i++)
                     {
                         dataColors[i] = curColor;
@@ -125,8 +131,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
             SliceTexture.SetData(dataColors);
             SliceSprite.Image = SliceTexture;
-            SliceSprite.Width = (int)Playfield.Width;
-            SliceSprite.Height = LengthMs;
+            SliceSprite.Width = (int)_playfield.Width;
+            SliceSprite.Height = _lengthMs;
             SliceSprite.FadeTo(1, Easing.Linear, 250);
         }
 
@@ -145,14 +151,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             return intensity;
         }
 
-        private int CalculateTextureX(int x, Func<float, float> transform)
+        private int CalculateTextureX(int x)
         {
-            var minFrequency = transform(ConfigManager.EditorSpectrogramMinimumFrequency.Value);
-            var maxFrequency = transform(ConfigManager.EditorSpectrogramMaximumFrequency.Value);
-            var frequency = (float)x * SampleRate / Spectrogram.FftCount;
-            var transformedFrequency = transform(frequency);
-            if (transformedFrequency > maxFrequency || transformedFrequency < minFrequency) return -1;
-            return (int)((transformedFrequency - minFrequency) / (maxFrequency - minFrequency) * ReferenceWidth);
+            var frequency = (float)x * _sampleRate / _spectrogram.FftCount;
+            var transformedFrequency = _frequencyTransform(frequency);
+            if (transformedFrequency > _maximumFrequency || transformedFrequency < _minimumFrequency) return -1;
+            return (int)((transformedFrequency - _minimumFrequency) / (_maximumFrequency - _minimumFrequency) * _referenceWidth);
         }
 
         private float Linear(float x) => x;
@@ -180,13 +184,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private float GetAverageData(float[,] data, int y, int x)
         {
-            if (TrackDataYOffset + y >= data.GetLength(0)) return 0;
-            return data[TrackDataYOffset + y, x];
+            if (_trackDataYOffset + y >= data.GetLength(0)) return 0;
+            return data[_trackDataYOffset + y, x];
         }
 
         private int DataColorIndex(int textureHeight, int y, int x)
         {
-            return (textureHeight - y - 1) * ReferenceWidth + x;
+            return (textureHeight - y - 1) * _referenceWidth + x;
         }
     }
 }
