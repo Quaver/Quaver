@@ -36,6 +36,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         private readonly int _minimumFrequency;
         private readonly int _maximumFrequency;
 
+        private readonly float _cutoffFactor;
+        private readonly float _intensityFactor;
+
         public EditorPlayfieldSpectrogramSlice(EditorPlayfieldSpectrogram spectrogram, EditorPlayfield playfield,
             float lengthMs, int sliceSize,
             float[][] sliceData,
@@ -50,6 +53,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             _sampleRate = sampleRate;
             _referenceWidth = spectrogram.FftCount;
             _trackDataYOffset = trackDataYOffset;
+            _cutoffFactor = ConfigManager.EditorSpectrogramCutoffFactor.Value;
+            _intensityFactor = ConfigManager.EditorSpectrogramIntensityFactor.Value;
 
             _frequencyTransform = ConfigManager.EditorSpectrogramFrequencyScale.Value switch
             {
@@ -142,11 +147,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             var db = MathF.Abs(rawIntensity) < 1e-4f ? -100 : 20 * MathF.Log10(rawIntensity);
             var intensity = Math.Clamp(1 + db / 100, 0f, 1f);
 
-            var cutoffFactor = ConfigManager.EditorSpectrogramCutoffFactor.Value;
-            intensity = MathF.Max(intensity, cutoffFactor);
-            intensity = (intensity - cutoffFactor) * (1 - cutoffFactor);
+            intensity = MathF.Max(intensity, _cutoffFactor);
+            intensity = (intensity - _cutoffFactor) * (1 - _cutoffFactor);
 
-            intensity *= intensity * ConfigManager.EditorSpectrogramIntensityFactor.Value;
+            intensity *= intensity * _intensityFactor;
             intensity = Sigmoid(Math.Clamp(intensity, 0, 1));
             return intensity;
         }
