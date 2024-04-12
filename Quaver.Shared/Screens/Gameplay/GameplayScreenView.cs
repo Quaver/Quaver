@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MoonSharp.Interpreter;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
@@ -29,6 +30,10 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.StateMachine;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
@@ -45,6 +50,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
@@ -199,6 +205,24 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private ReplayController ReplayController { get; }
 
+        /// <summary>
+        ///     Manages continuous segments of updates from storyboard
+        /// </summary>
+        public SegmentManager SegmentManager { get; set; }
+
+        /// <summary>
+        ///     Manages one-shot event firing for storyboard
+        /// </summary>
+        public TriggerManager TriggerManager { get; set; }
+
+        public List<StoryboardStateMachine> StoryboardStateMachines { get; set; }
+        
+        /// <summary>
+        ///     The script loaded that controls the storyboard
+        /// </summary>
+        public StoryboardScript StoryboardScript { get; set; }
+        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -223,6 +247,13 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateScoreDisplay();
             CreateRatingDisplay();
             CreateAccuracyDisplay();
+
+            TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
+            SegmentManager = new SegmentManager(new ());
+            StoryboardStateMachines = new List<StoryboardStateMachine>();
+            
+            if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
+                StoryboardScript = new StoryboardScript(Screen.Map.GetAnimationScriptPath(), this);
 
             if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
@@ -314,6 +345,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.OnGameEnded += OnGameEnded;
         }
 
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -323,6 +355,27 @@ namespace Quaver.Shared.Screens.Gameplay
             HandleWaitingForPlayersDialog();
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
+
+            try
+            {
+                var time = (int)Screen.Timing.Time;
+                StoryboardScript?.Update(time);
+                SegmentManager.Update(time);
+                TriggerManager.Update(time);
+                foreach (var machine in StoryboardStateMachines)
+                {
+                    machine.Update();
+                }
+            }
+            catch (ScriptRuntimeException e)
+            {
+                Logger.Error(e.DecoratedMessage, LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+            
             BattleRoyaleBackgroundAlerter?.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);

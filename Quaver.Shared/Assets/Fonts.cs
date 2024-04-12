@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using MoonSharp.Interpreter;
 using Wobble;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites.Text;
@@ -14,6 +15,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Assets
 {
+    [MoonSharpUserData]
     public static class Fonts
     {
         public static string Exo2Bold { get; } = "exo2-bold";

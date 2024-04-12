@@ -107,6 +107,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos { get; private set; }
 
+        public event Action<GameplayHitObjectKeysInfo> RenderedHitObjectInfoAdded;
+
         /// <summary>
         ///     Allows for quickly finding hitobjects close to some position.
         /// </summary>
@@ -558,6 +560,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 info.Link(hitObject);
                 RenderedHitObjectInfos.Add(info);
+                RenderedHitObjectInfoAdded?.Invoke(info);
             }
 
             // update sprite positions
