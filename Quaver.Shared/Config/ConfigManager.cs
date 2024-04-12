@@ -559,6 +559,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<EditorPlayfieldSpectrogramFrequencyScale> EditorSpectrogramFrequencyScale { get; private set; }
         
         internal static BindableInt EditorSpectrogramFftSize { get; private set; }
+        
+        /// <summary>
+        ///     The number of times the song's fft will be taken. Linearly increases the time to load
+        /// </summary>
+        internal static BindableInt EditorSpectrogramInterleaveCount { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1135,6 +1140,7 @@ namespace Quaver.Shared.Config
             EditorSpectrogramIntensityFactor = ReadValue("EditorSpectrogramIntensityFactor", 9.5f, data);
             EditorSpectrogramFrequencyScale = ReadValue("EditorSpectrogramFrequencyScale", EditorPlayfieldSpectrogramFrequencyScale.Linear, data);
             EditorSpectrogramFftSize = ReadInt(@"EditorSpectrumFftSize", 512, 256, 16384, data);
+            EditorSpectrogramInterleaveCount = ReadInt(@"EditorSpectrogramInterleaveCount", 4, 1, 16, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);

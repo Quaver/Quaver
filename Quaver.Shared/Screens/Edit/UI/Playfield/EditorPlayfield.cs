@@ -416,6 +416,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged += OnSpectrogramCutoffFactorChanged;
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged += OnSpectrogramIntensityFactorChanged;
             ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged += OnSpectrogramFrequencyScaleChanged;
+            ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged += OnSpectrogramInterleaveCountChanged;
         }
 
         /// <inheritdoc />
@@ -565,6 +566,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged -= OnSpectrogramCutoffFactorChanged;
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged -= OnSpectrogramIntensityFactorChanged;
             ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged -= OnSpectrogramFrequencyScaleChanged;
+            ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged -= OnSpectrogramInterleaveCountChanged;
 
             base.Destroy();
         }
@@ -1664,6 +1666,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             => ReloadSpectrogram();
         
         private void OnSpectrogramFrequencyScaleChanged(object sender, BindableValueChangedEventArgs<EditorPlayfieldSpectrogramFrequencyScale> e)
+            => ReloadSpectrogram();
+        
+        private void OnSpectrogramInterleaveCountChanged(object sender, BindableValueChangedEventArgs<int> e)
             => ReloadSpectrogram();
 
         private void ReloadWaveform()
