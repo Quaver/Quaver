@@ -28,6 +28,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         private int SampleRate { get; set; }
 
         private int ReferenceWidth { get; }
+        
+        private int TrackDataYOffset { get; }
 
         private Func<float, float> FrequencyTransform =>
             ConfigManager.EditorSpectrogramFrequencyScale.Value switch
@@ -42,6 +44,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         public EditorPlayfieldSpectrogramSlice(EditorPlayfieldSpectrogram spectrogram, EditorPlayfield playfield,
             float lengthMs, int sliceSize,
             float[,] sliceData,
+            int trackDataYOffset,
             double sliceTime, int sampleRate)
         {
             Spectrogram = spectrogram;
@@ -51,6 +54,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             LengthMs = lengthMs;
             SampleRate = sampleRate;
             ReferenceWidth = spectrogram.FftCount;
+            TrackDataYOffset = trackDataYOffset;
 
             CreateSlice(sliceData);
         }
@@ -176,7 +180,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private float GetAverageData(float[,] data, int y, int x)
         {
-            return data[y, x];
+            if (TrackDataYOffset + y >= data.GetLength(0)) return 0;
+            return data[TrackDataYOffset + y, x];
         }
 
         private int DataColorIndex(int textureHeight, int y, int x)

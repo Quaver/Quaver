@@ -105,20 +105,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             for (var fftRound = 0; fftRound < FftRoundsTaken; fftRound +=FftPerSlice)
             {
                 var t = (int)(fftRound * millisecondPerFft);
-                var trackSliceData = new float[InterleavedFftPerSlice, FftResultCount];
-                for (var y = 0; y < InterleavedFftPerSlice; y++)
-                {
-                    var currentFftIndex = fftRound * InterleaveCount + y;
-                    if (currentFftIndex >= TrackData.GetLength(0))
-                        break;
-                    for (var x = 0; x < FftResultCount; x++)
-                    {
-                        trackSliceData[y, x] = TrackData[currentFftIndex, x];
-                    }
-                }
+                var trackDataYOffset = fftRound * InterleaveCount;
 
                 var slice = new EditorPlayfieldSpectrogramSlice(this, Playfield, (float)millisecondPerSlice, InterleavedFftPerSlice,
-                    trackSliceData, t, sampleRate);
+                    TrackData, trackDataYOffset, t, sampleRate);
                 tempSlices.Add(slice);
             }
 
