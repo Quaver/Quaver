@@ -94,35 +94,34 @@ namespace Quaver.Shared.Database.Maps
              var screen = game.CurrentScreen;
 
              if (screen.Exiting)
-                    return;
+                 return;
 
-                if (screen.Type == QuaverScreenType.Select)
-                {
-                    if (OnlineManager.CurrentGame != null)
-                    {
-                        var select = game.CurrentScreen as SelectionScreen;
-                        screen.Exit(() => new ImportingScreen(null, true));
-                        return;
-                    }
+             if (screen.Type == QuaverScreenType.Select)
+             {
+                 if (OnlineManager.CurrentGame != null)
+                 {
+                     var select = game.CurrentScreen as SelectionScreen;
+                     screen.Exit(() => new ImportingScreen(null, true));
+                     return;
+                 }
 
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
+                 screen.Exit(() => new ImportingScreen());
+                 return;
+             }
 
-                if (screen.Type == QuaverScreenType.Music)
-                {
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
+             if (screen.Type == QuaverScreenType.Music)
+             {
+                 screen.Exit(() => new ImportingScreen());
+                 return;
+             }
 
-                if (screen.Type == QuaverScreenType.Multiplayer)
-                {
-                    var multi = (MultiplayerGameScreen)screen;
-                    multi.DontLeaveGameUponScreenSwitch = true;
+             if (screen.Type == QuaverScreenType.Multiplayer)
+             {
+                 var multi = (MultiplayerGameScreen)screen;
+                 multi.DontLeaveGameUponScreenSwitch = true;
 
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
+                 screen.Exit(() => new ImportingScreen());
+             }
         }
 
         /// <summary>
