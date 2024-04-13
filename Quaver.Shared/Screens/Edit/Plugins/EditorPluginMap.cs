@@ -109,6 +109,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public SliderVelocityInfo GetScrollVelocityAt(double time) => Map.GetScrollVelocityAt(time);
 
         /// <summary>
+        ///     Gets the bookmark at a particular time in the current map
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public BookmarkInfo GetBookmarkAt(int time) => Map.GetBookmarkAt(time);
+
+        /// <summary>
         ///    Finds the length of a timing point.
         /// </summary>
         /// <param name="point"></param>
