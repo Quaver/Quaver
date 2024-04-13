@@ -867,8 +867,9 @@ namespace Quaver.Shared.Screens.Edit
                     continue;
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-                
-                if (ConfigManager.EditorLiveMapSnap.Value)
+
+                // Only snaps the time if the audio is playing
+                if (ConfigManager.EditorLiveMapSnap.Value && AudioEngine.Track.IsPlaying)
                 {
                     time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time, BeatSnap.Value);
                 }
