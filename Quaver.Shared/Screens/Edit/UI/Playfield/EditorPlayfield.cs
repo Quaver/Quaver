@@ -1681,7 +1681,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void ReloadSpectrogram()
         {
             Spectrogram?.Destroy();
-            LoadingWaveform.FadeIn();
+            LoadingSpectrogram.FadeIn();
             SpectrogramLoadTask.Run(0);
         }
     }
