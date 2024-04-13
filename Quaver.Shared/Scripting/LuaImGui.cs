@@ -7,6 +7,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -45,7 +46,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="isResource"></param>
-        public LuaImGui(string filePath, bool isResource = false) : base(false, EditorFileMenuBar.GetOptions())
+        public LuaImGui(string filePath, bool isResource = false) : base(false, EditorFileMenuBar.GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
         {
             FilePath = filePath;
             IsResource = isResource;
