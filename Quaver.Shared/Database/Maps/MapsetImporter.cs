@@ -135,6 +135,17 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Adds the map dragged into the window to be scheduled to import
+        /// </summary>
+        /// <param name="path"></param>
+        private static void AddMapImportToQueue(string path)
+        {
+            NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
+            Queue.Add(path);
+            PostMapQueue();
+        }
+
+        /// <summary>
         ///     Tries to import the given file, be it a map, a replay, a skin, etc.
         ///     <param name="path">path to the file to import</param>
         /// </summary>
@@ -146,12 +157,7 @@ namespace Quaver.Shared.Database.Maps
             // Mapset files (or directory of Mapset files)
             if (AcceptedMapType(path))
             {
-                Queue.Add(path);
-
-                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
-                NotificationManager.Show(NotificationLevel.Info, log);
-
-                PostMapQueue();
+                AddMapImportToQueue(path);
             }
             // Quaver Replay
             else if (path.EndsWith(".qr"))
@@ -271,8 +277,7 @@ namespace Quaver.Shared.Database.Maps
                 {
                     if (AcceptedMapType(subPath))
                     {
-                        NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(subPath)} to be imported!");
-                        Queue.Add(subPath);
+                        AddMapImportToQueue(subPath);
                     }
                 }
                 foreach (var subDir in dirs)
