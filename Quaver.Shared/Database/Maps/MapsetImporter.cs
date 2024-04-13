@@ -140,6 +140,13 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="path"></param>
         private static void AddMapImportToQueue(string path)
         {
+            if (Path.GetExtension(path) == ".mc")
+            {
+                foreach (var scheduledPath in Queue)
+                {
+                    if (Path.GetDirectoryName(scheduledPath) == Path.GetDirectoryName(path)) return;
+                }
+            }
             NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
             Queue.Add(path);
             PostMapQueue();
