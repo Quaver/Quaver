@@ -871,7 +871,7 @@ namespace Quaver.Shared.Screens.Edit
                 // Only snaps the time if the audio is playing
                 if (ConfigManager.EditorLiveMapSnap.Value && AudioEngine.Track.IsPlaying)
                 {
-                    time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time - ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
+                    time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
                 }
 
                 var lane = i + 1;
