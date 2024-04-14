@@ -535,6 +535,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     ImGui.EndMenu();
                 }
+                
+                if (ImGui.BeginMenu("Precision"))
+                {
+                    for (var interleaveCount = 1; interleaveCount <= 16; interleaveCount *= 2)
+                    {
+                        if (ImGui.MenuItem($"{interleaveCount}x", "",
+                                ConfigManager.EditorSpectrogramInterleaveCount.Value == interleaveCount))
+                        {
+                            ConfigManager.EditorSpectrogramInterleaveCount.Value = interleaveCount;
+                        }
+                    }
+                    ImGui.EndMenu();
+                }
 
                 if (ImGui.BeginMenu("FFT Size"))
                 {
