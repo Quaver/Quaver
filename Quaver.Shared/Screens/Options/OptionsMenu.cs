@@ -408,7 +408,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
                         {
                             Tags = new List<string> {"linux"}
-                        }
+                        },
+                        new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage)
                     }),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()
                     {
