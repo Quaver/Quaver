@@ -428,10 +428,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Update(gameTime);
 
             if (ShowSpectrogram.Value && Spectrogram == null && SpectrogramLoadTask == null)
+            {
                 CreateSpectrogram();
+            }
+            else if (!ShowSpectrogram.Value && Spectrogram != null)
+            {
+                Spectrogram?.Dispose();
+                Spectrogram = null;
+                SpectrogramLoadTask = null;
+            }
 
             if (ShowWaveform.Value && Waveform == null && WaveformLoadTask == null)
+            {
                 CreateWaveform();
+            }
+            else if (!ShowWaveform.Value && Waveform != null)
+            {
+                Waveform?.Dispose();
+                Waveform = null;
+                WaveformLoadTask = null;
+            }
 
             if (LoadingWaveform != null)
             {
