@@ -376,8 +376,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateDividerLines();
             CreateHitPositionLine();
             CreateTimeline();
-            CreateWaveform();
-            CreateSpectrogram();
             CreateLineContainer();
             CreateHitObjects();
             CreateButton();
@@ -428,6 +426,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Alignment = Alignment;
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
+
+            if (ShowSpectrogram.Value && Spectrogram == null && SpectrogramLoadTask == null)
+            {
+                CreateSpectrogram();
+            }
+            else if (!ShowSpectrogram.Value && Spectrogram != null)
+            {
+                Spectrogram?.Dispose();
+                Spectrogram = null;
+                SpectrogramLoadTask = null;
+            }
+
+            if (ShowWaveform.Value && Waveform == null && WaveformLoadTask == null)
+            {
+                CreateWaveform();
+            }
+            else if (!ShowWaveform.Value && Waveform != null)
+            {
+                Waveform?.Dispose();
+                Waveform = null;
+                WaveformLoadTask = null;
+            }
 
             if (LoadingWaveform != null)
             {
