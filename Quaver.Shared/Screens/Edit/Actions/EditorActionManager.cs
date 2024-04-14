@@ -615,9 +615,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         ///     Adds a bookmark to the map
         /// </summary>
-        /// <param name="time"></param>
-        /// <param name="note"></param>
-        public void AddBookmark(int time, string note) => Perform(new EditorActionAddBookmark(this, WorkingMap, new BookmarkInfo { StartTime = time, Note = note }));
+        public void AddBookmark(BookmarkInfo bookmarkInfo) => Perform(new EditorActionAddBookmark(this, WorkingMap, bookmarkInfo));
+
+        public void AddBookmark(int time, string note) => AddBookmark(new BookmarkInfo
+        {
+            StartTime = time,
+            Note = note
+        });
 
         /// <summary>
         ///     Adds a batch of bookmarks to the map

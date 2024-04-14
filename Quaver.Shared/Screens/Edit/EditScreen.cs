@@ -234,6 +234,13 @@ namespace Quaver.Shared.Screens.Edit
         public Bindable<EditorLayerInfo> SelectedLayer { get; } = new Bindable<EditorLayerInfo>(null);
 
         /// <summary>
+        ///     The fraction scaling of ImGui Windows.
+        ///     Do NOT use bindable from this. We expect the user to leave and reenter the screen to see the effect
+        ///     Since <see cref="Wobble.Graphics.ImGUI.ImGuiRenderer.RebuildFontAtlas"/> needs to be called to update font sizes
+        /// </summary>
+        public float ImGuiScale { get; } = ConfigManager.EditorImGuiScalePercentage?.Value / 100f ?? 1f;
+
+        /// <summary>
         ///     Objects that are currently copied
         /// </summary>
         public List<HitObjectInfo> Clipboard { get; } = new List<HitObjectInfo>();
@@ -247,6 +254,7 @@ namespace Quaver.Shared.Screens.Edit
             Hidden = false,
             ColorRgb = "255,255,255"
         };
+
 
         /// <summary>
         /// </summary>
@@ -867,6 +875,12 @@ namespace Quaver.Shared.Screens.Edit
                     continue;
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+
+                // Only snaps the time if the audio is playing
+                if (ConfigManager.EditorLiveMapSnap.Value && AudioEngine.Track.IsPlaying)
+                {
+                    time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
+                }
 
                 var lane = i + 1;
 

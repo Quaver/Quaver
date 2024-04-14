@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions(), screen.ImGuiScale) => Screen = screen;
 
 
         /// <inheritdoc />
@@ -67,9 +67,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2);
-            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(0, 10));
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2 * Screen.ImGuiScale);
+            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(0, 10) * Screen.ImGuiScale);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4) * Screen.ImGuiScale);
             ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0, 0, 24, 0));
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 24, 0));
 
@@ -461,6 +461,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
                 Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
 
+            if (ImGui.MenuItem("Snap Notes When Live Mapping", "", ConfigManager.EditorLiveMapSnap.Value))
+                ConfigManager.EditorLiveMapSnap.Value = !ConfigManager.EditorLiveMapSnap.Value;
+            
+            if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
+                DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
+
             if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
                 Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
 
@@ -535,6 +541,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     ImGui.EndMenu();
                 }
+                
+                if (ImGui.BeginMenu("Precision"))
+                {
+                    for (var interleaveCount = 1; interleaveCount <= 16; interleaveCount *= 2)
+                    {
+                        if (ImGui.MenuItem($"{interleaveCount}x", "",
+                                ConfigManager.EditorSpectrogramInterleaveCount.Value == interleaveCount))
+                        {
+                            ConfigManager.EditorSpectrogramInterleaveCount.Value = interleaveCount;
+                        }
+                    }
+                    ImGui.EndMenu();
+                }
 
                 if (ImGui.BeginMenu("FFT Size"))
                 {
@@ -542,16 +561,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     {
                         if (ImGui.MenuItem($"{size}", "", Screen.SpectrogramFftSize.Value == size))
                             Screen.SpectrogramFftSize.Value = size;
-                    }
-                    ImGui.EndMenu();
-                }
-
-                if (ImGui.BeginMenu("Layer"))
-                {
-                    foreach (var layer in Enum.GetValues<EditorPlayfieldSpectrogramLayer>())
-                    {
-                        if (ImGui.MenuItem($"{layer}", "", layer == ConfigManager.EditorSpectrogramLayer.Value))
-                            ConfigManager.EditorSpectrogramLayer.Value = layer;
                     }
                     ImGui.EndMenu();
                 }
