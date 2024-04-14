@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions(), screen.ImGuiScale) => Screen = screen;
 
 
         /// <inheritdoc />
@@ -67,10 +67,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            var scale = ConfigManager.EditorImGuiScalePercentage.Value / 100f;
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2 * scale);
-            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(0, 10) * scale);
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4) * scale);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2 * Screen.ImGuiScale);
+            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(0, 10) * Screen.ImGuiScale);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4) * Screen.ImGuiScale);
             ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0, 0, 24, 0));
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 24, 0));
 

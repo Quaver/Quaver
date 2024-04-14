@@ -75,7 +75,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorTimingPointPanel(EditScreen screen) : base(false, GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
+        public EditorTimingPointPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();
