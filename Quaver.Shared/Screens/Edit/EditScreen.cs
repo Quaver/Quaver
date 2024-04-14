@@ -876,6 +876,12 @@ namespace Quaver.Shared.Screens.Edit
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
 
+                // Only snaps the time if the audio is playing
+                if (ConfigManager.EditorLiveMapSnap.Value && AudioEngine.Track.IsPlaying)
+                {
+                    time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
+                }
+
                 var lane = i + 1;
 
                 var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;

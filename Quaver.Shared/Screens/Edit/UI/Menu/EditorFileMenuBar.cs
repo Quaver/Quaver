@@ -461,6 +461,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
                 Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
 
+            if (ImGui.MenuItem("Snap Notes When Live Mapping", "", ConfigManager.EditorLiveMapSnap.Value))
+                ConfigManager.EditorLiveMapSnap.Value = !ConfigManager.EditorLiveMapSnap.Value;
+            
+            if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
+                DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
+
             if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
                 Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
 
