@@ -139,6 +139,8 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="path"></param>
         private static void AddMapImportToQueue(string path)
         {
+            // Only one .mc file under the same directory should be imported
+            // since .mc import 
             if (Path.GetExtension(path) == ".mc")
             {
                 foreach (var scheduledPath in Queue)
@@ -146,6 +148,7 @@ namespace Quaver.Shared.Database.Maps
                     if (Path.GetDirectoryName(scheduledPath) == Path.GetDirectoryName(path)) return;
                 }
             }
+
             NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
             Queue.Add(path);
             PostMapQueue();
@@ -311,8 +314,9 @@ namespace Quaver.Shared.Database.Maps
             {
                 var file = Queue[i];
                 var extension = Path.GetExtension(file);
+                // Use directory of .sm files, because during scheduled bulk import, there can be multiple files named file.sm, for example
                 var isPartOfMapset = extension == ".sm";
-                var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+                var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
 
                 var folderName = isPartOfMapset
                     ? Path.GetFileName(Path.GetDirectoryName(file))
