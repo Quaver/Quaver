@@ -1069,7 +1069,7 @@ namespace Quaver.Shared.Config
             TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
-            EditorImGuiScalePercentage = ReadInt(@"EditorImGuiScalePercentage", 100, 25, 400, data);
+            EditorImGuiScalePercentage = ReadInt(@"EditorImGuiScalePercentage", 100, 25, 300, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
