@@ -545,16 +545,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-
-                if (ImGui.BeginMenu("Layer"))
-                {
-                    foreach (var layer in Enum.GetValues<EditorPlayfieldSpectrogramLayer>())
-                    {
-                        if (ImGui.MenuItem($"{layer}", "", layer == ConfigManager.EditorSpectrogramLayer.Value))
-                            ConfigManager.EditorSpectrogramLayer.Value = layer;
-                    }
-                    ImGui.EndMenu();
-                }
                 
                 if (ImGui.BeginMenu("Frequency Scale"))
                 {
