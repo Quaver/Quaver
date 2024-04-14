@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -57,15 +58,15 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private EditorPanelDetails Details { get; set; }
+        internal EditorPanelDetails Details { get; set; }
 
         /// <summary>
         /// </summary>
-        private EditorPanelCompositionTools CompositionTools { get; set; }
+        internal EditorPanelCompositionTools CompositionTools { get; set; }
 
         /// <summary>
         /// </summary>
-        private EditorPanelHitsounds Hitsounds { get; set; }
+        internal EditorPanelHitsounds Hitsounds { get; set; }
 
         /// <summary>
         /// </summary>
@@ -106,6 +107,8 @@ namespace Quaver.Shared.Screens.Edit
             CreateHitsoundsPanel();
             CreateLayersPanel();
             CreateAutoMod();
+            
+            StructuredConfigManager.WindowStates.Value.EditorPanelStates.ForEach(s => s.SetPosition(this));
 
             if (EditScreen.DisplayGameplayPreview.Value)
                 CreateGameplayPreview();
