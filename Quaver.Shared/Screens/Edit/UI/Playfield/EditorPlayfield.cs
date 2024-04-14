@@ -472,34 +472,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
-            HitPositionLine.Y = HitPositionY - TrackPositionY * WindowManager.Scale.M22;
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
-
-            if (ShowSpectrogram.Value && ConfigManager.EditorSpectrogramLayer.Value ==
-                EditorPlayfieldSpectrogramLayer.BehindTimingLines)
-                Spectrogram?.Draw(gameTime);
 
             Timeline.Draw(gameTime);
 
-            if (ShowSpectrogram.Value &&
-                ConfigManager.EditorSpectrogramLayer.Value == EditorPlayfieldSpectrogramLayer.BehindNotes)
+            if (ShowSpectrogram.Value)
                 Spectrogram?.Draw(gameTime);
 
             if (ShowWaveform.Value)
                 Waveform?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
-            if (ShowSpectrogram.Value &&
-                ConfigManager.EditorSpectrogramLayer.Value == EditorPlayfieldSpectrogramLayer.FrontMost)
-            {
-                Spectrogram?.Draw(gameTime);
-                HitPositionLine?.Draw(gameTime);
-            }
-            else
-            {
-                HitPositionLine?.Draw(gameTime);
-                DrawHitObjects(gameTime);
-            }
+            
+            DrawHitObjects(gameTime);
             
             GameBase.Game.SpriteBatch.End();
 
