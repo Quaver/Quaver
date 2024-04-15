@@ -228,22 +228,33 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
         private int GetMatchScores(int val, CancellationToken cancellationToken)
         {
-            const int maxRetryCount = 3;
+            List<ScoreProcessor> players = null;
             MultiplayerMatchInformationResponse matchInfoResponse = null;
-
-            for (var retryCount = 0; retryCount < maxRetryCount; retryCount++)
+            var isCoop = Processor.Value.Mods.HasFlag(ModIdentifier.Coop);
+            // If this is a co-op play, we should directly use replay result instead of fetching online
+            if (isCoop)
             {
-                if (TryFetchMatchInfo(out matchInfoResponse)) break;
-                Thread.Sleep(500);
+                players = GetOrderedUserList();
+            }
+            else
+            {
+                // Otherwise, fetch match info from the API first
+                const int maxRetryCount = 3;
+
+                for (var retryCount = 0; retryCount < maxRetryCount; retryCount++)
+                {
+                    if (TryFetchMatchInfo(out matchInfoResponse)) break;
+                    Thread.Sleep(500);
+                }
             }
 
-            List<ScoreProcessor> players;
-            if (matchInfoResponse == null)
+            // Skip fetching results if it's co-op play
+            if (!isCoop && matchInfoResponse == null)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve players' scores!");
                 players = GetOrderedUserList();
             }
-            else
+            else if (!isCoop)
             {
                 players = new List<ScoreProcessor>();
                 var qua = Map.LoadQua();
