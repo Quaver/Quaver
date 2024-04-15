@@ -101,7 +101,7 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         public override void OnFirstUpdate()
         {
-            if (OnlineManager.IsSpectatingSomeone)
+            if (OnlineManager.IsSpectatingSomeone && !(OnlineManager.CurrentGame?.IsSpectating ?? false))
                 OnlineManager.Client?.StopSpectating();
 
             MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
