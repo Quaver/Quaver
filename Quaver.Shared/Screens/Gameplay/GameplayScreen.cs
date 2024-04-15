@@ -1312,7 +1312,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleSpectatorSkipping()
         {
-            if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
+            if (SpectatorClient.Replay.Frames.Count == 0)
                 return;
 
             // User can only be two seconds out of sync with the user
