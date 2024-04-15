@@ -47,6 +47,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -1315,9 +1316,12 @@ namespace Quaver.Shared.Screens.Gameplay
             if (SpectatorClient.Replay.Frames.Count == 0)
                 return;
 
+            var targetSyncTime = (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen) 
+                ? tournamentScreen.GameplayScreens.Min(s => s.SpectatorClient.Replay.Frames?.Last().Time ?? int.MaxValue)
+                : SpectatorClient.Replay.Frames.Last().Time;
             // User can only be two seconds out of sync with the user
-            if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000
-                && Math.Abs(Timing.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
+            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000
+                && Math.Abs(Timing.Time - targetSyncTime) < 3000)
                 return;
 
             var skipTime = SpectatorClient.Replay.Frames.Last().Time;
