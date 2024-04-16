@@ -1258,13 +1258,11 @@ namespace Quaver.Shared.Online
 
                 BackgroundHelper.Load(MapManager.Selected.Value);
 
-                if (!game.CurrentScreen.Exiting)
-                {
-                    foreach (var spect in SpectatorClients.Values)
-                        spect.WatchUserImmediately();
+                foreach (var spect in SpectatorClients.Values)
+                    spect.WatchUserImmediately();
 
-                    game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()));
-                }
+                game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()),
+                    delay: 500);
 
                 return;
             }
