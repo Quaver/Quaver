@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Tests.Tournaments
             var diffculty = new DifficultyProcessorKeys(map, new StrainConstantsKeys(), 0);
 
             var players = new List<TournamentPlayer>()
-            
+            {
                 // TODO Temp fix
                 // new TournamentPlayer(new User(new OnlineUser()
                 // {
