@@ -125,7 +125,6 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 var qua = MapManager.Selected.Value.LoadQua();
 
-                spectatees[i].PlayNewMap(new List<ReplayFrame>());
                 qua.ApplyMods(spectatees[i].Replay.Mods);
 
                 MapManager.Selected.Value.Qua = qua;
