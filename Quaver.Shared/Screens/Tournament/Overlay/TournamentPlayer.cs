@@ -5,6 +5,7 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Server.Client.Structures;
+using Quaver.Shared.Screens.Gameplay.Rulesets;
 
 namespace Quaver.Shared.Screens.Tournament.Overlay
 {
@@ -16,7 +17,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         /// <summary>
         /// </summary>
-        public ScoreProcessor Scoring { get; set; }
+        public ScoreProcessor Scoring => Ruleset.ScoreProcessor;
+        
+        public GameplayRuleset Ruleset { get; set; }
 
         /// <summary>
         /// </summary>
@@ -27,10 +30,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         /// <param name="user"></param>
         /// <param name="scoring"></param>
         /// <param name="difficultyRating"></param>
-        public TournamentPlayer(User user, ScoreProcessor scoring, float difficultyRating)
+        public TournamentPlayer(User user, GameplayRuleset ruleset, float difficultyRating)
         {
             User = user;
-            Scoring = scoring;
+            Ruleset = ruleset;
             Rating = new RatingProcessorKeys(difficultyRating);
         }
 

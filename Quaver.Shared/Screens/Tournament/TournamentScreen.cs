@@ -229,8 +229,8 @@ namespace Quaver.Shared.Screens.Tournament
 
                         var player = view.TournamentPlayers.Find(y => y.User == x.SpectatorClient?.Player);
 
-                        if (player != null)
-                            player.Scoring = x.Ruleset.ScoreProcessor;
+                        // if (player != null)
+                        //     player.Scoring = x.Ruleset.ScoreProcessor;
                     });
 
                     if (AudioEngine.Track.IsPlaying)

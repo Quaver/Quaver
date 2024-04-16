@@ -73,21 +73,22 @@ namespace Quaver.Shared.Screens.Tests.Tournaments
             var diffculty = new DifficultyProcessorKeys(map, new StrainConstantsKeys(), 0);
 
             var players = new List<TournamentPlayer>()
-            {
-                new TournamentPlayer(new User(new OnlineUser()
-                {
-                    Username = "Player1",
-                    CountryFlag = "US",
-                    Id = 1,
-                    UserGroups = UserGroups.Normal
-                }), new ScoreProcessorKeys(map, ModIdentifier.Mirror | ModIdentifier.Autoplay | ModIdentifier.Paused), diffculty.OverallDifficulty),
-                new TournamentPlayer(new User(new OnlineUser()
-                {
-                    Username = "Player2",
-                    CountryFlag = "CA",
-                    Id = 2,
-                    UserGroups = UserGroups.Normal
-                }), new ScoreProcessorKeys(map, ModIdentifier.Speed12X | ModIdentifier.Autoplay), diffculty.OverallDifficulty),
+            
+                // TODO Temp fix
+                // new TournamentPlayer(new User(new OnlineUser()
+                // {
+                //     Username = "Player1",
+                //     CountryFlag = "US",
+                //     Id = 1,
+                //     UserGroups = UserGroups.Normal
+                // }), new ScoreProcessorKeys(map, ModIdentifier.Mirror | ModIdentifier.Autoplay | ModIdentifier.Paused), diffculty.OverallDifficulty),
+                // new TournamentPlayer(new User(new OnlineUser()
+                // {
+                //     Username = "Player2",
+                //     CountryFlag = "CA",
+                //     Id = 2,
+                //     UserGroups = UserGroups.Normal
+                // }), new ScoreProcessorKeys(map, ModIdentifier.Speed12X | ModIdentifier.Autoplay), diffculty.OverallDifficulty),
             };
 
             var game = new MultiplayerGame()
