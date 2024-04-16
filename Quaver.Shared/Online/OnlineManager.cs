@@ -1260,7 +1260,7 @@ namespace Quaver.Shared.Online
                 BackgroundHelper.Load(MapManager.Selected.Value);
 
                 foreach (var spect in SpectatorClients.Values)
-                    spect.PlayNewMap(new List<ReplayFrame>(), forceIfImporting: true);
+                    spect.WatchUserImmediately();
 
                 game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()),
                     delay: 500);
