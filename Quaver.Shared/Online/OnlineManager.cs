@@ -1380,6 +1380,7 @@ namespace Quaver.Shared.Online
             }
 
             SpectatorClients[e.UserId] = new SpectatorClient(OnlineUsers[e.UserId]);
+            SpectatorClients[e.UserId].PlayNewMap(new List<ReplayFrame>(), true, true);
 
             // We don't have the player's information yet, so it needs to be requested from the server.
             if (!SpectatorClients[e.UserId].Player.HasUserInfo)
