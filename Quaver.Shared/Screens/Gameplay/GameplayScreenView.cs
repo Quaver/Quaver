@@ -881,13 +881,11 @@ namespace Quaver.Shared.Screens.Gameplay
             Screen.MultiplayerMatchEndedPrematurely = !Screen.IsPlayComplete && manager.NextHitObject != null
                                                       && (Screen.Timing.Time >= Screen.Map.Length || AudioEngine.Track.Time >= AudioEngine.Track.Length);
 
-            if (Screen is TournamentGameplayScreen)
+            if (Screen.Exiting) 
                 return;
-
-            Screen.IsPaused = true;
-
             Screen.Exit(() => new ResultsScreen(Screen, OnlineManager.CurrentGame,
-                GetProcessorsFromScoreboard(ScoreboardLeft), GetProcessorsFromScoreboard(ScoreboardRight)));
+                GetProcessorsFromScoreboard(ScoreboardLeft), GetProcessorsFromScoreboard(ScoreboardRight)),
+                Screen is TournamentGameplayScreen ? 3500 : 0);
         }
 
         private List<ScoreboardUser> GetScoreboardUsers()
