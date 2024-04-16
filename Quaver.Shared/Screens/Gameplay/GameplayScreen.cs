@@ -1317,7 +1317,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             var targetSyncTime = (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen) 
-                ? tournamentScreen.GameplayScreens.Min(s => s.SpectatorClient.Replay.Frames?.Last().Time ?? int.MaxValue)
+                ? tournamentScreen.GameplayScreens.Min(s =>
+                {
+                    // We are guaranteed to find a minimum because of the return condition above.
+                    var replayFrames = s.SpectatorClient.Replay.Frames;
+                    return replayFrames.Count == 0 ? int.MaxValue : replayFrames.Last().Time;
+                })
                 : SpectatorClient.Replay.Frames.Last().Time;
             // User can only be two seconds out of sync with the user
             if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000
