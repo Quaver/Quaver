@@ -12,6 +12,7 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
+using Quaver.API.Replays;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -1259,7 +1260,7 @@ namespace Quaver.Shared.Online
                 BackgroundHelper.Load(MapManager.Selected.Value);
 
                 foreach (var spect in SpectatorClients.Values)
-                    spect.WatchUserImmediately();
+                    spect.PlayNewMap(new List<ReplayFrame>(), forceIfImporting: true);
 
                 game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()),
                     delay: 500);
