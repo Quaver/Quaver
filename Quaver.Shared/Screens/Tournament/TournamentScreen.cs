@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
@@ -141,7 +142,10 @@ namespace Quaver.Shared.Screens.Tournament
             }
 
             ModManager.RemoveAllMods();
-            ModManager.AddSpeedMods(ModHelper.GetRateFromMods(spectatees.First().Replay.Mods));
+            
+            var minimumRate =
+                game.PlayerMods.Min(pm => ModHelper.GetRateFromMods((ModIdentifier)long.Parse(pm.Modifiers)));
+            ModManager.AddSpeedMods(minimumRate);
 
             SetRichPresenceForTournamentViewer();
             View = new TournamentScreenView(this);
