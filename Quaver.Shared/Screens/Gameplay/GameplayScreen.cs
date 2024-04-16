@@ -1314,7 +1314,7 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 // We are guaranteed to find a minimum because of the return condition above.
                 var replayFrames = s.SpectatorClient.Replay.Frames;
-                return replayFrames.Count == 0 ? int.MaxValue : replayFrames.Last().Time;
+                return (replayFrames?.Count ?? 0) == 0 ? int.MaxValue : replayFrames.Last()?.Time ?? int.MaxValue;
             })
             : SpectatorClient.Replay.Frames.Last().Time;
         /// <summary>
