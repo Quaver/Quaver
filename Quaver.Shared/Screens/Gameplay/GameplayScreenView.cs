@@ -734,14 +734,11 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (OnlineManager.IsBeingSpectated)
                 {
                     Screen.SendReplayFramesToServer(true);
-
-                    // Send final replay frame to let spectators know the song is complete
-                    if (OnlineManager.IsBeingSpectated)
-                    {
-                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
-                            new List<ReplayFrame>());
-                    }
                 }
+
+                // Send FinishedSong frame regardless of the presence of any spectator
+                OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                    new List<ReplayFrame>());
 
                 if (Screen.IsPlayTesting)
                 {

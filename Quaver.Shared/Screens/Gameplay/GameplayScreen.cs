@@ -478,7 +478,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame && !IsSongSelectPreview)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
-            if (OnlineManager.IsBeingSpectated && !InReplayMode)
+            if (!InReplayMode)
                 OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
 
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
