@@ -1326,7 +1326,8 @@ namespace Quaver.Shared.Screens.Gameplay
 
             var targetSyncTime = SpectatorTargetSyncTime;
             // User can only be two seconds out of sync with the user
-            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000)
+            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000
+                && Math.Abs(Timing.Time - targetSyncTime) < 3000)
                 return;
 
             var skipTime = SpectatorClient.Replay.Frames.Last().Time;
