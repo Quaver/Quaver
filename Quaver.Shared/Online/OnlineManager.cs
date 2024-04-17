@@ -1422,6 +1422,10 @@ namespace Quaver.Shared.Online
 
         private static void OnClearSpectateeReplayFrames(object sender, ClearSpectateeReplayFramesEventArgs e)
         {
+            if (!SpectatorClients.ContainsKey(e.UserId))
+                return;
+            if (SpectatorClients[e.UserId].Replay == null)
+                SpectatorClients[e.UserId].PlayNewMap(new List<ReplayFrame>(), true, true);
             Logger.Important(
                 $"Clearing {SpectatorClients[e.UserId].Replay.Frames.Count} replay frames as requested from server",
                 LogType.Runtime);
