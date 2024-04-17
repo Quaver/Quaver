@@ -270,6 +270,7 @@ namespace Quaver.Shared.Online
             Client.OnUserLeftGame += OnUserLeftGame;
             Client.OnStoppedSpectatingPlayer += OnStoppedSpectatingPlayer;
             Client.OnStartedSpectatingPlayer += OnStartedSpectatingPlayer;
+            Client.OnClearSpectateeReplayFrames += OnClearSpectateeReplayFrames;
             Client.OnSpectatorJoined += OnSpectatorJoined;
             Client.OnSpectatorLeft += OnSpectatorLeft;
             Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
@@ -1380,7 +1381,6 @@ namespace Quaver.Shared.Online
             }
 
             SpectatorClients[e.UserId] = new SpectatorClient(OnlineUsers[e.UserId]);
-            SpectatorClients[e.UserId].PlayNewMap(new List<ReplayFrame>(), true, true);
 
             // We don't have the player's information yet, so it needs to be requested from the server.
             if (!SpectatorClients[e.UserId].Player.HasUserInfo)
@@ -1418,6 +1418,14 @@ namespace Quaver.Shared.Online
             }
 
             Logger.Important($"Stopped spectating player: {e.UserId}", LogType.Network);
+        }
+
+        private static void OnClearSpectateeReplayFrames(object sender, ClearSpectateeReplayFramesEventArgs e)
+        {
+            Logger.Important(
+                $"Clearing {SpectatorClients[e.UserId].Replay.Frames.Count} replay frames as requested from server",
+                LogType.Runtime);
+            SpectatorClients[e.UserId].Replay.ReplaceFrames(new List<ReplayFrame>());
         }
 
         private static void OnSpectatorJoined(object sender, SpectatorJoinedEventArgs e)
