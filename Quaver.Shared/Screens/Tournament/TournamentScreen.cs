@@ -149,7 +149,7 @@ namespace Quaver.Shared.Screens.Tournament
             ModManager.RemoveAllMods();
             
             var minimumRate =
-                game.PlayerMods.Min(pm => ModHelper.GetRateFromMods((ModIdentifier)long.Parse(pm.Modifiers)));
+                game.PlayerMods.Min(pm => ModHelper.GetRateFromMods((ModIdentifier)long.Parse(string.IsNullOrEmpty(pm.Modifiers) ? "0" : pm.Modifiers)));
             ModManager.AddSpeedMods(minimumRate);
 
             SetRichPresenceForTournamentViewer();
