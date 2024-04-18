@@ -125,6 +125,11 @@ namespace Quaver.Shared.Screens.Tournament
             for (var i = 0; i < spectatees.Count; i++)
             {
                 var qua = MapManager.Selected.Value.LoadQua();
+                
+                if (spectatees[i].Replay == null)
+                    spectatees[i].PlayNewMap(new List<ReplayFrame>());
+                
+                Logger.Important($"Tournament Screen Init spectatee #{i}: {spectatees[i].Replay.Frames.Count} frames", LogType.Runtime);
 
                 qua.ApplyMods(spectatees[i].Replay.Mods);
 
