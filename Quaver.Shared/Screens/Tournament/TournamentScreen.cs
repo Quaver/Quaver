@@ -211,7 +211,7 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 UpdateScreens(gameTime);
 
-                if (GenericKeyManager.IsDown(ConfigManager.KeyPause.Value))
+                if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
                 {
                     if (TournamentType == TournamentScreenType.Spectator)
                     {
