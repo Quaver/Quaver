@@ -206,7 +206,9 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
-            RatingProcessor = new RatingProcessorKeys(Screen.Map.SolveDifficulty(ModManager.Mods, true).OverallDifficulty);
+            RatingProcessor = new RatingProcessorKeys(Screen.Map.SolveDifficulty(
+                screen is TournamentGameplayScreen ? Screen.Ruleset.ScoreProcessor.Mods : ModManager.Mods,
+                true).OverallDifficulty);
 
             CreateBackground();
 
