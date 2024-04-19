@@ -217,15 +217,17 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 UpdateScreens(gameTime);
 
-                if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
+                if (TournamentType == TournamentScreenType.Spectator)
                 {
-                    if (TournamentType == TournamentScreenType.Spectator)
+                    if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
                     {
                         OnlineManager.LeaveGame();
                         OnlineManager.Client?.StopSpectating();
                     }
-                    else
-                        MainGameplayScreen.Pause(gameTime);
+                }
+                else if (GenericKeyManager.IsDown(ConfigManager.KeyPause.Value))
+                {
+                    MainGameplayScreen.Pause(gameTime);
                 }
 
                 // Add skipping
