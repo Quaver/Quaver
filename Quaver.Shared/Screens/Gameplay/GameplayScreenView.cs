@@ -457,7 +457,10 @@ namespace Quaver.Shared.Screens.Gameplay
             // Update score and accuracy displays
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
 
-            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(
+                Screen is TournamentGameplayScreen
+                    ? Screen.Ruleset.ScoreProcessor.Accuracy
+                    : Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
 
             if (ConfigManager.DisplayRankedAccuracy.Value)
                 AccuracyDisplay.UpdateValue(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
