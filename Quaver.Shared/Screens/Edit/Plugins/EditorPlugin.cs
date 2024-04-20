@@ -24,9 +24,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public bool IsWindowHovered { get; set; }
 
-        /// <summary>
-        /// </summary>
-        public string Name { get; set; }
+        /// <inheritdoc/>
+        public override string Name { get; set; }
 
         /// <summary>
         /// </summary>

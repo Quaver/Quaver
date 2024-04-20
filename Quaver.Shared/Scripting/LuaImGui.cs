@@ -30,9 +30,13 @@ namespace Quaver.Shared.Scripting
         private string FilePath { get; }
 
         // <summary>
-        // Gets the name of the plugin
+        // Gets or sets the name of the plugin
         // </summary>
-        private string Name => Path.GetFileName(Path.GetDirectoryName(FilePath));
+        public virtual string Name
+        {
+        	get => Path.GetFileName(Path.GetDirectoryName(FilePath));
+        	set { }
+        }
 
         // <summary>
         // Determines whether an exception has occured.
