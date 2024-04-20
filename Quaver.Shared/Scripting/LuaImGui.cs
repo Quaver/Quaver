@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -27,6 +28,11 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         /// </summary>
         private string FilePath { get; }
+
+        // <summary>
+        // Gets the name of the plugin
+        // </summary>
+        private string Name => Path.GetFileName(Path.GetDirectoryName(FilePath));
 
         // <summary>
         // Determines whether an exception has occured.
@@ -169,7 +175,6 @@ namespace Quaver.Shared.Scripting
             WorkingScript.Globals["imgui_combo_flags"] = typeof(ImGuiComboFlags);
             WorkingScript.Globals["imgui_focused_flags"] = typeof(ImGuiFocusedFlags);
             WorkingScript.Globals["imgui_hovered_flags"] = typeof(ImGuiHoveredFlags);
-
             WorkingScript.Globals["keys"] = typeof(Keys);
         }
 
@@ -188,6 +193,7 @@ namespace Quaver.Shared.Scripting
         {
             CausedException = false;
             WorkingScript = new Script(CoreModules.Preset_HardSandbox);
+            WorkingScript.Globals["print"] = CallbackFunction.FromDelegate(null, Print);
 
             try
             {
@@ -202,7 +208,7 @@ namespace Quaver.Shared.Scripting
                 }
 
                 if (WorkingScript.DoString(ScriptText) is var ret && ret.Type is not DataType.Void)
-                	NotificationManager.Show(NotificationLevel.Info, $"Plugin {Path.GetFileName(Path.GetDirectoryName(FilePath))} returned {ret}.");
+                	NotificationManager.Show(NotificationLevel.Info, $"Plugin {Name} returned {ret}.");
             }
             catch (Exception e)
             {
@@ -298,7 +304,6 @@ namespace Quaver.Shared.Scripting
         private void HandleLuaException(Exception e)
         {
             Logger.Error(e, LogType.Runtime);
-    	    var name = Path.GetFileName(Path.GetDirectoryName(FilePath));
 
     	    var summary = e switch
             {
@@ -323,10 +328,12 @@ namespace Quaver.Shared.Scripting
                 ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
                 : "";
 
-            NotificationManager.Show(NotificationLevel.Error, $"Plugin {name} caused {summary} error{message}{callStack}");
+            NotificationManager.Show(NotificationLevel.Error, $"Plugin {Name} caused {summary} error{message}{callStack}");
         }
 
-        private string FormatSource(SourceRef source)
+        private void Print(params DynValue[] args) => NotificationManager.Show(NotificationLevel.Info, $"{Name}:\n{string.Join("\n", args.Select(x => $"{x}"))}");
+
+        private static string FormatSource(SourceRef source)
         {
             StringBuilder sb = new("(");
             sb.Append(source.FromLine);
