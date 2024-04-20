@@ -134,8 +134,8 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            // Prevents exception spam: No one needs more than 10 hot reloads per second.
-            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
+            // Prevents exception spam: No one needs more than 2 hot reloads per second.
+            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(500))
                 return;
 
             try
@@ -311,6 +311,9 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private void HandleLuaException(Exception e)
         {
+            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
+            	return;
+
             LastException = DateTime.Now;
             Logger.Error(e, LogType.Runtime);
 
