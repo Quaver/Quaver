@@ -210,6 +210,7 @@ namespace Quaver.Shared.Scripting
                 }
                 else
                 {
+                    Thread.Sleep(1);
                     ScriptText = File.ReadAllText(FilePath);
                 }
 
