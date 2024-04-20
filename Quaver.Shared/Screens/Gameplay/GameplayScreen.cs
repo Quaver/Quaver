@@ -47,6 +47,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -484,7 +485,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame && !IsSongSelectPreview)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
-            if (OnlineManager.IsBeingSpectated && !InReplayMode)
+            if (!InReplayMode)
                 OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
 
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -1356,7 +1357,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the client is currently being spectated, replay frames should be sent to the server
         /// </summary>
-        public void SendReplayFramesToServer(bool force = false)
+        public void SendReplayFramesToServer(bool force = false, bool appendFinishSong = false)
         {
             if (!OnlineManager.IsBeingSpectated || InReplayMode || IsSongSelectPreview)
                 return;
@@ -1394,6 +1395,10 @@ namespace Quaver.Shared.Screens.Gameplay
                     return;
 
                 OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+
+                if (appendFinishSong)
+                    OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                        new List<ReplayFrame>());
             });
         }
 

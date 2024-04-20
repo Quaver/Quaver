@@ -735,14 +735,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Force all replay frames on failure
                 if (OnlineManager.IsBeingSpectated)
                 {
-                    Screen.SendReplayFramesToServer(true);
-
-                    // Send final replay frame to let spectators know the song is complete
-                    if (OnlineManager.IsBeingSpectated)
-                    {
-                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
-                            new List<ReplayFrame>());
-                    }
+                    // Send replay frames
+                    // FinishedSong frame as well unless we are the spectator
+                    Screen.SendReplayFramesToServer(true, !OnlineManager.IsSpectatingSomeone);
                 }
 
                 if (Screen.IsPlayTesting)
@@ -883,13 +878,11 @@ namespace Quaver.Shared.Screens.Gameplay
             Screen.MultiplayerMatchEndedPrematurely = !Screen.IsPlayComplete && manager.NextHitObject != null
                                                       && (Screen.Timing.Time >= Screen.Map.Length || AudioEngine.Track.Time >= AudioEngine.Track.Length);
 
-            if (Screen is TournamentGameplayScreen)
+            if (Screen.Exiting) 
                 return;
-
-            Screen.IsPaused = true;
-
             Screen.Exit(() => new ResultsScreen(Screen, OnlineManager.CurrentGame,
-                GetProcessorsFromScoreboard(ScoreboardLeft), GetProcessorsFromScoreboard(ScoreboardRight)));
+                GetProcessorsFromScoreboard(ScoreboardLeft), GetProcessorsFromScoreboard(ScoreboardRight)),
+                Screen is TournamentGameplayScreen ? 3500 : 0);
         }
 
         private List<ScoreboardUser> GetScoreboardUsers()
