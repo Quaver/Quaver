@@ -38,11 +38,6 @@ namespace Quaver.Shared.Scripting
         	set { }
         }
 
-        // <summary>
-        // Determines whether an exception has occured.
-        // </summary>
-        private bool CausedException { get; set; }
-
         /// <summary>
         /// </summary>
         private bool IsResource { get; }
@@ -50,6 +45,11 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         /// </summary>
         private string ScriptText { get; set; }
+
+        // <summary>
+        // Determines when an exception has occured.
+        // </summary>
+        private DateTime LastException { get; set; }
 
         /// <summary>
         /// </summary>
@@ -113,6 +113,7 @@ namespace Quaver.Shared.Scripting
             Watcher.Changed += OnFileChanged;
             Watcher.Created += OnFileChanged;
             Watcher.Deleted += OnFileChanged;
+            Watcher.Renamed += OnFileChanged;
 
             // Begin watching.
             Watcher.EnableRaisingEvents = true;
@@ -133,7 +134,7 @@ namespace Quaver.Shared.Scripting
         protected override void RenderImguiLayout()
         {
             // Prevents exception spam
-            if (CausedException)
+            if (DateTime.Now - LastException < TimeSpan.FromSeconds(1))
                 return;
 
             try
@@ -197,7 +198,6 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private void LoadScript()
         {
-            CausedException = false;
             WorkingScript = new Script(CoreModules.Preset_HardSandbox);
             WorkingScript.Globals["print"] = CallbackFunction.FromDelegate(null, Print);
 
@@ -309,7 +309,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private void HandleLuaException(Exception e)
         {
-            CausedException = true;
+            LastException = DateTime.Now;
             Logger.Error(e, LogType.Runtime);
 
     	    var summary = e switch
