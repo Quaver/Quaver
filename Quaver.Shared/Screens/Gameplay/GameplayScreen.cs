@@ -1402,7 +1402,12 @@ namespace Quaver.Shared.Screens.Gameplay
                     status = SpectatorClientStatus.Playing;
 
                 if (status == SpectatorClientStatus.Playing && frames.Count == 0)
+                {
+                    if (appendFinishSong)
+                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                            new List<ReplayFrame>());
                     return;
+                }
 
                 OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
 
