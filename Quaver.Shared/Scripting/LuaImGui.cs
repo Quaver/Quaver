@@ -147,7 +147,6 @@ namespace Quaver.Shared.Scripting
             }
             catch (Exception e)
             {
-                CausedException = true;
                 HandleLuaException(e);
             }
         }
@@ -310,6 +309,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private void HandleLuaException(Exception e)
         {
+            CausedException = true;
             Logger.Error(e, LogType.Runtime);
 
     	    var summary = e switch
