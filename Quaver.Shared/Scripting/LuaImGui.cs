@@ -139,7 +139,10 @@ namespace Quaver.Shared.Scripting
             try
             {
                 SetFrameState();
-                WorkingScript.Call(WorkingScript.Globals["draw"]);
+
+                if (WorkingScript.Globals["draw"] is Closure draw)
+                    WorkingScript.Call(draw);
+
                 AfterRender();
             }
             catch (Exception e)
