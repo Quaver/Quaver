@@ -28,6 +28,11 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private string FilePath { get; }
 
+        // <summary>
+        // Determines whether an exception has occured.
+        // </summary>
+        private bool CausedException { get; set; }
+
         /// <summary>
         /// </summary>
         private bool IsResource { get; }
@@ -117,6 +122,10 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         protected override void RenderImguiLayout()
         {
+            // Prevents exception spam
+            if (CausedException)
+                return;
+
             try
             {
                 SetFrameState();
@@ -125,6 +134,7 @@ namespace Quaver.Shared.Scripting
             }
             catch (Exception e)
             {
+                CausedException = true;
                 HandleLuaException(e);
             }
         }
@@ -176,6 +186,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private void LoadScript()
         {
+            CausedException = false;
             WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
             try
