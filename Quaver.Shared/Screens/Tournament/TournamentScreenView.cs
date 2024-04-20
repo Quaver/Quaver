@@ -17,6 +17,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Screens.Tournament.Overlay;
 using Quaver.Shared.Skinning;
@@ -60,6 +61,11 @@ namespace Quaver.Shared.Screens.Tournament
         /// <param name="screen"></param>
         public TournamentScreenView(Screen screen) : base(screen)
         {
+            if (TournamentScreen.GameplayScreens.Count == 0)
+            {
+                OnlineManager.LeaveGame();
+                TournamentScreen.Exit(() => new MultiplayerLobbyScreen());
+            }
             CreateBackground();
             SetPlayfieldPositions();
             PositionPlayfieldItems();
