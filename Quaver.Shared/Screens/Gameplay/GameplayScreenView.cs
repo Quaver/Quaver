@@ -206,7 +206,9 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
-            RatingProcessor = new RatingProcessorKeys(Screen.Map.SolveDifficulty(ModManager.Mods, true).OverallDifficulty);
+            RatingProcessor = new RatingProcessorKeys(Screen.Map.SolveDifficulty(
+                screen is TournamentGameplayScreen ? Screen.Ruleset.ScoreProcessor.Mods : ModManager.Mods,
+                true).OverallDifficulty);
 
             CreateBackground();
 
@@ -457,7 +459,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
 
-            if (ConfigManager.DisplayRankedAccuracy.Value)
+            if (ConfigManager.DisplayRankedAccuracy.Value || Screen.IsSpectatingTournament)
                 AccuracyDisplay.UpdateValue(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
             else
                 AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);

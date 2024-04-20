@@ -342,6 +342,13 @@ namespace Quaver.Shared.Screens.Gameplay
         private ReplayInputManagerKeys CachedReplayInputManager { get; set; }
 
         /// <summary>
+        ///     true iff we are spectating a tournament
+        ///     This is used for appropriate judgement windows applied to score, grade and rating display
+        /// </summary>
+        public bool IsSpectatingTournament => this is TournamentGameplayScreen tournamentGameplayScreen &&
+                                              tournamentGameplayScreen.Type == TournamentScreenType.Spectator;
+
+        /// <summary>
         /// </summary>
         public bool IsDisposed { get; private set; }
 
