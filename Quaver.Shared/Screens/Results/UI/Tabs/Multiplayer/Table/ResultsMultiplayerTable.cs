@@ -48,6 +48,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// <summary>
         /// </summary>
         private List<ScoreProcessor> Team2Players { get; }
+        
+        /// <summary>
+        ///     Skip using API to fetch player scores
+        /// </summary>
+        private bool SkipApiResultFetch { get; }
 
         /// <summary>
         /// </summary>
@@ -67,7 +72,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         
         private LoadingWheelText ResultLoadingWheelText { get; set; }
         
-        private TaskHandler<int, int> GetScoresTask { get; set; } 
+        private TaskHandler<int, int> GetScoresTask { get; set; }
 
         /// <summary>
         /// </summary>
@@ -76,14 +81,16 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// <param name="game"></param>
         /// <param name="team1"></param>
         /// <param name="team2"></param>
+        /// <param name="skipApiResultFetch"></param>
         public ResultsMultiplayerTable(Map map, Bindable<ScoreProcessor> processor, MultiplayerGame game,
-            List<ScoreProcessor> team1, List<ScoreProcessor> team2)
+            List<ScoreProcessor> team1, List<ScoreProcessor> team2, bool skipApiResultFetch)
         {
             Map = map;
             Processor = processor;
             Game = game;
             Team1Players = team1;
             Team2Players = team2;
+            SkipApiResultFetch = skipApiResultFetch;
 
             Width = ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X;
             GetScoresTask = new TaskHandler<int, int>(GetMatchScores);
@@ -230,9 +237,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         {
             List<ScoreProcessor> players = null;
             MultiplayerMatchInformationResponse matchInfoResponse = null;
-            var isCoop = Processor.Value.Mods.HasFlag(ModIdentifier.Coop);
-            // If this is a co-op play, we should directly use replay result instead of fetching online
-            if (isCoop)
+            
+            if (SkipApiResultFetch)
             {
                 players = GetOrderedUserList();
             }
@@ -249,12 +255,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             }
 
             // Skip fetching results if it's co-op play
-            if (!isCoop && matchInfoResponse == null)
+            if (!SkipApiResultFetch && matchInfoResponse == null)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve players' scores!");
                 players = GetOrderedUserList();
             }
-            else if (!isCoop)
+            else if (!SkipApiResultFetch)
             {
                 players = new List<ScoreProcessor>();
                 var qua = Map.LoadQua();
