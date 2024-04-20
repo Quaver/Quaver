@@ -309,7 +309,7 @@ namespace Quaver.Shared.Scripting
             };
 
             var callStack = (e as InterpreterException)?.CallStack is { } list
-                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $"at {FormatSource(location)}" : "")}"))}"
+                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
                 : "";
 
             NotificationManager.Show(NotificationLevel.Error, $"Plugin {name} caused {summary} error{message}{callStack}");
