@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
@@ -134,7 +135,8 @@ namespace Quaver.Shared.Scripting
         protected override void RenderImguiLayout()
         {
             // Prevents exception spam
-            if (DateTime.Now - LastException < TimeSpan.FromSeconds(1))
+            // Prevents exception spam: No one needs more than 10 hot reloads per second.
+            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
                 return;
 
             try
@@ -210,7 +212,7 @@ namespace Quaver.Shared.Scripting
                 }
                 else
                 {
-                    Thread.Sleep(1);
+                    Thread.Sleep(10);
                     ScriptText = File.ReadAllText(FilePath);
                 }
 
