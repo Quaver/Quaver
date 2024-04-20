@@ -277,7 +277,7 @@ namespace Quaver.Shared.Screens.Tournament
                 CountryFlag = "US",
                 Id = i + 1,
                 UserGroups = UserGroups.Normal
-            }), screen.Ruleset.ScoreProcessor.StandardizedProcessor, screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty)));
+            }), screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor, screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty)));
 
             var game = new MultiplayerGame
             {
