@@ -17,9 +17,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         /// <summary>
         /// </summary>
-        public ScoreProcessor Scoring => Ruleset.ScoreProcessor;
-        
-        public GameplayRuleset Ruleset { get; set; }
+        public ScoreProcessor Scoring { get; set; }
 
         /// <summary>
         /// </summary>
@@ -30,10 +28,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         /// <param name="user"></param>
         /// <param name="scoring"></param>
         /// <param name="difficultyRating"></param>
-        public TournamentPlayer(User user, GameplayRuleset ruleset, float difficultyRating)
+        public TournamentPlayer(User user, ScoreProcessor scoring, float difficultyRating)
         {
             User = user;
-            Ruleset = ruleset;
+            Scoring = scoring;
             Rating = new RatingProcessorKeys(difficultyRating);
         }
 

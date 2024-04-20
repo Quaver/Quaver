@@ -263,7 +263,7 @@ namespace Quaver.Shared.Screens.Tournament
                 {
                     var difficulty = screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty;
 
-                    TournamentPlayers.Add(new TournamentPlayer(screen.SpectatorClient.Player, screen.Ruleset, difficulty));
+                    TournamentPlayers.Add(new TournamentPlayer(screen.SpectatorClient.Player, screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor, difficulty));
                 }
 
                 Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, OnlineManager.CurrentGame, TournamentPlayers) { Parent = Container };
@@ -277,7 +277,7 @@ namespace Quaver.Shared.Screens.Tournament
                 CountryFlag = "US",
                 Id = i + 1,
                 UserGroups = UserGroups.Normal
-            }), screen.Ruleset, screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty)));
+            }), screen.Ruleset.ScoreProcessor.StandardizedProcessor, screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty)));
 
             var game = new MultiplayerGame
             {
