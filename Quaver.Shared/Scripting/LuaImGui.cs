@@ -134,7 +134,6 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            // Prevents exception spam
             // Prevents exception spam: No one needs more than 10 hot reloads per second.
             if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
                 return;
