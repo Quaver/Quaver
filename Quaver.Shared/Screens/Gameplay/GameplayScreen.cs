@@ -1316,15 +1316,25 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
+        public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen) 
+            ? tournamentScreen.GameplayScreens.Min(s =>
+            {
+                // We are guaranteed to find a minimum because of the return condition above.
+                var replayFrames = s.SpectatorClient.Replay.Frames;
+                return (replayFrames?.Count ?? 0) == 0 ? int.MaxValue : replayFrames.Last()?.Time ?? int.MaxValue;
+            })
+            : SpectatorClient.Replay.Frames.Last().Time;
         /// <summary>
         /// </summary>
         private void HandleSpectatorSkipping()
         {
-            if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
+            if (SpectatorClient.Replay.Frames.Count == 0)
                 return;
 
+            var targetSyncTime = SpectatorTargetSyncTime;
             // User can only be two seconds out of sync with the user
-            if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
+            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000
+                && Math.Abs(Timing.Time - targetSyncTime) < 3000)
                 return;
 
             var skipTime = SpectatorClient.Replay.Frames.Last().Time;
@@ -1337,7 +1347,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 Timing.Time = AudioEngine.Track.Time;
             }
             catch (Exception e)
-            {;
+            {
                 Timing.Time = skipTime;
             }
             finally
