@@ -352,11 +352,20 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
+        
+        /// <summary>
+        ///     Scaling of ImGui windows and texts
+        /// </summary>
+        internal static BindableInt EditorImGuiScalePercentage { get; private set; }
 
         /// <summary>
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
+        
+        internal static Bindable<bool> EditorLiveMapSnap { get; private set; }
+        
+        internal static BindableInt EditorLiveMapOffset { get; private set; }
 
         /// <summary>
         ///     Whether or not to play hitsounds in the editor.
@@ -550,8 +559,6 @@ namespace Quaver.Shared.Config
         
         internal static Bindable<int> EditorSpectrogramMinimumFrequency { get; private set; }
         
-        internal static Bindable<EditorPlayfieldSpectrogramLayer> EditorSpectrogramLayer { get; private set; }
-        
         internal static Bindable<float> EditorSpectrogramCutoffFactor { get; private set; }
         
         internal static Bindable<float> EditorSpectrogramIntensityFactor { get; private set; }
@@ -559,6 +566,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<EditorPlayfieldSpectrogramFrequencyScale> EditorSpectrogramFrequencyScale { get; private set; }
         
         internal static BindableInt EditorSpectrogramFftSize { get; private set; }
+        
+        /// <summary>
+        ///     The number of times the song's fft will be taken. Linearly increases the time to load
+        /// </summary>
+        internal static BindableInt EditorSpectrogramInterleaveCount { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1066,11 +1078,14 @@ namespace Quaver.Shared.Config
             TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
+            EditorImGuiScalePercentage = ReadInt(@"EditorImGuiScalePercentage", 100, 25, 300, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
             InvertScrolling = ReadValue(@"InvertScrolling", false, data);
             InvertEditorScrolling = ReadValue(@"InvertEditorScrolling", true, data);
+            EditorLiveMapSnap = ReadValue(@"EditorLiveMapSnap", false, data);
+            EditorLiveMapOffset = ReadInt(@"EditorLiveMapOffset", 0, -200, 200, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
@@ -1129,12 +1144,12 @@ namespace Quaver.Shared.Config
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", false, data);
             EditorSpectrogramMaximumFrequency = ReadInt(@"EditorSpectrogramMaximumFrequency", 7000, 5000, 10000, data);
-            EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 250, 0, 1500, data);
-            EditorSpectrogramLayer = ReadValue("EditorSpectrogramLayer", EditorPlayfieldSpectrogramLayer.BehindTimingLines, data);
+            EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 125, 0, 1500, data);
             EditorSpectrogramCutoffFactor = ReadValue("EditorSpectrogramCutoffFactor", 0.34f, data);
             EditorSpectrogramIntensityFactor = ReadValue("EditorSpectrogramIntensityFactor", 9.5f, data);
             EditorSpectrogramFrequencyScale = ReadValue("EditorSpectrogramFrequencyScale", EditorPlayfieldSpectrogramFrequencyScale.Linear, data);
             EditorSpectrogramFftSize = ReadInt(@"EditorSpectrumFftSize", 512, 256, 16384, data);
+            EditorSpectrogramInterleaveCount = ReadInt(@"EditorSpectrogramInterleaveCount", 4, 1, 16, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);

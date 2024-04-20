@@ -10,6 +10,7 @@ using Quaver.Shared.Scheduling;
 using Wobble.Logging;
 using ManagedBass.Fx;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
@@ -22,7 +23,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private EditorPlayfield Playfield { get; }
 
-        private float[,] TrackData { get; set; }
+        private float[][] _trackData;
 
         private long TrackByteLength { get; set; }
 
@@ -30,16 +31,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private int FftPerSlice { get; set; }
 
+        private int InterleaveCount { get; set; } = 1;
+
+        private int InterleavedFftPerSlice => FftPerSlice * InterleaveCount;
+
         private int Stream { get; set; }
 
         public int FftCount { get; }
-        
+
         public int FftFlag { get; }
         public int FftResultCount { get; set; }
 
         private int FftRoundsTaken { get; set; }
 
         private int BytesReadPerFft { get; set; }
+
+        private long TotalBytes => (long)FftResultCount * InterleaveCount * FftRoundsTaken * sizeof(float);
 
         private CancellationToken Token { get; }
 
@@ -49,6 +56,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             Token = token;
             FftCount = ConfigManager.EditorSpectrogramFftSize.Value;
             FftFlag = (int)GetFftDataFlag(FftCount);
+            InterleaveCount = ConfigManager.EditorSpectrogramInterleaveCount.Value;
 
             Slices = new List<EditorPlayfieldSpectrogramSlice>();
             VisibleSlices = new List<EditorPlayfieldSpectrogramSlice>();
@@ -89,31 +97,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         public void GenerateWaveform()
         {
             FftPerSlice = (int)Playfield.Height;
-            GenerateTrackData();
+            if (!GenerateTrackData()) return;
 
             var tempSlices = new List<EditorPlayfieldSpectrogramSlice>();
             var millisecondPerFft = Bass.ChannelBytes2Seconds(Stream, BytesReadPerFft) * 1000;
+            Logger.Debug($"Precision of spectrogram: {millisecondPerFft / InterleaveCount}ms", LogType.Runtime);
             var millisecondPerSlice = FftPerSlice * millisecondPerFft;
             var sampleRate = Bass.ChannelGetInfo(Stream).Frequency;
 
             for (var fftRound = 0; fftRound < FftRoundsTaken; fftRound += FftPerSlice)
             {
                 var t = (int)(fftRound * millisecondPerFft);
-                var trackSliceData = new float[FftPerSlice, FftResultCount];
+                var trackDataYOffset = fftRound * InterleaveCount;
 
-                for (var y = 0; y < FftPerSlice; y++)
-                {
-                    var currentFftIndex = fftRound + y;
-                    if (currentFftIndex >= TrackData.GetLength(0))
-                        break;
-                    for (var x = 0; x < FftResultCount; x++)
-                    {
-                        trackSliceData[y, x] = TrackData[currentFftIndex, x];
-                    }
-                }
-
-                var slice = new EditorPlayfieldSpectrogramSlice(this, Playfield, (float)millisecondPerSlice, FftPerSlice,
-                    trackSliceData, t, sampleRate);
+                var slice = new EditorPlayfieldSpectrogramSlice(this, Playfield, (float)millisecondPerSlice,
+                    InterleavedFftPerSlice,
+                    _trackData, trackDataYOffset, t, sampleRate);
                 tempSlices.Add(slice);
             }
 
@@ -123,7 +122,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         /// <summary>
         /// </summary>
-        private void GenerateTrackData()
+        private bool GenerateTrackData()
         {
             const BassFlags flags = BassFlags.Decode | BassFlags.Float;
 
@@ -132,22 +131,38 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             TrackByteLength = Bass.ChannelGetLength(Stream);
             FftResultCount = FftCount;
             BytesReadPerFft = sizeof(float) * FftResultCount * Bass.ChannelGetInfo(Stream).Channels * 2;
-            TrackData = new float[TrackByteLength / BytesReadPerFft + 1, FftResultCount];
+            FftRoundsTaken = (int)(TrackByteLength / BytesReadPerFft);
 
-            var trackDataFft = new float[FftResultCount];
-            FftRoundsTaken = 0;
-            
-            while (Bass.ChannelGetData(Stream, trackDataFft, FftFlag | (int)DataFlags.FFTRemoveDC) > 0)
+            const long bytesPerMb = 1 << 20;
+            Logger.Debug($"The spectrogram requires {(double)TotalBytes / bytesPerMb:#.##}MB memory", LogType.Runtime);
+            if (TotalBytes > 1024L * bytesPerMb)
             {
-                for (var i = 0; i < FftResultCount; i++)
+                NotificationManager.Show(NotificationLevel.Warning,
+                    $"Spectrogram will not be loaded because it requires too much memory ({TotalBytes / bytesPerMb:#.##} MB)! Please lower the precision or FFT size.");
+                return false;
+            }
+
+            _trackData = new float[(FftRoundsTaken + 1) * InterleaveCount][];
+            for (var i = 0; i < _trackData.Length; i++)
+                _trackData[i] = GC.AllocateUninitializedArray<float>(FftResultCount);
+
+            for (var interleaveRound = 0; interleaveRound < InterleaveCount; interleaveRound++)
+            {
+                Bass.ChannelSetPosition(Stream, BytesReadPerFft / InterleaveCount * interleaveRound);
+                var currentFftRound = 0;
+                int row;
+                do
                 {
-                    TrackData[FftRoundsTaken, i] = trackDataFft[i];
-                }
-                FftRoundsTaken++;
+                    row = currentFftRound * InterleaveCount + interleaveRound;
+                    if (row >= _trackData.Length) break;
+
+                    currentFftRound++;
+                } while (Bass.ChannelGetData(Stream, _trackData[row], FftFlag | (int)DataFlags.FFTRemoveDC) > 0);
             }
 
             TrackByteLength = Bass.ChannelGetLength(Stream);
             TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
+            return true;
         }
 
         public static DataFlags GetFftDataFlag(int fftSize)
