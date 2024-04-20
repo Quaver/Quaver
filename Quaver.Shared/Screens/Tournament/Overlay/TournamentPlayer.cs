@@ -5,7 +5,6 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Server.Client.Structures;
-using Quaver.Shared.Screens.Gameplay.Rulesets;
 
 namespace Quaver.Shared.Screens.Tournament.Overlay
 {
