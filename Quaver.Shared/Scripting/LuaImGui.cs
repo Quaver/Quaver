@@ -1,13 +1,16 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Debugging;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -122,7 +125,7 @@ namespace Quaver.Shared.Scripting
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime, false);
+                HandleLuaException(e);
             }
         }
 
@@ -187,11 +190,12 @@ namespace Quaver.Shared.Scripting
                     ScriptText = File.ReadAllText(FilePath);
                 }
 
-                WorkingScript.DoString(ScriptText);
+                if (WorkingScript.DoString(ScriptText) is var ret && ret.Type is not DataType.Void)
+                	NotificationManager.Show(NotificationLevel.Info, $"Plugin {Path.GetFileName(Path.GetDirectoryName(FilePath))} returned {ret}.");
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime);
+                HandleLuaException(e);
             }
 
             WorkingScript.Globals["imgui"] = typeof(ImGuiWrapper);
@@ -275,6 +279,56 @@ namespace Quaver.Shared.Scripting
                     return dynVal;
                 }
             );
+        }
+
+        /// <summary>
+        ///     Handles an exception that comes from the lua interpreter.
+        /// </summary>
+        private void HandleLuaException(Exception e)
+        {
+            Logger.Error(e, LogType.Runtime);
+    	    var name = Path.GetFileName(Path.GetDirectoryName(FilePath));
+
+    	    var summary = e switch
+            {
+                DynamicExpressionException => "a dynamic expression",
+                InternalErrorException => "an internal",
+                ScriptRuntimeException => "a script runtime",
+                SyntaxErrorException => "a syntax",
+                InterpreterException => "an interpreter",
+                IOException => "an IO",
+                IndexOutOfRangeException => "a stack overflow", // Engine causes an IndexOutOfRangeException on stack overflows
+                _ => "an unknown",
+            };
+
+            var message = e switch
+            {
+                InterpreterException { DecoratedMessage: { } decorated } => $" at {decorated.Replace("chunk_0:", "")}",
+                IndexOutOfRangeException => ".",
+                _ => $": {e.Message}",
+            };
+
+            var callStack = (e as InterpreterException)?.CallStack is { } list
+                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $"at {FormatSource(location)}" : "")}"))}"
+                : "";
+
+            NotificationManager.Show(NotificationLevel.Error, $"Plugin {name} caused {summary} error{message}{callStack}");
+        }
+
+        private string FormatSource(SourceRef source)
+        {
+            StringBuilder sb = new("(");
+            sb.Append(source.FromLine);
+
+            if (source.ToLine >= 0 && source.ToLine != source.FromLine)
+                sb.Append('-').Append(source.ToLine);
+
+            sb.Append(',').Append(source.FromChar);
+
+            if (source.ToChar >= 0 && source.ToChar != source.FromChar)
+                sb.Append('-').Append(source.ToChar);
+
+            return sb.Append(')').ToString();
         }
     }
 }
