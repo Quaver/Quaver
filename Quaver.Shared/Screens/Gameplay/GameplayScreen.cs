@@ -1337,7 +1337,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 && Math.Abs(Timing.Time - targetSyncTime) < 3000)
                 return;
 
-            var skipTime = SpectatorClient.Replay.Frames.Last().Time;
+            var skipTime = SpectatorClient.Replay.Frames.Last().Time - 1500;
 
             try
             {
