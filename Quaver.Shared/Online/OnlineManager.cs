@@ -1262,7 +1262,7 @@ namespace Quaver.Shared.Online
                 foreach (var spect in SpectatorClients.Values)
                     spect.WatchUserImmediately();
 
-                game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()),
+                game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.OrderBy(s => s.Player?.OnlineUser?.Id ?? 0).ToList()),
                     delay: 500);
 
                 return;
