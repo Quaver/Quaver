@@ -414,9 +414,9 @@ namespace Quaver.Shared.Screens.Tournament
 
                     foreach (var screen in GameplayScreens)
                     {
-                        screen.Ruleset.ScoreProcessor.PlayerName = screen.SpectatorClient.Player.OnlineUser.Username;
-                        screen.Ruleset.ScoreProcessor.SteamId = (ulong) screen.SpectatorClient.Player.OnlineUser.SteamId;
-                        processors.Add(screen.Ruleset.ScoreProcessor);
+                        screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.PlayerName = screen.SpectatorClient.Player.OnlineUser.Username;
+                        screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.SteamId = (ulong) screen.SpectatorClient.Player.OnlineUser.SteamId;
+                        processors.Add(screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor);
                     }
 
                     Exit(() => new ResultsScreen(MainGameplayScreen, OnlineManager.CurrentGame,
