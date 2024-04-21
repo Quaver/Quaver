@@ -101,9 +101,16 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         public override void OnFirstUpdate()
         {
-            if (OnlineManager.IsSpectatingSomeone)
+            if (OnlineManager.IsSpectatingSomeone && !(OnlineManager.CurrentGame?.IsSpectating ?? false))
                 OnlineManager.Client?.StopSpectating();
 
+            if (OnlineManager.CurrentGame == null)
+            {
+                // Tournament Screen view exited the screen
+                // One cause of it is the server forbids spectating a match without player number != 2
+                // CurrentGame is null because we sent a LeaveGame packet in TournamentScreenView
+                return;
+            }
             MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
             OnlineManager.SendGameDifficultyRatings(OnlineManager.CurrentGame.MapMd5, OnlineManager.CurrentGame.AlternativeMd5);
             

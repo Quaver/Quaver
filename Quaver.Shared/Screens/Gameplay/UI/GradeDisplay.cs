@@ -10,6 +10,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics.Sprites;
 
@@ -68,7 +69,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             Visible = Scoring.Score > 0 && (ConfigManager.DisplayGameplayOverlay?.Value ?? true);
 
-            if (ConfigManager.DisplayRankedAccuracy.Value)
+            if (ConfigManager.DisplayRankedAccuracy.Value || Screen.IsSpectatingTournament)
                 Grade = GradeHelper.GetGradeFromAccuracy(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
             else
                 Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy);

@@ -12,6 +12,7 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
+using Quaver.API.Replays;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -1197,12 +1198,18 @@ namespace Quaver.Shared.Online
             CurrentGame.BlueTeamPlayers.Remove(e.UserId);
             CurrentGame.Players.Remove(OnlineUsers[e.UserId].OnlineUser);
 
+            var currentScreen = ((QuaverGame) GameBase.Game).CurrentScreen;
             if (CurrentGame.PlayerIds.Count == 0)
             {
-                var quaver = (QuaverGame) GameBase.Game;
-
-                if (quaver.CurrentScreen.Type == QuaverScreenType.Multiplayer)
-                    quaver.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
+                if (currentScreen.Type == QuaverScreenType.Multiplayer)
+                    currentScreen.Exit(() => new MultiplayerLobbyScreen());
+            }
+            else if (currentScreen is TournamentScreen tournamentScreen)
+            {
+                if (tournamentScreen.GameplayScreens.Any(s => s.SpectatorClient.Player.OnlineUser.Id == e.UserId))
+                {
+                    currentScreen.Exit(() => new MultiplayerGameScreen());
+                }
             }
         }
 
@@ -1258,13 +1265,11 @@ namespace Quaver.Shared.Online
 
                 BackgroundHelper.Load(MapManager.Selected.Value);
 
-                if (!game.CurrentScreen.Exiting)
-                {
-                    foreach (var spect in SpectatorClients.Values)
-                        spect.WatchUserImmediately();
+                foreach (var spect in SpectatorClients.Values)
+                    spect.WatchUserImmediately();
 
-                    game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()));
-                }
+                game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.OrderBy(s => s.Player?.OnlineUser?.Id ?? 0).ToList()),
+                    delay: 500);
 
                 return;
             }

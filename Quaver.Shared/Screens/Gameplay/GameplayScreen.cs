@@ -47,6 +47,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -342,6 +343,13 @@ namespace Quaver.Shared.Screens.Gameplay
         private ReplayInputManagerKeys CachedReplayInputManager { get; set; }
 
         /// <summary>
+        ///     true iff we are spectating a tournament
+        ///     This is used for appropriate judgement windows applied to score, grade and rating display
+        /// </summary>
+        public bool IsSpectatingTournament => this is TournamentGameplayScreen tournamentGameplayScreen &&
+                                              tournamentGameplayScreen.Type == TournamentScreenType.Spectator;
+
+        /// <summary>
         /// </summary>
         public bool IsDisposed { get; private set; }
 
@@ -477,7 +485,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame && !IsSongSelectPreview)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
-            if (OnlineManager.IsBeingSpectated && !InReplayMode)
+            if (!InReplayMode)
                 OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
 
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -1308,6 +1316,14 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
+        public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen) 
+            ? tournamentScreen.GameplayScreens.Min(s =>
+            {
+                // We are guaranteed to find a minimum because of the return condition above.
+                var replayFrames = s.SpectatorClient.Replay.Frames;
+                return (replayFrames?.Count ?? 0) == 0 ? int.MaxValue : replayFrames.Last()?.Time ?? int.MaxValue;
+            })
+            : SpectatorClient.Replay.Frames.Last().Time;
         /// <summary>
         /// </summary>
         private void HandleSpectatorSkipping()
@@ -1315,22 +1331,26 @@ namespace Quaver.Shared.Screens.Gameplay
             if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
                 return;
 
+            var targetSyncTime = SpectatorClient.Replay.Frames.Last().Time;
             // User can only be two seconds out of sync with the user
-            if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
+            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000)
                 return;
 
-            var skipTime = SpectatorClient.Replay.Frames.Last().Time;
+            SkipTo(targetSyncTime);
+        }
 
+        public void SkipTo(float targetSyncTime)
+        {
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 AudioTrack.AllowPlayback = true;
-                AudioEngine.Track?.Seek(skipTime);
+                AudioEngine.Track?.Seek(targetSyncTime);
                 Timing.Time = AudioEngine.Track.Time;
             }
             catch (Exception e)
-            {;
-                Timing.Time = skipTime;
+            {
+                Timing.Time = targetSyncTime;
             }
             finally
             {
@@ -1349,7 +1369,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the client is currently being spectated, replay frames should be sent to the server
         /// </summary>
-        public void SendReplayFramesToServer(bool force = false)
+        public void SendReplayFramesToServer(bool force = false, bool appendFinishSong = false)
         {
             if (!OnlineManager.IsBeingSpectated || InReplayMode || IsSongSelectPreview)
                 return;
@@ -1384,9 +1404,18 @@ namespace Quaver.Shared.Screens.Gameplay
                     status = SpectatorClientStatus.Playing;
 
                 if (status == SpectatorClientStatus.Playing && frames.Count == 0)
+                {
+                    if (appendFinishSong)
+                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                            new List<ReplayFrame>());
                     return;
+                }
 
                 OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+
+                if (appendFinishSong)
+                    OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                        new List<ReplayFrame>());
             });
         }
 
