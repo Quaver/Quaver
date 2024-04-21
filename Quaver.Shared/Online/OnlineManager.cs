@@ -1208,7 +1208,7 @@ namespace Quaver.Shared.Online
             {
                 if (tournamentScreen.GameplayScreens.Any(s => s.SpectatorClient.Player.OnlineUser.Id == e.UserId))
                 {
-                    currentScreen.Exit(() => new MultiplayerLobbyScreen());
+                    currentScreen.Exit(() => new MultiplayerGameScreen());
                 }
             }
         }
