@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
@@ -125,7 +126,9 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 var qua = MapManager.Selected.Value.LoadQua();
 
-                spectatees[i].PlayNewMap(new List<ReplayFrame>());
+                if (spectatees[i].Replay == null)
+                    spectatees[i].PlayNewMap(new List<ReplayFrame>());
+
                 qua.ApplyMods(spectatees[i].Replay.Mods);
 
                 MapManager.Selected.Value.Qua = qua;
@@ -142,7 +145,16 @@ namespace Quaver.Shared.Screens.Tournament
             }
 
             ModManager.RemoveAllMods();
-            ModManager.AddSpeedMods(ModHelper.GetRateFromMods(spectatees.First().Replay.Mods));
+
+            var minimumRate = string.IsNullOrEmpty(game.Modifiers)
+                ? game.PlayerMods.Min(pm =>
+                {
+                    var rateFromMods = ModHelper.GetRateFromMods(
+                        (ModIdentifier)long.Parse(string.IsNullOrEmpty(pm.Modifiers) ? "1.0" : pm.Modifiers));
+                    return rateFromMods;
+                })
+                : ModHelper.GetRateFromMods((ModIdentifier)long.Parse(game.Modifiers));
+            ModManager.AddSpeedMods(minimumRate);
 
             SetRichPresenceForTournamentViewer();
             View = new TournamentScreenView(this);
@@ -188,6 +200,15 @@ namespace Quaver.Shared.Screens.Tournament
         public override void OnFirstUpdate()
         {
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            if (TournamentType == TournamentScreenType.Spectator && GameplayScreens.All(s => s.SpectatorClient.Replay.Frames.Count != 0))
+            {
+                var targetSyncTime = MainGameplayScreen.SpectatorTargetSyncTime;
+                foreach (var gameplayScreen in GameplayScreens)
+                {
+                    gameplayScreen.SkipTo(targetSyncTime);
+                }
+            }
+
             base.OnFirstUpdate();
         }
 
@@ -203,15 +224,17 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 UpdateScreens(gameTime);
 
-                if (GenericKeyManager.IsDown(ConfigManager.KeyPause.Value))
+                if (TournamentType == TournamentScreenType.Spectator)
                 {
-                    if (TournamentType == TournamentScreenType.Spectator)
+                    if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
                     {
                         OnlineManager.LeaveGame();
                         OnlineManager.Client?.StopSpectating();
                     }
-                    else
-                        MainGameplayScreen.Pause(gameTime);
+                }
+                else if (GenericKeyManager.IsDown(ConfigManager.KeyPause.Value))
+                {
+                    MainGameplayScreen.Pause(gameTime);
                 }
 
                 // Add skipping
@@ -400,9 +423,9 @@ namespace Quaver.Shared.Screens.Tournament
 
                     foreach (var screen in GameplayScreens)
                     {
-                        screen.Ruleset.ScoreProcessor.PlayerName = screen.SpectatorClient.Player.OnlineUser.Username;
-                        screen.Ruleset.ScoreProcessor.SteamId = (ulong) screen.SpectatorClient.Player.OnlineUser.SteamId;
-                        processors.Add(screen.Ruleset.ScoreProcessor);
+                        screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.PlayerName = screen.SpectatorClient.Player.OnlineUser.Username;
+                        screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.SteamId = (ulong) screen.SpectatorClient.Player.OnlineUser.SteamId;
+                        processors.Add(screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor);
                     }
 
                     Exit(() => new ResultsScreen(MainGameplayScreen, OnlineManager.CurrentGame,

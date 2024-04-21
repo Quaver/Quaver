@@ -1617,6 +1617,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 try
                 {
+                    MapManager.Selected.Value = map;
                     var track = AudioEngine.LoadMapAudioTrack(map);
 
                     Exit(() => new EditScreen(map, track));

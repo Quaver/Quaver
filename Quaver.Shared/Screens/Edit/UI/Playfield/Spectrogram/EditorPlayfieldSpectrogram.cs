@@ -143,6 +143,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             }
 
             _trackData = new float[(FftRoundsTaken + 1) * InterleaveCount][];
+            for (var i = 0; i < _trackData.Length; i++)
+                _trackData[i] = GC.AllocateUninitializedArray<float>(FftResultCount);
 
             for (var interleaveRound = 0; interleaveRound < InterleaveCount; interleaveRound++)
             {
@@ -153,7 +155,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                 {
                     row = currentFftRound * InterleaveCount + interleaveRound;
                     if (row >= _trackData.Length) break;
-                    _trackData[row] = GC.AllocateUninitializedArray<float>(FftResultCount);
 
                     currentFftRound++;
                 } while (Bass.ChannelGetData(Stream, _trackData[row], FftFlag | (int)DataFlags.FFTRemoveDC) > 0);

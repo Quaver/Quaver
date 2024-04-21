@@ -48,6 +48,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// <summary>
         /// </summary>
         private List<ScoreProcessor> Team2Players { get; }
+        
+        /// <summary>
+        ///     Skip using API to fetch player scores
+        /// </summary>
+        private bool SkipApiResultFetch { get; }
 
         /// <summary>
         /// </summary>
@@ -67,7 +72,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         
         private LoadingWheelText ResultLoadingWheelText { get; set; }
         
-        private TaskHandler<int, int> GetScoresTask { get; set; } 
+        private TaskHandler<int, int> GetScoresTask { get; set; }
 
         /// <summary>
         /// </summary>
@@ -76,14 +81,16 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// <param name="game"></param>
         /// <param name="team1"></param>
         /// <param name="team2"></param>
+        /// <param name="skipApiResultFetch"></param>
         public ResultsMultiplayerTable(Map map, Bindable<ScoreProcessor> processor, MultiplayerGame game,
-            List<ScoreProcessor> team1, List<ScoreProcessor> team2)
+            List<ScoreProcessor> team1, List<ScoreProcessor> team2, bool skipApiResultFetch)
         {
             Map = map;
             Processor = processor;
             Game = game;
             Team1Players = team1;
             Team2Players = team2;
+            SkipApiResultFetch = skipApiResultFetch;
 
             Width = ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X;
             GetScoresTask = new TaskHandler<int, int>(GetMatchScores);
@@ -228,22 +235,32 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
         private int GetMatchScores(int val, CancellationToken cancellationToken)
         {
-            const int maxRetryCount = 3;
+            List<ScoreProcessor> players = null;
             MultiplayerMatchInformationResponse matchInfoResponse = null;
-
-            for (var retryCount = 0; retryCount < maxRetryCount; retryCount++)
+            
+            if (SkipApiResultFetch)
             {
-                if (TryFetchMatchInfo(out matchInfoResponse)) break;
-                Thread.Sleep(500);
+                players = GetOrderedUserList();
+            }
+            else
+            {
+                // Otherwise, fetch match info from the API first
+                const int maxRetryCount = 3;
+
+                for (var retryCount = 0; retryCount < maxRetryCount; retryCount++)
+                {
+                    if (TryFetchMatchInfo(out matchInfoResponse)) break;
+                    Thread.Sleep(500);
+                }
             }
 
-            List<ScoreProcessor> players;
-            if (matchInfoResponse == null)
+            // Skip fetching results if it's co-op play
+            if (!SkipApiResultFetch && matchInfoResponse == null)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve players' scores!");
                 players = GetOrderedUserList();
             }
-            else
+            else if (!SkipApiResultFetch)
             {
                 players = new List<ScoreProcessor>();
                 var qua = Map.LoadQua();

@@ -14,6 +14,7 @@ using Quaver.Shared.Screens.Results.UI.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Bindables;
@@ -170,7 +171,8 @@ namespace Quaver.Shared.Screens.Results
         private void CreateMultiplayerTab()
         {
             MultiplayerTab = new ResultsMultiplayerTab(ResultsScreen.Map, ResultsScreen.Processor,
-                ResultsScreen.ActiveTab, ResultsScreen.MultiplayerGame, ResultsScreen.MultiplayerTeam1Users, ResultsScreen.MultiplayerTeam2Users)
+                ResultsScreen.ActiveTab, ResultsScreen.MultiplayerGame, ResultsScreen.MultiplayerTeam1Users, ResultsScreen.MultiplayerTeam2Users,
+                ResultsScreen.Gameplay is TournamentGameplayScreen tournamentGameplayScreen && tournamentGameplayScreen.Type != TournamentScreenType.Spectator)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
