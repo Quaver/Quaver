@@ -200,7 +200,7 @@ namespace Quaver.Shared.Screens.Tournament
         public override void OnFirstUpdate()
         {
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-            if (GameplayScreens.All(s => s.SpectatorClient.Replay.Frames.Count != 0))
+            if (TournamentType == TournamentScreenType.Spectator && GameplayScreens.All(s => s.SpectatorClient.Replay.Frames.Count != 0))
             {
                 var targetSyncTime = MainGameplayScreen.SpectatorTargetSyncTime;
                 foreach (var gameplayScreen in GameplayScreens)
