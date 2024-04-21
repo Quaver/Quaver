@@ -35,6 +35,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Gameplay.UI.Replays;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
@@ -881,7 +882,11 @@ namespace Quaver.Shared.Screens.Gameplay
                                                       && (Screen.Timing.Time >= Screen.Map.Length || AudioEngine.Track.Time >= AudioEngine.Track.Length);
 
             if (Screen is TournamentGameplayScreen)
+            {
+                if (Screen.Map.Length - Screen.Timing.Time >= 10000)
+                    Screen.Exit(() => new MultiplayerGameScreen());
                 return;
+            }
 
             Screen.IsPaused = true;
 
