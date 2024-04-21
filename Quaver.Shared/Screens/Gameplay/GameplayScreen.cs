@@ -1328,27 +1328,29 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleSpectatorSkipping()
         {
-            if (SpectatorClient.Replay.Frames.Count == 0)
+            if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
                 return;
 
-            var targetSyncTime = SpectatorTargetSyncTime;
+            var targetSyncTime = SpectatorClient.Replay.Frames.Last().Time;
             // User can only be two seconds out of sync with the user
-            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000
-                && Math.Abs(Timing.Time - targetSyncTime) < 3000)
+            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000)
                 return;
 
-            var skipTime = SpectatorClient.Replay.Frames.Last().Time - 1500;
+            SkipTo(targetSyncTime);
+        }
 
+        public void SkipTo(float targetSyncTime)
+        {
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 AudioTrack.AllowPlayback = true;
-                AudioEngine.Track?.Seek(skipTime);
+                AudioEngine.Track?.Seek(targetSyncTime);
                 Timing.Time = AudioEngine.Track.Time;
             }
             catch (Exception e)
             {
-                Timing.Time = skipTime;
+                Timing.Time = targetSyncTime;
             }
             finally
             {
