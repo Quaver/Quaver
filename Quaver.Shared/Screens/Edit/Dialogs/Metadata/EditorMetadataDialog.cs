@@ -36,6 +36,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private LabelledCheckbox BpmAffectsScrollVelocity { get; set; }
 
+        private LabelledCheckbox LegacyLNRendering { get; set; }
+
         private TextboxTabControl TabControl { get; }
 
         private const int LabelSize = 21;
@@ -60,6 +62,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             CreateTagsTextbox();
             CreateGameModeDropdown();
             CreateBpmAffectsSvCheckbox();
+            CreateLegacyLNRenderingCheckbox();
 
             TabControl = new TextboxTabControl(new List<Textbox>()
             {
@@ -166,19 +169,31 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             {
                 Parent = Panel,
                 Y = Tags.Y + Tags.Height + Spacing,
-                X = -80,
+                X = -37,
                 Alignment = Alignment.TopRight,
             };
         }
 
         private void CreateBpmAffectsSvCheckbox()
         {
-            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 20,
+            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM SV:", 20,
                 new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
                 Y = GameMode.Y + 6,
                 X = -GameMode.X,
+                Alignment = Alignment.TopLeft,
+            };
+        }
+
+        private void CreateLegacyLNRenderingCheckbox()
+        {
+            LegacyLNRendering = new LabelledCheckbox("LEGACY LNs:", 20,
+                new QuaverCheckbox(new Bindable<bool>(WorkingMap.LegacyLNRendering)) { DisposeBindableOnDestroy = true })
+            {
+                Parent = Panel,
+                Y = GameMode.Y + 6,
+                X = 238,
                 Alignment = Alignment.TopLeft,
             };
         }
@@ -193,6 +208,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             Tags.Visible = false;
             GameMode.Visible = false;
             BpmAffectsScrollVelocity.Visible = false;
+            LegacyLNRendering.Visible = false;
 
             base.Close();
         }
@@ -211,6 +227,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             WorkingMap.DifficultyName = DifficultyName.Textbox.RawText.Trim();
             WorkingMap.Source = Source.Textbox.RawText.Trim();
             WorkingMap.Tags = Tags.Textbox.RawText.Trim();
+            WorkingMap.LegacyLNRendering = LegacyLNRendering.Checkbox.BindedValue.Value;
 
             if (WorkingMap.TimingPoints.Count > 0)
             {
