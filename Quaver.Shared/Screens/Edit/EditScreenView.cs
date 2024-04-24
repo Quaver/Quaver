@@ -92,6 +92,11 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public bool IsImGuiHovered { get; private set; }
 
+        /// <summary>
+        ///     Saves the layout of current windows when the screen is exited
+        /// </summary>
+        public bool SaveWindowLayoutOnExit { get; set; } = true;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -161,7 +166,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override void Destroy()
         {
-            SaveWindowStates();
+            if (SaveWindowLayoutOnExit)
+                SaveWindowStates();
 
             Container?.Destroy();
 
