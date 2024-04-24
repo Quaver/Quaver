@@ -883,7 +883,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (Screen is TournamentGameplayScreen)
             {
-                if (Screen.Map.Length - Screen.Timing.Time >= 10000)
+                if (Screen.Map.Length - Screen.Timing.Time >= 10000 * ModHelper.GetRateFromMods(ModManager.Mods))
                     Screen.Exit(() => new MultiplayerGameScreen());
                 return;
             }
