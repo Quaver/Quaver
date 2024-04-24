@@ -200,11 +200,6 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private ReplayController ReplayController { get; }
 
-        private ScoreProcessor DisplayScoreProcessor =>
-            ConfigManager.DisplayRankedAccuracy.Value || Screen.IsSpectatingTournament
-                ? Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor
-                : Screen.Ruleset.ScoreProcessor;
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -461,11 +456,13 @@ namespace Quaver.Shared.Screens.Gameplay
         public void UpdateScoreAndAccuracyDisplays()
         {
             // Update score and accuracy displays
-            var displayScoreProcessor = DisplayScoreProcessor;
+            ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
 
-            ScoreDisplay.UpdateValue(displayScoreProcessor.Score);
-            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(displayScoreProcessor.Accuracy));
-            AccuracyDisplay.UpdateValue(displayScoreProcessor.Accuracy);
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
+            if (ConfigManager.DisplayRankedAccuracy.Value || Screen.IsSpectatingTournament)
+                AccuracyDisplay.UpdateValue(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
+            else
+                AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 
         /// <summary>
