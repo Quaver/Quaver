@@ -3,12 +3,12 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Logging;
-using YamlDotNet.Core;
 
 namespace Quaver.Shared.Config;
 
@@ -19,16 +19,28 @@ public static class StructuredConfigManager
     /// </summary>
     private static string _gameDirectory;
 
+    [StructuredPropertyIgnore] private static string ConfigPath => _gameDirectory + "/quaver.structcfg.json";
+
+    public static JsonSerializer CreateSerializer() => new()
+    {
+        Converters = { new StringEnumConverter() },
+        Formatting = Formatting.Indented,
+        DefaultValueHandling = DefaultValueHandling.Include,
+        NullValueHandling = NullValueHandling.Include
+    };
+
 
     /// <summary>
     ///     Dictates whether or not this is the first write of the file for the current game session.
     ///     (Not saved in Config)
     /// </summary>
+    [StructuredPropertyIgnore]
     private static bool FirstWrite { get; set; }
 
     /// <summary>
     ///     The last time we've wrote config.
     /// </summary>
+    [StructuredPropertyIgnore]
     private static long LastWrite { get; set; }
 
     internal static Bindable<WindowStates> WindowStates { get; private set; }
@@ -78,10 +90,7 @@ public static class StructuredConfigManager
     /// </summary>
     internal static async Task WriteConfigFileAsync()
     {
-        var serializer = new JsonSerializer
-        {
-            Formatting = Formatting.Indented
-        };
+        var serializer = CreateSerializer();
         var configFilePath = _gameDirectory + "/quaver.structcfg.json";
 
         StructuredConfigModel data = new();
@@ -90,7 +99,7 @@ public static class StructuredConfigManager
         foreach (var prop in
                  typeof(StructuredConfigManager).GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
         {
-            if (prop.Name == "FirstWrite" || prop.Name == "LastWrite")
+            if (prop.GetCustomAttribute<StructuredPropertyIgnoreAttribute>() != null)
                 continue;
 
             try
@@ -148,50 +157,35 @@ public static class StructuredConfigManager
 
     private static void ReadConfigFile()
     {
-        var configFilePath = _gameDirectory + "/quaver.structcfg.json";
-
-        if (File.Exists(configFilePath))
+        var data = new StructuredConfigModel();
+        // We'll want to write a quaver.cfg file if it doesn't already exist.
+        // There's no need to read the config file afterwards, since we already have
+        // all of the default values.
+        if (File.Exists(ConfigPath))
         {
             try
             {
+                using var testReader = new JsonTextReader(File.OpenText(ConfigPath));
                 // Delete the config file if we catch an exception.
-                using var testReader = new JsonTextReader(File.OpenText(configFilePath));
-                var jsonTestSerializer = new JsonSerializer();
-                var _ = jsonTestSerializer.Deserialize<StructuredConfigModel>(testReader);
+                var jsonTestSerializer = CreateSerializer();
+                data = jsonTestSerializer.Deserialize<StructuredConfigModel>(testReader);
             }
             catch (Exception e)
             {
                 Logger.Important($"Structured config file couldn't be read: {e}", LogType.Runtime);
-                File.Copy(configFilePath,
+                File.Copy(ConfigPath,
                     _gameDirectory + "/quaver.corrupted." + TimeHelper.GetUnixTimestampMilliseconds() +
                     ".structcfg.json");
-                File.Delete(configFilePath);
+                File.Delete(ConfigPath);
             }
         }
-
-        // We'll want to write a quaver.cfg file if it doesn't already exist.
-        // There's no need to read the config file afterwards, since we already have
-        // all of the default values.
-        if (!File.Exists(configFilePath))
+        else
         {
-            File.WriteAllText(configFilePath, "");
+            File.WriteAllText(ConfigPath, "");
             Logger.Important("Creating a new structured config file...", LogType.Runtime);
         }
 
-        using var reader = new JsonTextReader(File.OpenText(configFilePath));
-        var jsonSerializer = new JsonSerializer();
-        StructuredConfigModel data;
-        try
-        {
-            data = jsonSerializer.Deserialize<StructuredConfigModel>(reader);
-        }
-        catch (YamlException e)
-        {
-            data = new StructuredConfigModel();
-        }
-
         data ??= new StructuredConfigModel();
-        reader.Close();
 
         WindowStates = BindValue("WindowStates", new WindowStates(), data);
         WindowStates.TriggerChange();
