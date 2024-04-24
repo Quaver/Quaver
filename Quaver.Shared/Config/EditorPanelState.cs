@@ -1,62 +1,57 @@
 using System;
-using System.Numerics;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Screens.Edit;
 using Wobble.Graphics;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Config;
 
-public class EditorPanelState : IWindowState
+public class EditorPanelState
 {
-    public Vector2 Position { get; set; }
+    public Vector2 Position { get; set; } = Vector2.Zero;
     public bool Enabled { get; set; } = true;
-    public EditorPanelType EditorPanelType { get; set; }
+    public Alignment Alignment { get; set; }
 
-    public void SetPosition(EditScreenView editScreen)
+    public EditorPanelState()
     {
-        var scalablePosition = new ScalableVector2(Position.X, Position.Y);
-        Logger.Debug($"Set position of {EditorPanelType} to {Position}", LogType.Runtime);
-        switch (EditorPanelType)
+    }
+
+    public EditorPanelState(Vector2 position, bool enabled = true)
+    {
+        Position = position;
+        Enabled = enabled;
+    }
+
+    private Drawable GetPanelDrawable(EditorPanelType editorPanelType, EditScreenView editScreenView)
+    {
+        switch (editorPanelType)
         {
             case EditorPanelType.CompositionTools:
-                editScreen.CompositionTools.Position = scalablePosition;
-                break;
+                return editScreenView.CompositionTools;
             case EditorPanelType.Details:
-                editScreen.Details.Position = scalablePosition;
-                break;
+                return editScreenView.Details;
             case EditorPanelType.Hitsounds:
-                editScreen.Hitsounds.Position = scalablePosition;
-                break;
+                return editScreenView.Hitsounds;
             case EditorPanelType.Layers:
-                editScreen.Layers.Position = scalablePosition;
-                break;
+                return editScreenView.Layers;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
 
-    public void RetrievePosition(EditScreenView editScreenView)
+    public void ApplyState(EditorPanelType editorPanelType, EditScreenView editScreenView)
     {
-        Drawable drawable;
-        switch (EditorPanelType)
-        {
-            case EditorPanelType.CompositionTools:
-                drawable = editScreenView.CompositionTools;
-                break;
-            case EditorPanelType.Details:
-                drawable = editScreenView.Details;
-                break;
-            case EditorPanelType.Hitsounds:
-                drawable = editScreenView.Hitsounds;
-                break;
-            case EditorPanelType.Layers:
-                drawable = editScreenView.Layers;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        var targetDrawable = GetPanelDrawable(editorPanelType, editScreenView);
+        targetDrawable.Parent = editScreenView.Container;
+        targetDrawable.Position = new ScalableVector2(Position.X, Position.Y);
+        targetDrawable.Visible = Enabled;
+        targetDrawable.Alignment = Alignment;
+    }
 
-        var scalablePosition = drawable.Position;
-        Position = new Vector2(scalablePosition.X.Value, scalablePosition.Y.Value);
+    public void RetrieveState(EditorPanelType editorPanelType, EditScreenView editScreenView)
+    {
+        var targetDrawable = GetPanelDrawable(editorPanelType, editScreenView);
+        Position = new Vector2(targetDrawable.X, targetDrawable.Y);
+        Enabled = targetDrawable.Visible;
+        Alignment = targetDrawable.Alignment;
     }
 }

@@ -107,8 +107,6 @@ namespace Quaver.Shared.Screens.Edit
             CreateHitsoundsPanel();
             CreateLayersPanel();
             CreateAutoMod();
-            
-            StructuredConfigManager.WindowStates.Value.EditorPanelStates.ForEach(s => s.SetPosition(this));
 
             if (EditScreen.DisplayGameplayPreview.Value)
                 CreateGameplayPreview();
@@ -120,6 +118,7 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             Footer.Parent = Container;
+            StructuredConfigManager.WindowStates.Value.ApplyState(this);
         }
 
         /// <inheritdoc />
@@ -162,6 +161,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override void Destroy()
         {
+            SaveWindowStates();
+
             Container?.Destroy();
 
             // ReSharper disable twice DelegateSubtraction
@@ -170,6 +171,12 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.DisplayGameplayPreview.ValueChanged -= OnDisplayGameplayPreviewChanged;
 
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
+        }
+
+        private void SaveWindowStates()
+        {
+            StructuredConfigManager.WindowStates.Value.RetrieveState(this);
+            StructuredConfigManager.WindowStates.TriggerChange();
         }
 
         /// <summary>
