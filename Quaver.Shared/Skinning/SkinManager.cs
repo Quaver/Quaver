@@ -16,6 +16,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Writers.Zip;
@@ -120,6 +121,18 @@ namespace Quaver.Shared.Skinning
                         break;
                     case QuaverScreenType.Select:
                         game.CurrentScreen.Exit(() => new SelectionScreen());
+                        break;
+                    case QuaverScreenType.Gameplay when 
+                        game.CurrentScreen is GameplayScreen gameplayScreen and not TournamentGameplayScreen
+                        && gameplayScreen.InReplayMode:
+                        game.CurrentScreen.Exit(() =>
+                        {
+                            var newScreen = new GameplayScreen(gameplayScreen.Map, gameplayScreen.MapHash,
+                                gameplayScreen.LocalScores, gameplayScreen.LoadedReplay,
+                                useExistingAudioTime: true);
+                            newScreen.HandleReplaySeeking();
+                            return newScreen;
+                        });
                         break;
                 }
 
