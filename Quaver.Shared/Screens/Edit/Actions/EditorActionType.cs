@@ -9,6 +9,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         RemoveHitObjectBatch,
         PlaceHitObjectBatch,
         FlipHitObjects,
+        SwapLanes,
         MoveHitObjects,
         AddHitsound,
         RemoveHitsound,
@@ -42,8 +43,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         Batch,
         ReverseHitObjects,
         AddBookmark,
+        AddBookmarkBatch,
         EditBookmark,
         RemoveBookmark,
+        RemoveBookmarkBatch,
         ChangeBookmarkOffsetBatch
     }
 }

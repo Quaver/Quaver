@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
@@ -58,7 +59,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions(), screen.ImGuiScale) => Screen = screen;
 
 
         /// <inheritdoc />
@@ -66,9 +67,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2);
-            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(0, 10));
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2 * Screen.ImGuiScale);
+            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(0, 10) * Screen.ImGuiScale);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4) * Screen.ImGuiScale);
             ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0, 0, 24, 0));
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 24, 0));
 
@@ -104,6 +105,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("New Song", "CTRL + N"))
                 DialogManager.Show(new EditorNewSongDialog());
+
+            if (ImGui.BeginMenu("Switch Difficulty"))
+            {
+                foreach (var map in Screen.Map.Mapset.Maps)
+                {
+                    var color = ColorHelper.DifficultyToColor((float)map.Difficulty10X);
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
+
+                    if (ImGui.MenuItem(map.DifficultyName, map != Screen.Map))
+                        Screen.SwitchToMap(map);
+                    ImGui.PopStyleColor();
+                }
+                ImGui.EndMenu();
+            }
 
             if (ImGui.BeginMenu("Create New Difficulty", Screen.Map.Game == MapGame.Quaver))
             {
@@ -222,6 +237,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Flip Objects", "CTRL + H", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.FlipSelectedObjects();
+
+            if (ImGui.BeginMenu("Swap Lanes of Objects", Screen.SelectedHitObjects.Value.Count > 0))
+            {
+                for (var i = 1; i <= Screen.WorkingMap.GetKeyCount(); i++)
+                {
+                    if (ImGui.BeginMenu($"Lane {i}"))
+                    { 
+                        for (var j = 1; j <= Screen.WorkingMap.GetKeyCount(); j++)
+                        {
+                            if (i == j) continue;
+                            if (ImGui.MenuItem($"Lane {j}", $"ALT + {i} + {j}"))
+                            {
+                                Screen.SwapSelectedObjects(i, j);
+                            }
+                        }
+
+                        ImGui.EndMenu();
+                    }
+                }
+                ImGui.EndMenu();
+            }
 
             if (ImGui.BeginMenu($"Move Objects To Layer", Screen.SelectedHitObjects.Value.Count > 0))
             {
@@ -394,7 +430,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Beat Snap Divisor"))
             {
-                foreach (var snap in Screen.AvailableBeatSnaps)
+                foreach (var snap in EditScreen.AvailableBeatSnaps)
                 {
                     if (ImGui.MenuItem($"1/{StringHelper.AddOrdinal(snap)}", "", Screen.BeatSnap.Value == snap))
                         Screen.BeatSnap.Value = snap;
@@ -425,12 +461,24 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Place Objects With Top Row Numbers", "", Screen.LiveMapping.Value))
                 Screen.LiveMapping.Value = !Screen.LiveMapping.Value;
 
+            if (ImGui.MenuItem("Snap Notes When Live Mapping", "", ConfigManager.EditorLiveMapSnap.Value))
+                ConfigManager.EditorLiveMapSnap.Value = !ConfigManager.EditorLiveMapSnap.Value;
+            
+            if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
+                DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
+
+            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
+                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
+
             ImGui.Separator();
 
             if (ImGui.BeginMenu("Waveform"))
             {
                 if (ImGui.MenuItem("Visible", "", Screen.ShowWaveform.Value))
+                {
+                    if (!Screen.ShowWaveform.Value) Screen.ShowSpectrogram.Value = false;
                     Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
+                }
 
                 if (ImGui.BeginMenu("Brightness"))
                 {
@@ -470,6 +518,107 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 if (ImGui.MenuItem("Color"))
                     DialogManager.Show(new EditorChangeWaveformColorDialog());
 
+                ImGui.EndMenu();
+            }
+            
+            if (ImGui.BeginMenu("Spectrogram"))
+            {
+                if (ImGui.MenuItem("Visible", "", Screen.ShowSpectrogram.Value))
+                {
+                    if (!Screen.ShowSpectrogram.Value) Screen.ShowWaveform.Value = false;
+                    Screen.ShowSpectrogram.Value = !Screen.ShowSpectrogram.Value;
+                }
+
+                if (ImGui.BeginMenu("Brightness"))
+                {
+                    for (var i = 0; i < 11; i++)
+                    {
+                        var value = i * 10;
+
+                        if (ImGui.MenuItem($"{value}%", "", Screen.SpectrogramBrightness.Value == value))
+                            Screen.SpectrogramBrightness.Value = value;
+                    }
+
+                    ImGui.EndMenu();
+                }
+                
+                if (ImGui.BeginMenu("Precision"))
+                {
+                    for (var interleaveCount = 1; interleaveCount <= 16; interleaveCount *= 2)
+                    {
+                        if (ImGui.MenuItem($"{interleaveCount}x", "",
+                                ConfigManager.EditorSpectrogramInterleaveCount.Value == interleaveCount))
+                        {
+                            ConfigManager.EditorSpectrogramInterleaveCount.Value = interleaveCount;
+                        }
+                    }
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("FFT Size"))
+                {
+                    for (var size = 256; size <= 16384; size *= 2)
+                    {
+                        if (ImGui.MenuItem($"{size}", "", Screen.SpectrogramFftSize.Value == size))
+                            Screen.SpectrogramFftSize.Value = size;
+                    }
+                    ImGui.EndMenu();
+                }
+                
+                if (ImGui.BeginMenu("Frequency Scale"))
+                {
+                    foreach (var scale in Enum.GetValues<EditorPlayfieldSpectrogramFrequencyScale>())
+                    {
+                        if (ImGui.MenuItem($"{scale}", "", scale == ConfigManager.EditorSpectrogramFrequencyScale.Value))
+                            ConfigManager.EditorSpectrogramFrequencyScale.Value = scale;
+                    }
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Cutoff Factor"))
+                {
+                    for (var i = 0; i <= 10; i++)
+                    {
+                        var f = 0.2f + 0.02f * i;
+                        if (ImGui.MenuItem($"{f:0.00}", "", Math.Abs(f - ConfigManager.EditorSpectrogramCutoffFactor.Value) < 0.01f))
+                            ConfigManager.EditorSpectrogramCutoffFactor.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+                
+                if (ImGui.BeginMenu("Intensity Factor"))
+                {
+                    for (var i = 0; i < 10; i++)
+                    {
+                        var f = 0.5f * i + 5.0f;
+                        if (ImGui.MenuItem($"{f}", "", Math.Abs(f - ConfigManager.EditorSpectrogramIntensityFactor.Value) < 0.01f))
+                            ConfigManager.EditorSpectrogramIntensityFactor.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+                
+                if (ImGui.BeginMenu("Minimum Frequency"))
+                {
+                    for (var f = 0; f <= 1500; f += 125)
+                    {
+                        if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMinimumFrequency.Value == f,
+                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f)) 
+                            ConfigManager.EditorSpectrogramMinimumFrequency.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Maximum Frequency"))
+                {
+                    for (var f = 5000; f <= 10000; f += 1000)
+                    {
+                        if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMaximumFrequency.Value == f,
+                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f)) 
+                            ConfigManager.EditorSpectrogramMaximumFrequency.Value = f;
+                    }
+                    ImGui.EndMenu();
+                }
+                
                 ImGui.EndMenu();
             }
 

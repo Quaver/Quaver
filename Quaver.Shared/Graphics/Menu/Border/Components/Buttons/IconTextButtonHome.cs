@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Main;
 using Wobble;
@@ -21,6 +22,8 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public override void OnClick()
         {
             var game = (QuaverGame) GameBase.Game;
+            if (OnlineManager.CurrentGame != null)
+                OnlineManager.LeaveGame();
             game.CurrentScreen.Exit(() => new MainMenuScreen());
         }
     }

@@ -50,6 +50,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     The non-default editor layers that are currently in the map
         /// </summary>
         public List<EditorLayerInfo> EditorLayers { get; [MoonSharpVisible(false)] set; }
+        
+        /// <summary>
+        ///     The bookmarks that are currently in the map
+        /// </summary>
+        public List<BookmarkInfo> Bookmarks { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     The default editor layer
@@ -69,6 +74,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
             HitObjects = Map.HitObjects;
             EditorLayers = Map.EditorLayers;
+            Bookmarks = Map.Bookmarks;
             TrackLength = Track.Length;
             Normalized = Map.BPMDoesNotAffectScrollVelocity;
         }
@@ -101,6 +107,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="time"></param>
         /// <returns></returns>
         public SliderVelocityInfo GetScrollVelocityAt(double time) => Map.GetScrollVelocityAt(time);
+
+        /// <summary>
+        ///     Gets the bookmark at a particular time in the current map
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public BookmarkInfo GetBookmarkAt(int time) => Map.GetBookmarkAt(time);
 
         /// <summary>
         ///    Finds the length of a timing point.

@@ -616,7 +616,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 if (Score.IsPersonalBest && !Score.Item.IsOnline)
                 {
-                    Avatar.Image = SteamManager.UserAvatars[steamId];
+                    Avatar.Image = SteamManager.GetAvatarOrUnknown(steamId);
                     Avatar.Alpha = 1;
                     return;
                 }

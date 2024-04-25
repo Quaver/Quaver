@@ -18,6 +18,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D Background { get; private set; }
 
+        public Texture2D BackgroundFooter { get; private set; }
+
         public SkinMenuBorder(SkinStore store, IniData config) : base(store, config)
         {
         }
@@ -42,6 +44,7 @@ namespace Quaver.Shared.Skinning.Menus
         protected override void LoadElements()
         {
             Background = LoadSkinElement("MenuBorder", "menu-border-background.png");
+            BackgroundFooter = LoadSkinElement("MenuBorder", "menu-border-background-footer.png");
         }
     }
 }

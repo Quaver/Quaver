@@ -1,12 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Debugging;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -24,6 +30,15 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private string FilePath { get; }
 
+        // <summary>
+        // Gets or sets the name of the plugin
+        // </summary>
+        public virtual string Name
+        {
+        	get => Path.GetFileName(Path.GetDirectoryName(FilePath));
+        	set { }
+        }
+
         /// <summary>
         /// </summary>
         private bool IsResource { get; }
@@ -31,6 +46,11 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         /// </summary>
         private string ScriptText { get; set; }
+
+        // <summary>
+        // Determines when an exception has occured.
+        // </summary>
+        private DateTime LastException { get; set; }
 
         /// <summary>
         /// </summary>
@@ -45,7 +65,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="isResource"></param>
-        public LuaImGui(string filePath, bool isResource = false) : base(false, EditorFileMenuBar.GetOptions())
+        public LuaImGui(string filePath, bool isResource = false) : base(false, EditorFileMenuBar.GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
         {
             FilePath = filePath;
             IsResource = isResource;
@@ -94,6 +114,7 @@ namespace Quaver.Shared.Scripting
             Watcher.Changed += OnFileChanged;
             Watcher.Created += OnFileChanged;
             Watcher.Deleted += OnFileChanged;
+            Watcher.Renamed += OnFileChanged;
 
             // Begin watching.
             Watcher.EnableRaisingEvents = true;
@@ -113,15 +134,22 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         protected override void RenderImguiLayout()
         {
+            // Prevents exception spam: No one needs more than 2 hot reloads per second.
+            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(500))
+                return;
+
             try
             {
                 SetFrameState();
-                WorkingScript.Call(WorkingScript.Globals["draw"]);
+
+                if (WorkingScript.Globals["draw"] is Closure draw)
+                    WorkingScript.Call(draw);
+
                 AfterRender();
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime, false);
+                HandleLuaException(e);
             }
         }
 
@@ -155,7 +183,6 @@ namespace Quaver.Shared.Scripting
             WorkingScript.Globals["imgui_combo_flags"] = typeof(ImGuiComboFlags);
             WorkingScript.Globals["imgui_focused_flags"] = typeof(ImGuiFocusedFlags);
             WorkingScript.Globals["imgui_hovered_flags"] = typeof(ImGuiHoveredFlags);
-
             WorkingScript.Globals["keys"] = typeof(Keys);
         }
 
@@ -173,6 +200,7 @@ namespace Quaver.Shared.Scripting
         private void LoadScript()
         {
             WorkingScript = new Script(CoreModules.Preset_HardSandbox);
+            WorkingScript.Globals["print"] = CallbackFunction.FromDelegate(null, Print);
 
             try
             {
@@ -183,14 +211,16 @@ namespace Quaver.Shared.Scripting
                 }
                 else
                 {
+                    Thread.Sleep(10);
                     ScriptText = File.ReadAllText(FilePath);
                 }
 
-                WorkingScript.DoString(ScriptText);
+                if (WorkingScript.DoString(ScriptText) is var ret && ret.Type is not DataType.Void)
+                	NotificationManager.Show(NotificationLevel.Info, $"Plugin {Name} returned {ret}.");
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime);
+                HandleLuaException(e);
             }
 
             WorkingScript.Globals["imgui"] = typeof(ImGuiWrapper);
@@ -256,24 +286,79 @@ namespace Quaver.Shared.Scripting
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector4),
                 dynVal => {
                     var table = dynVal.Table;
-                    var w = (float)((double)table[1]);
-                    var x = (float)((double)table[2]);
-                    var y = (float)((double)table[3]);
-                    var z = (float)((double)table[4]);
-                    return new Vector4(w, x, y, z);
+                    var x = (float)((double)table[1]);
+                    var y = (float)((double)table[2]);
+                    var z = (float)((double)table[3]);
+                    var w = (float)((double)table[4]);
+                    return new Vector4(x, y, z, w);
                 }
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
                 (script, vector) => {
-                    var w = DynValue.NewNumber(vector.W);
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var z = DynValue.NewNumber(vector.Z);
-                    var dynVal = DynValue.NewTable(script, w, x, y, z);
+                    var w = DynValue.NewNumber(vector.W);
+                    var dynVal = DynValue.NewTable(script, x, y, z, w);
                     return dynVal;
                 }
             );
+        }
+
+        /// <summary>
+        ///     Handles an exception that comes from the lua interpreter.
+        /// </summary>
+        private void HandleLuaException(Exception e)
+        {
+            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
+            	return;
+
+            LastException = DateTime.Now;
+            Logger.Error(e, LogType.Runtime);
+
+    	    var summary = e switch
+            {
+                DynamicExpressionException => "a dynamic expression",
+                InternalErrorException => "an internal",
+                ScriptRuntimeException => "a script runtime",
+                SyntaxErrorException => "a syntax",
+                InterpreterException => "an interpreter",
+                IOException => "an IO",
+                IndexOutOfRangeException => "a stack overflow", // Engine causes an IndexOutOfRangeException on stack overflows
+                _ => "an unknown",
+            };
+
+            var message = e switch
+            {
+                InterpreterException { DecoratedMessage: { } decorated } => $" at {decorated.Replace("chunk_0:", "")}",
+                IndexOutOfRangeException => ".",
+                _ => $": {e.Message}",
+            };
+
+            var callStack = (e as InterpreterException)?.CallStack is { } list
+                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
+                : "";
+
+            NotificationManager.Show(NotificationLevel.Error, $"Plugin {Name} caused {summary} error{message}{callStack}");
+        }
+
+        private void Print(params DynValue[] args) => NotificationManager.Show(NotificationLevel.Info, $"{Name}:\n{string.Join("\n", args.Select(x => $"{x}"))}");
+
+        private static string FormatSource(SourceRef source)
+        {
+            StringBuilder sb = new("(");
+            sb.Append(source.FromLine);
+
+            if (source.ToLine >= 0 && source.ToLine != source.FromLine)
+                sb.Append('-').Append(source.ToLine);
+
+            sb.Append(',').Append(source.FromChar);
+
+            if (source.ToChar >= 0 && source.ToChar != source.FromChar)
+                sb.Append('-').Append(source.ToChar);
+
+            return sb.Append(')').ToString();
         }
     }
 }

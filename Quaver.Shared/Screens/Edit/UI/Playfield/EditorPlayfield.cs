@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
@@ -35,6 +36,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
@@ -110,6 +112,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<bool> ShowWaveform { get; }
+        
+        /// <summary>
+        /// </summary>
+        private Bindable<bool> ShowSpectrogram { get; }
 
         /// <summary>
         /// </summary>
@@ -118,6 +124,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<EditorPlayfieldWaveformFilter> WaveformFilter { get; }
+        
+        /// <summary>
+        /// </summary>
+        private Bindable<int> SpectrogramFftSize { get; }
 
         /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
@@ -211,14 +221,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private TaskHandler<int, int> WaveformLoadTask { get; set; }
+        
+        /// <summary>
+        /// </summary>
+        private TaskHandler<int, int> SpectrogramLoadTask { get; set; }
 
         /// <summary>
         /// </summary>
         public EditorPlayfieldWaveform Waveform { get; set; }
+        
+        /// <summary>
+        /// </summary>
+        public EditorPlayfieldSpectrogram Spectrogram { get; set; }
 
         /// <summary>
         /// </summary>
         private LoadingWheelText LoadingWaveform { get; set; }
+        
+        /// <summary>
+        /// </summary>
+        private LoadingWheelText LoadingSpectrogram { get; set; }
 
         /// <summary>
         /// </summary>
@@ -302,13 +324,25 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="selectedHitObjects"></param>
         /// <param name="selectedLayer"></param>
         /// <param name="defaultLayer"></param>
+        /// <param name="placeObjectsOnNearestTick"></param>
+        /// <param name="showWaveform"></param>
+        /// <param name="showSpectrogram"></param>
+        /// <param name="waveFormAudioDirection"></param>
+        /// <param name="waveformFilter"></param>
+        /// <param name="spectrogramFftSize"></param>
         /// <param name="isUneditable"></param>
-        public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
+        public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track,
+            BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
-            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
-            BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
+            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers,
+            Bindable<EditorCompositionTool> tool,
+            BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects,
+            Bindable<EditorLayerInfo> selectedLayer,
             EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform,
-            Bindable<EditorPlayfieldWaveformAudioDirection> waveFormAudioDirection, Bindable<EditorPlayfieldWaveformFilter> waveformFilter,
+            Bindable<bool> showSpectrogram,
+            Bindable<EditorPlayfieldWaveformAudioDirection> waveFormAudioDirection,
+            Bindable<EditorPlayfieldWaveformFilter> waveformFilter,
+            BindableInt spectrogramFftSize,
             bool isUneditable = false)
         {
             Map = map;
@@ -329,8 +363,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             DefaultLayer = defaultLayer;
             PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
             ShowWaveform = showWaveform;
+            ShowSpectrogram = showSpectrogram;
             WaveFormAudioDirection = waveFormAudioDirection;
             WaveformFilter = waveformFilter;
+            SpectrogramFftSize = spectrogramFftSize;
 
             Alignment = Alignment.TopCenter;
             Tint = new Color(24,24,24);
@@ -340,7 +376,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateDividerLines();
             CreateHitPositionLine();
             CreateTimeline();
-            CreateWaveform();
             CreateLineContainer();
             CreateHitObjects();
             CreateButton();
@@ -358,6 +393,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.LanesSwapped += OnLanesSwapped;
             ActionManager.HitObjectsReversed += OnHitObjectsReversed;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
@@ -372,6 +408,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Skin.ValueChanged += OnSkinChanged;
             WaveFormAudioDirection.ValueChanged += OnWaveFormAudioDirectionChanged;
             WaveformFilter.ValueChanged += OnWaveformFilterChanged;
+            SpectrogramFftSize.ValueChanged += OnSpectrogramFftSizeChanged;
+            ConfigManager.EditorSpectrogramMaximumFrequency.ValueChanged += OnSpectrogramFrequencyWindowSizeChanged;
+            ConfigManager.EditorSpectrogramMinimumFrequency.ValueChanged += OnSpectrogramMinimumFrequencyChanged;
+            ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged += OnSpectrogramCutoffFactorChanged;
+            ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged += OnSpectrogramIntensityFactorChanged;
+            ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged += OnSpectrogramFrequencyScaleChanged;
+            ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged += OnSpectrogramInterleaveCountChanged;
         }
 
         /// <inheritdoc />
@@ -384,15 +427,45 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
             Button.Update(gameTime);
 
+            if (ShowSpectrogram.Value && Spectrogram == null && SpectrogramLoadTask == null)
+            {
+                CreateSpectrogram();
+            }
+            else if (!ShowSpectrogram.Value && Spectrogram != null)
+            {
+                Spectrogram?.Dispose();
+                Spectrogram = null;
+                SpectrogramLoadTask = null;
+            }
+
+            if (ShowWaveform.Value && Waveform == null && WaveformLoadTask == null)
+            {
+                CreateWaveform();
+            }
+            else if (!ShowWaveform.Value && Waveform != null)
+            {
+                Waveform?.Dispose();
+                Waveform = null;
+                WaveformLoadTask = null;
+            }
+
             if (LoadingWaveform != null)
             {
                 LoadingWaveform.Alignment = Alignment;
                 LoadingWaveform.Position = new ScalableVector2(X + BorderLeft.Width / 2f, 200);
                 LoadingWaveform.Update(gameTime);
             }
+            
+            if (LoadingSpectrogram != null)
+            {
+                LoadingSpectrogram.Alignment = Alignment;
+                LoadingSpectrogram.Position = new ScalableVector2(X + BorderLeft.Width / 2f, 200);
+                LoadingSpectrogram.Update(gameTime);
+            }
 
             UpdateHitObjectPool();
             Waveform?.Update(gameTime);
+            Spectrogram?.Update(gameTime);
             Timeline.Update(gameTime);
             LineContainer.Update(gameTime);
             HandleInput();
@@ -423,11 +496,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             Timeline.Draw(gameTime);
 
+            if (ShowSpectrogram.Value)
+                Spectrogram?.Draw(gameTime);
+
             if (ShowWaveform.Value)
                 Waveform?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
+            
             DrawHitObjects(gameTime);
+            
             GameBase.Game.SpriteBatch.End();
 
             // Draw the button on top of the hitobjects because it serves as a dimming
@@ -435,6 +513,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (ShowWaveform.Value)
                 LoadingWaveform?.Draw(gameTime);
+            
+            if (ShowSpectrogram.Value)
+                LoadingSpectrogram?.Draw(gameTime);
+
         }
 
         /// <inheritdoc />
@@ -446,6 +528,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             WaveformLoadTask?.Dispose();
             Waveform?.Destroy();
+            Spectrogram?.Destroy();
+            SpectrogramLoadTask?.Dispose();
 
             ThreadScheduler.Run(() =>
             {
@@ -465,6 +549,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.LanesSwapped -= OnLanesSwapped;
             ActionManager.HitObjectsReversed -= OnHitObjectsReversed;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
@@ -479,6 +564,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Skin.ValueChanged -= OnSkinChanged;
             WaveFormAudioDirection.ValueChanged -= OnWaveFormAudioDirectionChanged;
             WaveformFilter.ValueChanged -= OnWaveformFilterChanged;
+
+            SpectrogramFftSize.ValueChanged -= OnSpectrogramFftSizeChanged;
+            ConfigManager.EditorSpectrogramMaximumFrequency.ValueChanged -= OnSpectrogramFrequencyWindowSizeChanged;
+            ConfigManager.EditorSpectrogramMinimumFrequency.ValueChanged -= OnSpectrogramMinimumFrequencyChanged;
+            ConfigManager.EditorSpectrogramCutoffFactor.ValueChanged -= OnSpectrogramCutoffFactorChanged;
+            ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged -= OnSpectrogramIntensityFactorChanged;
+            ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged -= OnSpectrogramFrequencyScaleChanged;
+            ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged -= OnSpectrogramInterleaveCountChanged;
 
             base.Destroy();
         }
@@ -589,6 +682,43 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             return 0;
         }
 
+        /// <summary>
+        /// </summary>
+        public void CreateSpectrogram()
+        {
+            if (IsUneditable)
+                return;
+
+            LoadingSpectrogram = new LoadingWheelText(20, "Loading Spectrogram...")
+            {
+                Alignment = Alignment.TopCenter,
+                Y = 200,
+            };
+
+            SpectrogramLoadTask = new TaskHandler<int, int>(CreateSpectrogram);
+
+            SpectrogramLoadTask.OnCompleted += (sender, args) => LoadingSpectrogram.FadeOut();
+            SpectrogramLoadTask.OnCancelled += (sender, args) =>
+            {
+                Spectrogram?.Destroy();
+                LoadingSpectrogram.Destroy();
+            };
+
+            SpectrogramLoadTask.Run(0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int CreateSpectrogram(int arg1, CancellationToken token)
+        {
+            Spectrogram = new EditorPlayfieldSpectrogram(this, token);
+            return 0;
+        }
+
+        
         /// <summary>
         /// </summary>
         /// <param name="info"></param>
@@ -983,6 +1113,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjectBatch(e.HitObjects);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnLanesSwapped(object sender, EditorLanesSwappedEventArgs e)
         {
             if (IsUneditable)
                 return;
@@ -1512,11 +1655,39 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void OnWaveFormAudioDirectionChanged(object sender,
             BindableValueChangedEventArgs<EditorPlayfieldWaveformAudioDirection> e) => ReloadWaveform();
 
+        private void OnSpectrogramFftSizeChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramFrequencyWindowSizeChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramMinimumFrequencyChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramCutoffFactorChanged(object sender, BindableValueChangedEventArgs<float> e)
+            => ReloadSpectrogram();
+
+        private void OnSpectrogramIntensityFactorChanged(object sender, BindableValueChangedEventArgs<float> e)
+            => ReloadSpectrogram();
+        
+        private void OnSpectrogramFrequencyScaleChanged(object sender, BindableValueChangedEventArgs<EditorPlayfieldSpectrogramFrequencyScale> e)
+            => ReloadSpectrogram();
+        
+        private void OnSpectrogramInterleaveCountChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => ReloadSpectrogram();
+
         private void ReloadWaveform()
         {
             Waveform?.Destroy();
             LoadingWaveform.FadeIn();
             WaveformLoadTask.Run(0);
+        }
+
+        private void ReloadSpectrogram()
+        {
+            Spectrogram?.Destroy();
+            LoadingSpectrogram.FadeIn();
+            SpectrogramLoadTask.Run(0);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     {
         public IconTextButtonBeatSnap(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_sun),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Beat Snap",
-            (sender, args) => screen?.ActivateRightClickOptions(new BeatSnapRightClickOptions(screen.BeatSnap, screen.AvailableBeatSnaps)))
+            (sender, args) => screen?.ActivateRightClickOptions(new BeatSnapRightClickOptions(screen.BeatSnap, EditScreen.AvailableBeatSnaps)))
         {
             var tooltip = new Tooltip("Change the current beat snap divisor.\n" +
                                       "Hotkeys: CTRL + Up/Down/Scroll Wheel", ColorHelper.HexToColor("#808080"));

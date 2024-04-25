@@ -86,7 +86,7 @@ namespace Quaver.Shared.Graphics.Online
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(Height * 0.75f, Height * 0.75f),
                 X = 12,
-                Image = SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
+                Image = SteamManager.GetAvatarOrUnknown(SteamUser.GetSteamID().m_SteamID)
             };
 
             Avatar.AddBorder(Color.White, 2);

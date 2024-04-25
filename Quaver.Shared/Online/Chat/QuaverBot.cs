@@ -8,6 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Quaver.Server.Client;
+using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Graphics.Notifications;
@@ -42,6 +45,34 @@ namespace Quaver.Shared.Online.Chat
                 case "help":
                     ExecuteHelpCommand();
                     break;
+                case "server":
+                    ExecuteServerCommand(args);
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Executes the `/server {server}` command.
+        ///
+        ///     Switches the server endpoint
+        /// </summary>
+        public static void ExecuteServerCommand(string[] args)
+        {
+            if (args.Length > 1 && OnlineManager.Client != null)
+            {
+                var server = args[1];
+
+                NotificationManager.Show(NotificationLevel.Info, $"Switching to {server}");
+
+                OnlineClient.SERVER_ENDPOINT = server;
+
+                OnlineManager.Client.OnDisconnection += OnDisconnection;
+
+                OnlineManager.Client.Disconnect();
+            }
+            else
+            {
+                SendMessage(OnlineChat.Instance.ActiveChannel.Value, $"No server provided!");
             }
         }
 
@@ -93,6 +124,13 @@ namespace Quaver.Shared.Online.Chat
             SendMessage(OnlineChat.Instance.ActiveChannel.Value, "Whoa there! Unfortunately you're muted for another: " +
                                              $"{OnlineManager.Self.GetMuteTimeLeftString()}.\n" +
                                             "You won't be able to speak 'till then. Check your profile for more details.");
+        }
+
+        private static async void OnDisconnection(object sender, DisconnectedEventArgs e)
+        {
+            await Task.Delay(500);
+            OnlineManager.Login();
+            OnlineManager.Client.OnDisconnection -= OnDisconnection;
         }
     }
 }

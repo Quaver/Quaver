@@ -534,7 +534,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Parent = Playfield.ForegroundContainer,
             Alignment = Alignment.MidCenter,
-            Position = new ScalableVector2(Skin.HitErrorPosX, Skin.HitErrorPosY)
+            Position = new ScalableVector2(Skin.HitErrorPosX, Skin.HitErrorPosY),
+            Alpha = Skin.HitErrorAlpha
         };
 
         /// <summary>

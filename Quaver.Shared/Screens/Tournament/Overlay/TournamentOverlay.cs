@@ -410,11 +410,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         }
 
         // ReSharper disable twice ObjectCreationAsStatement
-        private void CreateDifficultyNameSettings() => new TournamentDifficultyName(Qua, DifficultyNameSettings) {Parent = this};
+        private void CreateDifficultyNameSettings() => new TournamentDifficultyName(Qua, DifficultyNameSettings, Players) {Parent = this};
         private void CreateSongArtistAndTitle() => SongTitle = new TournamentSongArtistAndTitle(Qua, SongTitleSettings) { Parent = this };
         private void CreateSongLength() => new TournamentSongLength(Qua, SongLengthSettings) {Parent = this};
         private void CreateSongBpm() => new TournamentBpm(Qua, SongBpmSettings) {Parent = this};
-        private void CreateDifficultyRating() => new TournamentDifficultyRating(Qua, DifficultyRatingSettings) {Parent = this};
+        private void CreateDifficultyRating() => new TournamentDifficultyRating(Qua, DifficultyRatingSettings, Players) {Parent = this};
         private void CreateMapCreator() => new TournamentMapCreator(Qua, MapCreatorSettings) {Parent = this};
         private void CreateMatchRound() => new TournamentCustomText(MatchRoundSettings) {Parent = this};
         private void CreateBestOf() => new TournamentCustomText(BestOfSettings) {Parent = this};

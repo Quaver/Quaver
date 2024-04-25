@@ -392,7 +392,11 @@ namespace Quaver.Shared.Modifiers
 
             var rate = ModHelper.GetModsFromRate(ModHelper.GetRateFromMods(Mods));
             var hostChangeableMods = CurrentModifiersList.FindAll(x => x.OnlyMultiplayerHostCanCanChange);
-            var ourMods = game.PlayerMods.Find(x => x.UserId == OnlineManager.Self.OnlineUser.Id);
+            var ourMods = game.PlayerMods.Find(x => x.UserId == OnlineManager.Self.OnlineUser.Id) ?? new MultiplayerPlayerMods
+            {
+                Modifiers = "0",
+                UserId = OnlineManager.Self.OnlineUser.Id
+            };
             var otherMods = CurrentModifiersList.FindAll(x => !x.OnlyMultiplayerHostCanCanChange
                                                               && x.Type != ModType.Speed
                                                               && !hostChangeableMods.Contains(x));

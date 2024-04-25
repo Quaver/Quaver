@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
@@ -8,8 +9,10 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Edit.UI.Footer
 {
@@ -32,11 +35,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// <param name="beatSnap"></param>
         /// <param name="availableBeatSnaps"></param>
         public BeatSnapRightClickOptions(BindableInt beatSnap, List<int> availableBeatSnaps)
-            : base(GetOptions(availableBeatSnaps), new ScalableVector2(200, 40),
-            22)
+            : base(GetOptions(availableBeatSnaps), new ScalableVector2(200, 40), 22, maxHeight: 800)
         {
             BeatSnap = beatSnap;
             AvailableBeatSnaps = availableBeatSnaps;
+            ItemContainer.Scrollbar.Tint = Color.White;
+            ItemContainer.Scrollbar.Visible = Opened;
+            ItemContainer.Scrollbar.Width = 2;
+            ItemContainer.EasingType = Easing.OutQuint;
+            ItemContainer.TimeToCompleteScroll = 1200;
+            ItemContainer.ScrollSpeed = 220;
 
             Items.ForEach(x =>
             {
@@ -74,6 +82,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             BeatSnap.ValueChanged += OnBeatSnapChanged;
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            ItemContainer.InputEnabled = GraphicsHelper.RectangleContains(
+                ItemContainer.ScreenRectangle,
+                MouseManager.CurrentState.Position
+            );
+
+            base.Update(gameTime);
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -94,7 +112,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             foreach (var snap in availableSnaps)
                 options.Add($"1/{StringHelper.AddOrdinal(snap)}", ColorHelper.BeatSnapToColor(snap));
 
-            options.Add("Custom", Color.White);
+            // You cannot add more snaps, so this option is redundant.
+            if (availableSnaps.Count is not 48)
+                options.Add("Custom", Color.White);
 
             return options;
         }

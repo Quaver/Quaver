@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using IniFileParser.Model;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -5,6 +6,7 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Wobble.Bindables;
+using System.Linq;
 
 namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 {
@@ -12,9 +14,12 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
     {
         private Qua Qua { get; }
 
-        public TournamentDifficultyRating(Qua qua, TournamentSettingsDifficultyRating settings) : base(settings)
+        private TournamentPlayer Player { get; }
+
+        public TournamentDifficultyRating(Qua qua, TournamentSettingsDifficultyRating settings, List<TournamentPlayer> players) : base(settings)
         {
             Qua = qua;
+            Player = players.First();
             SetText();
         }
 
@@ -22,13 +27,12 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         {
             base.UpdateState();
 
-            var difficulty = Qua.SolveDifficulty();
-            Text = StringHelper.RatingToString(difficulty.OverallDifficulty);
+            Text = StringHelper.RatingToString(Player.Rating.DifficultyRating);
 
             var settings = (TournamentSettingsDifficultyRating) Settings;
 
             if (settings.UseDefaultColor.Value)
-                Tint = ColorHelper.DifficultyToColor(difficulty.OverallDifficulty);
+                Tint = ColorHelper.DifficultyToColor((float) Player.Rating.DifficultyRating);
         }
     }
 

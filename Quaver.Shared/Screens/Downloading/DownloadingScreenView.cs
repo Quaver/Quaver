@@ -141,7 +141,7 @@ namespace Quaver.Shared.Screens.Downloading
         private void CreateMapsetContainer()
         {
             MapsetContainer = new DownloadableMapsetContainer(DownloadingScreen.Mapsets, DownloadingScreen.SelectedMapset,
-                DownloadingScreen.Page, DownloadingScreen.SearchTask)
+                DownloadingScreen.Page, DownloadingScreen.ReachedEnd, DownloadingScreen.SearchTask)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,

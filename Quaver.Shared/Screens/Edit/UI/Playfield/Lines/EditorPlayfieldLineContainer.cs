@@ -7,8 +7,10 @@ using Quaver.API.Maps;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
@@ -83,7 +85,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             ActionManager.BookmarkAdded += OnBookmarkAdded;
+            ActionManager.BookmarkBatchAdded += OnBookmarkBatchAdded;
             ActionManager.BookmarkRemoved += OnBookmarkRemoved;
+            ActionManager.BookmarkBatchRemoved += OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
         }
         
@@ -149,7 +153,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             ActionManager.BookmarkAdded -= OnBookmarkAdded;
+            ActionManager.BookmarkBatchAdded -= OnBookmarkBatchAdded;
             ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
+            ActionManager.BookmarkBatchRemoved -= OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
             
             base.Destroy();
@@ -427,11 +433,36 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             InitializeLinePool();
         }
         
+        private void OnBookmarkBatchAdded(object sender, EditorActionBookmarkBatchAddedEventArgs e)
+        {
+            foreach (var bookmark in e.Bookmarks) 
+                Lines.Add(new DrawableEditorLineBookmark(Playfield, bookmark));
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+        
         private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e)
         {
             var line = Lines.Find(x => x is DrawableEditorLineBookmark line && line.Bookmark == e.Bookmark);
             line.Destroy();
             Lines.Remove(line);
+            InitializeLinePool();
+        }
+        
+        private void OnBookmarkBatchRemoved(object sender, EditorActionBookmarkBatchRemovedEventArgs e)
+        {
+            foreach (var bookmark in e.Bookmarks)
+            {
+                Lines.RemoveAll(x =>
+                {
+                    var found = x is DrawableEditorLineBookmark line && line.Bookmark == bookmark;
+                    
+                    if (found)
+                        x.Destroy();
+                    
+                    return found;
+                });
+            }
             InitializeLinePool();
         }
         

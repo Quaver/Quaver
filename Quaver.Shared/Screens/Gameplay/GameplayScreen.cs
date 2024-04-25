@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Force.DeepCloner;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -46,6 +47,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -172,7 +174,8 @@ namespace Quaver.Shared.Screens.Gameplay
                               && !OnlineManager.IsSpectatingSomeone
                               && !IsPlayTesting
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
-                              && Ruleset.ScoreProcessor.Health <= 0)
+                              && Ruleset.ScoreProcessor.Health <= 0
+                              && !ConfigManager.KeepPlayingUponFailing.Value)
                               && !(this is TournamentGameplayScreen)
                               || ForceFail || Ruleset.ScoreProcessor.ForceFail;
 
@@ -195,6 +198,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If the user quit the game themselves.
         /// </summary>
         public bool HasQuit { get; set; }
+
+        /// <summary>
+        ///     If the player fails during gameplay, but keeps playing because of the option
+        /// </summary>
+        public bool FailedDuringGameplay { get; set; }
 
         /// <summary>
         ///     Flag that dictates if the user is currently restarting the play.
@@ -335,6 +343,13 @@ namespace Quaver.Shared.Screens.Gameplay
         private ReplayInputManagerKeys CachedReplayInputManager { get; set; }
 
         /// <summary>
+        ///     true iff we are spectating a tournament
+        ///     This is used for appropriate judgement windows applied to score, grade and rating display
+        /// </summary>
+        public bool IsSpectatingTournament => this is TournamentGameplayScreen tournamentGameplayScreen &&
+                                              tournamentGameplayScreen.Type == TournamentScreenType.Spectator;
+
+        /// <summary>
         /// </summary>
         public bool IsDisposed { get; private set; }
 
@@ -370,7 +385,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
-                var testingQua = ObjectHelper.DeepClone(map);
+                var testingQua = map.DeepClone();
                 testingQua.HitObjects.RemoveAll(x => x.StartTime + 2 < playTestTime);
                 Qua.RestoreDefaultValues(testingQua);
 
@@ -470,7 +485,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame && !IsSongSelectPreview)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
-            if (OnlineManager.IsBeingSpectated && !InReplayMode)
+            if (!InReplayMode)
                 OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
 
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -478,7 +493,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ReplayCapturer != null)
                 ReplayCapturer.Replay.TimePlayed = TimePlayed;
 
-            if (!InReplayMode)
+            if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
 
             base.OnFirstUpdate();
@@ -782,8 +797,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Add the pause mod to their score.
                 if (!ModManager.IsActivated(ModIdentifier.Paused) && Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " +
-                                                                        "during gameplay!", null, true);
+                    if (ConfigManager.DisplayPauseWarning.Value)
+                        NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " + 
+                                                                            "during gameplay!", null, true);
 
                     ModManager.AddMod(ModIdentifier.Paused);
                     ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
@@ -958,7 +974,26 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleFailure()
         {
-            if (!Failed || FailureHandled || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+            // NoMiss mod should take priority: gameplay is expected to restart when NM is on
+            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
+                return;
+            if (!FailedDuringGameplay
+                && OnlineManager.CurrentGame == null
+                && !OnlineManager.IsSpectatingSomeone
+                && !IsPlayTesting
+                && !IsCalibratingOffset
+                && (!ModManager.IsActivated(ModIdentifier.NoFail)
+                    && Ruleset.ScoreProcessor.Health <= 0
+                    && ConfigManager.KeepPlayingUponFailing.Value)
+                && !(this is TournamentGameplayScreen)
+                && !ForceFail && !Ruleset.ScoreProcessor.ForceFail)
+            {
+                if (ConfigManager.DisplayFailWarning.Value)
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        "WARNING! Your score will not be submitted due to failing during gameplay!", null, true);
+                FailedDuringGameplay = true;
+            }
+            if (!Failed || FailureHandled)
                 return;
 
             try
@@ -1281,6 +1316,14 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
+        public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen) 
+            ? tournamentScreen.GameplayScreens.Min(s =>
+            {
+                // We are guaranteed to find a minimum because of the return condition above.
+                var replayFrames = s.SpectatorClient.Replay.Frames;
+                return (replayFrames?.Count ?? 0) == 0 ? int.MaxValue : replayFrames.Last()?.Time ?? int.MaxValue;
+            })
+            : SpectatorClient.Replay.Frames.Last().Time;
         /// <summary>
         /// </summary>
         private void HandleSpectatorSkipping()
@@ -1288,22 +1331,26 @@ namespace Quaver.Shared.Screens.Gameplay
             if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
                 return;
 
+            var targetSyncTime = SpectatorClient.Replay.Frames.Last().Time;
             // User can only be two seconds out of sync with the user
-            if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
+            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000)
                 return;
 
-            var skipTime = SpectatorClient.Replay.Frames.Last().Time;
+            SkipTo(targetSyncTime);
+        }
 
+        public void SkipTo(float targetSyncTime)
+        {
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 AudioTrack.AllowPlayback = true;
-                AudioEngine.Track?.Seek(skipTime);
+                AudioEngine.Track?.Seek(targetSyncTime);
                 Timing.Time = AudioEngine.Track.Time;
             }
             catch (Exception e)
-            {;
-                Timing.Time = skipTime;
+            {
+                Timing.Time = targetSyncTime;
             }
             finally
             {
@@ -1322,7 +1369,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the client is currently being spectated, replay frames should be sent to the server
         /// </summary>
-        public void SendReplayFramesToServer(bool force = false)
+        public void SendReplayFramesToServer(bool force = false, bool appendFinishSong = false)
         {
             if (!OnlineManager.IsBeingSpectated || InReplayMode || IsSongSelectPreview)
                 return;
@@ -1357,9 +1404,18 @@ namespace Quaver.Shared.Screens.Gameplay
                     status = SpectatorClientStatus.Playing;
 
                 if (status == SpectatorClientStatus.Playing && frames.Count == 0)
+                {
+                    if (appendFinishSong)
+                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                            new List<ReplayFrame>());
                     return;
+                }
 
                 OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+
+                if (appendFinishSong)
+                    OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                        new List<ReplayFrame>());
             });
         }
 
@@ -1500,7 +1556,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen)
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
 

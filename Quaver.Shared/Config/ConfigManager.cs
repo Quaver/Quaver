@@ -22,12 +22,14 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
+using Wobble.Graphics.Sprites;
 using Wobble.Input;
 using Wobble.Logging;
 
@@ -286,6 +288,11 @@ namespace Quaver.Shared.Config
         ///     If true, hitsounds in gameplay will be played.
         /// </summary>
         internal static Bindable<bool> EnableHitsounds { get; private set; }
+        
+        /// <summary>
+        ///     If true, a hitsound will be played when releasing a long note
+        /// </summary>
+        internal static Bindable<bool> EnableLongNoteReleaseHitsounds { get; private set; }
 
         /// <summary>
         ///     If true, keysounds in gameplay will be played.
@@ -296,6 +303,11 @@ namespace Quaver.Shared.Config
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
+
+        /// <summary>
+        ///     If enabled, the user will be able to continue playing the map when dying, but with No Fail mod enabled.
+        /// </summary>
+        internal static Bindable<bool> KeepPlayingUponFailing { get; private set; }
 
         /// <summary>
         ///     If enabled, the user will be able to tap to restart instead of having to hold for 200ms to restart.
@@ -340,11 +352,20 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
+        
+        /// <summary>
+        ///     Scaling of ImGui windows and texts
+        /// </summary>
+        internal static BindableInt EditorImGuiScalePercentage { get; private set; }
 
         /// <summary>
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
+        
+        internal static Bindable<bool> EditorLiveMapSnap { get; private set; }
+        
+        internal static BindableInt EditorLiveMapOffset { get; private set; }
 
         /// <summary>
         ///     Whether or not to play hitsounds in the editor.
@@ -405,6 +426,11 @@ namespace Quaver.Shared.Config
         ///     If true, the user will skip the results screen after quitting the game.
         /// </summary>
         internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
+
+        /// <summary>
+        /// If true, the windows key is locked during gameplay
+        /// </summary>
+        internal static Bindable<bool> LockWinkeyDuringGameplay { get; private set; }
 
         /// <summary>
         ///     If true, it'll use hitobjects specifically for viewing layers in the editor.
@@ -527,6 +553,27 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
+        
+        internal static Bindable<int> EditorSpectrogramMaximumFrequency { get; private set; }
+        
+        internal static Bindable<int> EditorSpectrogramMinimumFrequency { get; private set; }
+        
+        internal static Bindable<float> EditorSpectrogramCutoffFactor { get; private set; }
+        
+        internal static Bindable<float> EditorSpectrogramIntensityFactor { get; private set; }
+        
+        internal static Bindable<EditorPlayfieldSpectrogramFrequencyScale> EditorSpectrogramFrequencyScale { get; private set; }
+        
+        internal static BindableInt EditorSpectrogramFftSize { get; private set; }
+        
+        /// <summary>
+        ///     The number of times the song's fft will be taken. Linearly increases the time to load
+        /// </summary>
+        internal static BindableInt EditorSpectrogramInterleaveCount { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<EditorPlayfieldWaveformAudioDirection> EditorAudioDirection { get; private set; }
 
         /// <summary>
@@ -547,11 +594,19 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static BindableInt EditorSpectrogramBrightness { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<bool> EditorPlaceObjectsOnNearestTick { get; private set; }
 
         /// <summary>
         /// </summary>
         internal static Bindable<bool> EditorLiveMapping { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EditorInvertBeatSnapScroll { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -604,6 +659,14 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayNotificationsInGameplay { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayPauseWarning { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayFailWarning { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -715,6 +778,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
+        ///     The key to toggle the mirror mod while in song select
+        /// </summary>
+        internal static Bindable<Keys> KeyToggleMirror { get; private set; }
+
+        /// <summary>
         ///     The key to decrease the gameplay rate while in song select
         /// </summary>
         internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
@@ -740,6 +808,11 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyIncreaseMapOffset { get; private set; }
         internal static Bindable<Keys> KeyDecreaseMapOffset { get; private set; }
+        
+        /// <summary>
+        ///     The keys to toggle autoplay during playtesting
+        /// </summary>
+        internal static Bindable<Keys> KeyTogglePlaytestAutoplay { get; private set; }
 
         /// <summary>
         ///     The key to hide the scoreboard in-game.
@@ -765,6 +838,16 @@ namespace Quaver.Shared.Config
         ///     The key to increase the audio rate in the editor.
         /// </summary>
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
+
+        /// <summary>
+        ///     Whether global scrolling is inverted.
+        /// </summary>
+        internal static Bindable<bool> InvertScrolling { get; private set; }
+
+        /// <summary>
+        ///     Whether scrolling in editor is inverted.
+        /// </summary>
+        internal static Bindable<bool> InvertEditorScrolling { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -907,7 +990,7 @@ namespace Quaver.Shared.Config
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
-            CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
+            CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, 5000, data);
             SmoothAudioTimingGameplay = ReadValue(@"SmoothAudioTimingGameplay", false, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
@@ -928,6 +1011,7 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
+            EnableLongNoteReleaseHitsounds = ReadValue(@"EnableLongNoteReleaseHitsounds", false, data);
             EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);
             KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
             KeyNavigateRight = ReadValue(@"KeyNavigateRight", Keys.Right, data);
@@ -977,6 +1061,7 @@ namespace Quaver.Shared.Config
             KeySkipIntro = ReadGenericKey(@"KeySkipIntro", new GenericKey { KeyboardKey = Keys.Space }, data);
             KeyPause = ReadGenericKey(@"KeyPause", new GenericKey { KeyboardKey = Keys.Escape }, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
+            KeyToggleMirror = ReadValue(@"KeyToggleMirror", Keys.H, data);
             KeyDecreaseGameplayAudioRate = ReadValue(@"KeyDecreaseGameplayAudioRate", Keys.OemMinus, data);
             KeyIncreaseGameplayAudioRate = ReadValue(@"KeyIncreaseGameplayAudioRate", Keys.OemPlus, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
@@ -984,16 +1069,23 @@ namespace Quaver.Shared.Config
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyDecreaseMapOffset = ReadValue(@"KeyDecreaseMapOffset", Keys.OemMinus, data);
             KeyIncreaseMapOffset = ReadValue(@"KeyIncreaseMapOffset", Keys.OemPlus, data);
+            KeyTogglePlaytestAutoplay = ReadValue(@"KeyTogglePlaytestAutoplay", Keys.Tab, data);
             KeyScoreboardVisible = ReadValue(@"KeyScoreboardVisible", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
+            KeepPlayingUponFailing = ReadValue(@"KeepPlayingUponFailing", false, data);
             TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
+            EditorImGuiScalePercentage = ReadInt(@"EditorImGuiScalePercentage", 100, 25, 300, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            InvertScrolling = ReadValue(@"InvertScrolling", false, data);
+            InvertEditorScrolling = ReadValue(@"InvertEditorScrolling", true, data);
+            EditorLiveMapSnap = ReadValue(@"EditorLiveMapSnap", false, data);
+            EditorLiveMapOffset = ReadInt(@"EditorLiveMapOffset", 0, -200, 200, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
@@ -1006,6 +1098,7 @@ namespace Quaver.Shared.Config
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
+            LockWinkeyDuringGameplay = ReadValue(@"LockWinkeyDuringGameplay", true, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
             LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
             LaneCoverBottomHeight = ReadInt(@"LaneCoverBottomHeight", 25, 0, 75, data);
@@ -1045,14 +1138,24 @@ namespace Quaver.Shared.Config
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
+            EditorInvertBeatSnapScroll = ReadValue(@"EditorInvertBeatSnapScroll", false, data);
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
+            EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", false, data);
+            EditorSpectrogramMaximumFrequency = ReadInt(@"EditorSpectrogramMaximumFrequency", 7000, 5000, 10000, data);
+            EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 125, 0, 1500, data);
+            EditorSpectrogramCutoffFactor = ReadValue("EditorSpectrogramCutoffFactor", 0.34f, data);
+            EditorSpectrogramIntensityFactor = ReadValue("EditorSpectrogramIntensityFactor", 9.5f, data);
+            EditorSpectrogramFrequencyScale = ReadValue("EditorSpectrogramFrequencyScale", EditorPlayfieldSpectrogramFrequencyScale.Linear, data);
+            EditorSpectrogramFftSize = ReadInt(@"EditorSpectrumFftSize", 512, 256, 16384, data);
+            EditorSpectrogramInterleaveCount = ReadInt(@"EditorSpectrogramInterleaveCount", 4, 1, 16, data);
             EditorAudioDirection = ReadValue(@"EditorAudioDirection", EditorPlayfieldWaveformAudioDirection.Both, data);
             EditorWaveformColorR = ReadInt(@"EditorWaveformColorR", 0, 0, 255, data);
             EditorWaveformColorG = ReadInt(@"EditorWaveformColorG", 200, 0, 255, data);
             EditorWaveformColorB = ReadInt(@"EditorWaveformColorB", 255, 0, 255, data);
             EditorWaveformBrightness = ReadInt(@"EditorWaveformBrightness", 50, 0, 100, data);
+            EditorSpectrogramBrightness = ReadInt(@"EditorSpectrogramBrightness", 50, 0, 100, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -500, 500, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
@@ -1065,6 +1168,8 @@ namespace Quaver.Shared.Config
             DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
             EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
+            DisplayPauseWarning = ReadValue(@"DisplayPauseWarning", true, data);
+            DisplayFailWarning = ReadValue(@"DisplayFailWarning", true, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
@@ -1072,6 +1177,9 @@ namespace Quaver.Shared.Config
             PrioritizedMapDifficulty7K = ReadInt(@"PrioritizedMapDifficulty7K", 0, 0, 1000, data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
 
+            // Bind global inverted scrolling so ScrollContainers get InvertScrolling setting too
+            ScrollContainer.GlobalInvertedScrolling = InvertScrolling;
+            
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";

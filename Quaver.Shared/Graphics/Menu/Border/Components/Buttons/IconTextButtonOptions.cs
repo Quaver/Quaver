@@ -1,6 +1,5 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Options;
-using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 

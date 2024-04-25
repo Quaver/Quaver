@@ -188,7 +188,7 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
             EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer,
-            EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform, EditScreen.AudioDirection, EditScreen.WaveformFilter) { Parent = Container};
+            EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform, EditScreen.ShowSpectrogram, EditScreen.AudioDirection, EditScreen.WaveformFilter, EditScreen.SpectrogramFftSize) { Parent = Container};
 
         /// <summary>
         /// </summary>
@@ -258,7 +258,7 @@ namespace Quaver.Shared.Screens.Edit
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity,
                 EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer, EditScreen.PlaceObjectsOnNearestTick,
-                EditScreen.ShowWaveform, EditScreen.AudioDirection, EditScreen.WaveformFilter, true)
+                EditScreen.ShowWaveform, EditScreen.ShowSpectrogram, EditScreen.AudioDirection, EditScreen.WaveformFilter, EditScreen.SpectrogramFftSize, true)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter

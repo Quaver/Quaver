@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void Close()
         {
-            if (Menu.IsKeybindFocused.Value)
+            if (Menu.IsOptionFocused.Value)
                 return;
 
             Menu.Destroy();

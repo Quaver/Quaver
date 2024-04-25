@@ -8,9 +8,11 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Batch;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
@@ -20,6 +22,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
@@ -115,6 +118,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of hitobjects have been flipped
         /// </summary>
         public event EventHandler<EditorHitObjectsFlippedEventArgs> HitObjectsFlipped;
+
+
+        /// <summary>
+        ///     Event invoked when a batch of hitobjects have been swapped between 2 lanes
+        /// </summary>
+        public event EventHandler<EditorLanesSwappedEventArgs> LanesSwapped;
 
         /// <summary>
         ///     Event invoked when a batch of hitobjects have been reversed
@@ -260,6 +269,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a bookmark has been removed.
         /// </summary>
         public event EventHandler<EditorActionBookmarkRemovedEventArgs> BookmarkRemoved;
+        
+        /// <summary>
+        ///     Event invoked when a bookmark has been added.
+        /// </summary>
+        public event EventHandler<EditorActionBookmarkBatchAddedEventArgs> BookmarkBatchAdded;
+
+        /// <summary>
+        ///     Event invoked when a bookmark has been removed.
+        /// </summary>
+        public event EventHandler<EditorActionBookmarkBatchRemovedEventArgs> BookmarkBatchRemoved;
 
         /// <summary>
         ///     Event invoked whe na bookmark has been edited.
@@ -596,16 +615,31 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         ///     Adds a bookmark to the map
         /// </summary>
-        /// <param name="time"></param>
-        /// <param name="note"></param>
-        public void AddBookmark(int time, string note) => Perform(new EditorActionAddBookmark(this, WorkingMap, new BookmarkInfo { StartTime = time, Note = note }));
+        public void AddBookmark(BookmarkInfo bookmarkInfo) => Perform(new EditorActionAddBookmark(this, WorkingMap, bookmarkInfo));
 
+        public void AddBookmark(int time, string note) => AddBookmark(new BookmarkInfo
+        {
+            StartTime = time,
+            Note = note
+        });
+
+        /// <summary>
+        ///     Adds a batch of bookmarks to the map
+        /// </summary>
+        /// <param name="bookmarks"></param>
+        public void AddBookmarkBatch(List<BookmarkInfo> bookmarks) => Perform(new EditorActionAddBookmarkBatch(this, WorkingMap, bookmarks));
         /// <summary>
         ///     Removes a bookmark from the map.
         /// </summary>
         /// <param name="bookmark"></param>
         public void RemoveBookmark(BookmarkInfo bookmark) => Perform(new EditorActionRemoveBookmark(this, WorkingMap, bookmark));
         
+        /// <summary>
+        ///     Removes a batch of bookmarks from the map.
+        /// </summary>
+        /// <param name="bookmark"></param>
+        public void RemoveBookmarkBatch(List<BookmarkInfo> bookmark) => Perform(new EditorActionRemoveBookmarkBatch(this, WorkingMap, bookmark));
+
         /// <summary>
         ///     Edits the note of an existing bookmark
         /// </summary>
@@ -646,6 +680,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.FlipHitObjects:
                     HitObjectsFlipped?.Invoke(this, (EditorHitObjectsFlippedEventArgs)args);
+                    break;
+                case EditorActionType.SwapLanes:
+                    LanesSwapped?.Invoke(this, (EditorLanesSwappedEventArgs)args);
                     break;
                 case EditorActionType.MoveHitObjects:
                     HitObjectsMoved?.Invoke(this, (EditorHitObjectsMovedEventArgs)args);
@@ -734,6 +771,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveBookmark:
                     BookmarkRemoved?.Invoke(this, (EditorActionBookmarkRemovedEventArgs) args);
                     break;
+                case EditorActionType.AddBookmarkBatch:
+                    BookmarkBatchAdded?.Invoke(this, (EditorActionBookmarkBatchAddedEventArgs) args);
+                    break;
+                case EditorActionType.RemoveBookmarkBatch:
+                    BookmarkBatchRemoved?.Invoke(this, (EditorActionBookmarkBatchRemovedEventArgs) args);
+                    break;
                 case EditorActionType.EditBookmark:
                     BookmarkEdited?.Invoke(this, (EditorActionBookmarkEditedEventArgs) args);
                     break;
@@ -756,6 +799,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             HitObjectBatchRemoved = null;
             HitObjectBatchPlaced = null;
             HitObjectsFlipped = null;
+            LanesSwapped = null;
             HitObjectsMoved = null;
             HitsoundAdded = null;
             HitsoundRemoved = null;
@@ -786,6 +830,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             BookmarkAdded = null;
             BookmarkRemoved = null;
             BookmarkEdited = null;
+            BookmarkBatchAdded = null;
+            BookmarkBatchRemoved = null;
             BookmarkBatchOffsetChanged = null;
         }
     }

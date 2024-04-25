@@ -122,7 +122,7 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         private void CreateMenuLogoBackground()
         {
-            var tex = UserInterface.MenuLogoBackground;
+            var tex = SkinManager.Skin?.MainMenu?.LogoBackground ?? UserInterface.MenuLogoBackground;
 
             MenuLogoBackground = new Sprite()
             {

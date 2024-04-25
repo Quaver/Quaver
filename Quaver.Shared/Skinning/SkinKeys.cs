@@ -181,6 +181,8 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float HitErrorPosY { get; private set; }
 
+        internal float HitErrorAlpha { get; private set; } = 0.5f;
+
         [FixedScale]
         internal float HitErrorHeight { get; private set; }
 
@@ -498,6 +500,7 @@ namespace Quaver.Shared.Skinning
             HealthBarScale = ConfigHelper.ReadInt32((int) HealthBarScale, ini["HealthBarScale"]);
             HitErrorPosX = ConfigHelper.ReadInt32((int) HitErrorPosX, ini["HitErrorPosX"]);
             HitErrorPosY = ConfigHelper.ReadInt32((int) HitErrorPosY, ini["HitErrorPosY"]);
+            HitErrorAlpha = ConfigHelper.ReadFloat(HitErrorAlpha, ini["HitErrorAlpha"]);
             HitErrorHeight = ConfigHelper.ReadInt32((int) HitErrorHeight, ini["HitErrorHeight"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32((int) HitErrorChevronSize, ini["HitErrorChevronSize"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);

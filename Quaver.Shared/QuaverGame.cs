@@ -24,6 +24,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database;
+using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
@@ -59,7 +60,6 @@ using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
-using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Tests.AutoMods;
 using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Chat;
@@ -326,10 +326,10 @@ namespace Quaver.Shared
         protected override void UnloadContent()
         {
             ConfigManager.WriteConfigFileAsync().Wait();
-            OnlineManager.Client?.Disconnect();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
             base.UnloadContent();
+            OnlineManager.Client?.Disconnect();
         }
 
         /// <inheritdoc />
@@ -420,6 +420,7 @@ namespace Quaver.Shared
             QuaverSettingsDatabaseCache.Initialize();
             JudgementWindowsDatabaseCache.Load();
             UserProfileDatabaseCache.Load();
+            BlockedUsers.Load();
 
             // Force garabge collection.
             GC.Collect();
@@ -446,6 +447,7 @@ namespace Quaver.Shared
             };
 
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
+            ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
             ConfigManager.WindowBorderless.ValueChanged += (sender, e) => Window.IsBorderless = e.Value;
             ConfigManager.SelectedGameMode.ValueChanged += (sender, args) =>
@@ -722,7 +724,7 @@ namespace Quaver.Shared
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
-            
+
             ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
         }
 
