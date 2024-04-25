@@ -6,17 +6,17 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 {
     public sealed class TournamentSongLength : TournamentOverlaySpriteText
     {
-        private Qua Qua { get; }
+        private int Length { get; }
 
         public TournamentSongLength(Qua qua, TournamentDrawableSettings settings) : base(settings)
         {
-            Qua = qua;
+            Length = qua.Length;
             SetText();
         }
 
         public override void UpdateState()
         {
-            Text = $"{TimeSpan.FromMilliseconds(Qua.Length):mm\\:ss}";
+            Text = $"{TimeSpan.FromMilliseconds(Length):mm\\:ss}";
             base.UpdateState();
         }
     }

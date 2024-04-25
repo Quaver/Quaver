@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <summary>
         ///     The custom audio track for this container
         /// </summary>
-        private IAudioTrack Track { get; }
+        private IAudioTrack Track { get; set; }
 
         /// <summary>
         ///     The Qua that'll be used if one is passed in through the constructor
@@ -136,7 +136,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         {
             UpdateGameplayScreen(gameTime);
 
-            TrackInPreviousFrame = Track ?? AudioEngine.Track;
             base.Update(gameTime);
         }
 
@@ -358,6 +357,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     if (SeekBar != null)
                         SeekBar.Track = AudioEngine.Track;
 
+                    Track = AudioEngine.Track;
+                    TrackInPreviousFrame = Track;
+                    
                     LoadedGameplayScreen?.HandleReplaySeeking();
                 }
 
