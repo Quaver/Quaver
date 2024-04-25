@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 [MoonSharpUserData]
 public class ModChartStateMachine
 {
-    private readonly List<IStateMachineState> _states = new();
+    private readonly List<StateMachineState> _states = new();
 
     public const int IdleStateId = -1;
     public int CurrentStateId { get; private set; } = IdleStateId;
@@ -16,7 +16,7 @@ public class ModChartStateMachine
     {
         if (CurrentStateId != IdleStateId)
         {
-            _states[CurrentStateId].OnDisable();
+            _states[CurrentStateId].OnLeave();
         }
 
         if (id == IdleStateId)
@@ -28,7 +28,7 @@ public class ModChartStateMachine
         if (id >= _states.Count || id < 0) throw new ArgumentOutOfRangeException(nameof(id), $"No state has the id {id}");
         var state = _states[id];
         CurrentStateId = id;
-        state.OnEnable();
+        state.OnEnter();
     }
 
     public void Idle()
@@ -36,22 +36,14 @@ public class ModChartStateMachine
         To(IdleStateId);
     }
 
-    public int Register(IStateMachineState state)
-    {
-        state.Id = _states.Count;
-        _states.Add(state);
-        state.OnInitialize();
-        state.OnEnable();
-        return state.Id;
-    }
 
     [MoonSharpHidden]
     public void Update()
     {
-        if (CurrentStateId == IdleStateId) return;
-        var state = _states[CurrentStateId];
-        var nextStateId = state.OnUpdate();
-        if (nextStateId == CurrentStateId) return;
-        To(nextStateId);
+        // if (CurrentStateId == IdleStateId) return;
+        // var state = _states[CurrentStateId];
+        // var nextStateId = state.OnUpdateSelf();
+        // if (nextStateId == CurrentStateId) return;
+        // To(nextStateId);
     }
 }
