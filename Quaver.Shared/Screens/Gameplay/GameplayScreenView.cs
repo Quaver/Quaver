@@ -29,11 +29,10 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Scripting;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.StateMachine;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Storyboard.Timeline;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
@@ -215,12 +214,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public TriggerManager TriggerManager { get; set; }
 
-        public List<StoryboardStateMachine> StoryboardStateMachines { get; set; }
+        public List<ModChartStateMachine> StoryboardStateMachines { get; set; }
         
         /// <summary>
         ///     The script loaded that controls the storyboard
         /// </summary>
-        public StoryboardScript StoryboardScript { get; set; }
+        public ModChartScript ModChartScript { get; set; }
         
 
         /// <inheritdoc />
@@ -250,10 +249,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
             TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
             SegmentManager = new SegmentManager(new ());
-            StoryboardStateMachines = new List<StoryboardStateMachine>();
+            StoryboardStateMachines = new List<ModChartStateMachine>();
             
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
-                StoryboardScript = new StoryboardScript(Screen.Map.GetAnimationScriptPath(), this);
+                ModChartScript = new ModChartScript(Screen.Map.GetAnimationScriptPath(), this);
 
             if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
@@ -359,7 +358,7 @@ namespace Quaver.Shared.Screens.Gameplay
             try
             {
                 var time = (int)Screen.Timing.Time;
-                StoryboardScript?.Update(time);
+                ModChartScript?.Update(time);
                 SegmentManager.Update(time);
                 TriggerManager.Update(time);
                 foreach (var machine in StoryboardStateMachines)
