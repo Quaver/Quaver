@@ -262,22 +262,22 @@ public class ModChartScript
             dynVal =>
             {
                 var table = dynVal.Table;
-                var w = (float)((double)table[1]);
-                var x = (float)((double)table[2]);
-                var y = (float)((double)table[3]);
-                var z = (float)((double)table[4]);
-                return new Vector4(w, x, y, z);
+                var x = (float)((double)table[1]);
+                var y = (float)((double)table[2]);
+                var z = (float)((double)table[3]);
+                var w = (float)((double)table[4]);
+                return new Vector4(x, y, z, w);
             }
         );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
             (script, vector) =>
             {
-                var w = DynValue.NewNumber(vector.W);
                 var x = DynValue.NewNumber(vector.X);
                 var y = DynValue.NewNumber(vector.Y);
                 var z = DynValue.NewNumber(vector.Z);
-                var dynVal = DynValue.NewTable(script, w, x, y, z);
+                var w = DynValue.NewNumber(vector.W);
+                var dynVal = DynValue.NewTable(script, x, y, z, w);
                 return dynVal;
             }
         );
