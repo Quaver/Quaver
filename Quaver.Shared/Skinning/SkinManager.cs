@@ -13,6 +13,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Selection;
 using SharpCompress.Archives;
@@ -50,6 +51,11 @@ namespace Quaver.Shared.Skinning
         ///     The skin for player 2 in the tournament screen
         /// </summary>
         public static SkinStore TournamentPlayer2Skin { get; set; }
+        
+        /// <summary>
+        ///     Watches for current skin changes
+        /// </summary>
+        public static FileSystemWatcher Watcher { get; private set; }
 
         /// <summary>
         ///     Loads the currently selected skin
@@ -57,6 +63,22 @@ namespace Quaver.Shared.Skinning
         public static void Load()
         {
             Skin = new SkinStore();
+            Watcher?.Dispose();
+            var path = Path.Combine(Skin.Dir, "skin.ini");
+            if (File.Exists(path))
+            {
+                Watcher = new FileSystemWatcher(Path.GetDirectoryName(path))
+                {
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    EnableRaisingEvents = true,
+                    Filter = Path.GetFileName(path)
+                };
+                Watcher.Changed += (sender, args) =>
+                {
+                    Logger.Important($"Skin change detected. Reloading", LogType.Runtime);
+                    TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+                };
+            }
 
             if (ConfigManager.TournamentPlayer2Skin.Value == null ||
                 ConfigManager.TournamentPlayer2Skin.Value == ConfigManager.Skin.Value)
