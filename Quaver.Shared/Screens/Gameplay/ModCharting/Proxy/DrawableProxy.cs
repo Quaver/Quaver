@@ -83,6 +83,18 @@ public class DrawableProxy
         set => _drawable.Size = value;
     }
 
+    public float Width
+    {
+        get => _drawable.Width;
+        set => _drawable.Width = value;
+    }
+
+    public float Height
+    {
+        get => _drawable.Height;
+        set => _drawable.Height = value;
+    }
+
     public Drawable Parent
     {
         get => _drawable.Parent;

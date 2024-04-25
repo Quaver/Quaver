@@ -34,12 +34,13 @@ public class TweenSetters
         return v => sprite.Alpha = v;
     }
     
-    public TweenPayload.SetterDelegate SizeX(Drawable drawable)
+    public TweenPayload.SetterDelegate Width(Drawable drawable)
     {
-        return v => drawable.Size = new ScalableVector2(v, drawable.Size.Y.Value);
+        return v => drawable.Width = v;
     }
-    public TweenPayload.SetterDelegate SizeY(Drawable drawable)
+
+    public TweenPayload.SetterDelegate Height(Drawable drawable)
     {
-        return v => drawable.Size = new ScalableVector2(drawable.Size.X.Value, v);
+        return v => drawable.Height = v;
     }
 }
