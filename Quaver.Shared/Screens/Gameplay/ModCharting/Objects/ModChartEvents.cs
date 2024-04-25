@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
@@ -20,13 +22,14 @@ public class ModChartEvents
     internal KeysInputManager InputManager => (KeysInputManager)HitObjectManagerKeys.Ruleset.InputManager;
 
 
-    private readonly Dictionary<ModChartEventCategory, ModChartCategorizedEvent> _events = new();
+    private readonly Dictionary<ModChartEventType, ModChartCategorizedEvent> _events = new();
     [MoonSharpHidden] internal ModChartDeferredEventQueue DeferredEventQueue { get; }
 
-    public ModChartCategorizedEvent this[ModChartEventCategory category]
+    public ModChartCategorizedEvent this[ModChartEventType type]
     {
         get
         {
+            var category = type.GetCategory();
             _events.TryAdd(category, new ModChartCategorizedEvent(category));
             return _events[category];
         }
@@ -34,23 +37,7 @@ public class ModChartEvents
 
     public void Invoke(ModChartEventType eventType, params object[] args)
     {
-        this[eventType.Category].Invoke(eventType.SpecificType, args);
-    }
-
-    public void Invoke(ModChartEventCategory category, ulong specificType, params object[] args)
-    {
-        this[category].Invoke(specificType, args);
-    }
-
-    public void Invoke(Enum specificType, params object[] args)
-    {
-        var category = GetCategory(specificType);
-        Invoke(category, Convert.ToUInt64(specificType), args);
-    }
-
-    public void Invoke(ulong specificType, params object[] args)
-    {
-        Invoke(ModChartEventCategory.Custom, specificType, args);
+        this[eventType].Invoke(eventType, args);
     }
 
     public void Enqueue(ModChartEventInstance eventInstance) => DeferredEventQueue.Enqueue(eventInstance);
@@ -58,37 +45,59 @@ public class ModChartEvents
     public void Enqueue(ModChartEventType type, params object[] args) =>
         DeferredEventQueue.Enqueue(new ModChartEventInstance(type, args));
 
-    public void Enqueue(Enum specificType, params object[] args) => Enqueue(GetType(specificType), args);
+    public void Enqueue(Closure closure, params object[] args) => Enqueue(new ModChartEventInstance(
+        ModChartEventType.FunctionCall,
+        new object[] { closure }.Concat(args).ToArray()));
 
-    public void Enqueue(ulong specificType, params object[] args) =>
-        Enqueue(new ModChartEventType(ModChartEventCategory.Custom, specificType), args);
+    public static int GetSpecificType(ModChartEventType eventType) => eventType.GetSpecificType();
 
-    public static ModChartEventType GetType(Enum specificType) => ModChartEventType.From(specificType);
+    public static ModChartEventType GetCategory(ModChartEventType eventType) => eventType.GetCategory();
 
-    public static ModChartEventCategory GetCategory(Enum specificType) => specificType switch
+    public static ModChartEventType CustomEventType(int id) => ModChartEventType.Custom.WithSpecificType(id);
+
+    private void CallNoteEntry(GameplayHitObjectKeysInfo info)
     {
-        ModChartNoteEventType => ModChartEventCategory.Note,
-        ModChartInputEventType => ModChartEventCategory.Input,
-        _ => ModChartEventCategory.None
-    };
-
-    private void CallNoteEntry(GameplayHitObjectKeysInfo info) =>
-        Invoke(ModChartNoteEventType.NoteEntry, info);
+        Invoke(ModChartEventType.NoteEntry, info);
+    }
 
     private void CallOnKeyPress(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
     {
-        Invoke(ModChartInputEventType.KeyPress, info, pressTime, judgement);
+        Invoke(ModChartEventType.InputKeyPress, info, pressTime, judgement);
     }
 
     private void CallOnKeyRelease(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
     {
-        Invoke(ModChartInputEventType.KeyRelease, info, pressTime, judgement);
+        Invoke(ModChartEventType.InputKeyRelease, info, pressTime, judgement);
+    }
+
+    public void Subscribe(ModChartEventType eventType, Closure closure)
+    {
+        var (category, specificType) = eventType;
+        if (specificType == 0)
+            this[category].Add(closure);
+        else
+            this[category][specificType].Add(closure);
+    }
+
+    public void Unsubscribe(ModChartEventType eventType, Closure closure)
+    {
+        var (category, specificType) = eventType;
+        if (specificType == 0)
+            this[category].Remove(closure);
+        else
+            this[category][specificType].Remove(closure);
     }
 
     public ModChartEvents(GameplayScreenView gameplayScreenView)
     {
         Shortcut = new ElementAccessShortcut(gameplayScreenView);
         DeferredEventQueue = new ModChartDeferredEventQueue(this);
+        this[ModChartEventType.Function][ModChartEventType.FunctionCall].OnInvoke += args =>
+        {
+            if (args.Length < 1) return;
+            var closure = (Closure)args[0];
+            closure.Call(args[1..]);
+        };
         HitObjectManagerKeys.RenderedHitObjectInfoAdded += CallNoteEntry;
         InputManager.OnKeyPress += CallOnKeyPress;
         InputManager.OnKeyRelease += CallOnKeyRelease;

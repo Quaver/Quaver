@@ -1,4 +1,4 @@
-namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 public class ModChartEventInstance
 {

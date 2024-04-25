@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 
-namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 [MoonSharpUserData]
 public class ModChartDeferredEventQueue

@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MoonSharp.Interpreter;
+using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 [MoonSharpUserData]
 public class ModChartEvent
 {
     public readonly ModChartEventType Type;
-    [MoonSharpHidden]
-    public event Action<object[]> OnInvoke;
+    [MoonSharpHidden] public event Action<object[]> OnInvoke;
 
     private readonly HashSet<Closure> _closures = new();
 
@@ -28,7 +28,18 @@ public class ModChartEvent
         OnInvoke?.Invoke(p);
         foreach (var closure in _closures)
         {
-            closure.Call(p.ToList());
+            try
+            {
+                closure.Call(p.ToList());
+            }
+            catch (ScriptRuntimeException e)
+            {
+                Logger.Error(e.DecoratedMessage, LogType.Runtime);
+            }
+            catch (SyntaxErrorException e)
+            {
+                Logger.Error(e.DecoratedMessage, LogType.Runtime);
+            }
         }
     }
 }

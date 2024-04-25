@@ -10,6 +10,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -77,6 +78,7 @@ public class ModChartScript
         UserData.RegisterType<Alignment>();
         UserData.RegisterType<Judgement>();
         UserData.RegisterType<Direction>();
+        UserData.RegisterType<ModChartEventType>();
         UserData.RegisterType<TweenPayload.SetterDelegate>();
         UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
         UserData.RegisterProxyType<HitObjectInfoProxy, HitObjectInfo>(hitObjectInfo =>
@@ -92,7 +94,7 @@ public class ModChartScript
         UserData.RegisterProxyType<GameplayHitObjectKeysProxy, GameplayHitObjectKeys>(s =>
             new GameplayHitObjectKeysProxy(s));
         UserData.RegisterProxyType<GameplayHitObjectKeysInfoProxy, GameplayHitObjectKeysInfo>(s =>
-            new GameplayHitObjectKeysInfoProxy(s));
+            new GameplayHitObjectKeysInfoProxy(s), friendlyName:"GameplayHitObjectKeys");
 
 
         RegisterAllVectors();
@@ -118,6 +120,7 @@ public class ModChartScript
         WorkingScript.Globals["events"] = ModChartEvents;
         WorkingScript.Globals["alignment"] = typeof(Alignment);
         WorkingScript.Globals["direction"] = typeof(Direction);
+        WorkingScript.Globals["event_type"] = typeof(ModChartEventType);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         try

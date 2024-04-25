@@ -1,20 +1,29 @@
-using System;
-using MoonSharp.Interpreter;
+namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
-namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
-
-[MoonSharpUserData]
-public struct ModChartEventType
+/// <summary>
+///     The 16 LSB is the specific type, and the rest 48 MSB is the category
+/// </summary>
+public enum ModChartEventType : ulong
 {
-    public ModChartEventCategory Category;
-    public ulong SpecificType;
-
-    public static ModChartEventType From(Enum specificType) =>
-        new(ModChartEvents.GetCategory(specificType), Convert.ToUInt64(specificType));
-
-    public ModChartEventType(ModChartEventCategory category, ulong specificType)
-    {
-        Category = category;
-        SpecificType = specificType;
-    }
+    None = 0,
+    Custom = 1 << 16,
+    /// <summary>
+    ///     Note becoming visible/invisible
+    /// </summary>
+    Note = 1 << 17,
+    NoteEntry,
+    NoteLeave,
+    NoteDead,
+    NoteDestroy,
+    /// <summary>
+    ///     User inputs something
+    /// </summary>
+    Input = 1 << 18,
+    InputKeyPress,
+    InputKeyRelease,
+    /// <summary>
+    ///     Just queueing to call a function. The first argument will be the closure to call
+    /// </summary>
+    Function = 1 << 19,
+    FunctionCall,
 }
