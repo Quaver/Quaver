@@ -3,6 +3,7 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
@@ -42,5 +43,10 @@ public class TweenSetters
     public TweenPayload.SetterDelegate Height(Drawable drawable)
     {
         return v => drawable.Height = v;
+    }
+
+    public TweenPayload.SetterDelegate FontSize(SpriteTextPlus spriteTextPlus)
+    {
+        return v => spriteTextPlus.FontSize = (int)v;
     }
 }
