@@ -38,7 +38,7 @@ public class ModChartScript
     
 
     protected GameplayScreenView GameplayScreenView { get; set; }
-    public ModChartActionManager ActionManager { get; set; }
+    public ModChartTimeline Timeline { get; set; }
     public TweenSetters TweenSetters { get; set; }
 
     public ModChartConstants ModChartConstants { get; set; }
@@ -58,7 +58,7 @@ public class ModChartScript
         
         Shortcut = new ElementAccessShortcut(screenView);
         
-        ActionManager = new ModChartActionManager(screenView);
+        Timeline = new ModChartTimeline(screenView);
 
         TweenSetters = new TweenSetters(screenView);
 
@@ -107,7 +107,7 @@ public class ModChartScript
         State = new ModChartState();
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
-        WorkingScript.Globals["actions"] = ActionManager;
+        WorkingScript.Globals["timeline"] = Timeline;
         WorkingScript.Globals["state"] = State;
         WorkingScript.Globals["tweens"] = TweenSetters;
         WorkingScript.Globals["easing"] = typeof(Easing);

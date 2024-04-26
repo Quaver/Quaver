@@ -9,11 +9,11 @@ using Wobble.Logging;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartActionManager
+public class ModChartTimeline
 {
     [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
 
-    public ModChartActionManager(GameplayScreenView gameplayScreenView)
+    public ModChartTimeline(GameplayScreenView gameplayScreenView)
     {
         Shortcut = new ElementAccessShortcut(gameplayScreenView);
     }
@@ -172,48 +172,6 @@ public class ModChartActionManager
     /// <returns></returns>
     public int GenerateSegmentId() => Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
 
-    /// <summary>
-    ///     Width of lane (receptor alone)
-    /// </summary>
-    /// <returns></returns>
-    public float LaneSize => Shortcut.GameplayPlayfieldKeys.LaneSize;
-
-    /// <summary>
-    ///     Padding of receptor
-    /// </summary>
-    /// <returns></returns>
-    public float ReceptorPadding => Shortcut.GameplayPlayfieldKeys.ReceptorPadding;
-
-    /// <summary>
-    ///     Separation between lanes
-    /// </summary>
-    /// <returns></returns>
-    public float LaneSeparationWidth => LaneSize + ReceptorPadding;
-
-    /// <summary>
-    ///     Positions of each receptor
-    /// </summary>
-    /// <returns>Scalable vector (x, y, scale_x, scale_y) for each receptor</returns>
-    public ScalableVector2[] GetReceptorPositions()
-    {
-        var positions = new ScalableVector2[Shortcut.GameplayScreen.Map.GetKeyCount()];
-        for (var i = 0; i < Shortcut.GameplayScreen.Map.GetKeyCount(); i++)
-        {
-            positions[i] = Shortcut.GameplayPlayfieldKeysStage.Receptors[i].Position;
-        }
-
-        return positions;
-    }
-
-    /// <summary>
-    ///     Sets the position of a receptor of a particular lane
-    /// </summary>
-    /// <param name="lane"></param>
-    /// <param name="pos"></param>
-    public void SetReceptorPosition(int lane, ScalableVector2 pos)
-    {
-        Shortcut.GameplayPlayfieldKeysStage.Receptors[lane - 1].Position = pos;
-    }
 
     /// <summary>
     ///     Spits a debug message

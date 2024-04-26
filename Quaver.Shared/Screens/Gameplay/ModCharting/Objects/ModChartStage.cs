@@ -27,8 +27,8 @@ public class ModChartStage
     public Sprite Background => Shortcut.GameplayScreenView.Background;
     public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
     public Container PlayfieldContainer => Shortcut.GameplayPlayfieldKeys.Container;
-    
-    
+
+
     [MoonSharpHidden]
     public string GetTexturePath(string path)
     {
@@ -40,7 +40,7 @@ public class ModChartStage
         var path = GetTexturePath(relativePath);
         return AssetLoader.LoadTexture2DFromFile(path);
     }
-    
+
     public Sprite CreateSprite(Texture2D texture2D)
     {
         return new Sprite
@@ -72,5 +72,49 @@ public class ModChartStage
     public AnimatableSprite CreateAnimatableSprite(List<string> framePaths)
     {
         return CreateAnimatableSprite(framePaths.Select(LoadTexture).ToList());
+    }
+
+
+    /// <summary>
+    ///     Width of lane (receptor alone)
+    /// </summary>
+    /// <returns></returns>
+    public float LaneSize => Shortcut.GameplayPlayfieldKeys.LaneSize;
+
+    /// <summary>
+    ///     Padding of receptor
+    /// </summary>
+    /// <returns></returns>
+    public float ReceptorPadding => Shortcut.GameplayPlayfieldKeys.ReceptorPadding;
+
+    /// <summary>
+    ///     Separation between lanes
+    /// </summary>
+    /// <returns></returns>
+    public float LaneSeparationWidth => LaneSize + ReceptorPadding;
+
+    /// <summary>
+    ///     Positions of each receptor
+    /// </summary>
+    /// <returns>Scalable vector (x, y, scale_x, scale_y) for each receptor</returns>
+    public ScalableVector2[] GetReceptorPositions()
+    {
+        var positions = new ScalableVector2[Shortcut.GameplayScreen.Map.GetKeyCount()];
+        for (var i = 0; i < Shortcut.GameplayScreen.Map.GetKeyCount(); i++)
+        {
+            positions[i] = Shortcut.GameplayPlayfieldKeysStage.Receptors[i].Position;
+        }
+
+        return positions;
+    }
+
+    /// <summary>
+    ///     Sets the position of a receptor of a particular lane
+    /// </summary>
+    /// <param name="lane"></param>
+    /// <param name="pos"></param>
+    public void SetReceptorPosition(int lane, ScalableVector2 pos)
+    {
+        Shortcut.GameplayPlayfieldKeysStage.Receptors[lane - 1].Position = pos;
     }
 }
