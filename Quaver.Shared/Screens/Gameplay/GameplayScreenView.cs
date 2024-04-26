@@ -213,8 +213,6 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     Manages one-shot event firing for storyboard
         /// </summary>
         public TriggerManager TriggerManager { get; set; }
-
-        public List<ModChartStateMachine> StoryboardStateMachines { get; set; }
         
         /// <summary>
         ///     The script loaded that controls the storyboard
@@ -249,7 +247,6 @@ namespace Quaver.Shared.Screens.Gameplay
 
             TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
             SegmentManager = new SegmentManager(new ());
-            StoryboardStateMachines = new List<ModChartStateMachine>();
             
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
                 ModChartScript = new ModChartScript(Screen.Map.GetAnimationScriptPath(), this);
@@ -361,10 +358,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 ModChartScript?.Update(time);
                 SegmentManager.Update(time);
                 TriggerManager.Update(time);
-                foreach (var machine in StoryboardStateMachines)
-                {
-                    machine.Update();
-                }
             }
             catch (ScriptRuntimeException e)
             {

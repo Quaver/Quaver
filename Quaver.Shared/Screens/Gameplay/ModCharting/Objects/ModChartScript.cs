@@ -159,6 +159,7 @@ public class ModChartScript
         State.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         State.CurrentTimingPoint = GameplayScreenView.Screen.Map.GetTimingPointAt(State.SongTime);
         State.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+        ModChartStateMachines.RootMachine.Update();
         ModChartEvents.DeferredEventQueue.Dispatch();
     }
 

@@ -1,16 +1,16 @@
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 /// <summary>
-///     The 16 LSB is the specific type, and the rest 48 MSB is the category
+///     The first 32 MSB is the category, and the last 32 LSB is the specific type
 /// </summary>
 public enum ModChartEventType : ulong
 {
     None = 0,
-    Custom = 1 << 16,
+    Custom = 1UL << 32,
     /// <summary>
     ///     Note becoming visible/invisible
     /// </summary>
-    Note = 1 << 17,
+    Note = 1UL << 33,
     NoteEntry,
     NoteLeave,
     NoteDead,
@@ -18,12 +18,14 @@ public enum ModChartEventType : ulong
     /// <summary>
     ///     User inputs something
     /// </summary>
-    Input = 1 << 18,
+    Input = 1UL << 34,
     InputKeyPress,
     InputKeyRelease,
     /// <summary>
     ///     Just queueing to call a function. The first argument will be the closure to call
     /// </summary>
-    Function = 1 << 19,
+    Function = 1UL << 35,
     FunctionCall,
+    StateMachine = 1UL << 36,
+    StateMachineTransition
 }

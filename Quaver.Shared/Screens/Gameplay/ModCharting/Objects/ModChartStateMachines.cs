@@ -16,62 +16,58 @@ public class ModChartStateMachines
         Shortcut = new ElementAccessShortcut(gameplayScreenView);
     }
 
-    public ModChartStateMachine New()
+    public readonly OrthogonalStateMachine RootMachine = new();
+
+    public OrthogonalStateMachine NewOrthogonal(string name = "", StateMachineState parent = default) =>
+        new(name, parent);
+
+    public StateMachine.StateMachine NewMachine(string name = "", StateMachineState entryState = null,
+        StateMachineState parent = default) => new(entryState, name, parent);
+
+    public LuaStateMachineState NewState(string name = "", Closure updater = null, Closure onEnable = null,
+        Closure onDisable = null, StateMachineState parent = default)
     {
-        var machine = new ModChartStateMachine();
-        Shortcut.GameplayScreenView.StoryboardStateMachines.Add(machine);
-        return machine;
+        return new LuaStateMachineState(updater, onEnable, onDisable, name, parent);
     }
 
-    public void Delete(ModChartStateMachine machine)
-    {
-        Shortcut.GameplayScreenView.StoryboardStateMachines.Remove(machine);
-    }
-
-    public LuaStateMachineState NewState(Closure updater, Closure onEnable,
-        Closure onDisable)
-    {
-        return new LuaStateMachineState(updater, onEnable, onDisable);
-    }
-
+    /// <summary>
+    ///     Attempts to change state from one to another
+    ///     This is responsible for calling the respective chain of <see cref="StateMachineState.Leave"/> and <see cref="StateMachineState.Enter"/>,
+    ///     along the path <see cref="originalState"/> ~> LCA ~> <see cref="targetState"/>. <br/>
+    ///     Currently, this method has the time complexity of O(h), where h is the depth of <see cref="originalState"/> <br/>
+    /// </summary>
+    /// <param name="originalState"></param>
+    /// <param name="targetState"></param>
+    /// <exception cref="InvalidOperationException"><see cref="originalState"/> and <see cref="targetState"/> do not share an ancestor</exception>
     public void ChangeState(StateMachineState originalState, StateMachineState targetState)
     {
-        if (StateMachineState.DisjointSetUnion.GetRepresentative(originalState) !=
-            StateMachineState.DisjointSetUnion.GetRepresentative(targetState))
+        // TODO: Use LCA -> RMQ for O(n) preprocessing and O(1) query
+        if (StateMachineState.DisjointSetUnion.IsUnion(originalState, targetState))
         {
             throw new InvalidOperationException(
                 $"Unable to transition from state '{originalState.Name}' to '{targetState.Name}' because they do not share an ancestor state machine");
         }
 
-        var currentState = originalState.Parent;
+        if (originalState == targetState) return;
+
+        var currentState = originalState;
         while (currentState != null)
         {
             currentState.LastLcaSearchTarget = originalState;
+            if (currentState.Parent != null)
+                currentState.Parent.LastLcaSearchChild = currentState;
             currentState = currentState.Parent;
         }
 
         // Find the LCA of two states (Least Common Ancestor)
         var lca = targetState;
-        // Maintain a stack to call a sequence of OnEntry()
-        var enterSequence = new Stack<StateMachineState>();
         while (lca != null && lca.LastLcaSearchTarget != originalState)
         {
-            enterSequence.Push(lca);
             lca = lca.Parent;
         }
 
         // Call a sequence of OnLeave()
-        currentState = originalState;
-        while (currentState != lca)
-        {
-            currentState.OnLeave();
-            currentState = currentState.Parent;
-        }
-
-        // Call the sequence of OnEnter()
-        while (enterSequence.TryPop(out var state))
-        {
-            state.OnEnter();
-        }
+        lca?.LastLcaSearchChild.Leave();
+        targetState.Enter();
     }
 }
