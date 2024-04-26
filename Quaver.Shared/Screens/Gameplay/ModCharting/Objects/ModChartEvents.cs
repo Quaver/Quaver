@@ -92,7 +92,7 @@ public class ModChartEvents
     {
         Shortcut = new ElementAccessShortcut(gameplayScreenView);
         DeferredEventQueue = new ModChartDeferredEventQueue(this);
-        this[ModChartEventType.Function][ModChartEventType.FunctionCall].OnInvoke += args =>
+        this[ModChartEventType.Function][ModChartEventType.FunctionCall].OnInvoke += (type, args) =>
         {
             if (args.Length < 1) return;
             var closure = (Closure)args[0];
