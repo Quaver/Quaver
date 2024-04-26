@@ -5,7 +5,6 @@ using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
 
-// TODO decide if this should be included
 public class DrawableProxy
 {
     private readonly Drawable _drawable;
@@ -16,19 +15,26 @@ public class DrawableProxy
         _drawable = drawable;
     }
 
-    public Drawable Place(ScalableVector2 coords)
+    public Drawable MoveTo(ScalableVector2 coords)
     {
         Position = coords;
         return _drawable;
     }
 
-    public Drawable Place(Vector2 coords)
+    public Drawable MoveTo(Vector2 coords)
     {
         Position = new ScalableVector2(coords.X, coords.Y);
         return _drawable;
     }
+    
+    public Drawable Resize(Vector2 size)
+    {
+        Width = size.X;
+        Height = size.Y;
+        return _drawable;
+    }
 
-    public Drawable Move(Vector2 coords)
+    public Drawable Translate(Vector2 coords)
     {
         Position = new ScalableVector2(Position.X.Value + coords.X, Position.Y.Value + coords.Y, Position.X.Scale,
             Position.Y.Scale);
