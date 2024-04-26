@@ -15,11 +15,11 @@ public class LuaCustomTriggerPayload: ITriggerPayload
 
     public void Trigger(ValueVertex<ITriggerPayload> valueVertex)
     {
-        TriggerClosure?.Call(valueVertex);
+        TriggerClosure?.SafeCall(valueVertex);
     }
 
     public void Undo(ValueVertex<ITriggerPayload> valueVertex)
     {
-        UndoClosure?.Call(valueVertex);
+        UndoClosure?.SafeCall(valueVertex);
     }
 }

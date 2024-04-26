@@ -15,6 +15,6 @@ public class LuaCustomSegmentPayload : ISegmentPayload
     [MoonSharpHidden]
     public void Update(float progress, Segment segment)
     {
-        Updater.Call(progress, segment);
+        Updater.SafeCall(progress, segment);
     }
 }

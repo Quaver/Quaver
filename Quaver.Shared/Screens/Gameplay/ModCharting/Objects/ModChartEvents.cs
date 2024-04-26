@@ -150,7 +150,7 @@ public class ModChartEvents
         {
             if (args.Length < 1) return;
             var closure = (Closure)args[0];
-            closure.Call(args[1..]);
+            closure.SafeCall(args[1..]);
         };
         HitObjectManagerKeys.RenderedHitObjectInfoAdded += CallNoteEntry;
         InputManager.OnKeyPress += CallOnKeyPress;

@@ -123,7 +123,7 @@ public class ModChartScript
         WorkingScript.Globals["event_type"] = typeof(ModChartEventType);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
-        try
+        ModChartScriptHelper.TryPerform(() =>
         {
             if (IsResource)
             {
@@ -138,19 +138,7 @@ public class ModChartScript
             // Update state at start
             Update(int.MinValue);
             WorkingScript.DoString(ScriptText, codeFriendlyName: Path.GetFileName(FilePath));
-        }
-        catch (ScriptRuntimeException e)
-        {
-            Logger.Error(e.DecoratedMessage, LogType.Runtime);
-        }
-        catch (SyntaxErrorException e)
-        {
-            Logger.Error(e.DecoratedMessage, LogType.Runtime);
-        }
-        catch (Exception e)
-        {
-            Logger.Error(e, LogType.Runtime);
-        }
+        });
     }
 
     public void Update(int time)

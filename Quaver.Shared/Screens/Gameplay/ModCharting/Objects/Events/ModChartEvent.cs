@@ -28,18 +28,7 @@ public class ModChartEvent
         OnInvoke?.Invoke(eventType, p);
         foreach (var closure in _closures)
         {
-            try
-            {
-                closure.Call(eventType, p);
-            }
-            catch (ScriptRuntimeException e)
-            {
-                Logger.Error(e.DecoratedMessage, LogType.Runtime);
-            }
-            catch (SyntaxErrorException e)
-            {
-                Logger.Error(e.DecoratedMessage, LogType.Runtime);
-            }
+            closure.SafeCall(eventType, p);
         }
     }
 }

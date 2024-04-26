@@ -72,8 +72,8 @@ public class ModChartActionManager
                 time,
                 interval,
                 count,
-                v => trigger.Call(v),
-                v => undoTrigger?.Call(v)),
+                v => trigger.SafeCall(v),
+                v => undoTrigger?.SafeCall(v)),
             IsDynamic = false,
             Time = time
         })
