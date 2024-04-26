@@ -1,8 +1,12 @@
+using System;
+
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 /// <summary>
-///     The first 32 MSB is the category, and the last 32 LSB is the specific type
+///     The first 32 MSB is the category, and the last 32 LSB is the specific type.
+///     When the last 32 LSB is not set (i.e. 0), it specifies the entire category of events.
 /// </summary>
+[Flags]
 public enum ModChartEventType : ulong
 {
     None = 0,

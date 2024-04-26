@@ -40,11 +40,26 @@ public class ModChartEvents
         this[eventType].Invoke(eventType, args);
     }
 
+    /// <summary>
+    ///     Queues an event to be processed at the end of <see cref="ModChartScript.Update"/>.
+    /// </summary>
+    /// <param name="eventInstance"></param>
     public void Enqueue(ModChartEventInstance eventInstance) => DeferredEventQueue.Enqueue(eventInstance);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Enqueue(Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.ModChartEventInstance)"/>
+    /// <param name="type"></param>
+    /// <param name="args"></param>
     public void Enqueue(ModChartEventType type, params object[] args) =>
         DeferredEventQueue.Enqueue(new ModChartEventInstance(type, args));
 
+    /// <summary>
+    ///     Queues a function call to be invoked at the end of <see cref="ModChartScript.Update"/>.
+    /// </summary>
+    /// <param name="closure">The lua function to call</param>
+    /// <param name="args">The arguments of the function</param>
     public void Enqueue(Closure closure, params object[] args) => Enqueue(new ModChartEventInstance(
         ModChartEventType.FunctionCall,
         new object[] { closure }.Concat(args).ToArray()));
@@ -70,6 +85,36 @@ public class ModChartEvents
         Invoke(ModChartEventType.InputKeyRelease, info, pressTime, judgement);
     }
 
+    /// <summary>
+    ///     Subscribes to a particular event, or the whole category of events.<br/>
+    ///     The function has the signature <c>function (type: event_types, args: object[])</c>
+    /// </summary>
+    /// <param name="eventType"></param>
+    /// <param name="closure"></param>
+    /// <example>
+    /// The following lua code subscribes a closure to a category:
+    /// <code language="lua">
+    /// <![CDATA[
+    ///     function noteEvents(type, args)
+    ///         print("Some note related events are triggered, namely " .. type)
+    ///     end
+    ///     events.subscribe(event_types.note, noteEvents)
+    /// ]]>
+    /// </code>
+    /// The following lua code subscribes a closure to a specific type of event, under a specified category:
+    /// <code language="lua">
+    /// <![CDATA[
+    ///     function onNoteEntry(type, args)
+    ///         hitObject = args[1]
+    ///         print("A note has become visible in the playfield at " .. hitObject.startTime)
+    ///     end
+    ///     events.subscribe(event_types.noteEntry, onNoteEntry)
+    /// ]]>
+    /// </code>
+    /// </example>
+    /// <seealso cref="ModChartEventType"/>
+    /// <seealso cref="ModChartEvent"/>
+    /// <seealso cref="ModChartCategorizedEvent"/>
     public void Subscribe(ModChartEventType eventType, Closure closure)
     {
         var (category, specificType) = eventType;
@@ -79,6 +124,15 @@ public class ModChartEvents
             this[category][specificType].Add(closure);
     }
 
+    /// <summary>
+    ///     Unsubscribes to a particular event, or the whole category of events
+    /// </summary>
+    /// <param name="eventType"></param>
+    /// <param name="closure"></param>
+    /// <seealso cref="Subscribe"/>
+    /// <seealso cref="ModChartEventType"/>
+    /// <seealso cref="ModChartEvent"/>
+    /// <seealso cref="ModChartCategorizedEvent"/>
     public void Unsubscribe(ModChartEventType eventType, Closure closure)
     {
         var (category, specificType) = eventType;
