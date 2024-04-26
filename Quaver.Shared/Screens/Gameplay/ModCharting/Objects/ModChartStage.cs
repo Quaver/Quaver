@@ -13,11 +13,11 @@ using Wobble.Managers;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartSprites
+public class ModChartStage
 {
     [MoonSharpVisible(false)] public readonly ElementAccessShortcut Shortcut;
 
-    public ModChartSprites(GameplayScreenView gameplayScreenView)
+    public ModChartStage(GameplayScreenView gameplayScreenView)
     {
         Shortcut = new ElementAccessShortcut(gameplayScreenView);
     }

@@ -43,7 +43,7 @@ public class ModChartScript
 
     public ModChartConstants ModChartConstants { get; set; }
 
-    public ModChartSprites ModChartSprites { get; set; }
+    public ModChartStage ModChartStage { get; set; }
     public ModChartNotes ModChartNotes { get; set; }
     
     public ModChartEvents ModChartEvents { get; set; }
@@ -64,7 +64,7 @@ public class ModChartScript
 
         ModChartConstants = new ModChartConstants();
 
-        ModChartSprites = new ModChartSprites(screenView);
+        ModChartStage = new ModChartStage(screenView);
 
         ModChartNotes = new ModChartNotes(screenView);
 
@@ -108,12 +108,12 @@ public class ModChartScript
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
         WorkingScript.Globals["actions"] = ActionManager;
-        WorkingScript.Globals["states"] = State;
+        WorkingScript.Globals["state"] = State;
         WorkingScript.Globals["tweens"] = TweenSetters;
         WorkingScript.Globals["easing"] = typeof(Easing);
         WorkingScript.Globals["constants"] = ModChartConstants;
         WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
-        WorkingScript.Globals["sprites"] = ModChartSprites;
+        WorkingScript.Globals["stage"] = ModChartStage;
         WorkingScript.Globals["notes"] = ModChartNotes;
         WorkingScript.Globals["sm"] = ModChartStateMachines;
         WorkingScript.Globals["fonts"] = typeof(Fonts);
