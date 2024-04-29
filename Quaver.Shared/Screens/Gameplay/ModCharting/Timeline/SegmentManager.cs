@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
@@ -7,8 +9,10 @@ public class SegmentManager : IValueChangeManager
     private readonly Dictionary<int, Segment> _segments;
     private readonly List<ValueVertex<ISegmentPayload>> _vertices = new();
     private int _currentIndex;
+    private int _currentTime;
     private readonly Dictionary<int, Segment> _activeSegments = new();
     private int _nextId;
+    private ModChartEvents _modChartEvents;
 
     public int GenerateNextId()
     {
@@ -19,6 +23,27 @@ public class SegmentManager : IValueChangeManager
     {
         _segments = segments;
         GenerateVertices();
+    }
+
+    public void SetupEvents(ModChartEvents modChartEvents)
+    {
+        _modChartEvents = modChartEvents;
+        var timelineCategoryEvent = modChartEvents[ModChartEventType.Timeline];
+        timelineCategoryEvent[ModChartEventType.TimelineAddSegment].OnInvoke += (type, args) =>
+        {
+            var segment = args[0] as Segment;
+            Add(segment);
+        };
+        timelineCategoryEvent[ModChartEventType.TimelineRemoveSegment].OnInvoke += (type, args) =>
+        {
+            var segment = args[0] as Segment;
+            Remove(segment);
+        };
+        timelineCategoryEvent[ModChartEventType.TimelineUpdateSegment].OnInvoke += (type, args) =>
+        {
+            var segment = args[0] as Segment;
+            UpdateSegment(segment);
+        };
     }
 
     public void GenerateVertices()
@@ -34,42 +59,52 @@ public class SegmentManager : IValueChangeManager
         _currentIndex = 0;
     }
 
-    private void UpdateIndex(int curTime)
+    private void UpdateIndex()
     {
         if (_vertices.Count == 0) return;
-        if (curTime < _vertices[0].Time)
+        // We have not yet reached the first vertex
+        if (_currentTime < _vertices[0].Time)
         {
             _currentIndex = 0;
             _activeSegments.Clear();
             return;
         }
 
-
-        while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
+        // Going forward
+        while (_currentIndex < _vertices.Count && _currentTime > _vertices[_currentIndex].Time)
         {
-            AlternateVertex(_vertices[_currentIndex], 1);
+            AlternateVertex(_vertices[_currentIndex], 0, 1);
 
             _currentIndex++;
         }
         if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
-        while (_currentIndex > 0 && curTime < _vertices[_currentIndex - 1].Time)
+        // Going backward
+        while (_currentIndex > 0 && _currentTime < _vertices[_currentIndex - 1].Time)
         {
             _currentIndex--;
-            AlternateVertex(_vertices[_currentIndex], 0);
+            AlternateVertex(_vertices[_currentIndex], 1, 0);
         }
     }
 
-    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float progress = -1)
+    /// <summary>
+    ///     Alternates the vertex's presence in the active segment list
+    /// </summary>
+    /// <param name="vertex"></param>
+    /// <param name="enterProgress"></param>
+    /// <param name="leaveProgress"></param>
+    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float enterProgress = -1, float leaveProgress = -1)
     {
         if (!_vertices.Contains(vertex)) return;
         var segment = _segments[vertex.Id];
+        var progress = enterProgress;
         if (!_activeSegments.TryAdd(vertex.Id, segment))
         {
             _activeSegments.Remove(vertex.Id);
+            progress = leaveProgress;
             if (segment.IsDynamic)
             {
-                Remove(segment);
+                _modChartEvents.Enqueue(ModChartEventType.TimelineRemoveSegment, segment);
             }
         }
 
@@ -78,10 +113,11 @@ public class SegmentManager : IValueChangeManager
 
     public void Update(int curTime)
     {
-        UpdateIndex(curTime);
+        _currentTime = curTime;
+        UpdateIndex();
         foreach (var (id, segment) in _activeSegments)
         {
-            segment.Payload.Update(segment.Progress(curTime), segment);
+            segment.Payload.Update(segment.Progress(_currentTime), segment);
         }
     }
 
@@ -90,10 +126,13 @@ public class SegmentManager : IValueChangeManager
         var insert = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
         if (insert < 0)
             insert = ~insert;
+        else
+            return false;
 
-        if (_currentIndex < _vertices.Count && insert <= _currentIndex)
+        // The timeline has already passed the time of vertex
+        if ( _currentTime > vertex.Time)
         {
-            AlternateVertex(vertex, 1);
+            AlternateVertex(vertex, 0, 1);
             _currentIndex++;
         }
 
@@ -105,15 +144,12 @@ public class SegmentManager : IValueChangeManager
     {
         var index = _vertices.BinarySearch(vertex, ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
         if (index < 0) return false;
-        // var index = _vertices.FindIndex(v => v.Time == vertex.Time && v.Segment.Id == vertex.Segment.Id);
-        // if (index == -1) return;
-        if (_currentIndex > 0 && index <= _currentIndex)
+        // The timeline has already passed the time of vertex
+        if (_currentTime > vertex.Time)
         {
-            _currentIndex--;
-        }
-        else
-        {
-            AlternateVertex(vertex, 0);
+            AlternateVertex(vertex, 0, 1);
+            if (_currentIndex > 0)
+                _currentIndex--;
         }
 
         _vertices.RemoveAt(index);

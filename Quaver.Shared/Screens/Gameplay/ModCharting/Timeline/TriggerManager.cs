@@ -7,6 +7,7 @@ public class TriggerManager : IValueChangeManager
     private readonly Dictionary<int, ValueVertex<ITriggerPayload>> _vertexDictionary = new();
     private readonly List<ValueVertex<ITriggerPayload>> _vertices;
     private int _currentIndex;
+    private int _currentTime;
     private int _nextId;
 
     public int GenerateNextId()
@@ -20,7 +21,7 @@ public class TriggerManager : IValueChangeManager
         _vertices.Sort(ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
     }
 
-    private void UpdateIndex(int curTime)
+    private void UpdateIndex()
     {
         if (_vertices.Count == 0) return;
         // if (curTime < _vertices[0].Time)
@@ -30,7 +31,7 @@ public class TriggerManager : IValueChangeManager
         // }
 
 
-        while (_currentIndex < _vertices.Count && curTime > _vertices[_currentIndex].Time)
+        while (_currentIndex < _vertices.Count && _currentTime > _vertices[_currentIndex].Time)
         {
             var vertex = _vertices[_currentIndex];
             vertex.Payload.Trigger(vertex);
@@ -47,7 +48,7 @@ public class TriggerManager : IValueChangeManager
         
         if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
-        while (_currentIndex > 0 && curTime < _vertices[_currentIndex - 1].Time)
+        while (_currentIndex > 0 && _currentTime < _vertices[_currentIndex - 1].Time)
         {
             _currentIndex--;
             _vertices[_currentIndex].Payload.Undo(_vertices[_currentIndex]);
@@ -56,7 +57,8 @@ public class TriggerManager : IValueChangeManager
 
     public void Update(int curTime)
     {
-        UpdateIndex(curTime);
+        _currentTime = curTime;
+        UpdateIndex();
     }
 
     public bool UpdateVertex(ValueVertex<ITriggerPayload> vertex, bool trigger = true)
@@ -72,8 +74,10 @@ public class TriggerManager : IValueChangeManager
         var insert = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
         if (insert < 0)
             insert = ~insert;
+        else
+            return false;
 
-        if (_currentIndex <= _vertices.Count && insert < _currentIndex)
+        if (_currentTime > vertex.Time)
         {
             if (trigger) vertex.Payload.Trigger(vertex);
             if (vertex.IsDynamic)
@@ -99,9 +103,10 @@ public class TriggerManager : IValueChangeManager
         if (vertex.Id >= _nextId) return false; // No
         var index = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
         if (index < 0) return false;
-        if (_currentIndex > 0 && index < _currentIndex)
+        if (_currentTime > vertex.Time)
         {
-            _currentIndex--;
+            if (_currentIndex > 0)
+                _currentIndex--;
             if (trigger) vertex.Payload.Undo(vertex);
         }
 
