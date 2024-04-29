@@ -17,9 +17,9 @@ public class ModChartStage
 {
     [MoonSharpVisible(false)] public readonly ElementAccessShortcut Shortcut;
 
-    public ModChartStage(GameplayScreenView gameplayScreenView)
+    public ModChartStage(ElementAccessShortcut shortcut)
     {
-        Shortcut = new ElementAccessShortcut(gameplayScreenView);
+        Shortcut = shortcut;
     }
 
     public Sprite Receptor(int lane) => Shortcut.GameplayPlayfieldKeysStage.Receptors[lane - 1];

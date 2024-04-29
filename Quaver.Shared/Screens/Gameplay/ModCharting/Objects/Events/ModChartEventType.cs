@@ -3,8 +3,9 @@ using System;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 /// <summary>
-///     The first 32 MSB is the category, and the last 32 LSB is the specific type.
-///     When the last 32 LSB is not set (i.e. 0), it specifies the entire category of events.
+///     The first 16 MSB is the category, and the last 32 LSB is the specific type.
+///     Bits 16 to 31 are reserved for future use
+///     When the last 16 LSB is not set (i.e. 0), it specifies the entire category of events.
 /// </summary>
 [Flags]
 public enum ModChartEventType : ulong
@@ -31,5 +32,12 @@ public enum ModChartEventType : ulong
     Function = 1UL << 35,
     FunctionCall,
     StateMachine = 1UL << 36,
-    StateMachineTransition
+    StateMachineTransition,
+    Timeline = 1UL << 37,
+    TimelineAddSegment,
+    TimelineRemoveSegment,
+    TimelineUpdateSegment,
+    TimelineTrigger,
+    TimelineAddTrigger,
+    TimelineRemoveTrigger
 }

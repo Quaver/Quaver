@@ -6,7 +6,7 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 public static class EventHelper
 {
-    public const int SpecificTypeWidth = 32;
+    public const int SpecificTypeWidth = 16;
     public const ulong EventSpecificTypeMask = (1UL << SpecificTypeWidth) - 1;
 
     public static int GetSpecificType(this ModChartEventType eventType)

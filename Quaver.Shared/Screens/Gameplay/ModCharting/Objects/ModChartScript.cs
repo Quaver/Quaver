@@ -32,10 +32,10 @@ public class ModChartScript
     protected string FilePath { get; set; }
     protected bool IsResource { get; set; }
     protected string ScriptText { get; set; }
-    
+
     protected ElementAccessShortcut Shortcut { get; }
     protected ModChartState State { get; set; }
-    
+
 
     protected GameplayScreenView GameplayScreenView { get; set; }
     public ModChartTimeline Timeline { get; set; }
@@ -45,9 +45,9 @@ public class ModChartScript
 
     public ModChartStage ModChartStage { get; set; }
     public ModChartNotes ModChartNotes { get; set; }
-    
+
     public ModChartEvents ModChartEvents { get; set; }
-    
+
     public ModChartStateMachines ModChartStateMachines { get; set; }
 
     public ModChartScript(string path, GameplayScreenView screenView)
@@ -55,22 +55,24 @@ public class ModChartScript
         FilePath = path;
 
         GameplayScreenView = screenView;
-        
-        Shortcut = new ElementAccessShortcut(screenView);
-        
-        Timeline = new ModChartTimeline(screenView);
 
-        TweenSetters = new TweenSetters(screenView);
+        Shortcut = new ElementAccessShortcut(screenView, this);
+
+        ModChartEvents = new ModChartEvents(Shortcut);
+
+        Timeline = new ModChartTimeline(Shortcut);
+        screenView.SegmentManager.SetupEvents(ModChartEvents);
+
+        TweenSetters = new TweenSetters(Shortcut);
 
         ModChartConstants = new ModChartConstants();
 
-        ModChartStage = new ModChartStage(screenView);
+        ModChartStage = new ModChartStage(Shortcut);
 
-        ModChartNotes = new ModChartNotes(screenView);
+        ModChartNotes = new ModChartNotes(Shortcut);
 
-        ModChartEvents = new ModChartEvents(screenView);
 
-        ModChartStateMachines = new ModChartStateMachines(screenView);
+        ModChartStateMachines = new ModChartStateMachines(Shortcut);
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
@@ -94,7 +96,7 @@ public class ModChartScript
         UserData.RegisterProxyType<GameplayHitObjectKeysProxy, GameplayHitObjectKeys>(s =>
             new GameplayHitObjectKeysProxy(s));
         UserData.RegisterProxyType<GameplayHitObjectKeysInfoProxy, GameplayHitObjectKeysInfo>(s =>
-            new GameplayHitObjectKeysInfoProxy(s), friendlyName:"GameplayHitObjectKeys");
+            new GameplayHitObjectKeysInfoProxy(s), friendlyName: "GameplayHitObjectKeys");
 
 
         RegisterAllVectors();
@@ -224,7 +226,7 @@ public class ModChartScript
                 return dynVal;
             }
         );
-        
+
         // Color
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Color),
             dynVal =>

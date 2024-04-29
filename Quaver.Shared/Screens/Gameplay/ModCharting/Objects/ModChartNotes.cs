@@ -12,9 +12,9 @@ public class ModChartNotes
     public HitObjectManagerKeys HitObjectManagerKeys =>
         (HitObjectManagerKeys)Shortcut.GameplayScreen.Ruleset.HitObjectManager;
 
-    public ModChartNotes(GameplayScreenView screenView)
+    public ModChartNotes(ElementAccessShortcut shortcut)
     {
-        Shortcut = new ElementAccessShortcut(screenView);
+        Shortcut = shortcut;
     }
 
     public List<GameplayHitObjectKeysInfo> HitObjectInfos => HitObjectManagerKeys.HitObjectInfos;

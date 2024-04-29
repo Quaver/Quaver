@@ -142,9 +142,9 @@ public class ModChartEvents
             this[category][specificType].Remove(closure);
     }
 
-    public ModChartEvents(GameplayScreenView gameplayScreenView)
+    public ModChartEvents(ElementAccessShortcut shortcut)
     {
-        Shortcut = new ElementAccessShortcut(gameplayScreenView);
+        Shortcut = shortcut;
         DeferredEventQueue = new ModChartDeferredEventQueue(this);
         this[ModChartEventType.Function][ModChartEventType.FunctionCall].OnInvoke += (type, args) =>
         {

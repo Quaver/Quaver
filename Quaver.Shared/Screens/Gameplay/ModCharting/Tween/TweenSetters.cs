@@ -12,9 +12,9 @@ public class TweenSetters
 {
     [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
 
-    public TweenSetters(GameplayScreenView gameplayScreenView)
+    public TweenSetters(ElementAccessShortcut shortcut)
     {
-        Shortcut = new ElementAccessShortcut(gameplayScreenView);
+        Shortcut = shortcut;
     }
 
     public TweenPayload.SetterDelegate X(Drawable drawable)

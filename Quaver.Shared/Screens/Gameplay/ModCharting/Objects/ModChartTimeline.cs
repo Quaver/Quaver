@@ -1,5 +1,6 @@
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Wobble.Graphics;
@@ -13,9 +14,9 @@ public class ModChartTimeline
 {
     [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
 
-    public ModChartTimeline(GameplayScreenView gameplayScreenView)
+    public ModChartTimeline(ElementAccessShortcut shortcut)
     {
-        Shortcut = new ElementAccessShortcut(gameplayScreenView);
+        Shortcut = shortcut;
     }
 
     /// <summary>
@@ -122,7 +123,7 @@ public class ModChartTimeline
         bool isDynamic = false)
     {
         if (id == -1) id = Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
-        return Shortcut.GameplayScreenView.SegmentManager.UpdateSegment(
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateSegment,
             new Segment(id, startTime, endTime,
                 new TweenPayload
                 {
@@ -130,9 +131,8 @@ public class ModChartTimeline
                     StartValue = startValue,
                     EndValue = endValue,
                     Setter = setter
-                }, isDynamic))
-            ? id
-            : -1;
+                }, isDynamic));
+        return id;
     }
 
     /// <summary>

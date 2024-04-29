@@ -11,9 +11,9 @@ public class ModChartStateMachines
 {
     [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut { get; }
 
-    public ModChartStateMachines(GameplayScreenView gameplayScreenView)
+    public ModChartStateMachines(ElementAccessShortcut shortcut)
     {
-        Shortcut = new ElementAccessShortcut(gameplayScreenView);
+        Shortcut = shortcut;
     }
 
     public readonly OrthogonalStateMachine RootMachine = new();
