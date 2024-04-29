@@ -109,20 +109,20 @@ public class ModChartScript
         State = new ModChartState();
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
-        WorkingScript.Globals["timeline"] = Timeline;
-        WorkingScript.Globals["state"] = State;
-        WorkingScript.Globals["tweens"] = TweenSetters;
-        WorkingScript.Globals["easing"] = typeof(Easing);
-        WorkingScript.Globals["constants"] = ModChartConstants;
-        WorkingScript.Globals["map"] = GameplayScreenView.Screen.Map;
-        WorkingScript.Globals["stage"] = ModChartStage;
-        WorkingScript.Globals["notes"] = ModChartNotes;
-        WorkingScript.Globals["sm"] = ModChartStateMachines;
-        WorkingScript.Globals["fonts"] = typeof(Fonts);
-        WorkingScript.Globals["events"] = ModChartEvents;
-        WorkingScript.Globals["alignment"] = typeof(Alignment);
-        WorkingScript.Globals["direction"] = typeof(Direction);
-        WorkingScript.Globals["event_type"] = typeof(ModChartEventType);
+        WorkingScript.Globals["Timeline"] = Timeline;
+        WorkingScript.Globals["State"] = State;
+        WorkingScript.Globals["Tweens"] = TweenSetters;
+        WorkingScript.Globals["Easing"] = typeof(Easing);
+        WorkingScript.Globals["Constants"] = ModChartConstants;
+        WorkingScript.Globals["Map"] = GameplayScreenView.Screen.Map;
+        WorkingScript.Globals["Stage"] = ModChartStage;
+        WorkingScript.Globals["Notes"] = ModChartNotes;
+        WorkingScript.Globals["SM"] = ModChartStateMachines;
+        WorkingScript.Globals["Fonts"] = typeof(Fonts);
+        WorkingScript.Globals["Events"] = ModChartEvents;
+        WorkingScript.Globals["Alignment"] = typeof(Alignment);
+        WorkingScript.Globals["Direction"] = typeof(Direction);
+        WorkingScript.Globals["EventType"] = typeof(ModChartEventType);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>
