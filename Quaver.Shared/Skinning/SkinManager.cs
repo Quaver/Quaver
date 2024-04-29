@@ -129,6 +129,7 @@ namespace Quaver.Shared.Skinning
                         {
                             var newScreen = new GameplayScreen(gameplayScreen.Map, gameplayScreen.MapHash,
                                 gameplayScreen.LocalScores, gameplayScreen.LoadedReplay,
+                                spectatorClient: gameplayScreen.SpectatorClient,
                                 useExistingAudioTime: true);
                             newScreen.HandleReplaySeeking();
                             return newScreen;
