@@ -39,5 +39,6 @@ public enum ModChartEventType : ulong
     TimelineUpdateSegment,
     TimelineTrigger,
     TimelineAddTrigger,
-    TimelineRemoveTrigger
+    TimelineRemoveTrigger,
+    TimelineUpdateTrigger
 }

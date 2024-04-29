@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
@@ -6,9 +8,10 @@ public class TriggerManager : IValueChangeManager
 {
     private readonly Dictionary<int, ValueVertex<ITriggerPayload>> _vertexDictionary = new();
     private readonly List<ValueVertex<ITriggerPayload>> _vertices;
-    private int _currentIndex;
+    private int _currentIndex = -1;
     private int _currentTime;
     private int _nextId;
+    private ModChartEvents _modChartEvents;
 
     public int GenerateNextId()
     {
@@ -24,35 +27,47 @@ public class TriggerManager : IValueChangeManager
     private void UpdateIndex()
     {
         if (_vertices.Count == 0) return;
-        // if (curTime < _vertices[0].Time)
-        // {
-        //     _currentIndex = 0;
-        //     return;
-        // }
 
-
-        while (_currentIndex < _vertices.Count && _currentTime > _vertices[_currentIndex].Time)
+        while (_currentIndex < _vertices.Count - 1 && _currentTime > _vertices[_currentIndex + 1].Time)
         {
+            _currentIndex++;
             var vertex = _vertices[_currentIndex];
             vertex.Payload.Trigger(vertex);
             if (vertex.IsDynamic)
             {
-                _vertexDictionary.Remove(vertex.Id);
-                _vertices.RemoveAt(_currentIndex);
-            }
-            else if (vertex == _vertices[_currentIndex]) // The vertex could update its own trigger
-            {
-                _currentIndex++;
+                _modChartEvents.Enqueue(ModChartEventType.TimelineRemoveTrigger, vertex, false);
             }
         }
-        
-        if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
-        while (_currentIndex > 0 && _currentTime < _vertices[_currentIndex - 1].Time)
+        while (_currentIndex >= 0 && _currentTime < _vertices[_currentIndex].Time)
         {
-            _currentIndex--;
             _vertices[_currentIndex].Payload.Undo(_vertices[_currentIndex]);
+            _currentIndex--;
         }
+    }
+
+    public void SetupEvents(ModChartEvents modChartEvents)
+    {
+        _modChartEvents = modChartEvents;
+        var timelineCategoryEvent = modChartEvents[ModChartEventType.Timeline];
+        timelineCategoryEvent[ModChartEventType.TimelineAddTrigger].OnInvoke += (type, args) =>
+        {
+            var vertex = args[0] as ValueVertex<ITriggerPayload>;
+            var trigger = args.Length <= 1 || (bool)args[1];
+            AddVertex(vertex, trigger);
+        };
+        timelineCategoryEvent[ModChartEventType.TimelineRemoveTrigger].OnInvoke += (type, args) =>
+        {
+            var vertex = args[0] as ValueVertex<ITriggerPayload>;
+            var trigger = args.Length <= 1 || (bool)args[1];
+            RemoveVertex(vertex, trigger);
+        };
+        timelineCategoryEvent[ModChartEventType.TimelineUpdateTrigger].OnInvoke += (type, args) =>
+        {
+            var vertex = args[0] as ValueVertex<ITriggerPayload>;
+            var trigger = args.Length <= 1 || (bool)args[1];
+            UpdateVertex(vertex, trigger);
+        };
     }
 
     public void Update(int curTime)
@@ -105,8 +120,7 @@ public class TriggerManager : IValueChangeManager
         if (index < 0) return false;
         if (_currentTime > vertex.Time)
         {
-            if (_currentIndex > 0)
-                _currentIndex--;
+            _currentIndex--;
             if (trigger) vertex.Payload.Undo(vertex);
         }
 

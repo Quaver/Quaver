@@ -62,6 +62,7 @@ public class ModChartScript
 
         Timeline = new ModChartTimeline(Shortcut);
         screenView.SegmentManager.SetupEvents(ModChartEvents);
+        screenView.TriggerManager.SetupEvents(ModChartEvents);
 
         TweenSetters = new TweenSetters(Shortcut);
 

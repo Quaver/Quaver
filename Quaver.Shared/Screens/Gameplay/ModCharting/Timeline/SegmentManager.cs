@@ -8,7 +8,7 @@ public class SegmentManager : IValueChangeManager
 {
     private readonly Dictionary<int, Segment> _segments;
     private readonly List<ValueVertex<ISegmentPayload>> _vertices = new();
-    private int _currentIndex;
+    private int _currentIndex = -1;
     private int _currentTime;
     private readonly Dictionary<int, Segment> _activeSegments = new();
     private int _nextId;
@@ -56,7 +56,7 @@ public class SegmentManager : IValueChangeManager
         }
 
         _vertices.Sort(ValueVertex<ISegmentPayload>.TimeSegmentIdComparer);
-        _currentIndex = 0;
+        _currentIndex = -1;
     }
 
     private void UpdateIndex()
@@ -65,25 +65,23 @@ public class SegmentManager : IValueChangeManager
         // We have not yet reached the first vertex
         if (_currentTime < _vertices[0].Time)
         {
-            _currentIndex = 0;
+            _currentIndex = -1;
             _activeSegments.Clear();
             return;
         }
 
         // Going forward
-        while (_currentIndex < _vertices.Count && _currentTime > _vertices[_currentIndex].Time)
+        while (_currentIndex < _vertices.Count - 1 && _currentTime > _vertices[_currentIndex + 1].Time)
         {
-            AlternateVertex(_vertices[_currentIndex], 0, 1);
-
             _currentIndex++;
+            AlternateVertex(_vertices[_currentIndex], 0, 1);
         }
-        if (_currentIndex > _vertices.Count) _currentIndex = _vertices.Count;
 
         // Going backward
-        while (_currentIndex > 0 && _currentTime < _vertices[_currentIndex - 1].Time)
+        while (_currentIndex >= 0 && _currentTime < _vertices[_currentIndex].Time)
         {
-            _currentIndex--;
             AlternateVertex(_vertices[_currentIndex], 1, 0);
+            _currentIndex--;
         }
     }
 
@@ -148,8 +146,7 @@ public class SegmentManager : IValueChangeManager
         if (_currentTime > vertex.Time)
         {
             AlternateVertex(vertex, 0, 1);
-            if (_currentIndex > 0)
-                _currentIndex--;
+            _currentIndex--;
         }
 
         _vertices.RemoveAt(index);
