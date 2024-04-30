@@ -45,7 +45,8 @@ public class ModChartStage
     {
         return new Sprite
         {
-            Image = texture2D
+            Image = texture2D,
+            Size = new ScalableVector2(texture2D.Width, texture2D.Height)
         };
     }
 
