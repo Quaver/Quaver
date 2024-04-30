@@ -49,20 +49,19 @@ public class TriggerManager : IValueChangeManager
     public void SetupEvents(ModChartEvents modChartEvents)
     {
         _modChartEvents = modChartEvents;
-        var timelineCategoryEvent = modChartEvents[ModChartEventType.Timeline];
-        timelineCategoryEvent[ModChartEventType.TimelineAddTrigger].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineAddTrigger].OnInvoke += (type, args) =>
         {
             var vertex = args[0] as ValueVertex<ITriggerPayload>;
             var trigger = args.Length <= 1 || (bool)args[1];
             AddVertex(vertex, trigger);
         };
-        timelineCategoryEvent[ModChartEventType.TimelineRemoveTrigger].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineRemoveTrigger].OnInvoke += (type, args) =>
         {
             var vertex = args[0] as ValueVertex<ITriggerPayload>;
             var trigger = args.Length <= 1 || (bool)args[1];
             RemoveVertex(vertex, trigger);
         };
-        timelineCategoryEvent[ModChartEventType.TimelineUpdateTrigger].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineUpdateTrigger].OnInvoke += (type, args) =>
         {
             var vertex = args[0] as ValueVertex<ITriggerPayload>;
             var trigger = args.Length <= 1 || (bool)args[1];

@@ -25,19 +25,23 @@ public class ModChartEvents
     private readonly Dictionary<ModChartEventType, ModChartCategorizedEvent> _events = new();
     [MoonSharpHidden] internal ModChartDeferredEventQueue DeferredEventQueue { get; }
 
-    public ModChartCategorizedEvent this[ModChartEventType type]
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    public ModChartEvent this[ModChartEventType type]
     {
         get
         {
-            var category = type.GetCategory();
+            var (category, specificType) = type;
             _events.TryAdd(category, new ModChartCategorizedEvent(category));
-            return _events[category];
+            return specificType == 0 ? _events[category] : _events[category][specificType];
         }
     }
 
     public void Invoke(ModChartEventType eventType, params object[] args)
     {
-        this[eventType].Invoke(eventType, args);
+        this[eventType.GetCategory()].Invoke(eventType, args);
     }
 
     /// <summary>
@@ -117,11 +121,7 @@ public class ModChartEvents
     /// <seealso cref="ModChartCategorizedEvent"/>
     public void Subscribe(ModChartEventType eventType, Closure closure)
     {
-        var (category, specificType) = eventType;
-        if (specificType == 0)
-            this[category].Add(closure);
-        else
-            this[category][specificType].Add(closure);
+        this[eventType].Add(closure);
     }
 
     /// <summary>
@@ -135,18 +135,14 @@ public class ModChartEvents
     /// <seealso cref="ModChartCategorizedEvent"/>
     public void Unsubscribe(ModChartEventType eventType, Closure closure)
     {
-        var (category, specificType) = eventType;
-        if (specificType == 0)
-            this[category].Remove(closure);
-        else
-            this[category][specificType].Remove(closure);
+       this[eventType].Remove(closure);
     }
 
     public ModChartEvents(ElementAccessShortcut shortcut)
     {
         Shortcut = shortcut;
         DeferredEventQueue = new ModChartDeferredEventQueue(this);
-        this[ModChartEventType.Function][ModChartEventType.FunctionCall].OnInvoke += (type, args) =>
+        this[ModChartEventType.FunctionCall].OnInvoke += (type, args) =>
         {
             if (args.Length < 1) return;
             var closure = (Closure)args[0];
