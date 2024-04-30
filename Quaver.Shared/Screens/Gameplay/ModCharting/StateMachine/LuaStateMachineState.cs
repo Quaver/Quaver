@@ -1,4 +1,5 @@
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
@@ -11,8 +12,8 @@ public class LuaStateMachineState : StateMachineState
 
     private Closure OnDisableClosure { get; }
 
-    public LuaStateMachineState(Closure onUpdateClosure, Closure onEnableClosure, Closure onDisableClosure,
-        string name = "", StateMachineState parent = default) : base(name, parent)
+    public LuaStateMachineState(ModChartScript script, Closure onUpdateClosure, Closure onEnableClosure, Closure onDisableClosure, 
+        string name = "", StateMachineState parent = default) : base(script, name, parent)
     {
         OnUpdateClosure = onUpdateClosure;
         OnEnableClosure = onEnableClosure;

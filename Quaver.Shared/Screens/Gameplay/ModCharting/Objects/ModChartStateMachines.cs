@@ -14,20 +14,21 @@ public class ModChartStateMachines
     public ModChartStateMachines(ElementAccessShortcut shortcut)
     {
         Shortcut = shortcut;
+        RootMachine = new OrthogonalStateMachine(Shortcut.ModChartScript);
     }
 
-    public readonly OrthogonalStateMachine RootMachine = new();
+    public readonly OrthogonalStateMachine RootMachine;
 
     public OrthogonalStateMachine NewOrthogonal(string name = "", StateMachineState parent = default) =>
-        new(name, parent);
+        new(Shortcut.ModChartScript, name, parent);
 
     public StateMachine.StateMachine NewMachine(string name = "", StateMachineState entryState = null,
-        StateMachineState parent = default) => new(entryState, name, parent);
+        StateMachineState parent = default) => new(Shortcut.ModChartScript, entryState, name, parent);
 
     public LuaStateMachineState NewState(string name = "", Closure updater = null, Closure onEnable = null,
         Closure onDisable = null, StateMachineState parent = default)
     {
-        return new LuaStateMachineState(updater, onEnable, onDisable, name, parent);
+        return new LuaStateMachineState(Shortcut.ModChartScript, updater, onEnable, onDisable, name, parent);
     }
 
     /// <summary>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
@@ -9,9 +10,12 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
 {
     [MoonSharpHidden] public static readonly DisjointSetUnion<StateMachineState> DisjointSetUnion = new();
     public bool IsActive { get; protected set; }
+    
+    public ModChartScript Script { get; protected set; }
 
-    protected StateMachineState(string name = "", StateMachineState parent = default)
+    protected StateMachineState(ModChartScript script, string name = "", StateMachineState parent = default)
     {
+        Script = script;
         Name = name;
         Parent = parent;
         Parent?.AddSubState(this);
@@ -59,6 +63,7 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
     [MoonSharpHidden]
     public virtual void Enter()
     {
+        if (IsActive) return;
         IsActive = true;
         if (Parent != null && !Parent.IsActive)
         {

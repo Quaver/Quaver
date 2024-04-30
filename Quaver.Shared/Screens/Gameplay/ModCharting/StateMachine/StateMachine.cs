@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
@@ -20,7 +21,7 @@ public class StateMachine : StateMachineState
     public StateMachineState EntryState { get; set; }
     public StateMachineState ActiveState { get; protected set; }
 
-    public StateMachine(StateMachineState entryState, string name = "", StateMachineState parent = default) : base(name,
+    public StateMachine(ModChartScript script, StateMachineState entryState, string name = "", StateMachineState parent = default) : base(script, name,
         parent)
     {
         AddSubState(entryState);

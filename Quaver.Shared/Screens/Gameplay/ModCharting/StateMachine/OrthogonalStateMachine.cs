@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
@@ -17,7 +18,7 @@ public class OrthogonalStateMachine : StateMachineState
 {
     private readonly List<StateMachineState> _subStates = new();
 
-    public OrthogonalStateMachine(string name = "", StateMachineState parent = default) : base(name, parent)
+    public OrthogonalStateMachine(ModChartScript script, string name = "", StateMachineState parent = default) : base(script, name, parent)
     {
     }
 
