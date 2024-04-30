@@ -11,6 +11,7 @@ using IniFileParser;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
@@ -99,6 +100,12 @@ namespace Quaver.Shared.Skinning
             {
                 Logger.Important($"Skin change detected. Reloading", LogType.Runtime);
                 TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+                if (Skin.Dir.IsSubDirectoryOf(ConfigManager.SteamWorkshopDirectory.Value))
+                {
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        $"You are making changes to a workshop skin! Changes to workshop skins might be lost when the skin updates!",
+                        forceShow: true);
+                }
             };
         }
 
