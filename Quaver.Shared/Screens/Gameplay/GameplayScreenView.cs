@@ -38,6 +38,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Steamworks;
@@ -880,7 +881,8 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (Screen is TournamentGameplayScreen)
             {
-                if (Screen.Map.Length - Screen.Timing.Time >= 10000 * ModHelper.GetRateFromMods(ModManager.Mods))
+                // Only exit once (multiple GameplayScreenViews), and force end (!mp end or lobby disbanded)
+                if (!Screen.Exiting && e.Force)
                     Screen.Exit(() => new MultiplayerGameScreen());
                 return;
             }
