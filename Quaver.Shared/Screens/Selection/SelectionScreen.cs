@@ -904,12 +904,12 @@ namespace Quaver.Shared.Screens.Selection
 
                 if (e.Index - 1 >= 0)
                     index = e.Index - 1;
-                ;
+
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
                 // Change the map
-                if (index != -1)
+                if (index >= 0 && index < AvailableMapsets.Value.Count)
                 {
                     MapManager.SelectMapFromMapset(AvailableMapsets.Value[index]);
                     return;
