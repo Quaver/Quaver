@@ -98,6 +98,7 @@ namespace Quaver.Shared.Skinning
             };
             Watcher.Changed += (sender, args) =>
             {
+                if (TimeSkinReloadRequested != 0) return;
                 Logger.Important($"Skin change detected. Reloading", LogType.Runtime);
                 TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                 if (Skin.Dir.IsSubDirectoryOf(ConfigManager.SteamWorkshopDirectory.Value))
