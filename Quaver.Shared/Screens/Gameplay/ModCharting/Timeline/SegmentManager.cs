@@ -91,7 +91,7 @@ public class SegmentManager : IValueChangeManager
     /// <param name="vertex"></param>
     /// <param name="enterProgress"></param>
     /// <param name="leaveProgress"></param>
-    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float enterProgress = -1, float leaveProgress = -1)
+    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float enterProgress = -1, float leaveProgress = -1, bool queueRemoveDynamic = true)
     {
         if (!_vertices.Contains(vertex)) return;
         var segment = _segments[vertex.Id];
@@ -100,7 +100,7 @@ public class SegmentManager : IValueChangeManager
         {
             _activeSegments.Remove(vertex.Id);
             progress = leaveProgress;
-            if (segment.IsDynamic)
+            if (segment.IsDynamic && queueRemoveDynamic)
             {
                 _modChartEvents.Enqueue(ModChartEventType.TimelineRemoveSegment, segment);
             }
@@ -145,7 +145,8 @@ public class SegmentManager : IValueChangeManager
         // The timeline has already passed the time of vertex
         if (_currentTime > vertex.Time)
         {
-            AlternateVertex(vertex, 0, 1);
+            // The vertex will be removed anyway, dynamic segments don't need to be queued to remove
+            AlternateVertex(vertex, 0, 1, false);
             _currentIndex--;
         }
 
