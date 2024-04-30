@@ -4,8 +4,10 @@ using System.Linq;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Wobble.Logging;
 
 // ReSharper disable ExpressionIsAlwaysNull
 
@@ -39,7 +41,7 @@ public class ModChartEvents
         }
     }
 
-    public void Invoke(ModChartEventType eventType, params object[] args)
+    public void Invoke(ModChartEventType eventType, ModChartEventArgs args)
     {
         this[eventType.GetCategory()].Invoke(eventType, args);
     }
@@ -57,7 +59,7 @@ public class ModChartEvents
     /// <param name="type"></param>
     /// <param name="args"></param>
     public void Enqueue(ModChartEventType type, params object[] args) =>
-        DeferredEventQueue.Enqueue(new ModChartEventInstance(type, args));
+        DeferredEventQueue.Enqueue(new ModChartEventInstance(type, GetArguments(type, args)));
 
     /// <summary>
     ///     Queues a function call to be invoked at the end of <see cref="ModChartScript.Update"/>.
@@ -65,8 +67,7 @@ public class ModChartEvents
     /// <param name="closure">The lua function to call</param>
     /// <param name="args">The arguments of the function</param>
     public void Enqueue(Closure closure, params object[] args) => Enqueue(new ModChartEventInstance(
-        ModChartEventType.FunctionCall,
-        new object[] { closure }.Concat(args).ToArray()));
+        ModChartEventType.FunctionCall, new ModChartEventFunctionCallArgs(closure, args)));
 
     public static int GetSpecificType(ModChartEventType eventType) => eventType.GetSpecificType();
 
@@ -76,17 +77,17 @@ public class ModChartEvents
 
     private void CallNoteEntry(GameplayHitObjectKeysInfo info)
     {
-        Invoke(ModChartEventType.NoteEntry, info);
+        Invoke(ModChartEventType.NoteEntry, new ModChartEventNoteEntryArgs(info));
     }
 
     private void CallOnKeyPress(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
     {
-        Invoke(ModChartEventType.InputKeyPress, info, pressTime, judgement);
+        Invoke(ModChartEventType.InputKeyPress, new ModChartEventInputKeyArgs(info, pressTime, judgement));
     }
 
     private void CallOnKeyRelease(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
     {
-        Invoke(ModChartEventType.InputKeyRelease, info, pressTime, judgement);
+        Invoke(ModChartEventType.InputKeyRelease, new ModChartEventInputKeyArgs(info, pressTime, judgement));
     }
 
     /// <summary>
@@ -135,7 +136,7 @@ public class ModChartEvents
     /// <seealso cref="ModChartCategorizedEvent"/>
     public void Unsubscribe(ModChartEventType eventType, Closure closure)
     {
-       this[eventType].Remove(closure);
+        this[eventType].Remove(closure);
     }
 
     public ModChartEvents(ElementAccessShortcut shortcut)
@@ -144,9 +145,8 @@ public class ModChartEvents
         DeferredEventQueue = new ModChartDeferredEventQueue(this);
         this[ModChartEventType.FunctionCall].OnInvoke += (type, args) =>
         {
-            if (args.Length < 1) return;
-            var closure = (Closure)args[0];
-            closure.SafeCall(args[1..]);
+            if (args is not ModChartEventFunctionCallArgs functionCallArguments) return;
+            functionCallArguments.Closure.SafeCall(functionCallArguments.Arguments);
         };
         HitObjectManagerKeys.RenderedHitObjectInfoAdded += CallNoteEntry;
         InputManager.OnKeyPress += CallOnKeyPress;
@@ -158,5 +158,42 @@ public class ModChartEvents
         HitObjectManagerKeys.RenderedHitObjectInfoAdded -= CallNoteEntry;
         InputManager.OnKeyPress -= CallOnKeyPress;
         InputManager.OnKeyRelease -= CallOnKeyRelease;
+    }
+
+    private static ModChartEventArgs GetArguments(Type type, params object[] args)
+    {
+        foreach (var constructorInfo in type.GetConstructors())
+        {
+            if (!constructorInfo.IsPublic || constructorInfo.IsAbstract) continue;
+            try
+            {
+                return constructorInfo.Invoke(args) as ModChartEventArgs;
+            }
+            catch (MemberAccessException)
+            {
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
+
+        return null;
+    }
+
+    private static ModChartEventArgs GetArguments(ModChartEventType eventType, params object[] args)
+    {
+        var type = eventType switch
+        {
+            ModChartEventType.FunctionCall => typeof(ModChartEventFunctionCallArgs),
+            ModChartEventType.TimelineAddSegment or ModChartEventType.TimelineRemoveSegment
+                or ModChartEventType.TimelineUpdateSegment => typeof(ModChartEventSegmentArgs),
+            ModChartEventType.TimelineAddTrigger or ModChartEventType.TimelineRemoveTrigger
+                or ModChartEventType.TimelineUpdateTrigger => typeof(ModChartEventTriggerArgs),
+            ModChartEventType.NoteEntry => typeof(ModChartEventNoteEntryArgs),
+            ModChartEventType.InputKeyPress or ModChartEventType.InputKeyRelease => typeof(ModChartEventInputKeyArgs),
+            _ => null
+        };
+        if (type == null) throw new InvalidOperationException($"Don't know how to construct arguments for {eventType}");
+        return GetArguments(type, args);
     }
 }

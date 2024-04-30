@@ -1,4 +1,5 @@
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
@@ -6,12 +7,12 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 public class ModChartEventInstance
 {
     public ModChartEventType Type { get; private set; }
-    public object[] Arguments { get; private set; }
+    public ModChartEventArgs Args { get; private set; }
 
-    public ModChartEventInstance(ModChartEventType type, object[] arguments)
+    public ModChartEventInstance(ModChartEventType type, ModChartEventArgs args)
     {
         Type = type;
-        Arguments = arguments;
+        Args = args;
     }
 
     /// <summary>
@@ -20,6 +21,6 @@ public class ModChartEventInstance
     /// <param name="modChartEvents"></param>
     public void Dispatch(ModChartEvents modChartEvents)
     {
-        modChartEvents.Invoke(Type, Arguments);
+        modChartEvents.Invoke(Type, Args);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
@@ -12,7 +13,6 @@ public class ModChartCategorizedEvent : ModChartEvent
 
     public ModChartCategorizedEvent(ModChartEventType type) : base(type)
     {
-        
     }
 
     public ModChartEvent this[int specificType]
@@ -26,11 +26,11 @@ public class ModChartCategorizedEvent : ModChartEvent
 
     public ModChartEvent this[ModChartEventType eventType] => this[eventType.GetSpecificType()];
 
-    public override void Invoke(ModChartEventType type, params object[] p)
+    public override void Invoke(ModChartEventType type, ModChartEventArgs args)
     {
         var specificType = type.GetSpecificType();
         var modChartEvent = this[specificType];
-        modChartEvent.Invoke(type, p);
-        base.Invoke(type, p);
+        modChartEvent.Invoke(type, args);
+        base.Invoke(type, args);
     }
 }

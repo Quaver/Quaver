@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
@@ -10,7 +11,7 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 public class ModChartEvent
 {
     public readonly ModChartEventType Type;
-    [MoonSharpHidden] public event Action<ModChartEventType, object[]> OnInvoke;
+    [MoonSharpHidden] public event Action<ModChartEventType, ModChartEventArgs> OnInvoke;
 
     private readonly HashSet<Closure> _closures = new();
 
@@ -23,12 +24,12 @@ public class ModChartEvent
     public void Remove(Closure closure) => _closures.Remove(closure);
 
     [MoonSharpHidden]
-    public virtual void Invoke(ModChartEventType eventType, params object[] p)
+    public virtual void Invoke(ModChartEventType eventType, ModChartEventArgs args)
     {
-        OnInvoke?.Invoke(eventType, p);
+        OnInvoke?.Invoke(eventType, args);
         foreach (var closure in _closures)
         {
-            closure.SafeCall(eventType, p);
+            closure.SafeCall(eventType, args);
         }
     }
 }

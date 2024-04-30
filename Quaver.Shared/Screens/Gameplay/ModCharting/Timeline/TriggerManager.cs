@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
@@ -51,21 +52,18 @@ public class TriggerManager : IValueChangeManager
         _modChartEvents = modChartEvents;
         modChartEvents[ModChartEventType.TimelineAddTrigger].OnInvoke += (type, args) =>
         {
-            var vertex = args[0] as ValueVertex<ITriggerPayload>;
-            var trigger = args.Length <= 1 || (bool)args[1];
-            AddVertex(vertex, trigger);
+            var triggerArgs = (ModChartEventTriggerArgs)args;
+            AddVertex(triggerArgs.Vertex, triggerArgs.Trigger);
         };
         modChartEvents[ModChartEventType.TimelineRemoveTrigger].OnInvoke += (type, args) =>
         {
-            var vertex = args[0] as ValueVertex<ITriggerPayload>;
-            var trigger = args.Length <= 1 || (bool)args[1];
-            RemoveVertex(vertex, trigger);
+            var triggerArgs = (ModChartEventTriggerArgs)args;
+            RemoveVertex(triggerArgs.Vertex, triggerArgs.Trigger);
         };
         modChartEvents[ModChartEventType.TimelineUpdateTrigger].OnInvoke += (type, args) =>
         {
-            var vertex = args[0] as ValueVertex<ITriggerPayload>;
-            var trigger = args.Length <= 1 || (bool)args[1];
-            UpdateVertex(vertex, trigger);
+            var triggerArgs = (ModChartEventTriggerArgs)args;
+            UpdateVertex(triggerArgs.Vertex, triggerArgs.Trigger);
         };
     }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
@@ -30,17 +31,17 @@ public class SegmentManager : IValueChangeManager
         _modChartEvents = modChartEvents;
         modChartEvents[ModChartEventType.TimelineAddSegment].OnInvoke += (type, args) =>
         {
-            var segment = args[0] as Segment;
+            var segment = ((ModChartEventSegmentArgs)args).Segment;
             Add(segment);
         };
         modChartEvents[ModChartEventType.TimelineRemoveSegment].OnInvoke += (type, args) =>
         {
-            var segment = args[0] as Segment;
+            var segment = ((ModChartEventSegmentArgs)args).Segment;
             Remove(segment);
         };
         modChartEvents[ModChartEventType.TimelineUpdateSegment].OnInvoke += (type, args) =>
         {
-            var segment = args[0] as Segment;
+            var segment = ((ModChartEventSegmentArgs)args).Segment;
             UpdateSegment(segment);
         };
     }
@@ -90,7 +91,8 @@ public class SegmentManager : IValueChangeManager
     /// <param name="vertex"></param>
     /// <param name="enterProgress"></param>
     /// <param name="leaveProgress"></param>
-    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float enterProgress = -1, float leaveProgress = -1, bool queueRemoveDynamic = true)
+    private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float enterProgress = -1,
+        float leaveProgress = -1, bool queueRemoveDynamic = true)
     {
         if (!_vertices.Contains(vertex)) return;
         var segment = _segments[vertex.Id];
@@ -127,7 +129,7 @@ public class SegmentManager : IValueChangeManager
             return false;
 
         // The timeline has already passed the time of vertex
-        if ( _currentTime > vertex.Time)
+        if (_currentTime > vertex.Time)
         {
             AlternateVertex(vertex, 0, 1);
             _currentIndex++;
