@@ -64,22 +64,6 @@ namespace Quaver.Shared.Skinning
         public static void Load()
         {
             Skin = new SkinStore();
-            Watcher?.Dispose();
-            var path = Path.Combine(Skin.Dir, "skin.ini");
-            if (File.Exists(path))
-            {
-                Watcher = new FileSystemWatcher(Path.GetDirectoryName(path))
-                {
-                    NotifyFilter = NotifyFilters.LastWrite,
-                    EnableRaisingEvents = true,
-                    Filter = Path.GetFileName(path)
-                };
-                Watcher.Changed += (sender, args) =>
-                {
-                    Logger.Important($"Skin change detected. Reloading", LogType.Runtime);
-                    TimeSkinReloadRequested = GameBase.Game.TimeRunning;
-                };
-            }
 
             if (ConfigManager.TournamentPlayer2Skin.Value == null ||
                 ConfigManager.TournamentPlayer2Skin.Value == ConfigManager.Skin.Value)
@@ -89,6 +73,45 @@ namespace Quaver.Shared.Skinning
             }
 
             TournamentPlayer2Skin = new SkinStore(ConfigManager.TournamentPlayer2Skin.Value);
+        }
+
+        /// <summary>
+        ///     Start watching for changes in skin.ini
+        /// </summary>
+        public static void StartWatching()
+        {
+            if (Watcher != null)
+            {
+                Logger.Important($"Skin manager started watching skin.ini", LogType.Runtime);
+                Watcher.EnableRaisingEvents = true;
+                return;
+            }
+            var path = Path.Combine(Skin.Dir, "skin.ini");
+            if (!File.Exists(path)) return;
+            Logger.Important($"Skin manager started watching skin.ini", LogType.Runtime);
+            Watcher = new FileSystemWatcher(Path.GetDirectoryName(path))
+            {
+                NotifyFilter = NotifyFilters.LastWrite,
+                EnableRaisingEvents = true,
+                Filter = Path.GetFileName(path)
+            };
+            Watcher.Changed += (sender, args) =>
+            {
+                Logger.Important($"Skin change detected. Reloading", LogType.Runtime);
+                TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+            };
+        }
+
+        /// <summary>
+        ///     Stops watching skin.ini
+        /// </summary>
+        public static void StopWatching()
+        {
+            if (Watcher == null) return;
+            Logger.Important($"Skin manager stopped watching skin.ini", LogType.Runtime);
+            // Dispose of the watcher
+            Watcher.Dispose();
+            Watcher = null;
         }
 
         /// <summary>

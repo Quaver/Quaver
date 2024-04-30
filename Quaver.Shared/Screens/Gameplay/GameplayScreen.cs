@@ -496,6 +496,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
 
+            if (InReplayMode)
+                SkinManager.StartWatching();
+
             base.OnFirstUpdate();
         }
 
@@ -562,6 +565,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             Metronome?.Dispose();
+            SkinManager.StopWatching();
             IsDisposed = true;
             base.Destroy();
         }
