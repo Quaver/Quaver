@@ -142,6 +142,7 @@ namespace Quaver.Shared.Skinning
                 Load();
                 TimeSkinReloadRequested = 0;
                 SkinLoaded?.Invoke(typeof(SkinManager), new SkinReloadedEventArgs());
+                var showLoadedNotification = true;
 
                 var game = (QuaverGame) GameBase.Game;
 
@@ -156,6 +157,7 @@ namespace Quaver.Shared.Skinning
                     case QuaverScreenType.Gameplay when 
                         game.CurrentScreen is GameplayScreen gameplayScreen and not TournamentGameplayScreen
                         && gameplayScreen.InReplayMode:
+                        showLoadedNotification = ConfigManager.DisplayNotificationsInGameplay.Value;
                         game.CurrentScreen.Exit(() =>
                         {
                             var newScreen = new GameplayScreen(gameplayScreen.Map, gameplayScreen.MapHash,
@@ -171,7 +173,9 @@ namespace Quaver.Shared.Skinning
                 ThreadScheduler.RunAfter(() =>
                 {
                     Transitioner.FadeOut();
-                    NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!");
+                    if (showLoadedNotification)
+                        NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!",
+                            forceShow: true);
                 }, 200);
             }
         }
