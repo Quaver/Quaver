@@ -496,7 +496,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
 
-            if (InReplayMode && !IsPlayTesting)
+            if (InReplayMode && !IsPlayTesting && !IsSongSelectPreview && !IsCalibratingOffset)
             {
                 SkinManager.StartWatching();
                 ScreenExiting += (_, _) => SkinManager.StopWatching();
