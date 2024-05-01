@@ -287,9 +287,9 @@ namespace Quaver.Shared.Screens.Multi
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
                 {
                     if (ModManager.IsActivated(ModIdentifier.Mirror))
-                        ModManager.RemoveMod(ModIdentifier.Mirror);
+                        ModManager.RemoveMod(ModIdentifier.Mirror, true);
                     else
-                        ModManager.AddMod(ModIdentifier.Mirror);
+                        ModManager.AddMod(ModIdentifier.Mirror, true);
                 }
             }
         }
