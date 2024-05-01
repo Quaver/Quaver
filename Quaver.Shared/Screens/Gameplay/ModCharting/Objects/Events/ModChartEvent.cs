@@ -21,7 +21,9 @@ public class ModChartEvent
     }
 
     public void Add(Closure closure) => _closures.Add(closure);
+    public void Add(Action<ModChartEventInstance> action) => OnInvoke += action;
     public void Remove(Closure closure) => _closures.Remove(closure);
+    public void Remove(Action<ModChartEventInstance> action) => OnInvoke -= action;
 
     [MoonSharpHidden]
     public virtual void Invoke(ModChartEventInstance instance)

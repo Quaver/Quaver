@@ -126,6 +126,11 @@ public class ModChartEvents
         this[eventType].Add(closure);
     }
 
+    public void Subscribe(ModChartEventType eventType, Action<ModChartEventInstance> action)
+    {
+        this[eventType].Add(action);
+    }
+
     /// <summary>
     ///     Unsubscribes to a particular event, or the whole category of events
     /// </summary>
@@ -138,6 +143,11 @@ public class ModChartEvents
     public void Unsubscribe(ModChartEventType eventType, Closure closure)
     {
         this[eventType].Remove(closure);
+    }
+
+    public void Unsubscribe(ModChartEventType eventType, Action<ModChartEventInstance> action)
+    {
+        this[eventType].Remove(action);
     }
 
     public ModChartEvents(ElementAccessShortcut shortcut)

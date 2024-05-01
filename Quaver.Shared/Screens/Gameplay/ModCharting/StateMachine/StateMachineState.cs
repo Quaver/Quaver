@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
+[MoonSharpUserData]
 public abstract class StateMachineState : IWithParent<StateMachineState>
 {
     [MoonSharpHidden] public static readonly DisjointSetUnion<StateMachineState> DisjointSetUnion = new();
     public bool IsActive { get; protected set; }
-    
+
+    [MoonSharpHidden] internal List<StateTransitionEdge> OutgoingTransitions { get; } = new();
+
     public ModChartScript Script { get; protected set; }
 
     protected StateMachineState(ModChartScript script, string name = "", StateMachineState parent = default)
@@ -60,11 +63,32 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
         if (IsActive) yield return this;
     }
 
+    public void AddTransition(StateTransitionEdge transitionEdge)
+    {
+        OutgoingTransitions.Add(transitionEdge);
+    }
+
+    public void AddTransition(StateMachineState targetState, ModChartEventType eventType,
+        StateTransitionEdge.GuardDelegate guard)
+    {
+        AddTransition(new StateTransitionEdge(this, targetState, eventType, guard));
+    }
+
+    public void AddTransition(StateMachineState targetState, ModChartEventType eventType)
+    {
+        AddTransition(new StateTransitionEdge(this, targetState, eventType));
+    }
+
     [MoonSharpHidden]
     public virtual void Enter()
     {
         if (IsActive) return;
         IsActive = true;
+        foreach (var outgoingTransition in OutgoingTransitions)
+        {
+            Script.ModChartEvents.Subscribe(outgoingTransition.EventType, outgoingTransition.Handler);
+        }
+
         if (Parent != null && !Parent.IsActive)
         {
             Parent.Enter();
@@ -74,6 +98,11 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
     [MoonSharpHidden]
     public virtual void Leave()
     {
+        if (!IsActive) return;
         IsActive = false;
+        foreach (var outgoingTransition in OutgoingTransitions)
+        {
+            Script.ModChartEvents.Unsubscribe(outgoingTransition.EventType, outgoingTransition.Handler);
+        }
     }
 }
