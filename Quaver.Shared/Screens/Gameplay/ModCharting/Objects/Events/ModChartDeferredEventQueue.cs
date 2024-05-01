@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 

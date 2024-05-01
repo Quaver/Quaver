@@ -26,11 +26,11 @@ public class ModChartCategorizedEvent : ModChartEvent
 
     public ModChartEvent this[ModChartEventType eventType] => this[eventType.GetSpecificType()];
 
-    public override void Invoke(ModChartEventType type, ModChartEventArgs args)
+    public override void Invoke(ModChartEventInstance instance)
     {
-        var specificType = type.GetSpecificType();
+        var specificType = instance.EventType.GetSpecificType();
         var modChartEvent = this[specificType];
-        modChartEvent.Invoke(type, args);
-        base.Invoke(type, args);
+        modChartEvent.Invoke(instance);
+        base.Invoke(instance);
     }
 }

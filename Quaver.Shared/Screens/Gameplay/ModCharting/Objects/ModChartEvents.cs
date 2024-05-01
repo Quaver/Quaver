@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
@@ -41,9 +42,9 @@ public class ModChartEvents
         }
     }
 
-    public void Invoke(ModChartEventType eventType, ModChartEventArgs args)
+    public void Invoke(ModChartEventInstance instance)
     {
-        this[eventType.GetCategory()].Invoke(eventType, args);
+        this[instance.EventType.GetCategory()].Invoke(instance);
     }
 
     /// <summary>
@@ -55,19 +56,19 @@ public class ModChartEvents
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="Enqueue(Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.ModChartEventInstance)"/>
+    /// <seealso cref="Enqueue(Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments.ModChartEventInstance)"/>
     /// <param name="type"></param>
     /// <param name="args"></param>
     public void Enqueue(ModChartEventType type, params object[] args) =>
-        DeferredEventQueue.Enqueue(new ModChartEventInstance(type, GetArguments(type, args)));
+        DeferredEventQueue.Enqueue(GetArguments(type, args));
 
     /// <summary>
     ///     Queues a function call to be invoked at the end of <see cref="ModChartScript.Update"/>.
     /// </summary>
     /// <param name="closure">The lua function to call</param>
     /// <param name="args">The arguments of the function</param>
-    public void Enqueue(Closure closure, params object[] args) => Enqueue(new ModChartEventInstance(
-        ModChartEventType.FunctionCall, new ModChartEventFunctionCallArgs(closure, args)));
+    public void Enqueue(Closure closure, params object[] args) =>
+        Enqueue(new ModChartEventFunctionCallInstance(closure, args));
 
     public static int GetSpecificType(ModChartEventType eventType) => eventType.GetSpecificType();
 
@@ -77,17 +78,17 @@ public class ModChartEvents
 
     private void CallNoteEntry(GameplayHitObjectKeysInfo info)
     {
-        Invoke(ModChartEventType.NoteEntry, new ModChartEventNoteEntryArgs(info));
+        Invoke(new ModChartEventNoteEntryInstance(info));
     }
 
     private void CallOnKeyPress(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
     {
-        Invoke(ModChartEventType.InputKeyPress, new ModChartEventInputKeyArgs(info, pressTime, judgement));
+        Invoke(new ModChartEventInputKeyPressInstance(info, pressTime, judgement));
     }
 
     private void CallOnKeyRelease(GameplayHitObjectKeysInfo info, int pressTime, Judgement judgement)
     {
-        Invoke(ModChartEventType.InputKeyRelease, new ModChartEventInputKeyArgs(info, pressTime, judgement));
+        Invoke(new ModChartEventInputKeyReleaseInstance(info, pressTime, judgement));
     }
 
     /// <summary>
@@ -143,9 +144,9 @@ public class ModChartEvents
     {
         Shortcut = shortcut;
         DeferredEventQueue = new ModChartDeferredEventQueue(this);
-        this[ModChartEventType.FunctionCall].OnInvoke += (type, args) =>
+        this[ModChartEventType.FunctionCall].OnInvoke += args =>
         {
-            if (args is not ModChartEventFunctionCallArgs functionCallArguments) return;
+            if (args is not ModChartEventFunctionCallInstance functionCallArguments) return;
             functionCallArguments.Closure.SafeCall(functionCallArguments.Arguments);
         };
         HitObjectManagerKeys.RenderedHitObjectInfoAdded += CallNoteEntry;
@@ -160,14 +161,14 @@ public class ModChartEvents
         InputManager.OnKeyRelease -= CallOnKeyRelease;
     }
 
-    private static ModChartEventArgs GetArguments(Type type, params object[] args)
+    private static ModChartEventInstance GetArguments(Type type, params object[] args)
     {
         foreach (var constructorInfo in type.GetConstructors())
         {
             if (!constructorInfo.IsPublic || constructorInfo.IsAbstract) continue;
             try
             {
-                return constructorInfo.Invoke(args) as ModChartEventArgs;
+                return constructorInfo.Invoke(args) as ModChartEventInstance;
             }
             catch (MemberAccessException)
             {
@@ -175,25 +176,30 @@ public class ModChartEvents
             catch (ArgumentException)
             {
             }
+            catch (TargetParameterCountException)
+            {
+            }
         }
 
-        return null;
+        throw new InvalidOperationException($"Constructing event instance {type} with params {args}");
     }
 
-    private static ModChartEventArgs GetArguments(ModChartEventType eventType, params object[] args)
+    private static ModChartEventInstance GetArguments(ModChartEventType eventType, params object[] args)
     {
         var type = eventType switch
         {
-            ModChartEventType.FunctionCall => typeof(ModChartEventFunctionCallArgs),
-            ModChartEventType.TimelineAddSegment or ModChartEventType.TimelineRemoveSegment
-                or ModChartEventType.TimelineUpdateSegment => typeof(ModChartEventSegmentArgs),
-            ModChartEventType.TimelineAddTrigger or ModChartEventType.TimelineRemoveTrigger
-                or ModChartEventType.TimelineUpdateTrigger => typeof(ModChartEventTriggerArgs),
-            ModChartEventType.NoteEntry => typeof(ModChartEventNoteEntryArgs),
-            ModChartEventType.InputKeyPress or ModChartEventType.InputKeyRelease => typeof(ModChartEventInputKeyArgs),
-            _ => null
+            ModChartEventType.FunctionCall => typeof(ModChartEventFunctionCallInstance),
+            ModChartEventType.TimelineAddSegment => typeof(ModChartEventAddSegmentInstance),
+            ModChartEventType.TimelineRemoveSegment => typeof(ModChartEventRemoveSegmentInstance),
+            ModChartEventType.TimelineUpdateSegment => typeof(ModChartEventUpdateSegmentInstance),
+            ModChartEventType.TimelineAddTrigger => typeof(ModChartEventAddTriggerInstance),
+            ModChartEventType.TimelineRemoveTrigger => typeof(ModChartEventRemoveTriggerInstance),
+            ModChartEventType.TimelineUpdateTrigger => typeof(ModChartEventUpdateTriggerInstance),
+            ModChartEventType.NoteEntry => typeof(ModChartEventNoteEntryInstance),
+            ModChartEventType.InputKeyPress => typeof(ModChartEventInputKeyPressInstance),
+            ModChartEventType.InputKeyRelease => typeof(ModChartEventInputKeyReleaseInstance),
+            _ => throw new ArgumentOutOfRangeException(nameof(eventType), eventType, null)
         };
-        if (type == null) throw new InvalidOperationException($"Don't know how to construct arguments for {eventType}");
         return GetArguments(type, args);
     }
 }

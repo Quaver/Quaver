@@ -29,19 +29,19 @@ public class SegmentManager : IValueChangeManager
     public void SetupEvents(ModChartEvents modChartEvents)
     {
         _modChartEvents = modChartEvents;
-        modChartEvents[ModChartEventType.TimelineAddSegment].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineAddSegment].OnInvoke += args =>
         {
-            var segment = ((ModChartEventSegmentArgs)args).Segment;
+            var segment = ((ModChartEventAddSegmentInstance)args).Segment;
             Add(segment);
         };
-        modChartEvents[ModChartEventType.TimelineRemoveSegment].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineRemoveSegment].OnInvoke += args =>
         {
-            var segment = ((ModChartEventSegmentArgs)args).Segment;
+            var segment = ((ModChartEventRemoveSegmentInstance)args).Segment;
             Remove(segment);
         };
-        modChartEvents[ModChartEventType.TimelineUpdateSegment].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineUpdateSegment].OnInvoke += args =>
         {
-            var segment = ((ModChartEventSegmentArgs)args).Segment;
+            var segment = ((ModChartEventUpdateSegmentInstance)args).Segment;
             UpdateSegment(segment);
         };
     }

@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 public class ModChartEvent
 {
     public readonly ModChartEventType Type;
-    [MoonSharpHidden] public event Action<ModChartEventType, ModChartEventArgs> OnInvoke;
+    [MoonSharpHidden] public event Action<ModChartEventInstance> OnInvoke;
 
     private readonly HashSet<Closure> _closures = new();
 
@@ -24,12 +24,12 @@ public class ModChartEvent
     public void Remove(Closure closure) => _closures.Remove(closure);
 
     [MoonSharpHidden]
-    public virtual void Invoke(ModChartEventType eventType, ModChartEventArgs args)
+    public virtual void Invoke(ModChartEventInstance instance)
     {
-        OnInvoke?.Invoke(eventType, args);
+        OnInvoke?.Invoke(instance);
         foreach (var closure in _closures)
         {
-            closure.SafeCall(eventType, args);
+            closure.SafeCall(instance);
         }
     }
 }

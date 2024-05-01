@@ -50,19 +50,19 @@ public class TriggerManager : IValueChangeManager
     public void SetupEvents(ModChartEvents modChartEvents)
     {
         _modChartEvents = modChartEvents;
-        modChartEvents[ModChartEventType.TimelineAddTrigger].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineAddTrigger].OnInvoke += args =>
         {
-            var triggerArgs = (ModChartEventTriggerArgs)args;
+            var triggerArgs = (ModChartEventAddTriggerInstance)args;
             AddVertex(triggerArgs.Vertex, triggerArgs.Trigger);
         };
-        modChartEvents[ModChartEventType.TimelineRemoveTrigger].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineRemoveTrigger].OnInvoke += args =>
         {
-            var triggerArgs = (ModChartEventTriggerArgs)args;
+            var triggerArgs = (ModChartEventRemoveTriggerInstance)args;
             RemoveVertex(triggerArgs.Vertex, triggerArgs.Trigger);
         };
-        modChartEvents[ModChartEventType.TimelineUpdateTrigger].OnInvoke += (type, args) =>
+        modChartEvents[ModChartEventType.TimelineUpdateTrigger].OnInvoke += args =>
         {
-            var triggerArgs = (ModChartEventTriggerArgs)args;
+            var triggerArgs = (ModChartEventUpdateTriggerInstance)args;
             UpdateVertex(triggerArgs.Vertex, triggerArgs.Trigger);
         };
     }
