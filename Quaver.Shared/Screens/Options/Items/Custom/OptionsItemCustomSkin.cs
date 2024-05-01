@@ -119,7 +119,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     }
                     catch (ParsingException e)
                     {
-                        Logger.Error($"Workshop skin at {directory} has ill-formed skin.ini: {e}", LogType.Runtime);
+                        Logger.Error($"Workshop skin at {directory} has an invalid skin.ini: {e}", LogType.Runtime);
                         NotificationManager.Show(NotificationLevel.Error,
                             $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
                         workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
