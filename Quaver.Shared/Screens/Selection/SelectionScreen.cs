@@ -151,6 +151,7 @@ namespace Quaver.Shared.Screens.Selection
             FadeAudioTrackIn();
 
             SkinManager.StartWatching();
+            ScreenExiting += (_, _) => SkinManager.StopWatching();
 
             base.OnFirstUpdate();
         }

@@ -97,6 +97,7 @@ namespace Quaver.Shared.Screens.Main
             GameBase.Game.GlobalUserInterface.Cursor.Show(1);
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
             SkinManager.StartWatching();
+            ScreenExiting += (_, _) => SkinManager.StopWatching();
 
             base.OnFirstUpdate();
         }
@@ -111,7 +112,6 @@ namespace Quaver.Shared.Screens.Main
         {
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
             TheaterCheat.Destroy();
-            SkinManager.StopWatching();
             base.Destroy();
         }
 
