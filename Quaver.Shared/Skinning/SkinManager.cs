@@ -81,6 +81,9 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         public static void StartWatching()
         {
+            if (!ConfigManager.ReloadSkinOnChange.Value)
+                return;
+
             if (Watcher != null)
             {
                 Logger.Important($"Skin manager started watching skin.ini", LogType.Runtime);
