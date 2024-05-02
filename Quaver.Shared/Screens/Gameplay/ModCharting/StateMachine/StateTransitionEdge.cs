@@ -61,4 +61,9 @@ public class StateTransitionEdge
         eventType = EventType;
         guard = Guard;
     }
+
+    public override string ToString()
+    {
+        return $"{{{From} -- {EventType} -> {To}}}";
+    }
 }

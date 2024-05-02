@@ -9,6 +9,9 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 [MoonSharpUserData]
 public abstract class StateMachineState : IWithParent<StateMachineState>
 {
+    private static int _currentUid;
+    protected static int GenerateUid() => _currentUid++;
+    public int Uid { get; }
     [MoonSharpHidden] public static readonly DisjointSetUnion<StateMachineState> DisjointSetUnion = new();
     public bool IsActive { get; protected set; }
 
@@ -18,9 +21,10 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
 
     protected StateMachineState(ModChartScript script, string name = "", StateMachineState parent = default)
     {
+        Uid = GenerateUid();
         Script = script;
-        Name = name;
         Parent = parent;
+        Name = string.IsNullOrWhiteSpace(name) ? $"AnonymousState {Uid}" : name;
         Parent?.AddSubState(this);
     }
 
@@ -65,6 +69,8 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
 
     public void AddTransition(StateTransitionEdge transitionEdge)
     {
+        if (transitionEdge.From != this)
+            throw new InvalidOperationException($"Adding transition {transitionEdge} to {this}");
         OutgoingTransitions.Add(transitionEdge);
     }
 
@@ -104,5 +110,10 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
         {
             Script.ModChartEvents.Unsubscribe(outgoingTransition.EventType, outgoingTransition.Handler);
         }
+    }
+
+    public override string ToString()
+    {
+        return $"[{Name}]";
     }
 }
