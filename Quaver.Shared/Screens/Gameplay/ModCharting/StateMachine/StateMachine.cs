@@ -75,7 +75,7 @@ public class StateMachine : StateMachineState
 
     public override void WriteDotGraph(TextWriter writer, bool isSubgraph)
     {
-        writer.WriteLine(isSubgraph ? $"subgraph {DotGraphNodeName} {{" : $"digraph {DotGraphNodeName} {{");
+        writer.WriteLine($"subgraph {DotGraphNodeName} {{");
         writer.WriteLine("style = solid;");
         writer.WriteLine("node [style=solid];");
         writer.WriteLine($"label = \"{Name}\";");
@@ -87,11 +87,7 @@ public class StateMachine : StateMachineState
         writer.WriteLine($"{EntryState.DotGraphNodeName} [shape=doublecircle]");
         if (!isSubgraph)
         {
-            foreach (var transitionEdge in AllTransitionEdges())
-            {
-                writer.WriteLine(
-                    $"{transitionEdge.From.DotGraphNodeName} -> {transitionEdge.To.DotGraphNodeName} [label={transitionEdge.EventType}];");
-            }
+            WriteDotGraphEdges(writer);
         }
 
         writer.WriteLine("}");

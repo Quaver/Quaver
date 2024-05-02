@@ -77,6 +77,7 @@ public class ModChartScript
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+        UserData.RegisterExtensionType(typeof(EventHelper));
         UserData.RegisterType<Easing>();
         UserData.RegisterType<Alignment>();
         UserData.RegisterType<Judgement>();

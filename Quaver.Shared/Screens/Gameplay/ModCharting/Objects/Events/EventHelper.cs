@@ -1,6 +1,7 @@
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 
@@ -14,6 +15,7 @@ public static class EventHelper
         return (int)((ulong)eventType & EventSpecificTypeMask);
     }
 
+    [MoonSharpUserDataMetamethod("__concat")]
     public static ModChartEventType WithSpecificType(this ModChartEventType eventType, int specificType)
     {
         return eventType | (ModChartEventType)specificType;
@@ -43,5 +45,13 @@ public static class EventHelper
     {
         category = GetCategory(eventType);
         specificType = (int)(eventType ^ category);
+    }
+
+    public static string ToFriendlyString(this ModChartEventType eventType)
+    {
+        if (eventType.GetSpecificType() == 0) return eventType.ToString();
+        if (eventType.GetCategory() == ModChartEventType.Custom)
+            return $"Custom[{eventType.GetSpecificType()}]";
+        return eventType.ToString();
     }
 }

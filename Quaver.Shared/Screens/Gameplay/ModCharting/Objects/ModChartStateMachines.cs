@@ -14,7 +14,7 @@ public class ModChartStateMachines
     public ModChartStateMachines(ElementAccessShortcut shortcut)
     {
         Shortcut = shortcut;
-        RootMachine = new OrthogonalStateMachine(Shortcut.ModChartScript);
+        RootMachine = new OrthogonalStateMachine(Shortcut.ModChartScript, "Root");
     }
 
     public OrthogonalStateMachine RootMachine { get; }
@@ -29,6 +29,16 @@ public class ModChartStateMachines
         Closure onDisable = null, StateMachineState parent = default)
     {
         return new LuaStateMachineState(Shortcut.ModChartScript, updater, onEnable, onDisable, name, parent);
+    }
+
+    public void Start()
+    {
+        RootMachine.Enter();
+    }
+
+    public void Stop()
+    {
+        RootMachine.Leave();
     }
 
     /// <summary>

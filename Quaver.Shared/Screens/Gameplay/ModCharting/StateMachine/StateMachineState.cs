@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
@@ -101,6 +103,7 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
     public virtual void Enter()
     {
         if (IsActive) return;
+        Logger.Debug($"[SM] {Name} entered", LogType.Runtime);
         IsActive = true;
         foreach (var outgoingTransition in OutgoingTransitions)
         {
@@ -117,6 +120,7 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
     public virtual void Leave()
     {
         if (!IsActive) return;
+        Logger.Debug($"[SM] {Name} left", LogType.Runtime);
         IsActive = false;
         foreach (var outgoingTransition in OutgoingTransitions)
         {
@@ -131,7 +135,7 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
 
     public virtual void WriteDotGraph(TextWriter writer, bool isSubgraph)
     {
-        writer.WriteLine($"n{Uid} [label = \"{Name}\"];");
+        writer.WriteLine($"n{Uid} [label = \"{Name}\" color = \"{(IsActive ? "green" : "black")}\" shape=circle];");
     }
 
     public virtual string DotGraphNodeName => $"n{Uid}";
@@ -139,7 +143,35 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
     public string GenerateDotGraph()
     {
         using var writer = new StringWriter();
+        writer.WriteLine($"digraph {DotGraphNodeName} {{");
+        writer.WriteLine($"compound = true;");
+        writer.WriteLine($"nodesep = 2;");
         WriteDotGraph(writer, false);
+        writer.WriteLine("}");
         return writer.ToString();
+    }
+
+    public void WriteDotGraphEdges(TextWriter writer)
+    {
+        foreach (var transitionEdge in AllTransitionEdges())
+        {
+            var arrowProps = "";
+            var fromName = transitionEdge.From.DotGraphNodeName;
+            if (transitionEdge.From is StateMachine or OrthogonalStateMachine)
+            {
+                fromName = transitionEdge.From.LeafEntryStates().FirstOrDefault()?.DotGraphNodeName ?? "Unknown";
+                arrowProps += $" ltail=\"{transitionEdge.From.DotGraphNodeName}\"";
+            }
+
+            var toName = transitionEdge.To.DotGraphNodeName;
+            if (transitionEdge.To is StateMachine or OrthogonalStateMachine)
+            {
+                toName = transitionEdge.To.LeafEntryStates().FirstOrDefault()?.DotGraphNodeName ?? "Unknown";
+                arrowProps += $" lhead=\"{transitionEdge.To.DotGraphNodeName}\"";
+            }
+
+            writer.WriteLine(
+                $"{fromName} -> {toName} [label=\"{transitionEdge.EventType.ToFriendlyString()}\"{arrowProps}];");
+        }
     }
 }

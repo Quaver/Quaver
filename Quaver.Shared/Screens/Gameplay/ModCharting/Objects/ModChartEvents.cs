@@ -196,6 +196,8 @@ public class ModChartEvents
 
     private static ModChartEventInstance GetArguments(ModChartEventType eventType, params object[] args)
     {
+        if (eventType.GetCategory() == ModChartEventType.Custom)
+            return new ModChartEventCustomInstance(eventType, args);
         var type = eventType switch
         {
             ModChartEventType.FunctionCall => typeof(ModChartEventFunctionCallInstance),
