@@ -39,14 +39,14 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         private LabelledCheckbox BpmAffectsScrollVelocity { get; set; }
 
         private Tooltip BpmAffectsScrollVelocityTooltip { get; } = new(
-            "When set to ON, A BPM change will also change the scroll velocity.\nFor instance, going from 120BPM to 240BPM effectively creates\nan implicit 2x Slider Velocity multiplier starting from the beginning\nof that BPM change until the next. Slider Velocity is still applied.",
+            "When set to ON, A BPM change will also change the Scroll Velocity.\nFor instance, going from 120BPM to 240BPM effectively creates\nan implicit 2x Scroll Velocity multiplier starting from the beginning\nof that BPM change until the next. Scroll Velocity is still applied.",
             Color.White
         );
 
         private LabelledCheckbox LegacyLNRendering { get; set; }
 
         private Tooltip LegacyLNRenderingTooltip { get; } = new(
-            "When set to ON, forces the use of the old LN renderer. If your chart has no Slider\nVelocity changes, you can safely ignore this option. The current LN renderer places\nthe head and tail to the earliest and latest positions reached, respectively. The old LN\nrenderer instead places them both wherever the playfield happens to be at the time.",
+            "When set to ON, forces the use of the old LN renderer. If your chart has no Scroll\nVelocity changes, you can safely ignore this option. The current LN renderer places\nthe head and tail to the earliest and latest positions reached, respectively. The old LN\nrenderer instead places them both wherever the playfield happens to be at the time.",
             Color.White
         );
 
