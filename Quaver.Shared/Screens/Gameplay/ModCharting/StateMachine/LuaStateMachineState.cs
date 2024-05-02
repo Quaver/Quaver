@@ -23,18 +23,18 @@ public class LuaStateMachineState : StateMachineState
     public override void Update()
     {
         base.Update();
-        OnUpdateClosure.SafeCall();
+        OnUpdateClosure?.SafeCall();
     }
 
     public override void Enter()
     {
         base.Enter();
-        OnEnableClosure.SafeCall();
+        OnEnableClosure?.SafeCall();
     }
 
     public override void Leave()
     {
         base.Leave();
-        OnDisableClosure.SafeCall();
+        OnDisableClosure?.SafeCall();
     }
 }
