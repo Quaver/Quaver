@@ -89,6 +89,10 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = this,
             };
 
+            const int Spread = 25;
+            YesButton.X -= Spread;
+            NoButton.X += Spread;
+
             YesButton.Y += 32;
             NoButton.Y = YesButton.Y;
 
@@ -190,20 +194,21 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             {
                 Parent = Panel,
                 Y = Tags.Y + Tags.Height + Spacing,
-                X = -450,
-                Alignment = Alignment.TopRight,
+                X = 70,
+                Alignment = Alignment.TopLeft,
             };
         }
 
         private void CreateBpmAffectsSvCheckbox()
         {
-            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 20,
+            // Leading whitespace needed to keep it left-aligned.
+            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:               ", 20,
                 new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
-                Y = GameMode.Y + 6,
-                X = -GameMode.X + 24,
-                Alignment = Alignment.TopLeft,
+                Y = GameMode.Y + 7,
+                X = -GameMode.X + 25,
+                Alignment = Alignment.TopRight,
             };
         }
 
@@ -214,8 +219,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             {
                 Parent = Panel,
                 Y = BpmAffectsScrollVelocity.Y + BpmAffectsScrollVelocity.Height + Spacing,
-                X = BpmAffectsScrollVelocity.X - 52,
-                Alignment = Alignment.TopLeft,
+                X = BpmAffectsScrollVelocity.X,
+                Alignment = Alignment.TopRight,
             };
         }
 
