@@ -17,7 +17,7 @@ public class ModChartStateMachines
         RootMachine = new OrthogonalStateMachine(Shortcut.ModChartScript);
     }
 
-    public readonly OrthogonalStateMachine RootMachine;
+    public OrthogonalStateMachine RootMachine { get; }
 
     public OrthogonalStateMachine NewOrthogonal(string name = "", StateMachineState parent = default) =>
         new(Shortcut.ModChartScript, name, parent);

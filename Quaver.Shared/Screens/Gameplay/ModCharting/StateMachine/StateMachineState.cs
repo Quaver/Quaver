@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
@@ -7,7 +8,7 @@ using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
 [MoonSharpUserData]
-public abstract class StateMachineState : IWithParent<StateMachineState>
+public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGraphFormattable
 {
     private static int _currentUid;
     protected static int GenerateUid() => _currentUid++;
@@ -56,6 +57,7 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
     {
         if (!(this is StateMachine || this is OrthogonalStateMachine))
             throw new InvalidOperationException($"{GetType().Name} does not allow sub-states");
+        if (state.Parent == this) return;
         if (state.Parent != null)
             throw new InvalidOperationException($"Cannot add a state to more than one state machine");
         state.Parent = this;
@@ -65,6 +67,16 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
     public virtual IEnumerable<StateMachineState> GetActiveLeafStates()
     {
         if (IsActive) yield return this;
+    }
+
+    public virtual IEnumerable<StateMachineState> LeafEntryStates()
+    {
+        yield return this;
+    }
+
+    public virtual IEnumerable<StateTransitionEdge> AllTransitionEdges()
+    {
+        return OutgoingTransitions;
     }
 
     public void AddTransition(StateTransitionEdge transitionEdge)
@@ -115,5 +127,19 @@ public abstract class StateMachineState : IWithParent<StateMachineState>
     public override string ToString()
     {
         return $"[{Name}]";
+    }
+
+    public virtual void WriteDotGraph(TextWriter writer, bool isSubgraph)
+    {
+        writer.WriteLine($"n{Uid} [label = \"{Name}\"];");
+    }
+
+    public virtual string DotGraphNodeName => $"n{Uid}";
+
+    public string GenerateDotGraph()
+    {
+        using var writer = new StringWriter();
+        WriteDotGraph(writer, false);
+        return writer.ToString();
     }
 }
