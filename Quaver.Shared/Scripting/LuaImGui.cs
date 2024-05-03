@@ -41,13 +41,15 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private bool IsResource { get; }
 
-        private DateTime LastWatcher { get; set; }
+        private DateTime LastException { get; set; }
 
-        private int FailedVersion { get; set; } = -1;
+        private DateTime LastWatcher { get; set; }
 
         private int LoadedVersion { get; set; } = -1;
 
         private int Version { get; set; }
+
+        private string LastErrorMessage { get; set; }
 
         /// <summary>
         /// </summary>
@@ -133,22 +135,15 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            if (LoadedVersion == FailedVersion)
+            if (DateTime.Now - LastException < TimeSpan.FromSeconds(1))
                 return;
 
-            try
-            {
-                SetFrameState();
+            SetFrameState();
 
-                if (WorkingScript.Globals["draw"] is Closure draw)
-                    WorkingScript.Call(draw);
-
-                AfterRender();
-            }
-            catch (Exception e)
-            {
+            if (Draw() is { } e)
                 HandleLuaException(e);
-            }
+
+            AfterRender();
         }
 
         /// <summary>
@@ -203,6 +198,7 @@ namespace Quaver.Shared.Scripting
                 Globals =
                 {
                     ["eval"] = Eval,
+                    ["imgui"] = typeof(ImGuiWrapper),
                     ["print"] = CallbackFunction.FromDelegate(null, Print),
                     ["state"] = State,
                 },
@@ -227,8 +223,6 @@ namespace Quaver.Shared.Scripting
             {
                 HandleLuaException(e);
             }
-
-            WorkingScript.Globals["imgui"] = typeof(ImGuiWrapper);
         }
 
         /// <summary>
@@ -348,7 +342,11 @@ namespace Quaver.Shared.Scripting
                 {
                     using FileStream file = new(FilePath, FileMode.Open, FileAccess.Read, FileShare.None);
                     using StreamReader reader = new(file);
-                    ScriptText = reader.ReadToEnd();
+                    var text = reader.ReadToEnd();
+
+                    // It is possible that the file was only partially written to, which would lead to a syntax error.
+                    WorkingScript.LoadString(text);
+                    ScriptText = text;
                     LoadedVersion++;
                     return;
                 }
@@ -366,38 +364,15 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private void HandleLuaException(Exception e)
         {
-            FailedVersion = LoadedVersion;
+            LastException = DateTime.Now;
+            var message = FormatException(e);
+
+            if (message == LastErrorMessage)
+                return;
+
+            LastErrorMessage = message;
             Logger.Error(e, LogType.Runtime);
-
-            var summary = e switch
-            {
-                DynamicExpressionException => "a dynamic expression",
-                InternalErrorException => "an internal",
-                ScriptRuntimeException => "a script runtime",
-                SyntaxErrorException => "a syntax",
-                InterpreterException => "an interpreter",
-                IOException => "an IO",
-                // Engine causes an IndexOutOfRangeException on stack overflows
-                IndexOutOfRangeException => "a stack overflow",
-                _ => "an unknown",
-            };
-
-            var message = e switch
-            {
-                InterpreterException { DecoratedMessage: { } decorated } => $" at {decorated.Replace("chunk_0:", "")}",
-                FileNotFoundException => ". Did \"plugin.lua\" get moved?",
-                IndexOutOfRangeException => ".",
-                _ => $": {e.Message}",
-            };
-
-            var callStack = (e as InterpreterException)?.CallStack is { } list
-                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
-                : "";
-
-            NotificationManager.Show(
-                NotificationLevel.Error,
-                $"Plugin \"{Name}\" caused {summary} error{message}{callStack}"
-            );
+            NotificationManager.Show(NotificationLevel.Error, message);
         }
 
         /// <summary>
@@ -419,6 +394,61 @@ namespace Quaver.Shared.Scripting
                 level ?? NotificationLevel.Info,
                 $"{Name}:\n{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(x => $"{x}"))}"
             );
+        }
+
+        /// <summary>
+        ///     Formats the exception to be readable in a notification.
+        /// </summary>
+        /// <param name="e">The exception to format.</param>
+        /// <returns>The formatted exception.</returns>
+        string FormatException(Exception e)
+        {
+            var summary = e switch
+            {
+                DynamicExpressionException => "a dynamic expression",
+                InternalErrorException => "an internal",
+                ScriptRuntimeException => "a script runtime",
+                SyntaxErrorException => "a syntax",
+                InterpreterException => "an interpreter",
+                IOException => "an IO",
+                // Engine causes an IndexOutOfRangeException on stack overflows
+                IndexOutOfRangeException => "a stack overflow",
+                _ => "an unknown",
+            };
+
+            var message = e switch
+            {
+                InterpreterException { DecoratedMessage: { } decorated } => $" at {decorated.Replace("chunk_1:", "")}",
+                FileNotFoundException => ". Did \"plugin.lua\" get moved?",
+                IndexOutOfRangeException => ".",
+                _ => $": {e.Message}",
+            };
+
+            var callStack = (e as InterpreterException)?.CallStack is { } list
+                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
+                : "";
+
+            return $"Plugin \"{Name}\" caused {summary} error{message}{callStack}";
+        }
+
+        /// <summary>
+        ///     Invokes the user-defined <c>draw</c> function, returning an <see cref="Exception"/> if it failed.
+        /// </summary>
+        /// <returns>The <see cref="Exception"/> if it failed.</returns>
+        Exception Draw()
+        {
+            try
+            {
+                if (WorkingScript.Globals["draw"] is Closure draw)
+                    WorkingScript.Call(draw);
+
+                LastErrorMessage = null;
+                return null;
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
         }
 
         /// <summary>
