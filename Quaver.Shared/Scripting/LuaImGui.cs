@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -17,6 +15,9 @@ using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Logging;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Quaver.Shared.Scripting
 {
@@ -33,24 +34,23 @@ namespace Quaver.Shared.Scripting
         // <summary>
         // Gets or sets the name of the plugin
         // </summary>
-        public virtual string Name
-        {
-        	get => Path.GetFileName(Path.GetDirectoryName(FilePath));
-        	set { }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// </summary>
         private bool IsResource { get; }
 
+        private DateTime LastWatcher { get; set; }
+
+        private int FailedVersion { get; set; } = -1;
+
+        private int LoadedVersion { get; set; } = -1;
+
+        private int Version { get; set; }
+
         /// <summary>
         /// </summary>
         private string ScriptText { get; set; }
-
-        // <summary>
-        // Determines when an exception has occured.
-        // </summary>
-        private DateTime LastException { get; set; }
 
         /// <summary>
         /// </summary>
@@ -65,10 +65,13 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="isResource"></param>
-        public LuaImGui(string filePath, bool isResource = false) : base(false, EditorFileMenuBar.GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
+        /// <param name="name"></param>
+        public LuaImGui(string filePath, bool isResource = false, string name = null)
+            : base(false, EditorFileMenuBar.GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
         {
             FilePath = filePath;
             IsResource = isResource;
+            Name = name ?? Path.GetFileName(Path.GetDirectoryName(FilePath));
 
             // ReSharper disable once VirtualMemberCallInConstructor
             State = GetStateObject();
@@ -101,19 +104,14 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<Keys>();
 
             RegisterAllVectors();
-            LoadScript();
+            LazyLoadScript();
 
             if (IsResource)
                 return;
 
-            Watcher = new FileSystemWatcher(Path.GetDirectoryName(filePath))
-            {
-                Filter = Path.GetFileName(filePath)
-            };
-
+            Watcher = new(Path.GetDirectoryName(filePath) ?? "") { Filter = Path.GetFileName(filePath) };
             Watcher.Changed += OnFileChanged;
             Watcher.Created += OnFileChanged;
-            Watcher.Deleted += OnFileChanged;
             Watcher.Renamed += OnFileChanged;
 
             // Begin watching.
@@ -134,8 +132,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            // Prevents exception spam: No one needs more than 2 hot reloads per second.
-            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(500))
+            if (LoadedVersion == FailedVersion)
                 return;
 
             try
@@ -157,7 +154,7 @@ namespace Quaver.Shared.Scripting
         ///     Returns an object with the state the plugin has
         /// </summary>
         /// <returns></returns>
-        public virtual LuaPluginState GetStateObject() => new LuaPluginState();
+        public virtual LuaPluginState GetStateObject() => new();
 
         /// <summary>
         ///     Sets the state of the plugin for this frame
@@ -187,36 +184,40 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
-        ///     After the plugin has been render, this will be called.
+        ///     After the plugin has been rendered, this will be called.
         ///     Should be used to pop any styles
         /// </summary>
-        public virtual void AfterRender()
-        {
-        }
+        public virtual void AfterRender() { }
 
         /// <summary>
         ///     Loads the text from the script
         /// </summary>
-        private void LoadScript()
+        private void LazyLoadScript()
         {
-            WorkingScript = new Script(CoreModules.Preset_HardSandbox);
-            WorkingScript.Globals["print"] = CallbackFunction.FromDelegate(null, Print);
+            if (LoadedVersion == Version)
+                return;
+
+            LoadedVersion++;
+
+            WorkingScript = new(CoreModules.Preset_HardSandbox | CoreModules.Dynamic)
+            {
+                Globals = { ["print"] = CallbackFunction.FromDelegate(null, Print), ["state"] = State },
+            };
 
             try
             {
-                if (IsResource)
-                {
-                    var buffer = GameBase.Game.Resources.Get(FilePath);
-                    ScriptText = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                }
-                else
-                {
-                    Thread.Sleep(10);
-                    ScriptText = File.ReadAllText(FilePath);
-                }
+                LoadScriptText();
 
                 if (WorkingScript.DoString(ScriptText) is var ret && ret.Type is not DataType.Void)
-                	NotificationManager.Show(NotificationLevel.Info, $"Plugin {Name} returned {ret}.");
+                    NotificationManager.Show(
+                        NotificationLevel.Success,
+                        $"Plugin \"{Name}\" has returned {ret} on initialization."
+                    );
+                else if (LoadedVersion > 0)
+                    NotificationManager.Show(
+                        NotificationLevel.Success,
+                        $"Plugin \"{Name}\" was hot-reloaded successfully."
+                    );
             }
             catch (Exception e)
             {
@@ -224,7 +225,6 @@ namespace Quaver.Shared.Scripting
             }
 
             WorkingScript.Globals["imgui"] = typeof(ImGuiWrapper);
-            WorkingScript.Globals["state"] = State;
         }
 
         /// <summary>
@@ -233,18 +233,26 @@ namespace Quaver.Shared.Scripting
         /// <param name="e"></param>
         private void OnFileChanged(object sender, FileSystemEventArgs e)
         {
-            LoadScript();
-            Logger.Important($"Script: {FilePath} has been loaded", LogType.Runtime);
+            if (DateTime.Now - LastWatcher < TimeSpan.FromMilliseconds(50))
+                return;
+
+            LastWatcher = DateTime.Now;
+            Version++;
+            Logger.Important($"Script: \"{FilePath}\" will be hot-reloaded. (Revision #{Version})", LogType.Runtime);
+            LazyLoadScript();
         }
 
         /// <summary>
         ///     Handles registering the Vector types for the script
         /// </summary>
-        private void RegisterAllVectors()
+        private static void RegisterAllVectors()
         {
             // Vector 2
-            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector2),
-                dynVal => {
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Table,
+                typeof(Vector2),
+                dynVal =>
+                {
                     var table = dynVal.Table;
                     var x = (float)(double)table[1];
                     var y = (float)(double)table[2];
@@ -253,7 +261,8 @@ namespace Quaver.Shared.Scripting
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
-                (script, vector) => {
+                (script, vector) =>
+                {
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var dynVal = DynValue.NewTable(script, x, y);
@@ -262,18 +271,22 @@ namespace Quaver.Shared.Scripting
             );
 
             // Vector3
-            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector3),
-                dynVal => {
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Table,
+                typeof(Vector3),
+                dynVal =>
+                {
                     var table = dynVal.Table;
-                    var x = (float)((double)table[1]);
-                    var y = (float)((double)table[2]);
-                    var z = (float)((double)table[3]);
+                    var x = (float)(double)table[1];
+                    var y = (float)(double)table[2];
+                    var z = (float)(double)table[3];
                     return new Vector3(x, y, z);
                 }
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
-                (script, vector) => {
+                (script, vector) =>
+                {
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var z = DynValue.NewNumber(vector.Z);
@@ -283,19 +296,23 @@ namespace Quaver.Shared.Scripting
             );
 
             // Vector4
-            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector4),
-                dynVal => {
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Table,
+                typeof(Vector4),
+                dynVal =>
+                {
                     var table = dynVal.Table;
-                    var x = (float)((double)table[1]);
-                    var y = (float)((double)table[2]);
-                    var z = (float)((double)table[3]);
-                    var w = (float)((double)table[4]);
+                    var x = (float)(double)table[1];
+                    var y = (float)(double)table[2];
+                    var z = (float)(double)table[3];
+                    var w = (float)(double)table[4];
                     return new Vector4(x, y, z, w);
                 }
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
-                (script, vector) => {
+                (script, vector) =>
+                {
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var z = DynValue.NewNumber(vector.Z);
@@ -307,17 +324,47 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Attempts to update <see cref="ScriptText"/>
+        /// </summary>
+        private void LoadScriptText()
+        {
+            if (IsResource)
+            {
+                var buffer = GameBase.Game.Resources.Get(FilePath);
+                ScriptText = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                return;
+            }
+
+            const int Retries = 10;
+
+            // There is no way to wait for the file lock to release. Every solution found in libraries,
+            // stackoverflow answers etc. are a variation on the brute force approach which is used here.
+            for (var i = 0; i < Retries; i++)
+                try
+                {
+                    using FileStream file = new(FilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+                    using StreamReader reader = new(file);
+                    ScriptText = reader.ReadToEnd();
+                    return;
+                }
+                catch (Exception)
+                {
+                    if (i == Retries - 1)
+                        throw;
+
+                    Thread.Sleep(50);
+                }
+        }
+
+        /// <summary>
         ///     Handles an exception that comes from the lua interpreter.
         /// </summary>
         private void HandleLuaException(Exception e)
         {
-            if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
-            	return;
-
-            LastException = DateTime.Now;
+            FailedVersion = LoadedVersion;
             Logger.Error(e, LogType.Runtime);
 
-    	    var summary = e switch
+            var summary = e switch
             {
                 DynamicExpressionException => "a dynamic expression",
                 InternalErrorException => "an internal",
@@ -325,13 +372,15 @@ namespace Quaver.Shared.Scripting
                 SyntaxErrorException => "a syntax",
                 InterpreterException => "an interpreter",
                 IOException => "an IO",
-                IndexOutOfRangeException => "a stack overflow", // Engine causes an IndexOutOfRangeException on stack overflows
+                // Engine causes an IndexOutOfRangeException on stack overflows
+                IndexOutOfRangeException => "a stack overflow",
                 _ => "an unknown",
             };
 
             var message = e switch
             {
                 InterpreterException { DecoratedMessage: { } decorated } => $" at {decorated.Replace("chunk_0:", "")}",
+                FileNotFoundException => ". Did \"plugin.lua\" get moved?",
                 IndexOutOfRangeException => ".",
                 _ => $": {e.Message}",
             };
@@ -340,10 +389,22 @@ namespace Quaver.Shared.Scripting
                 ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
                 : "";
 
-            NotificationManager.Show(NotificationLevel.Error, $"Plugin {Name} caused {summary} error{message}{callStack}");
+            NotificationManager.Show(
+                NotificationLevel.Error,
+                $"Plugin \"{Name}\" caused {summary} error{message}{callStack}"
+            );
         }
 
-        private void Print(params DynValue[] args) => NotificationManager.Show(NotificationLevel.Info, $"{Name}:\n{string.Join("\n", args.Select(x => $"{x}"))}");
+        private void Print(params DynValue[] args)
+        {
+            NotificationLevel? level =
+                args.Length is not 0 && Enum.TryParse(args[0].CastToString(), out NotificationLevel l) ? l : null;
+
+            NotificationManager.Show(
+                level ?? NotificationLevel.Info,
+                $"{Name}:\n{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(x => $"{x}"))}"
+            );
+        }
 
         private static string FormatSource(SourceRef source)
         {
