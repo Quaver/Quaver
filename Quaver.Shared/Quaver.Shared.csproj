@@ -138,6 +138,5 @@
     <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="2.0.6" />
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
-    <PackageReference Include="websocketsharp.core" Version="1.0.0" />
   </ItemGroup>
 </Project>
