@@ -7,6 +7,7 @@ using System.Threading;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.CoreLib;
 using MoonSharp.Interpreter.Debugging;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
@@ -197,11 +198,14 @@ namespace Quaver.Shared.Scripting
             if (LoadedVersion == Version)
                 return;
 
-            LoadedVersion++;
-
-            WorkingScript = new(CoreModules.Preset_HardSandbox | CoreModules.Dynamic)
+            WorkingScript = new(CoreModules.Preset_HardSandbox)
             {
-                Globals = { ["print"] = CallbackFunction.FromDelegate(null, Print), ["state"] = State },
+                Globals =
+                {
+                    ["eval"] = Eval,
+                    ["print"] = CallbackFunction.FromDelegate(null, Print),
+                    ["state"] = State,
+                },
             };
 
             try
@@ -345,6 +349,7 @@ namespace Quaver.Shared.Scripting
                     using FileStream file = new(FilePath, FileMode.Open, FileAccess.Read, FileShare.None);
                     using StreamReader reader = new(file);
                     ScriptText = reader.ReadToEnd();
+                    LoadedVersion++;
                     return;
                 }
                 catch (Exception)
@@ -395,10 +400,20 @@ namespace Quaver.Shared.Scripting
             );
         }
 
+        /// <summary>
+        ///     Intercepted print function to display a notification.
+        /// </summary>
+        /// <param name="args">The arguments to print.</param>
         private void Print(params DynValue[] args)
         {
-            NotificationLevel? level =
-                args.Length is not 0 && Enum.TryParse(args[0].CastToString(), out NotificationLevel l) ? l : null;
+            NotificationLevel? level = (args.Length is 0 ? "" : args[0]?.CastToString()?.ToUpperInvariant()) switch
+            {
+                "INF" or "INFO" => NotificationLevel.Info,
+                "WRN" or "WARN" or "WARNING" => NotificationLevel.Warning,
+                "ERR" or "ERROR" => NotificationLevel.Error,
+                "SUC" or "SUCCESS" => NotificationLevel.Success,
+                _ => null,
+            };
 
             NotificationManager.Show(
                 level ?? NotificationLevel.Info,
@@ -406,6 +421,11 @@ namespace Quaver.Shared.Scripting
             );
         }
 
+        /// <summary>
+        ///     Formats the <see cref="SourceRef"/> to be human-friendly.
+        /// </summary>
+        /// <param name="source">The <see cref="SourceRef"/> to format.</param>
+        /// <returns>The formatted string.</returns>
         private static string FormatSource(SourceRef source)
         {
             StringBuilder sb = new("(");
@@ -420,6 +440,24 @@ namespace Quaver.Shared.Scripting
                 sb.Append('-').Append(source.ToChar);
 
             return sb.Append(')').ToString();
+        }
+
+        /// <summary>
+        ///     Calls <see cref="DynamicModule.eval"/>, catching exceptions and returning <see cref="DynValue.Nil"/>.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.</returns>
+        private static DynValue Eval(ScriptExecutionContext context, CallbackArguments args)
+        {
+            try
+            {
+                return DynamicModule.eval(context, args);
+            }
+            catch (Exception)
+            {
+                return DynValue.Nil;
+            }
         }
     }
 }
