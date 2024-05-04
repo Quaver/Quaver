@@ -16,19 +16,18 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
     protected static int GenerateUid() => _currentUid++;
     public int Uid { get; }
     [MoonSharpHidden] public static readonly DisjointSetUnion<StateMachineState> DisjointSetUnion = new();
-    public bool IsActive { get; protected set; }
+    public bool IsActive { get; private set; }
 
     [MoonSharpHidden] internal List<StateTransitionEdge> OutgoingTransitions { get; } = new();
 
-    public ModChartScript Script { get; protected set; }
+    public ModChartScript Script { get; }
 
     protected StateMachineState(ModChartScript script, string name = "", StateMachineState parent = default)
     {
         Uid = GenerateUid();
         Script = script;
-        Parent = parent;
         Name = string.IsNullOrWhiteSpace(name) ? $"AnonymousState {Uid}" : name;
-        Parent?.AddSubState(this);
+        parent?.AddSubState(this);
     }
 
     public string Name { get; }
@@ -36,7 +35,9 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
     /// <summary>
     ///     The parent state. Null if root
     /// </summary>
-    public StateMachineState Parent { get; set; }
+    public StateMachineState Parent { get; private set; }
+
+    public StateMachineState Root => Parent?.Root ?? this;
 
     /// <summary>
     ///     Used to find the least common ancestor
@@ -48,7 +49,14 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
     ///     If this state is the LCA, this is the direct descendent of this state on the path from this to the originalState
     /// </summary>
     [MoonSharpHidden]
-    internal StateMachineState LastLcaSearchChild { get; set; }
+    internal StateMachineState LastLcaSearchChildToSource { get; set; }
+
+
+    /// <summary>
+    ///     If this state is the LCA, this is the direct descendent of this state on the path from this to the targetState
+    /// </summary>
+    [MoonSharpHidden]
+    internal StateMachineState LastLcaSearchChildToTarget { get; set; }
 
     [MoonSharpHidden]
     public virtual void Update()
@@ -103,16 +111,17 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
     public virtual void Enter()
     {
         if (IsActive) return;
-        Logger.Debug($"[SM] {Name} entered", LogType.Runtime);
         IsActive = true;
-        foreach (var outgoingTransition in OutgoingTransitions)
-        {
-            Script.ModChartEvents.Subscribe(outgoingTransition.EventType, outgoingTransition.Handler);
-        }
-
         if (Parent != null && !Parent.IsActive)
         {
             Parent.Enter();
+        }
+
+        Parent?.SetActiveSubState(this);
+        Logger.Debug($"[SM] {Name} entered", LogType.Runtime);
+        foreach (var outgoingTransition in OutgoingTransitions)
+        {
+            Script.ModChartEvents.Subscribe(outgoingTransition.EventType, outgoingTransition.Handler);
         }
     }
 
@@ -126,6 +135,15 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
         {
             Script.ModChartEvents.Unsubscribe(outgoingTransition.EventType, outgoingTransition.Handler);
         }
+    }
+
+    public virtual bool CanEnterSubStateDirectly(StateMachineState subState)
+    {
+        return false;
+    }
+
+    protected virtual void SetActiveSubState(StateMachineState subState)
+    {
     }
 
     public override string ToString()
@@ -145,16 +163,17 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
         using var writer = new StringWriter();
         writer.WriteLine($"digraph {DotGraphNodeName} {{");
         writer.WriteLine($"compound = true;");
-        writer.WriteLine($"nodesep = 2;");
+        writer.WriteLine($"nodesep = 1;");
         WriteDotGraph(writer, false);
         writer.WriteLine("}");
         return writer.ToString();
     }
 
-    public void WriteDotGraphEdges(TextWriter writer)
+    protected void WriteDotGraphEdges(TextWriter writer)
     {
         foreach (var transitionEdge in AllTransitionEdges())
         {
+            var transitionStatus = ModChartStateMachines.FindLca(transitionEdge.From, transitionEdge.To, out _);
             var arrowProps = "";
             var fromName = transitionEdge.From.DotGraphNodeName;
             if (transitionEdge.From is StateMachine or OrthogonalStateMachine)
@@ -168,6 +187,22 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
             {
                 toName = transitionEdge.To.LeafEntryStates().FirstOrDefault()?.DotGraphNodeName ?? "Unknown";
                 arrowProps += $" lhead=\"{transitionEdge.To.DotGraphNodeName}\"";
+            }
+
+            switch (transitionStatus)
+            {
+                case TransitionStatus.Incompatible or TransitionStatus.Unreachable:
+                    arrowProps += $" color=red";
+                    break;
+                case TransitionStatus.Possible:
+                    arrowProps += $" color=cyan";
+                    break;
+                case TransitionStatus.Self:
+                    arrowProps += $" color=purple style=dashed";
+                    break;
+                case TransitionStatus.ActiveTarget or TransitionStatus.InactiveOrigin:
+                    arrowProps += $" color=grey style=dashed";
+                    break;
             }
 
             writer.WriteLine(

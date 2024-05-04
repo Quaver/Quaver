@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
@@ -42,6 +42,78 @@ public class ModChartStateMachines
     }
 
     /// <summary>
+    ///     Tries to find the LCA (Least Common Ancestor) of the original and target state.
+    ///     Returns the viability of the transition
+    /// </summary>
+    /// <remarks>
+    ///     Transition path: s ~> u ~> lca ~> v ~> t <br/>
+    ///     Let P1 = s ~> u, P2 = v ~> t <br/>
+    ///     s, t are source and target, respectively <br/>
+    ///     u, v are direct children of lca <br/>
+    ///     u != v, s != t, P1 INTERSECT P2 = {} <br/>
+    ///     it is possible that s = u or v = t <br/>
+    ///     it is also possible that s = lca or t = lca, in which case u, v = null <br/>
+    ///     All states in the path P2 except v should be inactive, and have to be an entry state <br/>
+    ///     We exclude v because we consider a simple transition x -> y where x.parent = y.parent <br/>
+    /// </remarks>
+    /// <param name="originalState"></param>
+    /// <param name="targetState"></param>
+    /// <param name="lca">LCA found, if possible, otherwise null</param>
+    /// <returns></returns>
+    public static TransitionStatus FindLca(StateMachineState originalState, StateMachineState targetState,
+        out StateMachineState lca)
+    {
+        lca = null;
+        // TODO: Use LCA -> RMQ for O(n) preprocessing and O(1) query
+        if (!StateMachineState.DisjointSetUnion.IsUnion(originalState, targetState))
+        {
+            return TransitionStatus.Unreachable;
+        }
+
+        // Self transition: skip
+        if (originalState == targetState) return TransitionStatus.Self;
+        // Inappropriate transition: the original state must be active
+        if (!originalState.IsActive) return TransitionStatus.InactiveOrigin;
+        if (targetState.IsActive) return TransitionStatus.ActiveTarget;
+
+        // We will calculate LCA as well as u and v
+        var currentState = originalState;
+        currentState.LastLcaSearchChildToSource = null; // Nothing will leave if lca == originalState
+        while (currentState != null)
+        {
+            currentState.LastLcaSearchTarget = originalState;
+            if (currentState.Parent != null)
+                currentState.Parent.LastLcaSearchChildToSource = currentState;
+            currentState = currentState.Parent;
+        }
+
+        // Find the LCA of two states (Least Common Ancestor)
+        lca = targetState;
+        lca.LastLcaSearchChildToTarget = null;
+        while (lca != null && lca.LastLcaSearchTarget != originalState)
+        {
+            if (lca.Parent != null)
+                lca.Parent.LastLcaSearchChildToTarget = lca;
+            lca = lca.Parent;
+        }
+
+        // Won't happen if DSU works well, but just in case
+        if (lca == null) return TransitionStatus.Unreachable;
+
+        currentState = targetState;
+        // Logger.Debug($"{originalState} ~> {lca.LastLcaSearchChildToSource} ~> {lca} ~> {lca.LastLcaSearchChildToTarget} ~> {targetState}", LogType.Runtime);
+        while (currentState != null && currentState != lca.LastLcaSearchChildToTarget)
+        {
+            if (currentState.IsActive) return TransitionStatus.ActiveTarget;
+            if (currentState.Parent != null && !currentState.Parent.CanEnterSubStateDirectly(currentState))
+                return TransitionStatus.Incompatible;
+            currentState = currentState.Parent;
+        }
+
+        return TransitionStatus.Possible;
+    }
+
+    /// <summary>
     ///     Attempts to change state from one to another
     ///     This is responsible for calling the respective chain of <see cref="StateMachineState.Leave"/> and <see cref="StateMachineState.Enter"/>,
     ///     along the path <see cref="originalState"/> ~> LCA ~> <see cref="targetState"/>. <br/>
@@ -50,35 +122,13 @@ public class ModChartStateMachines
     /// <param name="originalState"></param>
     /// <param name="targetState"></param>
     /// <exception cref="InvalidOperationException"><see cref="originalState"/> and <see cref="targetState"/> do not share an ancestor</exception>
-    public void ChangeState(StateMachineState originalState, StateMachineState targetState)
+    public static void ChangeState(StateMachineState originalState, StateMachineState targetState)
     {
-        // TODO: Use LCA -> RMQ for O(n) preprocessing and O(1) query
-        if (StateMachineState.DisjointSetUnion.IsUnion(originalState, targetState))
-        {
-            throw new InvalidOperationException(
-                $"Unable to transition from state '{originalState.Name}' to '{targetState.Name}' because they do not share an ancestor state machine");
-        }
-
-        if (originalState == targetState) return;
-
-        var currentState = originalState;
-        while (currentState != null)
-        {
-            currentState.LastLcaSearchTarget = originalState;
-            if (currentState.Parent != null)
-                currentState.Parent.LastLcaSearchChild = currentState;
-            currentState = currentState.Parent;
-        }
-
-        // Find the LCA of two states (Least Common Ancestor)
-        var lca = targetState;
-        while (lca != null && lca.LastLcaSearchTarget != originalState)
-        {
-            lca = lca.Parent;
-        }
-
+        var status = FindLca(originalState, targetState, out var lca);
+        if (status != TransitionStatus.Possible)
+            throw new InvalidOperationException($"Cannot transition from {originalState} to {targetState}: {status}");
         // Call a sequence of OnLeave()
-        lca?.LastLcaSearchChild.Leave();
+        lca?.LastLcaSearchChildToSource.Leave();
         targetState.Enter();
     }
 }

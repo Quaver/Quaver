@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
@@ -61,9 +62,20 @@ public class StateMachine : StateMachineState
 
     public override void Leave()
     {
-        base.Leave();
         ActiveState?.Leave();
         ActiveState = null;
+        base.Leave();
+    }
+
+    protected override void SetActiveSubState(StateMachineState subState)
+    {
+        ActiveState = subState;
+    }
+
+    public override bool CanEnterSubStateDirectly(StateMachineState subState)
+    {
+        Logger.Debug($"SM {this}: Active {ActiveState}, Entry {EntryState}", LogType.Runtime);
+        return subState.Parent == this && (ActiveState == null && EntryState == subState || ActiveState == subState);
     }
 
     public override IEnumerable<StateTransitionEdge> AllTransitionEdges()
@@ -77,6 +89,7 @@ public class StateMachine : StateMachineState
     {
         writer.WriteLine($"subgraph {DotGraphNodeName} {{");
         writer.WriteLine("style = solid;");
+        writer.WriteLine($"color = {(IsActive ? "green" : "black")}");
         writer.WriteLine("node [style=solid];");
         writer.WriteLine($"label = \"{Name}\";");
         foreach (var subState in _subStates)

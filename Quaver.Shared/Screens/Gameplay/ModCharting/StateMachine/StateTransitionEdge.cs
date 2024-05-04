@@ -1,5 +1,6 @@
 using System;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
 
@@ -42,7 +43,7 @@ public class StateTransitionEdge
         Handler = instance =>
         {
             if (Guard(this, instance))
-                From.Script.ModChartStateMachines.ChangeState(From, To);
+                ModChartStateMachines.ChangeState(From, To);
         };
     }
 

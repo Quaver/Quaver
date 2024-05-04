@@ -43,6 +43,11 @@ public class OrthogonalStateMachine : StateMachineState
         }
     }
 
+    public override bool CanEnterSubStateDirectly(StateMachineState subState)
+    {
+        return subState.Parent == this;
+    }
+
     public override IEnumerable<StateMachineState> GetActiveLeafStates()
     {
         return _subStates.SelectMany(s => s.GetActiveLeafStates());
@@ -69,11 +74,12 @@ public class OrthogonalStateMachine : StateMachineState
 
     public override void Leave()
     {
-        base.Leave();
         foreach (var subState in _subStates)
         {
             subState.Leave();
         }
+
+        base.Leave();
     }
 
     public override string DotGraphNodeName => $"cluster_{Uid}";
@@ -82,6 +88,7 @@ public class OrthogonalStateMachine : StateMachineState
     {
         writer.WriteLine($"subgraph {DotGraphNodeName} {{");
         writer.WriteLine("style = solid;");
+        writer.WriteLine($"color = {(IsActive ? "green" : "black")}");
         writer.WriteLine("node [style=solid];");
         writer.WriteLine($"label = \"{Name}\";");
         foreach (var subState in _subStates)
