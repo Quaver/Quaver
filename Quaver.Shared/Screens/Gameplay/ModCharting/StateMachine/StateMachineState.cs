@@ -153,7 +153,7 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
 
     public virtual void WriteDotGraph(TextWriter writer, bool isSubgraph)
     {
-        writer.WriteLine($"n{Uid} [label = \"{Name}\" color = \"{(IsActive ? "green" : "black")}\" shape=circle];");
+        writer.WriteLine($"{DotGraphNodeName} [label = \"{Name}\" color = \"{(IsActive ? "green" : "black")}\" shape=circle];");
     }
 
     public virtual string DotGraphNodeName => $"n{Uid}";
@@ -191,8 +191,12 @@ public abstract class StateMachineState : IWithParent<StateMachineState>, IDotGr
 
             switch (transitionStatus)
             {
-                case TransitionStatus.Incompatible or TransitionStatus.Unreachable:
+                case TransitionStatus.Incompatible:
                     arrowProps += $" color=red";
+                    break;
+                case TransitionStatus.Unreachable:
+                    arrowProps += $" color=red style=dashed";
+                    writer.WriteLine($"{transitionEdge.To.DotGraphNodeName} [label=\"{transitionEdge.To.Name}\" shape=circle color=red style=dashed];");
                     break;
                 case TransitionStatus.Possible:
                     arrowProps += $" color=cyan";
