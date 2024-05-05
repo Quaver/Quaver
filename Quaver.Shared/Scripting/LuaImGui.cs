@@ -8,7 +8,6 @@ using System.Threading;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
-using MoonSharp.Interpreter.CoreLib;
 using MoonSharp.Interpreter.Debugging;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
@@ -201,6 +200,7 @@ namespace Quaver.Shared.Scripting
                 Globals =
                 {
                     ["eval"] = Eval,
+                    ["eval_expr"] = EvalExpr,
                     ["imgui"] = typeof(ImGuiWrapper),
                     ["print"] = CallbackFunction.FromDelegate(null, Print),
                     ["state"] = State,
@@ -400,6 +400,26 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Invokes the user-defined <c>draw</c> function, returning an <see cref="Exception"/> if it failed.
+        /// </summary>
+        /// <returns>The <see cref="Exception"/> if it failed.</returns>
+        Exception Draw()
+        {
+            try
+            {
+                if (WorkingScript.Globals["draw"] is Closure draw)
+                    WorkingScript.Call(draw);
+
+                LastErrorMessage = null;
+                return null;
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
+        }
+
+        /// <summary>
         ///     Formats the exception to be readable in a notification.
         /// </summary>
         /// <param name="e">The exception to format.</param>
@@ -427,32 +447,18 @@ namespace Quaver.Shared.Scripting
                 _ => $": {e.Message}",
             };
 
-            var callStack = (e as InterpreterException)?.CallStack is { } list
-                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
-                : "";
-
-            return $"Plugin \"{Name}\" caused {summary} error{message}{callStack}";
+            return $"Plugin \"{Name}\" caused {summary} error{message}{CallStack(e)}";
         }
 
         /// <summary>
-        ///     Invokes the user-defined <c>draw</c> function, returning an <see cref="Exception"/> if it failed.
+        ///     Gets the call stack.
         /// </summary>
-        /// <returns>The <see cref="Exception"/> if it failed.</returns>
-        Exception Draw()
-        {
-            try
-            {
-                if (WorkingScript.Globals["draw"] is Closure draw)
-                    WorkingScript.Call(draw);
-
-                LastErrorMessage = null;
-                return null;
-            }
-            catch (Exception e)
-            {
-                return e;
-            }
-        }
+        /// <param name="e">The exception.</param>
+        /// <returns>The call stack.</returns>
+        static string CallStack(Exception e) =>
+            (e as InterpreterException)?.CallStack is { } list
+                ? $"\nCall stack:\n{string.Join("\n", list.Select(x => $"{x.Name}{(x.Location is { } location ? $" at {FormatSource(location)}" : "")}"))}"
+                : "";
 
         /// <summary>
         ///     Formats the <see cref="SourceRef"/> to be human-friendly.
@@ -476,20 +482,62 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
-        ///     Calls <see cref="DynamicModule.eval"/>, catching exceptions and returning <see cref="DynValue.Nil"/>.
+        ///     Evaluates code.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="args">The arguments.</param>
-        /// <returns>The evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.</returns>
+        /// <returns>
+        /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
+        /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
+        /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
+        /// </returns>
         private static DynValue Eval(ScriptExecutionContext context, CallbackArguments args)
         {
             try
             {
-                return DynamicModule.eval(context, args);
+                var code = args.RawGet(0, false).String;
+
+                // Eval engine doesn't like empty code.
+                if (string.IsNullOrWhiteSpace(code))
+                    return DynValue.Nil;
+
+                var ok = context.GetScript().DoString(code);
+                return DynValue.NewTuple(ok, DynValue.Nil);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return DynValue.Nil;
+                var err = DynValue.NewString(e.Message);
+                return DynValue.NewTuple(DynValue.Nil, err);
+            }
+        }
+
+        /// <summary>
+        ///     Evaluates a code expression.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>
+        /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
+        /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
+        /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
+        /// </returns>
+        private static DynValue EvalExpr(ScriptExecutionContext context, CallbackArguments args)
+        {
+            try
+            {
+                var code = args.RawGet(0, false).String;
+
+                // Eval engine doesn't like empty code.
+                if (string.IsNullOrWhiteSpace(code))
+                    return DynValue.Nil;
+
+                var ok = context.GetScript().CreateDynamicExpression(code).Evaluate(context);
+                return DynValue.NewTuple(ok, DynValue.Nil);
+            }
+            catch (Exception e)
+            {
+                var err = DynValue.NewString(e.Message);
+                return DynValue.NewTuple(DynValue.Nil, err);
             }
         }
     }
