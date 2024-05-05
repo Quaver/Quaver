@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
@@ -24,6 +25,8 @@ namespace Quaver.Shared.Scripting
 {
     public class LuaImGui : SpriteImGui
     {
+        static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
+
         /// <summary>
         /// </summary>
         protected Script WorkingScript { get; private set; }
@@ -418,7 +421,7 @@ namespace Quaver.Shared.Scripting
 
             var message = e switch
             {
-                InterpreterException { DecoratedMessage: { } decorated } => $" at {decorated.Replace("chunk_1:", "")}",
+                InterpreterException { DecoratedMessage: { } decorated } => $" at {s_chunks.Replace(decorated, "")}",
                 FileNotFoundException => ". Did \"plugin.lua\" get moved?",
                 IndexOutOfRangeException => ".",
                 _ => $": {e.Message}",
