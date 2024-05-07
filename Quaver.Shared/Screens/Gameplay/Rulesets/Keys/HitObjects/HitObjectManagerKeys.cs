@@ -75,6 +75,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private Qua Map;
 
         /// <summary>
+        ///     Cached length of the map
+        /// </summary>
+        private int Length { get; set; }
+
+        /// <summary>
         ///     Number of lanes
         /// </summary>
         private int KeyCount { get; }
@@ -244,7 +249,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     return false;
 
                 // Wait for dead LNs to finish scrolling
-                return CurrentVisualAudioOffset > Map.Length;
+                return CurrentVisualAudioOffset > Length;
             }
         }
 
@@ -313,6 +318,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Ruleset = ruleset;
             Map = map.WithNormalizedSVs();
+            Length = Map.Length;
             KeyCount = Map.GetKeyCount(Map.HasScratchKey);
 
             // Initialize SV

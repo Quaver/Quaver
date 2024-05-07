@@ -11,10 +11,13 @@ using IniFileParser;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Writers.Zip;
@@ -50,6 +53,11 @@ namespace Quaver.Shared.Skinning
         ///     The skin for player 2 in the tournament screen
         /// </summary>
         public static SkinStore TournamentPlayer2Skin { get; set; }
+        
+        /// <summary>
+        ///     Watches for current skin changes
+        /// </summary>
+        public static FileSystemWatcher Watcher { get; private set; }
 
         /// <summary>
         ///     Loads the currently selected skin
@@ -66,6 +74,55 @@ namespace Quaver.Shared.Skinning
             }
 
             TournamentPlayer2Skin = new SkinStore(ConfigManager.TournamentPlayer2Skin.Value);
+        }
+
+        /// <summary>
+        ///     Start watching for changes in skin.ini
+        /// </summary>
+        public static void StartWatching()
+        {
+            if (!ConfigManager.ReloadSkinOnChange.Value)
+                return;
+
+            if (Watcher != null)
+            {
+                Logger.Important($"Skin manager started watching skin.ini", LogType.Runtime);
+                Watcher.EnableRaisingEvents = true;
+                return;
+            }
+            var path = Path.Combine(Skin.Dir, "skin.ini");
+            if (!File.Exists(path)) return;
+            Logger.Important($"Skin manager started watching skin.ini", LogType.Runtime);
+            Watcher = new FileSystemWatcher(Path.GetDirectoryName(path))
+            {
+                NotifyFilter = NotifyFilters.LastWrite,
+                EnableRaisingEvents = true,
+                Filter = Path.GetFileName(path)
+            };
+            Watcher.Changed += (sender, args) =>
+            {
+                if (TimeSkinReloadRequested != 0) return;
+                Logger.Important($"Skin change detected. Reloading", LogType.Runtime);
+                TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+                if (Skin.Dir.IsSubDirectoryOf(ConfigManager.SteamWorkshopDirectory.Value))
+                {
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        $"You are making changes to a workshop skin! Changes to workshop skins might be lost when the skin updates!",
+                        forceShow: true);
+                }
+            };
+        }
+
+        /// <summary>
+        ///     Stops watching skin.ini
+        /// </summary>
+        public static void StopWatching()
+        {
+            if (Watcher == null) return;
+            Logger.Important($"Skin manager stopped watching skin.ini", LogType.Runtime);
+            // Dispose of the watcher
+            Watcher.Dispose();
+            Watcher = null;
         }
 
         /// <summary>
@@ -88,6 +145,7 @@ namespace Quaver.Shared.Skinning
                 Load();
                 TimeSkinReloadRequested = 0;
                 SkinLoaded?.Invoke(typeof(SkinManager), new SkinReloadedEventArgs());
+                var showLoadedNotification = true;
 
                 var game = (QuaverGame) GameBase.Game;
 
@@ -99,12 +157,28 @@ namespace Quaver.Shared.Skinning
                     case QuaverScreenType.Select:
                         game.CurrentScreen.Exit(() => new SelectionScreen());
                         break;
+                    case QuaverScreenType.Gameplay when 
+                        game.CurrentScreen is GameplayScreen gameplayScreen and not TournamentGameplayScreen
+                        && gameplayScreen.InReplayMode:
+                        showLoadedNotification = ConfigManager.DisplayNotificationsInGameplay.Value;
+                        game.CurrentScreen.Exit(() =>
+                        {
+                            var newScreen = new GameplayScreen(gameplayScreen.Map, gameplayScreen.MapHash,
+                                gameplayScreen.LocalScores, gameplayScreen.LoadedReplay,
+                                spectatorClient: gameplayScreen.SpectatorClient,
+                                useExistingAudioTime: true);
+                            newScreen.HandleReplaySeeking();
+                            return newScreen;
+                        });
+                        break;
                 }
 
                 ThreadScheduler.RunAfter(() =>
                 {
                     Transitioner.FadeOut();
-                    NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!");
+                    if (showLoadedNotification)
+                        NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!",
+                            forceShow: true);
                 }, 200);
             }
         }

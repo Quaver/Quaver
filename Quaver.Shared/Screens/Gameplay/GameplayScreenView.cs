@@ -38,6 +38,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Steamworks;
@@ -199,11 +200,6 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         /// </summary>
         private ReplayController ReplayController { get; }
-
-        private ScoreProcessor DisplayScoreProcessor =>
-            ConfigManager.DisplayRankedAccuracy.Value || Screen.IsSpectatingTournament
-                ? Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor
-                : Screen.Ruleset.ScoreProcessor;
 
         /// <inheritdoc />
         /// <summary>
@@ -461,11 +457,13 @@ namespace Quaver.Shared.Screens.Gameplay
         public void UpdateScoreAndAccuracyDisplays()
         {
             // Update score and accuracy displays
-            var displayScoreProcessor = DisplayScoreProcessor;
+            ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
 
-            ScoreDisplay.UpdateValue(displayScoreProcessor.Score);
-            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(displayScoreProcessor.Accuracy));
-            AccuracyDisplay.UpdateValue(displayScoreProcessor.Accuracy);
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
+            if (ConfigManager.DisplayRankedAccuracy.Value || Screen.IsSpectatingTournament)
+                AccuracyDisplay.UpdateValue(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
+            else
+                AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 
         /// <summary>
@@ -883,7 +881,8 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (Screen is TournamentGameplayScreen)
             {
-                if (Screen.Map.Length - Screen.Timing.Time >= 10000)
+                // Only exit once (multiple GameplayScreenViews), and force end (!mp end or lobby disbanded)
+                if (!Screen.Exiting && e.Force)
                     Screen.Exit(() => new MultiplayerGameScreen());
                 return;
             }

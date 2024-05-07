@@ -37,6 +37,7 @@ using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Tournament;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -148,6 +149,10 @@ namespace Quaver.Shared.Screens.Selection
         {
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
             FadeAudioTrackIn();
+
+            SkinManager.StartWatching();
+            ScreenExiting += (_, _) => SkinManager.StopWatching();
+
             base.OnFirstUpdate();
         }
 
@@ -180,6 +185,7 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapDeleted -= OnMapDeleted;
             MapManager.MapUpdated -= OnMapUpdated;
             MapManager.SongRequestPlayed -= OnSongRequestPlayed;
+            SkinManager.StopWatching();
 
             // ReSharper disable once DelegateSubtraction
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
@@ -904,12 +910,12 @@ namespace Quaver.Shared.Screens.Selection
 
                 if (e.Index - 1 >= 0)
                     index = e.Index - 1;
-                ;
+
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
                 // Change the map
-                if (index != -1)
+                if (index >= 0 && index < AvailableMapsets.Value.Count)
                 {
                     MapManager.SelectMapFromMapset(AvailableMapsets.Value[index]);
                     return;
