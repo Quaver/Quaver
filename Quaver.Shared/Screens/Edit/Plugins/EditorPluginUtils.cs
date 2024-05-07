@@ -68,11 +68,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <returns></returns>
         public static SliderVelocityInfo CreateScrollVelocity(float time, float multiplier)
         {
-            var sv = new SliderVelocityInfo()
+            var sv = new SliderVelocityInfo
             {
                 StartTime = time,
                 Multiplier = multiplier,
-                IsEditableInLuaScript = true
+                IsEditableInLuaScript = true,
             };
 
             return sv;
@@ -83,17 +83,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="startTime"></param>
         /// <param name="lane"></param>
         /// <param name="endTime"></param>
-        /// <param name="hitsounds"></param>
+        /// <param name="hitSounds"></param>
+        /// <param name="editorLayer"></param>
         /// <returns></returns>
-        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitsounds = 0, int editorLayer = 0)
+        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitSounds = 0, int editorLayer = 0)
         {
-            var ho = new HitObjectInfo()
+            var ho = new HitObjectInfo
             {
                 StartTime = startTime,
                 Lane = lane,
                 EndTime = endTime,
-                HitSound = hitsounds,
-                EditorLayer = editorLayer
+                HitSound = hitSounds,
+                EditorLayer = editorLayer,
             };
 
             return ho;
@@ -104,15 +105,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="startTime"></param>
         /// <param name="bpm"></param>
         /// <param name="signature"></param>
+        /// <param name="hidden"></param>
         /// <returns></returns>
         public static TimingPointInfo CreateTimingPoint(float startTime, float bpm, TimeSignature signature = TimeSignature.Quadruple, bool hidden = false)
         {
-            var tp = new TimingPointInfo()
+            var tp = new TimingPointInfo
             {
                 StartTime = startTime,
                 Bpm = bpm,
                 Signature = signature,
-                Hidden = hidden
+                Hidden = hidden,
             };
 
             return tp;
@@ -126,11 +128,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <returns></returns>
         public static EditorLayerInfo CreateEditorLayer(string name, bool hidden = false, string colorRgb = null)
         {
-            var layer = new EditorLayerInfo()
+            var layer = new EditorLayerInfo
             {
                 Name = name,
                 Hidden = hidden,
-                ColorRgb = colorRgb
+                ColorRgb = colorRgb,
             };
 
             return layer;
@@ -146,7 +148,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             var layer = new BookmarkInfo
             {
                 StartTime = startTime,
-                Note = note
+                Note = note,
             };
 
             return layer;
