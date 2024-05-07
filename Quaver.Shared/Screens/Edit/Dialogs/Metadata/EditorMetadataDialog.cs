@@ -201,7 +201,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateBpmAffectsSvCheckbox()
         {
-            // Leading whitespace needed to keep it left-aligned.
+            // Trailing whitespace needed to keep it left-aligned.
             BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:               ", 20,
                 new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
