@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.WebSockets;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
@@ -381,17 +382,17 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnDisconnection(object sender, DisconnectedEventArgs e)
         {
-            Logger.Important($"Disconnected from the server for reason: {e.CloseEventArgs.Reason} with code: {e.CloseEventArgs.Code}", LogType.Network);
+            Logger.Important($"Disconnected from the server for reason: {e.SocketCloseEventArgs.Reason} with code: {e.SocketCloseEventArgs.CloseStatus}", LogType.Network);
 
             // If the user can't initially connect to the server (server is down.)
-            switch (e.CloseEventArgs.Code)
+            switch (e.SocketCloseEventArgs.CloseStatus)
             {
                 // Error ocurred while connecting.
-                case 1006:
+                case (WebSocketCloseStatus)1006:
                     NotificationManager.Show(NotificationLevel.Error, "You have been disconnected from the server.");
                     return;
                 // Authentication Failed
-                case 1002:
+                case WebSocketCloseStatus.ProtocolError:
                     NotificationManager.Show(NotificationLevel.Error, "You have failed to authenticate to the server.");
                     return;
             }
