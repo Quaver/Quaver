@@ -152,8 +152,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             get
             {
-                var receptor = Playfield.Stage.Receptors[Info.Lane - 1];
-                var pos = new Vector2(0, 1).Rotate(receptor.Rotation);
+                var rotation = Playfield.HitObjectFallRotation[Info.Lane - 1];
+                var pos = new Vector2(0, 1).Rotate(rotation);
                 if (ScrollDirection == ScrollDirection.Up) pos = -pos;
                 return pos;
             }

@@ -49,4 +49,9 @@ public class TweenSetters
     {
         return v => spriteTextPlus.FontSize = (int)v;
     }
+
+    public TweenPayload.SetterDelegate HitObjectFallRotation(int lane)
+    {
+        return v => Shortcut.GameplayPlayfieldKeys.HitObjectFallRotation[lane - 1] = v;
+    }
 }
