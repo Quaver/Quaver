@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,12 +23,10 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Maps;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using RestSharp;
 using RestSharp.Extensions;
-using SQLite;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -325,9 +322,9 @@ namespace Quaver.Shared.Database.Maps
                 var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, map.Mapset.Directory);
                 var path = Path.Combine(mapsetPath, map.Path);
 
-                if (File.Exists(path))
-                    File.Delete(path);
-
+                // TODO: Consider moving the file instead to the trash, once a cross-platform solution is made available.
+                // Do not consider `Microsoft.VisualBasic.FileIO.FileSystem`; It is not cross-platform!
+                File.Delete(path);
                 MapDatabaseCache.RemoveMap(map);
             }
             catch (Exception e)
@@ -369,13 +366,17 @@ namespace Quaver.Shared.Database.Maps
 
                 AudioEngine.Track = new AudioTrackVirtual(300000);
 
-                if (oldTrack != null && !oldTrack.IsDisposed)
+                if (oldTrack is { IsDisposed: false })
                     oldTrack.Dispose();
             }
 
             try
             {
-                Directory.Delete(Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory), true);
+                var directory = Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory);
+
+                // TODO: Consider moving the directory instead to the trash, once a cross-platform solution is made available.
+                // Do not consider `Microsoft.VisualBasic.FileIO.FileSystem`; It is not cross-platform!
+                Directory.Delete(directory, true);
             }
             catch (Exception e)
             {
