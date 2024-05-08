@@ -1891,7 +1891,7 @@ namespace Quaver.Shared.Screens.Edit
 
         void MakeScheduledChartBackup(object _)
         {
-            if (BackupQua.EqualByValue(WorkingMap))
+            if (BackupQua?.EqualByValue(WorkingMap) ?? false)
                 return;
 
             var chartDirectory = Path.Join(ConfigManager.ChartBackupDirectory, Path.GetFileNameWithoutExtension(Map.Path));
