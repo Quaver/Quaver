@@ -20,7 +20,6 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
-using WebSocketSharp;
 using Wobble.Logging;
 using Logger = Wobble.Logging.Logger;
 
