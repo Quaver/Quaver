@@ -634,6 +634,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> ReloadSkinOnChange { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
 
         /// <summary>
@@ -1160,6 +1164,7 @@ namespace Quaver.Shared.Config
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
+            ReloadSkinOnChange = ReadValue(@"ReloadSkinOnChange", false, data);
             EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
             ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
             ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);

@@ -367,19 +367,24 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var earliestPosition = Math.Min(startPosition, Info.EndTrackPosition);
             var latestPosition = Math.Max(startPosition, Info.EndTrackPosition);
 
-            foreach (var change in Info.SVDirectionChanges)
-            {
-                if (curTime >= change.StartTime)
-                    // We're past this change already.
-                    continue;
-
-                earliestPosition = Math.Min(earliestPosition, change.Position);
-                latestPosition = Math.Max(latestPosition, change.Position);
-            }
+            if (!Info.LegacyLNRendering)
+                SetEarliestAndLatestLongNotes(curTime, ref earliestPosition, ref latestPosition);
 
             EarliestHeldPosition = earliestPosition;
             LatestHeldPosition = latestPosition;
             CurrentLongNoteBodySize = (latestPosition - earliestPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
+        }
+
+        private void SetEarliestAndLatestLongNotes(double curTime, ref long earliestPosition, ref long latestPosition)
+        {
+            foreach (var change in Info.SVDirectionChanges)
+            {
+                if (curTime >= change.StartTime)
+                    continue; // We're past this change already.
+
+                earliestPosition = Math.Min(earliestPosition, change.Position);
+                latestPosition = Math.Max(latestPosition, change.Position);
+            }
         }
 
         /// <summary>

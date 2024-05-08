@@ -45,6 +45,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 		private HitObjectManagerKeys Manager { get; set; }
 
         /// <summary>
+        ///     Gets the value determining whether to use the old LN rendering system. (earliest/latest -> start/end)
+        /// </summary>
+        public bool LegacyLNRendering => Manager.LegacyLNRendering;
+
+        /// <summary>
         ///     Changes of SV direction during this LN.
         ///
         ///     Used for computing the earliest and latest visible position of this LN.
