@@ -327,15 +327,17 @@ namespace Quaver.Shared.Database.Maps
 
                 try
                 {
+                    // If we are importing map files, not zipped mapsets, we should never delete them
+                    var deleteOriginalFile = false;
                     if (file.EndsWith(".qp"))
                     {
                         ExtractQuaverMapset(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
                     else if (file.EndsWith(".osz"))
                     {
                         Osu.ConvertOsz(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
                     else if (file.EndsWith(".sm"))
                         Stepmania.ConvertFile(file, extractDirectory);
@@ -344,8 +346,11 @@ namespace Quaver.Shared.Database.Maps
                     else if (file.EndsWith(".mcz"))
                     {
                         Malody.ExtractZip(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
+
+                    if (deleteOriginalFile && ConfigManager.DeleteOriginalFileAfterImport.Value)
+                        File.Delete(file);
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 

@@ -240,6 +240,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> AutoLoadOsuBeatmaps { get; private set; }
 
         /// <summary>
+        ///     Delete the original mapset file after importing
+        /// </summary>
+        internal static Bindable<bool> DeleteOriginalFileAfterImport { get; private set; }
+
+        /// <summary>
         ///     If the scoreboard is currently visible.
         /// </summary>
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
@@ -1021,6 +1026,7 @@ namespace Quaver.Shared.Config
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
+            DeleteOriginalFileAfterImport = ReadValue(@"DeleteOriginalFileAfterImport", true, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
