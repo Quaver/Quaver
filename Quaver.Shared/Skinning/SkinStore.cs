@@ -363,11 +363,11 @@ namespace Quaver.Shared.Skinning
 
             try
             {
-                return File.Exists(path)
-                    ? AssetLoader.LoadTexture2DFromFile(path)
-                    : AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get(resource));
+                return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) :
+                    GameBase.Game.Resources.Get(resource) is { } buffer ? AssetLoader.LoadTexture2D(buffer) :
+                    UserInterface.BlankBox;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Logger.Warning($"Failed to load: {resource}. Using default!", LogType.Runtime, false);
                 return UserInterface.BlankBox;
