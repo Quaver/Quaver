@@ -1109,7 +1109,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 return;
 
-            Console.WriteLine($"NEW PLAYHER COUJNT: " + e.MaxPlayers);
+            Logger.Important($"New player count: {e.MaxPlayers}", LogType.Network);
             CurrentGame.MaxPlayers = e.MaxPlayers;
         }
 

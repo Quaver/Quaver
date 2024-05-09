@@ -86,11 +86,6 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                     ModManager.RemoveAllMods();
             }
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D3))
-            {
-                Console.WriteLine(MapManager.Mapsets.Count);
-            }
-
             if (KeyboardManager.IsUniqueKeyPress(Keys.Home))
                 Bg.Visible = !Bg.Visible;
 
