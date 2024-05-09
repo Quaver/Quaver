@@ -327,15 +327,16 @@ namespace Quaver.Shared.Database.Maps
 
                 try
                 {
+                    var deleteOriginalFile = false;
                     if (file.EndsWith(".qp"))
                     {
                         ExtractQuaverMapset(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
                     else if (file.EndsWith(".osz"))
                     {
                         Osu.ConvertOsz(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
                     else if (file.EndsWith(".sm"))
                         Stepmania.ConvertFile(file, extractDirectory);
@@ -344,8 +345,11 @@ namespace Quaver.Shared.Database.Maps
                     else if (file.EndsWith(".mcz"))
                     {
                         Malody.ExtractZip(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
+
+                    if (deleteOriginalFile && ConfigManager.DeleteOriginalFileAfterImport.Value)
+                        File.Delete(file);
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 
