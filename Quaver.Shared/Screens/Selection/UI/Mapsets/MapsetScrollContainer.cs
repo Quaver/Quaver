@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 ScrollToSelected();
             }
             // Move to the next difficulty of a mapset
-            else if ((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            else if (KeyboardManager.IsCtrlDown()
                 && KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
             {
                 InputEnabled = false;
@@ -223,7 +223,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 }
             }
             // Move to the previous difficulty of a mapset
-            else if ((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            else if (KeyboardManager.IsCtrlDown()
                 && KeyboardManager.IsUniqueKeyPress(Keys.PageUp))
             {
                 InputEnabled = false;
