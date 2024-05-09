@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble.Assets;
@@ -43,7 +44,8 @@ namespace Quaver.Shared.Skinning.Menus
         {
             try
             {
-                return AssetLoader.LoadTexture2DFromFile($@"{Store.Dir}/{folder}/{file}");
+                var path = $"{Store.Dir}/{folder}/{file}";
+                return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : null;
             }
             catch (Exception)
             {

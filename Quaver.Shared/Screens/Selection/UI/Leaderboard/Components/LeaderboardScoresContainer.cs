@@ -295,7 +295,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 return;
 
             // If the last score is empty, cut off the content container so it doesn't scroll.
-            if (Pool.Last().Item.IsEmptyScore)
+            if (Pool.LastOrDefault()?.Item.IsEmptyScore ?? false)
                 ContentContainer.Height = Height;
         }
 
