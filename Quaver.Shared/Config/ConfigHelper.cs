@@ -9,39 +9,13 @@ using System;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Helpers;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Config
 {
     public static class ConfigHelper
     {
-        readonly ref struct Drain<T>
-            where T : IEquatable<T>
-        {
-            readonly ReadOnlySpan<T> _remaining;
-
-            readonly T _separator;
-
-            public Drain(ReadOnlySpan<T> remaining, T separator)
-            {
-                _remaining = remaining;
-                _separator = separator;
-            }
-
-            public void Deconstruct(out ReadOnlySpan<T> next, out Drain<T> rest)
-            {
-                if (_remaining.IndexOf(_separator) is not -1 and var i)
-                {
-                    next = _remaining[..i];
-                    rest = new(_remaining[(i + 1)..], _separator);
-                    return;
-                }
-
-                next = _remaining;
-                rest = default;
-            }
-        }
-
         /// <summary>
         ///     Reads a string and checks if it's a valid directory.
         /// </summary>
