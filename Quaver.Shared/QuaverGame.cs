@@ -257,6 +257,7 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
+            Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
         }
 
         /// <inheritdoc />
