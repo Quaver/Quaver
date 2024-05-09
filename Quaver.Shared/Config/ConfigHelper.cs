@@ -15,10 +15,38 @@ namespace Quaver.Shared.Config
 {
     public static class ConfigHelper
     {
+        readonly ref struct Drain<T>
+            where T : IEquatable<T>
+        {
+            readonly ReadOnlySpan<T> _remaining;
+
+            readonly T _separator;
+
+            public Drain(ReadOnlySpan<T> remaining, T separator)
+            {
+                _remaining = remaining;
+                _separator = separator;
+            }
+
+            public void Deconstruct(out ReadOnlySpan<T> next, out Drain<T> rest)
+            {
+                if (_remaining.IndexOf(_separator) is not -1 and var i)
+                {
+                    next = _remaining[..i];
+                    rest = new(_remaining[(i + 1)..], _separator);
+                    return;
+                }
+
+                next = _remaining;
+                rest = default;
+            }
+        }
+
         /// <summary>
         ///     Reads a string and checks if it's a valid directory.
         /// </summary>
-        /// <param name="val"></param>
+        /// <param name="defaultDir"></param>
+        /// <param name="newDir"></param>
         /// <returns></returns>
         internal static string ReadDirectory(string defaultDir, string newDir)
         {
@@ -139,18 +167,12 @@ namespace Quaver.Shared.Config
         /// <param name="newVal"></param>
         /// <returns></returns>
         internal static Color ReadColor(Color defaultColor, string newVal) =>
-            // Incredibly intense Color parser.
-            newVal is null ||
-            newVal.AsSpan() is var span &&
-            span.IndexOf(',') is var first &&
-            first is -1 ||
-            span[..first] is var rText && !byte.TryParse(rText, out var r) ||
-            span[(first + 1)..].IndexOf(',') is var second && second is -1 ||
-            span[..second] is var gText && !byte.TryParse(gText, out var g) ||
-            span[(second + 1)..].IndexOf(',') is var third && third is -1 ||
-            span[..third] is var bText && !byte.TryParse(bText, out var b) ? defaultColor :
-            span[(third + 1)..].IndexOf(',') is not (var a and not -1) ? new Color(r, g, b, byte.MaxValue) :
-            span[(a + 1)..].IndexOf(',') is -1 ? defaultColor : new Color(r, g, b, a);
+            new Drain<char>(newVal, ',') is var (tr, (tg, (tb, (ta, _)))) &&
+            byte.TryParse(tr, out var r) &&
+            byte.TryParse(tg, out var g) &&
+            byte.TryParse(tb, out var b)
+                ? new(r, g, b, byte.TryParse(ta, out var a) ? a : 255)
+                : defaultColor;
 
         /// <summary>
         ///     Reads an XNA Vector2 from a string
@@ -159,15 +181,11 @@ namespace Quaver.Shared.Config
         /// <param name="newVal"></param>
         /// <returns></returns>
         internal static Vector2 ReadVector2(Vector2 defaultVector2, string newVal) =>
-            newVal is null ||
-            newVal.AsSpan() is var span &&
-            span.IndexOf(',') is var first &&
-            first is -1 ||
-            span[..first] is var rText && !int.TryParse(rText, out var x) ||
-            span[(first + 1)..].IndexOf(',') is var second && second is -1 ||
-            span[..second] is var gText && !int.TryParse(gText, out var y)
-                ? defaultVector2
-                : new Vector2(x, y);
+            new Drain<char>(newVal, ',') is var (tx, (ty, _)) &&
+            int.TryParse(tx, out var x) &&
+            int.TryParse(ty, out var y)
+                ? new(x, y)
+                : defaultVector2;
 
         /// <summary>
         ///     Reads a ScalableVector2 from a string
@@ -176,15 +194,11 @@ namespace Quaver.Shared.Config
         /// <param name="newVal"></param>
         /// <returns></returns>
         internal static ScalableVector2? ReadVector2(ScalableVector2 defaultVector2, string newVal) =>
-            newVal is null ||
-            newVal.AsSpan() is var span &&
-            span.IndexOf(',') is var first &&
-            first is -1 ||
-            span[..first] is var rText && !int.TryParse(rText, out var x) ||
-            span[(first + 1)..].IndexOf(',') is var second && second is -1 ||
-            span[..second] is var gText && !int.TryParse(gText, out var y)
-                ? defaultVector2
-                : new ScalableVector2(x, y);
+            new Drain<char>(newVal, ',') is var (tx, (ty, _)) &&
+            int.TryParse(tx, out var x) &&
+            int.TryParse(ty, out var y)
+                ? new(x, y)
+                : defaultVector2;
 
         /// <summary>
         ///     Reads an enum.
