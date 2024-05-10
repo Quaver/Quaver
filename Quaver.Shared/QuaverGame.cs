@@ -662,8 +662,7 @@ namespace Quaver.Shared
         /// </summary>
         private void HandleKeyPressCtrlO()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.O))
@@ -693,7 +692,7 @@ namespace Quaver.Shared
         private void HandleKeyPressCtrlS()
         {
             // Check for modifier keys
-            if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.S))
