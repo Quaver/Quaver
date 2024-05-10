@@ -17,7 +17,6 @@
     <ProjectReference Include="..\Wobble\Wobble.Extended\Wobble.Extended.csproj" />
     <ProjectReference Include="..\Wobble\Wobble.Resources\Wobble.Resources.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
-    <PackageReference Include="Steamworks.NET" Version="20.2.0" IncludeAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Quaver.Server.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -133,5 +132,6 @@
     <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="2.0.6" />
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
+    <PackageReference Include="Steamworks.NET" Version="20.2.0" IncludeAssets="all" />
   </ItemGroup>
 </Project>
