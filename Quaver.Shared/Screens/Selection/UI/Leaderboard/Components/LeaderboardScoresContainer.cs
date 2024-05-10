@@ -177,19 +177,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
                 LoadingWheel.FadeTo(1, Easing.Linear, 250);
                 FadeStatusTextOut();
-
-                try
-                {
-                    foreach (var x in new List<Drawable>(Pool))
-                        x.Destroy();
-
-                    Pool?.Clear();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-
+                ClearPool();
                 ContentContainer.Height = Height;
 
                 SnapToTop();
@@ -307,7 +295,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 return;
 
             // If the last score is empty, cut off the content container so it doesn't scroll.
-            if (Pool.Last().Item.IsEmptyScore)
+            if (Pool.LastOrDefault()?.Item.IsEmptyScore ?? false)
                 ContentContainer.Height = Height;
         }
 
@@ -393,18 +381,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             ScheduleUpdate(() =>
             {
-                try
-                {
-                    foreach (var x in new List<Drawable>(Pool))
-                        x.Destroy();
-
-                    Pool?.Clear();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-
+                ClearPool();
                 SnapToTop();
 
                 AvailableItems = e.Result.Scores;
@@ -450,6 +427,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             PreviousTargetY = PreviousContentContainerY;
 
             PoolStartingIndex = 0;
+        }
+
+        private void ClearPool()
+        {
+            if (Pool is null)
+                return;
+
+            try
+            {
+                foreach (var x in new List<Drawable>(Pool))
+                    x.Destroy();
+
+                Pool.Clear();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }

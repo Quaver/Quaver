@@ -559,8 +559,8 @@ namespace Quaver.Shared.Online
                 map.OnlineOffset = e.Response.OnlineOffset;
                 MapDatabaseCache.UpdateMap(map);
 
-                var game = GameBase.Game as QuaverGame;
-
+                // var game = GameBase.Game as QuaverGame;
+                //
                 // // If in song select, update the banner of the currently selected map.
                 // if (game.CurrentScreen is SelectScreen screen)
                 // {
@@ -1109,7 +1109,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 return;
 
-            Console.WriteLine($"NEW PLAYHER COUJNT: " + e.MaxPlayers);
+            Logger.Important($"New player count: {e.MaxPlayers}", LogType.Network);
             CurrentGame.MaxPlayers = e.MaxPlayers;
         }
 

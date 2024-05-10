@@ -146,8 +146,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             }
             catch (Exception e)
             {
-                // ignored
-                Console.WriteLine(e);
+                Logger.Error(e, LogType.Runtime);
             }
             finally
             {

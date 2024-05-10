@@ -257,6 +257,7 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
+            Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
         }
 
         /// <inheritdoc />
@@ -779,8 +780,11 @@ namespace Quaver.Shared
                         var request = new APIRequestImgurUpload(path);
                         var response = request.ExecuteRequest();
 
-                        if (response == null)
-                            throw new Exception("Failed to upload screenshot to imgur");
+                        if (response is null)
+                        {
+                            Logger.Error("Failed to upload screenshot to imgur", LogType.Network);
+                            NotificationManager.Show(NotificationLevel.Error, "Failed to upload screenshot!");
+                        }
 
                         Clipboard.NativeClipboard.SetText(response);
                         BrowserHelper.OpenURL(response, true);
@@ -795,7 +799,7 @@ namespace Quaver.Shared
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }

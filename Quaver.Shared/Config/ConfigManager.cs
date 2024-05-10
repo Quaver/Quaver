@@ -1227,17 +1227,7 @@ namespace Quaver.Shared.Config
         private static BindableInt ReadInt(string name, int defaultVal, int min, int max, KeyDataCollection ini)
         {
             var binded = new BindableInt(name, defaultVal, min, max);
-
-            // Try to read the int.
-            try
-            {
-                binded.Value = int.Parse(ini[name]);
-            }
-            catch (Exception e)
-            {
-                binded.Value = defaultVal;
-            }
-
+            binded.Value = int.TryParse(ini[name], out var value) ? value : defaultVal;
             binded.ValueChanged += AutoSaveConfiguration;
             return binded;
         }
@@ -1265,20 +1255,18 @@ namespace Quaver.Shared.Config
                         {
                             // Make sure the default directory is created.
                             Directory.CreateDirectory(defaultVal);
-                            throw new ArgumentException();
+                            binded.Value = defaultVal;
                         }
 
                         break;
                     case SpecialConfigType.Path:
-                        if (File.Exists(parsedVal))
-                            binded.Value = parsedVal;
-                        else
-                            throw new ArgumentException();
+                        binded.Value = File.Exists(parsedVal) ? parsedVal : defaultVal;
                         break;
                     case SpecialConfigType.Skin:
                         break;
                     default:
-                        throw new InvalidEnumArgumentException();
+                        binded.Value = defaultVal;
+                        break;
                 }
             }
             catch (Exception e)
@@ -1299,6 +1287,7 @@ namespace Quaver.Shared.Config
             var binded = new Bindable<GenericKey>(name, defaultVal);
 
             GenericKey key;
+
             if (GenericKey.TryParse(ini[name], out key))
                 binded.Value = key;
 
