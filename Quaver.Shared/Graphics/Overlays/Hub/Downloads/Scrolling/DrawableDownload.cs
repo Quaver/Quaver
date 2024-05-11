@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Events.Download;
 using Quaver.Server.Client.Helpers;
@@ -92,15 +93,22 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             CreateProgressBar(e.Cancelled);
             ContentContainer.Image =
                 e.Cancelled ? UserInterface.HubDownloadContainerRed : UserInterface.HubDownloadContainerBlue;
-            if (e.Status is FileDownloaderStatus.Cancelled or FileDownloaderStatus.Complete)
+            if (e.Status == FileDownloaderStatus.Complete)
             {
                 EstimatedTimeLeft.Text = "Download Complete";
+            }
+            else if (e.Status == FileDownloaderStatus.Cancelled)
+            {
+                EstimatedTimeLeft.Text = e.Error is null or TaskCanceledException ? "Download Cancelled" : "Download Failed";
+            }
+            if (e.Status is FileDownloaderStatus.Cancelled or FileDownloaderStatus.Complete)
+            {
                 Collapse();
                 ((DownloadScrollContainer)Container).DownloadNextItem();
             }
             else
             {
-                EstimatedTimeLeft.Text = "Downloading";
+                EstimatedTimeLeft.Text = "Downloading (Connecting)";
                 Expand();
             }
 
@@ -249,7 +257,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
         private void CreateEstimatedTimeLeft()
         {
-            EstimatedTimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Downloading (In Queue)", 18)
+            EstimatedTimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Waiting (In Queue)", 18)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
