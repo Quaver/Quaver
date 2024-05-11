@@ -26,6 +26,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         private static readonly Color ContentRed = new Color(235, 87, 87);
         private static readonly Color BorderRed = new Color(191, 71, 71);
 
+        private string _titleText = "Waiting (In Queue)";
+        private string _percentageText = "0%";
+
         /// <summary>
         /// </summary>
         public override int HEIGHT => _height;
@@ -45,7 +48,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private SpriteTextPlus Name { get; set; }
 
-        private SpriteTextPlus EstimatedTimeLeft { get; set; }
+        private SpriteTextPlus Title { get; set; }
 
         /// <summary>
         /// </summary>
@@ -71,7 +74,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
             CreateContentContainer();
             CreateButtons();
-            CreateEstimatedTimeLeft();
+            CreateTitle();
             CreateSongName();
             CreateProgressPercentage();
             CreateProgressBar();
@@ -95,12 +98,19 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 e.Cancelled ? UserInterface.HubDownloadContainerRed : UserInterface.HubDownloadContainerBlue;
             if (e.Status == FileDownloaderStatus.Complete)
             {
-                EstimatedTimeLeft.Text = "Download Complete";
+                _titleText = "Download Complete";
             }
             else if (e.Status == FileDownloaderStatus.Cancelled)
             {
-                EstimatedTimeLeft.Text = e.Error is null or TaskCanceledException ? "Download Cancelled" : "Download Failed";
+                _titleText = e.Error is null or TaskCanceledException
+                    ? "Download Cancelled"
+                    : "Download Failed";
             }
+            else
+            {
+                _titleText = "Downloading (Connecting)";
+            }
+
             if (e.Status is FileDownloaderStatus.Cancelled or FileDownloaderStatus.Complete)
             {
                 Collapse();
@@ -108,16 +118,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             }
             else
             {
-                EstimatedTimeLeft.Text = "Downloading (Connecting)";
                 Expand();
-            }
-
-            if (e.Status is FileDownloaderStatus.Downloading or FileDownloaderStatus.Initialized
-                or FileDownloaderStatus.Connecting)
-            {
-            }
-            else
-            {
             }
         }
 
@@ -250,14 +251,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
                 X = 18,
-                Y = EstimatedTimeLeft.RelativeRectangle.Bottom + 12,
+                Y = Title.RelativeRectangle.Bottom + 12,
                 UsePreviousSpriteBatchOptions = true
             };
         }
 
-        private void CreateEstimatedTimeLeft()
+        private void CreateTitle()
         {
-            EstimatedTimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Waiting (In Queue)", 18)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 18)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -310,6 +311,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         {
             Name.Text = string.IsNullOrEmpty(Item.Title) ? Item.Artist : $"{Item.Artist} - {Item.Title}";
             Name.TruncateWithEllipsis((int)ProgressBar.Width - 10);
+            Title.Text = _titleText;
+            ProgressPercentage.Text = _percentageText;
         }
 
         /// <summary>
@@ -319,26 +322,22 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         private void OnDownloadProgressChanged(object sender,
             BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
         {
-            ScheduleUpdate(() =>
-            {
-                if (Item.FileDownloader.Value?.Status is FileDownloaderStatus.Complete
-                    or FileDownloaderStatus.Cancelled)
-                    return;
-                var percent = e.Value.ProgressPercentage;
-                var bytesPerSecond = e.Value.TimeElapsed == TimeSpan.Zero
-                    ? 0
-                    : e.Value.NewBytesWritten / e.Value.TimeElapsed.TotalSeconds;
-                var bytesLeft = Item.FileDownloader.Value?.ContentLength - e.Value.BytesReceived ?? -1;
-                var etaSeconds =
-                    TimeSpan.FromSeconds(bytesPerSecond == 0 || bytesLeft == -1 ? 0 : bytesLeft / bytesPerSecond);
+            if (Item.FileDownloader.Value?.Status is FileDownloaderStatus.Complete or FileDownloaderStatus.Cancelled)
+                return;
+            var percent = e.Value.ProgressPercentage;
+            var bytesPerSecond = e.Value.TimeElapsed == TimeSpan.Zero
+                ? 0
+                : e.Value.NewBytesWritten / e.Value.TimeElapsed.TotalSeconds;
+            var bytesLeft = Item.FileDownloader.Value?.ContentLength - e.Value.BytesReceived ?? -1;
+            var etaSeconds =
+                TimeSpan.FromSeconds(bytesPerSecond == 0 || bytesLeft == -1 ? 0 : bytesLeft / bytesPerSecond);
 
-                if (e.Value.BytesReceived == 0)
-                    ProgressBar.Bindable.Value = 0;
+            if (e.Value.BytesReceived == 0)
+                ProgressBar.Bindable.Value = 0;
 
-                ProgressBar.Bindable.Value = percent;
-                ProgressPercentage.Text = $"{percent}%";
-                EstimatedTimeLeft.Text = $"Downloading (ETA {etaSeconds.Minutes:00}:{etaSeconds.Seconds:00})";
-            });
+            ProgressBar.Bindable.Value = percent;
+            _percentageText = $"{percent}%";
+            _titleText = $"Downloading (ETA {etaSeconds.Minutes:00}:{etaSeconds.Seconds:00})";
         }
     }
 }
