@@ -12,6 +12,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
@@ -77,19 +78,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Pool.Remove(item);
             }
 
-            RecalculateContainerHeight();
-
-            AddScheduledUpdate(() =>
-            {
-                // Reset the pool item index
-                for (var i = 0; i < Pool.Count; i++)
-                {
-                    Pool[i].Index = i;
-                    Pool[i].ClearAnimations();
-                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT, Easing.OutQuint, 400);
-                    Pool[i].UpdateContent(Pool[i].Item, i);
-                }
-            });
+            ReorganizeItems();
 
             // Download the next map in the queue
             Pool.Find(x => !x.Item.IsDownloading)?.Item?.Download();
@@ -117,7 +106,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// <param name="index"></param>
         /// <returns></returns>
         protected override PoolableSprite<MapsetDownload> CreateObject(MapsetDownload item, int index)
-            => new DrawableDownload(this, item, index);
+        {
+            var drawableDownload = new DrawableDownload(this, item, index);
+            drawableDownload.DimensionsChanged += (sender, args) =>
+            {
+                ReorganizeItems();
+            };
+            return drawableDownload;
+        }
 
         /// <summary>
         /// </summary>
