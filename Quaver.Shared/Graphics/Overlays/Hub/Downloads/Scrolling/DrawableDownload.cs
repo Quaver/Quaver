@@ -313,12 +313,16 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         {
             ScheduleUpdate(() =>
             {
+                if (Item.FileDownloader.Value?.Status is FileDownloaderStatus.Complete
+                    or FileDownloaderStatus.Cancelled)
+                    return;
                 var percent = e.Value.ProgressPercentage;
                 var bytesPerSecond = e.Value.TimeElapsed == TimeSpan.Zero
                     ? 0
                     : e.Value.NewBytesWritten / e.Value.TimeElapsed.TotalSeconds;
-                var bytesLeft = Item.FileDownloader.Value?.ContentLength ?? -1;
-                var etaSeconds = TimeSpan.FromSeconds(bytesLeft == -1 ? 0 : bytesLeft / bytesPerSecond);
+                var bytesLeft = Item.FileDownloader.Value?.ContentLength - e.Value.BytesReceived ?? -1;
+                var etaSeconds =
+                    TimeSpan.FromSeconds(bytesPerSecond == 0 || bytesLeft == -1 ? 0 : bytesLeft / bytesPerSecond);
 
                 if (e.Value.BytesReceived == 0)
                     ProgressBar.Bindable.Value = 0;
