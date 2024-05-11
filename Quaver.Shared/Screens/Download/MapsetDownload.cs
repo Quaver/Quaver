@@ -117,13 +117,9 @@ namespace Quaver.Shared.Screens.Download
                             LogType.Network);
                         MapsetImporter.Queue.Add(path);
                         Completed.Value = e;
-                        if (!e.Cancelled)
-                        {
-                            RemoveDownload();
-                        }
                     }
                 };
-                FileDownloader.Value.StartOrResume();
+                FileDownloader.Value.Start();
             }
             catch (Exception e)
             {
