@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.Server.Client.Events.Download;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -451,13 +452,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressChangedEventArgs> e)
+        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
         {
             if (CurrentDownload.MapsetId == Game.MapsetId)
                 Creator.Text = $"Downloading Map: {e.Value.ProgressPercentage}%";
         }
 
-        private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<AsyncCompletedEventArgs> e)
+        private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
         {
             CurrentDownload.Dispose();
 

@@ -61,6 +61,25 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             UpdateText();
 
             Item.Progress.ValueChanged += OnDownloadProgressChanged;
+            Item.FileDownloader.ValueChanged += (sender, args) =>
+            {
+                if (args.Value == null) return;
+                args.Value.StatusUpdated += OnDownloadStatusUpdated;
+            };
+            Item.FileDownloader.TriggerChange();
+        }
+
+        private void OnDownloadStatusUpdated(object sender, DownloadStatusChangedEventArgs e)
+        {
+            if (e.Status is FileDownloaderStatus.Downloading or FileDownloaderStatus.Initialized
+                or FileDownloaderStatus.Connecting)
+            {
+                PauseButton.Image = UserInterface.HubDownloadPause;
+            }
+            else
+            {
+                PauseButton.Image = UserInterface.HubDownloadResume;
+            }
         }
 
         /// <inheritdoc />

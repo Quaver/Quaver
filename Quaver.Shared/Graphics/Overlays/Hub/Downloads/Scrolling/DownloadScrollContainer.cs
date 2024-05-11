@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
@@ -142,7 +143,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// <param name="e"></param>
         private void OnDownloadAdded(object sender, MapsetDownloadAddedEventArgs e)
         {
-            e.Download.Completed.ValueChanged += (o, args) => Remove(e.Download);
+            e.Download.Removed += (o, args) =>
+            {
+                Remove(e.Download);
+            };
             AddObjectToBottom(e.Download, false);
 
             // Running update once immediately here to make sure everything scheduled is initialized properly
