@@ -1,5 +1,7 @@
 using System.Net;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Client.Events.Download;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Screens.Download;
@@ -18,7 +20,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
     {
         /// <summary>
         /// </summary>
-        public override int HEIGHT { get; } = 100;
+        public override int HEIGHT { get; } = 115;
 
         /// <summary>
         /// </summary>
@@ -27,6 +29,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// <summary>
         /// </summary>
         private ImageButton Button { get; set; }
+        
+        private ImageButton PauseButton { get; set; }
+        
+        private ImageButton RemoveButton { get; set; }
+        private ImageButton RetryButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -89,6 +96,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         public override void Update(GameTime gameTime)
         {
             Button.Alpha = Button.IsHovered ? 0.35f : 0;
+            RetryButton.Alpha = RetryButton.IsHovered ? 0.75f : 1;
+            RemoveButton.Alpha = RemoveButton.IsHovered ? 0.75f : 1;
+            PauseButton.Alpha = PauseButton.IsHovered ? 0.75f : 1;
 
             var game = (QuaverGame) GameBase.Game;
 
@@ -147,6 +157,47 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Alpha = 0,
                 Size = new ScalableVector2(ContentContainer.Width - 2, ContentContainer.Height - 2)
             };
+            PauseButton = new ImageButton(UserInterface.HubDownloadPause)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.BotRight,
+                Position = new ScalableVector2(-60, 0),
+                Size = new ScalableVector2(30, 30)
+            };
+            PauseButton.Clicked += (sender, args) =>
+            {
+                if (Item.FileDownloader.Value?.Status is FileDownloaderStatus.Connecting or FileDownloaderStatus.Downloading)
+                {
+                    Item.FileDownloader.Value?.Pause();
+                }
+                else
+                {
+                    Item.FileDownloader.Value?.StartOrResume();
+                }
+            };
+            RetryButton = new ImageButton(UserInterface.HubDownloadRetry)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.BotRight,
+                Position = new ScalableVector2(-30, 0),
+                Size = new ScalableVector2(30, 30)
+            };
+            RetryButton.Clicked += (sender, args) =>
+            {
+                Item.FileDownloader.Value?.Cancel();
+                Item.FileDownloader.Value?.StartOrResume();
+            };
+            RemoveButton = new ImageButton(UserInterface.HubDownloadRemove)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.BotRight,
+                Position = new ScalableVector2(0, 0),
+                Size = new ScalableVector2(30, 30)
+            };
+            RemoveButton.Clicked += (sender, args) =>
+            {
+                Item.RemoveDownload();
+            };
         }
 
         /// <summary>
@@ -156,9 +207,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Artist - Title", 22)
             {
                 Parent = ContentContainer,
-                Alignment = Alignment.MidLeft,
+                Alignment = Alignment.TopLeft,
                 X = 18,
-                Y = -14,
+                Y = 14,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -171,9 +222,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Colors.MainAccent)
             {
                 Parent = ContentContainer,
-                Alignment = Alignment.MidLeft,
+                Alignment = Alignment.TopLeft,
                 X = Name.X,
-                Y = -Name.Y,
+                Y = Name.RelativeRectangle.Bottom + 5,
                 UsePreviousSpriteBatchOptions = true,
                 ActiveBar =
                 {
@@ -191,7 +242,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             ProgressPercentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0%", 20)
             {
                 Parent = ContentContainer,
-                Alignment = Alignment.MidLeft,
+                Alignment = Alignment.TopLeft,
                 Y = ProgressBar.Y + 1,
                 X = ProgressBar.X + ProgressBar.Width + 14,
                 UsePreviousSpriteBatchOptions = true
@@ -210,7 +261,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressChangedEventArgs> e)
+        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
         {
             ScheduleUpdate(() =>
             {
