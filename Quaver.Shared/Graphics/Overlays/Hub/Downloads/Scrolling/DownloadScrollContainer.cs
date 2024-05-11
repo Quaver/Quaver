@@ -80,8 +80,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
             ReorganizeItems();
 
-            // Download the next map in the queue
-            Pool.Find(x => !x.Item.IsDownloading)?.Item?.Download();
+            DownloadNextItem();
 
             // Automatically mark the section as read if there are no more downloads left
             if (AvailableItems.Count == 0)
@@ -89,6 +88,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 var game = (QuaverGame) GameBase.Game;
                 game.OnlineHub.Sections[OnlineHubSectionType.ActiveDownloads].MarkAsRead();
             }
+        }
+
+        internal void DownloadNextItem()
+        {
+            // Download the next map in the queue
+            Pool.Find(x => !x.Item.IsDownloading)?.Item?.Download();
         }
 
         /// <summary>

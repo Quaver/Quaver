@@ -96,6 +96,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             {
                 EstimatedTimeLeft.Text = "Download Complete";
                 Collapse();
+                ((DownloadScrollContainer)Container).DownloadNextItem();
             }
             else
             {
@@ -248,7 +249,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
         private void CreateEstimatedTimeLeft()
         {
-            EstimatedTimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Downloading", 18)
+            EstimatedTimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Downloading (In Queue)", 18)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,

@@ -73,7 +73,8 @@ namespace Quaver.Shared.Screens.Download
             if (CurrentDownloads.Any(x => x.MapsetId == id))
                 return null;
 
-            var download = new MapsetDownload(id, artist, title, CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
+            var download = new MapsetDownload(id, artist, title,
+                CurrentDownloads.Count(mapsetDownload => mapsetDownload.IsDownloading) + 1 <= MAX_CONCURRENT_DOWNLOADS);
             CurrentDownloads.Add(download);
 
             DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
@@ -97,7 +98,7 @@ namespace Quaver.Shared.Screens.Download
                 return null;
 
             var download = new MultiplayerSharedMapsetDownload(OnlineManager.CurrentGame.GameId, artist, title,
-                CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
+                CurrentDownloads.Count(mapsetDownload => mapsetDownload.IsDownloading) + 1 <= MAX_CONCURRENT_DOWNLOADS);
 
             CurrentDownloads.Add(download);
 
