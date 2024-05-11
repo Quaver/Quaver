@@ -226,10 +226,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             };
             CancelButton.Clicked += (sender, args) =>
             {
-                if (_expanded)
-                    Item.FileDownloader.Value?.Cancel();
-                else
+                if (!_expanded || Item.FileDownloader.Value == null)
                     Item.RemoveDownload();
+                else
+                    Item.FileDownloader.Value?.Cancel();
             };
         }
 
