@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Emik;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -325,7 +326,7 @@ namespace Quaver.Shared.Database.Maps
                 var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, map.Mapset.Directory);
                 var path = Path.Combine(mapsetPath, map.Path);
 
-                if (File.Exists(path))
+                if (!Rubbish.Move(path) && File.Exists(path))
                     File.Delete(path);
 
                 MapDatabaseCache.RemoveMap(map);
@@ -375,7 +376,10 @@ namespace Quaver.Shared.Database.Maps
 
             try
             {
-                Directory.Delete(Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory), true);
+                var directory = Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory);
+
+                if (!Rubbish.Move(directory) && Directory.Exists(directory))
+                    Directory.Delete(directory, true);
             }
             catch (Exception e)
             {
