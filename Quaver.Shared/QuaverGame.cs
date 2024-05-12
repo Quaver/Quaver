@@ -331,6 +331,7 @@ namespace Quaver.Shared
             DiscordHelper.Shutdown();
             base.UnloadContent();
             OnlineManager.Client?.Disconnect();
+            SteamAPI.Shutdown();
         }
 
         /// <inheritdoc />
