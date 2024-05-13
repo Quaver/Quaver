@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -543,7 +544,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 var multi = (MultiplayerGameScreen) game.CurrentScreen;
                 multi.DontLeaveGameUponScreenSwitch = true;
 
-                download.Completed.ValueChanged += (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
+                download.Status.ValueChanged += (sender2, args2) =>
+                {
+                    if (args2.Value.Status != FileDownloaderStatus.Complete)
+                        return;
+
+                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                };
 
                 MapsetDownloadManager.OpenOnlineHub();
                 game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
@@ -577,7 +584,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 var multi = (MultiplayerGameScreen) game.CurrentScreen;
                 multi.DontLeaveGameUponScreenSwitch = true;
 
-                download.Completed.ValueChanged += (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
+                download.Status.ValueChanged += (sender2, args2) =>
+                {
+                    if (args2.Value.Status != FileDownloaderStatus.Complete)
+                        return;
+
+                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                };
 
                 MapsetDownloadManager.OpenOnlineHub();
                 game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);

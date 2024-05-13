@@ -192,9 +192,9 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="e"></param>
         private void OnDowloadAdded(object sender, MapsetDownloadAddedEventArgs e)
         {
-            e.Download.Completed.ValueChanged += (o, args) =>
+            e.Download.Status.ValueChanged += (o, args) =>
             {
-                if (args.Value.Status is not FileDownloaderStatus.Cancelled and not FileDownloaderStatus.Complete)
+                if (args.Value.Status != FileDownloaderStatus.Complete)
                     return;
                 if (args.Value.Error == null)
                 {

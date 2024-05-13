@@ -102,16 +102,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             }
             else if (e.Status == FileDownloaderStatus.Cancelled)
             {
-                _titleText = e.Error is null or TaskCanceledException
-                    ? "Download Cancelled"
-                    : "Download Failed";
+                _titleText = e.UserCancelled ? "Download Cancelled" : "Download Failed";
             }
             else
             {
                 _titleText = "Downloading (Connecting)";
             }
 
-            if (e.Status is FileDownloaderStatus.Cancelled or FileDownloaderStatus.Complete)
+            if (e.CancelledOrComplete)
             {
                 Collapse();
                 ((DownloadScrollContainer)Container).DownloadNextItem();
@@ -329,15 +327,18 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 ? 0
                 : e.Value.NewBytesWritten / e.Value.TimeElapsed.TotalSeconds;
             var bytesLeft = Item.FileDownloader.Value?.ContentLength - e.Value.BytesReceived ?? -1;
-            var etaSeconds =
-                TimeSpan.FromSeconds(bytesPerSecond == 0 || bytesLeft == -1 ? 0 : bytesLeft / bytesPerSecond);
+            var etaSeconds = bytesPerSecond == 0 || bytesLeft == -1
+                ? TimeSpan.MaxValue
+                : TimeSpan.FromSeconds(bytesLeft / bytesPerSecond);
 
             if (e.Value.BytesReceived == 0)
                 ProgressBar.Bindable.Value = 0;
 
             ProgressBar.Bindable.Value = percent;
             _percentageText = $"{percent}%";
-            _titleText = $"Downloading (ETA {etaSeconds.Minutes:00}:{etaSeconds.Seconds:00})";
+            _titleText = etaSeconds == TimeSpan.MaxValue
+                ? $"Downloading (ETA Unknown)"
+                : $"Downloading (ETA {etaSeconds.Minutes:00}:{etaSeconds.Seconds:00})";
         }
     }
 }

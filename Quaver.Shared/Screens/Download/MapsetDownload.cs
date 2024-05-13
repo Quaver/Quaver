@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Download
     {
         /// <summary>
         /// </summary>
-        public bool IsDownloading { get; protected set; }
+        public bool HasDownloadEverStarted { get; protected set; }
 
         /// <summary>
         ///     Json containing the mapset.
@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Download
 
         /// <summary>
         /// </summary>
-        public Bindable<DownloadStatusChangedEventArgs> Completed { get; } = new(null);
+        public Bindable<DownloadStatusChangedEventArgs> Status { get; } = new(null);
 
         public event EventHandler Removed;
 
@@ -87,10 +87,10 @@ namespace Quaver.Shared.Screens.Download
 
         public virtual void Download()
         {
-            if (IsDownloading)
+            if (HasDownloadEverStarted)
                 return;
 
-            IsDownloading = true;
+            HasDownloadEverStarted = true;
 
             Logger.Important($"Downloading mapset {MapsetId}...", LogType.Network);
 
@@ -110,14 +110,21 @@ namespace Quaver.Shared.Screens.Download
                 FileDownloader.Value.DownloadProgressChanged += (o, e) => Progress.Value = e;
                 FileDownloader.Value.StatusUpdated += (o, e) =>
                 {
-                    if (e.Status is FileDownloaderStatus.Cancelled or FileDownloaderStatus.Complete)
+                    if (e.CancelledOrComplete)
                     {
                         Logger.Important(
                             $"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}",
                             LogType.Network);
-                        MapsetImporter.Queue.Add(path);
-                        Completed.Value = e;
+                        if (e.Status == FileDownloaderStatus.Complete)
+                            MapsetImporter.Queue.Add(path);
+                        MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
                     }
+                    else if (e.Status == FileDownloaderStatus.Connecting)
+                    {
+                        MapsetDownloadManager.CurrentActiveDownloads.Add(this);
+                    }
+
+                    Status.Value = e;
                 };
                 FileDownloader.Value.Start();
             }
@@ -144,7 +151,7 @@ namespace Quaver.Shared.Screens.Download
         public void Dispose()
         {
             Progress?.Dispose();
-            Completed?.Dispose();
+            Status?.Dispose();
         }
     }
 }

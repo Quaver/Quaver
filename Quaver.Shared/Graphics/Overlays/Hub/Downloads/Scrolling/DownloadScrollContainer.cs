@@ -93,7 +93,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         internal void DownloadNextItem()
         {
             // Download the next map in the queue
-            Pool.Find(x => !x.Item.IsDownloading)?.Item?.Download();
+            Pool.Find(x => !x.Item.HasDownloadEverStarted)?.Item?.Download();
         }
 
         /// <summary>

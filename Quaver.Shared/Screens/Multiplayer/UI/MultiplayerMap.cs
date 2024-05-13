@@ -8,6 +8,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Events.Download;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
@@ -197,7 +198,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadCompleted;
             }
 
             base.Destroy();
@@ -440,12 +441,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadCompleted;
             }
 
             CurrentDownload = MapsetDownloadManager.Download(Game.MapsetId, Game.Map, "");
             CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
-            CurrentDownload.Completed.ValueChanged += OnDownloadCompleted;
+            CurrentDownload.Status.ValueChanged += OnDownloadCompleted;
         }
 
         /// <summary>
@@ -460,6 +461,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
         {
+            if (e.Value.Status != FileDownloaderStatus.Complete)
+                return;
+
             CurrentDownload.Dispose();
 
             if (e.Value.Error != null)

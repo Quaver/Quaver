@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
+ */
 
 using System;
 using System.Collections.Generic;
@@ -23,6 +23,8 @@ namespace Quaver.Shared.Screens.Download
         ///     All opf the currently downloading mapsets.
         /// </summary>
         public static List<MapsetDownload> CurrentDownloads { get; } = new List<MapsetDownload>();
+
+        public static HashSet<MapsetDownload> CurrentActiveDownloads { get; } = new HashSet<MapsetDownload>();
 
         /// <summary>
         ///    The amount of mapsets able to be downloaded at once.
@@ -47,7 +49,7 @@ namespace Quaver.Shared.Screens.Download
                 return null;
             }
 
-            if (CurrentDownloads.Any(x => x.MapsetId == (int) mapset["id"]))
+            if (CurrentDownloads.Any(x => x.MapsetId == (int)mapset["id"]))
                 return null;
 
             var download = new MapsetDownload(mapset, mapset["artist"].ToString(), mapset["title"].ToString(),
@@ -73,8 +75,8 @@ namespace Quaver.Shared.Screens.Download
             if (CurrentDownloads.Any(x => x.MapsetId == id))
                 return null;
 
-            var download = new MapsetDownload(id, artist, title,
-                CurrentDownloads.Count(mapsetDownload => mapsetDownload.IsDownloading) + 1 <= MAX_CONCURRENT_DOWNLOADS);
+            var download =
+                new MapsetDownload(id, artist, title, CurrentActiveDownloads.Count < MAX_CONCURRENT_DOWNLOADS);
             CurrentDownloads.Add(download);
 
             DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
@@ -98,7 +100,7 @@ namespace Quaver.Shared.Screens.Download
                 return null;
 
             var download = new MultiplayerSharedMapsetDownload(OnlineManager.CurrentGame.GameId, artist, title,
-                CurrentDownloads.Count(mapsetDownload => mapsetDownload.IsDownloading) + 1 <= MAX_CONCURRENT_DOWNLOADS);
+                CurrentActiveDownloads.Count < MAX_CONCURRENT_DOWNLOADS);
 
             CurrentDownloads.Add(download);
 
@@ -111,7 +113,7 @@ namespace Quaver.Shared.Screens.Download
         /// </summary>
         public static void OpenOnlineHub()
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
 
