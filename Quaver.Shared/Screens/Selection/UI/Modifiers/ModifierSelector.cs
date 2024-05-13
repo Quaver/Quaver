@@ -14,7 +14,6 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
-using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 {
