@@ -87,20 +87,20 @@ namespace Quaver.Shared.Screens.Initialization
         {
             Logger.Important($"Game initialization task complete!", LogType.Runtime);
 
-            new Thread(CleanOldChartBackups).Start();
+            new Thread(CleanOldMapBackups).Start();
 #if !VISUAL_TESTS
             QuaverScreenManager.ScheduleScreenChange(() => new MainMenuScreen());
 #endif
         }
 
-        private static void CleanOldChartBackups()
+        private static void CleanOldMapBackups()
         {
-            Logger.Important("Removing old chart backups...", LogType.Runtime);
-            Directory.CreateDirectory(ConfigManager.ChartBackupDirectory);
+            Logger.Important("Removing old map backups...", LogType.Runtime);
+            Directory.CreateDirectory(ConfigManager.MapBackupDirectory);
             var deleted = 0;
             var kept = 0;
 
-            foreach (var path in Directory.GetFiles(ConfigManager.ChartBackupDirectory, "*.qua", SearchOption.AllDirectories))
+            foreach (var path in Directory.GetFiles(ConfigManager.MapBackupDirectory, "*.qua", SearchOption.AllDirectories))
             {
                 if (!DateTime.TryParse(Path.GetFileNameWithoutExtension(path).Replace('_', ':'), out var time) ||
                     DateTime.Now - time <= _removeBackupInterval)
@@ -114,13 +114,13 @@ namespace Quaver.Shared.Screens.Initialization
             }
 
             var emptyDirectories = Directory
-               .GetDirectories(ConfigManager.ChartBackupDirectory)
+               .GetDirectories(ConfigManager.MapBackupDirectory)
                .Where(path => !Directory.EnumerateFiles(path).Any());
 
             foreach (var directory in emptyDirectories)
                 Directory.Delete(directory);
 
-            Logger.Important($"Removed {deleted} chart backup(s) while keeping {kept}.", LogType.Runtime);
+            Logger.Important($"Removed {deleted} map backup(s) while keeping {kept}.", LogType.Runtime);
         }
 
         public override UserClientStatus GetClientStatus() => null;

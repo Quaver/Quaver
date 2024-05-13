@@ -81,7 +81,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     The temp directory
         /// </summary>
-        internal static string ChartBackupDirectory => Path.Join(BackupDirectory, "Charts");
+        internal static string MapBackupDirectory => Path.Join(BackupDirectory, "Maps");
 
         /// <summary>
         ///     The temp directory

@@ -290,7 +290,7 @@ namespace Quaver.Shared.Screens.Edit
             BackgroundStore = visualTestBackground;
 
             if (map.Game is MapGame.Quaver)
-                BackupScheduler = new(MakeScheduledChartBackup, null, _backupInterval, _backupInterval);
+                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
 
             try
             {
@@ -1889,18 +1889,20 @@ namespace Quaver.Shared.Screens.Edit
             DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
         }
 
-        void MakeScheduledChartBackup(object _)
+        void MakeScheduledMapBackup(object _)
         {
-            if (BackupQua?.EqualByValue(WorkingMap) ?? false)
+            // We likely need to clone this because we are in a different thread,
+            // which could cause mutation during enumeration, and an exception thrown.
+            var newBackup = WorkingMap.DeepClone();
+
+            if (BackupQua?.EqualByValue(newBackup) ?? false)
                 return;
 
-            var chartDirectory = Path.Join(ConfigManager.ChartBackupDirectory, Path.GetFileNameWithoutExtension(Map.Path));
-            Directory.CreateDirectory(chartDirectory);
-            var filePath = Path.Join(chartDirectory, $"{DateTime.Now.ToString("s").Replace(':', '_')}.qua");
+            var mapDirectory = Path.Join(ConfigManager.MapBackupDirectory, Path.GetFileNameWithoutExtension(Map.Path));
+            Directory.CreateDirectory(mapDirectory);
+            var filePath = Path.Join(mapDirectory, $"{DateTime.Now.ToString("s").Replace(':', '_')}.qua");
 
-            // We likely need to clone this because `Save` is actually a mutating function, and we are in a different thread.
-            // We do not want the game to enumerate any of the chart's lists that is potentially being modified in this thread.
-            BackupQua = WorkingMap.DeepClone();
+            BackupQua = newBackup;
             BackupQua.Save(filePath);
         }
     }
