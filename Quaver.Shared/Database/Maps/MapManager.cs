@@ -366,7 +366,7 @@ namespace Quaver.Shared.Database.Maps
 
                 AudioEngine.Track = new AudioTrackVirtual(300000);
 
-                if (oldTrack is { IsDisposed: false })
+                if (oldTrack != null && !oldTrack.IsDisposed)
                     oldTrack.Dispose();
             }
 
