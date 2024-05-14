@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Download
                 Download();
         }
 
-        public virtual void Download()
+        public void Download()
         {
             if (HasDownloadEverStarted)
                 return;
@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Download
 
             try
             {
-                FileDownloader.Value = OnlineManager.Client?.DownloadMapset(path, MapsetId);
+                CreateFileDownloader(path);
                 if (FileDownloader.Value == null)
                 {
                     RemoveDownload();
@@ -144,14 +144,18 @@ namespace Quaver.Shared.Screens.Download
                 };
                 FileDownloader.Value.StatusUpdated += (o, e) =>
                 {
+                    Status.Value = e;
                     if (e.CancelledOrComplete)
                     {
                         Logger.Important(
                             $"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}",
                             LogType.Network);
-                        if (e.Status == FileDownloaderStatus.Complete)
-                            MapsetImporter.Queue.Add(path);
                         MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
+                        if (e.Status == FileDownloaderStatus.Complete)
+                        {
+                            MapsetImporter.Queue.Add(path);
+                            RemoveDownload();
+                        }
                     }
                     else if (e.Status == FileDownloaderStatus.Connecting)
                     {
@@ -160,8 +164,6 @@ namespace Quaver.Shared.Screens.Download
                     {
                         _lastRetryTime = DateTime.Now;
                     }
-
-                    Status.Value = e;
                 };
                 FileDownloader.Value.Start();
             }
@@ -173,9 +175,13 @@ namespace Quaver.Shared.Screens.Download
             }
         }
 
+        protected virtual void CreateFileDownloader(string path)
+        {
+            FileDownloader.Value = OnlineManager.Client?.DownloadMapset(path, MapsetId);
+        }
+
         public void RemoveDownload()
         {
-            Logger.Debug($"Removing download", LogType.Runtime);
             FileDownloader.Value?.Cancel();
             Removed?.Invoke(this, EventArgs.Empty);
             MapsetDownloadManager.CurrentDownloads.Remove(this);
