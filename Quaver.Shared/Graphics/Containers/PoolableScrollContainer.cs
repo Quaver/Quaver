@@ -9,11 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MoreLinq;
 using Wobble.Graphics;
-using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Graphics.Containers
 {
@@ -59,12 +56,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    Quick way to get the drawable's height.
         /// </summary>
-        private List<int> ItemY { get; set; } = new List<int>();
-
-        private int WrappedItemY(int index) => index >= 0 && index < ItemY.Count ? ItemY[index] : TotalHeight;
-
-        private int TotalHeight => ItemY.LastOrDefault(0);
-        private int FirstItemHeight => ItemY.Count < 2 ? 0 : ItemY[1];
+        private int DrawableHeight => Pool.Count > 0 ? Pool.First().HEIGHT : 0;
 
         /// <inheritdoc />
         /// <summary>
@@ -138,12 +130,9 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         public virtual void RecalculateContainerHeight(bool usePoolCount = false)
         {
-            var firstItemHeight = Pool.Select(i => i.HEIGHT).FirstOrDefault(0);
-            
-            ItemY = usePoolCount 
-                ? Pool.Select(i => i.HEIGHT).Scan(0, (current, next) => current + next).ToList()
-                : AvailableItems.Scan(0, (current, _) => current + firstItemHeight).ToList();
-            var totalUserHeight = TotalHeight + PaddingTop + PaddingBottom;
+            var count = usePoolCount ? Pool.Count : AvailableItems.Count;
+
+            var totalUserHeight = DrawableHeight * count + PaddingTop + PaddingBottom;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -180,12 +169,7 @@ namespace Quaver.Shared.Graphics.Containers
                 return;
 
             // Compute the index of the object currently in the middle of the container.
-            var middleY = (int)(-ContentContainer.Y + Height / 2 - PaddingTop);
-            var middleObjectIndex = ItemY.BinarySearch(middleY);
-            if (middleY < 0 || middleY > TotalHeight) 
-                middleObjectIndex = middleY / FirstItemHeight;
-            else if (middleObjectIndex < 0) middleObjectIndex = ~ middleObjectIndex - 1;
-            
+            var middleObjectIndex = (int) ((-ContentContainer.Y + Height / 2 - PaddingTop) / DrawableHeight);
 
             // Compute the corresponding PoolStartingIndex.
             var desiredPoolStartingIndex = DesiredPoolStartingIndex(middleObjectIndex);
@@ -207,7 +191,7 @@ namespace Quaver.Shared.Graphics.Containers
                     var objectIndex = desiredPoolStartingIndex + Pool.Count - 1 - overlap - i;
 
                     var drawable = Pool.Last();
-                    drawable.Y = WrappedItemY(objectIndex) + PaddingTop;
+                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
                     drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
                     // Circularly shift the list back one.
@@ -223,7 +207,7 @@ namespace Quaver.Shared.Graphics.Containers
                     var objectIndex = desiredPoolStartingIndex + overlap + i;
 
                     var drawable = Pool.First();
-                    drawable.Y = WrappedItemY(objectIndex) + PaddingTop;
+                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
                     drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
                     // Circularly shift the list forward one.
@@ -274,10 +258,10 @@ namespace Quaver.Shared.Graphics.Containers
                 if (Pool.Count < PoolSize)
                     AddContainedDrawable(AddObject(index));
 
-                ReorganizeItems(usePoolCount, 0);
+                RecalculateContainerHeight(usePoolCount);
 
                 if (scrollTo)
-                    ScrollTo(-ItemY[index], 1000);
+                    ScrollTo(-index * DrawableHeight, 1000);
             }
         }
 
@@ -298,10 +282,10 @@ namespace Quaver.Shared.Graphics.Containers
                 if (Pool.Count < PoolSize)
                     AddContainedDrawable(AddObject(AvailableItems.Count - 1));
 
-                ReorganizeItems(usePoolCount, 0);
+                RecalculateContainerHeight(usePoolCount);
 
                 if (scrollTo)
-                    ScrollTo(-ItemY[AvailableItems.Count + 1], 1000);
+                    ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
             }
         }
 
@@ -359,33 +343,6 @@ namespace Quaver.Shared.Graphics.Containers
             */
 
             throw new NotImplementedException();
-        }
-
-        public void ReorganizeItems(bool usePoolCount = false, int animationTime = 400)
-        {
-            RecalculateContainerHeight(usePoolCount);
-
-            AddScheduledUpdate(() =>
-            {
-                if (Pool.Count == 0) 
-                    return;
-
-                // Reset the pool item index
-                for (var i = 0; i < Pool.Count; i++)
-                {
-                    Pool[i].Index = i;
-                    if (animationTime > 0)
-                    {
-                        Pool[i].ClearAnimations();
-                        Pool[i].MoveToY(ItemY[i], Easing.OutQuint, animationTime);
-                    }
-                    else
-                    {
-                        Pool[i].Y = ItemY[i];
-                    }
-                    Pool[i].UpdateContent(Pool[i].Item, i);
-                }
-            });
         }
 
         /// <summary>

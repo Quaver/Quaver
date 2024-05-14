@@ -78,7 +78,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Pool.Remove(item);
             }
 
-            ReorganizeItems(true);
+            ReorganizeItems();
 
             DownloadNextItem();
 
@@ -115,7 +115,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             var drawableDownload = new DrawableDownload(this, item, index);
             drawableDownload.DimensionsChanged += (sender, args) =>
             {
-                ReorganizeItems(true);
+                ReorganizeItems();
             };
             return drawableDownload;
         }
@@ -149,12 +149,36 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Remove(e.Download);
             };
             AddObjectAtIndex(0, e.Download, false, true);
+            ReorganizeItems();
 
             // Running update once immediately here to make sure everything scheduled is initialized properly
             Update(new GameTime());
 
             var game = (QuaverGame) GameBase.Game;
             game.OnlineHub.MarkSectionAsUnread(OnlineHubSectionType.ActiveDownloads);
+        }
+        
+
+        public void ReorganizeItems()
+        {
+            RecalculateContainerHeight();
+
+            AddScheduledUpdate(() =>
+            {
+                if (Pool.Count == 0) 
+                    return;
+
+                var y = 0;
+                // Reset the pool item index
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    Pool[i].Index = i;
+                    Pool[i].ClearAnimations();
+                    Pool[i].MoveToY(y, Easing.OutQuint, 400);
+                    Pool[i].UpdateContent(Pool[i].Item, i);
+                    y += Pool[i].HEIGHT;
+                }
+            });
         }
     }
 }
