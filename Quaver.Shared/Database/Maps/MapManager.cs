@@ -326,7 +326,9 @@ namespace Quaver.Shared.Database.Maps
                 var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, map.Mapset.Directory);
                 var path = Path.Combine(mapsetPath, map.Path);
 
-                if (!Rubbish.Move(path))
+                if (Rubbish.Move(path))
+                    MapDatabaseCache.RemoveMap(map);
+                else
                     ShowFallbackMapDeletionDialog(
                         "map",
                         () =>
@@ -335,8 +337,6 @@ namespace Quaver.Shared.Database.Maps
                             MapDatabaseCache.RemoveMap(map);
                         }
                     );
-                else
-                    MapDatabaseCache.RemoveMap(map);
             }
             catch (Exception e)
             {
