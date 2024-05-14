@@ -51,6 +51,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private SpriteTextPlus Name { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private SpriteTextPlus By { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private SpriteTextPlus Artist { get; set; }
+
         private SpriteTextPlus Title { get; set; }
 
         /// <summary>
@@ -83,7 +91,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             CreateProgressBar();
             UpdateContainerSize();
 
-            UpdateText();
+            UpdateAllText();
 
             Item.Progress.ValueChanged += OnDownloadProgressChanged;
             Item.FileDownloader.ValueChanged += (sender, args) =>
@@ -122,7 +130,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Expand();
             }
 
-            ScheduleUpdate(UpdateText);
+            ScheduleUpdate(UpdateTitleAndProgress);
         }
 
         private void Collapse()
@@ -187,7 +195,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             Item = item;
             Index = index;
 
-            ScheduleUpdate(UpdateText);
+            ScheduleUpdate(UpdateAllText);
         }
 
         /// <summary>
@@ -251,13 +259,31 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void CreateSongName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Artist - Title", 16)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Name", 16)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
                 X = 18,
                 Y = Title.RelativeRectangle.Bottom + 12,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Colors.MainBlue
+            };
+            By = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), " by ", 16)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.TopLeft,
+                X = Name.RelativeRectangle.Right,
+                Y = Name.Y,
                 UsePreviousSpriteBatchOptions = true
+            };
+            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Artist", 16)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.TopLeft,
+                X = By.RelativeRectangle.Right,
+                Y = Name.Y,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Colors.MainBlue
             };
         }
 
@@ -310,14 +336,28 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             };
         }
 
+        private void UpdateAllText()
+        {
+            UpdateNameAndArtist();
+            UpdateTitleAndProgress();
+        }
+
         /// <summary>
         /// </summary>
-        private void UpdateText()
+        private void UpdateTitleAndProgress()
         {
-            Name.Text = string.IsNullOrEmpty(Item.Title) ? Item.Artist : $"{Item.Title} by {Item.Artist}";
-            Name.TruncateWithEllipsis((int)ProgressBar.Width - 10);
             Title.Text = _titleText;
             ProgressPercentage.Text = _percentageText;
+        }
+
+        private void UpdateNameAndArtist()
+        {
+            Name.Text = string.IsNullOrWhiteSpace(Item.Title) ? "Unknown" : Item.Title;
+            Artist.Text = string.IsNullOrWhiteSpace(Item.Artist) ? "Unknown" : Item.Artist;
+            Name.TruncateWithEllipsis((int)ProgressBar.Width - 50);
+            By.X = Name.RelativeRectangle.Right;
+            Artist.X = By.RelativeRectangle.Right;
+            Artist.TruncateWithEllipsis((int)(ContentContainer.Width - By.RelativeRectangle.Right) - 18);
         }
 
         /// <summary>
@@ -339,7 +379,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             _titleText = Item.Eta == TimeSpan.MaxValue
                 ? $"Downloading (ETA Unknown)"
                 : $"Downloading (ETA {Item.Eta:mm\\:ss})";
-            ScheduleUpdate(UpdateText);
+            ScheduleUpdate(UpdateTitleAndProgress);
         }
     }
 }
