@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MoreLinq;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Graphics.Containers
 {
@@ -59,7 +61,10 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         private List<int> ItemY { get; set; } = new List<int>();
 
+        private int WrappedItemY(int index) => index >= 0 && index < ItemY.Count ? ItemY[index] : TotalHeight;
+
         private int TotalHeight => ItemY.LastOrDefault(0);
+        private int FirstItemHeight => ItemY.Count < 2 ? 0 : ItemY[1];
 
         /// <inheritdoc />
         /// <summary>
@@ -134,15 +139,10 @@ namespace Quaver.Shared.Graphics.Containers
         public virtual void RecalculateContainerHeight(bool usePoolCount = false)
         {
             var firstItemHeight = Pool.Select(i => i.HEIGHT).FirstOrDefault(0);
-            ItemY = new List<int>();
-            ItemY.Add(0);
-            var currentY = 0;
-            for (var i = 0; i < Pool.Count; i++)
-            {
-                var actualIndex = (i + PoolStartingIndex) % Pool.Count;
-                currentY += Pool[actualIndex].HEIGHT;
-                ItemY.Add(currentY);
-            }
+            
+            ItemY = usePoolCount 
+                ? Pool.Select(i => i.HEIGHT).Scan(0, (current, next) => current + next).ToList()
+                : AvailableItems.Scan(0, (current, _) => current + firstItemHeight).ToList();
             var totalUserHeight = TotalHeight + PaddingTop + PaddingBottom;
 
             if (totalUserHeight > Height)
@@ -180,8 +180,12 @@ namespace Quaver.Shared.Graphics.Containers
                 return;
 
             // Compute the index of the object currently in the middle of the container.
-            var middleObjectIndex = ItemY.BinarySearch((int)(-ContentContainer.Y + Height / 2 - PaddingTop));
-            if (middleObjectIndex < 0) middleObjectIndex = ~ middleObjectIndex;
+            var middleY = (int)(-ContentContainer.Y + Height / 2 - PaddingTop);
+            var middleObjectIndex = ItemY.BinarySearch(middleY);
+            if (middleY < 0 || middleY > TotalHeight) 
+                middleObjectIndex = middleY / FirstItemHeight;
+            else if (middleObjectIndex < 0) middleObjectIndex = ~ middleObjectIndex - 1;
+            
 
             // Compute the corresponding PoolStartingIndex.
             var desiredPoolStartingIndex = DesiredPoolStartingIndex(middleObjectIndex);
@@ -203,7 +207,7 @@ namespace Quaver.Shared.Graphics.Containers
                     var objectIndex = desiredPoolStartingIndex + Pool.Count - 1 - overlap - i;
 
                     var drawable = Pool.Last();
-                    drawable.Y = ItemY[objectIndex] + PaddingTop;
+                    drawable.Y = WrappedItemY(objectIndex) + PaddingTop;
                     drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
                     // Circularly shift the list back one.
@@ -219,7 +223,7 @@ namespace Quaver.Shared.Graphics.Containers
                     var objectIndex = desiredPoolStartingIndex + overlap + i;
 
                     var drawable = Pool.First();
-                    drawable.Y = ItemY[objectIndex] + PaddingTop;
+                    drawable.Y = WrappedItemY(objectIndex) + PaddingTop;
                     drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
                     // Circularly shift the list forward one.

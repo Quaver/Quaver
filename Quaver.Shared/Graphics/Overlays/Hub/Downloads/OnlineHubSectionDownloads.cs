@@ -45,7 +45,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads
         public override void Update(GameTime gameTime)
         {
             ScrollContainer.Height = Container.Height;
-            ScrollContainer.RecalculateContainerHeight();
+            ScrollContainer.RecalculateContainerHeight(true);
             base.Update(gameTime);
         }
     }

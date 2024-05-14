@@ -78,7 +78,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Pool.Remove(item);
             }
 
-            ReorganizeItems();
+            ReorganizeItems(true);
 
             DownloadNextItem();
 
@@ -93,7 +93,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         internal void DownloadNextItem()
         {
             // Download the next map in the queue
-            Pool.Find(x => !x.Item.HasDownloadEverStarted)?.Item?.Download();
+            Pool.FindLast(x => !x.Item.HasDownloadEverStarted)?.Item?.Download();
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             var drawableDownload = new DrawableDownload(this, item, index);
             drawableDownload.DimensionsChanged += (sender, args) =>
             {
-                ReorganizeItems();
+                ReorganizeItems(true);
             };
             return drawableDownload;
         }
@@ -148,7 +148,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             {
                 Remove(e.Download);
             };
-            AddObjectToBottom(e.Download, false);
+            AddObjectAtIndex(0, e.Download, false, true);
 
             // Running update once immediately here to make sure everything scheduled is initialized properly
             Update(new GameTime());
