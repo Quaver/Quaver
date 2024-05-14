@@ -20,7 +20,9 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -30,6 +32,7 @@ using RestSharp;
 using RestSharp.Extensions;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Maps
@@ -323,10 +326,17 @@ namespace Quaver.Shared.Database.Maps
                 var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, map.Mapset.Directory);
                 var path = Path.Combine(mapsetPath, map.Path);
 
-                if (!Rubbish.Move(path) && File.Exists(path))
-                    File.Delete(path);
-
-                MapDatabaseCache.RemoveMap(map);
+                if (!Rubbish.Move(path))
+                    ShowFallbackMapDeletionDialog(
+                        "map",
+                        () =>
+                        {
+                            File.Delete(path);
+                            MapDatabaseCache.RemoveMap(map);
+                        }
+                    );
+                else
+                    MapDatabaseCache.RemoveMap(map);
             }
             catch (Exception e)
             {
@@ -376,8 +386,7 @@ namespace Quaver.Shared.Database.Maps
                 var directory = Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory);
 
                 if (!Rubbish.Move(directory) && Directory.Exists(directory))
-                    Directory.Delete(directory, true);
-
+                    ShowFallbackMapDeletionDialog("mapset", () => Directory.Delete(directory, true));
             }
             catch (Exception e)
             {
@@ -498,5 +507,14 @@ namespace Quaver.Shared.Database.Maps
         {
             SongRequestPlayed?.Invoke(typeof(MapManager), new SongRequestPlayedEventArgs(request, map));
         }
+
+        private static void ShowFallbackMapDeletionDialog(string label, Action onYes) =>
+            DialogManager.Show(
+                new YesNoDialog(
+                    "Map Deletion",
+                    $"Failed to move the {label} in the recycle bin. Would you like to delete it instead?",
+                    onYes
+                )
+            );
     }
 }
