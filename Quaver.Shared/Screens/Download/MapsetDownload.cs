@@ -57,6 +57,10 @@ namespace Quaver.Shared.Screens.Download
         /// </summary>
         public Bindable<DownloadStatusChangedEventArgs> Status { get; } = new(null);
 
+        /// <summary>
+        ///     This is used to signal to <see cref="Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling.DownloadScrollContainer"/>
+        ///     to remove this mapset download
+        /// </summary>
         public event EventHandler Removed;
 
         private readonly ConcurrentQueue<DownloadProgressEventArgs> _progressChangedSlidingWindow = new();
@@ -64,15 +68,28 @@ namespace Quaver.Shared.Screens.Download
         private TimeSpan _slidingWindowDuration = TimeSpan.Zero;
         private const int SlidingWindowWidth = 20;
         private DateTime _lastEtaUpdateTime = DateTime.Now;
-        private static readonly TimeSpan EtaUpdateInterval = TimeSpan.FromSeconds(1);
+
+        /// <summary>
+        ///     Determines how fast <see cref="Eta"/> updates
+        /// </summary>
+        public static readonly TimeSpan EtaUpdateInterval = TimeSpan.FromSeconds(1);
+
+        /// <summary>
+        ///     The estimated duration of time until the download completes.
+        ///     This value updates every <see cref="EtaUpdateInterval"/> 
+        /// </summary>
         public TimeSpan Eta { get; private set; } = TimeSpan.Zero;
 
         /// <summary>
-        ///     The user is only eligible to retry when the ETA is at least 30s
+        ///     The user is only eligible to retry when the ETA is at least this amount of time
         /// </summary>
         private static readonly TimeSpan MinimumEtaForRetry = TimeSpan.FromSeconds(30);
 
         private DateTime _lastRetryTime = DateTime.Now;
+
+        /// <summary>
+        ///     The user is only eligible to retry after this amount of time has passed after download started
+        /// </summary>
         private static readonly TimeSpan MinimumRetryInterval = TimeSpan.FromSeconds(10);
 
         /// <summary>
@@ -126,14 +143,15 @@ namespace Quaver.Shared.Screens.Download
 
                 FileDownloader.Value.DownloadProgressChanged += (o, e) =>
                 {
+                    // Update ETA
                     AddToSlidingWindow(e);
-                    var bytesPerSecond = _slidingWindowDuration == TimeSpan.Zero
-                        ? 0
-                        : _slidingWindowBytesRead / _slidingWindowDuration.TotalSeconds;
-                    var bytesLeft = e.ContentLength - e.TotalBytesReceived;
                     var now = DateTime.Now;
                     if (now - _lastEtaUpdateTime > EtaUpdateInterval)
                     {
+                        var bytesPerSecond = _slidingWindowDuration == TimeSpan.Zero
+                            ? 0
+                            : _slidingWindowBytesRead / _slidingWindowDuration.TotalSeconds;
+                        var bytesLeft = e.ContentLength - e.TotalBytesReceived;
                         Eta = bytesPerSecond == 0
                             ? TimeSpan.MaxValue
                             : TimeSpan.FromSeconds(bytesLeft / bytesPerSecond);
@@ -150,6 +168,7 @@ namespace Quaver.Shared.Screens.Download
                         Logger.Important(
                             $"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}",
                             LogType.Network);
+
                         MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
                         if (e.Status == FileDownloaderStatus.Complete)
                         {
@@ -160,11 +179,15 @@ namespace Quaver.Shared.Screens.Download
                     else if (e.Status == FileDownloaderStatus.Connecting)
                     {
                         MapsetDownloadManager.CurrentActiveDownloads.Add(this);
-                    } else if (e.Status == FileDownloaderStatus.Downloading)
+                    }
+                    else if (e.Status == FileDownloaderStatus.Downloading)
                     {
+                        // Record the current time so the player can retry download a certain amount of time after this.
                         _lastRetryTime = DateTime.Now;
                     }
                 };
+
+                // Start the downloader right away
                 FileDownloader.Value.Start();
             }
             catch (Exception e)
@@ -180,11 +203,18 @@ namespace Quaver.Shared.Screens.Download
             FileDownloader.Value = OnlineManager.Client?.DownloadMapset(path, MapsetId);
         }
 
+        /// <summary>
+        ///     Removes itself from <see cref="MapsetDownloadManager.CurrentDownloads"/>.
+        ///     If the download is still ongoing, cancel it.
+        ///     Signals <see cref="Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling.DownloadScrollContainer"/>
+        ///     to remove this item from the container.
+        /// </summary>
         public void RemoveDownload()
         {
             FileDownloader.Value?.Cancel();
             Removed?.Invoke(this, EventArgs.Empty);
             MapsetDownloadManager.CurrentDownloads.Remove(this);
+            MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
             Dispose();
         }
 
@@ -201,6 +231,9 @@ namespace Quaver.Shared.Screens.Download
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
         public bool EligibleForRetry()
         {
             if (DateTime.Now - _lastRetryTime < MinimumRetryInterval) return false;
@@ -209,6 +242,8 @@ namespace Quaver.Shared.Screens.Download
             return true;
         }
 
+        /// <summary>
+        /// </summary>
         public void TryRetry()
         {
             if (!EligibleForRetry()) return;
