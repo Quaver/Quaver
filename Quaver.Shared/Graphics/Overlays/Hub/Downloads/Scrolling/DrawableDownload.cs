@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -15,6 +17,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
@@ -59,6 +62,13 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         private SpriteTextPlus ProgressPercentage { get; set; }
 
         public event EventHandler DimensionsChanged;
+
+        private readonly ConcurrentQueue<DownloadProgressEventArgs> _progressChangedSlidingWindow = new();
+        private long _slidingWindowBytesRead = 0;
+        private TimeSpan _slidingWindowDuration = TimeSpan.Zero;
+        private const int SlidingWindowWidth = 20;
+        private DateTime _lastEtaUpdateTime = DateTime.Now;
+        private static readonly TimeSpan EtaUpdateInterval = TimeSpan.FromSeconds(1);
 
         /// <inheritdoc />
         /// <summary>
@@ -118,6 +128,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             {
                 Expand();
             }
+
+            ScheduleUpdate(UpdateText);
         }
 
         private void Collapse()
@@ -307,10 +319,23 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void UpdateText()
         {
-            Name.Text = string.IsNullOrEmpty(Item.Title) ? Item.Artist : $"{Item.Artist} - {Item.Title}";
+            Name.Text = string.IsNullOrEmpty(Item.Title) ? Item.Artist : $"{Item.Title} by {Item.Artist}";
             Name.TruncateWithEllipsis((int)ProgressBar.Width - 10);
             Title.Text = _titleText;
             ProgressPercentage.Text = _percentageText;
+        }
+
+        private void AddToSlidingWindow(DownloadProgressEventArgs e)
+        {
+            _progressChangedSlidingWindow.Enqueue(e);
+            _slidingWindowDuration += e.TimeElapsed;
+            _slidingWindowBytesRead += e.NewBytesReceived;
+            if (_progressChangedSlidingWindow.Count > SlidingWindowWidth &&
+                _progressChangedSlidingWindow.TryDequeue(out var dequeued))
+            {
+                _slidingWindowDuration -= dequeued.TimeElapsed;
+                _slidingWindowBytesRead -= dequeued.NewBytesReceived;
+            }
         }
 
         /// <summary>
@@ -323,22 +348,27 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             if (Item.FileDownloader.Value?.Status is FileDownloaderStatus.Complete or FileDownloaderStatus.Cancelled)
                 return;
             var percent = e.Value.ProgressPercentage;
-            var bytesPerSecond = e.Value.TimeElapsed == TimeSpan.Zero
+            AddToSlidingWindow(e.Value);
+            var bytesPerSecond = _slidingWindowDuration == TimeSpan.Zero
                 ? 0
-                : e.Value.NewBytesWritten / e.Value.TimeElapsed.TotalSeconds;
-            var bytesLeft = Item.FileDownloader.Value?.ContentLength - e.Value.BytesReceived ?? -1;
-            var etaSeconds = bytesPerSecond == 0 || bytesLeft == -1
+                : _slidingWindowBytesRead / _slidingWindowDuration.TotalSeconds;
+            var bytesLeft = e.Value.ContentLength - e.Value.TotalBytesReceived;
+            var etaSeconds = bytesPerSecond == 0
                 ? TimeSpan.MaxValue
                 : TimeSpan.FromSeconds(bytesLeft / bytesPerSecond);
 
-            if (e.Value.BytesReceived == 0)
+            if (e.Value.TotalBytesReceived == 0)
                 ProgressBar.Bindable.Value = 0;
 
             ProgressBar.Bindable.Value = percent;
             _percentageText = $"{percent}%";
             _titleText = etaSeconds == TimeSpan.MaxValue
                 ? $"Downloading (ETA Unknown)"
-                : $"Downloading (ETA {etaSeconds.Minutes:00}:{etaSeconds.Seconds:00})";
+                : $"Downloading (ETA {etaSeconds:mm\\:ss})";
+            var now = DateTime.Now;
+            if (now - _lastEtaUpdateTime <= EtaUpdateInterval) return;
+            ScheduleUpdate(UpdateText);
+            _lastEtaUpdateTime = now;
         }
     }
 }
