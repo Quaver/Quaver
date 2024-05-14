@@ -257,6 +257,7 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
+            Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
         }
 
         /// <inheritdoc />
@@ -330,6 +331,7 @@ namespace Quaver.Shared
             DiscordHelper.Shutdown();
             base.UnloadContent();
             OnlineManager.Client?.Disconnect();
+            SteamAPI.Shutdown();
         }
 
         /// <inheritdoc />
@@ -661,8 +663,7 @@ namespace Quaver.Shared
         /// </summary>
         private void HandleKeyPressCtrlO()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.O))
@@ -692,7 +693,7 @@ namespace Quaver.Shared
         private void HandleKeyPressCtrlS()
         {
             // Check for modifier keys
-            if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.S))
@@ -779,8 +780,11 @@ namespace Quaver.Shared
                         var request = new APIRequestImgurUpload(path);
                         var response = request.ExecuteRequest();
 
-                        if (response == null)
-                            throw new Exception("Failed to upload screenshot to imgur");
+                        if (response is null)
+                        {
+                            Logger.Error("Failed to upload screenshot to imgur", LogType.Network);
+                            NotificationManager.Show(NotificationLevel.Error, "Failed to upload screenshot!");
+                        }
 
                         Clipboard.NativeClipboard.SetText(response);
                         BrowserHelper.OpenURL(response, true);
@@ -795,7 +799,7 @@ namespace Quaver.Shared
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }

@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Emik;
@@ -25,12 +24,10 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Maps;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using RestSharp;
 using RestSharp.Extensions;
-using SQLite;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -380,6 +377,7 @@ namespace Quaver.Shared.Database.Maps
 
                 if (!Rubbish.Move(directory) && Directory.Exists(directory))
                     Directory.Delete(directory, true);
+
             }
             catch (Exception e)
             {

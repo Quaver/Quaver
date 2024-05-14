@@ -1371,7 +1371,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (Tool.Value != EditorCompositionTool.Select)
                 return;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (KeyboardManager.IsCtrlDown())
             {
                 if (SelectedHitObjects.Value.Contains(hoveredObject.Info))
                     SelectedHitObjects.Remove(hoveredObject.Info);

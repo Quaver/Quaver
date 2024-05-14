@@ -135,10 +135,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             processor.SteamId = SteamUser.GetSteamID().m_SteamID;
             processor.UserId = OnlineManager.Self?.OnlineUser?.Id ?? 0;
 
-            Logger.Important($"---- Health Weighting ----", LogType.Runtime);
+            Logger.Debug("---- Health Weighting ----", LogType.Runtime);
 
             foreach (var weight in processor.JudgementHealthWeighting)
-                Logger.Important($"{weight.Key}: {weight.Value}", LogType.Runtime);
+                Logger.Debug($"{weight.Key}: {weight.Value}", LogType.Runtime);
 
             return processor;
         }
