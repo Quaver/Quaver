@@ -187,8 +187,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
             if (ActiveTooltip == null)
                 return;
 
-            ActiveTooltip.X = MouseManager.CurrentState.X - AbsolutePosition.X - ActiveTooltip.Width / 2f;
-            ActiveTooltip.Y = MouseManager.CurrentState.Y - AbsolutePosition.Y - ActiveTooltip.Height - 2;
+            ActiveTooltip.X = MathHelper.Clamp(MouseManager.CurrentState.X - AbsolutePosition.X - ActiveTooltip.Width / 2f, 5, Width - ActiveTooltip.Width - 5);
+            ActiveTooltip.Y = MathHelper.Clamp(MouseManager.CurrentState.Y - AbsolutePosition.Y - ActiveTooltip.Height - 2, 5, Height - ActiveTooltip.Height - 5);
         }
     }
 }
