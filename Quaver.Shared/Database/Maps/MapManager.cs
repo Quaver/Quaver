@@ -322,8 +322,6 @@ namespace Quaver.Shared.Database.Maps
                 var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, map.Mapset.Directory);
                 var path = Path.Combine(mapsetPath, map.Path);
 
-                // TODO: Consider moving the file instead to the trash, once a cross-platform solution is made available.
-                // Do not consider `Microsoft.VisualBasic.FileIO.FileSystem`; It is not cross-platform!
                 File.Delete(path);
                 MapDatabaseCache.RemoveMap(map);
             }
@@ -374,8 +372,6 @@ namespace Quaver.Shared.Database.Maps
             {
                 var directory = Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory);
 
-                // TODO: Consider moving the directory instead to the trash, once a cross-platform solution is made available.
-                // Do not consider `Microsoft.VisualBasic.FileIO.FileSystem`; It is not cross-platform!
                 Directory.Delete(directory, true);
             }
             catch (Exception e)
