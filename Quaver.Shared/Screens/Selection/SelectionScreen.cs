@@ -124,9 +124,10 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
-            if (IsMultiplayer) {
+            if (IsMultiplayer)
                 OnlineManager.Client?.SetGameCurrentlySelectingMap(true);
-            } else {
+            else
+            {
                 ModManager.AddSpeedMods(LastSpeedRate);
                 SetRichPresence();
             }
