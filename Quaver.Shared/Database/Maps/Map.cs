@@ -214,6 +214,11 @@ namespace Quaver.Shared.Database.Maps
         public int OnlineOffset { get; set; }
 
         /// <summary>
+        ///     Returns the amount of times the scroll velocity changes in a map
+        /// </summary>
+        public int ScrollVelocityChanges { get; set; }
+
+        /// <summary>
         ///    Returns the notes per second a map has
         /// </summary>
         [Ignore]
@@ -335,7 +340,8 @@ namespace Quaver.Shared.Database.Maps
                 Mode = qua.Mode,
                 RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),
                 LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote),
-                HasScratchKey = qua.HasScratchKey
+                HasScratchKey = qua.HasScratchKey,
+                ScrollVelocityChanges = qua.SliderVelocities.Count
             };
 
             if (!skipPathSetting)
