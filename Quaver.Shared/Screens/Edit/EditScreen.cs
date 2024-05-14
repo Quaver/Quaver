@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Force.DeepCloner;
 using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -48,26 +48,33 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Wobble.Discord.RPC.Logging;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
-using YamlDotNet.Serialization.NodeTypeResolvers;
 
 namespace Quaver.Shared.Screens.Edit
 {
     public sealed class EditScreen : QuaverScreen, IHasLeftPanel
     {
+        static readonly TimeSpan _backupInterval = TimeSpan.FromMinutes(5);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override QuaverScreenType Type { get; } = QuaverScreenType.Editor;
 
+        public Timer BackupScheduler { get; }
+
         /// <summary>
         /// </summary>
         public Map Map { get; }
+
+        /// <summary>
+        ///     The most recent backup of the map, used for comparing changes.
+        /// </summary>
+        public Qua BackupQua { get; private set; }
 
         /// <summary>
         ///     A copy of the original and unedited map
@@ -153,7 +160,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
-        
+
         /// <summary>
         /// </summary>
         public Bindable<bool> ShowSpectrogram { get; } = ConfigManager.EditorShowSpectrogram ?? new Bindable<bool>(true) { Value = true };
@@ -168,7 +175,7 @@ namespace Quaver.Shared.Screens.Edit
 
         public BindableInt SpectrogramFftSize { get; } =
             ConfigManager.EditorSpectrogramFftSize ?? new BindableInt(256, 256, 16384);
-        
+
         /// <summary>
         /// </summary>
         public Bindable<EditorPlayfieldWaveformAudioDirection> AudioDirection { get; } = ConfigManager.EditorAudioDirection ?? new Bindable<EditorPlayfieldWaveformAudioDirection>(EditorPlayfieldWaveformAudioDirection.Both);
@@ -282,6 +289,9 @@ namespace Quaver.Shared.Screens.Edit
             Map = map;
             BackgroundStore = visualTestBackground;
 
+            if (map.Game is MapGame.Quaver)
+                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
+
             try
             {
                 OriginalQua = map.LoadQua();
@@ -363,6 +373,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             Track.Seeked -= OnTrackSeeked;
             GameBase.Game.Window.FileDropped -= OnFileDropped;
+            BackupScheduler?.Dispose();
             Track?.Dispose();
             Skin?.Value?.Dispose();
             Skin?.Dispose();
@@ -1876,6 +1887,23 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
+        }
+
+        void MakeScheduledMapBackup(object _)
+        {
+            // We likely need to clone this because we are in a different thread,
+            // which could cause mutation during enumeration, and an exception thrown.
+            var newBackup = WorkingMap.DeepClone();
+
+            if (BackupQua?.EqualByValue(newBackup) ?? false)
+                return;
+
+            var mapDirectory = Path.Join(ConfigManager.MapBackupDirectory, Path.GetFileNameWithoutExtension(Map.Path));
+            Directory.CreateDirectory(mapDirectory);
+            var filePath = Path.Join(mapDirectory, $"{DateTime.Now.ToString("s").Replace(':', '_')}.qua");
+
+            BackupQua = newBackup;
+            BackupQua.Save(filePath);
         }
     }
 }

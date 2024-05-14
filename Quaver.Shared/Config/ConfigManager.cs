@@ -76,6 +76,16 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     The temp directory
         /// </summary>
+        internal static string BackupDirectory => Path.Join(DataDirectory.Value, "Backups");
+
+        /// <summary>
+        ///     The temp directory
+        /// </summary>
+        internal static string MapBackupDirectory => Path.Join(BackupDirectory, "Maps");
+
+        /// <summary>
+        ///     The temp directory
+        /// </summary>
         internal static string TempDirectory => Path.Join(DataDirectory.Value, "Temp");
 
         /// <summary>
@@ -288,7 +298,7 @@ namespace Quaver.Shared.Config
         ///     If true, hitsounds in gameplay will be played.
         /// </summary>
         internal static Bindable<bool> EnableHitsounds { get; private set; }
-        
+
         /// <summary>
         ///     If true, a hitsound will be played when releasing a long note
         /// </summary>
@@ -352,7 +362,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
-        
+
         /// <summary>
         ///     Scaling of ImGui windows and texts
         /// </summary>
@@ -362,9 +372,9 @@ namespace Quaver.Shared.Config
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
-        
+
         internal static Bindable<bool> EditorLiveMapSnap { get; private set; }
-        
+
         internal static BindableInt EditorLiveMapOffset { get; private set; }
 
         /// <summary>
@@ -554,19 +564,19 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
-        
+
         internal static Bindable<int> EditorSpectrogramMaximumFrequency { get; private set; }
-        
+
         internal static Bindable<int> EditorSpectrogramMinimumFrequency { get; private set; }
-        
+
         internal static Bindable<float> EditorSpectrogramCutoffFactor { get; private set; }
-        
+
         internal static Bindable<float> EditorSpectrogramIntensityFactor { get; private set; }
-        
+
         internal static Bindable<EditorPlayfieldSpectrogramFrequencyScale> EditorSpectrogramFrequencyScale { get; private set; }
-        
+
         internal static BindableInt EditorSpectrogramFftSize { get; private set; }
-        
+
         /// <summary>
         ///     The number of times the song's fft will be taken. Linearly increases the time to load
         /// </summary>
@@ -812,7 +822,7 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyIncreaseMapOffset { get; private set; }
         internal static Bindable<Keys> KeyDecreaseMapOffset { get; private set; }
-        
+
         /// <summary>
         ///     The keys to toggle autoplay during playtesting
         /// </summary>
@@ -1184,7 +1194,7 @@ namespace Quaver.Shared.Config
 
             // Bind global inverted scrolling so ScrollContainers get InvertScrolling setting too
             ScrollContainer.GlobalInvertedScrolling = InvertScrolling;
-            
+
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
