@@ -63,13 +63,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
         public event EventHandler DimensionsChanged;
 
-        private readonly ConcurrentQueue<DownloadProgressEventArgs> _progressChangedSlidingWindow = new();
-        private long _slidingWindowBytesRead = 0;
-        private TimeSpan _slidingWindowDuration = TimeSpan.Zero;
-        private const int SlidingWindowWidth = 20;
-        private DateTime _lastEtaUpdateTime = DateTime.Now;
-        private static readonly TimeSpan EtaUpdateInterval = TimeSpan.FromSeconds(1);
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -162,6 +155,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             RetryButton.Alpha = RetryButton.IsHovered ? 0.75f : 1;
             CancelButton.Alpha = CancelButton.IsHovered ? 0.75f : 1;
 
+            RetryButton.Visible = Item.EligibleForRetry();
+
             var game = (QuaverGame)GameBase.Game;
 
             if (Container != null)
@@ -235,7 +230,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Position = new ScalableVector2(-44, 20),
                 Size = new ScalableVector2(16, 16)
             };
-            RetryButton.Clicked += (sender, args) => { Item.FileDownloader.Value?.Restart(); };
+            RetryButton.Clicked += (sender, args) => { Item.TryRetry(); };
             CancelButton = new ImageButton(UserInterface.HubDownloadRemove)
             {
                 Parent = ContentContainer,
@@ -325,19 +320,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             ProgressPercentage.Text = _percentageText;
         }
 
-        private void AddToSlidingWindow(DownloadProgressEventArgs e)
-        {
-            _progressChangedSlidingWindow.Enqueue(e);
-            _slidingWindowDuration += e.TimeElapsed;
-            _slidingWindowBytesRead += e.NewBytesReceived;
-            if (_progressChangedSlidingWindow.Count > SlidingWindowWidth &&
-                _progressChangedSlidingWindow.TryDequeue(out var dequeued))
-            {
-                _slidingWindowDuration -= dequeued.TimeElapsed;
-                _slidingWindowBytesRead -= dequeued.NewBytesReceived;
-            }
-        }
-
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
@@ -348,27 +330,16 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             if (Item.FileDownloader.Value?.Status is FileDownloaderStatus.Complete or FileDownloaderStatus.Cancelled)
                 return;
             var percent = e.Value.ProgressPercentage;
-            AddToSlidingWindow(e.Value);
-            var bytesPerSecond = _slidingWindowDuration == TimeSpan.Zero
-                ? 0
-                : _slidingWindowBytesRead / _slidingWindowDuration.TotalSeconds;
-            var bytesLeft = e.Value.ContentLength - e.Value.TotalBytesReceived;
-            var etaSeconds = bytesPerSecond == 0
-                ? TimeSpan.MaxValue
-                : TimeSpan.FromSeconds(bytesLeft / bytesPerSecond);
 
             if (e.Value.TotalBytesReceived == 0)
                 ProgressBar.Bindable.Value = 0;
 
             ProgressBar.Bindable.Value = percent;
             _percentageText = $"{percent}%";
-            _titleText = etaSeconds == TimeSpan.MaxValue
+            _titleText = Item.Eta == TimeSpan.MaxValue
                 ? $"Downloading (ETA Unknown)"
-                : $"Downloading (ETA {etaSeconds:mm\\:ss})";
-            var now = DateTime.Now;
-            if (now - _lastEtaUpdateTime <= EtaUpdateInterval) return;
+                : $"Downloading (ETA {Item.Eta:mm\\:ss})";
             ScheduleUpdate(UpdateText);
-            _lastEtaUpdateTime = now;
         }
     }
 }

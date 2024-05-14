@@ -6,6 +6,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -58,6 +59,22 @@ namespace Quaver.Shared.Screens.Download
 
         public event EventHandler Removed;
 
+        private readonly ConcurrentQueue<DownloadProgressEventArgs> _progressChangedSlidingWindow = new();
+        private long _slidingWindowBytesRead = 0;
+        private TimeSpan _slidingWindowDuration = TimeSpan.Zero;
+        private const int SlidingWindowWidth = 20;
+        private DateTime _lastEtaUpdateTime = DateTime.Now;
+        private static readonly TimeSpan EtaUpdateInterval = TimeSpan.FromSeconds(1);
+        public TimeSpan Eta { get; private set; } = TimeSpan.Zero;
+
+        /// <summary>
+        ///     The user is only eligible to retry when the ETA is at least 30s
+        /// </summary>
+        private static readonly TimeSpan MinimumEtaForRetry = TimeSpan.FromSeconds(30);
+
+        private DateTime _lastRetryTime = DateTime.Now;
+        private static readonly TimeSpan MinimumRetryInterval = TimeSpan.FromSeconds(10);
+
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
@@ -107,7 +124,24 @@ namespace Quaver.Shared.Screens.Download
                     return;
                 }
 
-                FileDownloader.Value.DownloadProgressChanged += (o, e) => Progress.Value = e;
+                FileDownloader.Value.DownloadProgressChanged += (o, e) =>
+                {
+                    AddToSlidingWindow(e);
+                    var bytesPerSecond = _slidingWindowDuration == TimeSpan.Zero
+                        ? 0
+                        : _slidingWindowBytesRead / _slidingWindowDuration.TotalSeconds;
+                    var bytesLeft = e.ContentLength - e.TotalBytesReceived;
+                    var now = DateTime.Now;
+                    if (now - _lastEtaUpdateTime > EtaUpdateInterval)
+                    {
+                        Eta = bytesPerSecond == 0
+                            ? TimeSpan.MaxValue
+                            : TimeSpan.FromSeconds(bytesLeft / bytesPerSecond);
+                        _lastEtaUpdateTime = now;
+                    }
+
+                    Progress.Value = e;
+                };
                 FileDownloader.Value.StatusUpdated += (o, e) =>
                 {
                     if (e.CancelledOrComplete)
@@ -122,6 +156,9 @@ namespace Quaver.Shared.Screens.Download
                     else if (e.Status == FileDownloaderStatus.Connecting)
                     {
                         MapsetDownloadManager.CurrentActiveDownloads.Add(this);
+                    } else if (e.Status == FileDownloaderStatus.Downloading)
+                    {
+                        _lastRetryTime = DateTime.Now;
                     }
 
                     Status.Value = e;
@@ -143,6 +180,33 @@ namespace Quaver.Shared.Screens.Download
             Removed?.Invoke(this, EventArgs.Empty);
             MapsetDownloadManager.CurrentDownloads.Remove(this);
             Dispose();
+        }
+
+        private void AddToSlidingWindow(DownloadProgressEventArgs e)
+        {
+            _progressChangedSlidingWindow.Enqueue(e);
+            _slidingWindowDuration += e.TimeElapsed;
+            _slidingWindowBytesRead += e.NewBytesReceived;
+            if (_progressChangedSlidingWindow.Count > SlidingWindowWidth &&
+                _progressChangedSlidingWindow.TryDequeue(out var dequeued))
+            {
+                _slidingWindowDuration -= dequeued.TimeElapsed;
+                _slidingWindowBytesRead -= dequeued.NewBytesReceived;
+            }
+        }
+
+        public bool EligibleForRetry()
+        {
+            if (DateTime.Now - _lastRetryTime < MinimumRetryInterval) return false;
+            if (Status.Value.Status == FileDownloaderStatus.Downloading && Eta < MinimumEtaForRetry) return false;
+            if (Status.Value.Status == FileDownloaderStatus.Complete) return false;
+            return true;
+        }
+
+        public void TryRetry()
+        {
+            if (!EligibleForRetry()) return;
+            FileDownloader.Value?.Restart();
         }
 
         /// <inheritdoc />
