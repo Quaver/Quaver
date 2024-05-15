@@ -10,8 +10,11 @@ public class Segment
     public int StartTime { get; }
     public int EndTime { get; }
     public bool IsDynamic { get; }
-    public ISegmentPayload Payload { get; }
     
+    [MoonSharpHidden]
+    public bool MarkedToRemove { get; set; }
+    public ISegmentPayload Payload { get; }
+
     public ValueVertex<ISegmentPayload> StartVertex { get; }
     public ValueVertex<ISegmentPayload> EndVertex { get; }
 
@@ -67,4 +70,9 @@ public class Segment
     public float Progress(int curTime) => (float)(curTime - StartTime) / Length;
 
     public int Length => EndTime - StartTime;
+
+    public override string ToString()
+    {
+        return $"[Segment {(IsDynamic ? "$" : "")}{Id} {StartTime} - {EndTime} {Payload}]";
+    }
 }

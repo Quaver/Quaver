@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events.Arguments;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
@@ -94,7 +95,6 @@ public class SegmentManager : IValueChangeManager
     private void AlternateVertex(ValueVertex<ISegmentPayload> vertex, float enterProgress = -1,
         float leaveProgress = -1, bool queueRemoveDynamic = true)
     {
-        if (!_vertices.Contains(vertex)) return;
         var segment = _segments[vertex.Id];
         var progress = enterProgress;
         if (!_activeSegments.TryAdd(vertex.Id, segment))
@@ -104,6 +104,7 @@ public class SegmentManager : IValueChangeManager
             if (segment.IsDynamic && queueRemoveDynamic)
             {
                 _modChartEvents.Enqueue(ModChartEventType.TimelineRemoveSegment, segment);
+                segment.MarkedToRemove = true;
             }
         }
 
@@ -128,14 +129,14 @@ public class SegmentManager : IValueChangeManager
         else
             return false;
 
+        _vertices.Insert(insert, vertex);
         // The timeline has already passed the time of vertex
         if (_currentTime > vertex.Time)
         {
-            AlternateVertex(vertex, 0, 1);
             _currentIndex++;
+            AlternateVertex(vertex, 0, 1);
         }
 
-        _vertices.Insert(insert, vertex);
         return true;
     }
 
@@ -159,7 +160,9 @@ public class SegmentManager : IValueChangeManager
     {
         if (segment.Id >= _nextId) return false; // No
         if (!_segments.TryAdd(segment.Id, segment)) return false;
-        return InsertVertex(segment.StartVertex) && InsertVertex(segment.EndVertex);
+        var success = InsertVertex(segment.StartVertex) && InsertVertex(segment.EndVertex);
+        // Logger.Important($"Added {segment}: {success}, {_activeSegments.Count} active at {_currentTime}", LogType.Runtime);
+        return success;
     }
 
     public bool UpdateSegment(Segment segment)
@@ -167,19 +170,28 @@ public class SegmentManager : IValueChangeManager
         if (segment.Id >= _nextId) return false; // No
         if (_segments.TryGetValue(segment.Id, out var foundSegment))
         {
+            foundSegment.MarkedToRemove = true;
             Remove(foundSegment);
         }
 
         return Add(segment);
     }
 
+    public bool TryGetSegment(int id, out Segment segment) => _segments.TryGetValue(id, out segment);
+
+    public bool ContainsSegment(int id) => _segments.ContainsKey(id);
+
     public bool Remove(Segment segment)
     {
         if (segment.Id >= _nextId) return false; // No
         if (!_segments.ContainsKey(segment.Id)) return false;
+        if (!segment.MarkedToRemove) return false;
         var result = RemoveVertex(segment.StartVertex) && RemoveVertex(segment.EndVertex);
+        if (!result) return false;
+        segment.MarkedToRemove = false;
         _segments.Remove(segment.Id);
         _activeSegments.Remove(segment.Id);
-        return result;
+        // Logger.Important($"Remove{segment}, {_activeSegments.Count} active at {_currentTime}", LogType.Runtime);
+        return true;
     }
 }

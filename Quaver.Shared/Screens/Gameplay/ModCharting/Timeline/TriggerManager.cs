@@ -42,7 +42,12 @@ public class TriggerManager : IValueChangeManager
 
         while (_currentIndex >= 0 && _currentTime < _vertices[_currentIndex].Time)
         {
-            _vertices[_currentIndex].Payload.Undo(_vertices[_currentIndex]);
+            var vertex = _vertices[_currentIndex];
+            vertex.Payload.Undo(vertex);
+            if (vertex.IsDynamic)
+            {
+                _modChartEvents.Enqueue(ModChartEventType.TimelineRemoveTrigger, vertex, false);
+            }
             _currentIndex--;
         }
     }
@@ -109,6 +114,10 @@ public class TriggerManager : IValueChangeManager
         if (id >= _nextId) return false; // No
         return _vertexDictionary.ContainsKey(id) && RemoveVertex(_vertexDictionary[id], trigger);
     }
+    
+    
+    public bool TryGetVertex(int id, out ValueVertex<ITriggerPayload> vertex) => _vertexDictionary.TryGetValue(id, out vertex);
+    public bool ContainsVertex(int id) => _vertexDictionary.ContainsKey(id);
 
     public bool RemoveVertex(ValueVertex<ITriggerPayload> vertex, bool trigger = true)
     {

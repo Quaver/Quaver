@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -12,6 +13,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Wobble;
@@ -50,6 +52,16 @@ public class ModChartScript
 
     public ModChartStateMachines ModChartStateMachines { get; set; }
 
+    /// <summary>
+    ///     Manages continuous segments of updates from storyboard
+    /// </summary>
+    public SegmentManager SegmentManager { get; set; }
+
+    /// <summary>
+    ///     Manages one-shot event firing for storyboard
+    /// </summary>
+    public TriggerManager TriggerManager { get; set; }
+
     public ModChartScript(string path, GameplayScreenView screenView)
     {
         FilePath = path;
@@ -60,9 +72,12 @@ public class ModChartScript
 
         ModChartEvents = new ModChartEvents(Shortcut);
 
+        TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
+        SegmentManager = new SegmentManager(new());
+        
         Timeline = new ModChartTimeline(Shortcut);
-        screenView.SegmentManager.SetupEvents(ModChartEvents);
-        screenView.TriggerManager.SetupEvents(ModChartEvents);
+        SegmentManager.SetupEvents(ModChartEvents);
+        TriggerManager.SetupEvents(ModChartEvents);
 
         TweenSetters = new TweenSetters(Shortcut);
 
@@ -83,7 +98,10 @@ public class ModChartScript
         UserData.RegisterType<Judgement>();
         UserData.RegisterType<Direction>();
         UserData.RegisterType<ModChartEventType>();
-        UserData.RegisterType<TweenPayload.SetterDelegate>();
+        UserData.RegisterType<TweenPayload<float>.SetterDelegate>();
+        UserData.RegisterType<TweenPayload<Vector2>.SetterDelegate>();
+        UserData.RegisterType<TweenPayload<Vector3>.SetterDelegate>();
+        UserData.RegisterType<TweenPayload<Vector4>.SetterDelegate>();
         UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
         UserData.RegisterProxyType<HitObjectInfoProxy, HitObjectInfo>(hitObjectInfo =>
             new HitObjectInfoProxy(hitObjectInfo));
@@ -113,7 +131,7 @@ public class ModChartScript
 
         WorkingScript.Globals["Timeline"] = Timeline;
         WorkingScript.Globals["State"] = State;
-        WorkingScript.Globals["Tweens"] = TweenSetters;
+        WorkingScript.Globals["Tween"] = TweenSetters;
         WorkingScript.Globals["Easing"] = typeof(Easing);
         WorkingScript.Globals["Constants"] = ModChartConstants;
         WorkingScript.Globals["Map"] = GameplayScreenView.Screen.Map;
@@ -151,6 +169,9 @@ public class ModChartScript
         State.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         State.CurrentTimingPoint = GameplayScreenView.Screen.Map.GetTimingPointAt(State.SongTime);
         State.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+
+        TriggerManager.Update(time);
+        SegmentManager.Update(time);
         ModChartStateMachines.RootMachine.Update();
         ModChartEvents.DeferredEventQueue.Dispatch();
     }

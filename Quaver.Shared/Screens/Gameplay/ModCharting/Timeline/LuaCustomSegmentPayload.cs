@@ -17,4 +17,9 @@ public class LuaCustomSegmentPayload : ISegmentPayload
     {
         Updater.SafeCall(progress, segment);
     }
+
+    public override string ToString()
+    {
+        return "Custom";
+    }
 }

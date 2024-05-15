@@ -1,18 +1,26 @@
+using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
-public class TweenPayload : ISegmentPayload
+[MoonSharpUserData]
+public class TweenPayload<T> : ISegmentPayload
 {
-    public delegate void SetterDelegate(float value);
-    public delegate float EasingDelegate(float startValue, float endValue, float progress);
-    public float StartValue { get; set; }
-    public float EndValue { get; set; }
-    public SetterDelegate Setter { get; set; }
-    public EasingDelegate EasingFunction { get; set; }
+    public delegate void SetterDelegate(T startValue, T endValue, float progress);
+    public T StartValue { get; init; }
+    public T EndValue { get; init; }
+    public SetterDelegate Setter { get; init; }
+    public EasingDelegate EasingFunction { get; init; } = EasingWrapperFunctions.Linear;
     public void Update(float progress, Segment segment)
     {
         if (progress is < 0 or > 1) return;
-        Setter(EasingFunction(StartValue, EndValue, progress));
+        Setter(StartValue, EndValue, EasingFunction(progress));
+    }
+
+    public override string ToString()
+    {
+        return $"Tween[{StartValue} - {EndValue}]";
     }
 }
+
+public delegate float EasingDelegate(float progress);

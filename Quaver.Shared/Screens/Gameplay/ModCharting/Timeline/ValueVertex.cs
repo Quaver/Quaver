@@ -40,4 +40,9 @@ public class ValueVertex<T>
     {
         return HashCode.Combine(obj.Time, obj.Payload, obj.Id);
     }
+
+    public override string ToString()
+    {
+        return $"[Vertex {(IsDynamic ? "$" : "")}{Id} {Time} {Payload}]";
+    }
 }

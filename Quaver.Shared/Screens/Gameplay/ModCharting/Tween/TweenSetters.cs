@@ -1,7 +1,10 @@
+using System;
+using System.Numerics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 
@@ -10,48 +13,70 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 [MoonSharpUserData]
 public class TweenSetters
 {
-    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
+    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut { get; }
 
     public TweenSetters(ElementAccessShortcut shortcut)
     {
         Shortcut = shortcut;
     }
 
-    public TweenPayload.SetterDelegate X(Drawable drawable)
+    public static TweenPayload<float>.SetterDelegate CreateFloat(Action<float> action)
     {
-        return v => drawable.X = v;
-    }
-    public TweenPayload.SetterDelegate Y(Drawable drawable)
-    {
-        return v => drawable.Y = v;
-    }
-    public TweenPayload.SetterDelegate Rotation(Sprite sprite)
-    {
-        return v => sprite.Rotation = v;
+        return (startValue, endValue, progress) => action(EasingFunctions.Linear(startValue, endValue, progress));
     }
     
-    public TweenPayload.SetterDelegate Alpha(Sprite sprite)
+    public static TweenPayload<Vector2>.SetterDelegate CreateVector2(Action<Vector2> action)
     {
-        return v => sprite.Alpha = v;
+        return (startValue, endValue, progress) => action(Vector2.Lerp(startValue, endValue, progress));
+    }
+    public static TweenPayload<Vector3>.SetterDelegate CreateVector3(Action<Vector3> action)
+    {
+        return (startValue, endValue, progress) => action(Vector3.Lerp(startValue, endValue, progress));
+    }
+    public static TweenPayload<Vector4>.SetterDelegate CreateVector4(Action<Vector4> action)
+    {
+        return (startValue, endValue, progress) => action(Vector4.Lerp(startValue, endValue, progress));
+    }
+
+    public TweenPayload<float>.SetterDelegate X(Drawable drawable)
+    {
+        return CreateFloat(v => drawable.X = v);
+    }
+    public TweenPayload<float>.SetterDelegate Y(Drawable drawable)
+    {
+        return CreateFloat(v => drawable.Y = v);
+    }
+    public TweenPayload<Vector2>.SetterDelegate Position(Drawable drawable)
+    {
+        return CreateVector2(v => drawable.Position = new ScalableVector2(v.X, v.Y));
+    }
+    public TweenPayload<float>.SetterDelegate Rotation(Sprite sprite)
+    {
+        return CreateFloat(v => sprite.Rotation = v);
     }
     
-    public TweenPayload.SetterDelegate Width(Drawable drawable)
+    public TweenPayload<float>.SetterDelegate Alpha(Sprite sprite)
     {
-        return v => drawable.Width = v;
+        return CreateFloat(v => sprite.Alpha = v);
+    }
+    
+    public TweenPayload<float>.SetterDelegate Width(Drawable drawable)
+    {
+        return CreateFloat(v => drawable.Width = v);
     }
 
-    public TweenPayload.SetterDelegate Height(Drawable drawable)
+    public TweenPayload<float>.SetterDelegate Height(Drawable drawable)
     {
-        return v => drawable.Height = v;
+        return CreateFloat(v => drawable.Height = v);
     }
 
-    public TweenPayload.SetterDelegate FontSize(SpriteTextPlus spriteTextPlus)
+    public TweenPayload<float>.SetterDelegate FontSize(SpriteTextPlus spriteTextPlus)
     {
-        return v => spriteTextPlus.FontSize = (int)v;
+        return CreateFloat(v => spriteTextPlus.FontSize = (int)v);
     }
 
-    public TweenPayload.SetterDelegate HitObjectFallRotation(int lane)
+    public TweenPayload<float>.SetterDelegate HitObjectFallRotation(int lane)
     {
-        return v => Shortcut.GameplayPlayfieldKeys.HitObjectFallRotation[lane - 1] = v;
+        return CreateFloat(v => Shortcut.GameplayPlayfieldKeys.HitObjectFallRotation[lane - 1] = v);
     }
 }

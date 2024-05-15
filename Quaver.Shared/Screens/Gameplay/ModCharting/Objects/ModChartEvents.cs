@@ -178,7 +178,21 @@ public class ModChartEvents
             if (!constructorInfo.IsPublic || constructorInfo.IsAbstract) continue;
             try
             {
-                return constructorInfo.Invoke(args) as ModChartEventInstance;
+                var parameters = constructorInfo.GetParameters();
+                var filledArgs = new object[parameters.Length];
+                for (var i = 0; i < filledArgs.Length; i++)
+                {
+                    if (i < args.Length)
+                    {
+                        filledArgs[i] = args[i];
+                    }
+                    else if (parameters[i].HasDefaultValue)
+                    {
+                        filledArgs[i] = parameters[i].DefaultValue;
+                    }
+                }
+
+                return constructorInfo.Invoke(filledArgs) as ModChartEventInstance;
             }
             catch (MemberAccessException)
             {
@@ -191,7 +205,8 @@ public class ModChartEvents
             }
         }
 
-        throw new InvalidOperationException($"Constructing event instance {type} with params {args}");
+        throw new InvalidOperationException(
+            $"Constructing event instance {type} with params {string.Join(", ", args)}");
     }
 
     private static ModChartEventInstance GetArguments(ModChartEventType eventType, params object[] args)

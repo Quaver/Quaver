@@ -5,14 +5,12 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
 public static class EasingWrapperFunctions
 {
-    public static TweenPayload.EasingDelegate Linear => EasingFunctions.Linear;
-    public static TweenPayload.EasingDelegate FromEasing(Easing easing)
-    {
-        return (start, end, progress) => EasingFunctions.Perform(easing, start, end, progress);
-    }
+    public static readonly EasingDelegate Linear = progress => progress;
 
-    public static TweenPayload.EasingDelegate CubicBezier(Vector2 c1, Vector2 c2)
+    public static EasingDelegate From(Easing easing) =>
+        progress => EasingFunctions.Perform(easing, 0, 1, progress);
+    public static EasingDelegate CubicBezier(Vector2 c1, Vector2 c2)
     {
-        return (start, end, progress) => Linear(start, end, Bezier.YFromX(c1, c2, progress));
+        return progress => Bezier.YFromX(c1, c2, progress);
     }
 }

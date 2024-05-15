@@ -203,16 +203,6 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         /// </summary>
         private ReplayController ReplayController { get; }
-
-        /// <summary>
-        ///     Manages continuous segments of updates from storyboard
-        /// </summary>
-        public SegmentManager SegmentManager { get; set; }
-
-        /// <summary>
-        ///     Manages one-shot event firing for storyboard
-        /// </summary>
-        public TriggerManager TriggerManager { get; set; }
         
         /// <summary>
         ///     The script loaded that controls the storyboard
@@ -244,9 +234,6 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateScoreDisplay();
             CreateRatingDisplay();
             CreateAccuracyDisplay();
-
-            TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
-            SegmentManager = new SegmentManager(new ());
             
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
                 ModChartScript = new ModChartScript(Screen.Map.GetAnimationScriptPath(), this);
@@ -356,8 +343,6 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 var time = (int)Screen.Timing.Time;
                 ModChartScript?.Update(time);
-                SegmentManager.Update(time);
-                TriggerManager.Update(time);
             }
             catch (ScriptRuntimeException e)
             {

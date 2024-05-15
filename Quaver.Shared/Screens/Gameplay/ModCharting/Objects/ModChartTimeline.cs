@@ -1,3 +1,4 @@
+using System.Numerics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
@@ -20,157 +21,140 @@ public class ModChartTimeline
     }
 
     /// <summary>
-    ///     Keeps calling the updater between the specified time range
-    /// </summary>
-    /// <param name="id">Unique ID for the segment. Leave -1 for automatic ID generation</param>
-    /// <param name="startTime"></param>
-    /// <param name="endTime"></param>
-    /// <param name="updater"></param>
-    /// <param name="isDynamic">Whether to delete the segment when finished</param>
-    /// <returns>The ID for the segment. -1 if there's already a segment with the id specified</returns>
-    public int AddCustomSegment(int id, int startTime, int endTime, Closure updater, bool isDynamic = false)
-    {
-        if (id == -1) id = Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
-        return Shortcut.GameplayScreenView.SegmentManager.Add(new Segment(id, startTime, endTime,
-            new LuaCustomSegmentPayload(updater), isDynamic))
-            ? id
-            : -1;
-    }
-
-    /// <summary>
     ///     Calls the trigger function when reaching a time, or calls the undo function to revert
     /// </summary>
-    /// <param name="id">Unique ID for the segment. Leave -1 for automatic ID generation</param>
-    /// <param name="time"></param>
     /// <param name="trigger"></param>
     /// <param name="undoTrigger"></param>
-    /// <param name="isDynamic">Whether to delete the trigger when finished</param>
-    /// <returns>The ID for the trigger. -1 if there's already a trigger with the id specified</returns>
-    public int SetCustomTrigger(int id, int time, Closure trigger, Closure undoTrigger = null,
-        bool isDynamic = false)
-    {
-        if (id == -1) id = Shortcut.GameplayScreenView.TriggerManager.GenerateNextId();
-        return Shortcut.GameplayScreenView.TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
-        {
-            Id = id,
-            Payload = new LuaCustomTriggerPayload(trigger, undoTrigger),
-            IsDynamic = isDynamic,
-            Time = time
-        })
-            ? id
-            : -1;
-    }
+    public LuaCustomTriggerPayload Trigger(Closure trigger, Closure undoTrigger = null) =>
+        new(trigger, undoTrigger);
 
-    public int SetIntervalTrigger(int id, int time, float interval, int count, Closure trigger,
-        Closure undoTrigger = null)
-    {
-        if (id == -1) id = Shortcut.GameplayScreenView.TriggerManager.GenerateNextId();
-        return Shortcut.GameplayScreenView.TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
-        {
-            Id = id,
-            Payload = new IntervalTriggerPayload(Shortcut.GameplayScreenView.TriggerManager,
-                id,
-                time,
-                interval,
-                count,
-                v => trigger.SafeCall(v),
-                v => undoTrigger?.SafeCall(v)),
-            IsDynamic = false,
-            Time = time
-        })
-            ? id
-            : -1;
-    }
 
     /// <summary>
-    ///     Adds the segment. If there is already a segment with the ID, removes the segment to add the new one
+    ///     Keeps calling the updater between the specified time range
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="startTime"></param>
-    /// <param name="endTime"></param>
     /// <param name="updater"></param>
-    /// <param name="isDynamic"></param>
-    /// <seealso cref="AddCustomSegment"/>
-    /// <returns></returns>
-    public int SetCustomSegment(int id, int startTime, int endTime, Closure updater, bool isDynamic = false)
-    {
-        if (id == -1) id = Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
-        return Shortcut.GameplayScreenView.SegmentManager.UpdateSegment(
-            new Segment(id, startTime, endTime,
-                new LuaCustomSegmentPayload(updater), isDynamic))
-            ? id
-            : 0;
-    }
+    public LuaCustomSegmentPayload Segment(Closure updater) => new(updater);
+
+    public IntervalTriggerPayload IntervalTrigger(int id, int time, float interval, int count, Closure trigger,
+        Closure undoTrigger = null) => new(Shortcut.ModChartScript.TriggerManager,
+        id,
+        time,
+        interval,
+        count,
+        v => trigger.SafeCall(v),
+        v => undoTrigger?.SafeCall(v));
 
     /// <summary>
     ///     Adds a tween segment that allows smooth transition of a value
     /// </summary>
-    /// <param name="id">ID of the segment</param>
-    /// <param name="startTime"></param>
-    /// <param name="endTime"></param>
     /// <param name="startValue"></param>
     /// <param name="endValue"></param>
     /// <param name="setter">A function f(time: float, progress: float) called for updating the value. progress is [0..1] or -1 if weird things happen</param>
     /// <param name="easingFunction">A function f(startValue: float, endValue: float, progress: float) that returns the value at progress</param>
-    /// <param name="isDynamic"></param>
     /// <returns></returns>
     /// <seealso cref="Easing"/>
-    public int SetTweenSegment(int id,
-        int startTime, int endTime,
-        float startValue, float endValue,
-        TweenPayload.SetterDelegate setter,
-        TweenPayload.EasingDelegate easingFunction = null,
-        bool isDynamic = false)
+    public TweenPayload<float> Tween(float startValue, float endValue, TweenPayload<float>.SetterDelegate setter,
+        EasingDelegate easingFunction = null) => new()
     {
-        if (id == -1) id = Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateSegment,
-            new Segment(id, startTime, endTime,
-                new TweenPayload
-                {
-                    EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
-                    StartValue = startValue,
-                    EndValue = endValue,
-                    Setter = setter
-                }, isDynamic));
+        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
+        StartValue = startValue,
+        EndValue = endValue,
+        Setter = setter
+    };
+
+    public TweenPayload<Vector2> Tween(Vector2 startValue, Vector2 endValue,
+        TweenPayload<Vector2>.SetterDelegate setter,
+        EasingDelegate easingFunction = null) => new()
+    {
+        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
+        StartValue = startValue,
+        EndValue = endValue,
+        Setter = setter
+    };
+
+    public TweenPayload<Vector3> Tween(Vector3 startValue, Vector3 endValue,
+        TweenPayload<Vector3>.SetterDelegate setter,
+        EasingDelegate easingFunction = null) => new()
+    {
+        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
+        StartValue = startValue,
+        EndValue = endValue,
+        Setter = setter
+    };
+
+    public TweenPayload<Vector4> Tween(Vector4 startValue, Vector4 endValue,
+        TweenPayload<Vector4>.SetterDelegate setter,
+        EasingDelegate easingFunction = null) => new()
+    {
+        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
+        StartValue = startValue,
+        EndValue = endValue,
+        Setter = setter
+    };
+
+    public int Add(int id, int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false)
+    {
+        if (id == -1) id = GenerateSegmentId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddSegment, new Segment(id, startTime, endTime, payload, isDynamic));
+        return id;
+    }
+    public bool RemoveSegment(int id)
+    {
+        if (!Shortcut.ModChartScript.SegmentManager.TryGetSegment(id, out var segment)) return false;
+        if (segment.MarkedToRemove) return false;
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineRemoveSegment, segment);
+        segment.MarkedToRemove = true;
+        return true;
+    }
+    public int Update(int id, int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false)
+    {
+        if (id == -1) id = Shortcut.ModChartScript.SegmentManager.GenerateNextId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateSegment, new Segment(id, startTime, endTime, payload, isDynamic));
         return id;
     }
 
-    /// <summary>
-    ///     Adds a tween segment that allows smooth transition of a value
-    /// </summary>
-    /// <param name="id">ID of the segment</param>
-    /// <param name="startTime"></param>
-    /// <param name="endTime"></param>
-    /// <param name="startValue"></param>
-    /// <param name="endValue"></param>
-    /// <param name="setter">A function f(time: float, progress: float) called for updating the value. progress is [0..1] or -1 if weird things happen</param>
-    /// <param name="easing">Easing type</param>
-    /// <param name="isDynamic"></param>
-    /// <returns></returns>
-    /// <seealso cref="Easing"/>
-    public int SetTweenSegment(int id,
-        int startTime, int endTime,
-        float startValue, float endValue,
-        TweenPayload.SetterDelegate setter,
-        Easing easing,
-        bool isDynamic = false)
+    public int Add(int id, int time, ITriggerPayload payload, bool isDynamic = false)
     {
-        return SetTweenSegment(id, startTime, endTime, startValue, endValue, setter,
-            EasingWrapperFunctions.FromEasing(easing), isDynamic);
+        if (id == -1) id = GenerateTriggerId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddTrigger, new ValueVertex<ITriggerPayload>()
+        {
+            Id = id,
+            Time = time,
+            Payload = payload,
+            IsDynamic = isDynamic
+        });
+        return id;
     }
-
+    public bool RemoveTrigger(int id)
+    {
+        if (!Shortcut.ModChartScript.TriggerManager.TryGetVertex(id, out var vertex)) return false;
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineRemoveTrigger, vertex);
+        return true;
+    }
+    public int Update(int id, int time, ITriggerPayload payload, bool isDynamic = false)
+    {
+        if (id == -1) id = GenerateTriggerId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateTrigger, new ValueVertex<ITriggerPayload>()
+        {
+            Id = id,
+            Time = time,
+            Payload = payload,
+            IsDynamic = isDynamic
+        });
+        return id;
+    }
 
     /// <summary>
     ///     Generates a new trigger ID
     /// </summary>
     /// <returns></returns>
-    public int GenerateTriggerId() => Shortcut.GameplayScreenView.TriggerManager.GenerateNextId();
+    public int GenerateTriggerId() => Shortcut.ModChartScript.TriggerManager.GenerateNextId();
 
     /// <summary>
     ///     Generates a new segment ID
     /// </summary>
     /// <returns></returns>
-    public int GenerateSegmentId() => Shortcut.GameplayScreenView.SegmentManager.GenerateNextId();
+    public int GenerateSegmentId() => Shortcut.ModChartScript.SegmentManager.GenerateNextId();
 
 
     /// <summary>

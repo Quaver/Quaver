@@ -5,18 +5,14 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
 public class Bezier
 {
-    private static Vector2 Lerp(Vector2 from, Vector2 to, float t)
-    {
-        return from + (to - from) * t;
-    }
     public static Vector2 CubicBezier(Vector2 from, Vector2 c1, Vector2 c2, Vector2 to, float t)
     {
-        var p1 = Lerp(from, c1, t);
-        var p2 = Lerp(c1, c2, t);
-        var p3 = Lerp(c2, to, t);
-        var p4 = Lerp(p1, p2, t);
-        var p5 = Lerp(p2, p3, t);
-        var p6 = Lerp(p4, p5, t);
+        var p1 = Vector2.Lerp(from, c1, t);
+        var p2 = Vector2.Lerp(c1, c2, t);
+        var p3 = Vector2.Lerp(c2, to, t);
+        var p4 = Vector2.Lerp(p1, p2, t);
+        var p5 = Vector2.Lerp(p2, p3, t);
+        var p6 = Vector2.Lerp(p4, p5, t);
         return p6;
     }
     public static Vector2 YFromT(Vector2 c1, Vector2 c2, float t)
