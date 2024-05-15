@@ -214,23 +214,9 @@ namespace Quaver.Shared.Screens.Results
             Replay = replay;
             Map = map;
             ScreenType = ResultsScreenType.Replay;
-
             Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(replay));
 
-            try
-            {
-                var qua = map.LoadQua();
-                qua.ApplyMods(replay.Mods);
-
-                var virtualPlayer = new VirtualReplayPlayer(replay, qua);
-                virtualPlayer.PlayAllFrames();
-
-                Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-            }
+            ConvertScoreToJudgementWindows(null);
 
             View = new ResultsScreenView(this);
         }
@@ -610,7 +596,7 @@ namespace Quaver.Shared.Screens.Results
 
         private void InitializeScoreResultsScreen()
         {
-             Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(Score.ToReplay()))
+            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(Score.ToReplay()))
             {
                 Value =
                 {
