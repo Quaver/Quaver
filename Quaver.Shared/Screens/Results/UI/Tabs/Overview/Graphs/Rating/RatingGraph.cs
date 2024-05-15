@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
         /// <summary>
         ///     How many grid lines to draw in total
         /// </summary>
-        private int GridLineCount => (int) Math.Floor((MaxRating - RatingStart) / RatingStep);
+        private int GridLineCount => (int) Math.Ceiling((MaxRating - RatingStart) / RatingStep);
 
         /// <summary>
         ///     The lower bound of the graph
@@ -221,8 +221,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
             // <= because we also want to draw the final line
             for (var i = 1; i <= GridLineCount; i++)
             {
-                var relativeY = (float) i / GridLineCount;
                 var rating = Math.Round(RatingStart + (GridLineCount - i) * RatingStep, 2);
+                var relativeY = (float) (1 - (rating - RatingStart) / (MaxRating - RatingStart));
                 var isSubGridLine = RatingStep < 0.25 && rating % 0.5 > 0 ||
                                     RatingStep >= 0.25 && RatingStep < 1 && rating % 1 > 0 ||
                                     RatingStep >= 1 && RatingStep < 5 && rating % 5 > 0 ||
