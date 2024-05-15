@@ -1275,6 +1275,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (DialogManager.Dialogs.Count != 0 || IsUneditable)
                 return;
 
+            var view = (EditScreenView)ActionManager.EditScreen.View;
+            if (view.IsImGuiHovered)
+                return;
+
             if (!Button.IsHeld)
             {
                 // Create an action for the long note resizing when the user lets go
