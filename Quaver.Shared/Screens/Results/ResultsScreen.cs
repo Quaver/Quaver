@@ -214,23 +214,9 @@ namespace Quaver.Shared.Screens.Results
             Replay = replay;
             Map = map;
             ScreenType = ResultsScreenType.Replay;
-
             Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(replay));
 
-            try
-            {
-                var qua = map.LoadQua();
-                qua.ApplyMods(replay.Mods);
-
-                var virtualPlayer = new VirtualReplayPlayer(replay, qua);
-                virtualPlayer.PlayAllFrames();
-
-                Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-            }
+            ConvertScoreToJudgementWindows(null);
 
             View = new ResultsScreenView(this);
         }
@@ -610,7 +596,7 @@ namespace Quaver.Shared.Screens.Results
 
         private void InitializeScoreResultsScreen()
         {
-             Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(Score.ToReplay()))
+            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(Score.ToReplay()))
             {
                 Value =
                 {
@@ -639,10 +625,14 @@ namespace Quaver.Shared.Screens.Results
                 {
                     try
                     {
+                        var replay = new Replay(path);
+
                         var qua = MapManager.Selected.Value.LoadQua();
                         qua.ApplyMods((ModIdentifier) Score.Mods);
-
-                        var replay = new Replay(path);
+                        if (replay.Mods.HasFlag(ModIdentifier.Randomize))
+                        {
+                            qua.RandomizeLanes(replay.RandomizeModifierSeed);
+                        }
 
                         var virtualPlayer = new VirtualReplayPlayer(replay, qua, Processor.Value.Windows);
                         virtualPlayer.PlayAllFrames();
@@ -924,6 +914,10 @@ namespace Quaver.Shared.Screens.Results
                 {
                     var qua = Map.LoadQua();
                     qua.ApplyMods(Replay.Mods);
+                    if (Replay.Mods.HasFlag(ModIdentifier.Randomize))
+                    {
+                        qua.RandomizeLanes(Replay.RandomizeModifierSeed);
+                    }
 
                     var virtualPlayer = new VirtualReplayPlayer(Replay, qua, windows, true);
 
