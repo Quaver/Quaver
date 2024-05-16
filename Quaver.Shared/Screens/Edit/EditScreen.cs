@@ -122,6 +122,11 @@ namespace Quaver.Shared.Screens.Edit
         public static List<int> AvailableBeatSnaps { get; set; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
 
         /// <summary>
+        ///     In Menu -> Edit -> Resnap All/Selected Notes, the divisions to choose
+        /// </summary>
+        public static HashSet<int> CustomSnapDivisions { get; } = new HashSet<int> { 12, 16 };
+
+        /// <summary>
         /// </summary>
         private int BeatSnapIndex => AvailableBeatSnaps.FindIndex(x => x == BeatSnap.Value);
 
