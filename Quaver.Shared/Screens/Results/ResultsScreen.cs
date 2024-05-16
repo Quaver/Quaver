@@ -625,10 +625,14 @@ namespace Quaver.Shared.Screens.Results
                 {
                     try
                     {
+                        var replay = new Replay(path);
+
                         var qua = MapManager.Selected.Value.LoadQua();
                         qua.ApplyMods((ModIdentifier) Score.Mods);
-
-                        var replay = new Replay(path);
+                        if (replay.Mods.HasFlag(ModIdentifier.Randomize))
+                        {
+                            qua.RandomizeLanes(replay.RandomizeModifierSeed);
+                        }
 
                         var virtualPlayer = new VirtualReplayPlayer(replay, qua, Processor.Value.Windows);
                         virtualPlayer.PlayAllFrames();
@@ -910,6 +914,10 @@ namespace Quaver.Shared.Screens.Results
                 {
                     var qua = Map.LoadQua();
                     qua.ApplyMods(Replay.Mods);
+                    if (Replay.Mods.HasFlag(ModIdentifier.Randomize))
+                    {
+                        qua.RandomizeLanes(Replay.RandomizeModifierSeed);
+                    }
 
                     var virtualPlayer = new VirtualReplayPlayer(Replay, qua, windows, true);
 
