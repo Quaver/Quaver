@@ -329,14 +329,26 @@ namespace Quaver.Shared.Database.Maps
                 if (Rubbish.Move(path))
                     MapDatabaseCache.RemoveMap(map);
                 else
+                {
                     ShowFallbackMapDeletionDialog(
                         "map",
                         () =>
                         {
                             File.Delete(path);
                             MapDatabaseCache.RemoveMap(map);
+                            map.Mapset.Maps.Remove(map);
+
+                            if (map.Mapset.Maps.Count == 0)
+                                Mapsets.Remove(map.Mapset);
+
+                            PlaylistManager.RemoveMapFromAllPlaylists(map);
+
+                            MapDeleted?.Invoke(typeof(MapManager), new MapDeletedEventArgs(map, index));
                         }
                     );
+
+                    return;
+                }
             }
             catch (Exception e)
             {
@@ -386,7 +398,42 @@ namespace Quaver.Shared.Database.Maps
                 var directory = Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory);
 
                 if (!Rubbish.Move(directory) && Directory.Exists(directory))
-                    ShowFallbackMapDeletionDialog("mapset", () => Directory.Delete(directory, true));
+                {
+                    ShowFallbackMapDeletionDialog(
+                    	"mapset",
+                    	() =>
+	                    {
+                            Directory.Delete(directory, true);
+
+                            try
+                            {
+                                mapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error(e, LogType.Runtime);
+                            }
+
+                            Mapsets.Remove(mapset);
+                            MapsetDeleted?.Invoke(typeof(MapManager), new MapsetDeletedEventArgs(mapset, index));
+
+                            lock (BackgroundHelper.MapsetBanners)
+                            {
+                                if (!BackgroundHelper.MapsetBanners.ContainsKey(mapset.Directory))
+                                    return;
+
+                                var banner = BackgroundHelper.MapsetBanners[mapset.Directory];
+
+                                if (banner != UserInterface.DefaultBanner)
+                                    banner.Dispose();
+
+                                BackgroundHelper.MapsetBanners.Remove(mapset.Directory);
+                            }
+                        }
+                    );
+
+                    return;
+                }
             }
             catch (Exception e)
             {
@@ -512,7 +559,7 @@ namespace Quaver.Shared.Database.Maps
             DialogManager.Show(
                 new YesNoDialog(
                     "Map Deletion",
-                    $"Failed to move the {label} in the recycle bin. Would you like to delete it instead?",
+                    $"Failed to move the {label} in the recycle bin.\nWould you like to delete it instead?",
                     onYes
                 )
             );
