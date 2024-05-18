@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Options
                 {
                     foreach (var item in subcategory.Items)
                     {
-                        item.Destroy();
+                        item?.Destroy();
                     }
                 }
             }
