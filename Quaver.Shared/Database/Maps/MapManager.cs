@@ -334,7 +334,15 @@ namespace Quaver.Shared.Database.Maps
                         "map",
                         () =>
                         {
-                            File.Delete(path);
+                            try
+                            {
+                                File.Delete(path);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(e, LogType.Runtime);
+                            }
+
                             MapDatabaseCache.RemoveMap(map);
                             map.Mapset.Maps.Remove(map);
 
@@ -403,7 +411,14 @@ namespace Quaver.Shared.Database.Maps
                     	"mapset",
                     	() =>
 	                    {
-                            Directory.Delete(directory, true);
+                            try
+                            {
+                                 Directory.Delete(directory, true);
+                            }
+                            catch (Exception e)
+                            {
+                                 Logger.Error(e, LogType.Runtime);
+                            }
 
                             try
                             {
