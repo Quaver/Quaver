@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
                     GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
                     RatingGraph.Draw(new GameTime());
-                    GameBase.Game.SpriteBatch.End();
+                    _ = GameBase.Game.TryEndBatch();
 
                     GameBase.Game.GraphicsDevice.SetRenderTarget(null);
                     CachedSprite.Image = RenderTarget;
