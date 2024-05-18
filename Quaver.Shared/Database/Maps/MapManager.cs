@@ -338,7 +338,7 @@ namespace Quaver.Shared.Database.Maps
                             {
                                 File.Delete(path);
                             }
-                            catch (Exception ex)
+                            catch (Exception e)
                             {
                                 Logger.Error(e, LogType.Runtime);
                             }
