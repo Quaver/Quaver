@@ -500,11 +500,11 @@ namespace Quaver.Shared.Screens.Edit
             // To not conflict with the volume controller
             if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
             {
-                var dropdownHovered = ButtonManager.Buttons.Find(
-                    x => x is DropdownItem item &&
-                        GraphicsHelper.RectangleContains(x.ScreenRectangle, MouseManager.CurrentState.Position) &&
+                var dropdownHovered = ButtonManager.Buttons.Any(
+                    x => x.Key is DropdownItem item &&
+                        GraphicsHelper.RectangleContains(x.Key.ScreenRectangle, MouseManager.CurrentState.Position) &&
                         item.Dropdown.Opened
-                ) is not null;
+                );
 
                 if (!dropdownHovered)
                 {
