@@ -684,7 +684,10 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
-            Exit(() => new MapLoadingScreen(new List<Score>()));
+            Exit(() => {
+                LastSpeedRate = ModHelper.GetRateFromMods(ModManager.Mods);
+                return new MapLoadingScreen(new List<Score>());
+            });
         }
 
         /// <summary>
