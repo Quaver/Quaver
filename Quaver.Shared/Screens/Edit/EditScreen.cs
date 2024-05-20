@@ -501,8 +501,8 @@ namespace Quaver.Shared.Screens.Edit
             if (!KeyboardManager.IsAltDown() && !KeyboardManager.IsCtrlDown())
             {
                 var dropdownHovered = ButtonManager.Buttons.Any(
-                    x => x.Key is DropdownItem item &&
-                        GraphicsHelper.RectangleContains(x.Key.ScreenRectangle, MouseManager.CurrentState.Position) &&
+                    x => x is DropdownItem item &&
+                        GraphicsHelper.RectangleContains(x.ScreenRectangle, MouseManager.CurrentState.Position) &&
                         item.Dropdown.Opened
                 );
 

@@ -42,12 +42,10 @@ namespace Quaver.Shared.Screens.Options.Items
         {
             if (IsHovered() && MouseManager.IsUniqueClick(MouseButton.Left))
             {
-                var hoveredButtons = ButtonManager.Buttons.FirstOrDefault(x => x.Key.IsHovered);
+                var hoveredButtons = ButtonManager.Buttons.FirstOrDefault(x => x.IsHovered);
 
                 // Only the "dialog" button (transparent black part) should be hovered
-                if (hoveredButtons.Key is null)
-                    Console.WriteLine("Hi");
-                if (hoveredButtons.Key is OptionsDialog)
+                if (hoveredButtons is OptionsDialog)
                     Checkbox.BindedValue.Value = !Checkbox.BindedValue.Value;
             }
 
