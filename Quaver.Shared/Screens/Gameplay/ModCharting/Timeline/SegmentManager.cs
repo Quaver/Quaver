@@ -117,6 +117,8 @@ public class SegmentManager : IValueChangeManager
         UpdateIndex();
         foreach (var (id, segment) in _activeSegments)
         {
+            if (segment.MarkedToRemove)
+                continue;
             segment.Payload.Update(segment.Progress(_currentTime), segment);
         }
     }

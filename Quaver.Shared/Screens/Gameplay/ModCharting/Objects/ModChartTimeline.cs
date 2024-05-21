@@ -25,7 +25,7 @@ public class ModChartTimeline
     /// </summary>
     /// <param name="trigger"></param>
     /// <param name="undoTrigger"></param>
-    public LuaCustomTriggerPayload Trigger(Closure trigger, Closure undoTrigger = null) =>
+    public LuaCustomTriggerPayload CustomTrigger(Closure trigger, Closure undoTrigger = null) =>
         new(trigger, undoTrigger);
 
 
@@ -33,7 +33,7 @@ public class ModChartTimeline
     ///     Keeps calling the updater between the specified time range
     /// </summary>
     /// <param name="updater"></param>
-    public LuaCustomSegmentPayload Segment(Closure updater) => new(updater);
+    public LuaCustomSegmentPayload CustomSegment(Closure updater) => new(updater);
 
     public IntervalTriggerPayload IntervalTrigger(int id, int time, float interval, int count, Closure trigger,
         Closure undoTrigger = null) => new(Shortcut.ModChartScript.TriggerManager,
@@ -92,56 +92,71 @@ public class ModChartTimeline
         Setter = setter
     };
 
-    public int Add(int id, int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false)
+    public static Segment Segment(int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false) =>
+        new(-1, startTime, endTime, payload, isDynamic);
+
+    public static ValueVertex<ITriggerPayload> Trigger(int time, ITriggerPayload payload, bool isDynamic = false) =>
+        new()
+        {
+            Id = -1,
+            Payload = payload,
+            Time = time,
+            IsDynamic = isDynamic
+        };
+
+    public int Add(Segment segment)
     {
-        if (id == -1) id = GenerateSegmentId();
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddSegment, new Segment(id, startTime, endTime, payload, isDynamic));
-        return id;
+        if (segment.Id == -1) segment.Id = GenerateSegmentId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddSegment, segment);
+        return segment.Id;
     }
-    public bool RemoveSegment(int id)
+
+    public bool Remove(Segment segment)
     {
-        if (!Shortcut.ModChartScript.SegmentManager.TryGetSegment(id, out var segment)) return false;
+        if (segment.Id == -1)
+            return false;
         if (segment.MarkedToRemove) return false;
         Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineRemoveSegment, segment);
         segment.MarkedToRemove = true;
         return true;
     }
-    public int Update(int id, int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false)
+
+    public bool RemoveSegment(int id)
     {
-        if (id == -1) id = Shortcut.ModChartScript.SegmentManager.GenerateNextId();
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateSegment, new Segment(id, startTime, endTime, payload, isDynamic));
-        return id;
+        return Shortcut.ModChartScript.SegmentManager.TryGetSegment(id, out var segment) && Remove(segment);
     }
 
-    public int Add(int id, int time, ITriggerPayload payload, bool isDynamic = false)
+    public int Set(Segment segment)
     {
-        if (id == -1) id = GenerateTriggerId();
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddTrigger, new ValueVertex<ITriggerPayload>()
-        {
-            Id = id,
-            Time = time,
-            Payload = payload,
-            IsDynamic = isDynamic
-        });
-        return id;
+        if (segment.Id == -1) segment.Id = GenerateSegmentId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateSegment, segment);
+        return segment.Id;
     }
-    public bool RemoveTrigger(int id)
+
+    public int Add(ValueVertex<ITriggerPayload> trigger)
     {
-        if (!Shortcut.ModChartScript.TriggerManager.TryGetVertex(id, out var vertex)) return false;
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineRemoveTrigger, vertex);
+        if (trigger.Id == -1) trigger.Id = GenerateTriggerId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddTrigger, trigger);
+        return trigger.Id;
+    }
+
+    public bool Remove(ValueVertex<ITriggerPayload> trigger)
+    {
+        if (trigger.Id == -1) return false;
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineRemoveTrigger, trigger);
         return true;
     }
-    public int Update(int id, int time, ITriggerPayload payload, bool isDynamic = false)
+
+    public bool RemoveTrigger(int id)
     {
-        if (id == -1) id = GenerateTriggerId();
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateTrigger, new ValueVertex<ITriggerPayload>()
-        {
-            Id = id,
-            Time = time,
-            Payload = payload,
-            IsDynamic = isDynamic
-        });
-        return id;
+        return Shortcut.ModChartScript.TriggerManager.TryGetVertex(id, out var vertex) && Remove(vertex);
+    }
+
+    public int Set(ValueVertex<ITriggerPayload> trigger)
+    {
+        if (trigger.Id == -1) trigger.Id = GenerateTriggerId();
+        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateTrigger, trigger);
+        return trigger.Id;
     }
 
     /// <summary>
@@ -155,14 +170,4 @@ public class ModChartTimeline
     /// </summary>
     /// <returns></returns>
     public int GenerateSegmentId() => Shortcut.ModChartScript.SegmentManager.GenerateNextId();
-
-
-    /// <summary>
-    ///     Spits a debug message
-    /// </summary>
-    /// <param name="str"></param>
-    public void Debug(string str)
-    {
-        Logger.Debug(str, LogType.Runtime);
-    }
 }

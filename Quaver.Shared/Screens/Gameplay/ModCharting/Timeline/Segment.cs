@@ -6,7 +6,19 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 [MoonSharpUserData]
 public class Segment
 {
-    public int Id { get; }
+    private int _id;
+
+    public int Id
+    {
+        get => _id;
+        set
+        {
+            _id = value;
+            StartVertex.Id = value;
+            EndVertex.Id = value;
+        }
+    }
+
     public int StartTime { get; }
     public int EndTime { get; }
     public bool IsDynamic { get; }
@@ -20,7 +32,6 @@ public class Segment
 
     public Segment(int id, int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false)
     {
-        Id = id;
         StartTime = startTime;
         EndTime = endTime;
         Payload = payload;
@@ -39,6 +50,7 @@ public class Segment
             Id = Id,
             IsDynamic = IsDynamic
         };
+        Id = id;
     }
 
     protected bool Equals(Segment other)

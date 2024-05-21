@@ -98,6 +98,7 @@ public class ModChartScript
         UserData.RegisterType<Judgement>();
         UserData.RegisterType<Direction>();
         UserData.RegisterType<ModChartEventType>();
+        UserData.RegisterType<EasingDelegate>();
         UserData.RegisterType<TweenPayload<float>.SetterDelegate>();
         UserData.RegisterType<TweenPayload<Vector2>.SetterDelegate>();
         UserData.RegisterType<TweenPayload<Vector3>.SetterDelegate>();
@@ -132,6 +133,7 @@ public class ModChartScript
         WorkingScript.Globals["Timeline"] = Timeline;
         WorkingScript.Globals["State"] = State;
         WorkingScript.Globals["Tween"] = TweenSetters;
+        WorkingScript.Globals["EasingWrapper"] = new EasingWrapperFunctions();
         WorkingScript.Globals["Easing"] = typeof(Easing);
         WorkingScript.Globals["Constants"] = ModChartConstants;
         WorkingScript.Globals["Map"] = GameplayScreenView.Screen.Map;
@@ -143,6 +145,8 @@ public class ModChartScript
         WorkingScript.Globals["Alignment"] = typeof(Alignment);
         WorkingScript.Globals["Direction"] = typeof(Direction);
         WorkingScript.Globals["EventType"] = typeof(ModChartEventType);
+        WorkingScript.Globals["Segment"] = ModChartTimeline.Segment;
+        WorkingScript.Globals["Trigger"] = ModChartTimeline.Trigger;
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>

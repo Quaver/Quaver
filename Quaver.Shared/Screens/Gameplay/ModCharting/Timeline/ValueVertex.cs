@@ -9,7 +9,7 @@ public class ValueVertex<T>
 {
     public int Time { get; init; }
     public T Payload { get; init; }
-    public int Id { get; init; }
+    public int Id { get; set; }
     public bool IsDynamic { get; init; }
 
     private sealed class TimeSegmentIdRelationalComparer : IComparer<ValueVertex<T>>
