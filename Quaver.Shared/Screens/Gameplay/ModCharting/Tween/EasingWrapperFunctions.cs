@@ -16,6 +16,9 @@ public class EasingWrapperFunctions
         return progress => Bezier.YFromX(c1, c2, progress);
     }
 
+    public static EasingDelegate Create(Closure closure) =>
+        progress => closure?.SafeCall(progress)?.ToObject<float>() ?? 0;
+
     [MoonSharpUserDataMetamethod("__concat")]
     public static EasingDelegate Combine(EasingDelegate d1, EasingDelegate d2)
     {

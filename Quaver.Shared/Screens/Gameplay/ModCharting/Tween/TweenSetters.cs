@@ -24,18 +24,35 @@ public class TweenSetters
     {
         return (startValue, endValue, progress) => action(EasingFunctions.Linear(startValue, endValue, progress));
     }
+    public static TweenPayload<float>.SetterDelegate CreateFloat(Closure action)
+    {
+        return (startValue, endValue, progress) => action?.SafeCall(EasingFunctions.Linear(startValue, endValue, progress));
+    }
     
     public static TweenPayload<Vector2>.SetterDelegate CreateVector2(Action<Vector2> action)
     {
         return (startValue, endValue, progress) => action(Vector2.Lerp(startValue, endValue, progress));
     }
+    
+    public static TweenPayload<Vector2>.SetterDelegate CreateVector2(Closure action)
+    {
+        return (startValue, endValue, progress) => action?.SafeCall(Vector2.Lerp(startValue, endValue, progress));
+    }
     public static TweenPayload<Vector3>.SetterDelegate CreateVector3(Action<Vector3> action)
     {
         return (startValue, endValue, progress) => action(Vector3.Lerp(startValue, endValue, progress));
     }
+    public static TweenPayload<Vector3>.SetterDelegate CreateVector3(Closure action)
+    {
+        return (startValue, endValue, progress) => action?.SafeCall(Vector3.Lerp(startValue, endValue, progress));
+    }
     public static TweenPayload<Vector4>.SetterDelegate CreateVector4(Action<Vector4> action)
     {
         return (startValue, endValue, progress) => action(Vector4.Lerp(startValue, endValue, progress));
+    }
+    public static TweenPayload<Vector4>.SetterDelegate CreateVector4(Closure action)
+    {
+        return (startValue, endValue, progress) => action?.SafeCall(Vector4.Lerp(startValue, endValue, progress));
     }
 
     public TweenPayload<float>.SetterDelegate X(Drawable drawable)
