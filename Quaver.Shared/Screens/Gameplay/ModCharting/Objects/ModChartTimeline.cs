@@ -126,9 +126,9 @@ public class ModChartTimeline
         return Shortcut.ModChartScript.SegmentManager.TryGetSegment(id, out var segment) && Remove(segment);
     }
 
-    public int Set(Segment segment)
+    public int Set(int id, Segment segment)
     {
-        if (segment.Id == -1) segment.Id = GenerateSegmentId();
+        segment.Id = id == -1 ? GenerateSegmentId() : id;
         Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateSegment, segment);
         return segment.Id;
     }
@@ -152,9 +152,9 @@ public class ModChartTimeline
         return Shortcut.ModChartScript.TriggerManager.TryGetVertex(id, out var vertex) && Remove(vertex);
     }
 
-    public int Set(ValueVertex<ITriggerPayload> trigger)
+    public int Set(int id, ValueVertex<ITriggerPayload> trigger)
     {
-        if (trigger.Id == -1) trigger.Id = GenerateTriggerId();
+        trigger.Id = id == -1 ? GenerateTriggerId() : id;
         Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateTrigger, trigger);
         return trigger.Id;
     }

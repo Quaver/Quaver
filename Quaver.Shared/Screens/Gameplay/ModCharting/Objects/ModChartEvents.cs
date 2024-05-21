@@ -98,23 +98,14 @@ public class ModChartEvents
     /// <param name="eventType"></param>
     /// <param name="closure"></param>
     /// <example>
-    /// The following lua code subscribes a closure to a category:
-    /// <code language="lua">
-    /// <![CDATA[
-    ///     function noteEvents(type, args)
-    ///         print("Some note related events are triggered, namely " .. type)
-    ///     end
-    ///     events.subscribe(event_types.note, noteEvents)
-    /// ]]>
-    /// </code>
     /// The following lua code subscribes a closure to a specific type of event, under a specified category:
     /// <code language="lua">
     /// <![CDATA[
-    ///     function onNoteEntry(type, args)
-    ///         hitObject = args[1]
+    ///     function onNoteEntry(args)
+    ///         hitObject = args.hitObject
     ///         print("A note has become visible in the playfield at " .. hitObject.startTime)
     ///     end
-    ///     events.subscribe(event_types.noteEntry, onNoteEntry)
+    ///     Events.Subscribe(EventType.NoteEntry, onNoteEntry)
     /// ]]>
     /// </code>
     /// </example>
