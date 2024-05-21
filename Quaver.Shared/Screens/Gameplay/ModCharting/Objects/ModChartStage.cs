@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.Shared.Assets;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -30,14 +31,14 @@ public class ModChartStage
 
 
     [MoonSharpHidden]
-    public string GetTexturePath(string path)
+    public string GetFullPath(string path)
     {
         return Path.Combine($"{Path.GetDirectoryName(Shortcut.GameplayScreen.Map.GetBackgroundPath())}", path);
     }
 
     public Texture2D LoadTexture(string relativePath)
     {
-        var path = GetTexturePath(relativePath);
+        var path = GetFullPath(relativePath);
         return AssetLoader.LoadTexture2DFromFile(path);
     }
 
@@ -54,7 +55,20 @@ public class ModChartStage
 
     public SpriteTextPlus CreateText(string fontName, string content, int size)
     {
-        return new SpriteTextPlus(FontManager.GetWobbleFont(fontName), content, size);
+        WobbleFontStore fontStore;
+        if (FontManager.WobbleFonts.ContainsKey(fontName))
+            fontStore = FontManager.GetWobbleFont(fontName);
+        else
+        {
+            var fullPath = GetFullPath(fontName);
+            fontStore = new WobbleFontStore(20, File.ReadAllBytes(fullPath));
+        }
+        return new SpriteTextPlus(fontStore, content, size);
+    }
+    
+    public SpriteTextPlus CreateText(string content, int size)
+    {
+        return CreateText(Fonts.LatoRegular, content, size);
     }
 
     public AnimatableSprite CreateAnimatableSprite(Texture2D spritesheet, int rows, int columns)
