@@ -752,9 +752,7 @@ namespace Quaver.Shared.Online
             game.CurrentScreen.Exit(() =>
             {
                 if (CurrentGame is not null)
-                    Logger.Important(
-                        $"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}",
-                        LogType.Network);
+                    Logger.Important($"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
                 
                 return new MultiplayerGameScreen();
             });
