@@ -105,12 +105,6 @@ namespace Quaver.Shared.Screens.Selection
         public Bindable<bool> IsPlayTestingInPreview { get; private set; }
 
         /// <summary>
-        ///     A capture of the last speed rate so that the user can go back
-        ///     to singleplayer without having to change their speed rate again.
-        /// </summary>
-        private static float LastSpeedRate { get; set; } = 1.0f;
-
-        /// <summary>
         /// </summary>
         public SelectionScreen()
         {
@@ -127,10 +121,7 @@ namespace Quaver.Shared.Screens.Selection
             if (IsMultiplayer)
                 OnlineManager.Client?.SetGameCurrentlySelectingMap(true);
             else
-            {
-                ModManager.AddSpeedMods(LastSpeedRate);
                 SetRichPresence();
-            }
 
             InitializeSearchQueryBindable();
             InitializeAvailableMapsetsBindable();
@@ -699,7 +690,7 @@ namespace Quaver.Shared.Screens.Selection
                     OnlineManager.Client?.SetGameCurrentlySelectingMap(false);
                     return new MultiplayerGameScreen();
                 }
-                LastSpeedRate = ModHelper.GetRateFromMods(ModManager.Mods);
+
                 return new MainMenuScreen();
             });
         }
