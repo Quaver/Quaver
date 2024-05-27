@@ -1961,6 +1961,7 @@ namespace Quaver.Shared.Online
             var users = OnlineUsers.ToList();
 
             var playingUsers = users.FindAll(x =>
+                x.Value.OnlineUser != null &&
                 CurrentGame.PlayerIds.Contains(x.Value.OnlineUser.Id) &&
                 !CurrentGame.PlayersWithoutMap.Contains(x.Value.OnlineUser.Id) &&
                 CurrentGame.RefereeUserId != x.Value.OnlineUser.Id &&
