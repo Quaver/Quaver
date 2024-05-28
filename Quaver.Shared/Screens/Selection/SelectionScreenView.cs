@@ -154,7 +154,6 @@ namespace Quaver.Shared.Screens.Selection
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2F2F2F"));
-            _ = GameBase.Game.TryBeginBatch();
             Container?.Draw(gameTime);
         }
 
