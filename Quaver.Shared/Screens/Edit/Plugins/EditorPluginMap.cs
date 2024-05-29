@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     The non-default editor layers that are currently in the map
         /// </summary>
         public List<EditorLayerInfo> EditorLayers { get; [MoonSharpVisible(false)] set; }
-        
+
         /// <summary>
         ///     The bookmarks that are currently in the map
         /// </summary>
@@ -65,6 +65,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     Total mp3 length
         /// </summary>
         public double TrackLength { get; [MoonSharpVisible(false)] set; }
+
+        /// <inheritdoc cref="Qua.InitialScrollVelocity"/>
+        public float InitialScrollVelocity => Map.InitialScrollVelocity
 
         [MoonSharpVisible(false)]
         public void SetFrameState()
