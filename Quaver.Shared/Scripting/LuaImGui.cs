@@ -413,7 +413,7 @@ namespace Quaver.Shared.Scripting
 
             NotificationManager.Show(
                 level ?? NotificationLevel.Info,
-                $"{Name}:\n{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(x => $"{x}"))}"
+                $"{Name}:\n{string.Join("\n", args.Skip(level is null || args.Length is 1 ? 0 : 1).Select(x => $"{x}"))}"
             );
         }
 
