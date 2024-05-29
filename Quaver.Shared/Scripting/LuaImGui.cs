@@ -605,10 +605,10 @@ namespace Quaver.Shared.Scripting
                     DataType.Number => value.Number,
                     DataType.String => value.String,
                     DataType.Table => ToSimpleObject(value.Table, depth),
-                    DataType.Tuple => value.Tuple.Select(x => ToSimpleObject(x, depth - 1)).ToArray(),
+                    DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
                     DataType.UserData => value.UserData.Object,
                     DataType.ClrFunction => value.Callback.Name,
-                    DataType.YieldRequest => value.YieldRequest.ReturnValues.Select(x => ToSimpleObject(x, depth - 1)).ToArray(),
+                    DataType.YieldRequest => Array.ConvertAll(value.YieldRequest.ReturnValues, x => ToSimpleObject(x, depth - 1)),
                     DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
                     _ => null,
                 };
