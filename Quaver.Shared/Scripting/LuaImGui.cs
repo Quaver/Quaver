@@ -404,10 +404,10 @@ namespace Quaver.Shared.Scripting
         {
             NotificationLevel? level = (args.Length is 0 ? "" : args[0]?.CastToString()?.ToUpperInvariant()) switch
             {
-                "INF" or "INFO" => NotificationLevel.Info,
-                "WRN" or "WARN" or "WARNING" => NotificationLevel.Warning,
-                "ERR" or "ERROR" => NotificationLevel.Error,
-                "SUC" or "SUCCESS" => NotificationLevel.Success,
+                "I" or "INF" or "INFO" => NotificationLevel.Info,
+                "W" or "WRN" or "WARN" or "WARNING" => NotificationLevel.Warning,
+                "E" or "ERR" or "ERROR" => NotificationLevel.Error,
+                "S" or "SUC" or "SUCCESS" => NotificationLevel.Success,
                 _ => null,
             };
 
