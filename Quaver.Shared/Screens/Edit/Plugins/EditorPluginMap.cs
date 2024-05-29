@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public double TrackLength { get; [MoonSharpVisible(false)] set; }
 
         /// <inheritdoc cref="Qua.InitialScrollVelocity"/>
-        public float InitialScrollVelocity => Map.InitialScrollVelocity
+        public float InitialScrollVelocity => Map.InitialScrollVelocity;
 
         [MoonSharpVisible(false)]
         public void SetFrameState()

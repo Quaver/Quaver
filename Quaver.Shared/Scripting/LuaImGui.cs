@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,6 +12,8 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Debugging;
+using MoonSharp.Interpreter.Serialization.Json;
+using Newtonsoft.Json;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
@@ -16,6 +21,8 @@ using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Logging;
+using YamlDotNet.Serialization;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
@@ -33,6 +40,15 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         /// </summary>
         private string FilePath { get; }
+
+        private string ConfigFilePath
+        {
+            get
+            {
+                var directory = Path.GetDirectoryName(FilePath.AsSpan());
+                return Path.Join(directory, "config.yaml");
+            }
+        }
 
         // <summary>
         // Gets or sets the name of the plugin
@@ -195,13 +211,15 @@ namespace Quaver.Shared.Scripting
             if (LoadedVersion == Version)
                 return;
 
-            WorkingScript = new(CoreModules.Preset_HardSandbox)
+            WorkingScript = new(CoreModules.Preset_SoftSandbox ^ CoreModules.Dynamic)
             {
                 Globals =
                 {
                     ["eval"] = Eval,
                     ["eval_expr"] = EvalExpr,
                     ["imgui"] = typeof(ImGuiWrapper),
+                    ["read"] = CallbackFunction.FromDelegate(null, Read),
+                    ["write"] = CallbackFunction.FromDelegate(null, Write),
                     ["print"] = CallbackFunction.FromDelegate(null, Print),
                     ["state"] = State,
                 },
@@ -539,6 +557,81 @@ namespace Quaver.Shared.Scripting
                 var err = DynValue.NewString(e.Message);
                 return DynValue.NewTuple(DynValue.Nil, err);
             }
+        }
+
+        private DynValue Read(ScriptExecutionContext context, CallbackArguments args)
+        {
+            try
+            {
+                using FileStream file = new(ConfigFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using StreamReader fileReader = new(file);
+                var obj = new DeserializerBuilder().Build().Deserialize(fileReader);
+                return DynValue.FromObject(context.GetScript(), obj);
+            }
+            catch (Exception)
+            {
+                return DynValue.Nil;
+            }
+        }
+
+        private DynValue Write(ScriptExecutionContext _, CallbackArguments args)
+        {
+            try
+            {
+                var toSerialize = args.GetArray() is var array && array.Length is 1
+                    ? ToSimpleObject(array[0])
+                    : Array.ConvertAll(array, x => ToSimpleObject(x));
+
+                var serializer = new Serializer();
+                var stringWriter = new StringWriter();
+                serializer.Serialize(stringWriter, toSerialize);
+                var serialized = stringWriter.ToString();
+                File.WriteAllText(ConfigFilePath, serialized);
+                return DynValue.True;
+            }
+            catch (Exception)
+            {
+                return DynValue.False;
+            }
+        }
+
+        private object ToSimpleObject(DynValue value, int depth = 10) =>
+            depth <= 0
+                ? value.ToString()
+                : value.Type switch
+                {
+                    DataType.Nil or DataType.Void => null,
+                    DataType.Boolean => value.Boolean,
+                    DataType.Number => value.Number,
+                    DataType.String => value.String,
+                    DataType.Table => ToSimpleObject(value.Table, depth),
+                    DataType.Tuple => value.Tuple.Select(x => ToSimpleObject(x, depth - 1)).ToArray(),
+                    DataType.UserData => value.UserData.Object,
+                    DataType.ClrFunction => value.Callback.Name,
+                    DataType.YieldRequest => value.YieldRequest.ReturnValues.Select(x => ToSimpleObject(x, depth - 1)).ToArray(),
+                    DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
+                    _ => null,
+                };
+
+        object ToSimpleObject(Table table, int depth)
+        {
+            var max = 1;
+
+            foreach (var a in table.Pairs)
+                if (a.Key.Type == DataType.Number && a.Key.Number % 1 is 0 && a.Key.Number <= int.MaxValue)
+                {
+                    if (a.Key.Number > max)
+                        max = (int)a.Key.Number;
+                }
+                else
+                    return table.Pairs.ToDictionary(x => ToSimpleObject(x.Key, depth - 1), x => ToSimpleObject(x.Value, depth - 1));
+
+            var array = new object[max];
+
+            for (var i = 0; i < array.Length; i++)
+                array[i] = ToSimpleObject(table.Get(i + 1), depth - 1);
+
+            return array;
         }
     }
 }
