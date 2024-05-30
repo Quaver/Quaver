@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,6 +26,8 @@ namespace Quaver.Shared.Scripting
 {
     public class LuaImGui : SpriteImGui
     {
+        const int Limit = 10;
+
         static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
 
         /// <summary>
@@ -382,7 +385,7 @@ namespace Quaver.Shared.Scripting
 
             NotificationManager.Show(
                 level ?? NotificationLevel.Info,
-                $"{Name}:\n{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(x => $"{x}"))}"
+                $"{Name}:\n{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(Display))}"
             );
         }
 
@@ -528,6 +531,67 @@ namespace Quaver.Shared.Scripting
             }
         }
 
+        private string Display(DynValue value) =>
+            ToSimpleObject(value) switch
+            {
+                Dictionary<object, object> x => $"{{ {string.Join(", ", x.Count > Limit ? x.Take(Limit).Select(x => $"{x.Key} = {x.Value}").Append("…") : x.Select(x => $"{x.Key} = {x.Value}"))} }}",
+                object[] x => $"[{string.Join(", ", x.Length > Limit ? x.Take(Limit).Append("…") : x)}]",
+                _ => value.ToPrintString(),
+            };
+
+        private object ToSimpleObject(DynValue value, int depth = Limit) =>
+            depth <= 0
+                ? value.ToString()
+                : value.Type switch
+                {
+                    DataType.Nil or DataType.Void => null,
+                    DataType.Boolean => value.Boolean,
+                    DataType.Number => value.Number,
+                    DataType.String => value.String,
+                    DataType.Table => ToSimpleObject(value.Table, depth),
+                    DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
+                    DataType.UserData => value.UserData.Object switch
+                    {
+                        Vector2 v => new[] { v.X, v.Y },
+                        Vector3 v => new[] { v.X, v.Y, v.Z },
+                        Vector4 v => new[] { v.X, v.Y, v.Z, v.W },
+                        BookmarkInfo i => new { i.Note, i.StartTime },
+                        CustomAudioSampleInfo i => new { i.Path, i.UnaffectedByRate },
+                        EditorLayerInfo i => new { i.ColorRgb, i.Hidden, i.Name },
+                        HitObjectInfo i => new { i.EditorLayer, i.EndTime, i.HitSound, i.Lane, i.StartTime },
+                        KeySoundInfo i => new { i.Sample, i.Volume },
+                        SliderVelocityInfo i => new { i.Multiplier, i.StartTime },
+                        SoundEffectInfo i => new { i.Sample, i.StartTime, i.Volume },
+                        TimingPointInfo i => new { i.Bpm, i.Hidden, i.StartTime, i.Signature },
+                        var o => o,
+                    },
+                    DataType.ClrFunction => value.Callback.Name,
+                    DataType.YieldRequest => Array.ConvertAll(value.YieldRequest.ReturnValues, x => ToSimpleObject(x, depth - 1)),
+                    DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
+                    _ => null,
+                };
+
+        private object ToSimpleObject(Table table, int depth)
+        {
+            var max = 1;
+
+            foreach (var a in table.Pairs)
+                if (a.Key.Type == DataType.Number && a.Key.Number % 1 is 0 && a.Key.Number <= int.MaxValue)
+                {
+                    if (a.Key.Number > max)
+                        max = (int)a.Key.Number;
+                }
+                else
+                    return table.Pairs.ToDictionary(x => ToSimpleObject(x.Key, depth - 1), x => ToSimpleObject(x.Value, depth - 1));
+
+            var array = new object[max];
+
+            for (var i = 0; i < array.Length; i++)
+                array[i] = ToSimpleObject(table.Get(i + 1), depth - 1);
+
+            return array;
+        }
+
         private DynValue Read(ScriptExecutionContext context, CallbackArguments args)
         {
             try
@@ -562,51 +626,6 @@ namespace Quaver.Shared.Scripting
             {
                 return DynValue.False;
             }
-        }
-
-        private object ToSimpleObject(DynValue value, int depth = 10) =>
-            depth <= 0
-                ? value.ToString()
-                : value.Type switch
-                {
-                    DataType.Nil or DataType.Void => null,
-                    DataType.Boolean => value.Boolean,
-                    DataType.Number => value.Number,
-                    DataType.String => value.String,
-                    DataType.Table => ToSimpleObject(value.Table, depth),
-                    DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
-                    DataType.UserData => value.UserData.Object switch
-                    {
-                        Vector2 v => new[] { v.X, v.Y },
-                        Vector3 v => new[] { v.X, v.Y, v.Z },
-                        Vector4 v => new[] { v.X, v.Y, v.Z, v.W },
-                        var o => o,
-                    },
-                    DataType.ClrFunction => value.Callback.Name,
-                    DataType.YieldRequest => Array.ConvertAll(value.YieldRequest.ReturnValues, x => ToSimpleObject(x, depth - 1)),
-                    DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
-                    _ => null,
-                };
-
-        object ToSimpleObject(Table table, int depth)
-        {
-            var max = 1;
-
-            foreach (var a in table.Pairs)
-                if (a.Key.Type == DataType.Number && a.Key.Number % 1 is 0 && a.Key.Number <= int.MaxValue)
-                {
-                    if (a.Key.Number > max)
-                        max = (int)a.Key.Number;
-                }
-                else
-                    return table.Pairs.ToDictionary(x => ToSimpleObject(x.Key, depth - 1), x => ToSimpleObject(x.Value, depth - 1));
-
-            var array = new object[max];
-
-            for (var i = 0; i < array.Length; i++)
-                array[i] = ToSimpleObject(table.Get(i + 1), depth - 1);
-
-            return array;
         }
     }
 }
