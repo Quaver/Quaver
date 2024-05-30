@@ -23,6 +23,11 @@ namespace Quaver.Shared.Scripting
          * - PlotHistogram()
          */
 
+        /*
+         * Additionally, to retain backwards compatibility with plugins made during the time vectors were converted to
+         * tables automatically,
+         */
+
         public static ImGuiPayloadPtr AcceptDragDropPayload(string type) => ImGui.AcceptDragDropPayload(type);
         public static ImGuiPayloadPtr AcceptDragDropPayload(string type, ImGuiDragDropFlags flags) => ImGui.AcceptDragDropPayload(type, flags);
         public static void AlignTextToFramePadding() => ImGui.AlignTextToFramePadding();
@@ -77,7 +82,7 @@ namespace Quaver.Shared.Scripting
         public static bool Button(string label) => ImGui.Button(label);
         public static bool Button(string label, Vector2 size) => ImGui.Button(label, size);
         public static float CalcItemWidth() => ImGui.CalcItemWidth();
-        public static Vector2 CalcTextSize(string text) => ImGui.CalcTextSize(text);
+        public static DynValue CalcTextSize(string text) => ImGui.CalcTextSize(text).ToDynValue();
         public static void CaptureKeyboardFromApp() => ImGui.CaptureKeyboardFromApp();
         public static void CaptureKeyboardFromApp(bool want_capture_keyboard_value) => ImGui.CaptureKeyboardFromApp(want_capture_keyboard_value);
         public static void CaptureMouseFromApp() => ImGui.CaptureMouseFromApp();
@@ -111,10 +116,14 @@ namespace Quaver.Shared.Scripting
         public static bool Combo(string label, ref int current_item, string items_separated_by_zeros, int popup_max_height_in_items) => ImGui.Combo(label, ref current_item, items_separated_by_zeros, popup_max_height_in_items);
         public static IntPtr CreateContext() => ImGui.CreateContext();
         public static IntPtr CreateContext(ImFontAtlasPtr shared_font_atlas) => ImGui.CreateContext(shared_font_atlas);
-        public static Vector2 CreateVector2(int x, int y) => new Vector2(x, y);
-        public static Vector3 CreateVector3(int x, int y, int z) => new Vector3(x, y, z);
-        public static Vector4 CreateVector4(float w, float x, float y, float z) => new Vector4(w, x, y, z);
-        public static bool DebugCheckVersionAndDataLayout(string version_str, uint sz_io, uint sz_style, uint sz_vec2, uint sz_vec4, uint sz_drawvert) => ImGui.DebugCheckVersionAndDataLayout(version_str, sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert);
+
+        public static DynValue CreateVector2(float x, float y) => DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y));
+        public static Vector2 CreateCLRVector2(float x, float y) => new(x, y);
+        public static DynValue CreateVector3(float x, float y, float z) => DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y), DynValue.NewNumber(z));
+        public static Vector3 CreateCLRVector3(float x, float y, float z) => new(x, y, z);
+        public static DynValue CreateVector4(float w, float x, float y, float z) => DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y), DynValue.NewNumber(z), DynValue.NewNumber(w));
+        public static Vector4 CreateCLRVector4(float w, float x, float y, float z) => new(w, x, y, z);
+        // public static bool DebugCheckVersionAndDataLayout(string version_str, uint sz_io, uint sz_style, uint sz_vec2, uint sz_vec4, uint sz_drawvert) => ImGui.DebugCheckVersionAndDataLayout(version_str, sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert);
         public static void DestroyContext() => ImGui.DestroyContext();
         public static void DestroyContext(IntPtr ctx) => ImGui.DestroyContext(ctx);
         public static bool DragFloat(string label, ref float v) => ImGui.DragFloat(label, ref v);
@@ -215,39 +224,39 @@ namespace Quaver.Shared.Scripting
         public static int GetColumnsCount() => ImGui.GetColumnsCount();
         public static float GetColumnWidth() => ImGui.GetColumnWidth();
         public static float GetColumnWidth(int column_index) => ImGui.GetColumnWidth(column_index);
-        public static Vector2 GetContentRegionAvail() => ImGui.GetContentRegionAvail();
-        public static float GetContentRegionAvailWidth() => ImGui.GetContentRegionAvailWidth();
-        public static Vector2 GetContentRegionMax() => ImGui.GetContentRegionMax();
+        public static DynValue GetContentRegionAvail() => ImGui.GetContentRegionAvail().ToDynValue();
+        // public static float GetContentRegionAvailWidth() => ImGui.GetContentRegionAvailWidth();
+        public static DynValue GetContentRegionMax() => ImGui.GetContentRegionMax().ToDynValue();
         public static IntPtr GetCurrentContext() => ImGui.GetCurrentContext();
-        public static Vector2 GetCursorPos() => ImGui.GetCursorPos();
+        public static DynValue GetCursorPos() => ImGui.GetCursorPos().ToDynValue();
         public static float GetCursorPosX() => ImGui.GetCursorPosX();
         public static float GetCursorPosY() => ImGui.GetCursorPosY();
-        public static Vector2 GetCursorScreenPos() => ImGui.GetCursorScreenPos();
-        public static Vector2 GetCursorStartPos() => ImGui.GetCursorStartPos();
+        public static DynValue GetCursorScreenPos() => ImGui.GetCursorScreenPos().ToDynValue();
+        public static DynValue GetCursorStartPos() => ImGui.GetCursorStartPos().ToDynValue();
         public static ImGuiPayloadPtr GetDragDropPayload() => ImGui.GetDragDropPayload();
         public static ImDrawDataPtr GetDrawData() => ImGui.GetDrawData();
         public static IntPtr GetDrawListSharedData() => ImGui.GetDrawListSharedData();
         public static ImFontPtr GetFont() => ImGui.GetFont();
         public static float GetFontSize() => ImGui.GetFontSize();
-        public static Vector2 GetFontTexUvWhitePixel() => ImGui.GetFontTexUvWhitePixel();
+        public static DynValue GetFontTexUvWhitePixel() => ImGui.GetFontTexUvWhitePixel().ToDynValue();
         public static int GetFrameCount() => ImGui.GetFrameCount();
         public static float GetFrameHeight() => ImGui.GetFrameHeight();
         public static float GetFrameHeightWithSpacing() => ImGui.GetFrameHeightWithSpacing();
         public static uint GetID(IntPtr ptr_id) => ImGui.GetID(ptr_id);
         public static uint GetID(string str_id) => ImGui.GetID(str_id);
         public static ImGuiIOPtr GetIO() => ImGui.GetIO();
-        public static Vector2 GetItemRectMax() => ImGui.GetItemRectMax();
-        public static Vector2 GetItemRectMin() => ImGui.GetItemRectMin();
-        public static Vector2 GetItemRectSize() => ImGui.GetItemRectSize();
+        public static DynValue GetItemRectMax() => ImGui.GetItemRectMax().ToDynValue();
+        public static DynValue GetItemRectMin() => ImGui.GetItemRectMin().ToDynValue();
+        public static DynValue GetItemRectSize() => ImGui.GetItemRectSize().ToDynValue();
         public static int GetKeyIndex(ImGuiKey imgui_key) => ImGui.GetKeyIndex(imgui_key);
         public static int GetKeyPressedAmount(int key_index, float repeat_delay, float rate) => ImGui.GetKeyPressedAmount(key_index, repeat_delay, rate);
         public static ImGuiMouseCursor GetMouseCursor() => ImGui.GetMouseCursor();
-        public static Vector2 GetMouseDragDelta() => ImGui.GetMouseDragDelta();
-        public static Vector2 GetMouseDragDelta(int button) => ImGui.GetMouseDragDelta(button);
-        public static Vector2 GetMouseDragDelta(int button, float lock_threshold) => ImGui.GetMouseDragDelta(button, lock_threshold);
-        public static Vector2 GetMousePos() => ImGui.GetMousePos();
-        public static Vector2 GetMousePosOnOpeningCurrentPopup() => ImGui.GetMousePosOnOpeningCurrentPopup();
-        public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetOverlayDrawList();
+        public static DynValue GetMouseDragDelta() => ImGui.GetMouseDragDelta().ToDynValue();
+        public static DynValue GetMouseDragDelta(int button) => ImGui.GetMouseDragDelta(button).ToDynValue();
+        public static DynValue GetMouseDragDelta(int button, float lock_threshold) => ImGui.GetMouseDragDelta(button, lock_threshold).ToDynValue();
+        public static DynValue GetMousePos() => ImGui.GetMousePos().ToDynValue();
+        public static DynValue GetMousePosOnOpeningCurrentPopup() => ImGui.GetMousePosOnOpeningCurrentPopup().ToDynValue();
+        // public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetOverlayDrawList();
         public static float GetScrollMaxX() => ImGui.GetScrollMaxX();
         public static float GetScrollMaxY() => ImGui.GetScrollMaxY();
         public static float GetScrollX() => ImGui.GetScrollX();
@@ -260,13 +269,13 @@ namespace Quaver.Shared.Scripting
         public static double GetTime() => ImGui.GetTime();
         public static float GetTreeNodeToLabelSpacing() => ImGui.GetTreeNodeToLabelSpacing();
         public static string GetVersion() => ImGui.GetVersion();
-        public static Vector2 GetWindowContentRegionMax() => ImGui.GetWindowContentRegionMax();
-        public static Vector2 GetWindowContentRegionMin() => ImGui.GetWindowContentRegionMin();
+        public static DynValue GetWindowContentRegionMax() => ImGui.GetWindowContentRegionMax().ToDynValue();
+        public static DynValue GetWindowContentRegionMin() => ImGui.GetWindowContentRegionMin().ToDynValue();
         public static float GetWindowContentRegionWidth() => ImGui.GetWindowContentRegionWidth();
         public static ImDrawListPtr GetWindowDrawList() => ImGui.GetWindowDrawList();
         public static float GetWindowHeight() => ImGui.GetWindowHeight();
-        public static Vector2 GetWindowPos() => ImGui.GetWindowPos();
-        public static Vector2 GetWindowSize() => ImGui.GetWindowSize();
+        public static DynValue GetWindowPos() => ImGui.GetWindowPos().ToDynValue();
+        public static DynValue GetWindowSize() => ImGui.GetWindowSize().ToDynValue();
         public static float GetWindowWidth() => ImGui.GetWindowWidth();
         public static void Image(IntPtr user_texture_id, Vector2 size) => ImGui.Image(user_texture_id, size);
         public static void Image(IntPtr user_texture_id, Vector2 size, Vector2 uv0) => ImGui.Image(user_texture_id, size, uv0);
@@ -494,8 +503,8 @@ namespace Quaver.Shared.Scripting
         public static void SetKeyboardFocusHere() => ImGui.SetKeyboardFocusHere();
         public static void SetKeyboardFocusHere(int offset) => ImGui.SetKeyboardFocusHere(offset);
         public static void SetMouseCursor(ImGuiMouseCursor type) => ImGui.SetMouseCursor(type);
-        public static void SetNextTreeNodeOpen(bool is_open) => ImGui.SetNextTreeNodeOpen(is_open);
-        public static void SetNextTreeNodeOpen(bool is_open, ImGuiCond cond) => ImGui.SetNextTreeNodeOpen(is_open, cond);
+        // public static void SetNextTreeNodeOpen(bool is_open) => ImGui.SetNextTreeNodeOpen(is_open);
+        // public static void SetNextTreeNodeOpen(bool is_open, ImGuiCond cond) => ImGui.SetNextTreeNodeOpen(is_open, cond);
         public static void SetNextWindowBgAlpha(float alpha) => ImGui.SetNextWindowBgAlpha(alpha);
         public static void SetNextWindowCollapsed(bool collapsed) => ImGui.SetNextWindowCollapsed(collapsed);
         public static void SetNextWindowCollapsed(bool collapsed, ImGuiCond cond) => ImGui.SetNextWindowCollapsed(collapsed, cond);
@@ -591,7 +600,7 @@ namespace Quaver.Shared.Scripting
         public static void TextDisabled(string fmt) => ImGui.TextDisabled(fmt);
         public static void TextUnformatted(string text) => ImGui.TextUnformatted(text);
         public static void TextWrapped(string fmt) => ImGui.TextWrapped(fmt);
-        public static void TreeAdvanceToLabelPos() => ImGui.TreeAdvanceToLabelPos();
+        // public static void TreeAdvanceToLabelPos() => ImGui.TreeAdvanceToLabelPos();
         public static bool TreeNode(IntPtr ptr_id, string fmt) => ImGui.TreeNode(ptr_id, fmt);
         public static bool TreeNode(string label) => ImGui.TreeNode(label);
         public static bool TreeNode(string str_id, string fmt) => ImGui.TreeNode(str_id, fmt);
@@ -618,5 +627,8 @@ namespace Quaver.Shared.Scripting
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max);
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max, format);
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format, float power) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max, format, power);
+        private static DynValue ToDynValue(this Vector2 v) => CreateVector2(v.X, v.Y);
+        private static DynValue ToDynValue(this Vector3 v) => CreateVector3(v.X, v.Y, v.Z);
+        private static DynValue ToDynValue(this Vector4 v) => CreateVector4(v.X, v.Y, v.Z, v.W);
     }
 }

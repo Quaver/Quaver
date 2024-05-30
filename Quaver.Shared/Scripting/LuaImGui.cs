@@ -115,6 +115,11 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiFocusedFlags>();
             UserData.RegisterType<ImGuiHoveredFlags>();
 
+            // Vectors, since imgui.CreateVectorN exists.
+            UserData.RegisterType<Vector2>();
+            UserData.RegisterType<Vector3>();
+            UserData.RegisterType<Vector4>();
+
             // MonoGame
             UserData.RegisterType<Keys>();
 
@@ -212,10 +217,13 @@ namespace Quaver.Shared.Scripting
                     ["eval"] = Eval,
                     ["eval_expr"] = EvalExpr,
                     ["imgui"] = typeof(ImGuiWrapper),
-                    ["read"] = CallbackFunction.FromDelegate(null, Read),
-                    ["write"] = CallbackFunction.FromDelegate(null, Write),
                     ["print"] = CallbackFunction.FromDelegate(null, Print),
+                    ["read"] = CallbackFunction.FromDelegate(null, Read),
                     ["state"] = State,
+                    ["vector2"] = typeof(Vector2),
+                    ["vector3"] = typeof(Vector3),
+                    ["vector4"] = typeof(Vector4),
+                    ["write"] = CallbackFunction.FromDelegate(null, Write),
                 },
             };
 
@@ -260,7 +268,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private static void RegisterAllVectors()
         {
-            // Vector 2
+            // Vector2
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.Table,
                 typeof(Vector2),
@@ -270,16 +278,6 @@ namespace Quaver.Shared.Scripting
                     var x = (float)(double)table[1];
                     var y = (float)(double)table[2];
                     return new Vector2(x, y);
-                }
-            );
-
-            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
-                (script, vector) =>
-                {
-                    var x = DynValue.NewNumber(vector.X);
-                    var y = DynValue.NewNumber(vector.Y);
-                    var dynVal = DynValue.NewTable(script, x, y);
-                    return dynVal;
                 }
             );
 
@@ -297,17 +295,6 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
-                (script, vector) =>
-                {
-                    var x = DynValue.NewNumber(vector.X);
-                    var y = DynValue.NewNumber(vector.Y);
-                    var z = DynValue.NewNumber(vector.Z);
-                    var dynVal = DynValue.NewTable(script, x, y, z);
-                    return dynVal;
-                }
-            );
-
             // Vector4
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.Table,
@@ -320,18 +307,6 @@ namespace Quaver.Shared.Scripting
                     var z = (float)(double)table[3];
                     var w = (float)(double)table[4];
                     return new Vector4(x, y, z, w);
-                }
-            );
-
-            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
-                (script, vector) =>
-                {
-                    var x = DynValue.NewNumber(vector.X);
-                    var y = DynValue.NewNumber(vector.Y);
-                    var z = DynValue.NewNumber(vector.Z);
-                    var w = DynValue.NewNumber(vector.W);
-                    var dynVal = DynValue.NewTable(script, x, y, z, w);
-                    return dynVal;
                 }
             );
         }
@@ -600,7 +575,13 @@ namespace Quaver.Shared.Scripting
                     DataType.String => value.String,
                     DataType.Table => ToSimpleObject(value.Table, depth),
                     DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
-                    DataType.UserData => value.UserData.Object,
+                    DataType.UserData => value.UserData.Object switch
+                    {
+                        Vector2 v => new[] { v.X, v.Y },
+                        Vector3 v => new[] { v.X, v.Y, v.Z },
+                        Vector4 v => new[] { v.X, v.Y, v.Z, v.W },
+                        var o => o,
+                    },
                     DataType.ClrFunction => value.Callback.Name,
                     DataType.YieldRequest => Array.ConvertAll(value.YieldRequest.ReturnValues, x => ToSimpleObject(x, depth - 1)),
                     DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
