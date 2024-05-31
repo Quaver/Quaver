@@ -117,7 +117,6 @@ namespace Quaver.Shared.Scripting
         public static bool Combo(string label, ref int current_item, string items_separated_by_zeros, int popup_max_height_in_items) => ImGui.Combo(label, ref current_item, items_separated_by_zeros, popup_max_height_in_items);
         public static IntPtr CreateContext() => ImGui.CreateContext();
         public static IntPtr CreateContext(ImFontAtlasPtr shared_font_atlas) => ImGui.CreateContext(shared_font_atlas);
-
         public static DynValue CreateVector2(float x, float y) => DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y));
         public static Vector2 CreateCLRVector2(float x, float y) => new(x, y);
         public static DynValue CreateVector3(float x, float y, float z) => DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y), DynValue.NewNumber(z));
@@ -257,7 +256,8 @@ namespace Quaver.Shared.Scripting
         public static DynValue GetMouseDragDelta(int button, float lock_threshold) => ImGui.GetMouseDragDelta(button, lock_threshold).ToDynValue();
         public static DynValue GetMousePos() => ImGui.GetMousePos().ToDynValue();
         public static DynValue GetMousePosOnOpeningCurrentPopup() => ImGui.GetMousePosOnOpeningCurrentPopup().ToDynValue();
-        // public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetOverlayDrawList();
+        public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetForegroundDrawList();
+        public static ImDrawListPtr GetForegroundDrawList() => ImGui.GetForegroundDrawList();
         public static float GetScrollMaxX() => ImGui.GetScrollMaxX();
         public static float GetScrollMaxY() => ImGui.GetScrollMaxY();
         public static float GetScrollX() => ImGui.GetScrollX();
@@ -504,8 +504,11 @@ namespace Quaver.Shared.Scripting
         public static void SetKeyboardFocusHere() => ImGui.SetKeyboardFocusHere();
         public static void SetKeyboardFocusHere(int offset) => ImGui.SetKeyboardFocusHere(offset);
         public static void SetMouseCursor(ImGuiMouseCursor type) => ImGui.SetMouseCursor(type);
-        // public static void SetNextTreeNodeOpen(bool is_open) => ImGui.SetNextTreeNodeOpen(is_open);
-        // public static void SetNextTreeNodeOpen(bool is_open, ImGuiCond cond) => ImGui.SetNextTreeNodeOpen(is_open, cond);
+        // SetNextTreeNodeOpen is kept for backwards compatibility.
+        public static void SetNextTreeNodeOpen(bool is_open) => ImGui.SetNextItemOpen(is_open);
+        public static void SetNextTreeNodeOpen(bool is_open, ImGuiCond cond) => ImGui.SetNextItemOpen(is_open, cond);
+        public static void SetNextItemOpen(bool is_open) => ImGui.SetNextItemOpen(is_open);
+        public static void SetNextItemOpen(bool is_open, ImGuiCond cond) => ImGui.SetNextItemOpen(is_open, cond);
         public static void SetNextWindowBgAlpha(float alpha) => ImGui.SetNextWindowBgAlpha(alpha);
         public static void SetNextWindowCollapsed(bool collapsed) => ImGui.SetNextWindowCollapsed(collapsed);
         public static void SetNextWindowCollapsed(bool collapsed, ImGuiCond cond) => ImGui.SetNextWindowCollapsed(collapsed, cond);
@@ -601,7 +604,7 @@ namespace Quaver.Shared.Scripting
         public static void TextDisabled(string fmt) => ImGui.TextDisabled(fmt);
         public static void TextUnformatted(string text) => ImGui.TextUnformatted(text);
         public static void TextWrapped(string fmt) => ImGui.TextWrapped(fmt);
-        // public static void TreeAdvanceToLabelPos() => ImGui.TreeAdvanceToLabelPos();
+        public static void TreeAdvanceToLabelPos() => SetCursorPosX(GetCursorPosX() + GetTreeNodeToLabelSpacing());
         public static bool TreeNode(IntPtr ptr_id, string fmt) => ImGui.TreeNode(ptr_id, fmt);
         public static bool TreeNode(string label) => ImGui.TreeNode(label);
         public static bool TreeNode(string str_id, string fmt) => ImGui.TreeNode(str_id, fmt);
