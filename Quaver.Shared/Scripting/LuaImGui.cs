@@ -379,7 +379,7 @@ namespace Quaver.Shared.Scripting
                 "I" or "INF" or "INFO" => NotificationLevel.Info,
                 "W" or "WRN" or "WARN" or "WARNING" => NotificationLevel.Warning,
                 "E" or "ERR" or "ERROR" => NotificationLevel.Error,
-                "S" or "SUC" or "SUCCESS" => NotificationLevel.Success,
+                "S" or "YAY" or "SUCCESS" => NotificationLevel.Success,
                 _ => null,
             };
 
