@@ -631,7 +631,8 @@ namespace Quaver.Shared.Scripting
         public static uint ColorConvertFloat4ToU32(Vector4 @in) => ImGui.ColorConvertFloat4ToU32(@in);
         public static Vector4 ColorConvertU32ToFloat4(uint @in) => ImGui.ColorConvertU32ToFloat4(@in);
         public static unsafe Vector4 GetStyleColorVec4(ImGuiCol idx) => ImGui.GetStyleColorVec4(idx) is var ptr && ptr is null ? default : *ptr;
-        public static void SaveIniSettingsToDisk(string ini_filename) => ImGui.SaveIniSettingsToDisk(ini_filename);
+        // Overly permissive: You can traverse through directories by invoking this function with '../../test', etc.
+        // public static void SaveIniSettingsToDisk(string ini_filename) => ImGui.SaveIniSettingsToDisk(ini_filename);
         public static string SaveIniSettingsToMemory() => ImGui.SaveIniSettingsToMemory();
         // public static string SaveIniSettingsToMemory() => ImGui.SaveIniSettingsToMemory(out _);
 
