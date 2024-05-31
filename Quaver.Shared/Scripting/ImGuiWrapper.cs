@@ -25,7 +25,8 @@ namespace Quaver.Shared.Scripting
 
         /*
          * Additionally, to retain backwards compatibility with plugins made during the time vectors were converted to
-         * tables automatically,
+         * tables automatically, the functions CreateVector2, CreateVector3, and CreateVector4 return DynValues, and
+         * the functions ToCLRVector2, ToCLRVector3, and ToCLRVector4 use the corresponding CLR types.
          */
 
         public static ImGuiPayloadPtr AcceptDragDropPayload(string type) => ImGui.AcceptDragDropPayload(type);
@@ -627,6 +628,25 @@ namespace Quaver.Shared.Scripting
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max);
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max, format);
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format, float power) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max, format, power);
+        public static uint ColorConvertFloat4ToU32(Vector4 @in) => ImGui.ColorConvertFloat4ToU32(@in);
+        public static Vector4 ColorConvertU32ToFloat4(uint @in) => ImGui.ColorConvertU32ToFloat4(@in);
+        public static unsafe Vector4 GetStyleColorVec4(ImGuiCol idx) => ImGui.GetStyleColorVec4(idx) is var ptr && ptr is null ? default : *ptr;
+        public static void SaveIniSettingsToDisk(string ini_filename) => ImGui.SaveIniSettingsToDisk(ini_filename);
+        public static string SaveIniSettingsToMemory() => ImGui.SaveIniSettingsToMemory();
+        // public static string SaveIniSettingsToMemory() => ImGui.SaveIniSettingsToMemory(out _);
+
+        public static DynValue ColorConvertHSVtoRGB(float h, float s, float v)
+        {
+            ImGui.ColorConvertHSVtoRGB(h, s, v, out var r, out var g, out var b);
+            return CreateVector3(r, g, b);
+        }
+
+        public static DynValue ColorConvertRGBtoHSV(float r, float g, float b)
+        {
+            ImGui.ColorConvertRGBtoHSV(r, g, b, out var h, out var s, out var v);
+            return CreateVector3(h, s, v);
+        }
+
         private static DynValue ToDynValue(this Vector2 v) => CreateVector2(v.X, v.Y);
     }
 }
