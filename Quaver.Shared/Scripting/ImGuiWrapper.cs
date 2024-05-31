@@ -628,7 +628,5 @@ namespace Quaver.Shared.Scripting
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max, format);
         public static bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, IntPtr v, IntPtr v_min, IntPtr v_max, string format, float power) => ImGui.VSliderScalar(label, size, data_type, v, v_min, v_max, format, power);
         private static DynValue ToDynValue(this Vector2 v) => CreateVector2(v.X, v.Y);
-        private static DynValue ToDynValue(this Vector3 v) => CreateVector3(v.X, v.Y, v.Z);
-        private static DynValue ToDynValue(this Vector4 v) => CreateVector4(v.X, v.Y, v.Z, v.W);
     }
 }
