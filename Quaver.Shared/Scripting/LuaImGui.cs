@@ -96,6 +96,7 @@ namespace Quaver.Shared.Scripting
 
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+            UserData.RegisterType<IntPtr>();
 
             // ImGui
             UserData.RegisterType<ImGuiInputTextFlags>();
@@ -114,6 +115,13 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiCol>();
             UserData.RegisterType<ImGuiStyleVar>();
             UserData.RegisterType<ImDrawListPtr>();
+            UserData.RegisterType<ImGuiStylePtr>();
+            UserData.RegisterType<ImGuiStoragePtr>();
+            UserData.RegisterType<ImGuiIOPtr>();
+            UserData.RegisterType<ImGuiPayloadPtr>();
+            UserData.RegisterType<ImDrawDataPtr>();
+            UserData.RegisterType<ImFontPtr>();
+            UserData.RegisterType<ImGuiIOPtr>();
             UserData.RegisterType<ImGuiComboFlags>();
             UserData.RegisterType<ImGuiFocusedFlags>();
             UserData.RegisterType<ImGuiHoveredFlags>();
