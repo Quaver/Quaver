@@ -1172,7 +1172,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 return;
 
-            if (CurrentGame.Players.Any(x => x.Id != e.UserId))
+            if (CurrentGame.Players.All(x => x.Id != e.UserId))
                 CurrentGame.Players.Add(OnlineUsers[e.UserId].OnlineUser);
 
             if (!CurrentGame.PlayerIds.Contains(e.UserId))
