@@ -1174,7 +1174,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 return;
 
-            if (CurrentGame.Players.Any(x => x.Id != e.UserId))
+            if (CurrentGame.Players.All(x => x.Id != e.UserId))
                 CurrentGame.Players.Add(OnlineUsers[e.UserId].OnlineUser);
 
             if (!CurrentGame.PlayerIds.Contains(e.UserId))
@@ -1960,13 +1960,13 @@ namespace Quaver.Shared.Online
         /// <returns></returns>
         private static List<Score> GetScoresFromMultiplayerUsers()
         {
-            var users = OnlineUsers.ToList();
-
-            var playingUsers = users.FindAll(x =>
-                CurrentGame.PlayerIds.Contains(x.Value.OnlineUser.Id) &&
-                !CurrentGame.PlayersWithoutMap.Contains(x.Value.OnlineUser.Id) &&
-                CurrentGame.RefereeUserId != x.Value.OnlineUser.Id &&
-                x.Value != Self);
+            
+            var playingUsers = CurrentGame.Players.FindAll(x =>
+                x.Id != CurrentGame.RefereeUserId &&
+                !CurrentGame.PlayersWithoutMap.Contains(x.Id) &&
+                CurrentGame.PlayerIds.Contains(x.Id) &&
+                x.Id != Self.OnlineUser.Id
+            );
 
             var scores = new List<Score>();
 
@@ -1974,10 +1974,10 @@ namespace Quaver.Shared.Online
             {
                 scores.Add(new Score
                 {
-                    PlayerId = x.Key,
-                    SteamId = x.Value.OnlineUser.SteamId,
-                    Name = x.Value.OnlineUser.Username,
-                    Mods = (long) GetUserActivatedMods(x.Value.OnlineUser.Id),
+                    PlayerId = x.Id,
+                    SteamId = x.SteamId,
+                    Name = x.Username,
+                    Mods = (long) GetUserActivatedMods(x.Id),
                     IsMultiplayer = true,
                     IsOnline = true
                 });

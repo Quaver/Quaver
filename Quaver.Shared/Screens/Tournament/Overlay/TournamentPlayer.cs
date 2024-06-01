@@ -41,6 +41,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         /// <returns></returns>
         public bool IsWinning(TournamentPlayer player)
         {
+            if (player == null)
+                return true;
+
             var ourRating = Rating.CalculateRating(Scoring);
             var otherRating = player.Rating.CalculateRating(player.Scoring);
 

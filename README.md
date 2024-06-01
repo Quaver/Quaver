@@ -1,6 +1,6 @@
 # Quaver
 
-[![Build Status](https://travis-ci.com/Quaver/Quaver.svg?branch=develop)](https://travis-ci.com/Quaver/Quaver) [![CodeFactor](https://www.codefactor.io/repository/github/quaver/quaver/badge)](https://www.codefactor.io/repository/github/quaver/quaver) [![license](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-blue)](https://github.com/Quaver/Quaver/blob/ui-redesign/LICENSE)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Quaver/Quaver/dotnet.yml)](https://github.com/Quaver/Quaver/actions/workflows/dotnet.yml) [![CodeFactor](https://www.codefactor.io/repository/github/quaver/quaver/badge)](https://www.codefactor.io/repository/github/quaver/quaver) [![license](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-blue)](https://github.com/Quaver/Quaver/blob/ui-redesign/LICENSE)
 
 **Quaver** is a community-driven and open-source competitive vertical scrolling rhythm game with two game modes and online leaderboards. It also features an in-game editor and a flexible multiplayer mode.
 
