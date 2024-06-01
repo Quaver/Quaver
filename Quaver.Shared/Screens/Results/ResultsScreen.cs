@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Results
         {
             ScreenType = ResultsScreenType.Gameplay;
             Gameplay = screen;
-            Map = MapManager.Selected.Value;
+            Map = MapManager.FindMapFromMd5(screen.MapHash) ?? MapManager.Selected.Value;
 
             InitializeGameplayResultsScreen(screen);
             Replay = Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
@@ -156,7 +156,7 @@ namespace Quaver.Shared.Screens.Results
         {
             ScreenType = ResultsScreenType.Gameplay;
             Gameplay = screen;
-            Map = MapManager.Selected.Value;
+            Map = MapManager.FindMapFromMd5(screen.MapHash) ?? MapManager.Selected.Value;
             MultiplayerGame = game;
             MultiplayerTeam1Users = team1;
             MultiplayerTeam2Users = team2;
