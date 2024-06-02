@@ -382,18 +382,19 @@ namespace Quaver.Shared.Scripting
         /// <param name="args">The arguments to print.</param>
         private void Print(params DynValue[] args)
         {
-            NotificationLevel? level = (args.Length is 0 ? "" : args[0]?.CastToString()?.ToUpperInvariant()) switch
+            NotificationLevel? level = args.FirstOrDefault()?.CastToString()?.ToUpperInvariant() switch
             {
-                "I" or "INF" or "INFO" => NotificationLevel.Info,
-                "W" or "WRN" or "WARN" or "WARNING" => NotificationLevel.Warning,
-                "E" or "ERR" or "ERROR" => NotificationLevel.Error,
-                "S" or "YAY" or "SUCCESS" => NotificationLevel.Success,
+                "I" or "I!" or "INF" or "INF!" or "INFO" or "INFO!" => NotificationLevel.Info,
+                "W" or "W!" or "WRN" or "WRN!" or "WARN" or "WARN!" or "WARNING" or "WARNING!" => NotificationLevel.Warning,
+                "E" or "E!" or "ERR" or "ERR!" or "ERROR" or "ERROR!" => NotificationLevel.Error,
+                "S" or "S!" or "YAY" or "YAY!" or "SUCCESS" or "SUCCESS!" => NotificationLevel.Success,
                 _ => null,
             };
 
             NotificationManager.Show(
                 level ?? NotificationLevel.Info,
-                $"{Name}:\n{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(Display))}"
+                $"{(level is null || args[0].CastToString().LastOrDefault() is not '!' ? $"{Name}: " : "")}" +
+                $"{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(Display))}"
             );
         }
 
