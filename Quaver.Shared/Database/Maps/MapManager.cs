@@ -343,6 +343,12 @@ namespace Quaver.Shared.Database.Maps
                                 Logger.Error(e, LogType.Runtime);
                             }
 
+                            if (File.Exists(path))
+                            {
+                                NotificationManager.Show(NotificationLevel.Error, "Unable to delete the map. Is the file protected?");
+                                return;
+                            }
+
                             MapDatabaseCache.RemoveMap(map);
                             map.Mapset.Maps.Remove(map);
 
@@ -418,6 +424,12 @@ namespace Quaver.Shared.Database.Maps
                             catch (Exception e)
                             {
                                  Logger.Error(e, LogType.Runtime);
+                            }
+
+                            if (Directory.Exists(path))
+                            {
+                                NotificationManager.Show(NotificationLevel.Error, "Unable to delete the mapset. Is the directory protected?");
+                                return;
                             }
 
                             try
