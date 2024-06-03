@@ -13,6 +13,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
+using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -194,14 +195,65 @@ public class ModChartScript
             dynVal =>
             {
                 var triggerClosure = dynVal.Function;
-                return new LuaCustomTriggerPayload(triggerClosure);
+                return new CustomTriggerPayload(v => { triggerClosure?.SafeCall(v); });
+            }
+        );
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function,
+            typeof(Action<ValueVertex<ITriggerPayload>>),
+            dynVal =>
+            {
+                var closure = dynVal.Function;
+                return (ValueVertex<ITriggerPayload> v) => { closure?.SafeCall(v); };
             }
         );
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function, typeof(ISegmentPayload),
             dynVal =>
             {
-                var triggerClosure = dynVal.Function;
-                return new LuaCustomSegmentPayload(triggerClosure);
+                var closure = dynVal.Function;
+                return new CustomSegmentPayload((progress, segment) => closure?.SafeCall(progress, segment));
+            }
+        );
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function,
+            typeof(CustomSegmentPayload.SegmentUpdater),
+            dynVal =>
+            {
+                var closure = dynVal.Function;
+                return new CustomSegmentPayload.SegmentUpdater((progress, segment) =>
+                    closure?.SafeCall(progress, segment));
+            }
+        );
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function,
+            typeof(Action<CustomStateMachineState>),
+            dynVal =>
+            {
+                var closure = dynVal.Function;
+                return (CustomStateMachineState state) => { closure?.SafeCall(state); };
+            }
+        );
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.UserData, typeof(ITriggerPayload),
+            dynVal =>
+            {
+                return dynVal.UserData.Object switch
+                {
+                    ulong eventType =>
+                        new CustomTriggerPayload(v => ModChartEvents.Enqueue((ModChartEventType)eventType, v)),
+                    _ => throw new ScriptRuntimeException(
+                        $"Cannot convert {dynVal.UserData.Descriptor.Name} to trigger payload")
+                };
+            }
+        );
+
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.UserData,
+            typeof(Action<CustomStateMachineState>),
+            dynVal =>
+            {
+                return dynVal.UserData.Object switch
+                {
+                    ulong eventType =>
+                        (CustomStateMachineState state) => ModChartEvents.Enqueue((ModChartEventType)eventType, state),
+                    _ => throw new ScriptRuntimeException(
+                        $"Cannot convert {dynVal.UserData.Descriptor.Name} to state machine callback")
+                };
             }
         );
     }

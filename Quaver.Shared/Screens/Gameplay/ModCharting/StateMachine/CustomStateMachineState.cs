@@ -1,18 +1,20 @@
+using System;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 
 [MoonSharpUserData]
-public class LuaStateMachineState : StateMachineState
+public class CustomStateMachineState : StateMachineState
 {
-    private Closure OnUpdateClosure { get; }
+    private Action<CustomStateMachineState> OnUpdateClosure { get; }
 
-    private Closure OnEnableClosure { get; }
+    private Action<CustomStateMachineState> OnEnableClosure { get; }
 
-    private Closure OnDisableClosure { get; }
+    private Action<CustomStateMachineState> OnDisableClosure { get; }
 
-    public LuaStateMachineState(ModChartScript script, Closure onUpdateClosure, Closure onEnableClosure, Closure onDisableClosure, 
+    public CustomStateMachineState(ModChartScript script, Action<CustomStateMachineState> onUpdateClosure,
+        Action<CustomStateMachineState> onEnableClosure, Action<CustomStateMachineState> onDisableClosure,
         string name = "", StateMachineState parent = default) : base(script, name, parent)
     {
         OnUpdateClosure = onUpdateClosure;
@@ -23,18 +25,18 @@ public class LuaStateMachineState : StateMachineState
     public override void Update()
     {
         base.Update();
-        OnUpdateClosure?.SafeCall();
+        OnUpdateClosure?.Invoke(this);
     }
 
     public override void Enter()
     {
         base.Enter();
-        OnEnableClosure?.SafeCall();
+        OnEnableClosure?.Invoke(this);
     }
 
     public override void Leave()
     {
         base.Leave();
-        OnDisableClosure?.SafeCall();
+        OnDisableClosure?.Invoke(this);
     }
 }

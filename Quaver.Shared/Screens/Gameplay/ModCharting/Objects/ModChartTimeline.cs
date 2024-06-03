@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
@@ -19,20 +20,6 @@ public class ModChartTimeline
     {
         Shortcut = shortcut;
     }
-
-    /// <summary>
-    ///     Calls the trigger function when reaching a time, or calls the undo function to revert
-    /// </summary>
-    /// <param name="trigger"></param>
-    /// <param name="undoTrigger"></param>
-    public LuaCustomTriggerPayload CustomTrigger(Closure trigger) => new(trigger);
-
-
-    /// <summary>
-    ///     Keeps calling the updater between the specified time range
-    /// </summary>
-    /// <param name="updater"></param>
-    public LuaCustomSegmentPayload CustomSegment(Closure updater) => new(updater);
 
     public IntervalTriggerPayload IntervalTrigger(int id, int time, float interval, int count, Closure trigger,
         Closure undoTrigger = null) => new(Shortcut.ModChartScript.TriggerManager,

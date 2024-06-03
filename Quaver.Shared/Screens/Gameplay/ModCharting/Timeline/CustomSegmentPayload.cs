@@ -1,13 +1,15 @@
+using System;
 using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
 [MoonSharpUserData]
-public class LuaCustomSegmentPayload : ISegmentPayload
+public class CustomSegmentPayload : ISegmentPayload
 {
-    public Closure Updater { get; }
+    public delegate void SegmentUpdater(float progress, Segment segment);
+    public SegmentUpdater Updater { get; }
 
-    public LuaCustomSegmentPayload(Closure updater)
+    public CustomSegmentPayload(SegmentUpdater updater)
     {
         Updater = updater;
     }
@@ -15,7 +17,7 @@ public class LuaCustomSegmentPayload : ISegmentPayload
     [MoonSharpHidden]
     public void Update(float progress, Segment segment)
     {
-        Updater.SafeCall(progress, segment);
+        Updater?.Invoke(progress, segment);
     }
 
     public override string ToString()

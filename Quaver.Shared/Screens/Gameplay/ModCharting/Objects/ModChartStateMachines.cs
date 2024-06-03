@@ -25,10 +25,11 @@ public class ModChartStateMachines
     public StateMachine.StateMachine NewMachine(string name = "", StateMachineState entryState = null,
         StateMachineState parent = default) => new(Shortcut.ModChartScript, entryState, name, parent);
 
-    public LuaStateMachineState NewState(string name = "", Closure updater = null, Closure onEnable = null,
-        Closure onDisable = null, StateMachineState parent = default)
+    public CustomStateMachineState NewState(string name = "", Action<CustomStateMachineState> updater = null,
+        Action<CustomStateMachineState> onEnable = null, Action<CustomStateMachineState> onDisable = null,
+        StateMachineState parent = default)
     {
-        return new LuaStateMachineState(Shortcut.ModChartScript, updater, onEnable, onDisable, name, parent);
+        return new CustomStateMachineState(Shortcut.ModChartScript, updater, onEnable, onDisable, name, parent);
     }
 
     public void Start()
