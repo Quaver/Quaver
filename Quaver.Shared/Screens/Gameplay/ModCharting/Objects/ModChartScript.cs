@@ -75,7 +75,7 @@ public class ModChartScript
 
         TriggerManager = new TriggerManager(new List<ValueVertex<ITriggerPayload>>());
         SegmentManager = new SegmentManager(new());
-        
+
         Timeline = new ModChartTimeline(Shortcut);
         SegmentManager.SetupEvents(ModChartEvents);
         TriggerManager.SetupEvents(ModChartEvents);
@@ -123,6 +123,7 @@ public class ModChartScript
 
 
         RegisterAllVectors();
+        RegisterClosures();
         LoadScript();
     }
 
@@ -185,6 +186,24 @@ public class ModChartScript
         SegmentManager.Update(time);
         ModChartStateMachines.RootMachine.Update();
         ModChartEvents.DeferredEventQueue.Dispatch();
+    }
+
+    private void RegisterClosures()
+    {
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function, typeof(ITriggerPayload),
+            dynVal =>
+            {
+                var triggerClosure = dynVal.Function;
+                return new LuaCustomTriggerPayload(triggerClosure);
+            }
+        );
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function, typeof(ISegmentPayload),
+            dynVal =>
+            {
+                var triggerClosure = dynVal.Function;
+                return new LuaCustomSegmentPayload(triggerClosure);
+            }
+        );
     }
 
     /// <summary>
