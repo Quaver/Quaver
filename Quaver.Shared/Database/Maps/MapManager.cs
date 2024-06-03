@@ -426,7 +426,7 @@ namespace Quaver.Shared.Database.Maps
                                  Logger.Error(e, LogType.Runtime);
                             }
 
-                            if (Directory.Exists(path))
+                            if (Directory.Exists(directory))
                             {
                                 NotificationManager.Show(NotificationLevel.Error, "Unable to delete the mapset. Is the directory protected?");
                                 return;
