@@ -8,7 +8,7 @@ public class IntervalTriggerPayload : ITriggerPayload
     [MoonSharpHidden]
     public IntervalTriggerPayload(TriggerManager triggerManager, int occupyId, int startTime, float interval,
         int triggerCount = int.MaxValue,
-        ITriggerPayload.TriggerDelegate onTrigger = default, ITriggerPayload.TriggerDelegate onUndo = default)
+        ITriggerPayload.TriggerDelegate onTrigger = default)
     {
         TriggerManager = triggerManager;
         OccupyId = occupyId;
@@ -16,9 +16,6 @@ public class IntervalTriggerPayload : ITriggerPayload
         Interval = interval;
         TriggerCount = triggerCount;
         OnTrigger = onTrigger;
-        OnUndo = onUndo;
-        UndoTriggerId = triggerManager.GenerateNextId();
-        IntervalUndoTriggerPayload = new IntervalUndoTriggerPayload(TriggerManager, this);
     }
 
     private TriggerManager TriggerManager { get; }
@@ -26,11 +23,8 @@ public class IntervalTriggerPayload : ITriggerPayload
     public int StartTime { get; }
     public float Interval { get; }
     public int TriggerCount { get; }
-    public int UndoTriggerId { get; }
-    private IntervalUndoTriggerPayload IntervalUndoTriggerPayload { get; set; }
 
     public ITriggerPayload.TriggerDelegate OnTrigger { get; }
-    public ITriggerPayload.TriggerDelegate OnUndo { get; }
 
     public int CurrentTriggerCount { get; internal set; }
 
@@ -43,11 +37,6 @@ public class IntervalTriggerPayload : ITriggerPayload
         UpdateTrigger(valueVertex);
     }
 
-    [MoonSharpHidden]
-    public void Undo(ValueVertex<ITriggerPayload> valueVertex)
-    {
-    }
-
     private void UpdateTrigger(ValueVertex<ITriggerPayload> valueVertex)
     {
         TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
@@ -57,55 +46,5 @@ public class IntervalTriggerPayload : ITriggerPayload
             Payload = this,
             Time = (int)(StartTime + Interval * CurrentTriggerCount)
         });
-        TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
-        {
-            Id = UndoTriggerId,
-            IsDynamic = false,
-            Payload = IntervalUndoTriggerPayload,
-            Time = (int)(StartTime + Interval * (CurrentTriggerCount - 1))
-        }, false);
-    }
-}
-
-class IntervalUndoTriggerPayload : ITriggerPayload
-{
-
-    private TriggerManager TriggerManager { get; }
-    private IntervalTriggerPayload IntervalTriggerPayload { get; }
-
-    public IntervalUndoTriggerPayload(TriggerManager triggerManager, IntervalTriggerPayload intervalTriggerPayload)
-    {
-        TriggerManager = triggerManager;
-        IntervalTriggerPayload = intervalTriggerPayload;
-    }
-
-    public void Trigger(ValueVertex<ITriggerPayload> valueVertex)
-    {
-        
-    }
-
-    public void Undo(ValueVertex<ITriggerPayload> valueVertex)
-    {
-        IntervalTriggerPayload.CurrentTriggerCount--;
-        if (IntervalTriggerPayload.CurrentTriggerCount < 0) return;
-        IntervalTriggerPayload.OnUndo?.Invoke(valueVertex);
-        UpdateTrigger(valueVertex);
-    }
-    private void UpdateTrigger(ValueVertex<ITriggerPayload> valueVertex)
-    {
-        TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
-        {
-            Id = IntervalTriggerPayload.OccupyId,
-            IsDynamic = false,
-            Payload = IntervalTriggerPayload,
-            Time = (int)(IntervalTriggerPayload.StartTime + IntervalTriggerPayload.Interval * IntervalTriggerPayload.CurrentTriggerCount)
-        });
-        TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
-        {
-            Id = valueVertex.Id,
-            IsDynamic = false,
-            Payload = this,
-            Time = (int)(IntervalTriggerPayload.StartTime + IntervalTriggerPayload.Interval * (IntervalTriggerPayload.CurrentTriggerCount - 1))
-        }, false);
     }
 }

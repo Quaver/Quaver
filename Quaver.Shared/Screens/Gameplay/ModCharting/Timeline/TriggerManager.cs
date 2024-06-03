@@ -41,15 +41,7 @@ public class TriggerManager : IValueChangeManager
         }
 
         while (_currentIndex >= 0 && _currentTime < _vertices[_currentIndex].Time)
-        {
-            var vertex = _vertices[_currentIndex];
-            vertex.Payload.Undo(vertex);
-            if (vertex.IsDynamic)
-            {
-                _modChartEvents.Enqueue(ModChartEventType.TimelineRemoveTrigger, vertex, false);
-            }
             _currentIndex--;
-        }
     }
 
     public void SetupEvents(ModChartEvents modChartEvents)
@@ -114,9 +106,11 @@ public class TriggerManager : IValueChangeManager
         if (id >= _nextId) return false; // No
         return _vertexDictionary.ContainsKey(id) && RemoveVertex(_vertexDictionary[id], trigger);
     }
-    
-    
-    public bool TryGetVertex(int id, out ValueVertex<ITriggerPayload> vertex) => _vertexDictionary.TryGetValue(id, out vertex);
+
+
+    public bool TryGetVertex(int id, out ValueVertex<ITriggerPayload> vertex) =>
+        _vertexDictionary.TryGetValue(id, out vertex);
+
     public bool ContainsVertex(int id) => _vertexDictionary.ContainsKey(id);
 
     public bool RemoveVertex(ValueVertex<ITriggerPayload> vertex, bool trigger = true)
@@ -124,11 +118,9 @@ public class TriggerManager : IValueChangeManager
         if (vertex.Id >= _nextId) return false; // No
         var index = _vertices.BinarySearch(vertex, ValueVertex<ITriggerPayload>.TimeSegmentIdComparer);
         if (index < 0) return false;
+
         if (_currentTime > vertex.Time)
-        {
             _currentIndex--;
-            if (trigger) vertex.Payload.Undo(vertex);
-        }
 
         _vertices.RemoveAt(index);
         return _vertexDictionary.Remove(vertex.Id);

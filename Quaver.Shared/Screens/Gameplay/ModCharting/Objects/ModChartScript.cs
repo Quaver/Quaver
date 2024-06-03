@@ -145,8 +145,10 @@ public class ModChartScript
         WorkingScript.Globals["Alignment"] = typeof(Alignment);
         WorkingScript.Globals["Direction"] = typeof(Direction);
         WorkingScript.Globals["EventType"] = typeof(ModChartEventType);
+#pragma warning disable CS8974 // Converting method group to non-delegate type
         WorkingScript.Globals["Segment"] = ModChartTimeline.Segment;
         WorkingScript.Globals["Trigger"] = ModChartTimeline.Trigger;
+#pragma warning restore CS8974 // Converting method group to non-delegate type
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>

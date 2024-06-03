@@ -25,8 +25,7 @@ public class ModChartTimeline
     /// </summary>
     /// <param name="trigger"></param>
     /// <param name="undoTrigger"></param>
-    public LuaCustomTriggerPayload CustomTrigger(Closure trigger, Closure undoTrigger = null) =>
-        new(trigger, undoTrigger);
+    public LuaCustomTriggerPayload CustomTrigger(Closure trigger) => new(trigger);
 
 
     /// <summary>
@@ -41,8 +40,7 @@ public class ModChartTimeline
         time,
         interval,
         count,
-        v => trigger.SafeCall(v),
-        v => undoTrigger?.SafeCall(v));
+        v => trigger.SafeCall(v));
 
     /// <summary>
     ///     Adds a tween segment that allows smooth transition of a value
