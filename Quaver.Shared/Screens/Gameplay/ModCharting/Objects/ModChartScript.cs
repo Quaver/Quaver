@@ -16,6 +16,7 @@ using Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -97,6 +98,7 @@ public class ModChartScript
         UserData.RegisterType<Alignment>();
         UserData.RegisterType<Judgement>();
         UserData.RegisterType<Direction>();
+        UserData.RegisterType<GameMode>();
         UserData.RegisterType<ModChartEventType>();
         UserData.RegisterType<EasingDelegate>();
         UserData.RegisterType<TweenPayload<float>.SetterDelegate>();
@@ -138,6 +140,7 @@ public class ModChartScript
         WorkingScript.Globals["Constants"] = ModChartConstants;
         WorkingScript.Globals["Map"] = GameplayScreenView.Screen.Map;
         WorkingScript.Globals["Stage"] = ModChartStage;
+        WorkingScript.Globals["Skin"] = SkinManager.Skin;
         WorkingScript.Globals["Notes"] = ModChartNotes;
         WorkingScript.Globals["SM"] = ModChartStateMachines;
         WorkingScript.Globals["Fonts"] = typeof(Fonts);
@@ -145,6 +148,8 @@ public class ModChartScript
         WorkingScript.Globals["Alignment"] = typeof(Alignment);
         WorkingScript.Globals["Direction"] = typeof(Direction);
         WorkingScript.Globals["EventType"] = typeof(ModChartEventType);
+        WorkingScript.Globals["GameMode"] = typeof(GameMode);
+        WorkingScript.Globals["Judgement"] = typeof(Judgement);
 #pragma warning disable CS8974 // Converting method group to non-delegate type
         WorkingScript.Globals["Segment"] = ModChartTimeline.Segment;
         WorkingScript.Globals["Trigger"] = ModChartTimeline.Trigger;
