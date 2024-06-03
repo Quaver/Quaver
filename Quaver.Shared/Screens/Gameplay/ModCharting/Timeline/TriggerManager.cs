@@ -34,10 +34,6 @@ public class TriggerManager : IValueChangeManager
             _currentIndex++;
             var vertex = _vertices[_currentIndex];
             vertex.Payload.Trigger(vertex);
-            if (vertex.IsDynamic)
-            {
-                _modChartEvents.Enqueue(ModChartEventType.TimelineRemoveTrigger, vertex, false);
-            }
         }
 
         while (_currentIndex >= 0 && _currentTime < _vertices[_currentIndex].Time)
@@ -89,11 +85,6 @@ public class TriggerManager : IValueChangeManager
         if (_currentTime > vertex.Time)
         {
             if (trigger) vertex.Payload.Trigger(vertex);
-            if (vertex.IsDynamic)
-            {
-                return true;
-            }
-
             _currentIndex++;
         }
 

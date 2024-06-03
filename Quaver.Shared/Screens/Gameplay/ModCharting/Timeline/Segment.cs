@@ -21,7 +21,6 @@ public class Segment
 
     public int StartTime { get; }
     public int EndTime { get; }
-    public bool IsDynamic { get; }
     
     [MoonSharpHidden]
     public bool MarkedToRemove { get; set; }
@@ -30,25 +29,22 @@ public class Segment
     public ValueVertex<ISegmentPayload> StartVertex { get; }
     public ValueVertex<ISegmentPayload> EndVertex { get; }
 
-    public Segment(int id, int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false)
+    public Segment(int id, int startTime, int endTime, ISegmentPayload payload)
     {
         StartTime = startTime;
         EndTime = endTime;
         Payload = payload;
-        IsDynamic = isDynamic;
         StartVertex = new ValueVertex<ISegmentPayload>
         {
             Payload = Payload,
             Time = StartTime,
-            Id = Id,
-            IsDynamic = IsDynamic
+            Id = Id
         };
         EndVertex = new ValueVertex<ISegmentPayload>
         {
             Payload = Payload,
             Time = EndTime,
-            Id = Id,
-            IsDynamic = IsDynamic
+            Id = Id
         };
         Id = id;
     }
@@ -85,6 +81,6 @@ public class Segment
 
     public override string ToString()
     {
-        return $"[Segment {(IsDynamic ? "$" : "")}{Id} {StartTime} - {EndTime} {Payload}]";
+        return $"[Segment {Id} {StartTime} - {EndTime} {Payload}]";
     }
 }

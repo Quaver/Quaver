@@ -42,7 +42,6 @@ public class IntervalTriggerPayload : ITriggerPayload
         TriggerManager.UpdateVertex(new ValueVertex<ITriggerPayload>
         {
             Id = valueVertex.Id,
-            IsDynamic = false,
             Payload = this,
             Time = (int)(StartTime + Interval * CurrentTriggerCount)
         });

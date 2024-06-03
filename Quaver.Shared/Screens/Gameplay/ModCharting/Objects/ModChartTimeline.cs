@@ -77,16 +77,15 @@ public class ModChartTimeline
         Setter = setter
     };
 
-    public static Segment Segment(int startTime, int endTime, ISegmentPayload payload, bool isDynamic = false) =>
-        new(-1, startTime, endTime, payload, isDynamic);
+    public static Segment Segment(int startTime, int endTime, ISegmentPayload payload) =>
+        new(-1, startTime, endTime, payload);
 
-    public static ValueVertex<ITriggerPayload> Trigger(int time, ITriggerPayload payload, bool isDynamic = false) =>
+    public static ValueVertex<ITriggerPayload> Trigger(int time, ITriggerPayload payload) =>
         new()
         {
             Id = -1,
             Payload = payload,
-            Time = time,
-            IsDynamic = isDynamic
+            Time = time
         };
 
     public int Add(Segment segment)
