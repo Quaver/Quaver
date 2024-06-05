@@ -290,19 +290,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="gameTime"></param>
         private void DrawLines(GameTime gameTime)
         {
-            const float minimumDistanceToDraw = 10;
+            const float minimumDistanceToDraw = 8;
 
             for (var i = 0; i < LinePool.Count; i++)
             {
                 var line = LinePool[i];
+                var previous = LinePool.FindLastIndex(i, i, x => x.IsMeasureLine);
+                var next = LinePool.FindIndex(i + 1, LinePool.Count - i - 1, x => x.IsMeasureLine);
                 line.SetPosition();
                 line.Tint = GetLineColor(line.Index % BeatSnap.Value, line.Index);
 
                 if (line.IsOnScreen() &&
-                    (i is 0 ||
-                        LinePool[i - 1].Y - line.Y > minimumDistanceToDraw ||
-                        i == LinePool.Count - 1 ||
-                        line.Y - LinePool[i + 1].Y > minimumDistanceToDraw))
+                    (previous is -1 ||
+                        next is -1 ||
+                        LinePool[previous].Y - line.Y > minimumDistanceToDraw ||
+                        line.Y - LinePool[next].Y > minimumDistanceToDraw))
                     line.Draw(gameTime);
             }
         }

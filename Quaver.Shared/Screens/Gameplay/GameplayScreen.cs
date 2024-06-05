@@ -335,6 +335,12 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If true, the gameplay screen is solely for song select preview usage
         /// </summary>
         public bool IsSongSelectPreview { get; }
+        
+        /// <summary>
+        ///     If true, the gameplay screen won't seek to the start when loaded.
+        ///     This is used for skin hot-reloading.
+        /// </summary>
+        public bool UseExistingAudioTime { get; }
 
         /// <summary>
         ///     Used to reset the input manager when toggling autoplay on/off.
@@ -379,9 +385,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="options"></param>
         /// <param name="isSongSelectPreview"></param>
         /// <param name="isTestPlayingInNewEditor"></param>
+        /// <param name="useExistingAudioTime"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
-            bool isTestPlayingInNewEditor = false)
+            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false)
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -406,6 +413,7 @@ namespace Quaver.Shared.Screens.Gameplay
             SpectatorClient = spectatorClient;
             TournamentOptions = options;
             IsSongSelectPreview = isSongSelectPreview;
+            UseExistingAudioTime = useExistingAudioTime;
 
             if (TournamentOptions != null && !(this is TournamentGameplayScreen))
                 throw new InvalidOperationException("Cannot provide tournament options for a non-tournament gameplay screen");
@@ -495,6 +503,12 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
+
+            if (InReplayMode && !IsPlayTesting && !IsSongSelectPreview && !IsCalibratingOffset)
+            {
+                SkinManager.StartWatching();
+                ScreenExiting += (_, _) => SkinManager.StopWatching();
+            }
 
             base.OnFirstUpdate();
         }
@@ -586,8 +600,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
 
             // CTRL+ input while play testing
-            if (!IsSongSelectPreview && IsPlayTesting && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                                  KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsCtrlDown())
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.P))
                 {
@@ -1612,8 +1625,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
             {
                 var change = 5;
-                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                    KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                if (KeyboardManager.IsCtrlDown())
                 {
                     change = 1;
                 }

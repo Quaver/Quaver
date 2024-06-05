@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using IniFileParser;
+using IniFileParser.Exceptions;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Skinning;
 using TagLib.Riff;
@@ -15,6 +17,7 @@ using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Logging;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using File = System.IO.File;
 
@@ -107,11 +110,20 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             {
                 if (File.Exists($"{directory}/skin.ini"))
                 {
-                    var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
-                        .ReadFile($"{directory}/skin.ini")["General"];
-
-                    if (data["Name"] != null)
-                        workshopList.Add($"{data["Name"]} <{new DirectoryInfo(directory).Name}>");
+                    try
+                    {
+                        var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                            .ReadFile($"{directory}/skin.ini")["General"];
+                        if (data["Name"] != null)
+                            workshopList.Add($"{data["Name"]} <{new DirectoryInfo(directory).Name}>");
+                    }
+                    catch (ParsingException e)
+                    {
+                        Logger.Error($"Workshop skin at {directory} has an invalid skin.ini: {e}", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error,
+                            $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
+                        workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
+                    }
                 }
                 else
                     workshopList.Add($"({new DirectoryInfo(directory).Name})");

@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             Screen = screen;
 
-            if (Screen.IsSongSelectPreview)
+            if (Screen.IsSongSelectPreview || Screen.UseExistingAudioTime)
                 return;
 
             try

@@ -251,10 +251,10 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void CreateOverlay()
         {
+            TournamentPlayers = new List<TournamentPlayer>();
+
             if (TournamentScreen.GameplayScreens.Count > 2 || !ConfigManager.Display1v1TournamentOverlay.Value)
                 return;
-
-            TournamentPlayers = new List<TournamentPlayer>();
 
             // Create overlay for spectator
             if (OnlineManager.CurrentGame != null)

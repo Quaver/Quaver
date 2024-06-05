@@ -441,7 +441,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (ImGui.Button($"{TimeSpan.FromMilliseconds(point.StartTime):mm\\:ss\\.fff}"))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
-                    if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                    if (KeyboardManager.IsCtrlDown())
                     {
                         if (isSelected)
                             SelectedTimingPoints.Remove(point);
@@ -510,8 +510,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (!IsWindowHovered)
                 return;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (KeyboardManager.IsCtrlDown())
             {
                 // Select all
                 if (KeyboardManager.IsUniqueKeyPress(Keys.A))

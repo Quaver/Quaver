@@ -18,7 +18,6 @@ using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings.Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using Quaver.Shared.Skinning;
-using WebSocketSharp;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -319,8 +318,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <param name="e"></param>
         private void OnFetchedScores(object sender, TaskCompleteEventArgs<Map, FetchedScoreStore> e)
         {
-            Logger.Important($"Fetched {e.Result.Scores?.Count} {ConfigManager.LeaderboardSection?.Value} scores for map: {e?.Input} | " +
-                             $"Has PB: {e.Result.PersonalBest != null}", LogType.Runtime);
+            Logger.Debug($"Fetched {e.Result.Scores?.Count} {ConfigManager.LeaderboardSection?.Value} scores for map: {e.Input} | " +
+                         $"Has PB: {e.Result.PersonalBest != null}", LogType.Runtime);
 
             StopLoading();
 

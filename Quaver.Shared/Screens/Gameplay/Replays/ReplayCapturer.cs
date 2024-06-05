@@ -88,10 +88,11 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
                 var inputManager = (KeysInputManager) Screen.Ruleset.InputManager;
                 var replayInputManager = inputManager.ReplayInputManager;
 
-                if (Screen.Ruleset.StandardizedReplayPlayer.Replay.Frames.Count == replayInputManager.CurrentFrame + 1)
-                    return;
-
-                for (var i = Screen.Ruleset.StandardizedReplayPlayer.Replay.Frames.Count; i < replayInputManager.CurrentFrame + 1; i++)
+                // Sync up to current frame
+                // i is frame index of ReplayInputManager
+                // There is one more frame -10000 added in the constructor of ReplayCapturer than ReplayInputManager,
+                // so we start with i = count - 1
+                for (var i = Replay.Frames.Count - 1; i < replayInputManager.CurrentFrame + 1; i++)
                 {
                     if (i >= replayInputManager.VirtualPlayer.Replay.Frames.Count)
                         break;

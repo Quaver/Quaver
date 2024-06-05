@@ -135,7 +135,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
             if (!GraphicsHelper.RectangleContains(clickArea, MouseManager.CurrentState.Position))
                 return;
 
-            if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 SelectedHitObjects.Clear();
 
             IsSelecting = true;
