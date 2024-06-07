@@ -754,8 +754,9 @@ namespace Quaver.Shared.Database.Maps
 
                         if (!string.IsNullOrEmpty(valString))
                         {
-                            if (!CompareValues(valString.ToLower(), searchQuery.Values[0].Value.ToString().ToLower(),
-                                    operatorKind, invert))
+                            if (!CompareToMultipleValues(valString.ToLower(),
+                                    searchQuery.Values.Select(v => v.Value?.ToString()?.ToLower()).ToArray(),
+                                    operatorKind, searchQuery.Values.CombinationKind, invert))
                                 exitLoop = true;
                         }
 
