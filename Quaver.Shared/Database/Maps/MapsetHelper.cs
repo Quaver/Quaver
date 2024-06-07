@@ -501,7 +501,7 @@ namespace Quaver.Shared.Database.Maps
             // When adding new options with overlapping first characters, specify the shortest unambiguous sequence as
             // the new key. So, for example, "duration" should be added as "du", "duration". This way "d" still searches
             // for "difficulty" (backwards-compatibility) and "du" searches for duration.
-            var options = new Dictionary<SearchFilterOption, string>
+            var keys = new Dictionary<SearchFilterOption, string>
             {
                 [SearchFilterOption.BPM] = "bpm",
                 [SearchFilterOption.Difficulty] = "difficulty",
@@ -522,41 +522,86 @@ namespace Quaver.Shared.Database.Maps
                 [SearchFilterOption.Genre] = "genre"
             };
 
+            var gameTypes = new Dictionary<string, MapGame>
+            {
+                ["quaver"] = MapGame.Quaver,
+                ["osu"] = MapGame.Osu,
+                ["etterna"] = MapGame.Etterna
+            };
+
+            var rankedStatuses = new Dictionary<string, RankedStatus>
+            {
+                ["ranked"] = RankedStatus.Ranked,
+                ["unranked"] = RankedStatus.Unranked,
+                ["notsubmitted"] = RankedStatus.NotSubmitted,
+                ["unsubmitted"] = RankedStatus.NotSubmitted,
+                ["dan"] = RankedStatus.DanCourse,
+                ["dancourse"] = RankedStatus.DanCourse
+            };
+
+            var enumKeyDictionary = new Dictionary<object, SearchFilterOption>();
+
 
             var tokenizer = new Tokenizer(query);
-            foreach (var (option, key) in options)
+            foreach (var (option, key) in keys)
             {
-                tokenizer.KeywordTrie.Add(key, option);
+                tokenizer.KeywordTrie.Add(key, TokenKind.Key, option);
             }
 
-            var parser = new Parser(tokenizer.ToArray());
+            foreach (var (name, mapGame) in gameTypes)
+            {
+                tokenizer.KeywordTrie.Add(name, TokenKind.Enum, mapGame);
+                // TryAdd since we have multiple possible enum strings that point to the same value
+                enumKeyDictionary.TryAdd(mapGame, SearchFilterOption.Game);
+            }
+
+            foreach (var (name, rankedStatus) in rankedStatuses)
+            {
+                tokenizer.KeywordTrie.Add(name, TokenKind.Enum, rankedStatus);
+                // TryAdd since we have multiple possible enum strings that point to the same value
+                enumKeyDictionary.TryAdd(rankedStatus, SearchFilterOption.Status);
+            }
+
+            var parser = new Parser(tokenizer);
             parser.SearchCriterionConstraint = criterion =>
             {
+                // This is redundant check, but just in case...
+                if (criterion.Values.Count == 0)
+                    return false;
+
                 var option = (SearchFilterOption)criterion.Key.Value!;
-                var valueKind = criterion.Value.Kind;
+                var valueKind = criterion.Values.FirstOrDefault()?.Token.Kind;
+
+                if (valueKind is TokenKind.Enum)
+                    return criterion.Values.All(v =>
+                        enumKeyDictionary.TryGetValue(v.Value!, out var key) && key.Equals(criterion.Key.Value));
+
                 return option switch
                 {
-                    SearchFilterOption.BPM or SearchFilterOption.Difficulty =>
+                    SearchFilterOption.BPM or SearchFilterOption.Difficulty when criterion.Values.Count == 1 =>
                         valueKind is TokenKind.Integer or TokenKind.Real,
-                    SearchFilterOption.Length =>
+                    SearchFilterOption.Length when criterion.Values.Count == 1 =>
                         valueKind is TokenKind.Integer or TokenKind.TimeSpan,
-                    SearchFilterOption.Keys or SearchFilterOption.Status or SearchFilterOption.Game =>
-                        valueKind is TokenKind.PlainText,
-                    SearchFilterOption.LNs =>
+                    SearchFilterOption.Status or SearchFilterOption.Game =>
+                        valueKind is TokenKind.Enum,
+                    SearchFilterOption.Keys when criterion.Values.Count == 1 =>
+                        valueKind is TokenKind.Integer,
+                    SearchFilterOption.LNs when criterion.Values.Count == 1 =>
                         valueKind is TokenKind.Integer or TokenKind.Percentage,
-                    SearchFilterOption.NPS or SearchFilterOption.TimesPlayed =>
+                    SearchFilterOption.NPS or SearchFilterOption.TimesPlayed when criterion.Values.Count == 1 =>
                         valueKind is TokenKind.Integer,
                     SearchFilterOption.Title or SearchFilterOption.Tags or
-                    SearchFilterOption.Source or SearchFilterOption.Artist or
-                    SearchFilterOption.Creator or SearchFilterOption.Description or
-                    SearchFilterOption.DifficultyName or SearchFilterOption.Genre =>
+                        SearchFilterOption.Source or SearchFilterOption.Artist or
+                        SearchFilterOption.Creator or SearchFilterOption.Description or
+                        SearchFilterOption.DifficultyName or SearchFilterOption.Genre =>
                         valueKind is TokenKind.String or TokenKind.PlainText,
                     _ => false
                 };
             };
+
             parser.Parse();
 
-            var terms = parser.GetPlainTextTerms(query).ToArray();
+            var terms = parser.GetPlainTextTerms().ToArray();
             var criteria = parser.SearchCriteria;
 
             var newMapsetLookup = new Dictionary<string, Mapset>();
@@ -576,7 +621,7 @@ namespace Quaver.Shared.Database.Maps
                         switch ((SearchFilterOption)searchQuery.Key.Value!)
                         {
                             case SearchFilterOption.BPM:
-                                var valBpm = searchQuery.Value.Value switch
+                                var valBpm = searchQuery.Values[0].Value switch
                                 {
                                     int i => i,
                                     double d => d,
@@ -586,39 +631,42 @@ namespace Quaver.Shared.Database.Maps
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Difficulty:
-                                var valDiff = searchQuery.Value.Value switch
+                                var valDiff = searchQuery.Values[0].Value switch
                                 {
                                     int i => i,
                                     double d => d,
                                     _ => 0
                                 };
 
-                                if (!CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, operatorKind, invert))
+                                if (!CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, operatorKind,
+                                        invert))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.NPS:
-                                var valNps = (double)searchQuery.Value.Value!;
+                                var valNps = (double)searchQuery.Values[0].Value!;
 
                                 var objectCount = map.LongNoteCount + map.RegularNoteCount;
-                                var nps = (objectCount / (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
+                                var nps = (objectCount /
+                                           (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
 
                                 if (!CompareValues(nps, valNps, operatorKind, invert))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Length:
-                                var valLength = (TimeSpan)searchQuery.Value.Value!;
+                                var valLength = (TimeSpan)searchQuery.Values[0].Value!;
 
-                                if (!CompareValues(map.SongLength / 1000f, valLength.TotalSeconds, operatorKind, invert))
+                                if (!CompareValues(map.SongLength / 1000f, valLength.TotalSeconds, operatorKind,
+                                        invert))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.TimesPlayed:
-                                var valTimesPlayed = (int)searchQuery.Value.Value!;
+                                var valTimesPlayed = (int)searchQuery.Values[0].Value!;
 
                                 if (!CompareValues(map.TimesPlayed, valTimesPlayed, operatorKind, invert))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Keys:
-                                var valKeys = (int)searchQuery.Value.Value!;
+                                var valKeys = (int)searchQuery.Values[0].Value!;
                                 switch (map.Mode)
                                 {
                                     case GameMode.Keys4:
@@ -637,44 +685,27 @@ namespace Quaver.Shared.Database.Maps
                                     default:
                                         throw new ArgumentOutOfRangeException();
                                 }
+
                                 break;
-                            // case SearchFilterOption.Status:
-                            //     if (!(operatorString.Equals(operators[2]) ||
-                            //           operatorString.Equals(operators[3]) ||
-                            //           operatorString.Equals(operators[6])))
-                            //         exitLoop = true;
-                            //
-                            //     var gate = operatorString.Equals(operators[3]) ? "and" : "or";
-                            //
-                            //     var statusKeywords = new Dictionary<RankedStatus, string[]>();
-                            //     statusKeywords.Add(RankedStatus.DanCourse, new string[] {"dan", "d"});
-                            //     statusKeywords.Add(RankedStatus.NotSubmitted, new string[] { "notsubmitted", "n" });
-                            //     statusKeywords.Add(RankedStatus.Ranked, new string[] { "ranked", "r" });
-                            //     statusKeywords.Add(RankedStatus.Unranked, new string[] { "unranked", "u" });
-                            //
-                            //     if (!CompareToMultipleValues(searchQuery.Value, statusKeywords[map.RankedStatus], operatorString, gate))
-                            //         exitLoop = true;
-                            //     break;
-                            // case SearchFilterOption.Game:
-                            //     if (!(operatorString.Equals(operators[2]) ||
-                            //           operatorString.Equals(operators[3]) ||
-                            //           operatorString.Equals(operators[6])))
-                            //         exitLoop = true;
-                            //
-                            //     gate = operatorString.Equals(operators[3]) ? "and" : "or";
-                            //     var gameKeywords = new Dictionary<MapGame, string[]>();
-                            //     gameKeywords.Add(MapGame.Quaver, new string[] { "quaver", "q" });
-                            //     gameKeywords.Add(MapGame.Osu, new string[] { "osu", "o" });
-                            //     gameKeywords.Add(MapGame.Etterna, new string[] { "etterna", "sm", "stepmania", "e", "s" });
-                            //     if (!CompareToMultipleValues(searchQuery.Value, gameKeywords[map.Game], operatorString, gate))
-                            //         exitLoop = true;
-                            //     break;
+                            case SearchFilterOption.Status:
+
+                                if (!CompareEnums(map.RankedStatus,
+                                        searchQuery.Values.Select(a => (RankedStatus)a.Value!).ToArray(),
+                                        searchQuery.Operator.Kind, searchQuery.Values.CombinationKind, invert))
+                                    exitLoop = true;
+                                break;
+                            case SearchFilterOption.Game:
+                                if (!CompareEnums(map.Game,
+                                        searchQuery.Values.Select(a => (MapGame)a.Value!).ToArray(),
+                                        searchQuery.Operator.Kind, searchQuery.Values.CombinationKind, invert))
+                                    exitLoop = true;
+                                break;
                             case SearchFilterOption.LNs:
-                                var valueToCompareTo = searchQuery.Value.Kind is TokenKind.Percentage
+                                var valueToCompareTo = searchQuery.Values[0].Token.Kind is TokenKind.Percentage
                                     ? (int)map.LNPercentage
                                     : map.LongNoteCount;
 
-                                var valLns = (int)searchQuery.Value.Value!;
+                                var valLns = (int)searchQuery.Values[0].Value!;
 
                                 if (!CompareValues(valueToCompareTo, valLns, operatorKind, invert))
                                     exitLoop = true;
@@ -706,9 +737,10 @@ namespace Quaver.Shared.Database.Maps
                                 break;
                         }
 
-                        if (!string.IsNullOrEmpty(valString) && searchQuery.Value.Kind is TokenKind.String or TokenKind.PlainText)
+                        if (!string.IsNullOrEmpty(valString))
                         {
-                            if (!CompareValues(valString.ToLower(), searchQuery.Value.Value.ToString().ToLower(), operatorKind, invert))
+                            if (!CompareValues(valString.ToLower(), searchQuery.Values[0].Value.ToString().ToLower(),
+                                    operatorKind, invert))
                                 exitLoop = true;
                         }
 
@@ -725,10 +757,14 @@ namespace Quaver.Shared.Database.Maps
                         var termContent = (string)term.Value!;
                         try
                         {
-                            var containsText = !map.Artist.ToLower().Contains(termContent) && !map.Title.ToLower().Contains(termContent) &&
-                                    !map.Creator.ToLower().Contains(termContent) && !map.Source.ToLower().Contains(termContent) &&
-                                    !map.Description.ToLower().Contains(termContent) && !map.Tags.ToLower().Contains(termContent) &&
-                                    !map.DifficultyName.ToLower().Contains(termContent) && !map.Genre.ToLower().Contains(termContent);
+                            var containsText = !map.Artist.ToLower().Contains(termContent) &&
+                                               !map.Title.ToLower().Contains(termContent) &&
+                                               !map.Creator.ToLower().Contains(termContent) &&
+                                               !map.Source.ToLower().Contains(termContent) &&
+                                               !map.Description.ToLower().Contains(termContent) &&
+                                               !map.Tags.ToLower().Contains(termContent) &&
+                                               !map.DifficultyName.ToLower().Contains(termContent) &&
+                                               !map.Genre.ToLower().Contains(termContent);
                             if (containsText)
                             {
                                 exitLoop = true;
@@ -799,23 +835,71 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Compares two values and determines
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="val1"></param>
+        /// <param name="val2"></param>
+        /// <param name="operation"></param>
+        /// <param name="invert"></param>
+        /// <returns></returns>
+        private static bool CompareEquality<T>(T val1, T val2, TokenKind operation, bool invert)
+        {
+            if (val1 == null || val2 == null)
+                return false;
+
+            var result = operation switch
+            {
+                TokenKind.Equal => Equals(val1, val2),
+                TokenKind.NotEqual => !Equals(val1, val2),
+                TokenKind.Contains when val1 is string s1 && val2 is string s2 => s1.Contains(s2),
+                _ => false
+            };
+            return result ^ invert;
+        }
+
+        /// <summary>
         ///     Compares a value once for each value in a given list and returns according to a given logic operator
         /// </summary>
         /// <param name="val1">The initial value to compare to the others</param>
         /// <param name="values">The values to compare to</param>
         /// <param name="operation">The operation used to compare</param>
         /// <param name="mode">Logic gate used to return, either "and" or "or</param>
-        private static bool CompareToMultipleValues<T>(T val1, T[] values, TokenKind operation, string mode) where T : IComparable<T>
+        /// <param name="invert"></param>
+        private static bool CompareToMultipleValues<T>(T val1, T[] values, TokenKind operation,
+            ListCombinationKind mode, bool invert) where T : IComparable<T>
         {
-            switch (mode.ToLower())
+            var result = mode switch
             {
-                case "and":
-                    return values.All(valToCompare => CompareValues(val1, valToCompare, operation, false));
-                case "or":
-                    return values.Any(valToCompare => CompareValues(val1, valToCompare, operation, false));
-                default:
-                    return false;
-            }
+                ListCombinationKind.And =>
+                    values.All(valToCompare => CompareValues(val1, valToCompare, operation, false)),
+                ListCombinationKind.Or =>
+                    values.Any(valToCompare => CompareValues(val1, valToCompare, operation, false)),
+                _ => false
+            };
+            return result ^ invert;
+        }
+
+        /// <summary>
+        ///     Compares a value once for each value in a given list and returns according to a given logic operator
+        /// </summary>
+        /// <param name="val1">The initial value to compare to the others</param>
+        /// <param name="values">The values to compare to</param>
+        /// <param name="operation">The operation used to compare</param>
+        /// <param name="mode">Logic gate used to return, either "and" or "or</param>
+        /// <param name="invert"></param>
+        private static bool CompareEnums<T>(T val1, T[] values, TokenKind operation, ListCombinationKind mode,
+            bool invert) where T : Enum
+        {
+            var result = mode switch
+            {
+                ListCombinationKind.And =>
+                    values.All(valToCompare => CompareEquality(val1, valToCompare, operation, false)),
+                ListCombinationKind.Or or ListCombinationKind.None =>
+                    values.Any(valToCompare => CompareEquality(val1, valToCompare, operation, false)),
+                _ => false
+            };
+            return result ^ invert;
         }
     }
 
