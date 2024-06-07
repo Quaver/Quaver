@@ -599,6 +599,21 @@ namespace Quaver.Shared.Database.Maps
                 };
             };
 
+            parser.SingletonEnumProcessor = listValue =>
+            {
+                // List must not be empty
+                if (listValue.Count == 0) return Array.Empty<SearchCriterion>();
+                // First value must have valid key correspondence
+                if (!enumKeyDictionary.TryGetValue(listValue[0].Value!, out var firstValueKey))
+                    return Array.Empty<SearchCriterion>();
+                // Coherent types for all values
+                if (listValue.Any(v =>
+                        !enumKeyDictionary.TryGetValue(v.Value!, out var filterOption) ||
+                        filterOption != firstValueKey))
+                    return Array.Empty<SearchCriterion>();
+                return new[] { new SearchCriterion(firstValueKey, TokenKind.Equal, listValue, false) };
+            };
+
             parser.Parse();
 
             var terms = parser.GetPlainTextTerms().ToArray();
@@ -689,13 +704,13 @@ namespace Quaver.Shared.Database.Maps
                                 break;
                             case SearchFilterOption.Status:
 
-                                if (!CompareEnums(map.RankedStatus,
+                                if (!CompareToMultipleValues(map.RankedStatus,
                                         searchQuery.Values.Select(a => (RankedStatus)a.Value!).ToArray(),
                                         searchQuery.Operator.Kind, searchQuery.Values.CombinationKind, invert))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Game:
-                                if (!CompareEnums(map.Game,
+                                if (!CompareToMultipleValues(map.Game,
                                         searchQuery.Values.Select(a => (MapGame)a.Value!).ToArray(),
                                         searchQuery.Operator.Kind, searchQuery.Values.CombinationKind, invert))
                                     exitLoop = true;
@@ -867,29 +882,7 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="mode">Logic gate used to return, either "and" or "or</param>
         /// <param name="invert"></param>
         private static bool CompareToMultipleValues<T>(T val1, T[] values, TokenKind operation,
-            ListCombinationKind mode, bool invert) where T : IComparable<T>
-        {
-            var result = mode switch
-            {
-                ListCombinationKind.And =>
-                    values.All(valToCompare => CompareValues(val1, valToCompare, operation, false)),
-                ListCombinationKind.Or =>
-                    values.Any(valToCompare => CompareValues(val1, valToCompare, operation, false)),
-                _ => false
-            };
-            return result ^ invert;
-        }
-
-        /// <summary>
-        ///     Compares a value once for each value in a given list and returns according to a given logic operator
-        /// </summary>
-        /// <param name="val1">The initial value to compare to the others</param>
-        /// <param name="values">The values to compare to</param>
-        /// <param name="operation">The operation used to compare</param>
-        /// <param name="mode">Logic gate used to return, either "and" or "or</param>
-        /// <param name="invert"></param>
-        private static bool CompareEnums<T>(T val1, T[] values, TokenKind operation, ListCombinationKind mode,
-            bool invert) where T : Enum
+            ListCombinationKind mode, bool invert)
         {
             var result = mode switch
             {
