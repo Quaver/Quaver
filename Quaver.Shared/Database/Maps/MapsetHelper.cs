@@ -498,25 +498,26 @@ namespace Quaver.Shared.Database.Maps
         internal static void InitializeSearchKeywordTrie()
         {
             _searchKeywordTrie = new Trie();
-            var keys = new Dictionary<SearchFilterOption, string>
+            var keys = new Dictionary<string, SearchFilterOption>
             {
-                [SearchFilterOption.BPM] = "bpm",
-                [SearchFilterOption.Difficulty] = "difficulty",
-                [SearchFilterOption.Length] = "length",
-                [SearchFilterOption.Keys] = "keys",
-                [SearchFilterOption.Status] = "status",
-                [SearchFilterOption.LNs] = "lns",
-                [SearchFilterOption.NPS] = "nps",
-                [SearchFilterOption.Game] = "game",
-                [SearchFilterOption.TimesPlayed] = "timesplayed",
-                [SearchFilterOption.Title] = "title",
-                [SearchFilterOption.Tags] = "tags",
-                [SearchFilterOption.Source] = "sources",
-                [SearchFilterOption.Artist] = "artists",
-                [SearchFilterOption.Creator] = "creators",
-                [SearchFilterOption.Description] = "description",
-                [SearchFilterOption.DifficultyName] = "difficultyname",
-                [SearchFilterOption.Genre] = "genre"
+                 ["artists"] = SearchFilterOption.Artist,
+                 ["bpm"] = SearchFilterOption.BPM,
+                 ["creators"] = SearchFilterOption.Creator,
+                 ["difficulty"] = SearchFilterOption.Difficulty,
+                 ["description"] = SearchFilterOption.Description,
+                 ["difficultyname"] = SearchFilterOption.DifficultyName,
+                 ["diffname"] = SearchFilterOption.DifficultyName,
+                 ["game"] = SearchFilterOption.Game,
+                 ["genre"] = SearchFilterOption.Genre,
+                 ["keys"] = SearchFilterOption.Keys,
+                 ["length"] = SearchFilterOption.Length,
+                 ["lns"] = SearchFilterOption.LNs,
+                 ["nps"] = SearchFilterOption.NPS,
+                 ["title"] = SearchFilterOption.Title,
+                 ["tags"] = SearchFilterOption.Tags,
+                 ["timesplayed"] = SearchFilterOption.TimesPlayed,
+                 ["status"] = SearchFilterOption.Status,
+                 ["sources"] = SearchFilterOption.Source
             };
 
             var gameTypes = new Dictionary<string, MapGame>
@@ -539,7 +540,7 @@ namespace Quaver.Shared.Database.Maps
             SearchEnumKeyDictionary.Clear();
 
 
-            foreach (var (option, key) in keys)
+            foreach (var (key, option) in keys)
             {
                 _searchKeywordTrie.Add(key, TokenKind.Key, option);
             }
