@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble.Extended", "Wobble\W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteFontPlus", "Wobble\SpriteFontPlus\src\SpriteFontPlus\SpriteFontPlus.csproj", "{E6D4B576-2E45-40BF-9906-32FAD89BC2E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Server.Common", "Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj", "{2F20BCA9-18E1-48F0-9C3A-27507F770065}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Server.Client", "Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj", "{33907E03-34E6-4C21-8F52-83AD1031EC41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +138,26 @@ Global
 		{E6D4B576-2E45-40BF-9906-32FAD89BC2E1}.Test Server|Any CPU.Build.0 = Debug|Any CPU
 		{E6D4B576-2E45-40BF-9906-32FAD89BC2E1}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6D4B576-2E45-40BF-9906-32FAD89BC2E1}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Public|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Public|Any CPU.Build.0 = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Test Server|Any CPU.Build.0 = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F20BCA9-18E1-48F0-9C3A-27507F770065}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Public|Any CPU.ActiveCfg = Debug|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Public|Any CPU.Build.0 = Debug|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Test Server|Any CPU.ActiveCfg = Test Server|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Test Server|Any CPU.Build.0 = Test Server|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
+		{33907E03-34E6-4C21-8F52-83AD1031EC41}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
