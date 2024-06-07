@@ -879,9 +879,11 @@ namespace Quaver.Shared.Database.Maps
 
             var result = operation switch
             {
+                TokenKind.Contains when val1 is string s1 && val2 is string s2 => s1.Contains(s2),
+                TokenKind.Equal when val1 is string s1 && val2 is string s2 => s1.Contains(s2),
+                TokenKind.NotEqual when val1 is string s1 && val2 is string s2 => !s1.Contains(s2),
                 TokenKind.Equal => Equals(val1, val2),
                 TokenKind.NotEqual => !Equals(val1, val2),
-                TokenKind.Contains when val1 is string s1 && val2 is string s2 => s1.Contains(s2),
                 _ => false
             };
             return result ^ invert;
