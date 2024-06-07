@@ -25,6 +25,18 @@ namespace Quaver.Shared.Database.Maps
     public static class MapsetHelper
     {
         /// <summary>
+        ///     A trie containing all possible keywords (keys like lns, mode, and enum values like unranked, quaver)
+        /// </summary>
+        private static Trie _searchKeywordTrie = new();
+
+        /// <summary>
+        ///     Stores which <see cref="SearchFilterOption"/> an enum value belongs to.
+        ///     For example, pair (<see cref="MapGame.Quaver"/>, <see cref="SearchFilterOption.Game"/>) exists in the
+        ///     dictionary.
+        /// </summary>
+        private static readonly Dictionary<object, SearchFilterOption> SearchEnumKeyDictionary = new();
+
+        /// <summary>
         ///     Gets the Md5 Checksum of a file, more specifically a .qua file.
         /// </summary>
         /// <param name="path"></param>
@@ -483,24 +495,9 @@ namespace Quaver.Shared.Database.Maps
             return mapsets;
         }
 
-        /// <summary>
-        /// Searches and returns mapsets given a query
-        /// </summary>
-        /// <param name="mapsets"></param>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        internal static List<Mapset> SearchMapsets(IEnumerable<Mapset> mapsets, string query)
+        internal static void InitializeSearchKeywordTrie()
         {
-            var sets = new List<Mapset>();
-
-            query = query.ToLower();
-
-            // The shortest and longest matching sequences for every option. For example, "d" and "difficulty" means you
-            // can search for "d>5", "di>5", "dif>5" and so on up to "difficulty>5".
-            //
-            // When adding new options with overlapping first characters, specify the shortest unambiguous sequence as
-            // the new key. So, for example, "duration" should be added as "du", "duration". This way "d" still searches
-            // for "difficulty" (backwards-compatibility) and "du" searches for duration.
+            _searchKeywordTrie = new Trie();
             var keys = new Dictionary<SearchFilterOption, string>
             {
                 [SearchFilterOption.BPM] = "bpm",
@@ -539,28 +536,43 @@ namespace Quaver.Shared.Database.Maps
                 ["dancourse"] = RankedStatus.DanCourse
             };
 
-            var enumKeyDictionary = new Dictionary<object, SearchFilterOption>();
+            SearchEnumKeyDictionary.Clear();
 
 
-            var tokenizer = new Tokenizer(query);
             foreach (var (option, key) in keys)
             {
-                tokenizer.KeywordTrie.Add(key, TokenKind.Key, option);
+                _searchKeywordTrie.Add(key, TokenKind.Key, option);
             }
 
             foreach (var (name, mapGame) in gameTypes)
             {
-                tokenizer.KeywordTrie.Add(name, TokenKind.Enum, mapGame);
+                _searchKeywordTrie.Add(name, TokenKind.Enum, mapGame);
                 // TryAdd since we have multiple possible enum strings that point to the same value
-                enumKeyDictionary.TryAdd(mapGame, SearchFilterOption.Game);
+                SearchEnumKeyDictionary.TryAdd(mapGame, SearchFilterOption.Game);
             }
 
             foreach (var (name, rankedStatus) in rankedStatuses)
             {
-                tokenizer.KeywordTrie.Add(name, TokenKind.Enum, rankedStatus);
+                _searchKeywordTrie.Add(name, TokenKind.Enum, rankedStatus);
                 // TryAdd since we have multiple possible enum strings that point to the same value
-                enumKeyDictionary.TryAdd(rankedStatus, SearchFilterOption.Status);
+                SearchEnumKeyDictionary.TryAdd(rankedStatus, SearchFilterOption.Status);
             }
+        }
+
+        /// <summary>
+        /// Searches and returns mapsets given a query
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        internal static List<Mapset> SearchMapsets(IEnumerable<Mapset> mapsets, string query)
+        {
+            var sets = new List<Mapset>();
+
+            query = query.ToLower();
+
+            var tokenizer = new Tokenizer(query);
+            tokenizer.KeywordTrie = _searchKeywordTrie;
 
             var parser = new Parser(tokenizer);
             parser.SearchCriterionConstraint = criterion =>
@@ -574,7 +586,7 @@ namespace Quaver.Shared.Database.Maps
 
                 if (valueKind is TokenKind.Enum)
                     return criterion.Values.All(v =>
-                        enumKeyDictionary.TryGetValue(v.Value!, out var key) && key.Equals(criterion.Key.Value));
+                        SearchEnumKeyDictionary.TryGetValue(v.Value!, out var key) && key.Equals(criterion.Key.Value));
 
                 return option switch
                 {
@@ -604,11 +616,11 @@ namespace Quaver.Shared.Database.Maps
                 // List must not be empty
                 if (listValue.Count == 0) return Array.Empty<SearchCriterion>();
                 // First value must have valid key correspondence
-                if (!enumKeyDictionary.TryGetValue(listValue[0].Value!, out var firstValueKey))
+                if (!SearchEnumKeyDictionary.TryGetValue(listValue[0].Value!, out var firstValueKey))
                     return Array.Empty<SearchCriterion>();
                 // Coherent types for all values
                 if (listValue.Any(v =>
-                        !enumKeyDictionary.TryGetValue(v.Value!, out var filterOption) ||
+                        !SearchEnumKeyDictionary.TryGetValue(v.Value!, out var filterOption) ||
                         filterOption != firstValueKey))
                     return Array.Empty<SearchCriterion>();
                 return new[] { new SearchCriterion(firstValueKey, TokenKind.Equal, listValue, false) };
