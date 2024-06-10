@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             CreateButtonCreate();
             CreateButtonCancel();
 
-            GameBase.Game.Window.FileDropped += OnFileDropped;
+            GameBase.Game.Window.FileDrop += OnFileDropped;
         }
 
         /// <inheritdoc />
@@ -144,7 +144,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         public override void Destroy()
         {
-            GameBase.Game.Window.FileDropped += OnFileDropped;
+            GameBase.Game.Window.FileDrop += OnFileDropped;
 
             if (Banner.Image != UserInterface.DefaultBanner)
                 Banner.Image.Dispose();
@@ -340,16 +340,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFileDropped(object sender, string e)
+        private void OnFileDropped(object sender, FileDropEventArgs e)
         {
+            if (e.Files.Length < 1)
+                return;
+
             if (IsBannerLoading)
                 return;
 
-            if (!e.EndsWith(".png") && !e.EndsWith(".jpg") && !e.EndsWith(".jpeg"))
+            var path = e.Files[0];
+            
+            if (!path.EndsWith(".png") && !path.EndsWith(".jpg") && !path.EndsWith(".jpeg"))
                 return;
 
             IsBannerLoading = true;
-            BannerPath = e;
+            BannerPath = path;
 
             BannerBlackness.ClearAnimations();
             BannerBlackness.FadeTo(1, Easing.Linear, 200);
@@ -361,7 +366,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                     if (Banner.Image != UserInterface.DefaultBanner)
                         Banner.Image.Dispose();
 
-                    var tex = AssetLoader.LoadTexture2DFromFile(e);
+                    var tex = AssetLoader.LoadTexture2DFromFile(path);
                     Banner.Image = tex;
                 }
                 catch (Exception ex)
