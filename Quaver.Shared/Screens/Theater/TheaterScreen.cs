@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MoreLinq;
 using Quaver.API.Replays;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
@@ -40,7 +41,7 @@ namespace Quaver.Shared.Screens.Theater
         /// </summary>
         public TheaterScreen()
         {
-            GameBase.Game.Window.FileDropped += OnFileDropped;
+            GameBase.Game.Window.FileDrop += OnFileDropped;
             View = new TheaterScreenView(this);
         }
 
@@ -59,7 +60,7 @@ namespace Quaver.Shared.Screens.Theater
         /// </summary>
         public override void Destroy()
         {
-            GameBase.Game.Window.FileDropped -= OnFileDropped;
+            GameBase.Game.Window.FileDrop -= OnFileDropped;
             ReplayLoaded = null;
 
             base.Destroy();
@@ -83,7 +84,12 @@ namespace Quaver.Shared.Screens.Theater
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFileDropped(object sender, string e)
+        private void OnFileDropped(object sender, FileDropEventArgs e)
+        {
+            e.Files.ForEach(ImportReplay);
+        }
+
+        private void ImportReplay(string e)
         {
             if (Replays.Count >= 4)
             {

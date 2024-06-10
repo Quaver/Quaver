@@ -286,7 +286,7 @@ namespace Quaver.Shared
             Graphics.ApplyChanges();
 
             // Handle file dropped event.
-            Window.FileDropped += MapsetImporter.OnFileDropped;
+            Window.FileDrop += MapsetImporter.OnFileDropped;
             Window.ClientSizeChanged += OnClientSizeChanged;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;

@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using MoreLinq;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
@@ -80,9 +82,9 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Allows files to be dropped into the window.
         /// </summary>
-        internal static void OnFileDropped(object sender, string e)
+        internal static void OnFileDropped(object sender, FileDropEventArgs e)
         {
-            ImportFile(e);
+            e.Files.ForEach(ImportFile);
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using Force.DeepCloner;
 using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MoreLinq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -325,7 +326,7 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.Pitched.ValueChanged += OnPitchedChanged;
 
             SkinManager.SkinLoaded += OnSkinLoaded;
-            GameBase.Game.Window.FileDropped += OnFileDropped;
+            GameBase.Game.Window.FileDrop += OnFileDropped;
 
             InitializeDiscordRichPresence();
             AddFileWatcher();
@@ -377,7 +378,7 @@ namespace Quaver.Shared.Screens.Edit
         public override void Destroy()
         {
             Track.Seeked -= OnTrackSeeked;
-            GameBase.Game.Window.FileDropped -= OnFileDropped;
+            GameBase.Game.Window.FileDrop -= OnFileDropped;
             BackupScheduler?.Dispose();
             Track?.Dispose();
             Skin?.Value?.Dispose();
@@ -1875,9 +1876,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFileDropped(object sender, string e)
+        private void OnFileDropped(object sender, FileDropEventArgs e)
         {
-            var file = e.ToLower();
+            if (e.Files.Length < 1)
+                return;
+
+            var file = e.Files[0].ToLower();
 
             if (!file.EndsWith(".jpg") && !file.EndsWith(".jpeg") && !file.EndsWith(".png"))
                 return;
@@ -1891,7 +1895,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
-            DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
+            DialogManager.Show(new EditorChangeBackgroundDialog(this, e.Files[0]));
         }
 
         void MakeScheduledMapBackup(object _)

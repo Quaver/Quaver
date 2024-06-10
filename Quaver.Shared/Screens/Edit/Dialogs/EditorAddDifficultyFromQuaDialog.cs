@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Audio;
@@ -31,23 +32,27 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             NoButton.Alignment = Alignment.BotCenter;
             NoButton.X = 0;
 
-            GameBase.Game.Window.FileDropped += OnFileDropped;
+            GameBase.Game.Window.FileDrop += OnFileDropped;
         }
 
         public override void Destroy()
         {
-            GameBase.Game.Window.FileDropped -= OnFileDropped;
+            GameBase.Game.Window.FileDrop -= OnFileDropped;
             base.Destroy();
         }
 
-        private void OnFileDropped(object sender, string e)
+        private void OnFileDropped(object sender, FileDropEventArgs e)
         {
-            var file = e.ToLower();
+            if (e.Files.Length < 1)
+                return;
+
+            var path = e.Files[0];
+            var file = path.ToLower();
 
             if (!file.EndsWith(".qua"))
                 return;
 
-            Logger.Important($"Importing file: {e} into the mapset.", LogType.Runtime);
+            Logger.Important($"Importing file: {path} into the mapset.", LogType.Runtime);
 
             ThreadScheduler.Run(() =>
             {
@@ -55,7 +60,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
                 try
                 {
-                    qua = Qua.Parse(e);
+                    qua = Qua.Parse(path);
                 }
                 catch (Exception ex)
                 {
@@ -71,7 +76,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                     var path = $"{dir}/{StringHelper.FileNameSafeString(qua.Artist)} - {StringHelper.FileNameSafeString(qua.Title)} " +
                                $"[{StringHelper.FileNameSafeString(qua.DifficultyName)}].qua";
 
-                    File.Copy(e, path);
+                    File.Copy(path, path);
 
                     // Add the new map to the db.
                     var map = Map.FromQua(qua, path);

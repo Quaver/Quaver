@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Graphics;
 using Wobble;
 using Wobble.Graphics;
@@ -17,23 +18,26 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             NoButton.Alignment = Alignment.BotCenter;
             NoButton.X = 0;
 
-            GameBase.Game.Window.FileDropped += OnFileDropped;
+            GameBase.Game.Window.FileDrop += OnFileDropped;
         }
 
         public override void Destroy()
         {
-            GameBase.Game.Window.FileDropped -= OnFileDropped;
+            GameBase.Game.Window.FileDrop -= OnFileDropped;
             base.Destroy();
         }
 
-        private void OnFileDropped(object sender, string e)
+        private void OnFileDropped(object sender, FileDropEventArgs e)
         {
-            var file = e.ToLower();
+            if (e.Files.Length < 1)
+                return;
+
+            var file = e.Files[0].ToLower();
 
             if (!file.EndsWith(".mp3") && !file.EndsWith(".ogg"))
                 return;
 
-            EditScreen.CreateNewMapset(e);
+            EditScreen.CreateNewMapset(e.Files[0]);
             DialogManager.Dismiss(this);
         }
     }
