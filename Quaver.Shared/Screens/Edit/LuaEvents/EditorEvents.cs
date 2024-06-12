@@ -13,9 +13,9 @@ public class EditorEvents
     private readonly Dictionary<EditorActionType, EditorEvent> _events = new();
 
     /// <summary>
-    /// 
+    ///     Gets the corresponding event handler for the action type
     /// </summary>
-    /// <param name="type"></param>
+    /// <param name="type">The type of the event handler</param>
     public EditorEvent this[EditorActionType type]
     {
         get
@@ -43,6 +43,10 @@ public class EditorEvents
         this[eventType].Add(closure);
     }
 
+    /// <summary>
+    /// </summary>
+    /// <param name="eventType"></param>
+    /// <param name="action"></param>
     public void Subscribe(EditorActionType eventType, Action<EditorEventInstance> action)
     {
         this[eventType].Add(action);
@@ -61,6 +65,10 @@ public class EditorEvents
         this[eventType].Remove(closure);
     }
 
+    /// <summary>
+    /// </summary>
+    /// <param name="eventType"></param>
+    /// <param name="action"></param>
     public void Unsubscribe(EditorActionType eventType, Action<EditorEventInstance> action)
     {
         this[eventType].Remove(action);
@@ -68,6 +76,7 @@ public class EditorEvents
 
     public EditorEvents()
     {
+        // The None event action marks the global event: any actions triggered will call this event
         _events.Add(EditorActionType.None, new EditorEvent());
     }
 }
