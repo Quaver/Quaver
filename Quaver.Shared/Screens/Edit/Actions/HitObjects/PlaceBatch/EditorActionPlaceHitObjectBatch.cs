@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         /// </summary>

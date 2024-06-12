@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch
 
         private Qua WorkingMap { get; }
 
-        private List<BookmarkInfo> Bookmarks { get; }
+        public List<BookmarkInfo> Bookmarks { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddBookmarkBatch(EditorActionManager manager, Qua workingMap, List<BookmarkInfo> bookmarks)

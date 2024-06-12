@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add
 
         private Qua WorkingMap { get; }
 
-        private BookmarkInfo Bookmark { get; }
+        public BookmarkInfo Bookmark { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddBookmark(EditorActionManager manager, Qua map, BookmarkInfo bookmark)

@@ -21,10 +21,10 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
-        private int SwapLane1 { get; }
-        private int SwapLane2 { get; }
+        public int SwapLane1 { get; }
+        public int SwapLane2 { get; }
 
         /// <summary>
         /// </summary>

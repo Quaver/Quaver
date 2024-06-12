@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
 
         private Qua WorkingMap { get; }
 
-        private List<BookmarkInfo> Bookmarks { get; }
+        public List<BookmarkInfo> Bookmarks { get; }
 
         private int Offset { get; }
 

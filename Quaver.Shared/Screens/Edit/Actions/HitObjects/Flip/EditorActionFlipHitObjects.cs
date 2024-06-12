@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         /// </summary>

@@ -14,11 +14,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset
 
         private Qua WorkingMap { get; }
 
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
-        private float OriginalOffset { get; }
+        public float OriginalOffset { get; }
 
-        private float NewOffset { get; }
+        public float NewOffset { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointOffset(EditorActionManager manager, Qua workingMap, TimingPointInfo tp, float newOffset)

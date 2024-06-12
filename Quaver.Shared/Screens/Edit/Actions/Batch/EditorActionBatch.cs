@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Batch
 
         private EditorActionManager ActionManager { get; }
 
-        private List<IEditorAction> EditorActions { get; }
+        public List<IEditorAction> EditorActions { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionBatch(EditorActionManager manager, List<IEditorAction> actions)

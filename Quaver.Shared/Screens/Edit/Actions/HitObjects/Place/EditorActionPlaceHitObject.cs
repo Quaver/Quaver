@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Place
 
         /// <summary>
         /// </summary>
-        private HitObjectInfo HitObject { get; }
+        public HitObjectInfo HitObject { get; }
 
         /// <summary>
         /// </summary>

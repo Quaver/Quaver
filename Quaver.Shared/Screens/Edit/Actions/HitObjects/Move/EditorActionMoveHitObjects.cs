@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         ///     The value in which the objects lanes will be added to.
