@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize
 
         /// <summary>
         /// </summary>
-        private HitObjectInfo HitObject { get; }
+        public HitObjectInfo HitObject { get; }
 
         /// <summary>
         ///     The original end time of the long note

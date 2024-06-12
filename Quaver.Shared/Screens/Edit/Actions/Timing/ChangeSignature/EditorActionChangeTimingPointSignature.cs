@@ -15,11 +15,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignature
 
         private Qua WorkingMap { get; }
 
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
-        private int OriginalSignature { get; }
+        public int OriginalSignature { get; }
 
-        private int NewSignature { get; }
+        public int NewSignature { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointSignature(EditorActionManager manager, Qua workingMap, TimingPointInfo tp, int newSignature)

@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch
 
         private Qua WorkingMap { get; }
 
-        private List<TimingPointInfo> TimingPoints { get; }
+        public List<TimingPointInfo> TimingPoints { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddTimingPointBatch(EditorActionManager manager, Qua workingMap, List<TimingPointInfo> tps)

@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Offset
 
         private Qua WorkingMap { get; }
 
-        private int Offset { get; }
+        public int Offset { get; }
 
         public EditorActionApplyOffset(EditorActionManager actiomManager, Qua workingMap, int offset)
         {

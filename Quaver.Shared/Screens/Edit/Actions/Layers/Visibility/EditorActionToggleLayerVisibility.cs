@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Visibility
 
         private Qua WorkingMap { get; }
 
-        private EditorLayerInfo Layer { get; }
+        public EditorLayerInfo Layer { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionToggleLayerVisibility(EditorActionManager manager, Qua workingMap, EditorLayerInfo layer)

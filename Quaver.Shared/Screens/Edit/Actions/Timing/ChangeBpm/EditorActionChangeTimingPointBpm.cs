@@ -14,11 +14,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm
 
         private Qua WorkingMap { get; }
 
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
-        private float OriginalBpm { get; }
+        public float OriginalBpm { get; }
 
-        private float NewBpm { get; }
+        public float NewBpm { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointBpm(EditorActionManager manager, Qua workingMap, TimingPointInfo tp, float newBpm)

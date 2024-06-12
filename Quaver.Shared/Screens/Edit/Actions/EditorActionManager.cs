@@ -51,6 +51,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Screens.Edit.LuaEvents;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -88,6 +89,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     An action manager dedicated for lua plugins
         /// </summary>
         public EditorPluginActionManager PluginActionManager { get; }
+
+        /// <summary>
+        ///     This is signalled when a perform or an undo action is done so plugins can detect them
+        /// </summary>
+        public EditorEvents LuaEditorEvents { get; }
 
         /// <summary>
         ///     Event invoked when a HitObject has been placed
@@ -299,6 +305,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             EditScreen = screen;
             WorkingMap = workingMap;
             PluginActionManager = new EditorPluginActionManager(this);
+            LuaEditorEvents = new EditorEvents();
         }
 
         /// <summary>
@@ -310,6 +317,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Perform();
             UndoStack.Push(action);
             RedoStack.Clear();
+            LuaEditorEvents[action.Type].Invoke(new EditorEventInstance(action, false));
         }
 
         /// <summary>
@@ -330,6 +338,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Undo();
 
             RedoStack.Push(action);
+            LuaEditorEvents[action.Type].Invoke(new EditorEventInstance(action, true));
         }
 
         /// <summary>
@@ -344,6 +353,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Perform();
 
             UndoStack.Push(action);
+            LuaEditorEvents[action.Type].Invoke(new EditorEventInstance(action, false));
         }
 
         /// <summary>

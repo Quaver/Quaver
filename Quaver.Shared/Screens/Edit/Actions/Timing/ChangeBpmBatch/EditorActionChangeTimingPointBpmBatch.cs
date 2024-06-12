@@ -16,11 +16,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch
 
         private Qua WorkingMap { get; }
 
-        private List<TimingPointInfo> TimingPoints { get; }
+        public List<TimingPointInfo> TimingPoints { get; }
 
-        private List<float> OriginalBpms { get; } = new List<float>();
+        public List<float> OriginalBpms { get; } = new List<float>();
 
-        private float NewBpm { get; }
+        public float NewBpm { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointBpmBatch(EditorActionManager manager, Qua workingMap, List<TimingPointInfo> tps,

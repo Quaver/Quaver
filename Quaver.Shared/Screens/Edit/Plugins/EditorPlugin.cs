@@ -96,6 +96,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
             WorkingScript.Globals["action_type"] = typeof(EditorActionType);
             WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
+            WorkingScript.Globals["events"] = Editor.ActionManager.LuaEditorEvents;
 
             var state = (EditorPluginState)State;
 
