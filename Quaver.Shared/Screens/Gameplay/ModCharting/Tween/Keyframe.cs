@@ -6,20 +6,20 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 [MoonSharpUserData]
 public class Keyframe<T>
 {
-    public readonly float Time;
+    public readonly double Time;
     public readonly T Value;
     public readonly EasingDelegate EasingFunction;
 
-    public Keyframe(float time, T value, EasingDelegate easingFunction)
+    public Keyframe(double time, T value, EasingDelegate easingFunction)
     {
         Time = time;
         Value = value;
         EasingFunction = easingFunction;
     }
 
-    public float GetProgress(Keyframe<T> nextKeyframe, float currentTime)
+    public float GetProgress(Keyframe<T> nextKeyframe, double currentTime)
     {
-        return EasingFunction((currentTime - Time) / (nextKeyframe.Time - Time));
+        return EasingFunction((float)((currentTime - Time) / (nextKeyframe.Time - Time)));
     }
 
     private sealed class TimeRelationalComparer : IComparer<Keyframe<T>>

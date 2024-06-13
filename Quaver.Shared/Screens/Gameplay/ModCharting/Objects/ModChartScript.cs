@@ -231,8 +231,12 @@ public class ModChartScript
             dynVal =>
             {
                 var table = dynVal.Table;
-                var time = (float)table[1];
-                var value = (T)table[2];
+                var time = (double)table[1];
+                var value = table.Get(2) switch
+                {
+                    {Type: DataType.Number} v => (T)Convert.ChangeType(v.Number, typeof(T)),
+                    var otherwise => otherwise.ToObject<T>()
+                };
                 var easingFunction =
                     table.RawGet(3)?.ToObject<EasingDelegate>() ?? EasingWrapperFunctions.Linear;
                 return new Keyframe<T>(time, value, easingFunction);

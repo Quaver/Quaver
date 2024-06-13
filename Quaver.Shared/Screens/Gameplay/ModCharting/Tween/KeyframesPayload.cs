@@ -12,21 +12,20 @@ public class KeyframesPayload<T> : ISegmentPayload
     public SetterDelegate<T> Setter { get; }
 
     private int _currentKeyframeIndex;
-
-    public readonly float StartTime;
-
-    public readonly float EndTime;
-
-    public readonly float Length;
+    public readonly double RelativeLength;
 
 
-    public KeyframesPayload(Keyframe<T>[] keyframes, SetterDelegate<T> setter)
+    public KeyframesPayload(SetterDelegate<T> setter, Keyframe<T>[] keyframes)
     {
         Keyframes = keyframes;
         Array.Sort(Keyframes, Keyframe<T>.TimeComparer);
-        StartTime = Keyframes.Length == 0 ? -1 : Keyframes[0].Time;
-        EndTime = Keyframes.Length == 0 ? -1 : Keyframes[^1].Time;
-        Length = EndTime - StartTime;
+        if (Keyframes.Length < 2 || Keyframes[0].Time != 0)
+        {
+            throw new ScriptRuntimeException(
+                "Keyframes payload must have at least two keyframes and must start at time 0!");
+        }
+
+        RelativeLength = Keyframes[^1].Time;
         Setter = setter;
     }
 
@@ -35,9 +34,13 @@ public class KeyframesPayload<T> : ISegmentPayload
         if (Keyframes.Length < 1)
             return;
 
-        var time = progress / Length + StartTime;
+        var time = progress * RelativeLength;
+
         while (_currentKeyframeIndex < Keyframes.Length - 1 && Keyframes[_currentKeyframeIndex + 1].Time < time)
             _currentKeyframeIndex++;
+
+        while (_currentKeyframeIndex > 0 && Keyframes[_currentKeyframeIndex].Time > time)
+            _currentKeyframeIndex--;
 
         var currentKeyFrame = Keyframes[_currentKeyframeIndex];
         if (_currentKeyframeIndex == Keyframes.Length - 1)

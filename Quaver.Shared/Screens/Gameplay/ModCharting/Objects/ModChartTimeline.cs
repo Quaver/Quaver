@@ -30,6 +30,25 @@ public class ModChartTimeline
         v => trigger.SafeCall(v));
 
     /// <summary>
+    ///     Creates a keyframes payload.
+    /// </summary>
+    /// <param name="setter"></param>
+    /// <param name="keyframes"></param>
+    /// <returns></returns>
+    /// <seealso cref="Keyframe{T}"/>
+    public KeyframesPayload<float> Keyframes(SetterDelegate<float> setter, Keyframe<float>[] keyframes) =>
+        new(setter, keyframes);
+
+    public KeyframesPayload<Vector2> Keyframes(SetterDelegate<Vector2> setter, Keyframe<Vector2>[] keyframes) =>
+        new(setter, keyframes);
+
+    public KeyframesPayload<Vector3> Keyframes(SetterDelegate<Vector3> setter, Keyframe<Vector3>[] keyframes) =>
+        new(setter, keyframes);
+
+    public KeyframesPayload<Vector4> Keyframes(SetterDelegate<Vector4> setter, Keyframe<Vector4>[] keyframes) =>
+        new(setter, keyframes);
+
+    /// <summary>
     ///     Adds a tween segment that allows smooth transition of a value
     /// </summary>
     /// <param name="startValue"></param>
