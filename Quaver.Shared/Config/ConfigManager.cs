@@ -974,7 +974,7 @@ namespace Quaver.Shared.Config
                 Logger.Important("Creating a new config file...", LogType.Runtime);
             }
 
-            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(configFilePath)["Config"];
+            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(configFilePath, Encoding.UTF8)["Config"];
 
             // Read / Set Config Values
             // NOTE: MAKE SURE TO SET THE VALUE TO AUTO-SAVE WHEN CHANGING! THIS ISN'T DONE AUTOMATICALLY.
