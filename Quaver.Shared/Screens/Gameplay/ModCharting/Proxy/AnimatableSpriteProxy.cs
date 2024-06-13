@@ -27,11 +27,11 @@ public class AnimatableSpriteProxy : SpriteProxy
     }
 
     public int TimesToLoop => _sprite.TimesToLoop;
-    public void To(int i) => _sprite.ChangeTo(i);
-    public void Next() => _sprite.ChangeToNext();
-    public void Previous() => _sprite.ChangeToPrevious();
+    public void ChangeTo(int i) => _sprite.ChangeTo(i);
+    public void ChangeToNext() => _sprite.ChangeToNext();
+    public void ChangeToPrevious() => _sprite.ChangeToPrevious();
 
-    public void Loop(Direction direction, int fps, int timesToLoop = 0) =>
+    public void StartLoop(Direction direction, int fps, int timesToLoop = 0) =>
         _sprite.StartLoop(direction, fps, timesToLoop);
 
     public void EndLoop() => _sprite.StopLoop();
