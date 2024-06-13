@@ -126,10 +126,6 @@ public class ModChartScript
         RegisterAllVectors();
         RegisterClosures();
         RegisterEasingType();
-        RegisterSetterDelegate<float>();
-        RegisterSetterDelegate<Vector2>();
-        RegisterSetterDelegate<Vector3>();
-        RegisterSetterDelegate<Vector4>();
         RegisterKeyframe<float>();
         RegisterKeyframe<Vector2>();
         RegisterKeyframe<Vector3>();
@@ -198,13 +194,6 @@ public class ModChartScript
         ModChartEvents.DeferredEventQueue.Dispatch();
     }
 
-    private void RegisterSetterDelegate<T>()
-    {
-        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function,
-            typeof(SetterDelegate<T>),
-            dynVal => new SetterDelegate<T>((start, end, progress) => dynVal.Function?.SafeCall(start, end, progress)));
-    }
-
     private void RegisterEasingType()
     {
         // Implicitly converts Easing to EasingWrapperFunction, so you can directly pass Easing in Timeline.Tween
@@ -232,11 +221,7 @@ public class ModChartScript
             {
                 var table = dynVal.Table;
                 var time = (double)table[1];
-                var value = table.Get(2) switch
-                {
-                    {Type: DataType.Number} v => (T)Convert.ChangeType(v.Number, typeof(T)),
-                    var otherwise => otherwise.ToObject<T>()
-                };
+                var value = table.Get(2).ToObject<T>();
                 var easingFunction =
                     table.RawGet(3)?.ToObject<EasingDelegate>() ?? EasingWrapperFunctions.Linear;
                 return new Keyframe<T>(time, value, easingFunction);

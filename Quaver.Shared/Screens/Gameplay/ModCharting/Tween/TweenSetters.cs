@@ -24,32 +24,38 @@ public class TweenSetters
     {
         return (startValue, endValue, progress) => action(EasingFunctions.Linear(startValue, endValue, progress));
     }
+
     public static SetterDelegate<float> CreateFloat(Closure action)
     {
-        return (startValue, endValue, progress) => action?.SafeCall(EasingFunctions.Linear(startValue, endValue, progress));
+        return (startValue, endValue, progress) =>
+            action?.SafeCall(EasingFunctions.Linear(startValue, endValue, progress));
     }
-    
+
     public static SetterDelegate<Vector2> CreateVector2(Action<Vector2> action)
     {
         return (startValue, endValue, progress) => action(Vector2.Lerp(startValue, endValue, progress));
     }
-    
+
     public static SetterDelegate<Vector2> CreateVector2(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector2.Lerp(startValue, endValue, progress));
     }
+
     public static SetterDelegate<Vector3> CreateVector3(Action<Vector3> action)
     {
         return (startValue, endValue, progress) => action(Vector3.Lerp(startValue, endValue, progress));
     }
+
     public static SetterDelegate<Vector3> CreateVector3(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector3.Lerp(startValue, endValue, progress));
     }
+
     public static SetterDelegate<Vector4> CreateVector4(Action<Vector4> action)
     {
         return (startValue, endValue, progress) => action(Vector4.Lerp(startValue, endValue, progress));
     }
+
     public static SetterDelegate<Vector4> CreateVector4(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector4.Lerp(startValue, endValue, progress));
@@ -59,24 +65,27 @@ public class TweenSetters
     {
         return CreateFloat(v => drawable.X = v);
     }
+
     public SetterDelegate<float> Y(Drawable drawable)
     {
         return CreateFloat(v => drawable.Y = v);
     }
+
     public SetterDelegate<Vector2> Position(Drawable drawable)
     {
         return CreateVector2(v => drawable.Position = new ScalableVector2(v.X, v.Y));
     }
+
     public SetterDelegate<float> Rotation(Sprite sprite)
     {
         return CreateFloat(v => sprite.Rotation = v);
     }
-    
+
     public SetterDelegate<float> Alpha(Sprite sprite)
     {
         return CreateFloat(v => sprite.Alpha = v);
     }
-    
+
     public SetterDelegate<float> Width(Drawable drawable)
     {
         return CreateFloat(v => drawable.Width = v);
