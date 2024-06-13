@@ -6,10 +6,9 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 [MoonSharpUserData]
 public class TweenPayload<T> : ISegmentPayload
 {
-    public delegate void SetterDelegate(T startValue, T endValue, float progress);
     public T StartValue { get; init; }
     public T EndValue { get; init; }
-    public SetterDelegate Setter { get; init; }
+    public SetterDelegate<T> Setter { get; init; }
     public EasingDelegate EasingFunction { get; init; } = EasingWrapperFunctions.Linear;
     public void Update(float progress, Segment segment)
     {
@@ -22,5 +21,7 @@ public class TweenPayload<T> : ISegmentPayload
         return $"Tween[{StartValue} - {EndValue}]";
     }
 }
+
+public delegate void SetterDelegate<in T>(T startValue, T endValue, float progress);
 
 public delegate float EasingDelegate(float progress);

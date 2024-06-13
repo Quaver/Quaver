@@ -38,7 +38,7 @@ public class ModChartTimeline
     /// <param name="easingFunction">A function f(startValue: float, endValue: float, progress: float) that returns the value at progress</param>
     /// <returns></returns>
     /// <seealso cref="Easing"/>
-    public TweenPayload<float> Tween(float startValue, float endValue, TweenPayload<float>.SetterDelegate setter,
+    public TweenPayload<float> Tween(float startValue, float endValue, SetterDelegate<float> setter,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
@@ -48,7 +48,7 @@ public class ModChartTimeline
     };
 
     public TweenPayload<Vector2> Tween(Vector2 startValue, Vector2 endValue,
-        TweenPayload<Vector2>.SetterDelegate setter,
+        SetterDelegate<Vector2> setter,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
@@ -58,7 +58,7 @@ public class ModChartTimeline
     };
 
     public TweenPayload<Vector3> Tween(Vector3 startValue, Vector3 endValue,
-        TweenPayload<Vector3>.SetterDelegate setter,
+        SetterDelegate<Vector3> setter,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
@@ -68,7 +68,7 @@ public class ModChartTimeline
     };
 
     public TweenPayload<Vector4> Tween(Vector4 startValue, Vector4 endValue,
-        TweenPayload<Vector4>.SetterDelegate setter,
+        SetterDelegate<Vector4> setter,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,

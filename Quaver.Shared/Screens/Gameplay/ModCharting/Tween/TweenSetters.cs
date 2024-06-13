@@ -20,79 +20,79 @@ public class TweenSetters
         Shortcut = shortcut;
     }
 
-    public static TweenPayload<float>.SetterDelegate CreateFloat(Action<float> action)
+    public static SetterDelegate<float> CreateFloat(Action<float> action)
     {
         return (startValue, endValue, progress) => action(EasingFunctions.Linear(startValue, endValue, progress));
     }
-    public static TweenPayload<float>.SetterDelegate CreateFloat(Closure action)
+    public static SetterDelegate<float> CreateFloat(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(EasingFunctions.Linear(startValue, endValue, progress));
     }
     
-    public static TweenPayload<Vector2>.SetterDelegate CreateVector2(Action<Vector2> action)
+    public static SetterDelegate<Vector2> CreateVector2(Action<Vector2> action)
     {
         return (startValue, endValue, progress) => action(Vector2.Lerp(startValue, endValue, progress));
     }
     
-    public static TweenPayload<Vector2>.SetterDelegate CreateVector2(Closure action)
+    public static SetterDelegate<Vector2> CreateVector2(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector2.Lerp(startValue, endValue, progress));
     }
-    public static TweenPayload<Vector3>.SetterDelegate CreateVector3(Action<Vector3> action)
+    public static SetterDelegate<Vector3> CreateVector3(Action<Vector3> action)
     {
         return (startValue, endValue, progress) => action(Vector3.Lerp(startValue, endValue, progress));
     }
-    public static TweenPayload<Vector3>.SetterDelegate CreateVector3(Closure action)
+    public static SetterDelegate<Vector3> CreateVector3(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector3.Lerp(startValue, endValue, progress));
     }
-    public static TweenPayload<Vector4>.SetterDelegate CreateVector4(Action<Vector4> action)
+    public static SetterDelegate<Vector4> CreateVector4(Action<Vector4> action)
     {
         return (startValue, endValue, progress) => action(Vector4.Lerp(startValue, endValue, progress));
     }
-    public static TweenPayload<Vector4>.SetterDelegate CreateVector4(Closure action)
+    public static SetterDelegate<Vector4> CreateVector4(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector4.Lerp(startValue, endValue, progress));
     }
 
-    public TweenPayload<float>.SetterDelegate X(Drawable drawable)
+    public SetterDelegate<float> X(Drawable drawable)
     {
         return CreateFloat(v => drawable.X = v);
     }
-    public TweenPayload<float>.SetterDelegate Y(Drawable drawable)
+    public SetterDelegate<float> Y(Drawable drawable)
     {
         return CreateFloat(v => drawable.Y = v);
     }
-    public TweenPayload<Vector2>.SetterDelegate Position(Drawable drawable)
+    public SetterDelegate<Vector2> Position(Drawable drawable)
     {
         return CreateVector2(v => drawable.Position = new ScalableVector2(v.X, v.Y));
     }
-    public TweenPayload<float>.SetterDelegate Rotation(Sprite sprite)
+    public SetterDelegate<float> Rotation(Sprite sprite)
     {
         return CreateFloat(v => sprite.Rotation = v);
     }
     
-    public TweenPayload<float>.SetterDelegate Alpha(Sprite sprite)
+    public SetterDelegate<float> Alpha(Sprite sprite)
     {
         return CreateFloat(v => sprite.Alpha = v);
     }
     
-    public TweenPayload<float>.SetterDelegate Width(Drawable drawable)
+    public SetterDelegate<float> Width(Drawable drawable)
     {
         return CreateFloat(v => drawable.Width = v);
     }
 
-    public TweenPayload<float>.SetterDelegate Height(Drawable drawable)
+    public SetterDelegate<float> Height(Drawable drawable)
     {
         return CreateFloat(v => drawable.Height = v);
     }
 
-    public TweenPayload<float>.SetterDelegate FontSize(SpriteTextPlus spriteTextPlus)
+    public SetterDelegate<float> FontSize(SpriteTextPlus spriteTextPlus)
     {
         return CreateFloat(v => spriteTextPlus.FontSize = (int)v);
     }
 
-    public TweenPayload<float>.SetterDelegate HitObjectFallRotation(int lane)
+    public SetterDelegate<float> HitObjectFallRotation(int lane)
     {
         return CreateFloat(v => Shortcut.GameplayPlayfieldKeys.HitObjectFallRotation[lane - 1] = v);
     }

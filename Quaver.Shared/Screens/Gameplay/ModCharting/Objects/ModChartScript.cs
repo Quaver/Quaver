@@ -102,10 +102,10 @@ public class ModChartScript
         UserData.RegisterType<GameMode>();
         UserData.RegisterType<ModChartEventType>();
         UserData.RegisterType<EasingDelegate>();
-        UserData.RegisterType<TweenPayload<float>.SetterDelegate>();
-        UserData.RegisterType<TweenPayload<Vector2>.SetterDelegate>();
-        UserData.RegisterType<TweenPayload<Vector3>.SetterDelegate>();
-        UserData.RegisterType<TweenPayload<Vector4>.SetterDelegate>();
+        UserData.RegisterType<SetterDelegate<float>>();
+        UserData.RegisterType<SetterDelegate<Vector2>>();
+        UserData.RegisterType<SetterDelegate<Vector3>>();
+        UserData.RegisterType<SetterDelegate<Vector4>>();
         UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
         UserData.RegisterProxyType<HitObjectInfoProxy, HitObjectInfo>(hitObjectInfo =>
             new HitObjectInfoProxy(hitObjectInfo));
@@ -125,6 +125,15 @@ public class ModChartScript
 
         RegisterAllVectors();
         RegisterClosures();
+        RegisterEasingType();
+        RegisterSetterDelegate<float>();
+        RegisterSetterDelegate<Vector2>();
+        RegisterSetterDelegate<Vector3>();
+        RegisterSetterDelegate<Vector4>();
+        RegisterKeyframe<float>();
+        RegisterKeyframe<Vector2>();
+        RegisterKeyframe<Vector3>();
+        RegisterKeyframe<Vector4>();
         LoadScript();
     }
 
@@ -187,6 +196,48 @@ public class ModChartScript
         SegmentManager.Update(time);
         ModChartStateMachines.RootMachine.Update();
         ModChartEvents.DeferredEventQueue.Dispatch();
+    }
+
+    private void RegisterSetterDelegate<T>()
+    {
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function,
+            typeof(SetterDelegate<T>),
+            dynVal => new SetterDelegate<T>((start, end, progress) => dynVal.Function?.SafeCall(start, end, progress)));
+    }
+
+    private void RegisterEasingType()
+    {
+        // Implicitly converts Easing to EasingWrapperFunction, so you can directly pass Easing in Timeline.Tween
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.UserData, typeof(EasingDelegate),
+            dynVal =>
+            {
+                return dynVal.UserData.Object switch
+                {
+                    Easing easing => EasingWrapperFunctions.From(easing),
+                    _ => throw new ScriptRuntimeException(
+                        $"Cannot convert {dynVal.UserData.Descriptor.Name} to easing wrapper function")
+                };
+            }
+        );
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function, typeof(EasingDelegate),
+            dynVal => new EasingDelegate(p => dynVal.Function?.SafeCall(p)?.ToObject<float>() ?? 0));
+    }
+
+    private void RegisterKeyframe<T>()
+    {
+        // Constructs keyframes with tables {time, value, easingFunction}.
+        // If in the form {time, value}, easingFunction defaults to Linear.
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Keyframe<T>),
+            dynVal =>
+            {
+                var table = dynVal.Table;
+                var time = (float)table[1];
+                var value = (T)table[2];
+                var easingFunction =
+                    table.RawGet(3)?.ToObject<EasingDelegate>() ?? EasingWrapperFunctions.Linear;
+                return new Keyframe<T>(time, value, easingFunction);
+            }
+        );
     }
 
     private void RegisterClosures()
