@@ -990,7 +990,7 @@ namespace Quaver.Shared.Config
             SteamWorkshopDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SteamWorkshopDirectory", _steamWorkshopDirectory, data);
             SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
             Username = ReadValue(@"Username", "Player", data);
-            VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
+            VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
             DevicePeriod = ReadInt(@"DevicePeriod", 2, 1, 100, data);
