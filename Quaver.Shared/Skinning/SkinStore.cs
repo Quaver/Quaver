@@ -673,8 +673,14 @@ namespace Quaver.Shared.Skinning
 
             foreach (var f in files)
             {
-                if (validExtensions.Contains(Path.GetExtension(f).ToLower()))
-                    BackgroundPaths.Add(f);
+                if (!validExtensions.Contains(Path.GetExtension(f).ToLower()))
+                    continue;
+
+                var metadata = SixLabors.ImageSharp.Image.Identify(f);
+                if (metadata.Width > 2560 || metadata.Height > 1440)
+                    continue;
+
+                BackgroundPaths.Add(f);
             }
         }
 
