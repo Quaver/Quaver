@@ -113,6 +113,11 @@ namespace Quaver.Shared.Skinning
         internal bool CenterCursor { get; private set; }
 
         /// <summary>
+        ///     Whether the skin uses its own backgrounds.
+        /// </summary>
+        internal bool UseSkinBackgrounds { get; private set; }
+
+        /// <summary>
         ///     Grade Textures.
         /// </summary>
         internal Dictionary<Grade, Texture2D> Grades { get; } = new Dictionary<Grade, Texture2D>();
@@ -253,6 +258,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D BattleRoyaleWarning { get; private set; }
 
         /// <summary>
+        ///     Backgrounds for the skin. Only loaded if UseSkinBackgrounds is true.
+        /// </summary>
+        internal List<string> BackgroundPaths { get; private set; }
+
+        /// <summary>
         ///     Sound effect elements.
         /// </summary>
         internal AudioSample SoundHit { get; private set; }
@@ -324,6 +334,7 @@ namespace Quaver.Shared.Skinning
                 Author = ConfigHelper.ReadString(Author, Config["General"]["Author"]);
                 Version = ConfigHelper.ReadString(Version, Config["General"]["Version"]);
                 CenterCursor = ConfigHelper.ReadBool(false, Config["General"]["CenterCursor"]);
+                UseSkinBackgrounds = ConfigHelper.ReadBool(false, Config["General"]["UseSkinBackgrounds"]);
             }
             catch (Exception e)
             {
@@ -348,6 +359,7 @@ namespace Quaver.Shared.Skinning
             LoadSkip();
             LoadComboAlert();
             LoadMultiplayerElements();
+            LoadBackgrounds();
             LoadSoundEffects();
         }
 
@@ -643,6 +655,22 @@ namespace Quaver.Shared.Skinning
             const string battleRoyaleWarning = "warning";
             BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
                 ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
+        }
+
+        private void LoadBackgrounds()
+        {
+            if (!UseSkinBackgrounds)
+                return;
+
+            var backgroundFolder = $"{Dir}/Backgrounds/";
+            const string background = "background";
+
+            BackgroundPaths = new List<string>();
+
+            for (var i = 0; File.Exists($"{backgroundFolder}/{background}-{i + 1}.png"); i++)
+            {
+                BackgroundPaths.Add($"{backgroundFolder}/{background}-{i + 1}.png");
+            }
         }
 
         /// <summary>
