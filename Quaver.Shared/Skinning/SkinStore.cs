@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using IniFileParser;
@@ -667,9 +668,13 @@ namespace Quaver.Shared.Skinning
 
             BackgroundPaths = new List<string>();
 
-            for (var i = 0; File.Exists($"{backgroundFolder}/{background}-{i + 1}.png"); i++)
+            string[] validExtensions = { ".png", ".jpg", ".jpeg" };
+            var files = Directory.GetFiles(backgroundFolder);
+
+            foreach (var f in files)
             {
-                BackgroundPaths.Add($"{backgroundFolder}/{background}-{i + 1}.png");
+                if (validExtensions.Contains(Path.GetExtension(f).ToLower()))
+                    BackgroundPaths.Add(f);
             }
         }
 
