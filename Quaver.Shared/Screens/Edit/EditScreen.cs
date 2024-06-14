@@ -294,9 +294,6 @@ namespace Quaver.Shared.Screens.Edit
             Map = map;
             BackgroundStore = visualTestBackground;
 
-            if (map.Game is MapGame.Quaver)
-                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
-
             try
             {
                 OriginalQua = map.LoadQua();
@@ -310,6 +307,9 @@ namespace Quaver.Shared.Screens.Edit
                 NotificationManager.Show(NotificationLevel.Error, "There was an issue while loading this map in the editor.");
                 return;
             }
+
+            if (map.Game is MapGame.Quaver)
+                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
 
             SetAudioTrack(track);
 
