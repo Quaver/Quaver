@@ -157,21 +157,17 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackgroundRaw;
                 RawTexture = tex;
 
-                ThreadScheduler.RunAfter(() =>
-                {
-                    lock (TextureManager.Textures)
-                    {
-                        if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
-                        {
-                            oldRawTexture?.Dispose();
-                        }
-                    }
-                }, 500);
-
                 token.ThrowIfCancellationRequested();
 
-                await Task.Delay(100, token);
                 Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
+
+                lock (TextureManager.Textures)
+                {
+                    if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                    {
+                        oldRawTexture?.Dispose();
+                    }
+                }
             }
             catch (OperationCanceledException e)
             {
