@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
@@ -188,7 +189,7 @@ namespace Quaver.Shared.Screens.Importing
                 Parent = Banner,
                 Alignment = Alignment.BotLeft,
                 Size = new ScalableVector2(WindowManager.Width, 2),
-                Rotation = 180
+                Rotation = MathF.PI
             };
 
             VisualizerBottom.Bars.ForEach(x =>
@@ -196,7 +197,7 @@ namespace Quaver.Shared.Screens.Importing
                 x.Alignment = Alignment.TopLeft;
                 x.Alpha = 1;
                 x.Tint = Banner.Border.Tint;
-                x.Rotation = 180;
+                x.Rotation = MathF.PI;
             });
         }
     }

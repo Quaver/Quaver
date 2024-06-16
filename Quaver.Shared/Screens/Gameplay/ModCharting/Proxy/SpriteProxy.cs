@@ -23,7 +23,7 @@ public class SpriteProxy : DrawableProxy
     public float Rotation
     {
         get => _drawable.Rotation;
-        set => _drawable.Rotation = MathHelper.ToDegrees(value);
+        set => _drawable.Rotation = value;
     }
 
     public float Alpha
@@ -36,5 +36,11 @@ public class SpriteProxy : DrawableProxy
     {
         get => _drawable.Tint;
         set => _drawable.Tint = value;
+    }
+
+    public Vector2 Pivot
+    {
+        get => _drawable.Pivot;
+        set => _drawable.Pivot = value;
     }
 }

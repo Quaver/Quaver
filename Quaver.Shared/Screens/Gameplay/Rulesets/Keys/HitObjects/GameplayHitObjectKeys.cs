@@ -599,34 +599,34 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     switch (lane)
                     {
                         case 0:
-                            return  90;
+                            return MathF.PI / 2;
                         case 1:
                             // Already downwards
                             break;
                         case 2:
-                            return 180;
+                            return MathF.PI;
                         case 3:
-                            return 270;
+                            return MathF.PI * 1.5f;
                     }
                     break;
                 case GameMode.Keys7:
                     switch (lane)
                     {
                         case 0:
-                            return 90;
+                            return MathF.PI / 2;
                         case 1:
-                            return 135;
+                            return MathF.PI * 0.75f;
                         case 2:
-                            return 180;
+                            return MathF.PI;
                         case 3:
                             // Already downwards
                             break;
                         case 4:
-                            return 180;
+                            return MathF.PI;
                         case 5:
-                            return 225;
+                            return MathF.PI * 1.25f;
                         case 6:
-                            return 270;
+                            return MathF.PI * 1.5f;
                     }
 
                     break;
