@@ -281,7 +281,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             DividerLine.FadeTo(1, Easing.OutQuint, time / 2);
 
             Chevron.ClearAnimations();
-            Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, MathHelper.ToDegrees(Chevron.Rotation), 180, time));
+            Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, Chevron.Rotation, MathF.PI, time));
 
             ItemContainer.ClearAnimations();
 
@@ -306,7 +306,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             DividerLine.FadeTo(0, Easing.OutQuint, (int) (time * 2.5f));
 
             Chevron.ClearAnimations();
-            Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, MathHelper.ToDegrees(Chevron.Rotation), 0, time));
+            Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, Chevron.Rotation, 0, time));
 
             ItemContainer.ClearAnimations();
             ItemContainer.ChangeHeightTo(0, Easing.OutQuint, time);

@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
@@ -66,9 +67,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
             if (LoadingWheel.Animations.Count != 0)
                 return;
 
-            var rotation = MathHelper.ToDegrees(LoadingWheel.Rotation);
+            var rotation = LoadingWheel.Rotation;
             LoadingWheel.ClearAnimations();
-            LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
+            LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 2 * MathF.PI, 1000));
         }
     }
 }

@@ -79,9 +79,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (LoadingWheel.Animations.Count != 0)
                 return;
 
-            var rotation = MathHelper.ToDegrees(LoadingWheel.Rotation);
+            var rotation = LoadingWheel.Rotation;
             LoadingWheel.ClearAnimations();
-            LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
+            LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 2 * MathF.PI, 1000));
         }
 
         private void OnClientStatusReceived(object sender, UserStatusEventArgs e)

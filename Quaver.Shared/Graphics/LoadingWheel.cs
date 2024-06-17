@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Wobble.Graphics.Animations;
@@ -27,9 +28,9 @@ namespace Quaver.Shared.Graphics
             if (Animations.Count != 0)
                 return;
 
-            var rotation = MathHelper.ToDegrees(Rotation);
+            var rotation = Rotation;
             ClearAnimations();
-            Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
+            Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 2 * MathF.PI, 1000));
         }
     }
 }
