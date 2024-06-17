@@ -307,7 +307,7 @@ namespace Quaver.Shared
         {
             base.LoadContent();
 
-            Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
+            Logger.Important($"Currently running Quaver version: `{Version}`", LogType.Runtime);
             IsReadyToUpdate = true;
 
 #if VISUAL_TESTS
