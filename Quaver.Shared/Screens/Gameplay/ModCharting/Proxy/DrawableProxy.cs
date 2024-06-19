@@ -1,7 +1,9 @@
 using System.Collections.Generic;
-using System.Numerics;
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using Wobble.Graphics;
+using Vector2 = System.Numerics.Vector2;
+using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
 
@@ -65,6 +67,17 @@ public class DrawableProxy
         return _drawable;
     }
 
+    public Drawable Rotate(float radian)
+    {
+        Rotation += radian;
+        return _drawable;
+    }
+
+    public void AddBorder(Color color, float thickness)
+    {
+        _drawable.AddBorder(color, thickness);
+    }
+
     public ScalableVector2 Position
     {
         get => _drawable.Position;
@@ -111,6 +124,18 @@ public class DrawableProxy
     {
         get => _drawable.Alignment;
         set => _drawable.Alignment = value;
+    }
+    
+    public float Rotation
+    {
+        get => _drawable.Rotation;
+        set => _drawable.Rotation = value;
+    }
+
+    public XnaVector2 Pivot
+    {
+        get => _drawable.Pivot;
+        set => _drawable.Pivot = value;
     }
 
     public List<Drawable> Children => _drawable.Children;

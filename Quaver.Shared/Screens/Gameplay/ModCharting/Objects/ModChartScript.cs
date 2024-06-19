@@ -24,6 +24,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Logging;
+using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
@@ -96,6 +97,7 @@ public class ModChartScript
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterExtensionType(typeof(EventHelper));
         UserData.RegisterType<Easing>();
+        UserData.RegisterType<Color>();
         UserData.RegisterType<Alignment>();
         UserData.RegisterType<Judgement>();
         UserData.RegisterType<Direction>();
@@ -144,6 +146,7 @@ public class ModChartScript
         WorkingScript.Globals["Tween"] = TweenSetters;
         WorkingScript.Globals["EasingWrapper"] = new EasingWrapperFunctions();
         WorkingScript.Globals["Easing"] = typeof(Easing);
+        WorkingScript.Globals["Color"] = typeof(Color);
         WorkingScript.Globals["Constants"] = ModChartConstants;
         WorkingScript.Globals["Map"] = GameplayScreenView.Screen.Map;
         WorkingScript.Globals["Stage"] = ModChartStage;
@@ -313,8 +316,28 @@ public class ModChartScript
                 return new Vector2(x, y);
             }
         );
+        
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(XnaVector2),
+            dynVal =>
+            {
+                var table = dynVal.Table;
+                var x = (float)(double)table[1];
+                var y = (float)(double)table[2];
+                return new XnaVector2(x, y);
+            }
+        );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
+            (script, vector) =>
+            {
+                var x = DynValue.NewNumber(vector.X);
+                var y = DynValue.NewNumber(vector.Y);
+                var dynVal = DynValue.NewTable(script, x, y);
+                return dynVal;
+            }
+        );
+
+        Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<XnaVector2>(
             (script, vector) =>
             {
                 var x = DynValue.NewNumber(vector.X);

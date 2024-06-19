@@ -76,7 +76,7 @@ public class TweenSetters
         return CreateVector2(v => drawable.Position = new ScalableVector2(v.X, v.Y));
     }
 
-    public SetterDelegate<float> Rotation(Sprite sprite)
+    public SetterDelegate<float> Rotation(Drawable sprite)
     {
         return CreateFloat(v => sprite.Rotation = v);
     }

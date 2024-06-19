@@ -14,18 +14,6 @@ public class SpriteProxy : DrawableProxy
         _drawable = drawable;
     }
 
-    public Sprite Rotate(float radian)
-    {
-        Rotation += radian;
-        return _drawable;
-    }
-    
-    public float Rotation
-    {
-        get => _drawable.Rotation;
-        set => _drawable.Rotation = value;
-    }
-
     public float Alpha
     {
         get => _drawable.Alpha;
@@ -38,9 +26,9 @@ public class SpriteProxy : DrawableProxy
         set => _drawable.Tint = value;
     }
 
-    public Vector2 Pivot
+    public bool IndependentRotation
     {
-        get => _drawable.Pivot;
-        set => _drawable.Pivot = value;
+        get => _drawable.IndependentRotation;
+        set => _drawable.IndependentRotation = value;
     }
 }
