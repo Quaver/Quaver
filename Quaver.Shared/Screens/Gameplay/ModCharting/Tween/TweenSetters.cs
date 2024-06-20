@@ -7,6 +7,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
@@ -39,6 +40,16 @@ public class TweenSetters
     public static SetterDelegate<Vector2> CreateVector2(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector2.Lerp(startValue, endValue, progress));
+    }
+
+    public static SetterDelegate<XnaVector2> CreateXnaVector2(Action<XnaVector2> action)
+    {
+        return (startValue, endValue, progress) => action(XnaVector2.Lerp(startValue, endValue, progress));
+    }
+
+    public static SetterDelegate<XnaVector2> CreateXnaVector2(Closure action)
+    {
+        return (startValue, endValue, progress) => action?.SafeCall(XnaVector2.Lerp(startValue, endValue, progress));
     }
 
     public static SetterDelegate<Vector3> CreateVector3(Action<Vector3> action)
@@ -79,6 +90,11 @@ public class TweenSetters
     public SetterDelegate<float> Rotation(Drawable sprite)
     {
         return CreateFloat(v => sprite.Rotation = v);
+    }
+
+    public SetterDelegate<XnaVector2> Scale(Drawable drawable)
+    {
+        return CreateXnaVector2(v => drawable.Scale = v);
     }
 
     public SetterDelegate<float> Alpha(Sprite sprite)

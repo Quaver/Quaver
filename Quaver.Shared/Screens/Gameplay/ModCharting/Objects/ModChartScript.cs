@@ -17,6 +17,7 @@ using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -106,6 +107,7 @@ public class ModChartScript
         UserData.RegisterType<EasingDelegate>();
         UserData.RegisterType<SetterDelegate<float>>();
         UserData.RegisterType<SetterDelegate<Vector2>>();
+        UserData.RegisterType<SetterDelegate<XnaVector2>>();
         UserData.RegisterType<SetterDelegate<Vector3>>();
         UserData.RegisterType<SetterDelegate<Vector4>>();
         UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
@@ -130,6 +132,7 @@ public class ModChartScript
         RegisterEasingType();
         RegisterKeyframe<float>();
         RegisterKeyframe<Vector2>();
+        RegisterKeyframe<XnaVector2>();
         RegisterKeyframe<Vector3>();
         RegisterKeyframe<Vector4>();
         LoadScript();

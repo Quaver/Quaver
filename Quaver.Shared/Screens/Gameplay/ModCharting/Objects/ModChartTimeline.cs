@@ -8,6 +8,7 @@ using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Logging;
+using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
@@ -42,6 +43,9 @@ public class ModChartTimeline
     public KeyframesPayload<Vector2> Keyframes(SetterDelegate<Vector2> setter, Keyframe<Vector2>[] keyframes) =>
         new(setter, keyframes);
 
+    public KeyframesPayload<XnaVector2> Keyframes(SetterDelegate<XnaVector2> setter, Keyframe<XnaVector2>[] keyframes) =>
+        new(setter, keyframes);
+
     public KeyframesPayload<Vector3> Keyframes(SetterDelegate<Vector3> setter, Keyframe<Vector3>[] keyframes) =>
         new(setter, keyframes);
 
@@ -68,6 +72,16 @@ public class ModChartTimeline
 
     public TweenPayload<Vector2> Tween(Vector2 startValue, Vector2 endValue,
         SetterDelegate<Vector2> setter,
+        EasingDelegate easingFunction = null) => new()
+    {
+        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
+        StartValue = startValue,
+        EndValue = endValue,
+        Setter = setter
+    };
+
+    public TweenPayload<XnaVector2> Tween(XnaVector2 startValue, XnaVector2 endValue,
+        SetterDelegate<XnaVector2> setter,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,

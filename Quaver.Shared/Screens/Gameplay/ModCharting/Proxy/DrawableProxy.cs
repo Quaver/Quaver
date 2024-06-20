@@ -43,18 +43,6 @@ public class DrawableProxy
         return _drawable;
     }
 
-    public Drawable Scale(float factor)
-    {
-        Size = new ScalableVector2(Size.X.Value * factor, Size.Y.Value * factor, Size.X.Scale, Size.Y.Scale);
-        return _drawable;
-    }
-
-    public Drawable Scale(Vector2 factor)
-    {
-        Size = new ScalableVector2(Size.X.Value * factor.X, Size.Y.Value * factor.Y, Size.X.Scale, Size.Y.Scale);
-        return _drawable;
-    }
-
     public Drawable WithParent(Drawable parent)
     {
         Parent = parent;
@@ -112,6 +100,12 @@ public class DrawableProxy
     {
         get => _drawable.Height;
         set => _drawable.Height = value;
+    }
+
+    public XnaVector2 Scale
+    {
+        get => _drawable.Scale;
+        set => _drawable.Scale = value;
     }
 
     public Drawable Parent
