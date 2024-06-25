@@ -107,7 +107,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
         /// </summary>
         public override void Cache()
         {
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            GameBase.Game.ScheduledRenderTargetDraws.Add(_ =>
             {
                 try
                 {
