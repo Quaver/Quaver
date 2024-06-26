@@ -20,6 +20,7 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
+using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
 
@@ -113,6 +114,21 @@ namespace Quaver.Shared.Skinning
         internal int HoldLightingFps { get; private set; }
 
         internal int HitLightingScale { get; private set; } = 100;
+
+        internal int HitBubbleScale { get; private set; } = 20;
+
+        [FixedScale]
+        internal float HitBubblesScale { get; private set; } = 0.25f;
+
+        internal HitBubblesAlignment HitBubblesAlignment { get; private set; } = HitBubblesAlignment.RightStage;
+
+        [FixedScale]
+        internal float HitBubblesPosX { get; private set; }
+
+        [FixedScale]
+        internal float HitBubblesPosY { get; private set; }
+
+        internal HitBubblesType HitBubblesType { get; private set; } = HitBubblesType.FallDown;
 
         internal int HoldLightingScale { get; private set; } = 100;
 
@@ -476,6 +492,12 @@ namespace Quaver.Shared.Skinning
             HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
             HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
             HoldLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HoldLightingScale"]);
+            HitBubbleScale = ConfigHelper.ReadInt32(HitBubbleScale, ini["HitBubbleScale"]);
+            HitBubblesAlignment = ConfigHelper.ReadEnum(HitBubblesAlignment, ini["HitBubblesAlignment"]);
+            HitBubblesPosX = ConfigHelper.ReadInt32((int) HitBubblesPosX, ini["HitBubblesPosX"]);
+            HitBubblesPosY = ConfigHelper.ReadInt32((int) HitBubblesPosY, ini["HitBubblesPosY"]);
+            HitBubblesScale = ConfigHelper.ReadFloat(HitBubblesScale, ini["HitBubblesScale"]);
+            HitBubblesType = ConfigHelper.ReadEnum(HitBubblesType, ini["HitBubblesType"]);
             HitLightingColumnRotation = ConfigHelper.ReadBool(HitLightingColumnRotation, ini["HitLightingColumnRotation"]);
             HoldLightingColumnRotation = ConfigHelper.ReadBool(HoldLightingColumnRotation, ini["HoldLightingColumnRotation"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32((int) ScoreDisplayPosX, ini["ScoreDisplayPosX"]);

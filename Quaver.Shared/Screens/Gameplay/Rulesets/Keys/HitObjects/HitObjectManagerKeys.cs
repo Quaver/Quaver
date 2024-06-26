@@ -646,6 +646,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (im?.ReplayInputManager == null)
                     {
                         playfield.Stage.ComboDisplay.MakeVisible();
+                        playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
                         playfield.Stage.JudgementHitBursts[Math.Clamp(info.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1)].PerformJudgementAnimation(Judgement.Miss);
                     }
 

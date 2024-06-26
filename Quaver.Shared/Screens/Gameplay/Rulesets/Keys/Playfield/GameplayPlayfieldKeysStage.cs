@@ -23,6 +23,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI;
+using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Skinning;
@@ -127,6 +128,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public HitErrorBar HitError { get; private set; }
 
         /// <summary>
+        ///     The HitError bar.
+        /// </summary>
+        public HitBubbles HitBubbles { get; private set; }
+
+        /// <summary>
         ///     The JudgementHitBurst Sprite.
         /// </summary>
         public List<JudgementHitBurst> JudgementHitBursts { get; private set; }
@@ -203,6 +209,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateLaneCoverOverlay();
                 CreateComboDisplay();
                 CreateHitError();
+                CreateHitBubbles();
                 CreateHitLighting();
                 CreateJudgementHitBurst();
 
@@ -220,6 +227,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 CreateComboDisplay();
                 CreateHitError();
+                CreateHitBubbles();
                 CreateJudgementHitBurst();
                 CreateHitLighting();
 
@@ -537,6 +545,31 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Position = new ScalableVector2(Skin.HitErrorPosX, Skin.HitErrorPosY),
             Alpha = Skin.HitErrorAlpha
         };
+
+        /// <summary>
+        ///     Creates the HitError Sprite.
+        /// </summary>
+        private void CreateHitBubbles()
+        {
+            HitBubbles = new HitBubbles(Skin.HitBubblesScale, Skin.HitBubblesType)
+            {
+                Parent = Playfield.ForegroundContainer,
+                Alignment = Alignment.MidCenter,
+                Position = new ScalableVector2(Skin.HitBubblesPosX, Skin.HitBubblesPosY),
+            };
+            switch (Skin.HitBubblesAlignment)
+            {
+                case HitBubblesAlignment.BelowStage:
+                    HitBubbles.Alignment = Alignment.BotCenter;
+                    break;
+                case HitBubblesAlignment.RightStage:
+                    HitBubbles.Parent = StageRight;
+                    HitBubbles.Alignment = Alignment.MidLeft;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         /// <summary>
         ///     Creates the JudgementHitBurst sprite.

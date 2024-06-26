@@ -123,6 +123,16 @@ namespace Quaver.Shared.Skinning
         internal Dictionary<Grade, Texture2D> GradesLarge { get; } = new Dictionary<Grade, Texture2D>();
 
         /// <summary>
+        ///     Grade Textures.
+        /// </summary>
+        internal Dictionary<Judgement, Texture2D> HitBubbles { get; } = new Dictionary<Judgement, Texture2D>();
+
+        /// <summary>
+        ///     The health bar displayed in the background. (Non-Moving one.)
+        /// </summary>
+        internal List<Texture2D> HitBubblesBackground { get; private set; }
+
+        /// <summary>
         ///     Judgement animation elements
         /// </summary>
         internal Dictionary<Judgement, List<Texture2D>> Judgements { get; } = new Dictionary<Judgement, List<Texture2D>>();
@@ -340,6 +350,7 @@ namespace Quaver.Shared.Skinning
             Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", $"Quaver.Resources/Textures/Skins/Shared/Cursor/{cursor}.png");
 
             LoadGradeElements();
+            LoadHitBubbleElements();
             LoadJudgements();
             LoadNumberDisplays();
             LoadPause();
@@ -471,6 +482,27 @@ namespace Quaver.Shared.Skinning
                 Grades[grade] = LoadSingleTexture($"{Dir}/Grades/grade-small-{grade.ToString().ToLower()}", $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-{grade.ToString().ToLower()}.png");
                 GradesLarge[grade] = LoadSingleTexture($"{Dir}/Grades/grade-large-{grade.ToString().ToLower()}", $"Quaver.Resources/Textures/UI/Results/grade-large-{grade.ToString().ToLower()}.png");
             }
+        }
+
+        /// <summary>
+        ///     Loads all grade texture elements
+        /// </summary>
+        private void LoadHitBubbleElements()
+        {
+            // Load Grades
+            foreach (Judgement judgement in Enum.GetValues(typeof(Judgement)))
+            {
+                if (judgement == Judgement.Ghost)
+                    continue;
+
+                HitBubbles[judgement] = LoadSingleTexture($"{Dir}/HitBubbles/bubble-{judgement.ToString().ToLower()}", $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubble-{judgement.ToString().ToLower()}.png");
+            }
+            
+            var hitBubblesFolder = $"/HitBubbles/";
+
+            const string bubblesBackground = "bubbles-background";
+            HitBubblesBackground = LoadSpritesheet(hitBubblesFolder, bubblesBackground,
+                $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubbles-background", 0, 0);
         }
 
         /// <summary>
