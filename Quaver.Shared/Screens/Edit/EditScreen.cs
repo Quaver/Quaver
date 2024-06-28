@@ -1612,7 +1612,7 @@ namespace Quaver.Shared.Screens.Edit
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset.");
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset:\n" + e.Message);
             }
         }
 
