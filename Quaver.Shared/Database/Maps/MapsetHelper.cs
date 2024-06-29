@@ -513,15 +513,16 @@ namespace Quaver.Shared.Database.Maps
             // for "difficulty" (backwards-compatibility) and "du" searches for duration.
             var options = new Dictionary<SearchFilterOption, (string Shortest, string Longest)>
             {
-                { SearchFilterOption.BPM,        ("b", "bpm") },
-                { SearchFilterOption.Difficulty, ("d", "difficulty") },
-                { SearchFilterOption.Length,     ("l", "length") },
-                { SearchFilterOption.Keys,       ("k", "keys") },
-                { SearchFilterOption.Status,     ("s", "status") },
-                { SearchFilterOption.LNs,        ("ln", "lns") },
-                { SearchFilterOption.NPS,        ("n", "nps") },
-                { SearchFilterOption.Game,       ("g", "game") },
-                { SearchFilterOption.TimesPlayed, ("t", "timesplayed") }
+                { SearchFilterOption.BPM,         ("b", "bpm") },
+                { SearchFilterOption.Difficulty,  ("d", "difficulty") },
+                { SearchFilterOption.Length,      ("l", "length") },
+                { SearchFilterOption.Keys,        ("k", "keys") },
+                { SearchFilterOption.Status,      ("s", "status") },
+                { SearchFilterOption.LNs,         ("ln", "lns") },
+                { SearchFilterOption.NPS,         ("n", "nps") },
+                { SearchFilterOption.Game,        ("g", "game") },
+                { SearchFilterOption.TimesPlayed, ("t", "timesplayed") },
+                { SearchFilterOption.SVChanges,   ("svc", "svchanges") }
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -697,7 +698,13 @@ namespace Quaver.Shared.Database.Maps
 
                                 if (!CompareValues(valueToCompareTo, value, searchQuery.Operator))
                                     exitLoop = true;
+                                break;
+                            case SearchFilterOption.SVChanges:
+                                if (!float.TryParse(searchQuery.Value, out var valSvChanges))
+                                    exitLoop = true;
 
+                                if (!CompareValues(map.ScrollVelocityChanges, valSvChanges, searchQuery.Operator))
+                                    exitLoop = true;
                                 break;
                         }
 
@@ -879,6 +886,11 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The amount of times the user has played the map
         /// </summary>
-        TimesPlayed
+        TimesPlayed,
+
+        /// <summary>
+        ///     The amount of times the velocity changes in the map
+        /// </summary>
+        SVChanges
     }
 }
