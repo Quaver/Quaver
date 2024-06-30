@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -191,8 +192,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="e"></param>
         private void OnDowloadAdded(object sender, MapsetDownloadAddedEventArgs e)
         {
-            e.Download.Completed.ValueChanged += (o, args) =>
+            e.Download.Status.ValueChanged += (o, args) =>
             {
+                if (args.Value.Status != FileDownloaderStatus.Complete)
+                    return;
                 if (args.Value.Error == null)
                 {
                     NotificationManager.Show(NotificationLevel.Success,

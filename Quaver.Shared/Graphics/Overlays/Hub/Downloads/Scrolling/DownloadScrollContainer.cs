@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
@@ -11,6 +12,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
@@ -76,22 +78,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Pool.Remove(item);
             }
 
-            RecalculateContainerHeight();
+            ReorganizeItems();
 
-            AddScheduledUpdate(() =>
-            {
-                // Reset the pool item index
-                for (var i = 0; i < Pool.Count; i++)
-                {
-                    Pool[i].Index = i;
-                    Pool[i].ClearAnimations();
-                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT, Easing.OutQuint, 400);
-                    Pool[i].UpdateContent(Pool[i].Item, i);
-                }
-            });
-
-            // Download the next map in the queue
-            Pool.Find(x => !x.Item.IsDownloading)?.Item?.Download();
+            DownloadNextItem();
 
             // Automatically mark the section as read if there are no more downloads left
             if (AvailableItems.Count == 0)
@@ -99,6 +88,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 var game = (QuaverGame) GameBase.Game;
                 game.OnlineHub.Sections[OnlineHubSectionType.ActiveDownloads].MarkAsRead();
             }
+        }
+
+        internal void DownloadNextItem()
+        {
+            // Download the next map in the queue
+            Pool.FindLast(x => !x.Item.HasDownloadEverStarted)?.Item?.Download();
         }
 
         /// <summary>
@@ -116,7 +111,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// <param name="index"></param>
         /// <returns></returns>
         protected override PoolableSprite<MapsetDownload> CreateObject(MapsetDownload item, int index)
-            => new DrawableDownload(this, item, index);
+        {
+            var drawableDownload = new DrawableDownload(this, item, index);
+            drawableDownload.DimensionsChanged += (sender, args) =>
+            {
+                ReorganizeItems();
+            };
+            return drawableDownload;
+        }
 
         /// <summary>
         /// </summary>
@@ -142,14 +144,41 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// <param name="e"></param>
         private void OnDownloadAdded(object sender, MapsetDownloadAddedEventArgs e)
         {
-            e.Download.Completed.ValueChanged += (o, args) => Remove(e.Download);
-            AddObjectToBottom(e.Download, false);
+            e.Download.Removed += (o, args) =>
+            {
+                Remove(e.Download);
+            };
+            AddObjectAtIndex(0, e.Download, false, true);
+            ReorganizeItems();
 
             // Running update once immediately here to make sure everything scheduled is initialized properly
             Update(new GameTime());
 
             var game = (QuaverGame) GameBase.Game;
             game.OnlineHub.MarkSectionAsUnread(OnlineHubSectionType.ActiveDownloads);
+        }
+        
+
+        public void ReorganizeItems()
+        {
+            RecalculateContainerHeight();
+
+            AddScheduledUpdate(() =>
+            {
+                if (Pool.Count == 0) 
+                    return;
+
+                var y = 0;
+                // Reset the pool item index
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    Pool[i].Index = i;
+                    Pool[i].ClearAnimations();
+                    Pool[i].MoveToY(y, Easing.OutQuint, 400);
+                    Pool[i].UpdateContent(Pool[i].Item, i);
+                    y += Pool[i].HEIGHT;
+                }
+            });
         }
     }
 }

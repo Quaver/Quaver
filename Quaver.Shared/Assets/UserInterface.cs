@@ -149,7 +149,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D HubOnlineIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-icon.png");
         public static Texture2D HubNotificationIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/notification.png");
         public static Texture2D HubNotificationIconUnread => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/notification-red.png");
-        public static Texture2D HubDownloadContainer => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-container.png");
+        public static Texture2D HubDownloadContainerBlue => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-container-blue.png");
+        public static Texture2D HubDownloadContainerRed => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-container-red.png");
+        public static Texture2D HubDownloadRetry => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-retry.png");
+        public static Texture2D HubDownloadRemove => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-remove.png");
         public static Texture2D TwitchIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon.png");
         public static Texture2D ConnectTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/connect-twitch.png");
         public static Texture2D UnlinkTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/unlink-twitch.png");
