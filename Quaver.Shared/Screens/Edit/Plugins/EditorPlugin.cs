@@ -24,9 +24,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public bool IsWindowHovered { get; set; }
 
-        /// <inheritdoc/>
-        public override string Name { get; set; }
-
         /// <summary>
         /// </summary>
         public string Author { get; set; }
@@ -58,10 +55,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="directory"></param>
         /// <param name="isWorkshop"></param>
         public EditorPlugin(EditScreen editScreen, string name, string author, string description, string filePath,
-            bool isResource = false, string directory = null, bool isWorkshop = false) : base(filePath, isResource)
+            bool isResource = false, string directory = null, bool isWorkshop = false) : base(filePath, isResource, name)
         {
             Editor = editScreen;
-            Name = name;
             Author = author;
             Description = description;
             IsBuiltIn = isResource;

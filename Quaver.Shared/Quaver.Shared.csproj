@@ -7,6 +7,7 @@
     <DefineConstants>TRACE;DEBUG;VISUAL_TESTS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   <ItemGroup>
