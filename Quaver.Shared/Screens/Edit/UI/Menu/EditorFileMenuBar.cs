@@ -730,6 +730,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                         plugin.Value.Initialize();
                 }
             }
+            
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Reset Window Layout"))
+            {
+                StructuredConfigManager.WindowStates.Value = new WindowStates();
+                ((EditScreenView)Screen.View).SaveWindowLayoutOnExit = false;
+                NotificationManager.Show(NotificationLevel.Info, "The window layout will be reset the next time you open the editor!");
+            }
 
             ImGui.EndMenu();
         }
