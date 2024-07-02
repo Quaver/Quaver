@@ -51,19 +51,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public GameplayPlayfieldKeys Playfield { get; }
 
         /// <summary>
-        ///     The container that holds all of the HitObjects.
-        /// </summary>
-        public Container HitObjectContainer { get; private set; }
-
-        /// <summary>
         ///     The Container that holds every Timing Line object
         /// </summary>
         public Container TimingLineContainer { get; private set; }
 
-        /// <summary>
-        ///     The container that holds all hits.
-        /// </summary>
-        public Container HitContainer { get; private set; }
+        public List<GameplayPlayfieldLane> LaneContainers { get; private set; }
 
         /// <summary>
         ///     The left side of the stage.
@@ -84,16 +76,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The HitPositionOverlay of the stage.
         /// </summary>
         public Sprite HitPositionOverlay { get; private set; }
-
-        /// <summary>
-        ///     The list of receptors
-        /// </summary>
-        public List<Sprite> Receptors { get; private set; }
-
-        /// <summary>
-        ///     The list of column lighting objects.
-        /// </summary>
-        public List<ColumnLighting> ColumnLightingObjects { get; private set; }
 
         /// <summary>
         ///     The distant overlay sprite.
@@ -177,6 +159,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             // Depending on what the skin.ini's value is, we'll want to either initialize
             // the receptors first, or the playfield first.
+            CreateLanes();
             if (Skin.ReceptorsOverHitObjects)
             {
                 CreateTimingLineContainer();
@@ -188,6 +171,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             else
             {
                 CreateReceptorsAndLighting();
+                // TODO Fix this order: hit position overlay and timing line will still be above because hitObject container
+                // and hit container are children of lanes
+                // maybe move to front?
                 CreateHitPositionOverlay();
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
@@ -346,13 +332,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             };
         }
 
-        /// <summary>
-        ///     Creates the receptors and column lighting
-        /// </summary>
-        private void CreateReceptorsAndLighting()
+        public void CreateLanes()
         {
-            Receptors = new List<Sprite>();
-            ColumnLightingObjects = new List<ColumnLighting>();
+            LaneContainers = new List<GameplayPlayfieldLane>();
 
             var scratchLaneLeft = Screen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScratchLaneLeft4K.Value : ConfigManager.ScratchLaneLeft7K.Value;
 
@@ -388,43 +370,40 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 if (scale != 1)
                     posX += (Playfield.LaneSize - Playfield.LaneSize * scale) / 2f;
 
-                // Create individiaul receptor.
-                Receptors.Add(new Sprite
+                
+
+                LaneContainers.Add(new GameplayPlayfieldLane(i, laneSize, scale, this)
                 {
                     Parent = Playfield.ForegroundContainer,
-                    Size = new ScalableVector2(laneSize * scale, (Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
-                    Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
+                    Size = new ScalableVector2(laneSize * scale, WindowManager.Height),
                     Alignment = Alignment.TopLeft,
-                    Image = Skin.NoteReceptorsUp[i],
-                    SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    X = posX
                 });
+            }
+        }
 
-                // Create the column lighting sprite.
-                var size = Skin.ColumnLightingScale * Playfield.LaneSize * ((float)Skin.ColumnLighting.Height / Skin.ColumnLighting.Width);
-                ColumnLightingObjects.Add(new ColumnLighting
-                {
-                    Parent = Playfield.BackgroundContainer,
-                    Image = Skin.ColumnLighting,
-                    Size = new ScalableVector2(Playfield.LaneSize, size),
-                    Tint = Skin.ColumnColors[i],
-                    X = posX,
-                    Y = Playfield.ColumnLightingPositionY[i],
-                    // todo: case statement for scroll direction
-                    SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                    Alignment = Alignment.TopLeft,
-                });
+        /// <summary>
+        ///     Creates the receptors and column lighting
+        /// </summary>
+        private void CreateReceptorsAndLighting()
+        {
+            foreach (var laneContainer in LaneContainers)
+            {
+                laneContainer.CreateReceptor();
+                laneContainer.CreateColumnLighting();
             }
         }
 
         /// <summary>
         ///     Creates the HitObjectContainer
         /// </summary>
-        private void CreateHitObjectContainer() => HitObjectContainer = new Container
+        private void CreateHitObjectContainer()
         {
-            Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
-            Alignment = Alignment.TopCenter,
-            Parent = Playfield.ForegroundContainer
-        };
+            foreach (var laneContainer in LaneContainers)
+            {
+                laneContainer.CreateHitObjectContainer();
+            }
+        }
 
         /// <summary>
         ///     Creates the TimingLineContainer
@@ -439,12 +418,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Creates the HitContainer
         /// </summary>
-        private void CreateHitContainer() => HitContainer = new Container
+        private void CreateHitContainer()
         {
-            Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
-            Alignment = Alignment.TopCenter,
-            Parent = Playfield.ForegroundContainer
-        };
+            foreach (var laneContainer in LaneContainers)
+            {
+                laneContainer.CreateHitContainer();
+            }
+        }
 
         /// <summary>
         ///     Creates the distant overlay sprite.
@@ -566,7 +546,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     Parent = Playfield.ForegroundContainer,
                     Alignment = Alignment.MidCenter,
-                    X = skin.DisplayJudgementsInEachColumn ? Receptors[lane].X - playfieldOffset : 0
+                    X = skin.DisplayJudgementsInEachColumn ? LaneContainers[lane].Receptor.X - playfieldOffset : 0
                 };
 
                 if (skin.RotateJudgements && skin.DisplayJudgementsInEachColumn)
@@ -598,7 +578,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 hl.Size = new ScalableVector2(hl.Image.Width * scale, hl.Image.Height * scale);
 
                 var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, hl.RelativeRectangle,
-                    Receptors[i].ScreenRectangle);
+                    LaneContainers[i].Receptor.ScreenRectangle);
 
                 hl.X = pos.X - Playfield.ForegroundContainer.ScreenRectangle.X;
                 hl.Y = pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y;
@@ -690,8 +670,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         public void SetReceptorAndLightingActivity(int index, bool pressed)
         {
-            Receptors[index].Image = pressed ? Skin.NoteReceptorsDown[index] : Skin.NoteReceptorsUp[index];
-            ColumnLightingObjects[index].Active = pressed;
+            LaneContainers[index].Receptor.Image = pressed ? Skin.NoteReceptorsDown[index] : Skin.NoteReceptorsUp[index];
+            LaneContainers[index].ColumnLighting.Active = pressed;
         }
 
         /// <summary>
@@ -738,7 +718,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void CreateKeybindOverlay()
         {
-            for (var i = 0; i < Receptors.Count; i++)
+            for (var i = 0; i < LaneContainers.Count; i++)
             {
                 var input = (KeysInputManager) Playfield.Ruleset.InputManager;
 
@@ -748,7 +728,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
                     input.BindingStore[i].Key.Value.GetName(), 32)
                 {
-                    Parent = Receptors[i],
+                    Parent = LaneContainers[i].Receptor,
                     Alignment = Playfield.ScrollDirections[i] == ScrollDirection.Down ? Alignment.TopCenter : Alignment.BotCenter,
                     Y = Playfield.ScrollDirections[i] == ScrollDirection.Down ? - 20 : 20,
                     Alpha = 1
@@ -772,10 +752,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             BgMask.Alpha = 0;
             BgMask.FadeTo(1, Easing.Linear, time);
 
-            Receptors.ForEach(x =>
+            LaneContainers.ForEach(x =>
             {
-                x.Alpha = 0;
-                x.FadeTo(1, Easing.Linear, time);
+                x.Receptor.Alpha = 0;
+                x.Receptor.FadeTo(1, Easing.Linear, time);
             });
 
             ComboDisplay.Digits.ForEach(x =>
@@ -784,13 +764,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 x.FadeTo(1, Easing.Linear, time);
             });
 
-            HitObjectContainer.Children.ForEach(x =>
+            LaneContainers.ForEach(laneContainer =>
             {
-                if (x is Sprite sprite)
+                laneContainer.HitObjectContainer.Children.ForEach(x =>
                 {
-                    sprite.Alpha = 0;
-                    sprite.FadeTo(1, Easing.Linear, time - 200);
-                }
+                    if (x is Sprite sprite)
+                    {
+                        sprite.Alpha = 0;
+                        sprite.FadeTo(1, Easing.Linear, time - 200);
+                    }
+                });
             });
 
             HitError.Children.ForEach(x =>

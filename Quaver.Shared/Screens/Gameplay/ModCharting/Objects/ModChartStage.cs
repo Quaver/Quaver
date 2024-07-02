@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -23,12 +24,11 @@ public class ModChartStage
         Shortcut = shortcut;
     }
 
-    public Sprite Receptor(int lane) => Shortcut.GameplayPlayfieldKeysStage.Receptors[lane - 1];
+    public GameplayPlayfieldLane LaneContainer(int lane) => Shortcut.GameplayPlayfieldKeysStage.LaneContainers[lane - 1];
     public Sprite BgMask => Shortcut.GameplayPlayfieldKeysStage.BgMask;
     public Sprite Background => Shortcut.GameplayScreenView.Background;
     public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
     public Container PlayfieldContainer => Shortcut.GameplayPlayfieldKeys.Container;
-
 
     [MoonSharpHidden]
     public string GetFullPath(string path)
@@ -117,12 +117,12 @@ public class ModChartStage
     ///     Positions of each receptor
     /// </summary>
     /// <returns>Scalable vector (x, y, scale_x, scale_y) for each receptor</returns>
-    public ScalableVector2[] GetReceptorPositions()
+    public ScalableVector2[] GetLanePositions()
     {
         var positions = new ScalableVector2[Shortcut.GameplayScreen.Map.GetKeyCount()];
         for (var i = 0; i < Shortcut.GameplayScreen.Map.GetKeyCount(); i++)
         {
-            positions[i] = Shortcut.GameplayPlayfieldKeysStage.Receptors[i].Position;
+            positions[i] = Shortcut.GameplayPlayfieldKeysStage.LaneContainers[i].Position;
         }
 
         return positions;
@@ -133,8 +133,8 @@ public class ModChartStage
     /// </summary>
     /// <param name="lane"></param>
     /// <param name="pos"></param>
-    public void SetReceptorPosition(int lane, ScalableVector2 pos)
+    public void SetLanePosition(int lane, ScalableVector2 pos)
     {
-        Shortcut.GameplayPlayfieldKeysStage.Receptors[lane - 1].Position = pos;
+        Shortcut.GameplayPlayfieldKeysStage.LaneContainers[lane - 1].Position = pos;
     }
 }

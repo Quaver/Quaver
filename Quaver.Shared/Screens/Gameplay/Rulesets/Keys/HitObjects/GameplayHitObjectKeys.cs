@@ -90,35 +90,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public Sprite LongNoteEndSprite { get; private set; }
 
-        private float MoveWithReceptorY(float y) => y - Playfield.ReceptorPositionY[Info.Lane - 1] +
-                                                    Playfield.Stage.Receptors[Info.Lane - 1].Y;
         /// <summary>
         ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
         /// </summary>
-        private Vector2 HitPosition
-        {
-            get
-            {
-                var y = Info.IsLongNote
-                    ? Playfield.HoldHitPositionY[Info.Lane - 1]
-                    : Playfield.HitPositionY[Info.Lane - 1];
-                var x = PositionX;
-                return new Vector2(x, MoveWithReceptorY(y));
-            }
-        }
+        private float HitPosition =>
+            Info.IsLongNote
+                ? Playfield.HoldHitPositionY[Info.Lane - 1]
+                : Playfield.HitPositionY[Info.Lane - 1];
 
         /// <summary>
         ///     Position for LN ends.
         /// </summary>
-        private Vector2 HoldEndHitPosition
-        {
-            get
-            {
-                var y = Playfield.HoldEndHitPositionY[Info.Lane - 1];
-                var x = PositionX;
-                return new Vector2(x, MoveWithReceptorY(y));
-            }
-        }
+        private float HoldEndHitPosition => Playfield.HoldEndHitPositionY[Info.Lane - 1];
 
         /// <summary>
         ///     Difference between the actual LN length and the LN body sprite length.
@@ -146,26 +129,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private DrawableReplayHit ReleaseHit { get; set; }
 
         private GameplayPlayfieldKeys Playfield => (GameplayPlayfieldKeys)Ruleset.Playfield;
-        private float PositionX => Playfield.Stage.Receptors[Info.Lane - 1].X;
 
         private Vector2 ReceptorUpUnit
         {
             get
             {
                 var rotation = Playfield.HitObjectFallRotation[Info.Lane - 1];
-                var pos = new Vector2(0, 1).Rotate(rotation);
+                var pos = Vector2.UnitY.Rotate(rotation);
                 if (ScrollDirection == ScrollDirection.Up) pos = -pos;
                 return pos;
             }
         }
 
-        private Vector2 Position(Vector2 basePosition, long offset, float initialPos)
+        private Vector2 Position(float basePosition, long offset, float initialPos)
         {
-            var measure = ((initialPos - offset) *
-                (ScrollDirection == ScrollDirection.Down
-                    ? -HitObjectManagerKeys.ScrollSpeed
-                    : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
-            return basePosition + measure * ReceptorUpUnit;
+            var measure = ((initialPos - offset) * -HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding);
+            return new Vector2(0, basePosition) + measure * ReceptorUpUnit;
         }
 
         /// <inheritdoc />
@@ -218,7 +197,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
-            var posX = playfield.Stage.Receptors[lane].X;
+            var posX = playfield.Stage.LaneContainers[lane].Receptor.X;
             var flipNoteBody = direction.Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll;
             ScrollDirection = direction;
 
@@ -228,8 +207,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
             {
-                Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(posX, 0),
+                Alignment = Alignment.TopCenter,
+                Position = new ScalableVector2(0, 0),
                 SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
@@ -241,19 +220,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var bodies = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodies[lane];
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
-                Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(laneSize , 0),
-                Position = new ScalableVector2(posX, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Alignment = Alignment.TopCenter,
+                Position = new ScalableVector2(0, 0),
+                Size = new ScalableVector2(laneSize, 0),
+                Parent = playfield.Stage.LaneContainers[lane].HitObjectContainer
             };
 
             // Create the Hold End
             LongNoteEndSprite = new Sprite()
             {
-                Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(posX, 0),
+                Alignment = Alignment.TopCenter,
+                Position = new ScalableVector2(0, 0),
                 Size = new ScalableVector2(laneSize, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Parent = playfield.Stage.LaneContainers[lane].HitObjectContainer
             };
 
             // Set long note end properties.
@@ -263,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
-            HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
+            HitObjectSprite.Parent = playfield.Stage.LaneContainers[lane].HitObjectContainer;
 
             // Hits go above the hit object.
             PressHit = new DrawableReplayHit(Ruleset, HitObjectManager, lane);
@@ -454,7 +433,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 UpdateLongNoteSize(offset, curTime);
 
                 if (curTime > Info.StartTime)
-                    spritePosition = HitPosition;
+                    spritePosition = HitPosition * ReceptorUpUnit;
                 else
                     spritePosition = GetSpritePosition(offset, Info.InitialTrackPosition);
             }
@@ -476,13 +455,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteBodySize;
-            LongNoteBodySprite.X = PositionX;
             
             var earliestSpritePosition = GetSpritePosition(offset, EarliestHeldPosition);
             if (ScrollDirection.Equals(ScrollDirection.Down))
                 earliestSpritePosition += (LongNoteBodyOffset - CurrentLongNoteBodySize) * ReceptorUpUnit;
             else
-                earliestSpritePosition += LongNoteBodyOffset * ReceptorUpUnit;
+                earliestSpritePosition -= LongNoteBodyOffset * ReceptorUpUnit;
             LongNoteBodySprite.X = earliestSpritePosition.X;
             LongNoteBodySprite.Y = earliestSpritePosition.Y;
 

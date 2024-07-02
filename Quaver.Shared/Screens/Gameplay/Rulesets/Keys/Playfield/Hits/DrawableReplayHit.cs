@@ -118,27 +118,25 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             
             ScrollDirection = playfield.ScrollDirections[lane];
             LineHitPosition = playfield.TimingLinePositionY[lane];
-
-            var laneX = playfield.Stage.Receptors[lane].X;
             
             LineToPerfect = new Sprite
             {
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(laneX + 0.5f * playfield.LaneSize, 0),
+                Position = new ScalableVector2(0.5f * playfield.LaneSize, 0),
                 Size = new ScalableVector2(2, 0),
                 Alpha = Manager.ShowHits ? 1 : 0,
                 Visible = false,
-                Parent = playfield.Stage.HitContainer,
+                Parent = playfield.Stage.LaneContainers[lane].HitContainer,
             };
             
             Indicator = new Sprite
             {
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(laneX + 0.125f * playfield.LaneSize, 0),
+                Position = new ScalableVector2(0.125f * playfield.LaneSize, 0),
                 Size = new ScalableVector2(playfield.LaneSize * 0.75f, 2),
                 Alpha = Manager.ShowHits ? 1 : 0,
                 Visible = false,
-                Parent = playfield.Stage.HitContainer,
+                Parent = playfield.Stage.LaneContainers[lane].HitContainer,
             };
         }
 

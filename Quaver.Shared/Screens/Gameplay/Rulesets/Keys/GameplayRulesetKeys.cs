@@ -88,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             if (direction.Equals(ScrollDirection.Split))
             {
                 var halfIndex = (int)Math.Ceiling(keys / 2.0) - 1;
-                var halfPos = playfield.Stage.Receptors[halfIndex].X + playfield.Stage.Receptors[halfIndex].Width;
+                var halfPos = playfield.Stage.LaneContainers[halfIndex].X + playfield.Stage.LaneContainers[halfIndex].Width;
                 TimingLineManagers.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.TimingLinePositionY[0], halfPos, 0));
                 TimingLineManagers.Add(new TimingLineManager(this, ScrollDirection.Up, playfield.TimingLinePositionY[halfIndex + 1], playfield.Width - halfPos, halfPos));
                 return;

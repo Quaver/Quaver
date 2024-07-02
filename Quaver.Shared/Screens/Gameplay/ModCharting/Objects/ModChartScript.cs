@@ -119,6 +119,7 @@ public class ModChartScript
         UserData.RegisterProxyType<AnimatableSpriteProxy, AnimatableSprite>(s => new AnimatableSpriteProxy(s));
         UserData.RegisterProxyType<SpriteTextPlusProxy, SpriteTextPlus>(t => new SpriteTextPlusProxy(t));
         UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
+        UserData.RegisterProxyType<LaneContainerProxy, GameplayPlayfieldLane>(s => new LaneContainerProxy(s));
         UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
         UserData.RegisterProxyType<Texture2DProxy, Texture2D>(t => new Texture2DProxy(t));
         UserData.RegisterProxyType<GameplayHitObjectKeysProxy, GameplayHitObjectKeys>(s =>
