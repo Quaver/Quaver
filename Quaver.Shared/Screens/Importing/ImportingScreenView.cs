@@ -189,7 +189,6 @@ namespace Quaver.Shared.Screens.Importing
                 Parent = Banner,
                 Alignment = Alignment.BotLeft,
                 Size = new ScalableVector2(WindowManager.Width, 2),
-                Rotation = MathF.PI
             };
 
             VisualizerBottom.Bars.ForEach(x =>
