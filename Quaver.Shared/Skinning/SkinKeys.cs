@@ -15,6 +15,8 @@ using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Config;
@@ -25,9 +27,10 @@ using Wobble;
 
 namespace Quaver.Shared.Skinning
 {
+    [MoonSharpUserData]
     public class SkinKeys
     {
-                /// <summary>
+        /// <summary>
         ///     Reference to the
         /// </summary>
         private SkinStore Store { get; }
@@ -44,36 +47,48 @@ namespace Quaver.Shared.Skinning
         #region SKIN.INI VALUES
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float StageReceptorPadding { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HitPosOffsetY { get; set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float NotePadding { get; private set; }
 
         // Not FixedScale because it's used as a factor in an expression with another, already scaled, attribute.
+        [MoonSharpVisible(true)]
         internal float ColumnLightingScale { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ColumnLightingOffsetY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ColumnSize { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ReceptorPosOffsetY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ColumnAlignment { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool ColorObjectsBySnapDistance { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float JudgementHitBurstScale { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool ReceptorsOverHitObjects { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal SortedDictionary<Judgement, Color> JudgeColors { get; private set; } = new SortedDictionary<Judgement, Color>()
         {
             {Judgement.Marv, new Color(255, 255, 200)},
@@ -84,6 +99,7 @@ namespace Quaver.Shared.Skinning
             {Judgement.Miss, new Color(255, 0, 0)}
         };
 
+        [MoonSharpVisible(true)]
         internal List<Color> ColumnColors { get; private set; } = new List<Color>()
         {
             Color.Transparent,
@@ -96,170 +112,235 @@ namespace Quaver.Shared.Skinning
             Color.Transparent,
         };
 
+        [MoonSharpVisible(true)]
         internal float BgMaskAlpha { get; private set;  }
 
+        [MoonSharpVisible(true)]
         internal bool FlipNoteImagesOnUpscroll { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HitLightingX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HitLightingY { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal int HitLightingFps { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal int HoldLightingFps { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal int HitLightingScale { get; private set; } = 100;
 
+        [MoonSharpVisible(true)]
         internal int HoldLightingScale { get; private set; } = 100;
 
+        [MoonSharpVisible(true)]
         internal bool HitLightingColumnRotation { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool HoldLightingColumnRotation { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ScoreDisplayPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ScoreDisplayPosY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ScoreDisplayScale { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float RatingDisplayPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float RatingDisplayPosY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float RatingDisplayScale { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float AccuracyDisplayPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float AccuracyDisplayPosY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float AccuracyDisplayScale { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float KpsDisplayPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float KpsDisplayPosY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float KpsDisplayScale { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ComboPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ComboPosY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ComboDisplayScale { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float JudgementBurstPosY { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool DisplayJudgementsInEachColumn { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool RotateJudgements { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HitErrorPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HitErrorPosY { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal float HitErrorAlpha { get; private set; } = 0.5f;
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HitErrorHeight { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HitErrorChevronSize { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal HealthBarType HealthBarType { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HealthBarScale{ get; private set; }
 
+        [MoonSharpVisible(true)]
         internal Color TimingLineColor { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal Color SongTimeProgressInactiveColor { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal Color SongTimeProgressActiveColor { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float SongTimeProgressScale { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool SongTimeProgressPositionAtTop { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal float JudgementCounterAlpha { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal Color JudgementCounterFontColor { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool UseJudgementColorForNumbers { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float JudgementCounterSize { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float JudgementCounterPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float JudgementCounterPosY { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal float JudgementCounterPadding { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool JudgementCounterHorizontal { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool JudgementCounterFadeToAlpha { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool DrawLongNoteEnd { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal Color DeadNoteColor { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float BattleRoyaleAlertPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float BattleRoyaleAlertPosY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float BattleRoyaleAlertScale { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float BattleRoyaleEliminatedPosX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float BattleRoyaleEliminatedPosY { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HealthBarPosOffsetX { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float HealthBarPosOffsetY { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool UseHitObjectSheet { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal float ScratchLaneSize { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal bool RotateHitObjectsByColumn { get; private set; }
 
+        [MoonSharpVisible(true)]
         internal int JudgementHitBurstFps { get; private set; }
 
         [FixedScale]
+        [MoonSharpVisible(true)]
         internal int WidthForNoteHeightScale { get; private set; }
 
         #endregion
@@ -270,6 +351,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ColumnLighting { get; private set; }
 
         // ----- Stage ----- //
@@ -277,31 +359,37 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D StageBgMask { get; private set; }
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D StageTimingBar { get; private set; }
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D StageLeftBorder { get; private set; }
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D StageRightBorder { get; private set; }
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D StageHitPositionOverlay { get; private set; }
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D StageDistantOverlay { get; private set; }
 
         // ----- HitObjects ----- //
@@ -309,33 +397,40 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<List<Texture2D>> NoteHitObjects { get; } = new List<List<Texture2D>>();
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<List<Texture2D>> NoteHoldHitObjects { get; } = new List<List<Texture2D>>();
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<List<Texture2D>> NoteHoldBodies { get;} = new List<List<Texture2D>>();
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> NoteHoldEnds { get; } = new List<Texture2D>();
 
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> EditorLayerNoteHitObjects { get; } = new List<Texture2D>();
 
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> EditorLayerNoteHoldBodies { get; } = new List<Texture2D>();
 
         /// <summary>
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> EditorLayerNoteHoldEnds { get; } = new List<Texture2D>();
 
         // ----- Receptors ----- //
@@ -343,11 +438,13 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> NoteReceptorsUp { get; } = new List<Texture2D>();
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> NoteReceptorsDown { get; } = new List<Texture2D>();
 
         // ----- Hitlighting ----- //
@@ -355,11 +452,13 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> HitLighting { get; private set; } = new List<Texture2D>();
 
         /// <summary>
         ///
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
 
         // ----- Lane Covers ----- //
@@ -367,11 +466,13 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Top lane cover texture.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D LaneCoverTop { get; private set; }
 
         /// <summary>
         ///     Bottom lane cover texture.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D LaneCoverBottom { get; private set; }
 
 #endregion

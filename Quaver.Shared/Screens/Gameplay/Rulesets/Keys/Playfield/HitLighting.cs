@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Size = new ScalableVector2(Image.Width * scale, Image.Height * scale);
 
             var relativeRect = new RectangleF(0, 0, RelativeRectangle.Width, RelativeRectangle.Height);
-            var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, relativeRect, Playfield.Stage.Receptors[ColumnIndex].ScreenRectangle);
+            var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, relativeRect, Playfield.Stage.LaneContainers[ColumnIndex].Receptor.ScreenRectangle);
 
             Position = new ScalableVector2(pos.X - Playfield.ForegroundContainer.ScreenRectangle.X + skin.HitLightingX,
                 pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y + skin.HitLightingY);

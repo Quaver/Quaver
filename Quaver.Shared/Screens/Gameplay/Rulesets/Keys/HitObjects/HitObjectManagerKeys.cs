@@ -117,6 +117,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos { get; private set; }
 
+        public event Action<GameplayHitObjectKeysInfo> RenderedHitObjectInfoAdded;
+
         /// <summary>
         ///     Allows for quickly finding hitobjects close to some position.
         /// </summary>
@@ -214,21 +216,24 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
 
-                playfield.Stage.HitContainer.Children.ForEach(x =>
+                playfield.Stage.LaneContainers.ForEach(laneContainer =>
                 {
-                    if (!(x is Sprite sprite))
-                        return;
+                    laneContainer.HitContainer.Children.ForEach(x =>
+                    {
+                        if (!(x is Sprite sprite))
+                            return;
 
-                    if (_showHits)
-                    {
-                        sprite.Alpha = 0;
-                        sprite.FadeTo(1, Easing.OutQuad, 250);
-                    }
-                    else
-                    {
-                        sprite.Alpha = 1;
-                        sprite.FadeTo(0, Easing.OutQuad, 250);
-                    }
+                        if (_showHits)
+                        {
+                            sprite.Alpha = 0;
+                            sprite.FadeTo(1, Easing.OutQuad, 250);
+                        }
+                        else
+                        {
+                            sprite.Alpha = 1;
+                            sprite.FadeTo(0, Easing.OutQuad, 250);
+                        }
+                    });
                 });
             }
         }
@@ -569,6 +574,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 info.Link(hitObject);
                 RenderedHitObjectInfos.Add(info);
+                RenderedHitObjectInfoAdded?.Invoke(info);
             }
 
             // update sprite positions

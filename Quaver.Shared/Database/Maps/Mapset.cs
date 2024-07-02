@@ -118,6 +118,7 @@ namespace Quaver.Shared.Database.Maps
                                 case ".jpg":
                                 case ".jpeg":
                                 case ".wav":
+                                case ".lua":
                                     File.Copy(file, $"{tempFolder}/{Path.GetFileName(file)}", true);
                                     break;
                                 default:

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MoonSharp.Interpreter;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
@@ -28,6 +29,9 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
+using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
@@ -47,6 +51,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
@@ -200,6 +205,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         /// </summary>
         private ReplayController ReplayController { get; }
+        
+        /// <summary>
+        ///     The script loaded that controls the storyboard
+        /// </summary>
+        public ModChartScript ModChartScript { get; set; }
+        
 
         /// <inheritdoc />
         /// <summary>
@@ -227,6 +238,9 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateScoreDisplay();
             CreateRatingDisplay();
             CreateAccuracyDisplay();
+            
+            if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
+                ModChartScript = new ModChartScript(Screen.Map.GetAnimationScriptPath(), this);
 
             if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
@@ -318,6 +332,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.OnGameEnded += OnGameEnded;
         }
 
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -327,6 +342,21 @@ namespace Quaver.Shared.Screens.Gameplay
             HandleWaitingForPlayersDialog();
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
+
+            try
+            {
+                var time = (int)Screen.Timing.Time;
+                ModChartScript?.Update(time);
+            }
+            catch (ScriptRuntimeException e)
+            {
+                Logger.Error(e.DecoratedMessage, LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+            
             BattleRoyaleBackgroundAlerter?.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);

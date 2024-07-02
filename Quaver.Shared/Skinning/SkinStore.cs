@@ -13,6 +13,8 @@ using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
 using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
@@ -26,6 +28,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Skinning
 {
+    [MoonSharpUserData]
     public class SkinStore
     {
         /// <summary>
@@ -58,6 +61,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Dictionary that contains both skins for 4K & 7K
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Dictionary<GameMode, SkinKeys> Keys { get; }
 
         /// <summary>
@@ -83,16 +87,19 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The name of the skin.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal string Name { get; private set; } = "Default Quaver Skin";
 
         /// <summary>
         ///     The author of the skin.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal string Author { get; private set; } = "Quaver Team";
 
         /// <summary>
         ///     The version of the skin.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal string Version { get; private set; } = "v0.1";
 
         /// <summary>
@@ -105,169 +112,213 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The user's mouse cursor.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D Cursor { get; private set; }
 
         /// <summary>
         ///     Whether the cursor should be centered.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal bool CenterCursor { get; private set; }
 
         /// <summary>
         ///     Grade Textures.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Dictionary<Grade, Texture2D> Grades { get; } = new Dictionary<Grade, Texture2D>();
 
         /// <summary>
         ///     Grade Textures for Results.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Dictionary<Grade, Texture2D> GradesLarge { get; } = new Dictionary<Grade, Texture2D>();
 
         /// <summary>
         ///     Judgement animation elements
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Dictionary<Judgement, List<Texture2D>> Judgements { get; } = new Dictionary<Judgement, List<Texture2D>>();
 
         /// <summary>
         ///     The numbers that display the user's current score.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D[] ScoreDisplayNumbers { get; } = new Texture2D[10];
 
         /// <summary>
         ///     The decimal "." character in the score display.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ScoreDisplayDecimal { get; private set; }
 
         /// <summary>
         ///     The percent "%" character in the score display.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ScoreDisplayPercent { get; private set; }
 
         /// <summary>
         ///     The numbers that display the user's current combo
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D[] ComboDisplayNumbers = new Texture2D[10];
 
         /// <summary>
         ///     The numbers that display the current song time.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D[] SongTimeDisplayNumbers = new Texture2D[10];
 
         /// <summary>
         ///     The ":" character displayed in the song time display.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D SongTimeDisplayColon { get; private set; }
 
         /// <summary>
         ///     The minus "-" character displayed in the song time display.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D SongTimeDisplayMinus { get; private set; }
 
         /// <summary>
         ///     The user's background displayed during the pause menu.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D PauseBackground { get; private set; }
 
         /// <summary>
         ///     The continue button displayed in the pause menu
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D PauseContinue { get; private set; }
 
         /// <summary>
         ///     The retry button displayed in the pause menu
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D PauseRetry { get; private set; }
 
         /// <summary>
         ///     The back button displayed in the pause menu.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D PauseBack { get; private set; }
 
         /// <summary>
         ///     The overlay that displayed the judgement counts.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Dictionary<Judgement, Texture2D> JudgementOverlay { get; } = new Dictionary<Judgement, Texture2D>();
 
         /// <summary>
         ///     The background of the judgement overlay.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Dictionary<Judgement, Texture2D> JudgementOverlayBackground { get; } = new Dictionary<Judgement, Texture2D>();
 
         /// <summary>
         ///     The scoreboard displayed on the screen for the player.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D Scoreboard { get; private set; }
 
         /// <summary>
         ///     The scoreboard displayed for other players.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ScoreboardOther { get; private set; }
 
         /// <summary>
         ///     The scoreboard for the red team
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ScoreboardRedTeam { get; set; }
 
         /// <summary>
         ///     The scoreboard for the red team (other players)
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ScoreboardRedTeamOther { get; set; }
 
         /// <summary>
         ///     The scoreboard for the blue team
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ScoreboardBlueTeam { get; set; }
 
         /// <summary>
         ///     The scoreboard for the blue team (other players)
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D ScoreboardBlueTeamOther { get; set; }
 
         /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> HealthBarBackground { get; private set; }
 
         /// <summary>
         ///     The health bar displayed in the foreground (Moving)
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> HealthBarForeground { get; private set; }
 
         /// <summary>
         ///     Skip animation when user is on a break.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> Skip { get; private set; }
 
         /// <summary>
         ///     Displayed when the user achieves high combos
         /// </summary>
+        [MoonSharpVisible(true)]
         internal List<Texture2D> ComboAlerts { get; private set; }
 
         /// <summary>
         ///     Displayed when being eliminated from battle royale
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D BattleRoyaleEliminated { get; private set; }
 
         /// <summary>
         ///     Displayed when in danger of being eliminated
         /// </summary>
+        [MoonSharpVisible(true)]
         internal Texture2D BattleRoyaleWarning { get; private set; }
 
         /// <summary>
         ///     Sound effect elements.
         /// </summary>
+        [MoonSharpVisible(true)]
         internal AudioSample SoundHit { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundHitClap { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundHitWhistle { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundHitFinish { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundComboBreak { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundApplause { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundScreenshot { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundClick { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundBack { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundHover { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundFailure { get; private set; }
+        [MoonSharpVisible(true)]
         internal AudioSample SoundRetry { get; private set; }
+        [MoonSharpVisible(true)]
         internal List<AudioSample> SoundComboAlerts { get; private set; }
+        [MoonSharpVisible(true)]
         internal List<AudioSample> SoundMenuKeyClick { get; private set; }
 
         /// <summary>

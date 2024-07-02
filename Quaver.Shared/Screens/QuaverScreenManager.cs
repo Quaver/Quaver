@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens
                 Thread.Sleep(16);
 
             // Run this on the next game loop on the main thread.
-            game.ScheduledRenderTargetDraws.Add(() => ChangeScreen(e.Result, false));
+            game.ScheduledRenderTargetDraws.Add(_ => ChangeScreen(e.Result, false));
         }
 
         private static void ChangeScreen(QuaverScreen screen, bool switchImmediately)

@@ -113,6 +113,7 @@ namespace Quaver.Shared.Database.Maps.Etterna
                         Title = song.Title,
                         Creator = step.Credit ?? song.Credit ?? "",
                         BackgroundPath = directory + "/" + Path.GetFileName(song.BackgroundPath),
+                        AnimationScriptPath = "",
                         BannerPath = directory + "/" + Path.GetFileName(song.BannerPath),
                         AudioPath = directory + "/" + Path.GetFileName(song.MusicPath),
                         AudioPreviewTime = (int) (song.SampleStart * 1000),
