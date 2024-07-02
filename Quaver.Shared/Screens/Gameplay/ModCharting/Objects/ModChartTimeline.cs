@@ -55,13 +55,13 @@ public class ModChartTimeline
     /// <summary>
     ///     Adds a tween segment that allows smooth transition of a value
     /// </summary>
+    /// <param name="setter">A function f(time: float, progress: float) called for updating the value. progress is [0..1] or -1 if weird things happen</param>
     /// <param name="startValue"></param>
     /// <param name="endValue"></param>
-    /// <param name="setter">A function f(time: float, progress: float) called for updating the value. progress is [0..1] or -1 if weird things happen</param>
     /// <param name="easingFunction">A function f(startValue: float, endValue: float, progress: float) that returns the value at progress</param>
     /// <returns></returns>
     /// <seealso cref="Easing"/>
-    public TweenPayload<float> Tween(float startValue, float endValue, SetterDelegate<float> setter,
+    public TweenPayload<float> Tween(SetterDelegate<float> setter, float startValue, float endValue, 
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
@@ -70,8 +70,7 @@ public class ModChartTimeline
         Setter = setter
     };
 
-    public TweenPayload<Vector2> Tween(Vector2 startValue, Vector2 endValue,
-        SetterDelegate<Vector2> setter,
+    public TweenPayload<Vector2> Tween(SetterDelegate<Vector2> setter, Vector2 startValue, Vector2 endValue,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
@@ -80,8 +79,7 @@ public class ModChartTimeline
         Setter = setter
     };
 
-    public TweenPayload<XnaVector2> Tween(XnaVector2 startValue, XnaVector2 endValue,
-        SetterDelegate<XnaVector2> setter,
+    public TweenPayload<XnaVector2> Tween(SetterDelegate<XnaVector2> setter, XnaVector2 startValue, XnaVector2 endValue,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
@@ -90,8 +88,7 @@ public class ModChartTimeline
         Setter = setter
     };
 
-    public TweenPayload<Vector3> Tween(Vector3 startValue, Vector3 endValue,
-        SetterDelegate<Vector3> setter,
+    public TweenPayload<Vector3> Tween(SetterDelegate<Vector3> setter, Vector3 startValue, Vector3 endValue,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
@@ -100,8 +97,7 @@ public class ModChartTimeline
         Setter = setter
     };
 
-    public TweenPayload<Vector4> Tween(Vector4 startValue, Vector4 endValue,
-        SetterDelegate<Vector4> setter,
+    public TweenPayload<Vector4> Tween(SetterDelegate<Vector4> setter, Vector4 startValue, Vector4 endValue,
         EasingDelegate easingFunction = null) => new()
     {
         EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
