@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -39,6 +40,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         bool IsWorkshop { get; set; }
 
+        Dictionary<string, EditorPluginStorageValue> Storage { get; set; }
+
         /// <summary>
         ///     Called when the plugin goes active
         /// </summary>
@@ -52,5 +55,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         /// </summary>
         void Destroy();
+
+        void OnStorageLoaded();
+
+        void OnStorageSave();
     }
 }

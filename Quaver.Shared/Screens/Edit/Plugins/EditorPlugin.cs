@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using ImGuiNET;
@@ -44,6 +45,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         public bool IsWorkshop { get; set; }
 
+        public Dictionary<string, EditorPluginStorageValue> Storage { get; set; } = new();
+
+        private EditorPluginStorage EditorPluginStorage { get; set; }
+
         public EditorPluginMap EditorPluginMap { get; set; }
 
         /// <inheritdoc />
@@ -76,6 +81,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             UserData.RegisterType<HitSounds>();
             UserData.RegisterType<TimeSignature>();
             UserData.RegisterType<EditorActionType>();
+
+            EditorPluginStorage = new EditorPluginStorage(WorkingScript, Storage);
+            WorkingScript.Globals["storage"] = EditorPluginStorage;
         }
 
         /// <inheritdoc />
@@ -83,6 +91,32 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public void Initialize()
         {
+        }
+
+        public void OnStorageLoaded()
+        {
+            try
+            {
+                if (WorkingScript.Globals["onStorageLoaded"] is Closure onStorageLoaded)
+                    WorkingScript.Call(onStorageLoaded);
+            }
+            catch (Exception e)
+            {
+                HandleLuaException(e);
+            }
+        }
+
+        public void OnStorageSave()
+        {
+            try
+            {
+                if (WorkingScript.Globals["onStorageSave"] is Closure onStorageSave)
+                    WorkingScript.Call(onStorageSave);
+            }
+            catch (Exception e)
+            {
+                HandleLuaException(e);
+            }
         }
 
         /// <inheritdoc />

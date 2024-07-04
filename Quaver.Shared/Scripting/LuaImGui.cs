@@ -309,7 +309,7 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Handles an exception that comes from the lua interpreter.
         /// </summary>
-        private void HandleLuaException(Exception e)
+        protected void HandleLuaException(Exception e)
         {
             if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
             	return;
