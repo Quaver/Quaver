@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
@@ -12,7 +13,11 @@ public class SpriteProxy : DrawableProxy
     public SpriteProxy(Sprite drawable) : base(drawable)
     {
         _drawable = drawable;
+
+        AlphaProp = new ModChartPropertyFloat(() => _drawable.Alpha, v => _drawable.Alpha = v);
+        TintProp = new ModChartPropertyColor(() => _drawable.Tint, v => _drawable.Tint = v);
     }
+
 
     public float Alpha
     {
@@ -25,6 +30,10 @@ public class SpriteProxy : DrawableProxy
         get => _drawable.Tint;
         set => _drawable.Tint = value;
     }
+
+    public readonly ModChartPropertyFloat AlphaProp;
+
+    public readonly ModChartPropertyColor TintProp;
 
     public bool IndependentRotation
     {

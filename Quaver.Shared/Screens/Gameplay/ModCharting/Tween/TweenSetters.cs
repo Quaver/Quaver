@@ -1,5 +1,5 @@
 using System;
-using System.Numerics;
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
@@ -7,6 +7,9 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
+using Vector4 = System.Numerics.Vector4;
 using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
@@ -19,6 +22,17 @@ public class TweenSetters
     public TweenSetters(ElementAccessShortcut shortcut)
     {
         Shortcut = shortcut;
+    }
+
+    public static SetterDelegate<int> CreateInt(Action<int> action)
+    {
+        return (startValue, endValue, progress) => action((int)EasingFunctions.Linear(startValue, endValue, progress));
+    }
+
+    public static SetterDelegate<int> CreateInt(Closure action)
+    {
+        return (startValue, endValue, progress) =>
+            action?.SafeCall(EasingFunctions.Linear(startValue, endValue, progress));
     }
 
     public static SetterDelegate<float> CreateFloat(Action<float> action)
@@ -52,6 +66,16 @@ public class TweenSetters
         return (startValue, endValue, progress) => action?.SafeCall(XnaVector2.Lerp(startValue, endValue, progress));
     }
 
+    public static SetterDelegate<ScalableVector2> CreateScalableVector2(Action<ScalableVector2> action)
+    {
+        return (startValue, endValue, progress) => action(ScalableVector2.Lerp(startValue, endValue, progress));
+    }
+
+    public static SetterDelegate<ScalableVector2> CreateScalableVector2(Closure action)
+    {
+        return (startValue, endValue, progress) => action?.SafeCall(ScalableVector2.Lerp(startValue, endValue, progress));
+    }
+
     public static SetterDelegate<Vector3> CreateVector3(Action<Vector3> action)
     {
         return (startValue, endValue, progress) => action(Vector3.Lerp(startValue, endValue, progress));
@@ -62,6 +86,16 @@ public class TweenSetters
         return (startValue, endValue, progress) => action?.SafeCall(Vector3.Lerp(startValue, endValue, progress));
     }
 
+    public static SetterDelegate<Color> CreateColor(Action<Color> action)
+    {
+        return (startValue, endValue, progress) => action(Color.Lerp(startValue, endValue, progress));
+    }
+
+    public static SetterDelegate<Color> CreateColor(Closure action)
+    {
+        return (startValue, endValue, progress) => action?.SafeCall(Color.Lerp(startValue, endValue, progress));
+    }
+
     public static SetterDelegate<Vector4> CreateVector4(Action<Vector4> action)
     {
         return (startValue, endValue, progress) => action(Vector4.Lerp(startValue, endValue, progress));
@@ -70,55 +104,5 @@ public class TweenSetters
     public static SetterDelegate<Vector4> CreateVector4(Closure action)
     {
         return (startValue, endValue, progress) => action?.SafeCall(Vector4.Lerp(startValue, endValue, progress));
-    }
-
-    public SetterDelegate<float> X(Drawable drawable)
-    {
-        return CreateFloat(v => drawable.X = v);
-    }
-
-    public SetterDelegate<float> Y(Drawable drawable)
-    {
-        return CreateFloat(v => drawable.Y = v);
-    }
-
-    public SetterDelegate<Vector2> Position(Drawable drawable)
-    {
-        return CreateVector2(v => drawable.Position = new ScalableVector2(v.X, v.Y));
-    }
-
-    public SetterDelegate<float> Rotation(Drawable sprite)
-    {
-        return CreateFloat(v => sprite.Rotation = v);
-    }
-
-    public SetterDelegate<XnaVector2> Scale(Drawable drawable)
-    {
-        return CreateXnaVector2(v => drawable.Scale = v);
-    }
-
-    public SetterDelegate<float> Alpha(Sprite sprite)
-    {
-        return CreateFloat(v => sprite.Alpha = v);
-    }
-
-    public SetterDelegate<float> Width(Drawable drawable)
-    {
-        return CreateFloat(v => drawable.Width = v);
-    }
-
-    public SetterDelegate<float> Height(Drawable drawable)
-    {
-        return CreateFloat(v => drawable.Height = v);
-    }
-
-    public SetterDelegate<float> FontSize(SpriteTextPlus spriteTextPlus)
-    {
-        return CreateFloat(v => spriteTextPlus.FontSize = (int)v);
-    }
-
-    public SetterDelegate<float> HitObjectFallRotation(int lane)
-    {
-        return CreateFloat(v => Shortcut.GameplayPlayfieldKeys.HitObjectFallRotation[lane - 1] = v);
     }
 }

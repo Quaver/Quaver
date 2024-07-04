@@ -30,98 +30,11 @@ public class ModChartTimeline
         count,
         v => trigger.SafeCall(v));
 
-    /// <summary>
-    ///     Creates a keyframes payload.
-    /// </summary>
-    /// <param name="setter"></param>
-    /// <param name="keyframes"></param>
-    /// <returns></returns>
-    /// <seealso cref="Keyframe{T}"/>
-    public KeyframesPayload<float> Keyframes(SetterDelegate<float> setter, Keyframe<float>[] keyframes) =>
-        new(setter, keyframes);
-
-    public KeyframesPayload<Vector2> Keyframes(SetterDelegate<Vector2> setter, Keyframe<Vector2>[] keyframes) =>
-        new(setter, keyframes);
-
-    public KeyframesPayload<XnaVector2> Keyframes(SetterDelegate<XnaVector2> setter, Keyframe<XnaVector2>[] keyframes) =>
-        new(setter, keyframes);
-
-    public KeyframesPayload<Vector3> Keyframes(SetterDelegate<Vector3> setter, Keyframe<Vector3>[] keyframes) =>
-        new(setter, keyframes);
-
-    public KeyframesPayload<Vector4> Keyframes(SetterDelegate<Vector4> setter, Keyframe<Vector4>[] keyframes) =>
-        new(setter, keyframes);
-
-    /// <summary>
-    ///     Adds a tween segment that allows smooth transition of a value
-    /// </summary>
-    /// <param name="setter">A function f(time: float, progress: float) called for updating the value. progress is [0..1] or -1 if weird things happen</param>
-    /// <param name="startValue"></param>
-    /// <param name="endValue"></param>
-    /// <param name="easingFunction">A function f(startValue: float, endValue: float, progress: float) that returns the value at progress</param>
-    /// <returns></returns>
-    /// <seealso cref="Easing"/>
-    public TweenPayload<float> Tween(SetterDelegate<float> setter, float startValue, float endValue, 
-        EasingDelegate easingFunction = null) => new()
+    public Segment Add(int startTime, int endTime, ISegmentPayload payload)
     {
-        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
-        StartValue = startValue,
-        EndValue = endValue,
-        Setter = setter
-    };
-
-    public TweenPayload<Vector2> Tween(SetterDelegate<Vector2> setter, Vector2 startValue, Vector2 endValue,
-        EasingDelegate easingFunction = null) => new()
-    {
-        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
-        StartValue = startValue,
-        EndValue = endValue,
-        Setter = setter
-    };
-
-    public TweenPayload<XnaVector2> Tween(SetterDelegate<XnaVector2> setter, XnaVector2 startValue, XnaVector2 endValue,
-        EasingDelegate easingFunction = null) => new()
-    {
-        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
-        StartValue = startValue,
-        EndValue = endValue,
-        Setter = setter
-    };
-
-    public TweenPayload<Vector3> Tween(SetterDelegate<Vector3> setter, Vector3 startValue, Vector3 endValue,
-        EasingDelegate easingFunction = null) => new()
-    {
-        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
-        StartValue = startValue,
-        EndValue = endValue,
-        Setter = setter
-    };
-
-    public TweenPayload<Vector4> Tween(SetterDelegate<Vector4> setter, Vector4 startValue, Vector4 endValue,
-        EasingDelegate easingFunction = null) => new()
-    {
-        EasingFunction = easingFunction ?? EasingWrapperFunctions.Linear,
-        StartValue = startValue,
-        EndValue = endValue,
-        Setter = setter
-    };
-
-    public static Segment Segment(int startTime, int endTime, ISegmentPayload payload) =>
-        new(-1, startTime, endTime, payload);
-
-    public static ValueVertex<ITriggerPayload> Trigger(int time, ITriggerPayload payload) =>
-        new()
-        {
-            Id = -1,
-            Payload = payload,
-            Time = time
-        };
-
-    public int Add(Segment segment)
-    {
-        if (segment.Id == -1) segment.Id = GenerateSegmentId();
+        var segment = new Segment(GenerateSegmentId(), startTime, endTime, payload);
         Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddSegment, segment);
-        return segment.Id;
+        return segment;
     }
 
     public bool Remove(Segment segment)
@@ -139,18 +52,16 @@ public class ModChartTimeline
         return Shortcut.ModChartScript.SegmentManager.TryGetSegment(id, out var segment) && Remove(segment);
     }
 
-    public int Set(int id, Segment segment)
+    public ValueVertex<ITriggerPayload> Add(int time, ITriggerPayload payload)
     {
-        segment.Id = id == -1 ? GenerateSegmentId() : id;
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateSegment, segment);
-        return segment.Id;
-    }
-
-    public int Add(ValueVertex<ITriggerPayload> trigger)
-    {
-        if (trigger.Id == -1) trigger.Id = GenerateTriggerId();
+        var trigger = new ValueVertex<ITriggerPayload>
+        {
+            Id = GenerateTriggerId(),
+            Payload = payload,
+            Time = time
+        };
         Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineAddTrigger, trigger);
-        return trigger.Id;
+        return trigger;
     }
 
     public bool Remove(ValueVertex<ITriggerPayload> trigger)
@@ -163,13 +74,6 @@ public class ModChartTimeline
     public bool RemoveTrigger(int id)
     {
         return Shortcut.ModChartScript.TriggerManager.TryGetVertex(id, out var vertex) && Remove(vertex);
-    }
-
-    public int Set(int id, ValueVertex<ITriggerPayload> trigger)
-    {
-        trigger.Id = id == -1 ? GenerateTriggerId() : id;
-        Shortcut.ModChartEvents.Enqueue(ModChartEventType.TimelineUpdateTrigger, trigger);
-        return trigger.Id;
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 using Wobble.Graphics;
 using Vector2 = System.Numerics.Vector2;
 using XnaVector2 = Microsoft.Xna.Framework.Vector2;
@@ -15,6 +16,18 @@ public class DrawableProxy
     public DrawableProxy(Drawable drawable)
     {
         _drawable = drawable;
+        XProp = new ModChartPropertyFloat(() => _drawable.X, v => _drawable.X = v);
+        YProp = new ModChartPropertyFloat(() => _drawable.Y, v => _drawable.Y = v);
+        PositionProp = new ModChartPropertyScalableVector2(() => _drawable.Position, v => _drawable.Position = v);
+        SizeProp = new ModChartPropertyScalableVector2(() => _drawable.Size, v => _drawable.Size = v);
+
+        WidthProp = new ModChartPropertyFloat(() => _drawable.Width, v => _drawable.Width = v);
+        HeightProp = new ModChartPropertyFloat(() => _drawable.Height, v => _drawable.Height = v);
+
+        RotationProp = new ModChartPropertyFloat(() => _drawable.Rotation, v => _drawable.Rotation = v);
+
+        ScaleProp = new ModChartPropertyXnaVector2(() => _drawable.Scale, v => _drawable.Scale = v);
+        PivotProp = new ModChartPropertyXnaVector2(() => _drawable.Pivot, v => _drawable.Pivot = v);
     }
 
     public Drawable MoveTo(ScalableVector2 coords)
@@ -28,7 +41,7 @@ public class DrawableProxy
         Position = new ScalableVector2(coords.X, coords.Y);
         return _drawable;
     }
-    
+
     public Drawable Resize(Vector2 size)
     {
         Width = size.X;
@@ -108,18 +121,6 @@ public class DrawableProxy
         set => _drawable.Scale = value;
     }
 
-    public Drawable Parent
-    {
-        get => _drawable.Parent;
-        set => _drawable.Parent = value;
-    }
-
-    public Alignment Alignment
-    {
-        get => _drawable.Alignment;
-        set => _drawable.Alignment = value;
-    }
-    
     public float Rotation
     {
         get => _drawable.Rotation;
@@ -130,6 +131,36 @@ public class DrawableProxy
     {
         get => _drawable.Pivot;
         set => _drawable.Pivot = value;
+    }
+
+    public readonly ModChartPropertyScalableVector2 PositionProp;
+
+    public readonly ModChartPropertyScalableVector2 SizeProp;
+
+    public readonly ModChartPropertyFloat XProp;
+
+    public readonly ModChartPropertyFloat YProp;
+
+    public readonly ModChartPropertyFloat WidthProp;
+
+    public readonly ModChartPropertyFloat HeightProp;
+
+    public readonly ModChartPropertyFloat RotationProp;
+
+    public readonly ModChartPropertyXnaVector2 ScaleProp;
+
+    public readonly ModChartPropertyXnaVector2 PivotProp;
+
+    public Drawable Parent
+    {
+        get => _drawable.Parent;
+        set => _drawable.Parent = value;
+    }
+
+    public Alignment Alignment
+    {
+        get => _drawable.Alignment;
+        set => _drawable.Alignment = value;
     }
 
     public List<Drawable> Children => _drawable.Children;

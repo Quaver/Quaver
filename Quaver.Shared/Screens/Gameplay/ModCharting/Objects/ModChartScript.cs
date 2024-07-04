@@ -164,10 +164,6 @@ public class ModChartScript
         WorkingScript.Globals["EventType"] = typeof(ModChartEventType);
         WorkingScript.Globals["GameMode"] = typeof(GameMode);
         WorkingScript.Globals["Judgement"] = typeof(Judgement);
-#pragma warning disable CS8974 // Converting method group to non-delegate type
-        WorkingScript.Globals["Segment"] = ModChartTimeline.Segment;
-        WorkingScript.Globals["Trigger"] = ModChartTimeline.Trigger;
-#pragma warning restore CS8974 // Converting method group to non-delegate type
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>
@@ -358,6 +354,8 @@ public class ModChartScript
                 var table = dynVal.Table;
                 var x = (float)(double)table[1];
                 var y = (float)(double)table[2];
+                if (table.Length != 4)
+                    return new ScalableVector2(x, y);
                 var sx = (float)(double)table[3];
                 var sy = (float)(double)table[4];
                 return new ScalableVector2(x, y, sx, sy);

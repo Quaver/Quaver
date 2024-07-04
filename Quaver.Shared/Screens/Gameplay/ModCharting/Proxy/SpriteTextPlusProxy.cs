@@ -1,20 +1,17 @@
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 using Wobble.Graphics.Sprites.Text;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
 
 public class SpriteTextPlusProxy : SpriteProxy
 {
-    private SpriteTextPlus _text;
+    private readonly SpriteTextPlus _text;
+
     public SpriteTextPlusProxy(SpriteTextPlus text) : base(text)
     {
         _text = text;
-    }
-    
-    public Color Tint
-    {
-        get => _text.Tint;
-        set => _text.Tint = value;
+        FontSizeProp = new ModChartPropertyInt(() => _text.FontSize, v => _text.FontSize = v);
     }
 
     public string Text
@@ -28,6 +25,8 @@ public class SpriteTextPlusProxy : SpriteProxy
         get => _text.FontSize;
         set => _text.FontSize = value;
     }
+
+    public readonly ModChartPropertyInt FontSizeProp;
 
     public WobbleFontStore Font
     {
