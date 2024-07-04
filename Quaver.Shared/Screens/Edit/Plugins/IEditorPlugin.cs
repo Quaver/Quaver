@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -38,6 +39,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     If the plugin belongs to the Steam Workshop
         /// </summary>
         bool IsWorkshop { get; set; }
+
+        Dictionary<string, EditorPluginStorageValue> Storage { get; set; }
 
         /// <summary>
         ///     Called when the plugin goes active

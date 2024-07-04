@@ -42,6 +42,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         public bool IsWorkshop { get; set; }
 
+        public Dictionary<string, EditorPluginStorageValue> Storage { get; set; } = new();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
