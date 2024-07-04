@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
@@ -29,6 +30,12 @@ public class SpriteProxy : DrawableProxy
     {
         get => _drawable.Tint;
         set => _drawable.Tint = value;
+    }
+
+    public SpriteBatchOptions SpriteBatchOptions
+    {
+        get => _drawable.SpriteBatchOptions;
+        set => _drawable.SpriteBatchOptions = value;
     }
 
     public readonly ModChartPropertyFloat AlphaProp;

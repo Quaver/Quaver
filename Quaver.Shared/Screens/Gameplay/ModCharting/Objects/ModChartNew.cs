@@ -8,8 +8,10 @@ using MoonSharp.Interpreter;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
@@ -166,6 +168,21 @@ public class ModChartNew
     public Color Color(float r, float g, float b, float a) => new(r, g, b, a);
     public ScalableVector2 ScalableVector2(float x, float y) => new(x, y);
     public ScalableVector2 ScalableVector2(float x, float y, float scaleX, float scaleY) => new(x, y, scaleX, scaleY);
+
+    #endregion
+
+    #region Shader
+
+    public SpriteBatchOptions SpriteBatchOptions() => new();
+
+    public SpriteBatchOptions SpriteBatchOptions(Shader shader) => new()
+    {
+        Shader = shader
+    };
+
+    public Shader MultiEffectShader() =>
+        new(GameBase.Game.Resources.Get("Quaver.Resources/Shaders/multi_effect_shader.mgfxo"),
+            new Dictionary<string, object>());
 
     #endregion
 }

@@ -22,6 +22,7 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Logging;
@@ -124,6 +125,8 @@ public class ModChartScript
         UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
         UserData.RegisterProxyType<LaneContainerProxy, GameplayPlayfieldLane>(s => new LaneContainerProxy(s));
         UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
+        UserData.RegisterProxyType<ShaderProxy, Shader>(s => new ShaderProxy(s));
+        UserData.RegisterProxyType<SpriteBatchOptionsProxy, SpriteBatchOptions>(s => new SpriteBatchOptionsProxy(s));
         UserData.RegisterProxyType<Texture2DProxy, Texture2D>(t => new Texture2DProxy(t));
         UserData.RegisterProxyType<GameplayHitObjectKeysProxy, GameplayHitObjectKeys>(s =>
             new GameplayHitObjectKeysProxy(s));
