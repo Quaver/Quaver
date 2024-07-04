@@ -100,6 +100,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             }
         }
 
+        public void OnStorageLoaded()
+        {
+        }
+
+        public void OnStorageSave()
+        {
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

@@ -20,11 +20,13 @@ public class PluginWindowState
         {
             plugin.Storage.Add(key, value);
         }
+        plugin.OnStorageLoaded();
     }
 
     public void RetrieveState(IEditorPlugin plugin)
     {
         Enabled = plugin.IsActive;
+        plugin.OnStorageSave();
         Storage.Clear();
         foreach (var (key, value) in plugin.Storage)
         {

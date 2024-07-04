@@ -93,6 +93,32 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         {
         }
 
+        public void OnStorageLoaded()
+        {
+            try
+            {
+                if (WorkingScript.Globals["onStorageLoaded"] is Closure onStorageLoaded)
+                    WorkingScript.Call(onStorageLoaded);
+            }
+            catch (Exception e)
+            {
+                HandleLuaException(e);
+            }
+        }
+
+        public void OnStorageSave()
+        {
+            try
+            {
+                if (WorkingScript.Globals["onStorageSave"] is Closure onStorageSave)
+                    WorkingScript.Call(onStorageSave);
+            }
+            catch (Exception e)
+            {
+                HandleLuaException(e);
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

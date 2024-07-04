@@ -55,5 +55,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         /// </summary>
         void Destroy();
+
+        void OnStorageLoaded();
+
+        void OnStorageSave();
     }
 }
