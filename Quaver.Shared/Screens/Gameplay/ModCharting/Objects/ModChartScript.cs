@@ -56,6 +56,8 @@ public class ModChartScript
 
     public ModChartStateMachines ModChartStateMachines { get; set; }
 
+    public ModChartNew ModChartNew { get; set; }
+
     /// <summary>
     ///     Manages continuous segments of updates from storyboard
     /// </summary>
@@ -91,8 +93,9 @@ public class ModChartScript
 
         ModChartNotes = new ModChartNotes(Shortcut);
 
-
         ModChartStateMachines = new ModChartStateMachines(Shortcut);
+
+        ModChartNew = new ModChartNew(Shortcut);
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
@@ -133,6 +136,8 @@ public class ModChartScript
         RegisterEasingType();
         RegisterKeyframe<float>();
         RegisterKeyframe<Vector2>();
+        RegisterKeyframe<ScalableVector2>();
+        RegisterKeyframe<Color>();
         RegisterKeyframe<XnaVector2>();
         RegisterKeyframe<Vector3>();
         RegisterKeyframe<Vector4>();
@@ -145,6 +150,7 @@ public class ModChartScript
         State = new ModChartState();
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
+        WorkingScript.Globals["New"] = ModChartNew;
         WorkingScript.Globals["Timeline"] = Timeline;
         WorkingScript.Globals["State"] = State;
         WorkingScript.Globals["Tween"] = TweenSetters;
@@ -316,7 +322,7 @@ public class ModChartScript
                 return new Vector2(x, y);
             }
         );
-        
+
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(XnaVector2),
             dynVal =>
             {

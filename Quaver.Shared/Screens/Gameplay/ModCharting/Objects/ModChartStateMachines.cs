@@ -19,19 +19,6 @@ public class ModChartStateMachines
 
     public OrthogonalStateMachine RootMachine { get; }
 
-    public OrthogonalStateMachine NewOrthogonal(string name = "", StateMachineState parent = default) =>
-        new(Shortcut.ModChartScript, name, parent);
-
-    public StateMachine.StateMachine NewMachine(string name = "", StateMachineState entryState = null,
-        StateMachineState parent = default) => new(Shortcut.ModChartScript, entryState, name, parent);
-
-    public CustomStateMachineState NewState(string name = "", Action<CustomStateMachineState> updater = null,
-        Action<CustomStateMachineState> onEnable = null, Action<CustomStateMachineState> onDisable = null,
-        StateMachineState parent = default)
-    {
-        return new CustomStateMachineState(Shortcut.ModChartScript, updater, onEnable, onDisable, name, parent);
-    }
-
     public void Start()
     {
         RootMachine.Enter();
