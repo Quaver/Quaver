@@ -32,6 +32,13 @@ public class ModChartNew
 
     #region Property
 
+    public ModChartGeneralProperty<DynValue> Property(Closure getter, Closure setter) => new(
+        () => getter.SafeCall(),
+        v => setter.SafeCall(v));
+
+    public ModChartGeneralProperty<DynValue> Property(Closure getter) => new(
+        () => getter.SafeCall());
+
     public ModChartPropertyFloat PropertyFloat(Closure getter, Closure setter) => new(
         () => getter.SafeCall().ToObject<float>(),
         v => setter.SafeCall(v));

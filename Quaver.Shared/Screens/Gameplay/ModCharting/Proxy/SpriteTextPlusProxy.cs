@@ -12,6 +12,8 @@ public class SpriteTextPlusProxy : SpriteProxy
     {
         _text = text;
         FontSizeProp = new ModChartPropertyInt(() => _text.FontSize, v => _text.FontSize = v);
+        TextProp = new ModChartGeneralProperty<string>(() => _text.Text, v => _text.Text = v);
+        MaxWidthProp = new ModChartPropertyFloat(() => MaxWidth, v => MaxWidth = v);
     }
 
     public string Text
@@ -27,6 +29,7 @@ public class SpriteTextPlusProxy : SpriteProxy
     }
 
     public readonly ModChartPropertyInt FontSizeProp;
+    public readonly ModChartGeneralProperty<string> TextProp;
 
     public WobbleFontStore Font
     {
@@ -34,11 +37,13 @@ public class SpriteTextPlusProxy : SpriteProxy
         set => _text.Font = value;
     }
 
-    public float? MaxWidth
+    public float MaxWidth
     {
-        get => _text.MaxWidth;
-        set => _text.MaxWidth = value;
+        get => _text.MaxWidth ?? 0;
+        set => _text.MaxWidth = value <= 0 ? null : value;
     }
+
+    public ModChartPropertyFloat MaxWidthProp;
 
     public void TruncateWithEllipsis(int maxWidth) => _text.TruncateWithEllipsis(maxWidth);
 }

@@ -6,28 +6,8 @@ using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 
 [MoonSharpUserData]
-public abstract class ModChartProperty<T>
+public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
 {
-    protected readonly Action<T> Setter;
-    protected readonly Func<T> Getter;
-
-    protected ModChartProperty(Func<T> getter, Action<T> setter)
-    {
-        Getter = getter;
-        Setter = setter;
-    }
-
-    protected ModChartProperty(Func<T> getter)
-    {
-        Getter = getter;
-        Setter = _ => { };
-    }
-
-    public T Value
-    {
-        get => Getter();
-        set => Setter(value);
-    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected abstract T Add(T left, T right);
@@ -81,4 +61,12 @@ public abstract class ModChartProperty<T>
     /// <param name="keyframes"></param>
     /// <returns></returns>
     public KeyframesPayload<T> Keyframes(Keyframe<T>[] keyframes) => new(SetterDelegate, keyframes);
+
+    protected ModChartProperty(Func<T> getter, Action<T> setter) : base(getter, setter)
+    {
+    }
+
+    protected ModChartProperty(Func<T> getter) : base(getter)
+    {
+    }
 }

@@ -286,6 +286,7 @@ public class ModChartScript
                 {
                     ulong eventType =>
                         new CustomTriggerPayload(v => ModChartEvents.Enqueue((ModChartEventType)eventType, v)),
+                    ITriggerPayload triggerPayload => triggerPayload,
                     _ => throw new ScriptRuntimeException(
                         $"Cannot convert {dynVal.UserData.Descriptor.Name} to trigger payload")
                 };
@@ -448,6 +449,30 @@ public class ModChartScript
                 var y = DynValue.NewNumber(vector.Y);
                 var z = DynValue.NewNumber(vector.Z);
                 var w = DynValue.NewNumber(vector.W);
+                var dynVal = DynValue.NewTable(script, x, y, z, w);
+                return dynVal;
+            }
+        );
+
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Padding),
+            dynVal =>
+            {
+                var table = dynVal.Table;
+                var x = (int)((double)table[1]);
+                var y = (int)((double)table[2]);
+                var z = (int)((double)table[3]);
+                var w = (int)((double)table[4]);
+                return new Padding(x, y, z, w);
+            }
+        );
+
+        Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Padding>(
+            (script, vector) =>
+            {
+                var x = DynValue.NewNumber(vector.Left);
+                var y = DynValue.NewNumber(vector.Right);
+                var z = DynValue.NewNumber(vector.Up);
+                var w = DynValue.NewNumber(vector.Down);
                 var dynVal = DynValue.NewTable(script, x, y, z, w);
                 return dynVal;
             }
