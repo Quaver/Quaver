@@ -24,6 +24,15 @@ public class TweenSetters
         Shortcut = shortcut;
     }
 
+    public static SetterDelegate<T> CreateSwap<T>(SetterDelegate<T> a, SetterDelegate<T> b)
+    {
+        return (startValue, endValue, progress) =>
+        {
+            a(startValue, endValue, progress);
+            b(endValue, startValue, progress);
+        };
+    }
+
     public static SetterDelegate<int> CreateInt(Action<int> action)
     {
         return (startValue, endValue, progress) => action((int)EasingFunctions.Linear(startValue, endValue, progress));
