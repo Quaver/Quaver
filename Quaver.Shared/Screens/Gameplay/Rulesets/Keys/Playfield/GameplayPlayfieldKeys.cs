@@ -211,8 +211,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
         private void InitializeLayers()
         {
-            GameplayForegroundLayer = GameplayLayerManager.NewLayer($"Foreground", Screen);
-            GameplayBackgroundLayer = GameplayLayerManager.NewLayer($"Background", Screen);
+            GameplayForegroundLayer = GameplayLayerManager.NewLayer($"Foreground");
+            GameplayBackgroundLayer = GameplayLayerManager.NewLayer($"Background");
             LayerManager.RequireOrder(new []
             {
                 GameplayLayerManager.TopLayer,

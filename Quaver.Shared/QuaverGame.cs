@@ -303,9 +303,9 @@ namespace Quaver.Shared
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
 
-            TransitionLayer = MainLayerManager.NewGlobalLayer("Transition");
-            NotificationLayer = MainLayerManager.NewGlobalLayer("Notification");
-            VolumeControllerLayer = MainLayerManager.NewGlobalLayer("VolumeController");
+            TransitionLayer = MainLayerManager.NewLayer("Transition");
+            NotificationLayer = MainLayerManager.NewLayer("Notification");
+            VolumeControllerLayer = MainLayerManager.NewLayer("VolumeController");
             LayerManager.RequireOrder(new []
             {
                 MainLayerManager.CursorLayer,

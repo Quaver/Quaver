@@ -232,11 +232,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private void InitializeLayers()
         {
             var layerManager = Playfield.GameplayLayerManager;
-            TimingLineLayer = layerManager.NewLayer($"TimingLines", Screen);
-            HitObjectLayer = layerManager.NewLayer($"HitObjects", Screen);
-            HitLayer = layerManager.NewLayer($"Hits", Screen);
-            ReceptorAndLightingLayer = layerManager.NewLayer($"ReceptorsAndLighting", Screen);
-            HitPositionOverlayLayer = layerManager.NewLayer($"HitPositionOverlays", Screen);
+            TimingLineLayer = layerManager.NewLayer($"TimingLines");
+            HitObjectLayer = layerManager.NewLayer($"HitObjects");
+            HitLayer = layerManager.NewLayer($"Hits");
+            ReceptorAndLightingLayer = layerManager.NewLayer($"ReceptorsAndLighting");
+            HitPositionOverlayLayer = layerManager.NewLayer($"HitPositionOverlays");
 
             // Depending on what the skin.ini's value is, we'll want to either initialize
             // the receptors first, or the playfield first.
