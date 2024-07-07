@@ -27,7 +27,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <summary>
         ///     The sprite container for our notifications.
         /// </summary>
-        public static Container Container { get; } = new Container();
+        public static Container Container { get; } = new() { Layer = ((QuaverGame)GameBase.Game).NotificationLayer };
 
         /// <summary>
         ///     Notifications that are queued to be displayed
@@ -66,10 +66,6 @@ namespace Quaver.Shared.Graphics.Notifications
             PerformAnimations(gameTime);
             Container.Update(gameTime);
         }
-
-        /// <summary>
-        /// </summary>
-        internal static void Draw(GameTime gameTime) => Container.Draw(gameTime);
 
         /// <summary>
         ///     Show a notification with a given type.
