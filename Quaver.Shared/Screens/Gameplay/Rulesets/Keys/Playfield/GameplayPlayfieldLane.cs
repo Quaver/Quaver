@@ -38,7 +38,8 @@ public class GameplayPlayfieldLane : Container
         {
             Size = new ScalableVector2(LaneSize * LaneScale, 0, 0, 1),
             Alignment = Alignment.TopCenter,
-            Parent = this
+            Parent = this,
+            Layer = Stage.HitObjectLayer
         };
     }
 
@@ -46,7 +47,8 @@ public class GameplayPlayfieldLane : Container
     {
         Size = new ScalableVector2(Width, 0, WidthScale, 1),
         Alignment = Alignment.TopCenter,
-        Parent = this
+        Parent = this,
+        Layer = Stage.HitLayer
     };
 
     public void CreateColumnLighting()
@@ -68,6 +70,7 @@ public class GameplayPlayfieldLane : Container
                 ? SpriteEffects.FlipVertically
                 : SpriteEffects.None,
             Alignment = Alignment.TopCenter,
+            Layer = Stage.ReceptorAndLightingLayer
         };
     }
 
@@ -85,5 +88,6 @@ public class GameplayPlayfieldLane : Container
                 !Playfield.ScrollDirections[Lane].Equals(ScrollDirection.Down) && Stage.Skin.FlipNoteImagesOnUpscroll
                     ? SpriteEffects.FlipVertically
                     : SpriteEffects.None,
+            Layer = Stage.ReceptorAndLightingLayer
         };
 }

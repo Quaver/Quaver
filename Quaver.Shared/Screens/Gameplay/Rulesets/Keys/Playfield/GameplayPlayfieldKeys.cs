@@ -35,6 +35,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public Container Container { get; set; }
 
         /// <summary>
+        ///     The foreground container will be drawn in this layer
+        /// </summary>
+        public Layer GameplayForegroundLayer { get; private set; }
+
+        /// <summary>
+        ///     The background container will be drawn in this layer
+        /// </summary>
+        public Layer GameplayBackgroundLayer { get; private set; }
+
+        /// <summary>
+        ///     Shortcut to container's layer manager
+        /// </summary>
+        public LayerManager GameplayLayerManager => ((LayeredContainer)Container)?.LayerManager;
+
+        /// <summary>
         ///     The background of the playfield.
         /// </summary>
         public Container BackgroundContainer { get; private set; }
@@ -187,10 +202,24 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Screen = screen;
             Ruleset = ruleset;
-            Container = new Container();
+            Container = new LayeredContainer();
+            InitializeLayers();
             SetLaneScrollDirections();
             SetReferencePositions();
             CreateElementContainers();
+        }
+
+        private void InitializeLayers()
+        {
+            GameplayForegroundLayer = GameplayLayerManager.NewLayer($"Foreground", Screen);
+            GameplayBackgroundLayer = GameplayLayerManager.NewLayer($"Background", Screen);
+            LayerManager.RequireOrder(new []
+            {
+                GameplayLayerManager.TopLayer,
+                GameplayForegroundLayer,
+                GameplayBackgroundLayer,
+                GameplayLayerManager.DefaultLayer
+            });
         }
 
 
@@ -206,6 +235,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Size = new ScalableVector2(Width, WindowManager.Height),
                 Alignment = Alignment.TopCenter,
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment,
+                Layer = GameplayBackgroundLayer
             };
 
             // Create the foreground container.
@@ -214,7 +244,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
                 Alignment = Alignment.TopCenter,
-                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment,
+                Layer = GameplayForegroundLayer
             };
 
             Stage = new GameplayPlayfieldKeysStage(Screen, this);

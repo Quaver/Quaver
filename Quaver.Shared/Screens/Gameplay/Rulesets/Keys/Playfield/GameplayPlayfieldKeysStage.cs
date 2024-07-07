@@ -58,6 +58,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public List<GameplayPlayfieldLane> LaneContainers { get; private set; }
 
         /// <summary>
+        /// </summary>
+        public Layer TimingLineLayer { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public Layer HitObjectLayer { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public Layer HitLayer { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public Layer ReceptorAndLightingLayer { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public Layer HitPositionOverlayLayer { get; private set; }
+        
+        /// <summary>
         ///     The left side of the stage.
         /// </summary>
         public Sprite StageLeft { get; private set; }
@@ -152,33 +172,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Screen = screen;
             Playfield = playfield;
+            InitializeLayers();
 
             CreateStageLeft();
             CreateStageRight();
             CreateBgMask();
 
-            // Depending on what the skin.ini's value is, we'll want to either initialize
-            // the receptors first, or the playfield first.
             CreateLanes();
-            if (Skin.ReceptorsOverHitObjects)
-            {
-                CreateTimingLineContainer();
-                CreateHitObjectContainer();
-                CreateHitContainer();
-                CreateReceptorsAndLighting();
-                CreateHitPositionOverlay();
-            }
-            else
-            {
-                CreateReceptorsAndLighting();
-                // TODO Fix this order: hit position overlay and timing line will still be above because hitObject container
-                // and hit container are children of lanes
-                // maybe move to front?
-                CreateHitPositionOverlay();
-                CreateTimingLineContainer();
-                CreateHitObjectContainer();
-                CreateHitContainer();
-            }
+            CreateTimingLineContainer();
+            CreateHitObjectContainer();
+            CreateHitContainer();
+            CreateReceptorsAndLighting();
+            CreateHitPositionOverlay();
 
             CreateDistantOverlay();
 
@@ -222,6 +227,45 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             CreateHealthBar();
             CreateKeybindOverlay();
+        }
+
+        private void InitializeLayers()
+        {
+            var layerManager = Playfield.GameplayLayerManager;
+            TimingLineLayer = layerManager.NewLayer($"TimingLines", Screen);
+            HitObjectLayer = layerManager.NewLayer($"HitObjects", Screen);
+            HitLayer = layerManager.NewLayer($"Hits", Screen);
+            ReceptorAndLightingLayer = layerManager.NewLayer($"ReceptorsAndLighting", Screen);
+            HitPositionOverlayLayer = layerManager.NewLayer($"HitPositionOverlays", Screen);
+
+            // Depending on what the skin.ini's value is, we'll want to either initialize
+            // the receptors first, or the playfield first.
+            if (Skin.ReceptorsOverHitObjects)
+            {
+                LayerManager.RequireOrder(new []
+                {
+                    Playfield.GameplayForegroundLayer,
+                    HitPositionOverlayLayer,
+                    ReceptorAndLightingLayer,
+                    HitLayer,
+                    HitObjectLayer,
+                    TimingLineLayer,
+                    Playfield.GameplayBackgroundLayer
+                });
+            }
+            else
+            {
+                LayerManager.RequireOrder(new []
+                {                    
+                    Playfield.GameplayForegroundLayer,
+                    HitLayer,
+                    HitObjectLayer,
+                    TimingLineLayer,
+                    HitPositionOverlayLayer,
+                    ReceptorAndLightingLayer,
+                    Playfield.GameplayBackgroundLayer
+                });
+            }
         }
 
         /// <summary>
@@ -412,7 +456,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
             Alignment = Alignment.TopCenter,
-            Parent = Playfield.ForegroundContainer
+            Parent = Playfield.ForegroundContainer,
+            Layer = TimingLineLayer
         };
 
         /// <summary>
