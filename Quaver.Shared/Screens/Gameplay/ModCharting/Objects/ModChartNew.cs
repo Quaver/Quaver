@@ -73,6 +73,14 @@ public class ModChartNew : ModChartGlobalVariable
     public ModChartPropertyVector4 PropertyVector4(Closure getter) => new(
         () => getter.SafeCall().ToObject<Vector4>());
 
+    public ModChartPropertyColor PropertyColor(Closure getter, Closure setter) => new(
+        () => getter.SafeCall().ToObject<Color>(),
+        v => setter.SafeCall(v));
+
+    public ModChartPropertyColor PropertyColor(Closure getter) => new(
+        () => getter.SafeCall().ToObject<Color>());
+
+
     #endregion
 
     #region Drawables
