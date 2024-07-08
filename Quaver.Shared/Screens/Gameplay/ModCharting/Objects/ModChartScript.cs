@@ -61,6 +61,8 @@ public class ModChartScript
 
     public ModChartLayers ModChartLayers { get; set; }
 
+    public ModChartUtils ModChartUtils { get; set; }
+
     /// <summary>
     ///     Manages continuous segments of updates from storyboard
     /// </summary>
@@ -104,6 +106,10 @@ public class ModChartScript
 
         State = new ModChartState(Shortcut);
 
+        ModChartUtils = new ModChartUtils(Shortcut);
+
+        ModChartUtils.InitializeMeasures();
+
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterExtensionType(typeof(EventHelper));
@@ -145,6 +151,7 @@ public class ModChartScript
         RegisterKeyframe<Vector3>();
         RegisterKeyframe<Vector4>();
         RegisterLayer();
+        RegisterBeat();
         LoadScript();
     }
 
@@ -174,6 +181,8 @@ public class ModChartScript
         WorkingScript.Globals["Layers"] = ModChartLayers;
         WorkingScript.Globals["Fonts"] = typeof(Fonts);
         WorkingScript.Globals["Events"] = ModChartEvents;
+        WorkingScript.Globals["beat"] = ModChartUtils.Beat;
+        WorkingScript.Globals["measure"] = ModChartUtils.Measure;
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>
@@ -223,6 +232,21 @@ public class ModChartScript
     {
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.String, typeof(Layer),
             dynVal => ModChartLayers[dynVal.String]);
+    }
+
+    private void RegisterBeat()
+    {
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(int),
+            dynVal =>
+            {
+                var tuple = dynVal.Table;
+                return tuple.Length switch
+                {
+                    1 => (int)ModChartUtils.Measure((float)tuple.Get(1).Number),
+                    2 => (int)ModChartUtils.Beat((int)tuple.Get(1).Number, (float)tuple.Get(2).Number),
+                    _ => throw new ScriptRuntimeException($"Cannot convert tuple {dynVal} to time")
+                };
+            });
     }
 
     private void RegisterEasingType()
