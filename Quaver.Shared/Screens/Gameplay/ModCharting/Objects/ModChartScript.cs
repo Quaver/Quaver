@@ -59,6 +59,8 @@ public class ModChartScript
 
     public ModChartNew ModChartNew { get; set; }
 
+    public ModChartLayers ModChartLayers { get; set; }
+
     /// <summary>
     ///     Manages continuous segments of updates from storyboard
     /// </summary>
@@ -98,6 +100,8 @@ public class ModChartScript
 
         ModChartNew = new ModChartNew(Shortcut);
 
+        ModChartLayers = new ModChartLayers(Shortcut);
+
         State = new ModChartState(Shortcut);
 
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
@@ -130,6 +134,7 @@ public class ModChartScript
         UserData.RegisterProxyType<ShaderProxy, Shader>(s => new ShaderProxy(s));
         UserData.RegisterProxyType<SpriteBatchOptionsProxy, SpriteBatchOptions>(s => new SpriteBatchOptionsProxy(s));
         UserData.RegisterProxyType<Texture2DProxy, Texture2D>(t => new Texture2DProxy(t));
+        UserData.RegisterProxyType<LayerProxy, Layer>(s => new LayerProxy(s));
         UserData.RegisterProxyType<GameplayHitObjectKeysProxy, GameplayHitObjectKeys>(s =>
             new GameplayHitObjectKeysProxy(s));
         UserData.RegisterProxyType<GameplayHitObjectKeysInfoProxy, GameplayHitObjectKeysInfo>(s =>
@@ -146,6 +151,7 @@ public class ModChartScript
         RegisterKeyframe<XnaVector2>();
         RegisterKeyframe<Vector3>();
         RegisterKeyframe<Vector4>();
+        RegisterLayer();
         LoadScript();
     }
 
@@ -167,6 +173,7 @@ public class ModChartScript
         WorkingScript.Globals["Skin"] = SkinManager.Skin;
         WorkingScript.Globals["Notes"] = ModChartNotes;
         WorkingScript.Globals["SM"] = ModChartStateMachines;
+        WorkingScript.Globals["Layers"] = ModChartLayers;
         WorkingScript.Globals["Fonts"] = typeof(Fonts);
         WorkingScript.Globals["Events"] = ModChartEvents;
         WorkingScript.Globals["Alignment"] = typeof(Alignment);
@@ -205,6 +212,12 @@ public class ModChartScript
         SegmentManager.Update(time);
         ModChartStateMachines.RootMachine.Update();
         ModChartEvents.DeferredEventQueue.Dispatch();
+    }
+
+    private void RegisterLayer()
+    {
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.String, typeof(Layer),
+            dynVal => ModChartLayers[dynVal.String]);
     }
 
     private void RegisterEasingType()

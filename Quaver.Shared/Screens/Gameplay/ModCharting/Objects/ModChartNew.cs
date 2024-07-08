@@ -182,4 +182,10 @@ public class ModChartNew : ModChartGlobalVariable
             new Dictionary<string, object>());
 
     #endregion
+
+    #region Layer
+
+    public Layer Layer(string name) => Shortcut.ModChartScript.ModChartLayers.NewLayer(name);
+
+    #endregion
 }

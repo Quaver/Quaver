@@ -157,6 +157,12 @@ public class DrawableProxy
         set => _drawable.Parent = value;
     }
 
+    public Layer Layer
+    {
+        get => _drawable.Layer;
+        set => _drawable.Layer = value;
+    }
+
     public Alignment Alignment
     {
         get => _drawable.Alignment;
