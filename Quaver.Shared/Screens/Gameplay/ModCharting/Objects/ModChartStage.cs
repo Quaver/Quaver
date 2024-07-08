@@ -15,13 +15,10 @@ using Wobble.Managers;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartStage
+public class ModChartStage : ModChartGlobalVariable
 {
-    [MoonSharpVisible(false)] public readonly ElementAccessShortcut Shortcut;
-
-    public ModChartStage(ElementAccessShortcut shortcut)
+    public ModChartStage(ElementAccessShortcut shortcut) : base(shortcut)
     {
-        Shortcut = shortcut;
     }
 
     public GameplayPlayfieldLane LaneContainer(int lane) =>

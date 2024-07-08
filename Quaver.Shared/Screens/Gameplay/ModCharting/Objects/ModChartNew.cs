@@ -23,14 +23,11 @@ using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartNew
+public class ModChartNew : ModChartGlobalVariable
 {
-    public ModChartNew(ElementAccessShortcut shortcut)
+    public ModChartNew(ElementAccessShortcut shortcut) : base(shortcut)
     {
-        Shortcut = shortcut;
     }
-
-    [MoonSharpHidden] private ElementAccessShortcut Shortcut { get; set; }
 
     #region Property
 

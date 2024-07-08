@@ -7,13 +7,10 @@ using Wobble.Logging;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartStateMachines
+public class ModChartStateMachines : ModChartGlobalVariable
 {
-    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut { get; }
-
-    public ModChartStateMachines(ElementAccessShortcut shortcut)
+    public ModChartStateMachines(ElementAccessShortcut shortcut) : base(shortcut)
     {
-        Shortcut = shortcut;
         RootMachine = new OrthogonalStateMachine(Shortcut.ModChartScript, "Root");
     }
 

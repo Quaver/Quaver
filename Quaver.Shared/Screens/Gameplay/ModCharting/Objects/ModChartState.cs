@@ -6,10 +6,8 @@ using Quaver.API.Maps.Structures;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartState
+public class ModChartState : ModChartGlobalVariable
 {
-    
-
     /// <summary>
     ///     Any state that the user wants to store for their plugin
     /// </summary>
@@ -39,4 +37,8 @@ public class ModChartState
     /// <param name="key"></param>
     /// <param name="value"></param>
     public void SetValue(string key, object value) => Values[key] = value;
+
+    public ModChartState(ElementAccessShortcut shortcut) : base(shortcut)
+    {
+    }
 }

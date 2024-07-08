@@ -15,9 +15,8 @@ using Wobble.Logging;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartEvents
+public class ModChartEvents : ModChartGlobalVariable
 {
-    private ElementAccessShortcut Shortcut { get; set; }
 
     public HitObjectManagerKeys HitObjectManagerKeys =>
         (HitObjectManagerKeys)Shortcut.GameplayScreen.Ruleset.HitObjectManager;
@@ -141,9 +140,8 @@ public class ModChartEvents
         this[eventType].Remove(action);
     }
 
-    public ModChartEvents(ElementAccessShortcut shortcut)
+    public ModChartEvents(ElementAccessShortcut shortcut) : base(shortcut)
     {
-        Shortcut = shortcut;
         DeferredEventQueue = new ModChartDeferredEventQueue(this);
         this[ModChartEventType.FunctionCall].OnInvoke += args =>
         {

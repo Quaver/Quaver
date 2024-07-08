@@ -5,16 +5,13 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartNotes
+public class ModChartNotes : ModChartGlobalVariable
 {
-    [MoonSharpHidden] private ElementAccessShortcut Shortcut { get; set; }
-
     public HitObjectManagerKeys HitObjectManagerKeys =>
         (HitObjectManagerKeys)Shortcut.GameplayScreen.Ruleset.HitObjectManager;
 
-    public ModChartNotes(ElementAccessShortcut shortcut)
+    public ModChartNotes(ElementAccessShortcut shortcut) : base(shortcut)
     {
-        Shortcut = shortcut;
     }
 
     public List<GameplayHitObjectKeysInfo> HitObjectInfos => HitObjectManagerKeys.HitObjectInfos;

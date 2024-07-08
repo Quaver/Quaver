@@ -13,13 +13,10 @@ using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects;
 
 [MoonSharpUserData]
-public class ModChartTimeline
+public class ModChartTimeline : ModChartGlobalVariable
 {
-    [MoonSharpVisible(false)] public ElementAccessShortcut Shortcut;
-
-    public ModChartTimeline(ElementAccessShortcut shortcut)
+    public ModChartTimeline(ElementAccessShortcut shortcut) : base(shortcut)
     {
-        Shortcut = shortcut;
     }
 
     public IntervalTriggerPayload IntervalTrigger(int id, int time, float interval, int count, Closure trigger,

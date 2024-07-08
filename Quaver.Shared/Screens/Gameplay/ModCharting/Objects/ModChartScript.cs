@@ -98,6 +98,8 @@ public class ModChartScript
 
         ModChartNew = new ModChartNew(Shortcut);
 
+        State = new ModChartState(Shortcut);
+
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterExtensionType(typeof(EventHelper));
@@ -150,7 +152,6 @@ public class ModChartScript
 
     public void LoadScript()
     {
-        State = new ModChartState();
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
         WorkingScript.Globals["New"] = ModChartNew;
