@@ -62,6 +62,12 @@ public class DrawableProxy
         return _drawable;
     }
 
+    public Drawable WithLayer(Layer layer)
+    {
+        Layer = layer;
+        return _drawable;
+    }
+
     public Drawable Align(Alignment alignment)
     {
         Alignment = alignment;

@@ -107,13 +107,6 @@ public class ModChartScript
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterExtensionType(typeof(EventHelper));
-        UserData.RegisterType<Easing>();
-        UserData.RegisterType<Color>();
-        UserData.RegisterType<Alignment>();
-        UserData.RegisterType<Judgement>();
-        UserData.RegisterType<Direction>();
-        UserData.RegisterType<GameMode>();
-        UserData.RegisterType<ModChartEventType>();
         UserData.RegisterType<EasingDelegate>();
         UserData.RegisterType<SetterDelegate<float>>();
         UserData.RegisterType<SetterDelegate<Vector2>>();
@@ -160,13 +153,18 @@ public class ModChartScript
     {
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
+        RegisterEnum<Easing>("Easing");
+        RegisterEnum<Color>("Color");
+        RegisterEnum<Alignment>("Alignment");
+        RegisterEnum<Judgement>("Judgement");
+        RegisterEnum<Direction>("Direction");
+        RegisterEnum<GameMode>("GameMode");
+        RegisterEnum<ModChartEventType>("EventType");
         WorkingScript.Globals["New"] = ModChartNew;
         WorkingScript.Globals["Timeline"] = Timeline;
         WorkingScript.Globals["State"] = State;
         WorkingScript.Globals["Tween"] = TweenSetters;
         WorkingScript.Globals["EasingWrapper"] = new EasingWrapperFunctions();
-        WorkingScript.Globals["Easing"] = typeof(Easing);
-        WorkingScript.Globals["Color"] = typeof(Color);
         WorkingScript.Globals["Constants"] = ModChartConstants;
         WorkingScript.Globals["Map"] = GameplayScreenView.Screen.Map;
         WorkingScript.Globals["Stage"] = ModChartStage;
@@ -176,11 +174,6 @@ public class ModChartScript
         WorkingScript.Globals["Layers"] = ModChartLayers;
         WorkingScript.Globals["Fonts"] = typeof(Fonts);
         WorkingScript.Globals["Events"] = ModChartEvents;
-        WorkingScript.Globals["Alignment"] = typeof(Alignment);
-        WorkingScript.Globals["Direction"] = typeof(Direction);
-        WorkingScript.Globals["EventType"] = typeof(ModChartEventType);
-        WorkingScript.Globals["GameMode"] = typeof(GameMode);
-        WorkingScript.Globals["Judgement"] = typeof(Judgement);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>
@@ -199,6 +192,18 @@ public class ModChartScript
             Update(int.MinValue);
             WorkingScript.DoString(ScriptText, codeFriendlyName: Path.GetFileName(FilePath));
         });
+    }
+
+    private void RegisterEnum<T>(string globalVariableName) => RegisterEnum(typeof(T), globalVariableName);
+
+    private void RegisterEnum(Type enumType, string globalVariableName)
+    {
+        UserData.RegisterType(enumType);
+        WorkingScript.Globals[globalVariableName] = enumType;
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.String, enumType,
+            dynVal => Enum.TryParse(enumType, dynVal.String, true, out var result)
+                ? result
+                : throw new ScriptRuntimeException($"Failed to parse '{dynVal.String}' as {globalVariableName}"));
     }
 
     public void Update(int time)
@@ -234,6 +239,12 @@ public class ModChartScript
                 };
             }
         );
+        // Implicitly converts string to EasingWrapperFunction, so you can directly pass string in Timeline.Tween
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.String, typeof(EasingDelegate),
+            dynVal => EasingWrapperFunctions.From(Enum.TryParse(typeof(Easing), dynVal.String, true, out var result)
+                ? (Easing)result!
+                : throw new ScriptRuntimeException($"Failed to parse '{dynVal.String}' as Easing")));
+
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function, typeof(EasingDelegate),
             dynVal => new EasingDelegate(p => dynVal.Function?.SafeCall(p)?.ToObject<float>() ?? 0));
     }
