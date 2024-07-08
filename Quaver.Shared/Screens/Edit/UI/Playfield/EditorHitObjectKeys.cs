@@ -294,9 +294,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Tail.Image = TextureTail;
 
             if (SkinMode.RotateHitObjectsByColumn && !ViewLayers.Value)
-                Rotation = GameplayHitObjectKeys.GetObjectRotation(Map.Mode, Info.Lane - 1);
+                SpriteRotation = GameplayHitObjectKeys.GetObjectRotation(Map.Mode, Info.Lane - 1);
             else
-                Rotation = 0;
+                SpriteRotation = 0;
         }
 
         /// <summary>
