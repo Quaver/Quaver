@@ -7,7 +7,6 @@
 
 using System;
 using Microsoft.Xna.Framework;
-using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -32,8 +31,7 @@ namespace Quaver.Shared.Graphics.Transitions
             {
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Tint = Color.Black,
-                Alpha = 0,
-                Layer = ((QuaverGame)GameBase.Game).TransitionLayer
+                Alpha = 0
             };
 
             WindowManager.ResolutionChanged += OnResolutionChanged;
@@ -48,6 +46,8 @@ namespace Quaver.Shared.Graphics.Transitions
             Blackness.Height = WindowManager.Height;
             Blackness.Update(gameTime);
         }
+
+        public static void Draw(GameTime gameTime) => Blackness?.Draw(gameTime);
 
         /// <summary>
         ///     Disposes of the the transitioner.

@@ -156,18 +156,6 @@ namespace Quaver.Shared
         public FpsCounter Fps { get; private set; }
 
         /// <summary>
-        /// </summary>
-        public Layer TransitionLayer { get; private set; }
-
-        /// <summary>
-        /// </summary>
-        public Layer NotificationLayer { get; private set; }
-
-        /// <summary>
-        /// </summary>
-        public Layer VolumeControllerLayer { get; private set; }
-
-        /// <summary>
         ///     The current activated screen.
         /// </summary>
         public QuaverScreen CurrentScreen { get; set; }
@@ -303,19 +291,6 @@ namespace Quaver.Shared
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
 
-            TransitionLayer = MainLayerManager.NewLayer("Transition");
-            NotificationLayer = MainLayerManager.NewLayer("Notification");
-            VolumeControllerLayer = MainLayerManager.NewLayer("VolumeController");
-            LayerManager.RequireOrder(new []
-            {
-                MainLayerManager.CursorLayer,
-                TransitionLayer,
-                MainLayerManager.GlobalUILayer,
-                VolumeControllerLayer,
-                NotificationLayer,
-                MainLayerManager.DialogLayer
-            });
-
 #if VISUAL_TESTS
             HotLoaderGame.Font = FontsBitmap.CodeProBold;
 #endif
@@ -380,7 +355,7 @@ namespace Quaver.Shared
                 // be initialized
                 OnlineHub = new OnlineHub();
                 OnlineChat = new OnlineChat();
-                VolumeController = new VolumeControl { Layer = VolumeControllerLayer };
+                VolumeController = new VolumeControl();
                 FirstUpdateCalled = true;
             }
 
@@ -418,6 +393,15 @@ namespace Quaver.Shared
                 return;
 
             base.Draw(gameTime);
+
+            // Draw dialogs
+            DialogManager.Draw(gameTime);
+
+            NotificationManager.Draw(gameTime);
+            VolumeController?.Draw(gameTime);
+            GlobalUserInterface.Draw(gameTime);
+
+            Transitioner.Draw(gameTime);
 
             ClearAlphaChannel(gameTime);
         }
