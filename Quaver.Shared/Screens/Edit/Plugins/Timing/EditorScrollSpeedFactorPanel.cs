@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps.Structures;
@@ -590,7 +591,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
                 ImGui.TextWrapped($"{sv.Factor:0.00}x");
                 ImGui.NextColumn();
-                ImGui.TextWrapped($"{sv.MaskRepresentation(_keyCount)}");
+                ImGui.TextWrapped($"{GetLaneMaskRepresentation(sv)}");
                 ImGui.NextColumn();
 
                 ImGui.PopID();
@@ -599,6 +600,27 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
             HandleInput();
             ImGui.EndChild();
+        }
+
+        private string GetLaneMaskRepresentation(ScrollSpeedFactorInfo sv)
+        {
+            if (sv.LaneMask == -1)
+                return "All";
+
+            var sb = new StringBuilder();
+            var lanes = sv.GetLaneMaskLanes(_keyCount).Select(s => s + 1).ToList();
+            var keyCountWithoutScratch = Screen.WorkingMap.GetKeyCount(false);
+            for (var i = 0; i < lanes.Count; i++)
+            {
+                if (lanes[i] > keyCountWithoutScratch)
+                    sb.Append("#");
+                else
+                    sb.Append(lanes[i]);
+                if (i != lanes.Count - 1)
+                    sb.Append(", ");
+            }
+
+            return sb.ToString();
         }
 
         private void HandleInput()
