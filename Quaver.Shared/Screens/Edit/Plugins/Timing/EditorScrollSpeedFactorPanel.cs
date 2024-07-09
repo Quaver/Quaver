@@ -104,9 +104,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         public void Initialize()
         {
             _lanesTristate = new uint[_keyCount];
-            _laneMaskFilter = (1u << _keyCount) - 1;
-
-            SelectedScrollSpeedFactors.Clear();
+            ResetFilter();
 
             var point = Screen.WorkingMap.GetScrollSpeedFactorAt(Screen.Track.Time);
 
@@ -246,34 +244,23 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var currentPoint = Screen.WorkingMap.GetScrollSpeedFactorAt(Screen.Track.Time);
                 if (currentPoint != null)
                 {
-                    NeedsToScrollToLastSelectedSf = true;
-
-                    var newSelection = new List<ScrollSpeedFactorInfo>() { currentPoint };
-
-                    if (KeyboardManager.IsCtrlDown() || KeyboardManager.IsShiftDown())
-                        newSelection.AddRange(SelectedScrollSpeedFactors);
-
-                    if (KeyboardManager.IsShiftDown() && SelectedScrollSpeedFactors.Count > 0)
+                    if (!MatchesFilter(currentPoint.LaneMask))
                     {
-                        var sorted = SelectedScrollSpeedFactors.OrderBy(x => x.StartTime);
-                        var min = sorted.First().StartTime;
-                        var max = sorted.Last().StartTime;
-                        if (currentPoint.StartTime < min)
-                        {
-                            var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
-                                .Where(v => v.StartTime >= currentPoint.StartTime && v.StartTime <= min);
-                            newSelection.AddRange(svsInRange);
-                        }
-                        else if (currentPoint.StartTime > max)
-                        {
-                            var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
-                                .Where(v => v.StartTime >= max && v.StartTime <= currentPoint.StartTime);
-                            newSelection.AddRange(svsInRange);
-                        }
+                        ResetFilter(false);
                     }
 
-                    SelectedScrollSpeedFactors.Clear();
-                    SelectedScrollSpeedFactors.AddRange(newSelection.Distinct());
+                    NeedsToScrollToLastSelectedSf = true;
+
+                    if (KeyboardManager.IsCtrlDown())
+                    {
+                        SelectedScrollSpeedFactors.Add(currentPoint);
+                    }
+                    else if (KeyboardManager.IsShiftDown() && SelectedScrollSpeedFactors.Count > 0)
+                    {
+                        ShiftSelect(Screen.WorkingMap.ScrollSpeedFactors.IndexOf(currentPoint));
+                    }
+
+                    UpdateSelectedScrollSpeedFactors();
                 }
             }
 
@@ -388,7 +375,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         // we should solo instead of resetting filter
                         if (_laneMaskFilter == 0)
                         {
-                            _laneMaskFilter = (1u << _keyCount) - 1;
+                            ResetFilter();
                         }
                         else
                         {
@@ -403,6 +390,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (i < _keyCount - 1)
                     ImGui.SameLine();
             }
+        }
+
+        private void ResetFilter(bool clearSelected = true)
+        {
+            if (clearSelected)
+                SelectedScrollSpeedFactors.Clear();
+            _laneMaskFilter = (1u << _keyCount) - 1;
         }
 
         /// <summary>
@@ -507,7 +501,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 var sv = Screen.WorkingMap.ScrollSpeedFactors[i];
 
-                if ((sv.LaneMask & (int)_laneMaskFilter) == 0)
+                if (!MatchesFilter(sv.LaneMask))
                 {
                     ImGui.PopID();
                     continue;
@@ -552,28 +546,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                              KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                     {
                         // TODO we need to optimise this O(n^2 log n)
-                        SelectedScrollSpeedFactors =
-                            SelectedScrollSpeedFactors.OrderBy(tp => Screen.WorkingMap.ScrollSpeedFactors.IndexOf(tp))
-                                .ToList();
-                        var min = Screen.WorkingMap.ScrollSpeedFactors.IndexOf(SelectedScrollSpeedFactors.First());
-                        var max = Screen.WorkingMap.ScrollSpeedFactors.IndexOf(SelectedScrollSpeedFactors.Last());
-                        var clickedIndex = i;
-                        if (clickedIndex < min)
-                        {
-                            var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
-                                .Where((_, j) => min > j && j >= clickedIndex);
-                            SelectedScrollSpeedFactors.AddRange(svsInRange);
-                        }
-                        else if (clickedIndex > max)
-                        {
-                            var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
-                                .Where((_, j) => max < j && j <= clickedIndex);
-                            SelectedScrollSpeedFactors.AddRange(svsInRange);
-                        }
-
-                        SelectedScrollSpeedFactors = SelectedScrollSpeedFactors.Distinct()
-                            .Where(sf => (sf.LaneMask & _laneMaskFilter) != 0)
-                            .OrderBy(tp => Screen.WorkingMap.ScrollSpeedFactors.IndexOf(tp)).ToList();
+                        ShiftSelect(i);
                     }
                     else
                     {
@@ -600,6 +573,40 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
             HandleInput();
             ImGui.EndChild();
+        }
+
+        private bool MatchesFilter(int laneMask)
+        {
+            return (laneMask & _laneMaskFilter) != 0;
+        }
+
+        private void ShiftSelect(int i)
+        {
+            UpdateSelectedScrollSpeedFactors();
+            var min = Screen.WorkingMap.ScrollSpeedFactors.IndexOf(SelectedScrollSpeedFactors.First());
+            var max = Screen.WorkingMap.ScrollSpeedFactors.IndexOf(SelectedScrollSpeedFactors.Last());
+            var clickedIndex = i;
+            if (clickedIndex < min)
+            {
+                var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
+                    .Where((_, j) => min > j && j >= clickedIndex);
+                SelectedScrollSpeedFactors.AddRange(svsInRange);
+            }
+            else if (clickedIndex > max)
+            {
+                var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
+                    .Where((_, j) => max < j && j <= clickedIndex);
+                SelectedScrollSpeedFactors.AddRange(svsInRange);
+            }
+
+            UpdateSelectedScrollSpeedFactors();
+        }
+
+        private void UpdateSelectedScrollSpeedFactors()
+        {
+            SelectedScrollSpeedFactors = SelectedScrollSpeedFactors.Distinct()
+                .Where(sf => MatchesFilter(sf.LaneMask))
+                .OrderBy(tp => Screen.WorkingMap.ScrollSpeedFactors.IndexOf(tp)).ToList();
         }
 
         private string GetLaneMaskRepresentation(ScrollSpeedFactorInfo sv)
