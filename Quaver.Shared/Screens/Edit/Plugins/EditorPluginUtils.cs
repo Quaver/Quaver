@@ -29,6 +29,13 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
+using Quaver.Shared.Screens.Edit.Actions.SF.Add;
+using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeLaneMaskBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeMultiplierBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -184,6 +191,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     return new EditorActionAddScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>());
                 case EditorActionType.RemoveScrollVelocityBatch:
                     return new EditorActionRemoveScrollVelocityBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>());
+                case EditorActionType.AddScrollSpeedFactor:
+                    return new EditorActionAddScrollSpeedFactor(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<ScrollSpeedFactorInfo>());
+                case EditorActionType.RemoveScrollSpeedFactor:
+                    return new EditorActionRemoveScrollSpeedFactor(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<ScrollSpeedFactorInfo>());
+                case EditorActionType.AddScrollSpeedFactorBatch:
+                    return new EditorActionAddScrollSpeedFactorBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>());
+                case EditorActionType.RemoveScrollSpeedFactorBatch:
+                    return new EditorActionRemoveScrollSpeedFactorBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>());
                 case EditorActionType.AddTimingPoint:
                     return new EditorActionAddTimingPoint(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<TimingPointInfo>());
                 case EditorActionType.RemoveTimingPoint:
@@ -206,6 +221,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     return new EditorActionChangeScrollVelocityOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
+                case EditorActionType.ChangeScrollSpeedFactorOffsetBatch:
+                    return new EditorActionChangeScrollSpeedFactorOffsetBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>(), args[1].ToObject<float>());
+                case EditorActionType.ChangeScrollSpeedFactorMultiplierBatch:
+                    return new EditorActionChangeScrollSpeedFactorMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>(), args[1].ToObject<float>());
+                case EditorActionType.ChangeScrollSpeedFactorLaneMaskBatch:
+                    return new EditorActionChangeScrollSpeedFactorLaneMaskBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>(), args[1].ToObject<int>());
                 case EditorActionType.AddBookmark:
                     return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>()); 
                 case EditorActionType.RemoveBookmark:

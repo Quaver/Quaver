@@ -32,6 +32,13 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.Add;
+using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeLaneMaskBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeMultiplierBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -191,6 +198,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorScrollVelocityBatchRemovedEventArgs> ScrollVelocityBatchRemoved;
 
         /// <summary>
+        ///     Event invoked when a scroll velocity has been added to the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorAddedEventArgs> ScrollSpeedFactorAdded;
+
+        /// <summary>
+        ///     Event invoked when a scroll velocity has been removed from the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorRemovedEventArgs> ScrollSpeedFactorRemoved;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities has been added to the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorBatchAddedEventArgs> ScrollSpeedFactorBatchAdded;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities has been removed from the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorBatchRemovedEventArgs> ScrollSpeedFactorBatchRemoved;
+
+        /// <summary>
         ///     Event invoked when a timing point has been added to the map
         /// </summary>
         public event EventHandler<EditorTimingPointAddedEventArgs> TimingPointAdded;
@@ -259,6 +286,21 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of scroll velocities have had their multipliers changed
         /// </summary>
         public event EventHandler<EditorChangedScrollVelocityMultiplierBatchEventArgs> ScrollVelocityMultiplierBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their offset changed
+        /// </summary>
+        public event EventHandler<EditorChangedScrollSpeedFactorOffsetBatchEventArgs> ScrollSpeedFactorOffsetBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their multipliers changed
+        /// </summary>
+        public event EventHandler<EditorChangedScrollSpeedFactorMultiplierBatchEventArgs> ScrollSpeedFactorMultiplierBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their lane mask changed
+        /// </summary>
+        public event EventHandler<EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs> ScrollSpeedFactorLaneMaskBatchChanged;
 
         /// <summary>
         ///     Event invoked when a bookmark has been added.
@@ -431,6 +473,45 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="svs"></param>
         /// <param name="multiplier"></param>
         public void ChangeScrollVelocityMultiplierBatch(List<SliderVelocityInfo> svs, float multiplier) => Perform(new EditorActionChangeScrollVelocityMultiplierBatch(this, WorkingMap, svs, multiplier));
+
+        /// <summary>
+        ///     Places an sf down in the map
+        /// </summary>
+        /// <param name="sf"></param>
+        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf));
+
+        /// <summary>
+        ///     Places a batch of scroll speed factors into the map
+        /// </summary>
+        /// <param name="sfs"></param>
+        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs));
+
+        /// <summary>
+        ///     Removes a batch of scroll speed factors from the map
+        /// </summary>
+        /// <param name="sfs"></param>
+        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs));
+
+        /// <summary>
+        ///     Changes the offset of a batch of scroll speed factors
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="offset"></param>
+        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset));
+
+        /// <summary>
+        ///     Changes the multiplier of a batch of scroll speed factors
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="multiplier"></param>
+        public void ChangeScrollSpeedFactorMultiplierBatch(List<ScrollSpeedFactorInfo> sfs, float multiplier) => Perform(new EditorActionChangeScrollSpeedFactorMultiplierBatch(this, WorkingMap, sfs, multiplier));
+
+        /// <summary>
+        ///     Changes the lane mask of a batch of scroll speed factors
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="laneMask"></param>
+        public void ChangeScrollSpeedFactorLaneMaskBatch(List<ScrollSpeedFactorInfo> sfs, int laneMask) => Perform(new EditorActionChangeScrollSpeedFactorLaneMaskBatch(this, WorkingMap, sfs, laneMask));
 
         /// <summary>
         ///     Adds a timing point to the map
@@ -717,6 +798,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveScrollVelocityBatch:
                     ScrollVelocityBatchRemoved?.Invoke(this, (EditorScrollVelocityBatchRemovedEventArgs)args);
                     break;
+                case EditorActionType.AddScrollSpeedFactor:
+                    ScrollSpeedFactorAdded?.Invoke(this, (EditorScrollSpeedFactorAddedEventArgs)args);
+                    break;
+                case EditorActionType.RemoveScrollSpeedFactor:
+                    ScrollSpeedFactorRemoved?.Invoke(this, (EditorScrollSpeedFactorRemovedEventArgs)args);
+                    break;
+                case EditorActionType.AddScrollSpeedFactorBatch:
+                    ScrollSpeedFactorBatchAdded?.Invoke(this, (EditorScrollSpeedFactorBatchAddedEventArgs)args);
+                    break;
+                case EditorActionType.RemoveScrollSpeedFactorBatch:
+                    ScrollSpeedFactorBatchRemoved?.Invoke(this, (EditorScrollSpeedFactorBatchRemovedEventArgs)args);
+                    break;
                 case EditorActionType.AddTimingPoint:
                     TimingPointAdded?.Invoke(this, (EditorTimingPointAddedEventArgs)args);
                     break;
@@ -758,6 +851,15 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     ScrollVelocityMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollVelocityMultiplierBatchEventArgs)args);
+                    break;
+                case EditorActionType.ChangeScrollSpeedFactorOffsetBatch:
+                    ScrollSpeedFactorOffsetBatchChanged?.Invoke(this, (EditorChangedScrollSpeedFactorOffsetBatchEventArgs)args);
+                    break;
+                case EditorActionType.ChangeScrollSpeedFactorMultiplierBatch:
+                    ScrollSpeedFactorMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollSpeedFactorMultiplierBatchEventArgs)args);
+                    break;
+                case EditorActionType.ChangeScrollSpeedFactorLaneMaskBatch:
+                    ScrollSpeedFactorLaneMaskBatchChanged?.Invoke(this, (EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs)args);
                     break;
                 case EditorActionType.ResnapHitObjects:
                     HitObjectsResnapped?.Invoke(this, (EditorActionHitObjectsResnappedEventArgs)args);
@@ -811,6 +913,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
             ScrollVelocityRemoved = null;
             ScrollVelocityBatchAdded = null;
             ScrollVelocityBatchRemoved = null;
+            ScrollSpeedFactorAdded = null;
+            ScrollSpeedFactorRemoved = null;
+            ScrollSpeedFactorBatchAdded = null;
+            ScrollSpeedFactorBatchRemoved = null;
             TimingPointAdded = null;
             TimingPointRemoved = null;
             TimingPointBatchAdded = null;
@@ -825,6 +931,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
             TimingPointOffsetBatchChanged = null;
             ScrollVelocityOffsetBatchChanged = null;
             ScrollVelocityMultiplierBatchChanged = null;
+            ScrollSpeedFactorOffsetBatchChanged = null;
+            ScrollSpeedFactorLaneMaskBatchChanged = null;
+            ScrollSpeedFactorMultiplierBatchChanged = null;
             HitObjectsResnapped = null;
             HitObjectsReversed = null;
             BookmarkAdded = null;
