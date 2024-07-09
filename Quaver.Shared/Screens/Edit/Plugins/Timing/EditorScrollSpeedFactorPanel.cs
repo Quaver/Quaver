@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         /// <summary>
         /// </summary>
-        private List<ScrollSpeedFactorInfo> SelectedScrollSpeedFactors { get; } = new();
+        private List<ScrollSpeedFactorInfo> SelectedScrollSpeedFactors { get; set; } = new();
 
         /// <summary>
         /// </summary>
@@ -437,7 +437,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 NeedsToScrollToLastSelectedSf = false;
             }
 
-            for (int i = 0; i < Screen.WorkingMap.ScrollSpeedFactors.Count; i++)
+            for (var i = 0; i < Screen.WorkingMap.ScrollSpeedFactors.Count; i++)
             {
                 // https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-why-is-my-widget-not-reacting-when-i-click-on-it
                 // allows all SFs with same truncated time to be selected, instead of just the first in list
@@ -483,21 +483,28 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     else if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) ||
                              KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                     {
-                        var sorted = SelectedScrollSpeedFactors.OrderBy(tp => tp.StartTime).ToList();
-                        var min = sorted.First().StartTime;
-                        var max = sorted.Last().StartTime;
-                        if (sv.StartTime < min)
+                        // TODO we need to optimise this O(n^2 log n)
+                        SelectedScrollSpeedFactors =
+                            SelectedScrollSpeedFactors.OrderBy(tp => Screen.WorkingMap.ScrollSpeedFactors.IndexOf(tp))
+                                .ToList();
+                        var min = Screen.WorkingMap.ScrollSpeedFactors.IndexOf(SelectedScrollSpeedFactors.First());
+                        var max = Screen.WorkingMap.ScrollSpeedFactors.IndexOf(SelectedScrollSpeedFactors.Last());
+                        var clickedIndex = i;
+                        if (clickedIndex < min)
                         {
                             var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
-                                .Where(v => v.StartTime >= sv.StartTime && v.StartTime < min);
+                                .Where((_, j) => min > j && j >= clickedIndex);
                             SelectedScrollSpeedFactors.AddRange(svsInRange);
                         }
-                        else if (sv.StartTime > max)
+                        else if (clickedIndex > max)
                         {
                             var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
-                                .Where(v => v.StartTime > max && v.StartTime <= sv.StartTime);
+                                .Where((_, j) => max < j && j <= clickedIndex);
                             SelectedScrollSpeedFactors.AddRange(svsInRange);
                         }
+
+                        SelectedScrollSpeedFactors = SelectedScrollSpeedFactors.Distinct()
+                            .OrderBy(tp => Screen.WorkingMap.ScrollSpeedFactors.IndexOf(tp)).ToList();
                     }
                     else
                     {
