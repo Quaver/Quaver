@@ -8,12 +8,15 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.ChangeLaneMaskBatch
     {
         public List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; }
 
-        public int LaneMask { get; }
+        public int ActiveLaneMask { get; }
+        public int InactiveLaneMask { get; }
 
-        public EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs(List<ScrollSpeedFactorInfo> SFs, int laneMask)
+        public EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs(List<ScrollSpeedFactorInfo> SFs, int activeLaneMask,
+            int inactiveLaneMask)
         {
             ScrollSpeedFactors = SFs;
-            LaneMask = laneMask;
+            ActiveLaneMask = activeLaneMask;
+            InactiveLaneMask = inactiveLaneMask;
         }
     }
 }

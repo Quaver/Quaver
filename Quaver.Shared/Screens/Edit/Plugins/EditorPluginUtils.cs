@@ -226,7 +226,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 case EditorActionType.ChangeScrollSpeedFactorMultiplierBatch:
                     return new EditorActionChangeScrollSpeedFactorMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.ChangeScrollSpeedFactorLaneMaskBatch:
-                    return new EditorActionChangeScrollSpeedFactorLaneMaskBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>(), args[1].ToObject<int>());
+                    return new EditorActionChangeScrollSpeedFactorLaneMaskBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<ScrollSpeedFactorInfo>>(), args[1].ToObject<int>(), args[2].ToObject<int>());
                 case EditorActionType.AddBookmark:
                     return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>()); 
                 case EditorActionType.RemoveBookmark:

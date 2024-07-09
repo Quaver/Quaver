@@ -510,8 +510,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Changes the lane mask of a batch of scroll speed factors
         /// </summary>
         /// <param name="sfs"></param>
-        /// <param name="laneMask"></param>
-        public void ChangeScrollSpeedFactorLaneMaskBatch(List<ScrollSpeedFactorInfo> sfs, int laneMask) => Perform(new EditorActionChangeScrollSpeedFactorLaneMaskBatch(this, WorkingMap, sfs, laneMask));
+        /// <param name="activeLaneMask"></param>
+        /// <param name="inactiveLaneMask"></param>
+        public void ChangeScrollSpeedFactorLaneMaskBatch(List<ScrollSpeedFactorInfo> sfs, int activeLaneMask, int inactiveLaneMask) =>
+            Perform(new EditorActionChangeScrollSpeedFactorLaneMaskBatch(this, WorkingMap, sfs, activeLaneMask, inactiveLaneMask));
 
         /// <summary>
         ///     Adds a timing point to the map

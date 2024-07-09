@@ -19,16 +19,20 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.ChangeLaneMaskBatch
 
         private List<int> OriginalLaneMasks { get; } = new List<int>();
 
-        private int LaneMask { get; }
+        private int ActiveLaneMask { get; }
+
+        private int InactiveLaneMask { get; }
 
         [MoonSharpVisible(false)]
-        public EditorActionChangeScrollSpeedFactorLaneMaskBatch(EditorActionManager manager, Qua workingMap, List<ScrollSpeedFactorInfo> SFs,
-            int laneMask)
+        public EditorActionChangeScrollSpeedFactorLaneMaskBatch(EditorActionManager manager, Qua workingMap,
+            List<ScrollSpeedFactorInfo> SFs,
+            int activeLaneMask, int inactiveLaneMask)
         {
             ActionManager = manager;
             WorkingMap = workingMap;
             ScrollSpeedFactors = SFs;
-            LaneMask = laneMask;
+            ActiveLaneMask = activeLaneMask;
+            InactiveLaneMask = inactiveLaneMask;
 
             ScrollSpeedFactors.ForEach(x => OriginalLaneMasks.Add(x.LaneMask));
         }
@@ -36,8 +40,10 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.ChangeLaneMaskBatch
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            ScrollSpeedFactors.ForEach(x => x.LaneMask = LaneMask);
-            ActionManager.TriggerEvent(Type, new EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs(ScrollSpeedFactors, LaneMask));
+            ScrollSpeedFactors.ForEach(x => x.LaneMask = (x.LaneMask | ActiveLaneMask) & ~InactiveLaneMask);
+            ActionManager.TriggerEvent(Type,
+                new EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs(ScrollSpeedFactors, ActiveLaneMask,
+                    InactiveLaneMask));
         }
 
         [MoonSharpVisible(false)]
@@ -46,7 +52,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.ChangeLaneMaskBatch
             for (var i = 0; i < ScrollSpeedFactors.Count; i++)
                 ScrollSpeedFactors[i].LaneMask = OriginalLaneMasks[i];
 
-            ActionManager.TriggerEvent(Type, new EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs(ScrollSpeedFactors, LaneMask));
+            ActionManager.TriggerEvent(Type,
+                new EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs(ScrollSpeedFactors, ActiveLaneMask,
+                    InactiveLaneMask));
         }
     }
 }

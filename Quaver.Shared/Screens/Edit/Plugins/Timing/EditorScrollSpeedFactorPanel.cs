@@ -68,8 +68,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private List<ScrollSpeedFactorInfo> Clipboard { get; } = new();
 
         /// <summary>
+        ///     Tristate for selection: binary 0 -> none, 1 -> some, 2 -> empty, 3 -> all
         /// </summary>
-        private bool[] _lanesToggle;
+        private uint[] _lanesTristate;
 
         /// <summary>
         /// </summary>
@@ -91,7 +92,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         public void Initialize()
         {
             var keyCount = Screen.WorkingMap.GetKeyCount();
-            _lanesToggle = new bool[keyCount];
+            _lanesTristate = new uint[keyCount];
 
             SelectedScrollSpeedFactors.Clear();
 
@@ -306,37 +307,50 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawLaneMaskTextbox()
         {
             var keyCount = Screen.WorkingMap.GetKeyCount();
+            var laneMaskedCount = new int[keyCount];
+            Array.Clear(_lanesTristate);
 
-            if (SelectedScrollSpeedFactors.Count == 1)
+            foreach (var point in SelectedScrollSpeedFactors)
             {
-                var point = SelectedScrollSpeedFactors.First();
-                Array.Clear(_lanesToggle);
-
                 foreach (var lane in point.GetLaneMaskLanes(keyCount))
                 {
-                    _lanesToggle[lane] = true;
+                    laneMaskedCount[lane]++;
+                    // At least one SF has this lane included
+                    _lanesTristate[lane] |= 1;
                 }
+            }
+
+            for (var i = 0; i < keyCount; i++)
+            {
+                // All selected factors have this lane included
+                // If any are selected (>0 selected) the tristate will be 3, which means the checkbox is on
+                if (laneMaskedCount[i] == SelectedScrollSpeedFactors.Count)
+                    _lanesTristate[i] |= 2;
             }
 
             ImGui.TextWrapped("Lane Mask");
 
             for (var i = 0; i < keyCount; i++)
             {
-                if (ImGui.Checkbox($"##LaneMask{i}", ref _lanesToggle[i]))
+                if (ImGui.CheckboxFlags($"##LaneMask{i}", ref _lanesTristate[i], 3))
                 {
-                    if (SelectedScrollSpeedFactors.Count == 1)
+                    var activeLaneMask = 0;
+                    var inactiveLaneMask = 0;
+                    for (var j = 0; j < keyCount; j++)
                     {
-                        var sv = SelectedScrollSpeedFactors.First();
-                        var laneMask = -1;
-                        for (var j = 0; j < keyCount; j++)
+                        switch (_lanesTristate[j])
                         {
-                            if (!_lanesToggle[j]) laneMask ^= 1 << j;
+                            case 3:
+                                activeLaneMask |= 1 << j;
+                                break;
+                            case 0:
+                                inactiveLaneMask |= 1 << j;
+                                break;
                         }
-
-                        Screen.ActionManager.ChangeScrollSpeedFactorLaneMaskBatch(
-                            new List<ScrollSpeedFactorInfo> { sv },
-                            laneMask);
                     }
+
+                    Screen.ActionManager.ChangeScrollSpeedFactorLaneMaskBatch(SelectedScrollSpeedFactors,
+                        activeLaneMask, inactiveLaneMask);
                 }
 
                 ImGui.SameLine();
