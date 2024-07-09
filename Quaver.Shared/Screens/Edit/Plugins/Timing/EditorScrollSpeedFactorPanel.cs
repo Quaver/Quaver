@@ -342,7 +342,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     _lanesTristate[i] |= 2;
             }
 
-            ImGui.TextWrapped("Lane Mask");
+            ImGui.TextWrapped("Lanes");
 
             for (var i = 0; i < _keyCount; i++)
             {
@@ -476,7 +476,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.NextColumn();
             ImGui.TextWrapped("Multiplier");
             ImGui.NextColumn();
-            ImGui.TextWrapped("Lane Mask");
+            ImGui.TextWrapped("Lanes");
             ImGui.Separator();
             ImGui.Columns();
         }
