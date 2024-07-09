@@ -1105,6 +1105,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
                 {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
+                {EditorBuiltInPlugin.ScrollSpeedFactorEditor, new EditorScrollSpeedFactorPanel(this)},
                 {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
                     $"{dir}/BpmCalculator/plugin.lua", true)},
                 {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",

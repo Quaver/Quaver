@@ -37,6 +37,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<SliderVelocityInfo> ScrollVelocities { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     The scroll speed factors present in the map
+        /// </summary>
+        public List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     The HitObjects that are currently in the map
         /// </summary>
         public List<HitObjectInfo> HitObjects { get; [MoonSharpVisible(false)] set; }
@@ -72,6 +77,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             Mode = Map.Mode;
             TimingPoints = Map.TimingPoints;
             ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
+            ScrollSpeedFactors = Map.ScrollSpeedFactors;
             HitObjects = Map.HitObjects;
             EditorLayers = Map.EditorLayers;
             Bookmarks = Map.Bookmarks;
