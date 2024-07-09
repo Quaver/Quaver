@@ -137,6 +137,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public List<long> VelocityPositionMarkers { get; set; } = new List<long>();
 
+        /// <summary>
+        ///     List of scroll speed factor changes split to each lane.
+        /// </summary>
         public List<ScrollSpeedFactorInfo>[] ScrollSpeedFactorInfos { get; set; }
 
         /// <summary>
@@ -170,6 +173,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private int CurrentSvIndex { get; set; } = 0;
 
+        /// <summary>
+        ///     Current SF index for each lane.
+        ///     Defaults to -1 which makes <see cref="GetScrollSpeedFactorFromTime"/> return 1.
+        /// </summary>
         private int[] CurrentSfIndex { get; set; }
 
         /// <summary>
@@ -814,6 +821,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
         }
 
+        /// <summary>
+        ///     Finds the appropriate SF index and returns the SF at that time
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
         public float GetScrollSpeedFactorFromTime(int lane, double time)
         {
             var sfIndex = ScrollSpeedFactorInfos[lane]
@@ -830,10 +843,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             return GetScrollSpeedFactorFromTime(lane, time, sfIndex);
         }
 
+        /// <summary>
+        ///     Returns the scroll speed factor at that time on <see cref="sfIndex"/>.
+        ///     The factor is lerped with the next factor, unless it is already the last.
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        /// <param name="sfIndex"></param>
+        /// <returns></returns>
         private float GetScrollSpeedFactorFromTime(int lane, double time, int sfIndex)
         {
             sfIndex = Math.Min(sfIndex, ScrollSpeedFactorInfos[lane].Count - 1);
-            if (sfIndex < 0)
+            if (sfIndex < 0 || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
                 return 1;
             var sf = ScrollSpeedFactorInfos[lane][sfIndex];
             if (sfIndex == ScrollSpeedFactorInfos[lane].Count - 1)
