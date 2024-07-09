@@ -73,6 +73,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private uint[] _lanesTristate;
 
         /// <summary>
+        ///     Bitwise AND mask. an SF is only shown if its LaneMask & _laneMaskFilter != 0
+        /// </summary>
+        private uint _laneMaskFilter;
+
+        /// <summary>
+        ///     Number of keys of map
+        /// </summary>
+        private readonly int _keyCount;
+
+        /// <summary>
         /// </summary>
         private float _time;
 
@@ -83,6 +93,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         public EditorScrollSpeedFactorPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
         {
             Screen = screen;
+            _keyCount = Screen.WorkingMap.GetKeyCount();
             Initialize();
         }
 
@@ -91,8 +102,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         public void Initialize()
         {
-            var keyCount = Screen.WorkingMap.GetKeyCount();
-            _lanesTristate = new uint[keyCount];
+            _lanesTristate = new uint[_keyCount];
+            _laneMaskFilter = (1u << _keyCount) - 1;
 
             SelectedScrollSpeedFactors.Clear();
 
@@ -117,6 +128,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Begin(Name);
 
             DrawHeaderText();
+            ImGui.Dummy(new Vector2(0, 10));
+
+            DrawFilter();
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawSelectCurrentSFButton();
@@ -306,13 +320,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawLaneMaskTextbox()
         {
-            var keyCount = Screen.WorkingMap.GetKeyCount();
-            var laneMaskedCount = new int[keyCount];
+            var laneMaskedCount = new int[_keyCount];
             Array.Clear(_lanesTristate);
 
             foreach (var point in SelectedScrollSpeedFactors)
             {
-                foreach (var lane in point.GetLaneMaskLanes(keyCount))
+                foreach (var lane in point.GetLaneMaskLanes(_keyCount))
                 {
                     laneMaskedCount[lane]++;
                     // At least one SF has this lane included
@@ -320,7 +333,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 }
             }
 
-            for (var i = 0; i < keyCount; i++)
+            for (var i = 0; i < _keyCount; i++)
             {
                 // All selected factors have this lane included
                 // If any are selected (>0 selected) the tristate will be 3, which means the checkbox is on
@@ -330,13 +343,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped("Lane Mask");
 
-            for (var i = 0; i < keyCount; i++)
+            for (var i = 0; i < _keyCount; i++)
             {
                 if (ImGui.CheckboxFlags($"##LaneMask{i}", ref _lanesTristate[i], 3))
                 {
                     var activeLaneMask = 0;
                     var inactiveLaneMask = 0;
-                    for (var j = 0; j < keyCount; j++)
+                    for (var j = 0; j < _keyCount; j++)
                     {
                         switch (_lanesTristate[j])
                         {
@@ -353,7 +366,41 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         activeLaneMask, inactiveLaneMask);
                 }
 
-                ImGui.SameLine();
+                if (i < _keyCount - 1)
+                    ImGui.SameLine();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DrawFilter()
+        {
+            ImGui.TextWrapped("Lane Filter");
+            for (var i = 0; i < _keyCount; i++)
+            {
+                if (ImGui.CheckboxFlags($"##Filter{i}", ref _laneMaskFilter, 1u << i))
+                {
+                    if (KeyboardManager.IsShiftDown())
+                    {
+                        // Shift clicking on the only selected lane resets filter
+                        // Special case: if we had an empty filter before (by toggling we now have filter == 1 << i),
+                        // we should solo instead of resetting filter
+                        if (_laneMaskFilter == 0)
+                        {
+                            _laneMaskFilter = (1u << _keyCount) - 1;
+                        }
+                        else
+                        {
+                            // Solo
+                            _laneMaskFilter = 1u << i;
+                        }
+                    }
+
+                    SelectedScrollSpeedFactors.Clear();
+                }
+
+                if (i < _keyCount - 1)
+                    ImGui.SameLine();
             }
         }
 
@@ -459,6 +506,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 var sv = Screen.WorkingMap.ScrollSpeedFactors[i];
 
+                if ((sv.LaneMask & (int)_laneMaskFilter) == 0)
+                {
+                    ImGui.PopID();
+                    continue;
+                }
+
                 var isSelected = SelectedScrollSpeedFactors.Contains(sv);
 
                 if (!isSelected)
@@ -518,6 +571,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         }
 
                         SelectedScrollSpeedFactors = SelectedScrollSpeedFactors.Distinct()
+                            .Where(sf => (sf.LaneMask & _laneMaskFilter) != 0)
                             .OrderBy(tp => Screen.WorkingMap.ScrollSpeedFactors.IndexOf(tp)).ToList();
                     }
                     else
@@ -536,7 +590,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
                 ImGui.TextWrapped($"{sv.Factor:0.00}x");
                 ImGui.NextColumn();
-                ImGui.TextWrapped($"{sv.MaskRepresentation(Screen.WorkingMap.GetKeyCount())}");
+                ImGui.TextWrapped($"{sv.MaskRepresentation(_keyCount)}");
                 ImGui.NextColumn();
 
                 ImGui.PopID();
