@@ -348,13 +348,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset, float initialPos) => HitPosition + ((initialPos - offset) * (ScrollDirection == ScrollDirection.Down ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+        public float GetSpritePosition(long offset, float initialPos) => HitPosition + ((initialPos - offset) * (ScrollDirection == ScrollDirection.Down ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) * HitObjectManager.CurrentScrollSpeedFactor[Info.Lane - 1] / HitObjectManagerKeys.TrackRounding);
 
         /// <summary>
         ///     Calculates the position of the end Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetEndSpritePosition(long offset, float initialPos) => HoldEndHitPosition + ((initialPos - offset) * (ScrollDirection == ScrollDirection.Down ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+        public float GetEndSpritePosition(long offset, float initialPos) => HoldEndHitPosition + ((initialPos - offset) * (ScrollDirection == ScrollDirection.Down ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) * HitObjectManager.CurrentScrollSpeedFactor[Info.Lane - 1] / HitObjectManagerKeys.TrackRounding);
 
         /// <summary>
         ///     Updates the earliest and latest track positions as well as the current LN body size.
@@ -372,7 +372,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             EarliestHeldPosition = earliestPosition;
             LatestHeldPosition = latestPosition;
-            CurrentLongNoteBodySize = (latestPosition - earliestPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
+            CurrentLongNoteBodySize = (latestPosition - earliestPosition) * HitObjectManagerKeys.ScrollSpeed * HitObjectManager.CurrentScrollSpeedFactor[Info.Lane - 1] / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
         }
 
         private void SetEarliestAndLatestLongNotes(double curTime, ref long earliestPosition, ref long latestPosition)
