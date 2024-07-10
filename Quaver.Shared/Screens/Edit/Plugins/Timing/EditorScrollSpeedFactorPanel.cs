@@ -403,7 +403,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         // we should solo instead of resetting filter
                         if (_laneMaskFilter == 0)
                         {
-                            ResetFilter();
+                            ResetFilter(false);
                         }
                         else
                         {
@@ -412,7 +412,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         }
                     }
 
-                    SelectedScrollSpeedFactors.Clear();
+                    UpdateSelectedScrollSpeedFactors();
                 }
 
                 if (i < _keyCount - 1)
