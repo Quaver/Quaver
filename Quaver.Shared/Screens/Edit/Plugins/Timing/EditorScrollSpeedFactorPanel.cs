@@ -215,14 +215,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 SelectedScrollSpeedFactors.Clear();
 
-                var sv = new ScrollSpeedFactorInfo()
+                var sf = new ScrollSpeedFactorInfo()
                 {
                     StartTime = (float)Screen.Track.Time,
                     Factor = multiplier
                 };
 
-                Screen.ActionManager.PlaceScrollSpeedFactor(sv);
-                SelectedScrollSpeedFactors.Add(sv);
+                Screen.ActionManager.PlaceScrollSpeedFactor(sf);
+                SelectedScrollSpeedFactors.Add(sf);
                 NeedsToScrollToFirstSelectedSf = true;
                 ImGui.SetKeyboardFocusHere(3); // Focus third input after the button, which is the multiplier
             }
@@ -329,10 +329,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 if (SelectedScrollSpeedFactors.Count == 1)
                 {
-                    var sv = SelectedScrollSpeedFactors.First();
+                    var sf = SelectedScrollSpeedFactors.First();
 
-                    Screen.ActionManager.ChangeScrollSpeedFactorOffsetBatch(new List<ScrollSpeedFactorInfo> { sv },
-                        _time - sv.StartTime);
+                    Screen.ActionManager.ChangeScrollSpeedFactorOffsetBatch(new List<ScrollSpeedFactorInfo> { sf },
+                        _time - sf.StartTime);
                 }
             }
         }
@@ -481,7 +481,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawSelectedCountLabel()
         {
             var count = SelectedScrollSpeedFactors.Count;
-            var labelText = count > 1 ? $"{count} scroll velocities selected" : "";
+            var labelText = count > 1 ? $"{count} scroll speed factors selected" : "";
             ImGui.Text(labelText);
         }
 
@@ -532,15 +532,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 // allows all SFs with same truncated time to be selected, instead of just the first in list
                 ImGui.PushID(i);
 
-                var sv = Screen.WorkingMap.ScrollSpeedFactors[i];
+                var sf = Screen.WorkingMap.ScrollSpeedFactors[i];
 
-                if (!MatchesFilter(sv.LaneMask))
+                if (!MatchesFilter(sf.LaneMask))
                 {
                     ImGui.PopID();
                     continue;
                 }
 
-                var isSelected = SelectedScrollSpeedFactors.Contains(sv);
+                var isSelected = SelectedScrollSpeedFactors.Contains(sf);
 
                 if (!isSelected)
                     ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
@@ -548,30 +548,30 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (SelectedScrollSpeedFactors.Count != 0)
                 {
                     // Last selected takes precedence over first selected, since it's initiated via a button press
-                    if (NeedsToScrollToLastSelectedSf && SelectedScrollSpeedFactors.Last() == sv &&
+                    if (NeedsToScrollToLastSelectedSf && SelectedScrollSpeedFactors.Last() == sf &&
                         !NeedsToScrollToFirstSelectedSf)
                     {
                         ImGui.SetScrollHereY(-0.025f);
                         NeedsToScrollToLastSelectedSf = false;
                     }
-                    else if (NeedsToScrollToFirstSelectedSf && SelectedScrollSpeedFactors.First() == sv)
+                    else if (NeedsToScrollToFirstSelectedSf && SelectedScrollSpeedFactors.First() == sf)
                     {
                         ImGui.SetScrollHereY(-0.025f);
                         NeedsToScrollToFirstSelectedSf = false;
                     }
                 }
 
-                if (ImGui.Button($"{TimeSpan.FromMilliseconds(sv.StartTime):mm\\:ss\\.fff}"))
+                if (ImGui.Button($"{TimeSpan.FromMilliseconds(sf.StartTime):mm\\:ss\\.fff}"))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
                     if (KeyboardManager.IsCtrlDown())
                     {
                         if (isSelected)
-                            SelectedScrollSpeedFactors.Remove(sv);
+                            SelectedScrollSpeedFactors.Remove(sf);
                         else
                         {
-                            if (!SelectedScrollSpeedFactors.Contains(sv))
-                                SelectedScrollSpeedFactors.Add(sv);
+                            if (!SelectedScrollSpeedFactors.Contains(sf))
+                                SelectedScrollSpeedFactors.Add(sf);
                         }
                     }
                     // User holds down shift, so range select if the clicked element is outside of the bounds of the currently selected points
@@ -584,10 +584,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     else
                     {
                         if (isSelected)
-                            Screen.Track.Seek(sv.StartTime);
+                            Screen.Track.Seek(sf.StartTime);
 
                         SelectedScrollSpeedFactors.Clear();
-                        SelectedScrollSpeedFactors.Add(sv);
+                        SelectedScrollSpeedFactors.Add(sf);
                     }
                 }
 
@@ -595,9 +595,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     ImGui.PopStyleColor();
 
                 ImGui.NextColumn();
-                ImGui.TextWrapped($"{sv.Factor:0.00}x");
+                ImGui.TextWrapped($"{sf.Factor:0.00}x");
                 ImGui.NextColumn();
-                ImGui.TextWrapped($"{GetLaneMaskRepresentation(sv)}");
+                ImGui.TextWrapped($"{GetLaneMaskRepresentation(sf)}");
                 ImGui.NextColumn();
 
                 ImGui.PopID();
@@ -621,15 +621,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var clickedIndex = i;
             if (clickedIndex < min)
             {
-                var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
+                var sfsInRange = Screen.WorkingMap.ScrollSpeedFactors
                     .Where((_, j) => min > j && j >= clickedIndex);
-                SelectedScrollSpeedFactors.AddRange(svsInRange);
+                SelectedScrollSpeedFactors.AddRange(sfsInRange);
             }
             else if (clickedIndex > max)
             {
-                var svsInRange = Screen.WorkingMap.ScrollSpeedFactors
+                var sfsInRange = Screen.WorkingMap.ScrollSpeedFactors
                     .Where((_, j) => max < j && j <= clickedIndex);
-                SelectedScrollSpeedFactors.AddRange(svsInRange);
+                SelectedScrollSpeedFactors.AddRange(sfsInRange);
             }
 
             UpdateSelectedScrollSpeedFactors();
@@ -642,13 +642,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 .OrderBy(tp => Screen.WorkingMap.ScrollSpeedFactors.IndexOf(tp)).ToList();
         }
 
-        private string GetLaneMaskRepresentation(ScrollSpeedFactorInfo sv)
+        private string GetLaneMaskRepresentation(ScrollSpeedFactorInfo sf)
         {
-            if (sv.LaneMask == -1)
+            if (sf.LaneMask == -1)
                 return "All";
 
             var sb = new StringBuilder();
-            var lanes = sv.GetLaneMaskLanes(_keyCount).Select(s => s + 1).ToList();
+            var lanes = sf.GetLaneMaskLanes(_keyCount).Select(s => s + 1).ToList();
             var keyCountWithoutScratch = Screen.WorkingMap.GetKeyCount(false);
             for (var i = 0; i < lanes.Count; i++)
             {
