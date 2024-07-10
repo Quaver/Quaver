@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using osu.Shared;
 using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps.Etterna;
@@ -330,7 +331,7 @@ namespace Quaver.Shared.Database.Maps
                         Source = map.SongSource,
                         Tags = map.SongTags,
                         // ReSharper disable once CompareOfFloatsByEqualityOperator
-                        Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
+                        Mode = ModeHelper.FromKeyCount((int)map.CircleSize),
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
                         OriginalGame = OtherGameMapDatabaseGame.Osu,

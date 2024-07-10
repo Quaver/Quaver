@@ -7,6 +7,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Wobble.Graphics;
+using Quaver.API.Helpers;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
 {
@@ -20,17 +21,31 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 if (ConfigManager.PrioritizedGameMode == null)
                     return;
 
-                ConfigManager.PrioritizedGameMode.Value = args.Text switch
+                if (args.Index == 0)
                 {
-                    "None" => (GameMode)0,
-                    "4 Keys" => GameMode.Keys4,
-                    "7 Keys" => GameMode.Keys7,
-                    _ => throw new InvalidEnumArgumentException()
-                };
+                    ConfigManager.PrioritizedGameMode.Value = (GameMode)0;
+                    return;
+                }
+
+                ConfigManager.PrioritizedGameMode.Value = ModeHelper.FromKeyCount(args.Index);
             };
         }
 
-        private static List<string> GetOptions() => new List<string>{ "None", "4 Keys", "7 Keys" };
+        private static List<string> GetOptions()
+        {
+            var list = new List<string>
+            {
+                "None",
+            };
+
+            for(var i = 1; i <= 10; i++)
+            {
+                var mode = ModeHelper.FromKeyCount(i);
+                list.Add($"{i} Keys");
+            }
+
+            return list;
+        }
 
         private static int GetSelectedIndex()
         {

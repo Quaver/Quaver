@@ -708,7 +708,7 @@ namespace Quaver.Shared.Screens.Results
             var profileName = UserProfileDatabaseCache.Selected.Value.Username;
             var username = !string.IsNullOrEmpty(profileName) ? profileName : ConfigManager.Username.Value;
 
-            var scrollSpeed = Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+            var scrollSpeed = ConfigManager.ScrollSpeeds[Map.Mode].Value;
             var rankedAccuracy = screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy;
 
             var score = Score.FromScoreProcessor(processor, screen.MapHash, username, scrollSpeed,
@@ -871,7 +871,7 @@ namespace Quaver.Shared.Screens.Results
                 }
             }
 
-            var scrollSpeed = Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+            var scrollSpeed = ConfigManager.ScrollSpeeds[Map.Mode].Value;
 
             // Submit score to the server...
             OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, replay, processor, scrollSpeed,

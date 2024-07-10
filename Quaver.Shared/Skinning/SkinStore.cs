@@ -15,6 +15,7 @@ using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using MoreLinq.Extensions;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning.Menus;
@@ -279,12 +280,12 @@ namespace Quaver.Shared.Skinning
             LoadConfig();
 
             // Load up Keys game mode skins.
-            Keys = new Dictionary<GameMode, SkinKeys>
+            Keys = new Dictionary<GameMode, SkinKeys>();
+            for(var i = 1; i <= 10; i++)
             {
-                {GameMode.Keys4, new SkinKeys(this, GameMode.Keys4)},
-                {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}
-            };
-
+                var mode = ModeHelper.FromKeyCount(i);
+                Keys.Add(mode, new SkinKeys(this, mode));
+            }
 
             try
             {

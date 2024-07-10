@@ -229,18 +229,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             var keys = Ruleset.Screen.Map?.GetKeyCount() ?? 4;
 
-            ScrollDirection direction;
-            switch (Ruleset.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    direction = ConfigManager.ScrollDirection4K.Value;
-                    break;
-                case GameMode.Keys7:
-                    direction = ConfigManager.ScrollDirection7K.Value;
-                    break;
-                default:
-                    throw new Exception("Map Mode does not exist.");
-            }
+            var direction = ConfigManager.ScrollDirections[Ruleset.Map.Mode].Value;
 
             // Case: Config = Split Scroll
             if (direction.Equals(ScrollDirection.Split))

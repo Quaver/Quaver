@@ -569,19 +569,7 @@ namespace Quaver.Shared.Screens.Selection
             if (MapManager.Selected.Value == null)
                 return;
 
-            BindableInt scrollSpeed;
-
-            switch (MapManager.Selected.Value.Mode)
-            {
-                case GameMode.Keys4:
-                    scrollSpeed = ConfigManager.ScrollSpeed4K;
-                    break;
-                case GameMode.Keys7:
-                    scrollSpeed = ConfigManager.ScrollSpeed7K;
-                    break;
-                default:
-                    return;
-            }
+            var scrollSpeed = ConfigManager.ScrollSpeeds[MapManager.Selected.Value.Mode];
 
             var changed = false;
 

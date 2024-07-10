@@ -52,17 +52,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             var rating = profile.Stats[mode].OverallRating;
             var diff = (int) (rating / 20f * 10);
 
-            switch (mode)
-            {
-                case GameMode.Keys4:
-                    ConfigManager.PrioritizedMapDifficulty4K.Value = diff;
-                    break;
-                case GameMode.Keys7:
-                    ConfigManager.PrioritizedMapDifficulty7K.Value = diff;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
+            ConfigManager.PrioritizedMapDifficulty[mode].Value = diff;
         }
     }
 }

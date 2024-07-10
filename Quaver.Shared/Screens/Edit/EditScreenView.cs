@@ -2,6 +2,7 @@ using System;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -275,7 +276,8 @@ namespace Quaver.Shared.Screens.Edit
             if (UnEditablePlayfield == null)
                 return;
 
-            var spacing = EditScreen.WorkingMap.Mode == GameMode.Keys4 ? 120 : 60;
+            var keyCount = ModeHelper.ToKeyCount(EditScreen.WorkingMap.Mode);
+            var spacing = 120 * 4 / keyCount;
 
             Playfield.X = -Playfield.Width / 2 - spacing;
             UnEditablePlayfield.X = Playfield.Width / 2 + spacing;
@@ -386,7 +388,8 @@ namespace Quaver.Shared.Screens.Edit
                 Y = 34,
             };
 
-            var spacing = EditScreen.WorkingMap.Mode == GameMode.Keys4 ? 120 : 60;
+            var keyCount = ModeHelper.ToKeyCount(EditScreen.WorkingMap.Mode);
+            var spacing = 120 * 4 / keyCount;
 
             Playfield.X = -Playfield.Width / 2 - spacing;
             MapPreview.X = Playfield.Width / 2 + spacing;

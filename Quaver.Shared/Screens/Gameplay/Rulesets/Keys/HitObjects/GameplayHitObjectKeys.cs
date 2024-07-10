@@ -548,7 +548,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="mode"></param>
         /// <param name="lane"></param>
         /// <returns></returns>
-        public static float GetObjectRotation(GameMode mode, int lane)
+        public static float GetObjectRotation(GameMode mode, int lane) // 10kTodo
         {
             switch (mode)
             {

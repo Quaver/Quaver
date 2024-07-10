@@ -46,10 +46,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             get
             {
-                var speed = ConfigManager.ScrollSpeed4K;
+                var speed = ConfigManager.ScrollSpeeds[GameMode.Keys4];
 
                 if (MapManager.Selected.Value.Qua != null)
-                    speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
+                    speed = ConfigManager.ScrollSpeeds[MapManager.Selected.Value.Qua.Mode];
 
                 var scalingFactor = QuaverGame.SkinScalingFactor;
 
@@ -333,8 +333,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ResetHitObjectInfo();
 
             AudioEngine.Track.RateChanged += OnRateChanged;
-            ConfigManager.ScrollSpeed4K.ValueChanged += On4KScrollSpeedChanged;
-            ConfigManager.ScrollSpeed7K.ValueChanged += On7KScrollSpeedChanged;
+            ConfigManager.ScrollSpeeds.ForEach(speed => speed.Value.ValueChanged += OnScrollSpeedChanged);
         }
 
         public override void Destroy()
@@ -342,8 +341,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             AudioEngine.Track.RateChanged -= OnRateChanged;
 
             // ReSharper disable twice DelegateSubtraction
-            ConfigManager.ScrollSpeed4K.ValueChanged -= On4KScrollSpeedChanged;
-            ConfigManager.ScrollSpeed7K.ValueChanged -= On7KScrollSpeedChanged;
+            ConfigManager.ScrollSpeeds.ForEach(speed => speed.Value.ValueChanged -= OnScrollSpeedChanged);
 
             base.Destroy();
         }
@@ -938,8 +936,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         private void OnRateChanged(object sender, TrackRateChangedEventArgs e) => ForceUpdateLNSize();
 
-        private void On7KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
-
-        private void On4KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
+        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
     }
 }

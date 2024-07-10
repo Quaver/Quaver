@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -17,6 +18,7 @@ using IniFileParser.Exceptions;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
@@ -194,25 +196,9 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> DisplaySongTimeProgress { get; private set; }
 
-        /// <summary>
-        ///     The scroll speed for mania 4k
-        /// </summary>
-        internal static BindableInt ScrollSpeed4K { get; private set; }
+        internal static Dictionary<GameMode, BindableInt> ScrollSpeeds { get; private set; }
 
-        /// <summary>
-        ///     The scroll speed for mania 7k
-        /// </summary>
-        internal static BindableInt ScrollSpeed7K { get; private set; }
-
-        /// <summary>
-        ///     Direction in which hit objects will be moving for 4K gamemode
-        /// </summary>
-        internal static Bindable<ScrollDirection> ScrollDirection4K { get; private set; }
-
-        /// <summary>
-        ///     Direction in which hit objects will be moving for 7K gamemode
-        /// </summary>
-        internal static Bindable<ScrollDirection> ScrollDirection7K { get; private set; }
+        internal static Dictionary<GameMode, Bindable<ScrollDirection>> ScrollDirections { get; private set; }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
@@ -716,65 +702,33 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyNavigateSelect { get; private set; }
 
-        /// <summary>
-        ///     Keybindings for 4K
-        /// </summary>
-        internal static Bindable<GenericKey> KeyMania4K1 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania4K2 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania4K3 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania4K4 { get; private set; }
+        internal static Dictionary<GameMode, List<Bindable<GenericKey>>> KeyLayouts { get; private set; }
 
-        /// <summary>
-        ///     Keybindings for 7K
-        /// </summary>
-        internal static Bindable<GenericKey> KeyMania7K1 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania7K2 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania7K3 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania7K4 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania7K5 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania7K6 { get; private set; }
-        internal static Bindable<GenericKey> KeyMania7K7 { get; private set; }
+        internal static GenericKey DefaultKeyLayout(GameMode mode, int index)
+        {
+            var keyCount = ModeHelper.ToKeyCount(mode);
+            var half = keyCount / 2;
 
-        /// <summary>
-        ///     Keybindings for 4K (co-op 2 player)
-        /// </summary>
-        internal static Bindable<GenericKey> KeyCoop2P4K1 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P4K2 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P4K3 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P4K4 { get; private set; }
+            var keys = new[] { Keys.A, Keys.S, Keys.D, Keys.F, Keys.V, Keys.B, Keys.H, Keys.J, Keys.K, Keys.L };
+            var middleKey = Keys.Space;
 
-        /// <summary>
-        ///     Keybindings for 7K (co-op 2 player)
-        /// </summary>
-        internal static Bindable<GenericKey> KeyCoop2P7K1 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P7K2 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P7K3 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P7K4 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P7K5 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P7K6 { get; private set; }
-        internal static Bindable<GenericKey> KeyCoop2P7K7 { get; private set; }
+            if (keyCount % 2 != 0 && index == half)
+                return new GenericKey() { KeyboardKey = middleKey };
+            else if (index <= half - 1)
+                return new GenericKey() { KeyboardKey = keys[index] };
+            else
+                return new GenericKey() { KeyboardKey = keys[^(keyCount - index)] };
+        }
 
-        /// <summary>
-        ///     Scratch key layout for 4K+1
-        /// </summary>
-        internal static Bindable<GenericKey> KeyLayout4KScratch1 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout4KScratch2 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout4KScratch3 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout4KScratch4 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout4KScratch5 { get; private set; }
-
-        /// <summary>
-        ///     Scratch key layout for 7K+1
-        /// </summary>
-        internal static Bindable<GenericKey> KeyLayout7KScratch1 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch2 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch3 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch4 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch5 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch6 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch7 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch8 { get; private set; }
-        internal static Bindable<GenericKey> KeyLayout7KScratch9 { get; private set; }
+        internal static void WriteKeyLayouts(StringBuilder sb)
+        {
+            foreach (var (mode, keys) in KeyLayouts)
+                for (var key = 1; key <= keys.Count; key++)
+                {
+                    var keyCount = ModeHelper.ToKeyCount(mode);
+                    sb.AppendLine($"KeyMania{keyCount}K{key} = {keys[key - 1].Value}");
+                }
+        }
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
@@ -877,13 +831,7 @@ namespace Quaver.Shared.Config
         ///     Target difficulty used for selecting a default map in a mapset.
         ///     Stored as an integer, divide by 10 for actual target difficulty.
         /// </summary>
-        internal static BindableInt PrioritizedMapDifficulty4K { get; private set; }
-
-        /// <summary>
-        ///     Target difficulty used for selecting a default map in a mapset.
-        ///     Stored as an integer, divide by 10 for actual target difficulty.
-        /// </summary>
-        internal static BindableInt PrioritizedMapDifficulty7K { get; private set; }
+        internal static Dictionary<GameMode, BindableInt> PrioritizedMapDifficulty { get; private set; }
 
         /// <summary>
         ///     Prioritize which keymode when selecting a default map in a mapset.
@@ -1006,10 +954,6 @@ namespace Quaver.Shared.Config
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, 5000, data);
             SmoothAudioTimingGameplay = ReadValue(@"SmoothAudioTimingGameplay", false, data);
-            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
-            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
-            ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
-            ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -500, 500, data);
             Skin = ReadValue(@"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
@@ -1033,45 +977,6 @@ namespace Quaver.Shared.Config
             KeyNavigateDown = ReadValue(@"KeyNavigateDown", Keys.Down, data);
             KeyNavigateBack = ReadValue(@"KeyNavigateBack", Keys.Escape, data);
             KeyNavigateSelect = ReadValue(@"KeyNavigateSelect", Keys.Enter, data);
-            KeyMania4K1 = ReadGenericKey(@"KeyMania4K1", new GenericKey { KeyboardKey = Keys.A }, data);
-            KeyMania4K2 = ReadGenericKey(@"KeyMania4K2", new GenericKey { KeyboardKey = Keys.S }, data);
-            KeyMania4K3 = ReadGenericKey(@"KeyMania4K3", new GenericKey { KeyboardKey = Keys.K }, data);
-            KeyMania4K4 = ReadGenericKey(@"KeyMania4K4", new GenericKey { KeyboardKey = Keys.L }, data);
-            KeyMania7K1 = ReadGenericKey(@"KeyMania7K1", new GenericKey { KeyboardKey = Keys.A }, data);
-            KeyMania7K2 = ReadGenericKey(@"KeyMania7K2", new GenericKey { KeyboardKey = Keys.S }, data);
-            KeyMania7K3 = ReadGenericKey(@"KeyMania7K3", new GenericKey { KeyboardKey = Keys.D }, data);
-            KeyMania7K4 = ReadGenericKey(@"KeyMania7K4", new GenericKey { KeyboardKey = Keys.Space }, data);
-            KeyMania7K5 = ReadGenericKey(@"KeyMania7K5", new GenericKey { KeyboardKey = Keys.J }, data);
-            KeyMania7K6 = ReadGenericKey(@"KeyMania7K6", new GenericKey { KeyboardKey = Keys.K }, data);
-            KeyMania7K7 = ReadGenericKey(@"KeyMania7K7", new GenericKey { KeyboardKey = Keys.L }, data);
-            KeyCoop2P4K1 = ReadGenericKey(@"KeyCoop2P4K1", new GenericKey { KeyboardKey = Keys.Z }, data);
-            KeyCoop2P4K2 = ReadGenericKey(@"KeyCoop2P4K2", new GenericKey { KeyboardKey = Keys.X }, data);
-            KeyCoop2P4K3 = ReadGenericKey(@"KeyCoop2P4K3", new GenericKey { KeyboardKey = Keys.OemComma }, data);
-            KeyCoop2P4K4 = ReadGenericKey(@"KeyCoop2P4K4", new GenericKey { KeyboardKey = Keys.OemPeriod }, data);
-            KeyCoop2P7K1 = ReadGenericKey(@"KeyCoop2P7K1", new GenericKey { KeyboardKey = Keys.Z }, data);
-            KeyCoop2P7K2 = ReadGenericKey(@"KeyCoop2P7K2", new GenericKey { KeyboardKey = Keys.X }, data);
-            KeyCoop2P7K3 = ReadGenericKey(@"KeyCoop2P7K3", new GenericKey { KeyboardKey = Keys.C }, data);
-            KeyCoop2P7K4 = ReadGenericKey(@"KeyCoop2P7K4", new GenericKey { KeyboardKey = Keys.V }, data);
-            KeyCoop2P7K5 = ReadGenericKey(@"KeyCoop2P7K5", new GenericKey { KeyboardKey = Keys.M }, data);
-            KeyCoop2P7K6 = ReadGenericKey(@"KeyCoop2P7K6", new GenericKey { KeyboardKey = Keys.OemComma }, data);
-            KeyCoop2P7K7 = ReadGenericKey(@"KeyCoop2P7K7", new GenericKey { KeyboardKey = Keys.OemPeriod }, data);
-
-            KeyLayout4KScratch1 = ReadGenericKey(@"KeyLayout4KScratch1", new GenericKey { KeyboardKey = Keys.A }, data);
-            KeyLayout4KScratch2 = ReadGenericKey(@"KeyLayout4KScratch2", new GenericKey { KeyboardKey = Keys.S }, data);
-            KeyLayout4KScratch3 = ReadGenericKey(@"KeyLayout4KScratch3", new GenericKey { KeyboardKey = Keys.D }, data);
-            KeyLayout4KScratch4 = ReadGenericKey(@"KeyLayout4KScratch4", new GenericKey { KeyboardKey = Keys.K }, data);
-            KeyLayout4KScratch5 = ReadGenericKey(@"KeyLayout4KScratch5", new GenericKey { KeyboardKey = Keys.L }, data);
-
-            KeyLayout7KScratch1 = ReadGenericKey(@"KeyLayout7KScratch1", new GenericKey { KeyboardKey = Keys.A }, data);
-            KeyLayout7KScratch2 = ReadGenericKey(@"KeyLayout7KScratch2", new GenericKey { KeyboardKey = Keys.S }, data);
-            KeyLayout7KScratch3 = ReadGenericKey(@"KeyLayout7KScratch3", new GenericKey { KeyboardKey = Keys.D }, data);
-            KeyLayout7KScratch4 = ReadGenericKey(@"KeyLayout7KScratch4", new GenericKey { KeyboardKey = Keys.Space }, data);
-            KeyLayout7KScratch5 = ReadGenericKey(@"KeyLayout7KScratch5", new GenericKey { KeyboardKey = Keys.J }, data);
-            KeyLayout7KScratch6 = ReadGenericKey(@"KeyLayout7KScratch6", new GenericKey { KeyboardKey = Keys.K }, data);
-            KeyLayout7KScratch7 = ReadGenericKey(@"KeyLayout7KScratch7", new GenericKey { KeyboardKey = Keys.L }, data);
-            KeyLayout7KScratch8 = ReadGenericKey(@"KeyLayout7KScratch8", new GenericKey { KeyboardKey = Keys.CapsLock }, data);
-            KeyLayout7KScratch9 = ReadGenericKey(@"KeyLayout7KScratch9", new GenericKey { KeyboardKey = Keys.OemColon }, data);
-
             KeySkipIntro = ReadGenericKey(@"KeySkipIntro", new GenericKey { KeyboardKey = Keys.Space }, data);
             KeyPause = ReadGenericKey(@"KeyPause", new GenericKey { KeyboardKey = Keys.Escape }, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
@@ -1188,9 +1093,28 @@ namespace Quaver.Shared.Config
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
-            PrioritizedMapDifficulty4K = ReadInt(@"PrioritizedMapDifficulty4K", 0, 0, 1000, data);
-            PrioritizedMapDifficulty7K = ReadInt(@"PrioritizedMapDifficulty7K", 0, 0, 1000, data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
+
+            KeyLayouts = new();
+            PrioritizedMapDifficulty = new();
+            ScrollSpeeds = new();
+            ScrollDirections = new();
+            for (var keyCount = 1; keyCount <= 10; keyCount++)
+            {
+                var mode = ModeHelper.FromKeyCount(keyCount);
+
+                KeyLayouts.Add(mode, new List<Bindable<GenericKey>>());
+                for (var key = 1; key <= keyCount; key++)
+                {
+                    KeyLayouts[mode].Add(ReadGenericKey($"KeyMania{keyCount}K{key}", DefaultKeyLayout(mode, key - 1), data));
+                }
+
+                PrioritizedMapDifficulty.Add(mode, ReadInt($"PrioritizedMapDifficulty{keyCount}K", 0, 0, 1000, data));
+
+                ScrollSpeeds.Add(mode, ReadInt($"ScrollSpeed{keyCount}K", 150, 50, 1000, data));
+
+                ScrollDirections.Add(mode, ReadValue($"ScrollDirection{keyCount}K", ScrollDirection.Down, data));
+            }
 
             // Bind global inverted scrolling so ScrollContainers get InvertScrolling setting too
             ScrollContainer.GlobalInvertedScrolling = InvertScrolling;
@@ -1337,8 +1261,35 @@ namespace Quaver.Shared.Config
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var prop in typeof(ConfigManager).GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
             {
-                if (prop.Name == "FirstWrite" || prop.Name == "LastWrite")
+                if (prop.Name == nameof(FirstWrite) || prop.Name == nameof(LastWrite))
                     continue;
+
+                if (prop.Name == nameof(KeyLayouts))
+                {
+                    WriteKeyLayouts(sb);
+                    continue;
+                }
+
+                if (prop.Name == nameof(PrioritizedMapDifficulty))
+                {
+                    foreach (var (mode, bindable) in PrioritizedMapDifficulty)
+                        sb.AppendLine($"PrioritizedMapDifficulty{ModeHelper.ToKeyCount(mode)}K = {bindable.Value}");
+                    continue;
+                }
+
+                if (prop.Name == nameof(ScrollSpeeds))
+                {
+                    foreach (var (mode, bindable) in ScrollSpeeds)
+                        sb.AppendLine($"ScrollSpeed{ModeHelper.ToKeyCount(mode)}K = {bindable.Value}");
+                    continue;
+                }
+
+                if (prop.Name == nameof(ScrollDirections))
+                {
+                    foreach (var (mode, bindable) in ScrollDirections)
+                        sb.AppendLine($"ScrollDirection{ModeHelper.ToKeyCount(mode)}K = {bindable.Value}");
+                    continue;
+                }
 
                 try
                 {

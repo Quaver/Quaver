@@ -104,22 +104,13 @@ namespace Quaver.Shared.Database.Maps
             {
                 if (maps.Count == 0) return null;
 
-                // target difficulty
-                double target4K = ConfigManager.PrioritizedMapDifficulty4K.Value / 10d;
-                double target7K = ConfigManager.PrioritizedMapDifficulty7K.Value / 10d;
-
                 // find closest map to target
                 var minDelta = Double.PositiveInfinity;
                 Map selection = null;
 
                 foreach (var map in maps)
                 {
-                    var target = map.Mode switch
-                    {
-                        GameMode.Keys4 => target4K,
-                        GameMode.Keys7 => target7K,
-                        _ => throw new InvalidOperationException("Map is an invalid game mode")
-                    };
+                    var target = ConfigManager.PrioritizedMapDifficulty[map.Mode].Value / 10d;
 
                     double delta = Math.Abs(map.DifficultyFromMods(mods) - target);
 

@@ -616,29 +616,13 @@ namespace Quaver.Shared.Database.Maps
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Keys:
-                                switch (map.Mode)
-                                {
-                                    case GameMode.Keys4:
-                                        if (!float.TryParse(searchQuery.Value, out var val4k))
-                                            exitLoop = true;
+                                if (!float.TryParse(searchQuery.Value, out var val))
+                                    exitLoop = true;
 
-                                        var keyCount = map.HasScratchKey ? 5 : 4;
+                                var keyCount = ModeHelper.ToKeyCount(map.Mode, map.HasScratchKey);
 
-                                        if (!CompareValues(keyCount, val4k, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    case GameMode.Keys7:
-                                        if (!float.TryParse(searchQuery.Value, out var val7k))
-                                            exitLoop = true;
-
-                                        var keyCount7k = map.HasScratchKey ? 8 : 7;
-
-                                        if (!CompareValues(keyCount7k, val7k, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
+                                if (!CompareValues(keyCount, val, searchQuery.Operator))
+                                    exitLoop = true;
                                 break;
                             case SearchFilterOption.Status:
                                 if (!(searchQuery.Operator.Equals(operators[2]) ||

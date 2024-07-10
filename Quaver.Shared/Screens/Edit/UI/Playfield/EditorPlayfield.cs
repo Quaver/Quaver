@@ -142,15 +142,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             get
             {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        return 74;
-                    case GameMode.Keys7:
-                        return 70;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                var keyCount = API.Helpers.ModeHelper.ToKeyCount(Map.Mode);
+                if (keyCount < 7)
+                    return 74;
+
+                return 70 * 7 / keyCount;
             }
         }
 

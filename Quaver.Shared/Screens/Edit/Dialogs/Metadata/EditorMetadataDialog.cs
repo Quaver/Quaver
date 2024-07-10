@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
@@ -265,16 +266,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
             WorkingMap.Mode = GameMode.SelectedMode;
 
-            // Remove all objects that are above lane 4
-            if (WorkingMap.Mode == API.Enums.GameMode.Keys4)
-                WorkingMap.HitObjects.RemoveAll(x => x.Lane > 4);
-
             // 7K+1
             WorkingMap.HasScratchKey = GameMode.Dropdown.SelectedIndex == EditorMetadataModeDropdown.Keys7Plus1Index;
 
-            // Remove any objects that are in the scratch lane (8) if going from scratch to no-scratch
-            if (!WorkingMap.HasScratchKey)
-                WorkingMap.HitObjects.RemoveAll(x => x.Lane > 7);
+            var keyCount = ModeHelper.ToKeyCount(WorkingMap.Mode, WorkingMap.HasScratchKey);
+            WorkingMap.HitObjects.RemoveAll(x => x.Lane > keyCount);
 
             Screen.Exit(() =>
             {
