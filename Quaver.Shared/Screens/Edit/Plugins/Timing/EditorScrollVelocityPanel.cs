@@ -145,6 +145,21 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.TextWrapped("Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.");
             ImGui.Dummy(new Vector2(0, 10));
             ImGui.TextWrapped("You can click on an individual SV point to edit it and double-click to go to its position in time.");
+            ShowDifferenceText();
+        }
+
+        private static void ShowDifferenceText()
+        {
+            ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1), "(Difference from SF)");
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos(300);
+                ImGui.TextWrapped("SV will not move the notes but only change its speed, " +
+                                  "whereas SF will directly change both their position and speed");
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
         }
 
         /// <summary>

@@ -170,10 +170,38 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawHeaderText()
         {
             ImGui.TextWrapped(
-                "Scroll Speed Factors (SF) allow you to dynamically change the speed and direction at which the objects fall.");
-            ImGui.Dummy(new Vector2(0, 10));
-            ImGui.TextWrapped(
-                "You can click on an individual SF point to edit it and double-click to go to its position in time.");
+                "Scroll Speed Factors (SF) allow you to scale the distance from the notes to the receptor directly");
+            ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1), "(Help)");
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos(300);
+                ImGui.TextWrapped("SF is a multiplier to your current scroll speed. " +
+                                  "The entries you add will be linearly transformed from one to another, like keyframes.");
+                ImGui.TextWrapped(
+                    "You can click on an individual SF point to edit it and double-click to go to its position in time.");
+                ImGui.TextWrapped("You can also tweak SFs per lane by toggling the Lanes checkbox.");
+                ImGui.TextWrapped("By setting the Lane Filter, only the SFs which have the toggled lanes will be shown." +
+                                  "You can shift click on the checkbox to toggle showing SFs at that specific lane.");
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
+            ImGui.SameLine();
+            ShowDifferenceText();
+        }
+
+        private static void ShowDifferenceText()
+        {
+            ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1), "(Difference from SV)");
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos(300);
+                ImGui.TextWrapped("SV will not move the notes but only change its speed, " +
+                                  "whereas SF will directly change both their position and speed");
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
         }
 
         /// <summary>
