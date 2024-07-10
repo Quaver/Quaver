@@ -12,6 +12,11 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.Add;
+using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
@@ -63,7 +68,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="map"></param>
         /// <param name="track"></param>
         /// <param name="actionManager"></param>
-        public EditorPlayfieldLineContainer(EditorPlayfield playfield, Qua map, IAudioTrack track, EditorActionManager actionManager)
+        public EditorPlayfieldLineContainer(EditorPlayfield playfield, Qua map, IAudioTrack track,
+            EditorActionManager actionManager)
         {
             Playfield = playfield;
             Map = map;
@@ -77,6 +83,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityBatchAdded += OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
             ActionManager.ScrollVelocityOffsetBatchChanged += OnScrollVelocityBatchOffsetChanged;
+            ActionManager.ScrollSpeedFactorAdded += OnScrollSpeedFactorAdded;
+            ActionManager.ScrollSpeedFactorRemoved += OnScrollSpeedFactorRemoved;
+            ActionManager.ScrollSpeedFactorBatchAdded += OnScrollSpeedFactorBatchAdded;
+            ActionManager.ScrollSpeedFactorBatchRemoved += OnScrollSpeedFactorBatchRemoved;
+            ActionManager.ScrollSpeedFactorOffsetBatchChanged += OnScrollSpeedFactorBatchOffsetChanged;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
@@ -90,7 +101,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.BookmarkBatchRemoved += OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -157,10 +168,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
             ActionManager.BookmarkBatchRemoved -= OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
-            
+
             base.Destroy();
         }
-        
+
         /// <summary>
         ///     Initializes and positions all the timing point/sv lines
         /// </summary>
@@ -170,13 +181,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             var timingPointIndex = 0;
             var svIndex = 0;
-            
+
             // SV & Timing points are guaranteed to already be sorted, so there's no need to resort.
             while (Lines.Count != Map.TimingPoints.Count + Map.SliderVelocities.Count)
             {
                 var pointExists = timingPointIndex < Map.TimingPoints.Count;
                 var svExists = svIndex < Map.SliderVelocities.Count;
-                
+
                 if (pointExists && svExists)
                 {
                     if (Map.TimingPoints[timingPointIndex].StartTime < Map.SliderVelocities[svIndex].StartTime)
@@ -204,7 +215,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             foreach (var bookmark in Map.Bookmarks)
                 Lines.Add(new DrawableEditorLineBookmark(Playfield, bookmark));
-            
+
+            foreach (var scrollSpeedFactor in Map.ScrollSpeedFactors)
+            {
+                Lines.Add(new DrawableEditorLineScrollSpeedFactor(Playfield, scrollSpeedFactor));
+            }
+
             PreviewLine = new DrawableEditorLinePreview(Playfield, Map.SongPreviewTime);
             InitializeLinePool();
         }
@@ -294,7 +310,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Lines.RemoveAll(x =>
             {
                 var found = x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == e.ScrollVelocity;
-                
+
                 if (found)
                     x.Destroy();
 
@@ -314,14 +330,90 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 Lines.RemoveAll(x =>
                 {
                     var found = x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == sv;
-                    
+
                     if (found)
                         x.Destroy();
 
                     return found;
                 });
             }
-            
+
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorAdded(object sender, EditorScrollSpeedFactorAddedEventArgs e)
+        {
+            Lines.Add(new DrawableEditorLineScrollSpeedFactor(Playfield, e.ScrollSpeedFactor));
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorBatchAdded(object sender, EditorScrollSpeedFactorBatchAddedEventArgs e)
+        {
+            foreach (var sv in e.ScrollSpeedFactors)
+                Lines.Add(new DrawableEditorLineScrollSpeedFactor(Playfield, sv));
+
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorRemoved(object sender, EditorScrollSpeedFactorRemovedEventArgs e)
+        {
+            Lines.RemoveAll(x =>
+            {
+                var found = x is DrawableEditorLineScrollSpeedFactor line &&
+                            line.ScrollSpeedFactor == e.ScrollSpeedFactor;
+
+                if (found)
+                    x.Destroy();
+
+                return found;
+            });
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorBatchRemoved(object sender, EditorScrollSpeedFactorBatchRemovedEventArgs e)
+        {
+            foreach (var sv in e.ScrollSpeedFactors)
+            {
+                Lines.RemoveAll(x =>
+                {
+                    var found = x is DrawableEditorLineScrollSpeedFactor line && line.ScrollSpeedFactor == sv;
+
+                    if (found)
+                        x.Destroy();
+
+                    return found;
+                });
+            }
+
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorBatchOffsetChanged(object sender,
+            EditorChangedScrollSpeedFactorOffsetBatchEventArgs e)
+        {
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
             InitializeLinePool();
         }
 
@@ -360,7 +452,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnScrollVelocityBatchOffsetChanged(object sender, EditorChangedScrollVelocityOffsetBatchEventArgs e)
+        private void OnScrollVelocityBatchOffsetChanged(object sender,
+            EditorChangedScrollVelocityOffsetBatchEventArgs e)
         {
             Lines = Lines.OrderBy(x => x.GetTime()).ToList();
             InitializeLinePool();
@@ -375,13 +468,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Lines.RemoveAll(x =>
             {
                 var found = x is DrawableEditorLineTimingPoint line && line.TimingPoint == e.TimingPoint;
-                
+
                 if (found)
                     x.Destroy();
 
                 return found;
             });
-            
+
             InitializeLinePool();
         }
 
@@ -409,14 +502,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 Lines.RemoveAll(x =>
                 {
                     var found = x is DrawableEditorLineTimingPoint line && line.TimingPoint == tp;
-                    
+
                     if (found)
                         x.Destroy();
-                    
+
                     return found;
                 });
             }
-            
+
             InitializeLinePool();
         }
 
@@ -424,23 +517,24 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPreviewTimeChanged(object sender, EditorChangedPreviewTimeEventArgs e) => PreviewLine.Time = e.Time;
-        
+        private void OnPreviewTimeChanged(object sender, EditorChangedPreviewTimeEventArgs e) =>
+            PreviewLine.Time = e.Time;
+
         private void OnBookmarkAdded(object sender, EditorActionBookmarkAddedEventArgs e)
         {
             Lines.Add(new DrawableEditorLineBookmark(Playfield, e.Bookmark));
             Lines = Lines.OrderBy(x => x.GetTime()).ToList();
             InitializeLinePool();
         }
-        
+
         private void OnBookmarkBatchAdded(object sender, EditorActionBookmarkBatchAddedEventArgs e)
         {
-            foreach (var bookmark in e.Bookmarks) 
+            foreach (var bookmark in e.Bookmarks)
                 Lines.Add(new DrawableEditorLineBookmark(Playfield, bookmark));
             Lines = Lines.OrderBy(x => x.GetTime()).ToList();
             InitializeLinePool();
         }
-        
+
         private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e)
         {
             var line = Lines.Find(x => x is DrawableEditorLineBookmark line && line.Bookmark == e.Bookmark);
@@ -448,7 +542,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Lines.Remove(line);
             InitializeLinePool();
         }
-        
+
         private void OnBookmarkBatchRemoved(object sender, EditorActionBookmarkBatchRemovedEventArgs e)
         {
             foreach (var bookmark in e.Bookmarks)
@@ -456,16 +550,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 Lines.RemoveAll(x =>
                 {
                     var found = x is DrawableEditorLineBookmark line && line.Bookmark == bookmark;
-                    
+
                     if (found)
                         x.Destroy();
-                    
+
                     return found;
                 });
             }
+
             InitializeLinePool();
         }
-        
+
         private void OnBookmarkBatchOffsetChanged(object sender, EditorActionChangeBookmarkOffsetBatchEventArgs e)
         {
             Lines = Lines.OrderBy(x => x.GetTime()).ToList();
