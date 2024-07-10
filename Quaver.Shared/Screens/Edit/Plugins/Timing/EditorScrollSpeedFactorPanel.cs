@@ -287,6 +287,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     {
                         ShiftSelect(Screen.WorkingMap.ScrollSpeedFactors.IndexOf(currentPoint));
                     }
+                    else
+                    {
+                        SelectedScrollSpeedFactors.Clear();
+                        SelectedScrollSpeedFactors.Add(currentPoint);
+                    }
 
                     UpdateSelectedScrollSpeedFactors();
                 }
