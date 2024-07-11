@@ -1745,7 +1745,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (ActionManager.HasUnsavedChanges)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Your map has unsaved changes. Please save & upload before submitting for rank.");
+                NotificationManager.Show(NotificationLevel.Warning, "Your map has unsaved changes. Please save before exporting.");
                 return;
             }
 
