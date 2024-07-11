@@ -350,6 +350,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> UIElementsOverLaneCover { get; private set; }
 
         /// <summary>
+        ///     If enabled, the receptors will be displayed over the lane cover.
+        /// </summary>
+        internal static Bindable<bool> ReceptorsOverLaneCover { get; private set; }
+
+        /// <summary>
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
@@ -1119,6 +1124,7 @@ namespace Quaver.Shared.Config
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
+            ReceptorsOverLaneCover = ReadValue(@"ReceptorsOverLaneCover", false, data);
             EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
