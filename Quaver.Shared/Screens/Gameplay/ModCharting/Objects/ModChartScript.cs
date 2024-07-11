@@ -61,6 +61,8 @@ public class ModChartScript
 
     public ModChartLayers ModChartLayers { get; set; }
 
+    public ModChartAudio ModChartAudio { get; set; }
+
     public ModChartUtils ModChartUtils { get; set; }
 
     /// <summary>
@@ -103,6 +105,8 @@ public class ModChartScript
         ModChartNew = new ModChartNew(Shortcut);
 
         ModChartLayers = new ModChartLayers(Shortcut);
+
+        ModChartAudio = new ModChartAudio(Shortcut);
 
         State = new ModChartState(Shortcut);
 
@@ -179,6 +183,7 @@ public class ModChartScript
         WorkingScript.Globals["Notes"] = ModChartNotes;
         WorkingScript.Globals["SM"] = ModChartStateMachines;
         WorkingScript.Globals["Layers"] = ModChartLayers;
+        WorkingScript.Globals["Audio"] = ModChartAudio;
         WorkingScript.Globals["Fonts"] = typeof(Fonts);
         WorkingScript.Globals["Events"] = ModChartEvents;
         WorkingScript.Globals["beat"] = ModChartUtils.Beat;
