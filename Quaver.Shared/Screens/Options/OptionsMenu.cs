@@ -177,10 +177,6 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {
-                    new OptionsSubcategory("Scratch Lane", new List<OptionsItem>()
-                    {
-                        new OptionsItemCheckbox(containerRect, "Place 7K Scratch Lane On Left", ConfigManager.ScratchLaneLeft7K)
-                    }),
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),
@@ -235,6 +231,14 @@ namespace Quaver.Shared.Screens.Options
                             )
                     ).ToList()
                     ),
+                    new OptionsSubcategory("Scratch Lane", 
+                    ConfigManager.ScratchLanesLeft.Select(x => 
+                        (OptionsItem)new OptionsItemCheckbox(
+                            containerRect, 
+                            $"Place {ModeHelper.ToShortHand(x.Key)} Scratch Lane On Left", 
+                            x.Value)
+                        ).ToList()
+                    ),
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
                 {
@@ -263,7 +267,8 @@ namespace Quaver.Shared.Screens.Options
                 new OptionsSection("Input", UserInterface.OptionsInput, new List<OptionsSubcategory>
                 {
                     CreateInputGameplayCategory(containerRect),
-                    // CreateCoopInputGameplayCategory(containerRect),
+                    CreateScratchInputGameplayCategory(containerRect),
+                    CreateCoopInputGameplayCategory(containerRect),
                     new OptionsSubcategory("Gameplay Controls", new List<OptionsItem>()
                     {
                         new OptionsItemKeybindGeneric(containerRect, "Pause", ConfigManager.KeyPause),
@@ -399,7 +404,7 @@ namespace Quaver.Shared.Screens.Options
         private OptionsSubcategory CreateInputGameplayCategory(RectangleF containerRect)
         {
             var optionItems = new List<OptionsItem>();
-            for (var keyCount = 1; keyCount <= 10; keyCount++)
+            for (var keyCount = 1; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
             {
                 var gameMode = ModeHelper.FromKeyCount(keyCount);
                 optionItems.Add(new OptionsItemKeybindMultiple(
@@ -413,9 +418,40 @@ namespace Quaver.Shared.Screens.Options
             }
             return new OptionsSubcategory("Gameplay", optionItems);
         }
-        // private OptionsSubcategory CreateCoopInputGameplayCategory(RectangleF containerRect)
-        // {
-        // }
+        private OptionsSubcategory CreateScratchInputGameplayCategory(RectangleF containerRect)
+        {
+            var optionItems = new List<OptionsItem>();
+            for (var keyCount = 1; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
+            {
+                var gameMode = ModeHelper.FromKeyCount(keyCount);
+                optionItems.Add(new OptionsItemKeybindMultiple(
+                    containerRect, 
+                    $"{ModeHelper.ToShortHand(gameMode)} Scratch Layout", 
+                    ConfigManager.ScratchKeyLayouts[gameMode]
+                )
+                {
+                    Tags = new List<string> {"keybind", "keyboard", "keys"}
+                });
+            }
+            return new OptionsSubcategory("Scratch", optionItems);
+        }
+        private OptionsSubcategory CreateCoopInputGameplayCategory(RectangleF containerRect)
+        {
+            var optionItems = new List<OptionsItem>();
+            for (var keyCount = 1; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
+            {
+                var gameMode = ModeHelper.FromKeyCount(keyCount);
+                optionItems.Add(new OptionsItemKeybindMultiple(
+                    containerRect, 
+                    $"{ModeHelper.ToShortHand(gameMode)} Co-op Layout", 
+                    ConfigManager.CoopKeyLayouts[gameMode]
+                )
+                {
+                    Tags = new List<string> {"keybind", "keyboard", "keys"}
+                });
+            }
+            return new OptionsSubcategory("Co-op", optionItems);
+        }
 
         /// <summary>
         /// </summary>

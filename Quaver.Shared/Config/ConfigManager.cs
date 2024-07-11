@@ -196,8 +196,10 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> DisplaySongTimeProgress { get; private set; }
 
+        [IgnoreWrite]
         internal static Dictionary<GameMode, BindableInt> ScrollSpeeds { get; private set; }
 
+        [IgnoreWrite]
         internal static Dictionary<GameMode, Bindable<ScrollDirection>> ScrollDirections { get; private set; }
 
         /// <summary>
@@ -636,13 +638,8 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
 
-        /// <summary>
-        /// </summary>
-        internal static Bindable<bool> ScratchLaneLeft4K { get; private set; }
-
-        /// <summary>
-        /// </summary>
-        internal static Bindable<bool> ScratchLaneLeft7K { get; private set; }
+        [IgnoreWrite]
+        internal static Dictionary<GameMode, Bindable<bool>> ScratchLanesLeft { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -702,7 +699,14 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyNavigateSelect { get; private set; }
 
+        [IgnoreWrite]
         internal static Dictionary<GameMode, List<Bindable<GenericKey>>> KeyLayouts { get; private set; }
+
+        [IgnoreWrite]
+        internal static Dictionary<GameMode, List<Bindable<GenericKey>>> CoopKeyLayouts { get; private set; }
+
+        [IgnoreWrite]
+        internal static Dictionary<GameMode, List<Bindable<GenericKey>>> ScratchKeyLayouts { get; private set; }
 
         internal static GenericKey DefaultKeyLayout(GameMode mode, int index)
         {
@@ -718,16 +722,6 @@ namespace Quaver.Shared.Config
                 return new GenericKey() { KeyboardKey = keys[index] };
             else
                 return new GenericKey() { KeyboardKey = keys[^(keyCount - index)] };
-        }
-
-        internal static void WriteKeyLayouts(StringBuilder sb)
-        {
-            foreach (var (mode, keys) in KeyLayouts)
-                for (var key = 1; key <= keys.Count; key++)
-                {
-                    var keyCount = ModeHelper.ToKeyCount(mode);
-                    sb.AppendLine($"KeyMania{keyCount}K{key} = {keys[key - 1].Value}");
-                }
         }
 
         /// <summary>
@@ -831,6 +825,7 @@ namespace Quaver.Shared.Config
         ///     Target difficulty used for selecting a default map in a mapset.
         ///     Stored as an integer, divide by 10 for actual target difficulty.
         /// </summary>
+        [IgnoreWrite]
         internal static Dictionary<GameMode, BindableInt> PrioritizedMapDifficulty { get; private set; }
 
         /// <summary>
@@ -842,11 +837,13 @@ namespace Quaver.Shared.Config
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
+        [IgnoreWrite]
         private static bool FirstWrite { get; set; }
 
         /// <summary>
         ///     The last time we've wrote config.
         /// </summary>
+        [IgnoreWrite]
         private static long LastWrite { get; set; }
 
         /// <summary>
@@ -1081,8 +1078,8 @@ namespace Quaver.Shared.Config
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
             ReloadSkinOnChange = ReadValue(@"ReloadSkinOnChange", false, data);
             EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
-            ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
-            ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
+            // ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
+            // ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
             SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
             DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
@@ -1096,24 +1093,37 @@ namespace Quaver.Shared.Config
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
 
             KeyLayouts = new();
+            CoopKeyLayouts = new();
+            ScratchKeyLayouts = new();
             PrioritizedMapDifficulty = new();
             ScrollSpeeds = new();
             ScrollDirections = new();
-            for (var keyCount = 1; keyCount <= 10; keyCount++)
+            ScratchLanesLeft = new();
+            for (var keyCount = 1; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
             {
                 var mode = ModeHelper.FromKeyCount(keyCount);
 
                 KeyLayouts.Add(mode, new List<Bindable<GenericKey>>());
+                CoopKeyLayouts.Add(mode, new List<Bindable<GenericKey>>());
                 for (var key = 1; key <= keyCount; key++)
                 {
                     KeyLayouts[mode].Add(ReadGenericKey($"KeyMania{keyCount}K{key}", DefaultKeyLayout(mode, key - 1), data));
+                    CoopKeyLayouts[mode].Add(ReadGenericKey($"KeyCoop2P{keyCount}K{key}", new GenericKey() { KeyboardKey = Keys.None }, data));
                 }
+
+                ScratchKeyLayouts.Add(mode, new List<Bindable<GenericKey>>
+                {
+                    ReadGenericKey($"KeyScratch{keyCount}K1", new GenericKey() { KeyboardKey = Keys.None }, data),
+                    ReadGenericKey($"KeyScratch{keyCount}K2", new GenericKey() { KeyboardKey = Keys.None }, data)
+                });
 
                 PrioritizedMapDifficulty.Add(mode, ReadInt($"PrioritizedMapDifficulty{keyCount}K", 0, 0, 1000, data));
 
                 ScrollSpeeds.Add(mode, ReadInt($"ScrollSpeed{keyCount}K", 150, 50, 1000, data));
 
                 ScrollDirections.Add(mode, ReadValue($"ScrollDirection{keyCount}K", ScrollDirection.Down, data));
+
+                ScratchLanesLeft.Add(mode, ReadValue($"ScratchLaneLeft{keyCount}K", true, data));
             }
 
             // Bind global inverted scrolling so ScrollContainers get InvertScrolling setting too
@@ -1240,6 +1250,29 @@ namespace Quaver.Shared.Config
             CommonTaskScheduler.Add(CommonTask.WriteConfig);
         }
 
+        internal static void WriteKeySpecific(StringBuilder sb)
+        {
+            for (var keyCount = 1; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
+            {
+                var mode = ModeHelper.FromKeyCount(keyCount);
+                for (var key = 1; key <= keyCount; key++)
+                {
+                    sb.AppendLine($"KeyMania{keyCount}K{key} = {KeyLayouts[mode][key - 1].Value}");
+                    sb.AppendLine($"KeyCoop2P{keyCount}K{key} = {CoopKeyLayouts[mode][key - 1].Value}");
+                }
+
+                sb.AppendLine($"KeyScratch{keyCount}K1 = {ScratchKeyLayouts[mode][0].Value}");
+                sb.AppendLine($"KeyScratch{keyCount}K2 = {ScratchKeyLayouts[mode][1].Value}");
+
+                sb.AppendLine($"PrioritizedMapDifficulty{keyCount}K = {PrioritizedMapDifficulty[mode].Value}");
+
+                sb.AppendLine($"ScrollSpeed{keyCount}K = {ScrollSpeeds[mode].Value}");
+                sb.AppendLine($"ScrollDirection{keyCount}K = {ScrollDirections[mode].Value}");
+
+                sb.AppendLine($"ScratchLaneLeft{keyCount}K = {ScratchLanesLeft[mode].Value}");
+            }
+        }
+
         /// <summary>
         ///     Takes all of the current values from the ConfigManager class and creates a file with them.
         ///     This will automatically be called whenever a configuration value is changed in the code.
@@ -1261,35 +1294,8 @@ namespace Quaver.Shared.Config
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var prop in typeof(ConfigManager).GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
             {
-                if (prop.Name == nameof(FirstWrite) || prop.Name == nameof(LastWrite))
+                if (prop.GetCustomAttribute<IgnoreWriteAttribute>() != null)
                     continue;
-
-                if (prop.Name == nameof(KeyLayouts))
-                {
-                    WriteKeyLayouts(sb);
-                    continue;
-                }
-
-                if (prop.Name == nameof(PrioritizedMapDifficulty))
-                {
-                    foreach (var (mode, bindable) in PrioritizedMapDifficulty)
-                        sb.AppendLine($"PrioritizedMapDifficulty{ModeHelper.ToKeyCount(mode)}K = {bindable.Value}");
-                    continue;
-                }
-
-                if (prop.Name == nameof(ScrollSpeeds))
-                {
-                    foreach (var (mode, bindable) in ScrollSpeeds)
-                        sb.AppendLine($"ScrollSpeed{ModeHelper.ToKeyCount(mode)}K = {bindable.Value}");
-                    continue;
-                }
-
-                if (prop.Name == nameof(ScrollDirections))
-                {
-                    foreach (var (mode, bindable) in ScrollDirections)
-                        sb.AppendLine($"ScrollDirection{ModeHelper.ToKeyCount(mode)}K = {bindable.Value}");
-                    continue;
-                }
 
                 try
                 {
@@ -1300,6 +1306,8 @@ namespace Quaver.Shared.Config
                     sb.AppendLine(prop.Name + " = ");
                 }
             }
+
+            WriteKeySpecific(sb);
 
             try
             {
@@ -1382,4 +1390,6 @@ namespace Quaver.Shared.Config
         Bar,
         Circle,
     }
+
+    internal sealed class IgnoreWriteAttribute : Attribute { }
 }

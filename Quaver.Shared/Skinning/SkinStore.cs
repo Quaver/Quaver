@@ -281,9 +281,9 @@ namespace Quaver.Shared.Skinning
 
             // Load up Keys game mode skins.
             Keys = new Dictionary<GameMode, SkinKeys>();
-            for(var i = 1; i <= 10; i++)
+            for(var keyCount = 1; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
             {
-                var mode = ModeHelper.FromKeyCount(i);
+                var mode = ModeHelper.FromKeyCount(keyCount);
                 Keys.Add(mode, new SkinKeys(this, mode));
             }
 

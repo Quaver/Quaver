@@ -38,10 +38,10 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 "None",
             };
 
-            for(var i = 1; i <= 10; i++)
+            for(var keyCount = 1; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
             {
-                var mode = ModeHelper.FromKeyCount(i);
-                list.Add($"{i} Keys");
+                var mode = ModeHelper.FromKeyCount(keyCount);
+                list.Add($"{keyCount} Keys");
             }
 
             return list;

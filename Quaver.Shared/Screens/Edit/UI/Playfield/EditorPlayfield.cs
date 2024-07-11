@@ -943,7 +943,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var val = (int) MathHelper.Clamp(lane, 1, Map.GetKeyCount());
 
             // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
-            if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
+            if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLanesLeft[Map.Mode] != null && ConfigManager.ScratchLanesLeft[Map.Mode].Value)
             {
                 if (val == 1)
                     val = 8;

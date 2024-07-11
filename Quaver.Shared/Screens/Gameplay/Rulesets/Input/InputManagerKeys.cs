@@ -413,7 +413,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <param name="mode"></param>
         private void SetPlayer2Keybinds(GameMode mode)
         {
-            // 10kTodo
+            BindingStore = ConfigManager.CoopKeyLayouts[mode].Select(x => new InputBindingKeys(x)).ToList();
         }
     }
 }

@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var lane = Info.Lane - 1;
 
             // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
-            if (Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
+            if (Map.HasScratchKey && ConfigManager.ScratchLanesLeft[Map.Mode] != null && ConfigManager.ScratchLanesLeft[Map.Mode].Value)
             {
                 if (Info.Lane == 8)
                     lane = 0;
