@@ -1743,6 +1743,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void ExportToZip()
         {
+            if (ActionManager.HasUnsavedChanges)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Your map has unsaved changes. Please save before exporting.");
+                return;
+            }
+
             NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
 
             ThreadScheduler.Run(() =>
