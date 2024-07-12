@@ -21,6 +21,7 @@ using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Edit;
@@ -349,7 +350,12 @@ namespace Quaver.Shared.Database.Maps
                         deleteOriginalFile = true;
                     }
 
-                    if (deleteOriginalFile && ConfigManager.DeleteOriginalFileAfterImport.Value)
+                    // Delete if the player has the option Delete Original File After Import on
+                    // and the file to delete is a mapset, not a map file
+                    // If we are importing a mapset downloaded from in-game downloader,
+                    // We should delete it no matter what
+                    if ((deleteOriginalFile && ConfigManager.DeleteOriginalFileAfterImport.Value)
+                        || file.IsSubDirectoryOf(ConfigManager.DataDirectory.Value))
                         File.Delete(file);
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
