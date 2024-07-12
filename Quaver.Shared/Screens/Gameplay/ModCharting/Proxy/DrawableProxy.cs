@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Vector2 = System.Numerics.Vector2;
 using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -28,6 +29,9 @@ public class DrawableProxy
 
         ScaleProp = new ModChartPropertyXnaVector2(() => _drawable.Scale, v => _drawable.Scale = v);
         PivotProp = new ModChartPropertyXnaVector2(() => _drawable.Pivot, v => _drawable.Pivot = v);
+
+        RenderTargetBackgroundColorProp = new ModChartPropertyColor(() => _drawable.RenderTargetOptions.BackgroundColor,
+            v => _drawable.RenderTargetOptions.BackgroundColor = v);
     }
 
     public Drawable MoveTo(ScalableVector2 coords)
@@ -174,6 +178,24 @@ public class DrawableProxy
         get => _drawable.Alignment;
         set => _drawable.Alignment = value;
     }
+
+    public void CastToRenderTarget() => _drawable.CastToRenderTarget();
+
+    public RenderProjectionSprite DefaultProjectionSprite => _drawable.DefaultProjectionSprite;
+
+    public Padding OverflowRenderPadding
+    {
+        get => _drawable.RenderTargetOptions.OverflowRenderPadding;
+        set => _drawable.RenderTargetOptions.OverflowRenderPadding = value;
+    }
+
+    public Color RenderTargetBackgroundColor
+    {
+        get => _drawable.RenderTargetOptions.BackgroundColor;
+        set => _drawable.RenderTargetOptions.BackgroundColor = value;
+    }
+
+    public readonly ModChartPropertyColor RenderTargetBackgroundColorProp;
 
     public List<Drawable> Children => _drawable.Children;
 }

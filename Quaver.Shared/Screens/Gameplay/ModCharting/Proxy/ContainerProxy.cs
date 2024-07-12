@@ -14,25 +14,5 @@ public class ContainerProxy : DrawableProxy
     public ContainerProxy(Container drawable) : base(drawable)
     {
         _drawable = drawable;
-        RenderTargetBackgroundColorProp = new ModChartPropertyColor(() => _drawable.RenderTargetOptions.BackgroundColor,
-            v => _drawable.RenderTargetOptions.BackgroundColor = v);
     }
-
-    public void CastToRenderTarget() => _drawable.CastToRenderTarget();
-
-    public RenderProjectionSprite DefaultProjectionSprite => _drawable.DefaultProjectionSprite;
-
-    public Padding OverflowRenderPadding
-    {
-        get => _drawable.RenderTargetOptions.OverflowRenderPadding;
-        set => _drawable.RenderTargetOptions.OverflowRenderPadding = value;
-    }
-
-    public Color RenderTargetBackgroundColor
-    {
-        get => _drawable.RenderTargetOptions.BackgroundColor;
-        set => _drawable.RenderTargetOptions.BackgroundColor = value;
-    }
-
-    public readonly ModChartPropertyColor RenderTargetBackgroundColorProp;
 }
