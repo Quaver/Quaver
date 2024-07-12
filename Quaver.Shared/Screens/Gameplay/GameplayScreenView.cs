@@ -377,7 +377,7 @@ namespace Quaver.Shared.Screens.Gameplay
             Background.Draw(gameTime);
             BattleRoyaleBackgroundAlerter?.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
-            Container?.Draw(gameTime);
+            Container?.WrappedDraw(gameTime);
         }
 
         /// <inheritdoc />

@@ -367,7 +367,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Draw(GameTime gameTime) => Container.Draw(gameTime);
+        public void Draw(GameTime gameTime) => Container.WrappedDraw(gameTime);
 
         /// <inheritdoc />
         /// <summary>
