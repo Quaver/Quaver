@@ -29,6 +29,8 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// </summary>
         public int MaxBarHeight { get; }
 
+        private readonly float[]  _spectrumData = new float[2048];
+
         /// <inheritdoc />
         ///   <summary>
         ///   </summary>
@@ -88,19 +90,17 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// </summary>
         private void InterpolateBars()
         {
-            var spectrumData = new float[2048];
-
             if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
                 return;
 
             if (AudioEngine.Track.IsPlaying)
-                Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
+                Bass.ChannelGetData(AudioEngine.Track.Stream, _spectrumData, (int)DataFlags.FFT2048);
 
             for (var i = 0; i < Bars.Count; i++)
             {
                 var bar = Bars[i];
 
-                var targetHeight = spectrumData[i] * MaxBarHeight;
+                var targetHeight = _spectrumData[i] * MaxBarHeight;
 
                 bar.Visible = targetHeight > 1f;
 
