@@ -37,7 +37,12 @@ public class SpriteProxy : DrawableProxy
     public SpriteBatchOptions SpriteBatchOptions
     {
         get => _drawable.SpriteBatchOptions;
-        set => _drawable.SpriteBatchOptions = value;
+        set
+        {
+            _drawable.SpriteBatchOptions = value;
+            if (_drawable is RenderProjectionSprite renderProjectionSprite)
+                renderProjectionSprite.UpdateShaderSizeParameter();
+        }
     }
 
     public readonly ModChartPropertyFloat AlphaProp;

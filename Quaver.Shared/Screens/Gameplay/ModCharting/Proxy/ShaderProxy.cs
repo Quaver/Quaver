@@ -1,6 +1,6 @@
-using System.Numerics;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 using Wobble.Graphics.Shaders;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
 
@@ -28,15 +28,13 @@ public class ShaderProxy
         () => (float)GetParameter(name),
         v => SetParameter(name, v));
 
-    public ModChartPropertyVector2 ParameterPropVector2(string name) => new(
+    public ModChartPropertyXnaVector2 ParameterPropVector2(string name) => new(
         () => (Vector2)GetParameter(name),
         v => SetParameter(name, v));
 
-    public ModChartPropertyVector3 ParameterPropVector3(string name) => new(
-        () => (Vector3)GetParameter(name),
-        v => SetParameter(name, v));
-
-    public ModChartPropertyVector4 ParameterPropVector4(string name) => new(
-        () => (Vector4)GetParameter(name),
-        v => SetParameter(name, v));
+    public ModChartPropertyFloat GreyscaleProp => ParameterPropFloat("GreyscaleStrength");
+    public ModChartPropertyXnaVector2 RedOffsetProp => ParameterPropVector2("ChromaticAberrationRedOffset");
+    public ModChartPropertyXnaVector2 GreenOffsetProp => ParameterPropVector2("ChromaticAberrationGreenOffset");
+    public ModChartPropertyXnaVector2 BlueOffsetProp => ParameterPropVector2("ChromaticAberrationBlueOffset");
+    public ModChartPropertyXnaVector2 MosaicBlockSizeProp => ParameterPropVector2("MosaicBlockSize");
 }
