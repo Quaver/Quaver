@@ -11,6 +11,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Events;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Proxy;
 using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
@@ -75,8 +76,15 @@ public class ModChartScript
     /// </summary>
     public TriggerManager TriggerManager { get; set; }
 
+    /// <summary>
+    ///     Program stops executing
+    /// </summary>
+    public bool Halted { get; private set; }
+
     public ModChartScript(string path, GameplayScreenView screenView)
     {
+        ModChartScriptHelper.ResetCounters();
+
         FilePath = path;
 
         GameplayScreenView = screenView;
@@ -222,6 +230,20 @@ public class ModChartScript
 
     public void Update(int time)
     {
+        if (Halted)
+            return;
+
+        if (ModChartScriptHelper.CounterExceeded)
+        {
+            Halted = true;
+            NotificationManager.Show(NotificationLevel.Error,
+                $"Script stopped executing because there are {ModChartScriptHelper.ErrorCount} errors and" +
+                $" {ModChartScriptHelper.TimeLimitExceedCount} calls that exceed" +
+                $" {ModChartScriptHelper.MaxInstructionsPerCall} instructions per call!",
+                forceShow: true);
+            return;
+        }
+
         State.SongTime = time;
         State.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         State.CurrentTimingPoint = GameplayScreenView.Screen.Map.GetTimingPointAt(State.SongTime);
