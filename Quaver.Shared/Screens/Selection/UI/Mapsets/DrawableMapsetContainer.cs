@@ -81,6 +81,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private Sprite GameModes { get; set; }
 
         /// <summary>
+        ///    The game mode text
+        /// </summary>
+        private SpriteTextPlus GameModeText { get; set; }
+
+        /// <summary>
         /// </summary>
         private SpriteTextPlus ByText { get; set; }
 
@@ -214,7 +219,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Creator.X = ByText.X + ByText.Width + ArtistCreatorSpacingX;
 
             RankedStatusSprite.Image = GetRankedStatusImage();
-            GameModes.Image = GetGameModeImage();
+            GameModeHelper.SetGameModeTexture(item.Maps, GameModes, GameModeText);
 
             if (ParentMapset.IsSelected)
                 Select(true);
@@ -361,6 +366,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
                 UsePreviousSpriteBatchOptions = true
             };
+
+            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
+            {
+                Parent = GameModes,
+                Alignment = Alignment.MidCenter,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Color.White,
+            };
         }
 
         /// <summary>
@@ -424,36 +437,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        /// <summary>
-        ///     Gets the image for the game mode(s)
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D GetGameModeImage()
-        {
-            var has4k = false;
-            var has7K = false;
-
-            foreach (var map in ParentMapset.Item.Maps)
-            {
-                switch (map.Mode)
-                {
-                    case GameMode.Keys4:
-                        has4k = true;
-                        break;
-                    case GameMode.Keys7:
-                        has7K = true;
-                        break;
-                }
-            }
-
-            if (has4k && !has7K)
-                return SkinManager.Skin?.SongSelect?.GameMode4K ?? UserInterface.Keys4Panel;
-            if (has7K && !has4k)
-                return SkinManager.Skin?.SongSelect?.GameMode7K ?? UserInterface.Keys7Panel;
-
-            return SkinManager.Skin?.SongSelect?.GameMode4K7K ?? UserInterface.BothModesPanel;
         }
 
         /// <summary>
