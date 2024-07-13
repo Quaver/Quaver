@@ -33,14 +33,14 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// <summary>
         ///     Timer used to record time passed since last interpolation
         /// </summary>
-        private TimeSpan _interpolationTimer = TimeSpan.Zero;
+        private TimeSpan interpolationTimer = TimeSpan.Zero;
 
         /// <summary>
         ///     Minimum time that needs to pass before the bars are interpolated again
         /// </summary>
-        private readonly TimeSpan _barInterpolateInterval = TimeSpan.FromMilliseconds(50);
+        private readonly TimeSpan barInterpolateInterval = TimeSpan.FromMilliseconds(50);
 
-        private readonly float[]  _spectrumData = new float[2048];
+        private readonly float[]  spectrumData = new float[2048];
 
         /// <inheritdoc />
         ///   <summary>
@@ -82,11 +82,11 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         {
             if (ConfigManager.DisplayMenuAudioVisualizer != null && ConfigManager.DisplayMenuAudioVisualizer.Value)
             {
-                _interpolationTimer += gameTime.ElapsedGameTime;
+                interpolationTimer += gameTime.ElapsedGameTime;
                 // ReSharper disable once InconsistentlySynchronizedField
-                if (_interpolationTimer >= _barInterpolateInterval)
+                if (interpolationTimer >= barInterpolateInterval)
                 {
-                    _interpolationTimer = TimeSpan.Zero;
+                    interpolationTimer = TimeSpan.Zero;
                     InterpolateBars();
                 }
             }
@@ -113,15 +113,15 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
                 return;
 
             if (AudioEngine.Track.IsPlaying)
-                _ = Bass.ChannelGetData(AudioEngine.Track.Stream, _spectrumData, (int)DataFlags.FFT2048);
+                _ = Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
             else
-                Array.Clear(_spectrumData);
+                Array.Clear(spectrumData);
 
             for (var i = 0; i < Bars.Count; i++)
             {
                 var bar = Bars[i];
 
-                var targetHeight = _spectrumData[i] * MaxBarHeight;
+                var targetHeight = spectrumData[i] * MaxBarHeight;
 
                 bar.Visible = targetHeight > 1f;
 
@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
                 {
                     bar.Animations.Clear();
                     bar.Animations.Add(new Animation(AnimationProperty.Height, Easing.Linear,
-                        bar.Height, targetHeight, (float)_barInterpolateInterval.TotalMilliseconds));
+                        bar.Height, targetHeight, (float)barInterpolateInterval.TotalMilliseconds));
                 }
             }
         }
