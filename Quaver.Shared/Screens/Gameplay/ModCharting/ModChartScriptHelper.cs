@@ -45,7 +45,7 @@ public static class ModChartScriptHelper
     ///     Either <see cref="ErrorCount"/> and <see cref="TimeLimitExceedCount"/> has exceeded limit
     /// </summary>
     public static bool CounterExceeded => ErrorCount > MaxErrorCount || TimeLimitExceedCount > MaxTleCount;
-    
+
     public static void TryPerform(Action action)
     {
         TryPerform(() =>
@@ -82,10 +82,8 @@ public static class ModChartScriptHelper
         return default;
     }
 
-    public static DynValue SafeCall(this Closure closure, params object[] args)
+    public static DynValue SafeCall(this Coroutine coroutine, params object[] args)
     {
-        var coroutine = closure.OwnerScript.CreateCoroutine(closure).Coroutine;
-        coroutine.AutoYieldCounter = MaxInstructionsPerCall;
         return TryPerform(() =>
         {
             var result = coroutine.Resume(args);
@@ -93,5 +91,10 @@ public static class ModChartScriptHelper
             TimeLimitExceedCount++;
             return null;
         });
+    }
+
+    public static DynValue SafeCall(this Closure closure, params object[] args)
+    {
+        return TryPerform(() => closure.Call(args));
     }
 }

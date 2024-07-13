@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Presets;
 using Quaver.Shared.Screens.Gameplay.ModCharting.StateMachine;
 using Wobble;
 using Wobble.Assets;
@@ -194,6 +195,12 @@ public class ModChartNew : ModChartGlobalVariable
     #region Layer
 
     public Layer Layer(string name) => Shortcut.ModChartScript.ModChartLayers.NewLayer(name);
+
+    #endregion
+
+    #region Presets
+
+    public SwapLanePreset SwapLanePreset(int lane1, int lane2) => new(Shortcut, lane1, lane2);
 
     #endregion
 }
