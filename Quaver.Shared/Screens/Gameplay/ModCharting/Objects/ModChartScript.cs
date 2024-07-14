@@ -126,11 +126,11 @@ public class ModChartScript
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
         UserData.RegisterExtensionType(typeof(EventHelper));
         UserData.RegisterType<EasingDelegate>();
-        UserData.RegisterType<SetterDelegate<float>>();
-        UserData.RegisterType<SetterDelegate<Vector2>>();
-        UserData.RegisterType<SetterDelegate<XnaVector2>>();
-        UserData.RegisterType<SetterDelegate<Vector3>>();
-        UserData.RegisterType<SetterDelegate<Vector4>>();
+        UserData.RegisterType<LerpDelegate<float>>();
+        UserData.RegisterType<LerpDelegate<Vector2>>();
+        UserData.RegisterType<LerpDelegate<XnaVector2>>();
+        UserData.RegisterType<LerpDelegate<Vector3>>();
+        UserData.RegisterType<LerpDelegate<Vector4>>();
         UserData.RegisterProxyType<QuaProxy, Qua>(q => new QuaProxy(q));
         UserData.RegisterProxyType<HitObjectInfoProxy, HitObjectInfo>(hitObjectInfo =>
             new HitObjectInfoProxy(hitObjectInfo));
@@ -394,23 +394,11 @@ public class ModChartScript
     {
         // Vector 2
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector2),
-            dynVal =>
-            {
-                var table = dynVal.Table;
-                var x = (float)(double)table[1];
-                var y = (float)(double)table[2];
-                return new Vector2(x, y);
-            }
+            TableToVector2
         );
 
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(XnaVector2),
-            dynVal =>
-            {
-                var table = dynVal.Table;
-                var x = (float)(double)table[1];
-                var y = (float)(double)table[2];
-                return new XnaVector2(x, y);
-            }
+            TableToXnaVector2
         );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
@@ -435,17 +423,7 @@ public class ModChartScript
 
         // Scalable Vector 2
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(ScalableVector2),
-            dynVal =>
-            {
-                var table = dynVal.Table;
-                var x = (float)(double)table[1];
-                var y = (float)(double)table[2];
-                if (table.Length != 4)
-                    return new ScalableVector2(x, y);
-                var sx = (float)(double)table[3];
-                var sy = (float)(double)table[4];
-                return new ScalableVector2(x, y, sx, sy);
-            }
+            TableToScalableVector2
         );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<ScalableVector2>(
@@ -462,14 +440,7 @@ public class ModChartScript
 
         // Vector3
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector3),
-            dynVal =>
-            {
-                var table = dynVal.Table;
-                var x = (float)((double)table[1]);
-                var y = (float)((double)table[2]);
-                var z = (float)((double)table[3]);
-                return new Vector3(x, y, z);
-            }
+            TableToVector3
         );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
@@ -485,15 +456,7 @@ public class ModChartScript
 
         // Color
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Color),
-            dynVal =>
-            {
-                var table = dynVal.Table;
-                var r = (byte)(double)table[1];
-                var g = (byte)(double)table[2];
-                var b = (byte)(double)table[3];
-                var a = (byte)(double)table[4];
-                return new Color(r, g, b, a);
-            }
+            TableToColor
         );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Color>(
@@ -510,15 +473,7 @@ public class ModChartScript
 
         // Vector4
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector4),
-            dynVal =>
-            {
-                var table = dynVal.Table;
-                var x = (float)((double)table[1]);
-                var y = (float)((double)table[2]);
-                var z = (float)((double)table[3]);
-                var w = (float)((double)table[4]);
-                return new Vector4(x, y, z, w);
-            }
+            TableToVector4
         );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
@@ -534,15 +489,7 @@ public class ModChartScript
         );
 
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Padding),
-            dynVal =>
-            {
-                var table = dynVal.Table;
-                var x = (int)((double)table[1]);
-                var y = (int)((double)table[2]);
-                var z = (int)((double)table[3]);
-                var w = (int)((double)table[4]);
-                return new Padding(x, y, z, w);
-            }
+            TableToPadding
         );
 
         Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Padding>(
@@ -556,5 +503,71 @@ public class ModChartScript
                 return dynVal;
             }
         );
+    }
+
+    private object TableToPadding(DynValue dynVal)
+    {
+        var table = dynVal.Table;
+        var x = (int)((double)table[1]);
+        var y = (int)((double)table[2]);
+        var z = (int)((double)table[3]);
+        var w = (int)((double)table[4]);
+        return new Padding(x, y, z, w);
+    }
+
+    private object TableToVector4(DynValue dynVal)
+    {
+        var table = dynVal.Table;
+        var x = (float)((double)table[1]);
+        var y = (float)((double)table[2]);
+        var z = (float)((double)table[3]);
+        var w = (float)((double)table[4]);
+        return new Vector4(x, y, z, w);
+    }
+
+    private object TableToColor(DynValue dynVal)
+    {
+        var table = dynVal.Table;
+        var r = (byte)(double)table[1];
+        var g = (byte)(double)table[2];
+        var b = (byte)(double)table[3];
+        var a = (byte)(double)table[4];
+        return new Color(r, g, b, a);
+    }
+
+    private object TableToVector3(DynValue dynVal)
+    {
+        var table = dynVal.Table;
+        var x = (float)((double)table[1]);
+        var y = (float)((double)table[2]);
+        var z = (float)((double)table[3]);
+        return new Vector3(x, y, z);
+    }
+
+    private object TableToScalableVector2(DynValue dynVal)
+    {
+        var table = dynVal.Table;
+        var x = (float)(double)table[1];
+        var y = (float)(double)table[2];
+        if (table.Length != 4) return new ScalableVector2(x, y);
+        var sx = (float)(double)table[3];
+        var sy = (float)(double)table[4];
+        return new ScalableVector2(x, y, sx, sy);
+    }
+
+    private object TableToXnaVector2(DynValue dynVal)
+    {
+        var table = dynVal.Table;
+        var x = (float)(double)table[1];
+        var y = (float)(double)table[2];
+        return new XnaVector2(x, y);
+    }
+
+    private object TableToVector2(DynValue dynVal)
+    {
+        var table = dynVal.Table;
+        var x = (float)(double)table[1];
+        var y = (float)(double)table[2];
+        return new Vector2(x, y);
     }
 }

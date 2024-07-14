@@ -1,7 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
+using Wobble.Graphics.Animations;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 
@@ -17,10 +19,14 @@ public class ModChartPropertyInt : ModChartProperty<int>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected override int Add(int left, int right)
+    public override int Add(int left, int right)
     {
         return left + right;
     }
 
-    protected override SetterDelegate<int> SetterDelegate => TweenSetters.CreateInt(Setter);
+    public override int Multiply(int left, float right) => (int)(left * right);
+    public override int RandomUnit() => RandomHelper.RandomBinary() * 2 - 1;
+
+    public override LerpDelegate<int> Lerp =>
+        (start, end, progress) => (int)EasingFunctions.Linear(start, end, progress);
 }

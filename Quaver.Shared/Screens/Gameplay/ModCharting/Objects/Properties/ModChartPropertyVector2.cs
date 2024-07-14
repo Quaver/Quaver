@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
@@ -16,10 +17,20 @@ public class ModChartPropertyVector2 : ModChartProperty<Vector2>
     {
     }
 
-    protected override Vector2 Add(Vector2 left, Vector2 right)
+    public override Vector2 Add(Vector2 left, Vector2 right)
     {
         return left + right;
     }
 
-    protected override SetterDelegate<Vector2> SetterDelegate => TweenSetters.CreateVector2(Setter);
+    public override Vector2 Multiply(Vector2 left, float right) => left * right;
+
+    public override Vector2 RandomUnit()
+    {
+        var x = RandomHelper.RandomGauss();
+        var y = RandomHelper.RandomGauss();
+        var magnitude = MathF.Sqrt(x * x + y * y);
+        return new Vector2(x / magnitude, y / magnitude);
+    }
+
+    public override LerpDelegate<Vector2> Lerp => Vector2.Lerp;
 }

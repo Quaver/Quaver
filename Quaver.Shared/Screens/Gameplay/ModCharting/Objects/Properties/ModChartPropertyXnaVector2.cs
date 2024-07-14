@@ -1,5 +1,6 @@
 using System;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using XnaVector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -16,10 +17,13 @@ public class ModChartPropertyXnaVector2 : ModChartProperty<XnaVector2>
     {
     }
 
-    protected override XnaVector2 Add(XnaVector2 left, XnaVector2 right)
+    public override XnaVector2 Add(XnaVector2 left, XnaVector2 right)
     {
         return left + right;
     }
 
-    protected override SetterDelegate<XnaVector2> SetterDelegate => TweenSetters.CreateXnaVector2(Setter);
+    public override XnaVector2 Multiply(XnaVector2 left, float right) => left * right;
+    public override XnaVector2 RandomUnit() => RandomHelper.RandomUnitXnaVector2();
+
+    public override LerpDelegate<XnaVector2> Lerp => XnaVector2.Lerp;
 }

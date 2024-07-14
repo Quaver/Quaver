@@ -1,23 +1,24 @@
 using System;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
 [MoonSharpUserData]
-public class KeyframesPayload<T> : ISegmentPayload
+public class KeyframesPayload<T> : PropertySegmentPayload<T>
 {
     public Keyframe<T>[] Keyframes { get; }
 
-    public SetterDelegate<T> Setter { get; }
-
     private int _currentKeyframeIndex;
+
     public readonly double RelativeLength;
 
 
-    public KeyframesPayload(SetterDelegate<T> setter, Keyframe<T>[] keyframes)
+    public KeyframesPayload(ModChartProperty<T> property, Keyframe<T>[] keyframes)
     {
         Keyframes = keyframes;
+        Property = property;
         Array.Sort(Keyframes, Keyframe<T>.TimeComparer);
         if (Keyframes.Length < 2 || Keyframes[0].Time != 0)
         {
@@ -26,10 +27,9 @@ public class KeyframesPayload<T> : ISegmentPayload
         }
 
         RelativeLength = Keyframes[^1].Time;
-        Setter = setter;
     }
 
-    public void Update(float progress, Segment segment)
+    public override void Update(float progress, Segment segment)
     {
         if (Keyframes.Length < 1)
             return;
@@ -43,14 +43,18 @@ public class KeyframesPayload<T> : ISegmentPayload
             _currentKeyframeIndex--;
 
         var currentKeyFrame = Keyframes[_currentKeyframeIndex];
+        T lerpedValue;
         if (_currentKeyframeIndex == Keyframes.Length - 1)
         {
-            Setter(currentKeyFrame.Value, currentKeyFrame.Value, 1);
+            lerpedValue = Property.Lerp(currentKeyFrame.Value, currentKeyFrame.Value, 1);
         }
         else
         {
             var nextKeyframe = Keyframes[_currentKeyframeIndex + 1];
-            Setter(currentKeyFrame.Value, nextKeyframe.Value, currentKeyFrame.GetProgress(nextKeyframe, time));
+            lerpedValue = Property.Lerp(currentKeyFrame.Value, nextKeyframe.Value,
+                currentKeyFrame.GetProgress(nextKeyframe, time));
         }
+
+        Property.Value = progress is 0 or 1 ? lerpedValue : Transform(lerpedValue, progress);
     }
 }

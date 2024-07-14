@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
@@ -9,11 +10,15 @@ namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
 public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected abstract T Add(T left, T right);
+    public abstract T Add(T left, T right);
 
-    protected abstract SetterDelegate<T> SetterDelegate { get; }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public abstract T Multiply(T left, float right);
 
-    public TweenPayload<T> Tween(T start, T end) => Tween(start, end, EasingWrapperFunctions.Linear);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public abstract T RandomUnit();
+
+    public abstract LerpDelegate<T> Lerp { get; }
 
     /// <summary>
     ///     Tweens the property from <see cref="start"/> to <see cref="end"/>
@@ -22,15 +27,12 @@ public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
     /// <param name="end"></param>
     /// <param name="easingDelegate"></param>
     /// <returns></returns>
-    public TweenPayload<T> Tween(T start, T end, EasingDelegate easingDelegate) => new()
+    public ISegmentPayload Tween(T start, T end, EasingDelegate easingDelegate = null) => new TweenPayload<T>(this)
     {
         StartValue = start,
         EndValue = end,
-        EasingFunction = easingDelegate,
-        Setter = SetterDelegate
+        EasingFunction = easingDelegate ?? EasingWrapperFunctions.Linear
     };
-
-    public TweenPayload<T> Tween(T end) => Tween(Getter(), end, EasingWrapperFunctions.Linear);
 
     /// <summary>
     ///     Tweens the property from current value to <see cref="end"/> 
@@ -38,9 +40,11 @@ public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
     /// <param name="end"></param>
     /// <param name="easingDelegate"></param>
     /// <returns></returns>
-    public TweenPayload<T> Tween(T end, EasingDelegate easingDelegate) => Tween(Getter(), end, easingDelegate);
-
-    public TweenPayload<T> TweenAdd(T increment) => TweenAdd(increment, EasingWrapperFunctions.Linear);
+    public TweenTowardsPayload<T> Tween(T end, EasingDelegate easingDelegate = null) => new(this)
+    {
+        EndValue = end,
+        EasingFunction = easingDelegate ?? EasingWrapperFunctions.Linear
+    };
 
     /// <summary>
     ///     Tweens the property from current value to current value + <see cref="increment"/>
@@ -48,13 +52,10 @@ public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
     /// <param name="increment"></param>
     /// <param name="easingDelegate"></param>
     /// <returns></returns>
-    public TweenPayload<T> TweenAdd(T increment, EasingDelegate easingDelegate)
+    public TweenAddPayload<T> TweenAdd(T increment, EasingDelegate easingDelegate = null) => new(this, increment)
     {
-        var startValue = Getter();
-        return Tween(startValue, Add(startValue, increment), easingDelegate);
-    }
-
-    public TweenPayload<T> TweenSwap(ModChartProperty<T> other) => TweenSwap(other, EasingWrapperFunctions.Linear);
+        EasingFunction = easingDelegate ?? EasingWrapperFunctions.Linear
+    };
 
     /// <summary>
     ///     Tween the two properties towards each other.
@@ -63,20 +64,66 @@ public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
     /// <param name="other"></param>
     /// <param name="easingDelegate"></param>
     /// <returns></returns>
-    public TweenPayload<T> TweenSwap(ModChartProperty<T> other, EasingDelegate easingDelegate) => new()
+    public TweenSwapPayload<T> TweenSwap(ModChartProperty<T> other, EasingDelegate easingDelegate) => new(this, other)
     {
-        StartValue = Getter(),
-        EndValue = other.Getter(),
-        EasingFunction = easingDelegate,
-        Setter = TweenSetters.CreateSwap(SetterDelegate, other.SetterDelegate)
+        EasingFunction = easingDelegate ?? EasingWrapperFunctions.Linear
     };
+
+    #region Vibrate
+
+    /// <summary>
+    /// </summary>
+    /// <param name="strength"></param>
+    /// <returns></returns>
+    public ISegmentPayload VibrateCirc(ModChartPropertyFloat strength) =>
+        new TweenIdlePayload<T>(this).WithVibrateCirc(strength);
+
+    /// <summary>
+    /// </summary>
+    /// <param name="strength"></param>
+    /// <returns></returns>
+    public ISegmentPayload VibrateCirc(float strength) =>
+        new TweenIdlePayload<T>(this).WithVibrateCirc(strength);
+
+    /// <summary>
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public ISegmentPayload VibrateRandom(T direction) =>
+        new TweenIdlePayload<T>(this).WithVibrateRandom(direction);
+
+    /// <summary>
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public ISegmentPayload VibrateRandom(ModChartProperty<T> direction) =>
+        new TweenIdlePayload<T>(this).WithVibrateRandom(direction);
+
+    /// <summary>
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="cycles"></param>
+    /// <returns></returns>
+    public ISegmentPayload Vibrate(T direction, int cycles) =>
+        new TweenIdlePayload<T>(this).WithVibrate(direction, cycles);
+
+    /// <summary>
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="cycles"></param>
+    /// <returns></returns>
+    public ISegmentPayload Vibrate(ModChartGeneralProperty<T> direction, int cycles) =>
+        new TweenIdlePayload<T>(this).WithVibrate(direction, cycles);
+
+    #endregion
+
 
     /// <summary>
     ///     Generates a keyframes payload
     /// </summary>
     /// <param name="keyframes"></param>
     /// <returns></returns>
-    public KeyframesPayload<T> Keyframes(Keyframe<T>[] keyframes) => new(SetterDelegate, keyframes);
+    public KeyframesPayload<T> Keyframes(Keyframe<T>[] keyframes) => new(this, keyframes);
 
     protected ModChartProperty(Func<T> getter, Action<T> setter) : base(getter, setter)
     {

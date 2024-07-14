@@ -101,7 +101,11 @@ public class SegmentManager : IValueChangeManager
         {
             _activeSegments.Remove(vertex.Id);
             progress = leaveProgress;
+            if (leaveProgress == 1)
+                segment.Payload.OnLeave(segment);
         }
+        else if (enterProgress == 0)
+            segment.Payload.OnEnter(segment);
 
         vertex.Payload.Update(progress, segment);
     }

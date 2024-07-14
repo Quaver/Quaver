@@ -24,94 +24,44 @@ public class TweenSetters
         Shortcut = shortcut;
     }
 
-    public static SetterDelegate<T> CreateSwap<T>(SetterDelegate<T> a, SetterDelegate<T> b)
+    public static Action<int> CreateInt(Closure action)
     {
-        return (startValue, endValue, progress) =>
-        {
-            a(startValue, endValue, progress);
-            b(endValue, startValue, progress);
-        };
+        return value => action?.SafeCall(value).ToObject<int>();
     }
 
-    public static SetterDelegate<int> CreateInt(Action<int> action)
+    public static Action<float> CreateFloat(Closure action)
     {
-        return (startValue, endValue, progress) => action((int)EasingFunctions.Linear(startValue, endValue, progress));
+        return value =>
+            action?.SafeCall(value).ToObject<float>();
     }
 
-    public static SetterDelegate<int> CreateInt(Closure action)
+    public static Action<Vector2> CreateVector2(Closure action)
     {
-        return (startValue, endValue, progress) =>
-            action?.SafeCall(EasingFunctions.Linear(startValue, endValue, progress));
+        return value => action?.SafeCall(value).ToObject<Vector2>();
     }
 
-    public static SetterDelegate<float> CreateFloat(Action<float> action)
+    public static Action<XnaVector2> CreateXnaVector2(Closure action)
     {
-        return (startValue, endValue, progress) => action(EasingFunctions.Linear(startValue, endValue, progress));
+        return value => action?.SafeCall(value).ToObject<XnaVector2>();
     }
 
-    public static SetterDelegate<float> CreateFloat(Closure action)
+    public static Action<ScalableVector2> CreateScalableVector2(Closure action)
     {
-        return (startValue, endValue, progress) =>
-            action?.SafeCall(EasingFunctions.Linear(startValue, endValue, progress));
+        return value => action?.SafeCall(value).ToObject<ScalableVector2>();
     }
 
-    public static SetterDelegate<Vector2> CreateVector2(Action<Vector2> action)
+    public static Action<Vector3> CreateVector3(Closure action)
     {
-        return (startValue, endValue, progress) => action(Vector2.Lerp(startValue, endValue, progress));
+        return value => action?.SafeCall(value).ToObject<Vector3>();
     }
 
-    public static SetterDelegate<Vector2> CreateVector2(Closure action)
+    public static Action<Color> CreateColor(Closure action)
     {
-        return (startValue, endValue, progress) => action?.SafeCall(Vector2.Lerp(startValue, endValue, progress));
+        return value => action?.SafeCall(value).ToObject<Color>();
     }
 
-    public static SetterDelegate<XnaVector2> CreateXnaVector2(Action<XnaVector2> action)
+    public static Action<Vector4> CreateVector4(Closure action)
     {
-        return (startValue, endValue, progress) => action(XnaVector2.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<XnaVector2> CreateXnaVector2(Closure action)
-    {
-        return (startValue, endValue, progress) => action?.SafeCall(XnaVector2.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<ScalableVector2> CreateScalableVector2(Action<ScalableVector2> action)
-    {
-        return (startValue, endValue, progress) => action(ScalableVector2.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<ScalableVector2> CreateScalableVector2(Closure action)
-    {
-        return (startValue, endValue, progress) => action?.SafeCall(ScalableVector2.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<Vector3> CreateVector3(Action<Vector3> action)
-    {
-        return (startValue, endValue, progress) => action(Vector3.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<Vector3> CreateVector3(Closure action)
-    {
-        return (startValue, endValue, progress) => action?.SafeCall(Vector3.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<Color> CreateColor(Action<Color> action)
-    {
-        return (startValue, endValue, progress) => action(Color.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<Color> CreateColor(Closure action)
-    {
-        return (startValue, endValue, progress) => action?.SafeCall(Color.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<Vector4> CreateVector4(Action<Vector4> action)
-    {
-        return (startValue, endValue, progress) => action(Vector4.Lerp(startValue, endValue, progress));
-    }
-
-    public static SetterDelegate<Vector4> CreateVector4(Closure action)
-    {
-        return (startValue, endValue, progress) => action?.SafeCall(Vector4.Lerp(startValue, endValue, progress));
+        return value => action?.SafeCall(value).ToObject<Vector4>();
     }
 }

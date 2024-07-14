@@ -1,8 +1,7 @@
 using System;
-using System.Numerics;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 
 namespace Quaver.Shared.Screens.Gameplay.ModCharting.Objects.Properties;
@@ -18,33 +17,32 @@ public class ModChartPropertyColor : ModChartProperty<Color>
     {
     }
 
-    protected override Color Add(Color left, Color right)
+    public override Color Add(Color left, Color right)
     {
         return new Color(left.PackedValue + right.PackedValue);
     }
 
-    public TweenPayload<float> TweenRainbow(float saturation, float lightness, int cycles = 1,
-        EasingDelegate easingDelegate = default)
+    public override Color Multiply(Color left, float right) => left * right;
+
+    public override Color RandomUnit()
     {
-        var originalColor = Getter();
-        return new TweenPayload<float>
-        {
-            StartValue = 0,
-            EndValue = cycles,
-            EasingFunction = easingDelegate ?? EasingWrapperFunctions.Linear,
-            Setter = (_, _, progress) =>
-            {
-                var color = progress is > 0 and < 1
-                    ? ColorHelper.FromHsl(progress * cycles % 1f, saturation, lightness)
-                    : originalColor;
-                Setter(color);
-            }
-        };
+        var x = RandomHelper.RandomGauss();
+        var y = RandomHelper.RandomGauss();
+        var z = RandomHelper.RandomGauss();
+        var w = RandomHelper.RandomGauss();
+        var magnitude = MathF.Sqrt(x * x + y * y + z * z + w * w);
+        return new Color(x / magnitude, y / magnitude, z / magnitude, w / magnitude);
     }
 
-    public TweenPayload<float> TweenRainbow(int cycles = 1, EasingDelegate easingDelegate = default) => 
+    public TweenRainbowPayload TweenRainbow(float saturation, float lightness, int cycles = 1,
+        EasingDelegate easingDelegate = default) => new(this, cycles, saturation, lightness)
+    {
+        EasingFunction = easingDelegate ?? EasingWrapperFunctions.Linear
+    };
+
+    public TweenRainbowPayload TweenRainbow(int cycles = 1, EasingDelegate easingDelegate = default) =>
         TweenRainbow(1, 0.5f, cycles, easingDelegate ?? EasingWrapperFunctions.Linear);
 
 
-    protected override SetterDelegate<Color> SetterDelegate => TweenSetters.CreateColor(Setter);
+    public override LerpDelegate<Color> Lerp => Color.Lerp;
 }
