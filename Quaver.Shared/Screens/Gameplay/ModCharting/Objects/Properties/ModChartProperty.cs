@@ -13,12 +13,33 @@ public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
     public abstract T Add(T left, T right);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public abstract float Dot(T left, T right);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public abstract T Normalise(T left);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public abstract T Negative(T left);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T Subtract(T left, T right) => Add(left, Negative(right));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract T Multiply(T left, float right);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public abstract T RandomUnit();
 
     public abstract LerpDelegate<T> Lerp { get; }
+
+    public LerpDelegate<T> Slerp => (left, right, progress) =>
+    {
+        var angle = MathF.Acos(Dot(Normalise(left), Normalise(right)));
+        var sin = MathF.Sin(angle);
+        var sinComp = MathF.Sin((1 - progress) * angle);
+        var sint = MathF.Sin(progress * angle);
+        return Add(Multiply(left, sinComp / sin), Multiply(right, sint / sin));
+    };
 
     /// <summary>
     ///     Tweens the property from <see cref="start"/> to <see cref="end"/>
@@ -117,6 +138,12 @@ public abstract class ModChartProperty<T> : ModChartGeneralProperty<T>
 
     #endregion
 
+
+    public LerpDelegate<T> MakeSlerp(T origin)
+    {
+        return (startValue, endValue, progress) =>
+            Add(Slerp(Subtract(startValue, origin), Subtract(endValue, origin), progress), origin);
+    }
 
     /// <summary>
     ///     Generates a keyframes payload

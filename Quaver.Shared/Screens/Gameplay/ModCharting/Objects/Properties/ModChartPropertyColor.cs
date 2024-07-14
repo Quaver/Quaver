@@ -22,6 +22,21 @@ public class ModChartPropertyColor : ModChartProperty<Color>
         return new Color(left.PackedValue + right.PackedValue);
     }
 
+    public override float Dot(Color left, Color right)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Color Normalise(Color left)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Color Negative(Color left)
+    {
+        throw new NotImplementedException();
+    }
+
     public override Color Multiply(Color left, float right) => left * right;
 
     public override Color RandomUnit()

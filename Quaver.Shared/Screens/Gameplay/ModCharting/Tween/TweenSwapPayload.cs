@@ -21,8 +21,8 @@ public class TweenSwapPayload<T> : TweenPayload<T>
     {
         if (progress is < 0 or > 1) return;
         progress = EasingFunction(progress);
-        var lerpedValue1 = Property.Lerp(StartValue, EndValue, progress);
-        var lerpedValue2 = Property2.Lerp(EndValue, StartValue, progress);
+        var lerpedValue1 = Lerp(StartValue, EndValue, progress);
+        var lerpedValue2 = Lerp(EndValue, StartValue, progress);
         if (progress is 0 or 1)
         {
             lerpedValue1 = Transform(lerpedValue1, progress);

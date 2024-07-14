@@ -51,7 +51,7 @@ public class KeyframesPayload<T> : PropertySegmentPayload<T>
         else
         {
             var nextKeyframe = Keyframes[_currentKeyframeIndex + 1];
-            lerpedValue = Property.Lerp(currentKeyFrame.Value, nextKeyframe.Value,
+            lerpedValue = Lerp(currentKeyFrame.Value, nextKeyframe.Value,
                 currentKeyFrame.GetProgress(nextKeyframe, time));
         }
 

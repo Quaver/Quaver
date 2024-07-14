@@ -11,7 +11,15 @@ public abstract class PropertySegmentPayload<T> : ISegmentPayload
     /// <summary>
     ///     The property to vary
     /// </summary>
-    protected ModChartProperty<T> Property { get; init; }
+    protected ModChartProperty<T> Property
+    {
+        get => _property;
+        init
+        {
+            _property = value;
+            Lerp ??= value.Lerp;
+        }
+    }
 
     /// <summary>
     ///     The modifiers that are supposed to be applied to the property.
@@ -19,6 +27,22 @@ public abstract class PropertySegmentPayload<T> : ISegmentPayload
     ///     The implementor is obligated to use <see cref="Transform"/> to apply the modifiers first.
     /// </summary>
     private readonly List<ModifierDelegate<T>> modifiers = new();
+
+    private readonly ModChartProperty<T> _property;
+
+    protected LerpDelegate<T> Lerp { get; set; }
+
+    public ISegmentPayload Slerp()
+    {
+        Lerp = Property.Slerp;
+        return this;
+    }
+
+    public ISegmentPayload Slerp(T origin)
+    {
+        Lerp = Property.MakeSlerp(origin);
+        return this;
+    }
 
     /// <summary>
     ///     Aggregate applying modifiers to the lerped value 

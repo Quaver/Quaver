@@ -19,10 +19,13 @@ public class ModChartPropertyFloat : ModChartProperty<float>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override float Add(float left, float right)
-    {
-        return left + right;
-    }
+    public override float Add(float left, float right) => left + right;
+
+    public override float Dot(float left, float right) => left * right;
+
+    public override float Normalise(float left) => left;
+
+    public override float Negative(float left) => -left;
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

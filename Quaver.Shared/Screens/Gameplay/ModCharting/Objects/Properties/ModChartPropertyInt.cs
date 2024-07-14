@@ -19,10 +19,13 @@ public class ModChartPropertyInt : ModChartProperty<int>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override int Add(int left, int right)
-    {
-        return left + right;
-    }
+    public override int Add(int left, int right) => left + right;
+
+    public override float Dot(int left, int right) => left * right;
+
+    public override int Normalise(int left) => left;
+
+    public override int Negative(int left) => -left;
 
     public override int Multiply(int left, float right) => (int)(left * right);
     public override int RandomUnit() => RandomHelper.RandomBinary() * 2 - 1;

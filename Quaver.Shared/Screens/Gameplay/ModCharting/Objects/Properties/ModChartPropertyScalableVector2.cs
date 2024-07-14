@@ -24,6 +24,22 @@ public class ModChartPropertyScalableVector2 : ModChartProperty<ScalableVector2>
             left.X.Scale + right.X.Scale, left.Y.Scale + right.Y.Scale);
     }
 
+    public override float Dot(ScalableVector2 left, ScalableVector2 right)
+    {
+        return left.X.Value * right.X.Value + left.Y.Value * right.Y.Value;
+    }
+
+    public override ScalableVector2 Normalise(ScalableVector2 left)
+    {
+        var magnitude = MathF.Sqrt(left.X.Value * left.X.Value + left.Y.Value * left.Y.Value);
+        return new ScalableVector2(left.X.Value / magnitude, left.Y.Value / magnitude, left.X.Scale, left.Y.Scale);
+    }
+
+    public override ScalableVector2 Negative(ScalableVector2 left)
+    {
+        throw new NotImplementedException();
+    }
+
     public override ScalableVector2 Multiply(ScalableVector2 left, float right)
     {
         return new ScalableVector2(left.X.Value * right, left.Y.Value * right, left.X.Scale * right,

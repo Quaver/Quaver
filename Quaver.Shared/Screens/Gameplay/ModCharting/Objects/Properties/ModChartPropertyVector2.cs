@@ -17,10 +17,13 @@ public class ModChartPropertyVector2 : ModChartProperty<Vector2>
     {
     }
 
-    public override Vector2 Add(Vector2 left, Vector2 right)
-    {
-        return left + right;
-    }
+    public override Vector2 Add(Vector2 left, Vector2 right) => left + right;
+
+    public override float Dot(Vector2 left, Vector2 right) => Vector2.Dot(left, right);
+
+    public override Vector2 Normalise(Vector2 left) => Vector2.Normalize(left);
+
+    public override Vector2 Negative(Vector2 left) => -left;
 
     public override Vector2 Multiply(Vector2 left, float right) => left * right;
 
