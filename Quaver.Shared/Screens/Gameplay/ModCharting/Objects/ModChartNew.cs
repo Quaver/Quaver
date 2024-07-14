@@ -39,12 +39,31 @@ public class ModChartNew : ModChartGlobalVariable
     public ModChartGeneralProperty<DynValue> Property(Closure getter) => new(
         () => getter.SafeCall());
 
+    public ModChartGeneralProperty<DynValue> Property(DynValue value) => new(
+        () => value,
+        v => value = v);
+
+    public ModChartPropertyInt PropertyInt(Closure getter, Closure setter) => new(
+        () => getter.SafeCall().ToObject<int>(),
+        v => setter.SafeCall(v));
+
+    public ModChartPropertyInt PropertyInt(Closure getter) => new(
+        () => getter.SafeCall().ToObject<int>());
+
+    public ModChartPropertyInt PropertyInt(int value) => new(
+        () => value,
+        v => value = v);
+
     public ModChartPropertyFloat PropertyFloat(Closure getter, Closure setter) => new(
         () => getter.SafeCall().ToObject<float>(),
         v => setter.SafeCall(v));
 
     public ModChartPropertyFloat PropertyFloat(Closure getter) => new(
         () => getter.SafeCall().ToObject<float>());
+
+    public ModChartPropertyFloat PropertyFloat(float value) => new(
+        () => value,
+        v => value = v);
 
     public ModChartPropertyVector2 PropertyVector2(Closure getter, Closure setter) => new(
         () => getter.SafeCall().ToObject<Vector2>(),
@@ -53,12 +72,20 @@ public class ModChartNew : ModChartGlobalVariable
     public ModChartPropertyVector2 PropertyVector2(Closure getter) => new(
         () => getter.SafeCall().ToObject<Vector2>());
 
+    public ModChartPropertyVector2 PropertyVector2(Vector2 value) => new(
+        () => value,
+        v => value = v);
+
     public ModChartPropertyXnaVector2 PropertyXnaVector2(Closure getter, Closure setter) => new(
         () => getter.SafeCall().ToObject<XnaVector2>(),
         v => setter.SafeCall(v));
 
     public ModChartPropertyXnaVector2 PropertyXnaVector2(Closure getter) => new(
         () => getter.SafeCall().ToObject<XnaVector2>());
+
+    public ModChartPropertyXnaVector2 PropertyXnaVector2(XnaVector2 value) => new(
+        () => value,
+        v => value = v);
 
     public ModChartPropertyVector3 PropertyVector3(Closure getter, Closure setter) => new(
         () => getter.SafeCall().ToObject<Vector3>(),
@@ -67,6 +94,10 @@ public class ModChartNew : ModChartGlobalVariable
     public ModChartPropertyVector3 PropertyVector3(Closure getter) => new(
         () => getter.SafeCall().ToObject<Vector3>());
 
+    public ModChartPropertyVector3 PropertyVector3(Vector3 value) => new(
+        () => value,
+        v => value = v);
+
     public ModChartPropertyVector4 PropertyVector4(Closure getter, Closure setter) => new(
         () => getter.SafeCall().ToObject<Vector4>(),
         v => setter.SafeCall(v));
@@ -74,12 +105,20 @@ public class ModChartNew : ModChartGlobalVariable
     public ModChartPropertyVector4 PropertyVector4(Closure getter) => new(
         () => getter.SafeCall().ToObject<Vector4>());
 
+    public ModChartPropertyVector4 PropertyVector4(Vector4 value) => new(
+        () => value,
+        v => value = v);
+
     public ModChartPropertyColor PropertyColor(Closure getter, Closure setter) => new(
         () => getter.SafeCall().ToObject<Color>(),
         v => setter.SafeCall(v));
 
     public ModChartPropertyColor PropertyColor(Closure getter) => new(
         () => getter.SafeCall().ToObject<Color>());
+
+    public ModChartPropertyColor PropertyColor(Color value) => new(
+        () => value,
+        v => value = v);
 
 
     #endregion
