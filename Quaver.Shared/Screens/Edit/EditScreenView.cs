@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 previousCustomFps = ConfigManager.CustomFpsLimit.Value;
                 Container.ScheduleUpdate(() =>
-                    ConfigManager.CustomFpsLimit.Value = MaximumCustomFps
+                    ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, MaximumCustomFps)
                 );
             }
 
@@ -182,7 +182,7 @@ namespace Quaver.Shared.Screens.Edit
         public override void Destroy()
         {
             if (previousCustomFps != 0)
-                ConfigManager.CustomFpsLimit.Value = previousCustomFps;
+                ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, previousCustomFps);
 
             Container?.Destroy();
 
