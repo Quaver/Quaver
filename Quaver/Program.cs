@@ -51,7 +51,7 @@ namespace Quaver
             {
                 if(!mutex.WaitOne(0, false))
                 {
-                    Console.WriteLine("Quaver is already running");
+                    Logger.Error("Quaver is already running", LogType.Runtime);
 
                     // Send to running instance only if we have actual data to send
                     if (args.Length > 0)
@@ -156,7 +156,7 @@ namespace Quaver
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Logger.Error(e, LogType.Runtime);
             }
         }
 

@@ -18,6 +18,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
@@ -174,7 +175,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         {
             if (!MultiplayerLobbyFilterPanel.GameMeetsFilterRequirements(game, SearchQuery.Value))
             {
-                Console.WriteLine("Game didnt meet match requirements");
+                Logger.Important("Game didn't meet match requirements", LogType.Runtime);
                 return;
             }
 

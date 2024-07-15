@@ -600,8 +600,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
 
             // CTRL+ input while play testing
-            if (!IsSongSelectPreview && IsPlayTesting && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                                  KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsCtrlDown())
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.P))
                 {
@@ -1604,7 +1603,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (!InReplayMode)
                 {
                     inputManager.ReplayInputManager = null;
-                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
+                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
 
                     for (var i = 0; i < Map.GetKeyCount(); i++)
                     {
@@ -1626,8 +1625,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
             {
                 var change = 5;
-                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                    KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                if (KeyboardManager.IsCtrlDown())
                 {
                     change = 1;
                 }

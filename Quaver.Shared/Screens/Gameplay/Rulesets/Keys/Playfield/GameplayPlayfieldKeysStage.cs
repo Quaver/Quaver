@@ -177,11 +177,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             // Depending on what the skin.ini's value is, we'll want to either initialize
             // the receptors first, or the playfield first.
-            if (Skin.ReceptorsOverHitObjects)
+            if (ConfigManager.ReceptorsOverLaneCover.Value)
             {
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
                 CreateHitContainer();
+            }
+            else if (Skin.ReceptorsOverHitObjects)
+            {
+                CreateTimingLineContainer();
+                CreateHitObjectContainer();
+                CreateHitContainer();
+
                 CreateReceptorsAndLighting();
                 CreateHitPositionOverlay();
             }
@@ -189,6 +196,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 CreateReceptorsAndLighting();
                 CreateHitPositionOverlay();
+
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
                 CreateHitContainer();
@@ -201,6 +209,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             if (ConfigManager.UIElementsOverLaneCover.Value)
             {
                 CreateLaneCoverOverlay();
+                if (ConfigManager.ReceptorsOverLaneCover.Value)
+                {
+                    CreateReceptorsAndLighting();
+                    CreateHitPositionOverlay();
+                }
+
                 CreateComboDisplay();
                 CreateHitError();
                 CreateHitLighting();
@@ -212,7 +226,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     CreateBattleRoyaleAlert();
                     CreateBattleRoyaleEliminated();
                 }
-
 
                 CreateSongInfo();
             }
@@ -231,7 +244,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 }
 
                 CreateSongInfo();
+
                 CreateLaneCoverOverlay();
+                if (ConfigManager.ReceptorsOverLaneCover.Value)
+                {
+                    CreateReceptorsAndLighting();
+                    CreateHitPositionOverlay();
+                }
             }
 
             CreateHealthBar();
@@ -544,7 +563,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private void CreateJudgementHitBurst()
         {
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
-            JudgementHitBursts = new List<JudgementHitBurst>(); 
+            JudgementHitBursts = new List<JudgementHitBurst>();
 
             // Default the frames to miss.
             var frames = SkinManager.Skin.Judgements[Judgement.Miss];

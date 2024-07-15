@@ -1275,6 +1275,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (DialogManager.Dialogs.Count != 0 || IsUneditable)
                 return;
 
+            var view = (EditScreenView)ActionManager.EditScreen.View;
+            if (view.IsImGuiHovered)
+                return;
+
             if (!Button.IsHeld)
             {
                 // Create an action for the long note resizing when the user lets go
@@ -1371,7 +1375,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (Tool.Value != EditorCompositionTool.Select)
                 return;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (KeyboardManager.IsCtrlDown())
             {
                 if (SelectedHitObjects.Value.Contains(hoveredObject.Info))
                     SelectedHitObjects.Remove(hoveredObject.Info);
