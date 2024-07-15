@@ -373,9 +373,20 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
 
+        /// <summary>
+        ///     Whether to snap notes when livemapping
+        /// </summary>
         internal static Bindable<bool> EditorLiveMapSnap { get; private set; }
 
+        /// <summary>
+        ///     The offset applied to every hit objects placed by livemapping
+        /// </summary>
         internal static BindableInt EditorLiveMapOffset { get; private set; }
+
+        /// <summary>
+        ///     Whether long notes can be placed when live mapping
+        /// </summary>
+        internal static Bindable<bool> EditorLiveMapLongNote { get; private set; }
 
         /// <summary>
         ///     Whether or not to play hitsounds in the editor.
@@ -1100,6 +1111,7 @@ namespace Quaver.Shared.Config
             InvertEditorScrolling = ReadValue(@"InvertEditorScrolling", true, data);
             EditorLiveMapSnap = ReadValue(@"EditorLiveMapSnap", false, data);
             EditorLiveMapOffset = ReadInt(@"EditorLiveMapOffset", 0, -200, 200, data);
+            EditorLiveMapLongNote = ReadValue(@"EditorLiveMapLongNote", true, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);

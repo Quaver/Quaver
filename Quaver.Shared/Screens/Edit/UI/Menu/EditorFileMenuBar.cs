@@ -527,6 +527,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
 
+            if (ImGui.MenuItem("Place Long Notes When Live Mapping", "", ConfigManager.EditorLiveMapLongNote.Value))
+                ConfigManager.EditorLiveMapLongNote.Value = !ConfigManager.EditorLiveMapLongNote.Value;
+
             if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
                 Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
 

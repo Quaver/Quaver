@@ -880,6 +880,7 @@ namespace Quaver.Shared.Screens.Edit
 
             DeleteSelectedObjects();
         }
+
         /// <summary>
         ///     Places a note if a note at the current editor time and the given number key
         ///     lane doesn't exist, otherwise removes all instances of notes at that time and lane
@@ -887,6 +888,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
+            const float minimumLongNoteLength = 100;
             if (!LiveMapping.Value)
                 return;
             if (KeyboardManager.IsAltDown()) return; // Swapping lanes, not placing objects
@@ -928,9 +930,10 @@ namespace Quaver.Shared.Screens.Edit
                     else
                         heldLivemapHitObjectInfos[i] = ActionManager.PlaceHitObject(lane, time, 0, layer);
                 }
-                else if (heldLivemapHitObjectInfos[i] != null)
+                else if (heldLivemapHitObjectInfos[i] != null && ConfigManager.EditorLiveMapLongNote.Value)
                 {
-                    ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[i], heldLivemapHitObjectInfos[i].EndTime, time);
+                    if (time - heldLivemapHitObjectInfos[i].StartTime > minimumLongNoteLength)
+                        ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[i], heldLivemapHitObjectInfos[i].EndTime, time);
                 }
             }
         }
