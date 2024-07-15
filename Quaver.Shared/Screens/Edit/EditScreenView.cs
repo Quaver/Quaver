@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -91,12 +92,33 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public bool IsImGuiHovered { get; private set; }
 
+        /// <summary>
+        ///     Maximum allowed custom FPS in editor
+        /// </summary>
+        private const int MaximumCustomFps = 500;
+
+        /// <summary>
+        ///     If the fps is capped, the previous custom fps value.
+        ///     Otherwise, it will be 0
+        ///     When the screen is destroyed, the FPS cap should return to <see cref="previousCustomFps"/>
+        /// </summary>
+        private int previousCustomFps;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public EditScreenView(Screen screen) : base(screen)
         {
+            if (ConfigManager.FpsLimiterType.Value == FpsLimitType.Custom &&
+                ConfigManager.CustomFpsLimit.Value > MaximumCustomFps)
+            {
+                previousCustomFps = ConfigManager.CustomFpsLimit.Value;
+                Container.ScheduleUpdate(() =>
+                    ConfigManager.CustomFpsLimit.Value = MaximumCustomFps
+                );
+            }
+
             CreateBackground();
             CreatePlayfield();
             CreateFooter();
@@ -159,6 +181,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override void Destroy()
         {
+            if (previousCustomFps != 0)
+                ConfigManager.CustomFpsLimit.Value = previousCustomFps;
+
             Container?.Destroy();
 
             // ReSharper disable twice DelegateSubtraction
