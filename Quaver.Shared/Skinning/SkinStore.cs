@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using IniFileParser;
@@ -111,6 +112,11 @@ namespace Quaver.Shared.Skinning
         ///     Whether the cursor should be centered.
         /// </summary>
         internal bool CenterCursor { get; private set; }
+
+        /// <summary>
+        ///     Whether the skin uses its own backgrounds.
+        /// </summary>
+        internal bool UseSkinBackgrounds { get; private set; }
 
         /// <summary>
         ///     Grade Textures.
@@ -253,6 +259,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D BattleRoyaleWarning { get; private set; }
 
         /// <summary>
+        ///     Backgrounds for the skin. Only loaded if UseSkinBackgrounds is true.
+        /// </summary>
+        internal List<string> BackgroundPaths { get; private set; }
+
+        /// <summary>
         ///     Sound effect elements.
         /// </summary>
         internal AudioSample SoundHit { get; private set; }
@@ -324,6 +335,7 @@ namespace Quaver.Shared.Skinning
                 Author = ConfigHelper.ReadString(Author, Config["General"]["Author"]);
                 Version = ConfigHelper.ReadString(Version, Config["General"]["Version"]);
                 CenterCursor = ConfigHelper.ReadBool(false, Config["General"]["CenterCursor"]);
+                UseSkinBackgrounds = ConfigHelper.ReadBool(false, Config["General"]["UseSkinBackgrounds"]);
             }
             catch (Exception e)
             {
@@ -348,6 +360,7 @@ namespace Quaver.Shared.Skinning
             LoadSkip();
             LoadComboAlert();
             LoadMultiplayerElements();
+            LoadBackgrounds();
             LoadSoundEffects();
         }
 
@@ -363,11 +376,11 @@ namespace Quaver.Shared.Skinning
 
             try
             {
-                return File.Exists(path)
-                    ? AssetLoader.LoadTexture2DFromFile(path)
-                    : AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get(resource));
+                return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) :
+                    GameBase.Game.Resources.Get(resource) is { } buffer ? AssetLoader.LoadTexture2D(buffer) :
+                    UserInterface.BlankBox;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Logger.Warning($"Failed to load: {resource}. Using default!", LogType.Runtime, false);
                 return UserInterface.BlankBox;
@@ -643,6 +656,32 @@ namespace Quaver.Shared.Skinning
             const string battleRoyaleWarning = "warning";
             BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
                 ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
+        }
+
+        private void LoadBackgrounds()
+        {
+            if (!UseSkinBackgrounds)
+                return;
+
+            var backgroundFolder = $"{Dir}/Backgrounds/";
+            const string background = "background";
+
+            BackgroundPaths = new List<string>();
+
+            string[] validExtensions = { ".png", ".jpg", ".jpeg" };
+            var files = Directory.GetFiles(backgroundFolder);
+
+            foreach (var f in files)
+            {
+                if (!validExtensions.Contains(Path.GetExtension(f).ToLower()))
+                    continue;
+
+                var metadata = SixLabors.ImageSharp.Image.Identify(f);
+                if (metadata.Width > 2560 || metadata.Height > 1440)
+                    continue;
+
+                BackgroundPaths.Add(f);
+            }
         }
 
         /// <summary>

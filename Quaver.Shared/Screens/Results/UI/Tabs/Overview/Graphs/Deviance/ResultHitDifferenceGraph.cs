@@ -276,10 +276,7 @@ namespace Quaver.Shared.Screens.Result.UI
         private void CreateMissLines()
         {
             foreach (var miss in Processor.Stats.FindAll(s => s.Judgement == Judgement.Miss))
-            {
-                Console.WriteLine(miss);
-                // ReSharper disable once ObjectCreationAsStatement
-                new Sprite
+                _ = new Sprite
                 {
                     Parent = this,
                     Alpha = 0.35f,
@@ -289,7 +286,6 @@ namespace Quaver.Shared.Screens.Result.UI
                     Y = 0,
                     Size = new ScalableVector2(MissLineWidth, Height)
                 };
-            }
         }
 
         /// <summary>

@@ -141,26 +141,33 @@ namespace Quaver.Shared.Graphics.Backgrounds
 
                 var oldRawTexture = RawTexture;
 
-                var path = MapManager.GetBackgroundPath(map);
+                string path;
+                if (SkinManager.Skin != null && SkinManager.Skin.UseSkinBackgrounds && SkinManager.Skin.BackgroundPaths.Count != 0)
+                {
+                    // string.GetHashCode() is not consistent across builds
+                    var hash = map.Md5Checksum.Aggregate(0, (hash, c) => (hash << 5) - hash + c);
+
+                    path = SkinManager.Skin.BackgroundPaths[Math.Abs(hash) % SkinManager.Skin.BackgroundPaths.Count];
+                }
+                else
+                {
+                    path = MapManager.GetBackgroundPath(map);
+                }
 
                 var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackgroundRaw;
                 RawTexture = tex;
 
-                ThreadScheduler.RunAfter(() =>
-                {
-                    lock (TextureManager.Textures)
-                    {
-                        if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
-                        {
-                            oldRawTexture?.Dispose();
-                        }
-                    }
-                }, 500);
-
                 token.ThrowIfCancellationRequested();
 
-                await Task.Delay(100, token);
                 Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
+
+                lock (TextureManager.Textures)
+                {
+                    if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                    {
+                        oldRawTexture?.Dispose();
+                    }
+                }
             }
             catch (OperationCanceledException e)
             {
