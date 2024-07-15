@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     To push any default styling for plugin windows
         /// </summary>
-        private void PushDefaultStyles()
+        private static void PushDefaultStyles()
         {
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
         }
