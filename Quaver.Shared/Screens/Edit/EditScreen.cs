@@ -288,6 +288,12 @@ namespace Quaver.Shared.Screens.Edit
         private double TimeSinceLastPlayfieldZoom { get; set; }
 
         /// <summary>
+        ///     Hit objects that are just placed by livemapping and wasn't let go yet.
+        ///     This is used so as long as livemapping keybinds are held, the note will get resized.
+        /// </summary>
+        private HitObjectInfo[] heldLivemapHitObjectInfos;
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -298,6 +304,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 OriginalQua = map.LoadQua();
                 WorkingMap = OriginalQua.DeepClone();
+                heldLivemapHitObjectInfos = new HitObjectInfo[WorkingMap.GetKeyCount()];
             }
             catch (Exception e)
             {
@@ -873,7 +880,6 @@ namespace Quaver.Shared.Screens.Edit
 
             DeleteSelectedObjects();
         }
-
         /// <summary>
         ///     Places a note if a note at the current editor time and the given number key
         ///     lane doesn't exist, otherwise removes all instances of notes at that time and lane
@@ -887,7 +893,13 @@ namespace Quaver.Shared.Screens.Edit
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
-                if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                var key = Keys.D1 + i;
+                if (KeyboardManager.IsUniqueKeyRelease(key))
+                {
+                    heldLivemapHitObjectInfos[i] = null;
+                }
+
+                if (!KeyboardManager.CurrentState.IsKeyDown(key))
                     continue;
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
@@ -902,16 +914,24 @@ namespace Quaver.Shared.Screens.Edit
 
                 var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
 
-                // Can be multiple if overlap
-                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
-
-                if (hitObjectsAtTime.Count > 0)
+                if (KeyboardManager.IsUniqueKeyPress(key))
                 {
-                    foreach (var note in hitObjectsAtTime)
-                        ActionManager.RemoveHitObject(note);
+                    // Can be multiple if overlap
+                    var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time)
+                        .ToList();
+
+                    if (hitObjectsAtTime.Count > 0)
+                    {
+                        foreach (var note in hitObjectsAtTime)
+                            ActionManager.RemoveHitObject(note);
+                    }
+                    else
+                        heldLivemapHitObjectInfos[i] = ActionManager.PlaceHitObject(lane, time, 0, layer);
                 }
-                else
-                    ActionManager.PlaceHitObject(lane, time, 0, layer);
+                else if (heldLivemapHitObjectInfos[i] != null)
+                {
+                    ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[i], heldLivemapHitObjectInfos[i].EndTime, time);
+                }
             }
         }
 
