@@ -387,6 +387,11 @@ namespace Quaver.Shared.Config
         ///     Whether long notes can be placed when live mapping
         /// </summary>
         internal static Bindable<bool> EditorLiveMapLongNote { get; private set; }
+        
+        /// <summary>
+        ///     Minimum time needed to press the key to place a long note when live mapping
+        /// </summary>
+        internal static BindableInt EditorLiveMapLongNoteThreshold { get; private set; }
 
         /// <summary>
         ///     Whether or not to play hitsounds in the editor.
@@ -1112,6 +1117,7 @@ namespace Quaver.Shared.Config
             EditorLiveMapSnap = ReadValue(@"EditorLiveMapSnap", false, data);
             EditorLiveMapOffset = ReadInt(@"EditorLiveMapOffset", 0, -200, 200, data);
             EditorLiveMapLongNote = ReadValue(@"EditorLiveMapLongNote", true, data);
+            EditorLiveMapLongNoteThreshold = ReadInt(@"EditorLiveMapLongNoteThreshold", 100, 0, 1000, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);

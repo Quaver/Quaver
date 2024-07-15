@@ -888,7 +888,6 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
-            const float minimumLongNoteLength = 100;
             if (!LiveMapping.Value)
                 return;
             if (KeyboardManager.IsAltDown()) return; // Swapping lanes, not placing objects
@@ -932,7 +931,7 @@ namespace Quaver.Shared.Screens.Edit
                 }
                 else if (heldLivemapHitObjectInfos[i] != null && ConfigManager.EditorLiveMapLongNote.Value)
                 {
-                    if (time - heldLivemapHitObjectInfos[i].StartTime > minimumLongNoteLength)
+                    if (time - heldLivemapHitObjectInfos[i].StartTime > ConfigManager.EditorLiveMapLongNoteThreshold.Value)
                         ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[i], heldLivemapHitObjectInfos[i].EndTime, time);
                 }
             }
