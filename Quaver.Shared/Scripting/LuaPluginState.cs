@@ -13,7 +13,7 @@ namespace Quaver.Shared.Scripting
         public double DeltaTime { get; set; }
 
         /// <summary>
-        ///     Unix timestmap of the current time
+        ///     Unix timestamp of the current time
         /// </summary>
         public long UnixTime { get; set; }
 
