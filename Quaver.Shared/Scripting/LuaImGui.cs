@@ -180,7 +180,7 @@ namespace Quaver.Shared.Scripting
                 IsFirstDrawCall = false;
 
                 if (CallUserDefinedFunction("awake") is { } awakeException)
-                    HandleLuaException(awakeException);
+                    HandleLuaException(awakeException, true);
             }
 
             if (CallUserDefinedFunction("draw") is { } drawException)
@@ -521,7 +521,7 @@ namespace Quaver.Shared.Scripting
             }
             catch (Exception e)
             {
-                HandleLuaException(e);
+                HandleLuaException(e, true);
             }
 
             IsFirstDrawCall = true;
@@ -583,12 +583,14 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Handles an exception that comes from the lua interpreter.
         /// </summary>
-        private void HandleLuaException(Exception e)
+        /// <param name="e">The exception.</param>
+        /// <param name="showAlways">Whether to show the notification unconditionally.</param>
+        private void HandleLuaException(Exception e, bool showAlways = false)
         {
             LastException = DateTime.Now;
             var message = FormatException(e);
 
-            if (message == LastErrorMessage)
+            if (!showAlways && message == LastErrorMessage)
                 return;
 
             LastErrorMessage = message;
