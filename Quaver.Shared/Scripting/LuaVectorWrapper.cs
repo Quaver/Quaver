@@ -286,10 +286,10 @@ namespace Quaver.Shared.Scripting
         static IFormattable CoerceToVectorOrFloat(DynValue value) =>
             value.TryCoerceToFloat() ??
             (value.Type is DataType.UserData ? value.UserData.Object as IFormattable :
-                value.Type is not DataType.Table || value.TryCoerceToFloat(0, "X", "x") is not { } x ? Vector2.Zero :
-                value.TryCoerceToFloat(1, "Y", "y") is not { } y ? new Vector2(x, 0) :
-                value.TryCoerceToFloat(2, "Z", "z") is not { } z ? new Vector2(x, y) :
-                value.TryCoerceToFloat(3, "W", "w") is not { } w ? new Vector3(x, y, z) :
+                value.Type is not DataType.Table || value.TryCoerceToFloat(1, "X", "x") is not { } x ? Vector2.Zero :
+                value.TryCoerceToFloat(2, "Y", "y") is not { } y ? new Vector2(x, 0) :
+                value.TryCoerceToFloat(3, "Z", "z") is not { } z ? new Vector2(x, y) :
+                value.TryCoerceToFloat(4, "W", "w") is not { } w ? new Vector3(x, y, z) :
                 new Vector4(x, y, z, w));
 
         static InvalidOperationException Unreachable(params DynValue[] value) =>
