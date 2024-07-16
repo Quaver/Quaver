@@ -327,7 +327,7 @@ namespace Quaver.Shared.Screens.Downloading
         {
             var state = KeyboardManager.CurrentState;
 
-            if (state.IsKeyUp(Keys.LeftControl) && state.IsKeyUp(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.P))

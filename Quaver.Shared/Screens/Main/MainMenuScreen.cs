@@ -148,7 +148,7 @@ namespace Quaver.Shared.Screens.Main
         ///	</summary>
         private void HandleKeyPressF5()
         {
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))

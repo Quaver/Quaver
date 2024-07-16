@@ -85,6 +85,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private int KeyCount { get; }
 
         /// <summary>
+        ///     Gets the value determining whether to use the old LN rendering system. (earliest/latest -> start/end)
+        /// </summary>
+        public bool LegacyLNRendering => Map.LegacyLNRendering;
+
+        /// <summary>
         ///     Used for constructing <see cref="HitObjectQueueLanes"/>
         /// </summary>
         public List<GameplayHitObjectKeysInfo> HitObjectInfos { get; private set; }
