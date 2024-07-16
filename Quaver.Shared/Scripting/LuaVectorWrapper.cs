@@ -225,25 +225,31 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue ToTable(DynValue value) =>
-            (value.CastToNumber() ?? (value.Type is DataType.UserData ? value.UserData?.Object : null)) switch
-            {
-                float f => DynValue.NewTable(null, DynValue.NewNumber(f)),
-                Vector2 { X: var x, Y: var y } => DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y)),
-                Vector3 { X: var x, Y: var y, Z: var z } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(x),
-                    DynValue.NewNumber(y),
-                    DynValue.NewNumber(z)
-                ),
-                Vector4 { X: var x, Y: var y, Z: var z, W: var w } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(x),
-                    DynValue.NewNumber(y),
-                    DynValue.NewNumber(z),
-                    DynValue.NewNumber(w)
-                ),
-                _ => DynValue.NewTable((Script)null),
-            };
+            value.Type is DataType.Table
+                ? value
+                : (value.CastToNumber() ?? (value.Type is DataType.UserData ? value.UserData?.Object : null)) switch
+                {
+                    float f => DynValue.NewTable(null, DynValue.NewNumber(f)),
+                    Vector2 { X: var x, Y: var y } => DynValue.NewTable(
+                        null,
+                        DynValue.NewNumber(x),
+                        DynValue.NewNumber(y)
+                    ),
+                    Vector3 { X: var x, Y: var y, Z: var z } => DynValue.NewTable(
+                        null,
+                        DynValue.NewNumber(x),
+                        DynValue.NewNumber(y),
+                        DynValue.NewNumber(z)
+                    ),
+                    Vector4 { X: var x, Y: var y, Z: var z, W: var w } => DynValue.NewTable(
+                        null,
+                        DynValue.NewNumber(x),
+                        DynValue.NewNumber(y),
+                        DynValue.NewNumber(z),
+                        DynValue.NewNumber(w)
+                    ),
+                    _ => DynValue.NewTable(null, value),
+                };
 
         public static DynValue UnitW(DynValue value) =>
             Create(
