@@ -203,7 +203,6 @@ namespace Quaver.Shared.Graphics
                 Alignment = Alignment.TopCenter,
                 Size = new ScalableVector2(766, 151),
                 Image = UserInterface.DefaultBanner,
-                Alpha = 0,
                 Y = 2,
             };
 
