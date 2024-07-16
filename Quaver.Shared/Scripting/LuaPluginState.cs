@@ -31,7 +31,7 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Width and height of the current Quaver window
         /// </summary>
-        public Vector2 WindowSize { get; set; }
+        public DynValue WindowSize { get; set; }
 
         /// <summary>
         ///     Gets a value at a particular key

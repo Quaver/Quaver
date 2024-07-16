@@ -101,7 +101,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
             state.CurrentSnap = Editor.BeatSnap.Value;
             state.CurrentLayer = Editor.SelectedLayer.Value ?? Editor.DefaultLayer;
-            state.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+
+            state.WindowSize = DynValue.NewTable(
+                null,
+                DynValue.NewNumber(ConfigManager.WindowWidth.Value),
+                DynValue.NewNumber(ConfigManager.WindowHeight.Value)
+            );
 
             EditorPluginMap.Map = Editor.WorkingMap;
             EditorPluginMap.Track = Editor.Track;
