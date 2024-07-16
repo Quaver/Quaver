@@ -5,12 +5,14 @@ using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Scripting
 {
-    /// <summary>Contains generalized functions around CLR vectors designed to be exported to Lua.</summary>
+    /// <summary>
+    ///     Contains generalized functions around CLR vectors designed to be exported to Lua.
+    /// </summary>
     [MoonSharpUserData]
     static class LuaVectorWrapper
     {
         public static DynValue Add(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Add(x, y),
@@ -21,7 +23,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Abs(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float f => Vector2.Abs(f.ToVector2()),
@@ -42,7 +44,7 @@ namespace Quaver.Shared.Scripting
             };
 
         public static DynValue Clamp(DynValue first, DynValue second, DynValue third) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second, third) is var (x, y, z) => Vector2.Clamp(x, y, z),
@@ -71,7 +73,7 @@ namespace Quaver.Shared.Scripting
             };
 
         public static DynValue Divide(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Divide(x, y),
@@ -82,7 +84,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Dot(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Dot(x, y),
@@ -102,7 +104,7 @@ namespace Quaver.Shared.Scripting
             };
 
         public static DynValue Lerp(DynValue first, DynValue second, DynValue third) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Lerp(x, y, third.CoerceToFloat()),
@@ -113,7 +115,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Max(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Max(x, y),
@@ -124,7 +126,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Min(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Min(x, y),
@@ -135,7 +137,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Multiply(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Multiply(x, y),
@@ -146,7 +148,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Negate(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float f => Vector2.Negate(f.ToVector2()),
@@ -158,7 +160,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue New(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float f => f.ToVector2(),
@@ -167,7 +169,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Normalize(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float f => Vector2.Normalize(f.ToVector2()),
@@ -179,7 +181,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue One(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float or Vector2 => Vector2.One,
@@ -190,7 +192,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Reflect(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Reflect(x, y),
@@ -202,7 +204,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue SquareRoot(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float f => Vector2.SquareRoot(f.ToVector2()),
@@ -214,7 +216,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Subtract(DynValue first, DynValue second) =>
-            UserData.Create(
+            Create(
                 0 switch
                 {
                     _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Subtract(x, y),
@@ -225,7 +227,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue UnitW(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float or Vector2 => default(Vector2),
@@ -236,7 +238,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue UnitX(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float or Vector2 => Vector2.UnitX,
@@ -247,7 +249,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue UnitY(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float or Vector2 => Vector2.UnitY,
@@ -258,7 +260,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue UnitZ(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float or Vector2 => default(Vector2),
@@ -269,7 +271,7 @@ namespace Quaver.Shared.Scripting
             );
 
         public static DynValue Zero(DynValue value) =>
-            UserData.Create(
+            Create(
                 CoerceToVectorOrFloat(value) switch
                 {
                     float or Vector2 => Vector2.Zero,
@@ -279,6 +281,7 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
+        [MoonSharpHidden]
         public static T? TryCoerceTo<T>(DynValue value)
             where T : struct, IFormattable => // ReSharper disable RedundantCast
             CoerceToVectorOrFloat(value) is var val && typeof(T) == typeof(Vector2) ?
@@ -308,14 +311,21 @@ namespace Quaver.Shared.Scripting
 
         private static float CoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : 0;
 
+        // Exists primarily for type safety.
+        private static DynValue Create(IFormattable value) => UserData.Create(value);
+
         private static IFormattable CoerceToVectorOrFloat(DynValue value) =>
-            value.TryCoerceToFloat() ??
-            (value.Type is DataType.UserData ? value.UserData.Object as IFormattable :
-                value.Type is not DataType.Table || value.TryCoerceToFloat(1, "X", "x") is not { } x ? Vector2.Zero :
-                value.TryCoerceToFloat(2, "Y", "y") is not { } y ? new Vector2(x, 0) :
-                value.TryCoerceToFloat(3, "Z", "z") is not { } z ? new Vector2(x, y) :
-                value.TryCoerceToFloat(4, "W", "w") is not { } w ? new Vector3(x, y, z) :
-                new Vector4(x, y, z, w));
+            value is {
+                Type: DataType.UserData, UserData.Object: not Vector2 and not Vector3 and not Vector4,
+            } or { Type: DataType.Nil }
+                ? 0
+                : value.TryCoerceToFloat() ??
+                (value.Type is DataType.UserData ? (IFormattable)value.UserData.Object :
+                    value.TryCoerceToFloat(1, "X", "x") is not { } x ? Vector2.Zero :
+                    value.TryCoerceToFloat(2, "Y", "y") is not { } y ? new Vector2(x, 0) :
+                    value.TryCoerceToFloat(3, "Z", "z") is not { } z ? new Vector2(x, y) :
+                    value.TryCoerceToFloat(4, "W", "w") is not { } w ? new Vector3(x, y, z) :
+                    new Vector4(x, y, z, w));
 
         private static InvalidOperationException Unreachable(params DynValue[] value) =>
             new(

@@ -180,11 +180,11 @@ namespace Quaver.Shared.Scripting
                 IsFirstDrawCall = false;
 
                 if (CallUserDefinedFunction("awake") is { } awakeException)
-                    HandleLuaException(awakeException, true);
+                    HandleLuaException(awakeException);
             }
 
             if (CallUserDefinedFunction("draw") is { } drawException)
-                HandleLuaException(drawException);
+                HandleLuaException(drawException, true);
 
             AfterRender();
         }
@@ -252,9 +252,11 @@ namespace Quaver.Shared.Scripting
             );
         }
 
-        /// <summary>Indicates a </summary>
-        /// <param name="dynVal"></param>
-        /// <returns></returns>
+        /// <summary>
+        ///     Indicates a failure to coerce a value to a vector.
+        /// </summary>
+        /// <param name="dynVal">The value that failed to coerce.</param>
+        /// <returns>The exception to throw.</returns>
         private static Exception UnableToCoerce(DynValue dynVal) =>
             new ArgumentException($"Value cannot be converted to a vector type: {Display(dynVal)}");
 
@@ -521,7 +523,7 @@ namespace Quaver.Shared.Scripting
             }
             catch (Exception e)
             {
-                HandleLuaException(e, true);
+                HandleLuaException(e);
             }
 
             IsFirstDrawCall = true;
@@ -584,13 +586,13 @@ namespace Quaver.Shared.Scripting
         ///     Handles an exception that comes from the lua interpreter.
         /// </summary>
         /// <param name="e">The exception.</param>
-        /// <param name="showAlways">Whether to show the notification unconditionally.</param>
-        private void HandleLuaException(Exception e, bool showAlways = false)
+        /// <param name="displayWhenDifferent">Whether to display the message only if it differs from the last.</param>
+        private void HandleLuaException(Exception e, bool displayWhenDifferent = false)
         {
             LastException = DateTime.Now;
             var message = FormatException(e);
 
-            if (!showAlways && message == LastErrorMessage)
+            if (displayWhenDifferent && message == LastErrorMessage)
                 return;
 
             LastErrorMessage = message;

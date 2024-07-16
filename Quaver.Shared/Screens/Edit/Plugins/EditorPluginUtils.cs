@@ -242,13 +242,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         public static bool IsKeyUp(Keys k) => KeyboardManager.CurrentState.IsKeyUp(k);
 
-        /// <summary>Casts the value to a <see cref="Half"/>.</summary>
+        /// <summary>
+        ///     Casts the value to a <see cref="Half"/>.
+        /// </summary>
         /// <remarks><para>This is required for plugins that perform <see cref="Half"/> emulation.</para></remarks>
         /// <param name="value">The value to cast.</param>
         /// <returns>The parameter <paramref name="value"/> as a <see cref="Half"/>.</returns>
         public static float ToHalf(double value) => (float)(Half)value;
 
-        /// <summary>Casts the value to a <see cref="float"/>.</summary>
+        /// <summary>
+        ///     Casts the value to a <see cref="float"/>.
+        /// </summary>
         /// <remarks><para>This is required for plugins that perform <see cref="float"/> emulation.</para></remarks>
         /// <param name="value">The value to cast.</param>
         /// <returns>The parameter <paramref name="value"/> as a <see cref="float"/>.</returns>

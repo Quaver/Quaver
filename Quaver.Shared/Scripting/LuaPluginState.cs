@@ -29,6 +29,11 @@ namespace Quaver.Shared.Scripting
         public Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
 
         /// <summary>
+        ///     Width and height of the current Quaver window
+        /// </summary>
+        public Vector2 WindowSize { get; set; }
+
+        /// <summary>
         ///     Gets a value at a particular key
         /// </summary>
         /// <param name="key"></param>
@@ -40,10 +45,5 @@ namespace Quaver.Shared.Scripting
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void SetValue(string key, object value) => Values[key] = value;
-
-        /// <summary>
-        ///     Width and height of the current Quaver window
-        /// </summary>
-        public Vector2 WindowSize { get; set; }
     }
 }
