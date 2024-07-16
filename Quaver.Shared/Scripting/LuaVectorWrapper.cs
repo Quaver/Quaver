@@ -349,12 +349,12 @@ namespace Quaver.Shared.Scripting
 
         static (T X, T Y)? TryCoerce<T>(DynValue first, DynValue second)
             where T : struct, IFormattable =>
-            TryCoerceTo<T>(first) is { } f && TryCoerceTo<T>(second) is { } s ? (f, s) : default;
+            TryCoerceTo<T>(first) is { } f && TryCoerceTo<T>(second) is { } s ? (f, s) : null;
 
         static (T X, T Y, T Z)? TryCoerce<T>(DynValue first, DynValue second, DynValue third)
             where T : struct, IFormattable =>
             TryCoerceTo<T>(first) is { } f && TryCoerceTo<T>(second) is { } s && TryCoerceTo<T>(third) is { } t
                 ? (f, s, t)
-                : default;
+                : null;
     }
 }
