@@ -279,50 +279,7 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-        static float? TryCoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : null;
-
-        static float CoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : 0;
-
-        static IFormattable CoerceToVectorOrFloat(DynValue value) =>
-            value.TryCoerceToFloat() ??
-            (value.Type is DataType.UserData ? value.UserData.Object as IFormattable :
-                value.Type is not DataType.Table || value.TryCoerceToFloat(1, "X", "x") is not { } x ? Vector2.Zero :
-                value.TryCoerceToFloat(2, "Y", "y") is not { } y ? new Vector2(x, 0) :
-                value.TryCoerceToFloat(3, "Z", "z") is not { } z ? new Vector2(x, y) :
-                value.TryCoerceToFloat(4, "W", "w") is not { } w ? new Vector3(x, y, z) :
-                new Vector4(x, y, z, w));
-
-        static InvalidOperationException Unreachable(params DynValue[] value) =>
-            new(
-                $"If you see this, it's a bug. Please report it to https://github.com/Quaver/Quaver/issues " +
-                $"along with the plugin source code: {string.Join(", ", value.Select(x => x.ToPrintString()))}"
-            );
-
-        static Vector2 ToVector2(this float f) => new(f, f);
-
-        static Vector3 ToVector3(this float f) => new(f, f, f);
-
-        static Vector3 ToVector3(this Vector2 v) => new(v.X, v.Y, 0);
-
-        static Vector3 ToVector3(this Vector4 v) => new(v.X, v.Y, v.Z);
-
-        static Vector4 ToVector4(this float f) => new(f, f, f, f);
-
-        static Vector4 ToVector4(this Vector2 v) => new(v.X, v.Y, 0, 0);
-
-        static Vector4 ToVector4(this Vector3 v) => new(v.X, v.Y, v.Z, 0);
-
-        static float? TryCoerceToFloat(this DynValue value, int index, string name, string otherName) =>
-            value.Type switch
-            {
-                DataType.Tuple => value.Tuple.ElementAtOrDefault(index)?.TryCoerceToFloat(),
-                DataType.Table => value.Table.Get(index).TryCoerceToFloat() ??
-                    value.Table.Get(name).TryCoerceToFloat() ??
-                    value.Table.Get(otherName).TryCoerceToFloat(),
-                _ => null,
-            };
-
-        static T? TryCoerceTo<T>(DynValue value)
+        public static T? TryCoerceTo<T>(DynValue value)
             where T : struct, IFormattable => // ReSharper disable RedundantCast
             CoerceToVectorOrFloat(value) is var val && typeof(T) == typeof(Vector2) ?
                 (T?)(object)(Vector2?)(val switch
@@ -347,11 +304,54 @@ namespace Quaver.Shared.Scripting
                         _ => null,
                     }) : null; // ReSharper restore RedundantCast
 
-        static (T X, T Y)? TryCoerce<T>(DynValue first, DynValue second)
+        private static float? TryCoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : null;
+
+        private static float CoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : 0;
+
+        private static IFormattable CoerceToVectorOrFloat(DynValue value) =>
+            value.TryCoerceToFloat() ??
+            (value.Type is DataType.UserData ? value.UserData.Object as IFormattable :
+                value.Type is not DataType.Table || value.TryCoerceToFloat(1, "X", "x") is not { } x ? Vector2.Zero :
+                value.TryCoerceToFloat(2, "Y", "y") is not { } y ? new Vector2(x, 0) :
+                value.TryCoerceToFloat(3, "Z", "z") is not { } z ? new Vector2(x, y) :
+                value.TryCoerceToFloat(4, "W", "w") is not { } w ? new Vector3(x, y, z) :
+                new Vector4(x, y, z, w));
+
+        private static InvalidOperationException Unreachable(params DynValue[] value) =>
+            new(
+                $"If you see this, it's a bug. Please report it to https://github.com/Quaver/Quaver/issues " +
+                $"along with the plugin source code: {string.Join(", ", value.Select(x => x.ToPrintString()))}"
+            );
+
+        private static Vector2 ToVector2(this float f) => new(f, f);
+
+        private static Vector3 ToVector3(this float f) => new(f, f, f);
+
+        private static Vector3 ToVector3(this Vector2 v) => new(v.X, v.Y, 0);
+
+        private static Vector3 ToVector3(this Vector4 v) => new(v.X, v.Y, v.Z);
+
+        private static Vector4 ToVector4(this float f) => new(f, f, f, f);
+
+        private static Vector4 ToVector4(this Vector2 v) => new(v.X, v.Y, 0, 0);
+
+        private static Vector4 ToVector4(this Vector3 v) => new(v.X, v.Y, v.Z, 0);
+
+        private static float? TryCoerceToFloat(this DynValue value, int index, string name, string otherName) =>
+            value.Type switch
+            {
+                DataType.Tuple => value.Tuple.ElementAtOrDefault(index)?.TryCoerceToFloat(),
+                DataType.Table => value.Table.Get(index).TryCoerceToFloat() ??
+                    value.Table.Get(name).TryCoerceToFloat() ??
+                    value.Table.Get(otherName).TryCoerceToFloat(),
+                _ => null,
+            };
+
+        private static (T X, T Y)? TryCoerce<T>(DynValue first, DynValue second)
             where T : struct, IFormattable =>
             TryCoerceTo<T>(first) is { } f && TryCoerceTo<T>(second) is { } s ? (f, s) : null;
 
-        static (T X, T Y, T Z)? TryCoerce<T>(DynValue first, DynValue second, DynValue third)
+        private static (T X, T Y, T Z)? TryCoerce<T>(DynValue first, DynValue second, DynValue third)
             where T : struct, IFormattable =>
             TryCoerceTo<T>(first) is { } f && TryCoerceTo<T>(second) is { } s && TryCoerceTo<T>(third) is { } t
                 ? (f, s, t)
