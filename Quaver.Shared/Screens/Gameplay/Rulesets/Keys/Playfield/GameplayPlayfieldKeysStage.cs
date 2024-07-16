@@ -511,7 +511,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private void UpdateComboDisplay(GameTime gameTime)
         {
             // Gradually tween the position back to what it was originally.
-            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 30, 1) / 2);
+            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / Skin.ComboDisplayBumpTime, 1) / 2);
 
             if (OldCombo == Screen.Ruleset.ScoreProcessor.Combo)
                 return;
@@ -520,10 +520,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             ComboDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Combo);
 
             // Set the position and scale  of the combo display, so that we can perform some animations.
-            ComboDisplay.Y = OriginalComboDisplayY - 5;
+            ComboDisplay.Y = OriginalComboDisplayY + Skin.ComboDisplayBumpY;
 
             // Gradually tween the position back to what it was originally.
-            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 30, 1) / 2);
+            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / Skin.ComboDisplayBumpTime, 1) / 2);
             OldCombo = Screen.Ruleset.ScoreProcessor.Combo;
         }
 

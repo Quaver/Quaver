@@ -107,7 +107,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             }
             else
             {
-                Y = OriginalPosY - 5;
+                Y = OriginalPosY + Skin.JudgementHitBurstBumpY;
                 IsAnimatingWithOneFrame = true;
             }
 
@@ -131,7 +131,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Tween the position if need be
             if (Math.Abs(Y - OriginalPosY) > 0.01)
-                Y = MathHelper.Lerp(Y, OriginalPosY, (float) Math.Min(dt / 30, 1));
+                Y = MathHelper.Lerp(Y, OriginalPosY, (float) Math.Min(dt / Skin.JudgementHitBurstBumpTime, 1));
             // If we've already tweened it, then we can begin to fade it out.
             else
             {
