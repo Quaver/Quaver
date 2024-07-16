@@ -23,6 +23,7 @@ namespace Quaver.Shared.Scripting
             UserData.Create(
                 CoerceToVectorOrFloat(value) switch
                 {
+                    float f => Vector2.Abs(f.ToVector2()),
                     Vector2 v => Vector2.Abs(v),
                     Vector3 v => Vector3.Abs(v),
                     Vector4 v => Vector4.Abs(v),
@@ -147,6 +148,7 @@ namespace Quaver.Shared.Scripting
             UserData.Create(
                 CoerceToVectorOrFloat(value) switch
                 {
+                    float f => Vector2.Negate(f.ToVector2()),
                     Vector2 v => Vector2.Negate(v),
                     Vector3 v => Vector3.Negate(v),
                     Vector4 v => Vector4.Negate(v),
@@ -158,7 +160,7 @@ namespace Quaver.Shared.Scripting
             UserData.Create(
                 CoerceToVectorOrFloat(value) switch
                 {
-                    float f => new Vector2(f, f),
+                    float f => f.ToVector2(),
                     var v => v,
                 }
             );
@@ -167,6 +169,7 @@ namespace Quaver.Shared.Scripting
             UserData.Create(
                 CoerceToVectorOrFloat(value) switch
                 {
+                    float f => Vector2.Normalize(f.ToVector2()),
                     Vector2 v => Vector2.Normalize(v),
                     Vector3 v => Vector3.Normalize(v),
                     Vector4 v => Vector4.Normalize(v),
@@ -201,6 +204,7 @@ namespace Quaver.Shared.Scripting
             UserData.Create(
                 CoerceToVectorOrFloat(value) switch
                 {
+                    float f => Vector2.SquareRoot(f.ToVector2()),
                     Vector2 v => Vector2.SquareRoot(v),
                     Vector3 v => Vector3.SquareRoot(v),
                     Vector4 v => Vector4.SquareRoot(v),
@@ -293,9 +297,15 @@ namespace Quaver.Shared.Scripting
                 $"along with the plugin source code: {string.Join(", ", value.Select(x => x.ToPrintString()))}"
             );
 
+        static Vector2 ToVector2(this float f) => new(f, f);
+
+        static Vector3 ToVector3(this float f) => new(f, f, f);
+
         static Vector3 ToVector3(this Vector2 v) => new(v.X, v.Y, 0);
 
         static Vector3 ToVector3(this Vector4 v) => new(v.X, v.Y, v.Z);
+
+        static Vector4 ToVector4(this float f) => new(f, f, f, f);
 
         static Vector4 ToVector4(this Vector2 v) => new(v.X, v.Y, 0, 0);
 
@@ -316,17 +326,20 @@ namespace Quaver.Shared.Scripting
             CoerceToVectorOrFloat(value) is var val && typeof(T) == typeof(Vector2) ?
                 (T?)(object)(Vector2?)(val switch
                 {
-                    Vector2 x => x,
+                    float f => f.ToVector2(),
+                    Vector2 v => v,
                     _ => null,
                 }) :
                 typeof(T) == typeof(Vector3) ? (T?)(object)(Vector3?)(val switch
                     {
+                        float f => f.ToVector3(),
                         Vector2 v => v.ToVector3(),
                         Vector3 v => v,
                         _ => null,
                     }) :
                     typeof(T) == typeof(Vector4) ? (T?)(object)(Vector4?)(val switch
                     {
+                        float f => f.ToVector4(),
                         Vector2 v => v.ToVector4(),
                         Vector3 v => v.ToVector4(),
                         Vector4 v => v,
