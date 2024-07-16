@@ -6,6 +6,7 @@ using MoonSharp.Interpreter;
 namespace Quaver.Shared.Scripting
 {
     /// <summary>Contains generalized functions around CLR vectors designed to be exported to Lua.</summary>
+    [MoonSharpUserData]
     static class LuaVectorWrapper
     {
         public static DynValue Add(DynValue first, DynValue second) =>
