@@ -83,16 +83,14 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-        public static DynValue Dot(DynValue first, DynValue second) =>
-            Create(
-                0 switch
-                {
-                    _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Dot(x, y),
-                    _ when TryCoerce<Vector3>(first, second) is var (x, y) => Vector3.Dot(x, y),
-                    _ when TryCoerce<Vector4>(first, second) is var (x, y) => Vector4.Dot(x, y),
-                    _ => throw Unreachable(first, second),
-                }
-            );
+        public static float Dot(DynValue first, DynValue second) =>
+            0 switch
+            {
+                _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Dot(x, y),
+                _ when TryCoerce<Vector3>(first, second) is var (x, y) => Vector3.Dot(x, y),
+                _ when TryCoerce<Vector4>(first, second) is var (x, y) => Vector4.Dot(x, y),
+                _ => throw Unreachable(first, second),
+            };
 
         public static int Length(DynValue value) =>
             CoerceToVectorOrFloat(value) switch
@@ -251,8 +249,8 @@ namespace Quaver.Shared.Scripting
             Create(
                 CoerceToVectorOrFloat(value) switch
                 {
-                    float or Vector2 => default(Vector2),
-                    Vector3 => default(Vector3),
+                    float or Vector2 => Vector2.Zero,
+                    Vector3 => Vector3.Zero,
                     Vector4 => Vector4.UnitW,
                     _ => throw Unreachable(value),
                 }
@@ -284,7 +282,7 @@ namespace Quaver.Shared.Scripting
             Create(
                 CoerceToVectorOrFloat(value) switch
                 {
-                    float or Vector2 => default(Vector2),
+                    float or Vector2 => Vector2.Zero,
                     Vector3 => Vector3.UnitZ,
                     Vector4 => Vector4.UnitZ,
                     _ => throw Unreachable(value),
