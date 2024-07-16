@@ -128,7 +128,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
             return layer;
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="startTime"></param>
@@ -207,11 +207,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.AddBookmark:
-                    return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>()); 
+                    return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>());
                 case EditorActionType.RemoveBookmark:
                     return new EditorActionRemoveBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>());
                 case EditorActionType.AddBookmarkBatch:
-                    return new EditorActionAddBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>()); 
+                    return new EditorActionAddBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>());
                 case EditorActionType.RemoveBookmarkBatch:
                     return new EditorActionRemoveBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>());
                 case EditorActionType.EditBookmark:
@@ -241,5 +241,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public static bool IsKeyDown(Keys k) => KeyboardManager.CurrentState.IsKeyDown(k);
 
         public static bool IsKeyUp(Keys k) => KeyboardManager.CurrentState.IsKeyUp(k);
+
+        /// <summary>Casts the value to a <see cref="Half"/>.</summary>
+        /// <remarks><para>This is required for plugins that perform <see cref="Half"/> emulation.</para></remarks>
+        /// <param name="value">The value to cast.</param>
+        /// <returns>The parameter <paramref name="value"/> as a <see cref="Half"/>.</returns>
+        public static float ToHalf(double value) => (float)(Half)value;
+
+        /// <summary>Casts the value to a <see cref="float"/>.</summary>
+        /// <remarks><para>This is required for plugins that perform <see cref="float"/> emulation.</para></remarks>
+        /// <param name="value">The value to cast.</param>
+        /// <returns>The parameter <paramref name="value"/> as a <see cref="float"/>.</returns>
+        public static float ToFloat(double value) => (float)value;
     }
 }

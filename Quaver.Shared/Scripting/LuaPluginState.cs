@@ -32,13 +32,7 @@ namespace Quaver.Shared.Scripting
         ///     Gets a value at a particular key
         /// </summary>
         /// <param name="key"></param>
-        public object GetValue(string key)
-        {
-            if (!Values.ContainsKey(key))
-                return null;
-
-            return Values[key];
-        }
+        public object GetValue(string key) => Values.GetValueOrDefault(key);
 
         /// <summary>
         ///     Sets a value at a particular key

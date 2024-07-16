@@ -231,6 +231,7 @@ namespace Quaver.Shared.Scripting
                     ["print"] = CallbackFunction.FromDelegate(null, Print),
                     ["read"] = CallbackFunction.FromDelegate(null, Read),
                     ["state"] = State,
+                    ["vector"] = typeof(LuaVectorWrapper),
                     ["vector2"] = typeof(Vector2),
                     ["vector3"] = typeof(Vector3),
                     ["vector4"] = typeof(Vector4),
