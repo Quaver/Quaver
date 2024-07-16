@@ -53,6 +53,12 @@ namespace Quaver.Shared.Scripting
         public string Name { get; }
 
         /// <summary>
+        /// Determines whether the first draw call has been made.
+        /// </summary>
+        private bool IsFirstDrawCall { get; set; }
+
+        /// <summary>
+        /// Determines whether the plugin is a resource.
         /// </summary>
         private bool IsResource { get; }
 
@@ -168,8 +174,16 @@ namespace Quaver.Shared.Scripting
 
             SetFrameState();
 
-            if (Draw() is { } e)
-                HandleLuaException(e);
+            if (IsFirstDrawCall)
+            {
+                IsFirstDrawCall = false;
+
+                if (CallUserDefinedFunction("awake") is { } awakeException)
+                    HandleLuaException(awakeException);
+            }
+
+            if (CallUserDefinedFunction("draw") is { } drawException)
+                HandleLuaException(drawException);
 
             AfterRender();
         }
@@ -258,6 +272,8 @@ namespace Quaver.Shared.Scripting
             {
                 HandleLuaException(e);
             }
+
+            IsFirstDrawCall = true;
         }
 
         /// <summary>
@@ -400,14 +416,14 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
-        ///     Invokes the user-defined <c>draw</c> function, returning an <see cref="Exception"/> if it failed.
+        ///     Invokes the user-defined function, returning an <see cref="Exception"/> if it failed.
         /// </summary>
         /// <returns>The <see cref="Exception"/> if it failed.</returns>
-        Exception Draw()
+        Exception CallUserDefinedFunction(string functionName)
         {
             try
             {
-                if (WorkingScript.Globals["draw"] is Closure draw)
+                if (WorkingScript.Globals[functionName] is Closure draw)
                     WorkingScript.Call(draw);
 
                 LastErrorMessage = null;
