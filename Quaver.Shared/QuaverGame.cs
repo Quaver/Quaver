@@ -257,7 +257,9 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
-            Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
+
+            if (Environment.GetEnvironmentVariable("QUAVER_LOGLEVEL") is null)
+                Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
         }
 
         /// <inheritdoc />
