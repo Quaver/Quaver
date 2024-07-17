@@ -134,6 +134,19 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
+        public static DynValue Modulo(DynValue first, DynValue second) =>
+            Create(
+                0 switch
+                {
+                    _ when TryCoerce<Vector2>(first, second) is var (x, y) => new Vector2(x.X % y.X, x.Y % y.Y),
+                    _ when TryCoerce<Vector3>(first, second) is var (x, y) =>
+                        new Vector3(x.X % y.X, x.Y % y.Y, x.Z % y.Z),
+                    _ when TryCoerce<Vector4>(first, second) is var (x, y) =>
+                        new Vector4(x.X % y.X, x.Y % y.Y, x.Z % y.Z, x.W % y.W),
+                    _ => throw Unreachable(first, second),
+                }
+            );
+
         public static DynValue Multiply(DynValue first, DynValue second) =>
             Create(
                 0 switch
@@ -157,12 +170,24 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-        public static DynValue New(DynValue value) =>
+        public static DynValue New(params DynValue[] values) =>
             Create(
-                CoerceToVectorOrFloat(value) switch
+                values.Length switch
                 {
-                    float f => f.ToVector2(),
-                    var v => v,
+                    0 => Vector2.Zero,
+                    1 => CoerceToVectorOrFloat(values[0]) switch
+                    {
+                        float f => f.ToVector2(),
+                        var v => v,
+                    },
+                    2 => new Vector2(values[0].CoerceToFloat(), values[1].CoerceToFloat()),
+                    3 => new Vector3(values[0].CoerceToFloat(), values[1].CoerceToFloat(), values[2].CoerceToFloat()),
+                    _ => new Vector4(
+                        values[0].CoerceToFloat(),
+                        values[1].CoerceToFloat(),
+                        values[2].CoerceToFloat(),
+                        values[3].CoerceToFloat()
+                    ),
                 }
             );
 
@@ -201,6 +226,19 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
+        public static DynValue RemEuclid(DynValue first, DynValue second) =>
+            Create(
+                0 switch
+                {
+                    _ when TryCoerce<Vector2>(first, second) is var (x, y) => new Vector2(x.X.Mod(y.X), x.Y.Mod(y.Y)),
+                    _ when TryCoerce<Vector3>(first, second) is var (x, y) =>
+                        new Vector3(x.X.Mod(y.X), x.Y.Mod(y.Y), x.Z.Mod(y.Z)),
+                    _ when TryCoerce<Vector4>(first, second) is var (x, y) =>
+                        new Vector4(x.X.Mod(y.X), x.Y.Mod(y.Y), x.Z.Mod(y.Z), x.W.Mod(y.W)),
+                    _ => throw Unreachable(first, second),
+                }
+            );
+
         public static DynValue SquareRoot(DynValue value) =>
             Create(
                 CoerceToVectorOrFloat(value) switch
@@ -224,23 +262,16 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-        public static DynValue ToTable(DynValue value) =>
+        public static DynValue Table(DynValue value) =>
             value.Type is DataType.Table
                 ? value
                 : (value.CastToNumber() ?? (value.Type is DataType.UserData ? value.UserData?.Object : null)) switch
                 {
                     float f => DynValue.NewTable(null, DynValue.NewNumber(f)),
-                    Vector2 { X: var x, Y: var y } => DynValue.NewTable(
-                        null,
-                        DynValue.NewNumber(x),
-                        DynValue.NewNumber(y)
-                    ),
-                    Vector3 { X: var x, Y: var y, Z: var z } => DynValue.NewTable(
-                        null,
-                        DynValue.NewNumber(x),
-                        DynValue.NewNumber(y),
-                        DynValue.NewNumber(z)
-                    ),
+                    Vector2 { X: var x, Y: var y } =>
+                        DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y)),
+                    Vector3 { X: var x, Y: var y, Z: var z } =>
+                        DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y), DynValue.NewNumber(z)),
                     Vector4 { X: var x, Y: var y, Z: var z, W: var w } => DynValue.NewTable(
                         null,
                         DynValue.NewNumber(x),
@@ -295,6 +326,25 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
+        public static DynValue Unpack(DynValue value) =>
+            value.Type is DataType.Tuple
+                ? value
+                : (value.CastToNumber() ?? (value.Type is DataType.UserData ? value.UserData?.Object : null)) switch
+                {
+                    float f => DynValue.NewTuple(DynValue.NewNumber(f)),
+                    Vector2 { X: var x, Y: var y } =>
+                        DynValue.NewTuple(DynValue.NewNumber(x), DynValue.NewNumber(y)),
+                    Vector3 { X: var x, Y: var y, Z: var z } =>
+                        DynValue.NewTuple(DynValue.NewNumber(x), DynValue.NewNumber(y), DynValue.NewNumber(z)),
+                    Vector4 { X: var x, Y: var y, Z: var z, W: var w } => DynValue.NewTuple(
+                        DynValue.NewNumber(x),
+                        DynValue.NewNumber(y),
+                        DynValue.NewNumber(z),
+                        DynValue.NewNumber(w)
+                    ),
+                    _ => DynValue.NewTuple(value),
+                };
+
         public static DynValue Zero(DynValue value) =>
             Create(
                 CoerceToVectorOrFloat(value) switch
@@ -332,9 +382,11 @@ namespace Quaver.Shared.Scripting
                         _ => null,
                     }) : null; // ReSharper restore RedundantCast
 
-        private static float? TryCoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : null;
-
         private static float CoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : 0;
+
+        private static float Mod(this float number, float radix) => number % radix is var r && r < 0 ? r + radix : r;
+
+        private static float? TryCoerceToFloat(this DynValue value) => value.CastToNumber() is { } v ? (float)v : null;
 
         // Exists primarily for type safety.
         private static DynValue Create(IFormattable value) => UserData.Create(value);
