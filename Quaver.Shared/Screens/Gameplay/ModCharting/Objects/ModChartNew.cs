@@ -120,7 +120,6 @@ public class ModChartNew : ModChartGlobalVariable
         () => value,
         v => value = v);
 
-
     #endregion
 
     #region Drawables
@@ -240,6 +239,8 @@ public class ModChartNew : ModChartGlobalVariable
     #region Presets
 
     public SwapLanePreset SwapLanePreset(int lane1, int lane2) => new(Shortcut, lane1, lane2);
+
+    public LaneArrangePreset LaneArrangePreset(List<int> enabledLanes) => new(Shortcut, enabledLanes);
 
     #endregion
 }

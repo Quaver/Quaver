@@ -15,17 +15,17 @@ public class SwapLanePreset : ModChartPreset
         Lane2 = lane2;
     }
 
-    protected override void PlacePreset(int startTime, int duration)
+    protected override void PlacePreset(int startTime, int endTime)
     {
         var laneContainer1 = new DrawableProxy(Stage.LaneContainer(Lane1));
         var laneContainer2 = new DrawableProxy(Stage.LaneContainer(Lane2));
-        Timeline.Add(startTime, startTime + duration,
+        Timeline.Add(startTime, endTime,
             laneContainer1.XProp.TweenSwap(laneContainer2.XProp, EasingDelegate));
-        Timeline.Add(startTime, startTime + duration,
+        Timeline.Add(startTime, endTime,
             laneContainer1.YProp.TweenSwap(laneContainer2.YProp, EasingDelegate));
-        Timeline.Add(startTime, startTime + duration,
+        Timeline.Add(startTime, endTime,
             laneContainer1.RotationProp.TweenSwap(laneContainer2.RotationProp, EasingDelegate));
-        Timeline.Add(startTime, startTime + duration,
+        Timeline.Add(startTime, endTime,
             laneContainer1.ScaleProp.TweenSwap(laneContainer2.ScaleProp, EasingDelegate));
     }
 }

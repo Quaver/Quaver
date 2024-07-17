@@ -414,8 +414,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 if (scale != 1)
                     posX += (Playfield.LaneSize - Playfield.LaneSize * scale) / 2f;
 
-                
-
                 LaneContainers.Add(new GameplayPlayfieldLane(i, laneSize, scale, this)
                 {
                     Parent = Playfield.ForegroundContainer,

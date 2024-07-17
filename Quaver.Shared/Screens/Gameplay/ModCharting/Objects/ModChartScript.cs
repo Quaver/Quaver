@@ -66,6 +66,8 @@ public class ModChartScript
 
     public ModChartUtils ModChartUtils { get; set; }
 
+    public ModChartInternal Internal { get; set; }
+
     /// <summary>
     ///     Manages continuous segments of updates from storyboard
     /// </summary>
@@ -90,6 +92,8 @@ public class ModChartScript
         GameplayScreenView = screenView;
 
         Shortcut = new ElementAccessShortcut(screenView, this);
+
+        Internal = new ModChartInternal(Shortcut);
 
         ModChartEvents = new ModChartEvents(Shortcut);
 

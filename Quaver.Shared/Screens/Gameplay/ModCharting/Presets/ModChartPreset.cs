@@ -20,13 +20,12 @@ public abstract class ModChartPreset
 
     public virtual int DefaultDuration { get; } = 1000;
 
-    protected abstract void PlacePreset(int startTime, int duration);
+    protected abstract void PlacePreset(int startTime, int endTime);
 
-    public void Place(int startTime, int duration = -1)
+    public void Place(int startTime, int endTime = int.MinValue)
     {
-        // ReSharper disable once CompareOfFloatsByEqualityOperator
-        if (duration == -1) duration = DefaultDuration;
-        PlacePreset(startTime, duration);
+        if (endTime == int.MinValue) endTime = startTime + DefaultDuration;
+        PlacePreset(startTime, endTime);
     }
 
     public ModChartPreset Ease(EasingDelegate easingDelegate)

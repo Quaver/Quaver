@@ -17,6 +17,8 @@ public class ElementAccessShortcut
     
     public ModChartScript ModChartScript { get; private set; }
 
+    public ModChartInternal Internal => ModChartScript.Internal;
+
     public ModChartEvents ModChartEvents => ModChartScript.ModChartEvents;
 
     public ElementAccessShortcut(GameplayScreen gameplayScreen, ModChartScript modChartScript)
