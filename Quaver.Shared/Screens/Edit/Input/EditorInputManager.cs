@@ -304,6 +304,30 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.RecolorCurrentLayer:
                     Screen.RecolorLayer();
                     break;
+                case KeybindActions.Undo:
+                    Screen.ActionManager.Undo();
+                    break;
+                case KeybindActions.Redo:
+                    Screen.ActionManager.Redo();
+                    break;
+                case KeybindActions.Copy:
+                    Screen.CopySelectedObjects();
+                    break;
+                case KeybindActions.Paste:
+                    Screen.PasteCopiedObjects(false);
+                    break;
+                case KeybindActions.SelectAllNotes:
+                    Screen.SelectAllObjects();
+                    break;
+                case KeybindActions.Deselect:
+                    Screen.SelectedHitObjects.Clear();
+                    break;
+                case KeybindActions.Cut:
+                    Screen.CutSelectedObjects();
+                    break;
+                case KeybindActions.Save:
+                    Screen.Save();
+                    break;
                 default:
                     return;
             }

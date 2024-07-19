@@ -61,5 +61,13 @@ namespace Quaver.Shared.Screens.Edit.Input
         DeleteCurrentLayer,
         RenameCurrentLayer,
         RecolorCurrentLayer,
+        Undo,
+        Redo,
+        Cut,
+        Copy,
+        Paste,
+        SelectAllNotes,
+        Deselect,
+        Save
     }
 }

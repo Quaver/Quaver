@@ -239,6 +239,14 @@ namespace Quaver.Shared.Screens.Edit.Input
             {DeleteCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.Delete)},
             {RenameCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.R)},
             {RecolorCurrentLayer, new KeybindList(KeyModifiers.Shift, Keys.E)},
+            {Undo, new KeybindList(new[] {new Keybind(Keys.Z), new Keybind(KeyModifiers.Ctrl, Keys.Z)})},
+            {Redo, new KeybindList(new[] {new Keybind(Keys.Y), new Keybind(KeyModifiers.Ctrl, Keys.Y)})},
+            {Cut, new KeybindList(new[] {new Keybind(Keys.X), new Keybind(KeyModifiers.Ctrl, Keys.X)})},
+            {Copy, new KeybindList(new[] {new Keybind(Keys.C), new Keybind(KeyModifiers.Ctrl, Keys.C)})},
+            {Paste, new KeybindList(new[] {new Keybind(Keys.V), new Keybind(KeyModifiers.Ctrl, Keys.V)})},
+            {SelectAllNotes, new KeybindList(new[] {new Keybind(Keys.A), new Keybind(KeyModifiers.Ctrl, Keys.A)})},
+            {Save, new KeybindList(new[] {new Keybind(Keys.S), new Keybind(KeyModifiers.Ctrl, Keys.S)})},
+            {Deselect, new KeybindList(new[] {new Keybind(Keys.D), new Keybind(KeyModifiers.Ctrl, Keys.D)})},
         };
     }
 }
