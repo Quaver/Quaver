@@ -47,7 +47,7 @@ public class ModChartEvents : ModChartGlobalVariable
     }
 
     /// <summary>
-    ///     Queues an event to be processed at the end of <see cref="ModChartScript.Update"/>.
+    ///     Queues an event to be processed at the end of <see cref="ModChartScript.Tick"/>.
     /// </summary>
     /// <param name="eventInstance"></param>
     public void Enqueue(ModChartEventInstance eventInstance) => DeferredEventQueue.Enqueue(eventInstance);
@@ -62,7 +62,7 @@ public class ModChartEvents : ModChartGlobalVariable
         DeferredEventQueue.Enqueue(GetArguments(type, args));
 
     /// <summary>
-    ///     Queues a function call to be invoked at the end of <see cref="ModChartScript.Update"/>.
+    ///     Queues a function call to be invoked at the end of <see cref="ModChartScript.Tick"/>.
     /// </summary>
     /// <param name="closure">The lua function to call</param>
     /// <param name="args">The arguments of the function</param>

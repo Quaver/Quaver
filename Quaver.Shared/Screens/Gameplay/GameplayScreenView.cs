@@ -341,8 +341,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                var time = (int)Screen.Timing.Time;
-                ModChartScript?.Update(time);
+                ModChartScript?.Update(gameTime);
             }
             catch (ScriptRuntimeException e)
             {

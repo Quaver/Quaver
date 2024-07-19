@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Timers;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -82,6 +83,16 @@ public class ModChartScript
     ///     Program stops executing
     /// </summary>
     public bool Halted { get; private set; }
+
+    /// <summary>
+    ///     The interval between updates
+    /// </summary>
+    private TimeSpan updateInterval = TimeSpan.FromMilliseconds(16);
+
+    /// <summary>
+    ///     Clock ticking updates
+    /// </summary>
+    private ContinuousClock clock;
 
     public ModChartScript(string path, GameplayScreenView screenView)
     {
@@ -201,10 +212,14 @@ public class ModChartScript
         WorkingScript.Globals["beat"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.Beat);
         WorkingScript.Globals["beatFrac"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.BeatFraction);
         WorkingScript.Globals["measure"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.Measure);
+        WorkingScript.Globals["setUpdateInterval"] = CallbackFunction.FromDelegate(WorkingScript, SetUpdateInterval);
+
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>
         {
+            clock = new ContinuousClock(updateInterval);
+            clock.Tick += Tick;
             if (IsResource)
             {
                 var buffer = GameBase.Game.Resources.Get(FilePath);
@@ -216,7 +231,8 @@ public class ModChartScript
             }
 
             // Update state at start
-            Update(int.MinValue);
+            Tick(null, EventArgs.Empty);
+            clock.Start();
             WorkingScript.DoString(ScriptText, codeFriendlyName: Path.GetFileName(FilePath));
         });
     }
@@ -233,7 +249,15 @@ public class ModChartScript
                 : throw new ScriptRuntimeException($"Failed to parse '{dynVal.String}' as {globalVariableName}"));
     }
 
-    public void Update(int time)
+    public void Update(GameTime gameTime) => clock.Update(gameTime);
+
+    private void SetUpdateInterval(double milliseconds)
+    {
+        updateInterval = TimeSpan.FromMilliseconds(milliseconds);
+        clock.Interval = updateInterval;
+    }
+
+    public void Tick(object sender, EventArgs e)
     {
         if (Halted)
             return;
@@ -241,6 +265,7 @@ public class ModChartScript
         if (ModChartScriptHelper.CounterExceeded)
         {
             Halted = true;
+            clock.Stop();
             NotificationManager.Show(NotificationLevel.Error,
                 $"Script stopped executing because there are {ModChartScriptHelper.ErrorCount} errors and" +
                 $" {ModChartScriptHelper.TimeLimitExceedCount} calls that exceed" +
@@ -249,14 +274,17 @@ public class ModChartScript
             return;
         }
 
+        var time = Shortcut.GameplayScreen.Timing.Time;
+
         State.SongTime = time;
         State.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         State.CurrentTimingPoint = GameplayScreenView.Screen.Map.GetTimingPointAt(State.SongTime);
         State.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
-        TriggerManager.Update(time);
-        SegmentManager.Update(time);
+        TriggerManager.Update((int)time);
+        SegmentManager.Update((int)time);
         ModChartStateMachines.RootMachine.Update();
+
         ModChartEvents.DeferredEventQueue.Dispatch();
     }
 
