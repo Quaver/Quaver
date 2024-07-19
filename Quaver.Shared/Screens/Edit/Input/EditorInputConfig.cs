@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ToggleHitsounds, new KeybindList(new [] {new Keybind(Keys.D8)})},
             {ToggleMetronome, new KeybindList(new [] {new Keybind(Keys.D9)})},
             {TogglePitchRate, new KeybindList(new [] {new Keybind(Keys.D0), new Keybind(KeyModifiers.Ctrl, Keys.D0)})},
-            {ToggleGameplayPreview, new KeybindList(Keys.P)},
+            {ToggleGameplayPreview, new KeybindList(new [] {new Keybind(Keys.P), new Keybind(KeyModifiers.Ctrl, Keys.P)})},
             {ToggleLayerViewMode, new KeybindList(KeyModifiers.Shift, Keys.D)},
             {ChangeSelectedLayerUp, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.Q)})},
             {ChangeSelectedLayerDown, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.W)})},
