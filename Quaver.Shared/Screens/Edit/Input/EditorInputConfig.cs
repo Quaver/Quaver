@@ -225,6 +225,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {TestPlay, new KeybindList(new [] {new Keybind(Keys.F4)})},
             {ToggleBpmPanel, new KeybindList(new [] {new Keybind(Keys.F5)})},
             {ToggleSvPanel, new KeybindList(new [] {new Keybind(Keys.F6)})},
+            {ToggleGameplayPreview, new KeybindList(Keys.P)},
             {ToggleLayerViewMode, new KeybindList(KeyModifiers.Shift, Keys.D)},
             {ChangeSelectedLayerUp, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.Q)})},
             {ChangeSelectedLayerDown, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.W)})},

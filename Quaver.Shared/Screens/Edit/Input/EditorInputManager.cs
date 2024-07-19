@@ -258,6 +258,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ToggleGotoPanel:
                     Screen.ToggleBuiltinPlugin(EditorBuiltInPlugin.GoToObjects);
                     break;
+                case KeybindActions.ToggleGameplayPreview:
+                    Screen.DisplayGameplayPreview.Value = !Screen.DisplayGameplayPreview.Value;
+                    break;
                 case KeybindActions.TestPlay:
                     Screen.ExitToTestPlay();
                     break;

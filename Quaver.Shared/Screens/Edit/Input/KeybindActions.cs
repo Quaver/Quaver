@@ -47,6 +47,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         ToggleSvPanel,
         ToggleGotoPanel,
         ToggleLayerViewMode,
+        ToggleGameplayPreview,
         TestPlay,
         ChangeSelectedLayerUp,
         ChangeSelectedLayerDown,
