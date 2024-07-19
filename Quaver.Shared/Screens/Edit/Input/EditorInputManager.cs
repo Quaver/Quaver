@@ -167,16 +167,16 @@ namespace Quaver.Shared.Screens.Edit.Input
                         Screen.SeekTo(Screen.Track.Time - 1);
                     break;
                 case KeybindActions.SeekToStartOfSelection:
-                    Screen.SeekToStart();
-                    break;
-                case KeybindActions.SeekToEndOfSelection:
-                    Screen.SeekToEnd();
-                    break;
-                case KeybindActions.SeekToStart:
                     Screen.SeekToStartOfSelection();
                     break;
-                case KeybindActions.SeekToEnd:
+                case KeybindActions.SeekToEndOfSelection:
                     Screen.SeekToEndOfSelection();
+                    break;
+                case KeybindActions.SeekToStart:
+                    Screen.SeekToStart();
+                    break;
+                case KeybindActions.SeekToEnd:
+                    Screen.SeekToEnd();
                     break;
                 case KeybindActions.IncreasePlaybackRate:
                     Screen.ChangeAudioPlaybackRate(Direction.Forward);
