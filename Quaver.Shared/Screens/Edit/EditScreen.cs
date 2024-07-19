@@ -716,6 +716,8 @@ namespace Quaver.Shared.Screens.Edit
 
         public void OpenMetadataDialog() => DialogManager.Show(new EditorMetadataDialog(this));
 
+        public void OpenModifiersDialog() => DialogManager.Show(new EditorModifierMenuDialog());
+
         #endregion
 
         #region PLUGINS
