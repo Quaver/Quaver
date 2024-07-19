@@ -34,6 +34,24 @@ public class ModChartUtils : ModChartGlobalVariable
     }
 
     /// <summary>
+    ///     Same as <see cref="Beat"/>, but separating beat to <see cref="beat"/> + <see cref="numerator"/> / <see cref="denominator"/>
+    /// </summary>
+    /// <param name="measure"></param>
+    /// <param name="beat"></param>
+    /// <param name="numerator"></param>
+    /// <param name="denominator"></param>
+    /// <returns></returns>
+    /// <seealso cref="Beat"/>
+    /// <exception cref="ScriptRuntimeException">Denominator is 0</exception>
+    public float BeatFraction(int measure, int beat, int numerator, int denominator)
+    {
+        if (denominator == 0)
+            throw new ScriptRuntimeException("Beat denominator is 0!");
+
+        return Beat(measure, beat + (float)numerator / denominator);
+    }
+
+    /// <summary>
     ///     Gets the time at the specified measure and beat
     /// </summary>
     /// <param name="measure">Bar number. Should be same as shown in the editor.</param>

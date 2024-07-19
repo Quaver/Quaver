@@ -198,8 +198,9 @@ public class ModChartScript
         WorkingScript.Globals["Audio"] = ModChartAudio;
         WorkingScript.Globals["Fonts"] = typeof(Fonts);
         WorkingScript.Globals["Events"] = ModChartEvents;
-        WorkingScript.Globals["beat"] = ModChartUtils.Beat;
-        WorkingScript.Globals["measure"] = ModChartUtils.Measure;
+        WorkingScript.Globals["beat"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.Beat);
+        WorkingScript.Globals["beatFrac"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.BeatFraction);
+        WorkingScript.Globals["measure"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.Measure);
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
         ModChartScriptHelper.TryPerform(() =>
@@ -275,6 +276,10 @@ public class ModChartScript
                 {
                     1 => (int)ModChartUtils.Measure((float)tuple.Get(1).Number),
                     2 => (int)ModChartUtils.Beat((int)tuple.Get(1).Number, (float)tuple.Get(2).Number),
+                    3 => (int)ModChartUtils.Beat((int)tuple.Get(1).Number,
+                        (int)tuple.Get(2).Number + (float)tuple.Get(3).Number),
+                    4 => (int)ModChartUtils.BeatFraction((int)tuple.Get(1).Number, (int)tuple.Get(2).Number,
+                        (int)tuple.Get(3).Number, (int)tuple.Get(4).Number),
                     _ => throw new ScriptRuntimeException($"Cannot convert tuple {dynVal} to time")
                 };
             });
