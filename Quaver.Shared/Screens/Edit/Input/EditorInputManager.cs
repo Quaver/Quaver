@@ -243,6 +243,15 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.OpenCustomSnapDialog:
                     Screen.OpenCustomSnapDialog();
                     break;
+                case KeybindActions.OpenMetadataDialog:
+                    Screen.OpenMetadataDialog();
+                    break;
+                case KeybindActions.ToggleBpmPanel:
+                    Screen.ToggleBuiltinPlugin(EditorBuiltInPlugin.TimingPointEditor);
+                    break;
+                case KeybindActions.ToggleSvPanel:
+                    Screen.ToggleBuiltinPlugin(EditorBuiltInPlugin.ScrollVelocityEditor);
+                    break;
                 case KeybindActions.ToggleLayerViewMode:
                     Screen.ToggleViewLayers();
                     break;

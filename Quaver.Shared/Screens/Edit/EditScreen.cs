@@ -711,7 +711,10 @@ namespace Quaver.Shared.Screens.Edit
 
         #region DIALOGS
 
-        public void OpenCustomSnapDialog() => DialogManager.Show(new CustomBeatSnapDialog(BeatSnap, AvailableBeatSnaps));
+        public void OpenCustomSnapDialog() =>
+            DialogManager.Show(new CustomBeatSnapDialog(BeatSnap, AvailableBeatSnaps));
+
+        public void OpenMetadataDialog() => DialogManager.Show(new EditorMetadataDialog(this));
 
         #endregion
 
@@ -792,6 +795,19 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+        }
+
+        public void ToggleBuiltinPlugin(EditorBuiltInPlugin plugin)
+        {
+            TogglePlugin(BuiltInPlugins[plugin]);
+        }
+
+        public void TogglePlugin(IEditorPlugin timingPointPlugin)
+        {
+            timingPointPlugin.IsActive = !timingPointPlugin.IsActive;
+
+            if (timingPointPlugin.IsActive)
+                timingPointPlugin.Initialize();
         }
 
         #endregion
