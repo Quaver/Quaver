@@ -221,7 +221,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {OpenCustomSnapDialog, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D0), new Keybind(KeyModifiers.Shift, Keys.D0)})},
             {OpenMetadataDialog, new KeybindList(new [] {new Keybind(Keys.F1)})},
             {OpenModifiersDialog, new KeybindList(new [] {new Keybind(Keys.F2)})},
-            {ToggleGotoPanel, new KeybindList(new [] {new Keybind(Keys.F3)})},
+            {ToggleGotoPanel, new KeybindList(new [] {new Keybind(Keys.F3), new Keybind(Keys.F), new Keybind(KeyModifiers.Ctrl, Keys.F)})},
             {TestPlay, new KeybindList(new [] {new Keybind(Keys.F4)})},
             {ToggleBpmPanel, new KeybindList(new [] {new Keybind(Keys.F5)})},
             {ToggleSvPanel, new KeybindList(new [] {new Keybind(Keys.F6)})},
