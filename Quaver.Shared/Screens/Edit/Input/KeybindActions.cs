@@ -64,6 +64,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         Undo,
         Redo,
         Cut,
+        DeleteSelection,
         Copy,
         Paste,
         SelectAllNotes,

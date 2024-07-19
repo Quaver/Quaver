@@ -244,6 +244,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {Cut, new KeybindList(new[] {new Keybind(Keys.X), new Keybind(KeyModifiers.Ctrl, Keys.X)})},
             {Copy, new KeybindList(new[] {new Keybind(Keys.C), new Keybind(KeyModifiers.Ctrl, Keys.C)})},
             {Paste, new KeybindList(new[] {new Keybind(Keys.V), new Keybind(KeyModifiers.Ctrl, Keys.V)})},
+            {DeleteSelection, new KeybindList(new[] {new Keybind(Keys.Back), new Keybind(KeyModifiers.Free, Keys.Delete), new Keybind(KeyModifiers.Ctrl, Keys.Delete), new Keybind(KeyModifiers.Alt, Keys.Delete)})},
             {SelectAllNotes, new KeybindList(new[] {new Keybind(Keys.A), new Keybind(KeyModifiers.Ctrl, Keys.A)})},
             {Save, new KeybindList(new[] {new Keybind(Keys.S), new Keybind(KeyModifiers.Ctrl, Keys.S)})},
             {Deselect, new KeybindList(new[] {new Keybind(Keys.D), new Keybind(KeyModifiers.Ctrl, Keys.D)})},

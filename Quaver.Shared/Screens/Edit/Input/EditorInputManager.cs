@@ -325,6 +325,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.Cut:
                     Screen.CutSelectedObjects();
                     break;
+                case KeybindActions.DeleteSelection:
+                    Screen.DeleteSelectedObjects();
+                    break;
                 case KeybindActions.Save:
                     Screen.Save();
                     break;
