@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
@@ -260,6 +261,15 @@ namespace Quaver.Shared.Screens.Edit.Input
                     break;
                 case KeybindActions.ToggleGameplayPreview:
                     Screen.DisplayGameplayPreview.Value = !Screen.DisplayGameplayPreview.Value;
+                    break;
+                case KeybindActions.ToggleHitsounds:
+                    Screen.EnableHitsounds.Value = !Screen.EnableHitsounds.Value;
+                    break;
+                case KeybindActions.ToggleMetronome:
+                    Screen.EnableMetronome.Value = !Screen.EnableMetronome.Value;
+                    break;
+                case KeybindActions.TogglePitchRate:
+                    ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
                     break;
                 case KeybindActions.TestPlay:
                     Screen.ExitToTestPlay();
