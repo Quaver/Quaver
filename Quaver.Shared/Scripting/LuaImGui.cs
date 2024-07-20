@@ -29,11 +29,11 @@ namespace Quaver.Shared.Scripting
 {
     public class LuaImGui : SpriteImGui
     {
-        const int Limit = 10;
+        private const int Limit = 10;
 
-        static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
+        private static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
 
-        static Action<IEditorAction, bool?> s_events;
+        private static Action<IEditorAction, EditorActionEvent> s_events;
 
         /// <summary>
         /// </summary>
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private FileSystemWatcher Watcher { get; }
 
-        private List<Action<IEditorAction, bool?>> Events { get; } = new();
+        private List<Action<IEditorAction, EditorActionEvent>> Events { get; } = new();
 
         /// <summary>
         /// </summary>
@@ -110,6 +110,8 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterType<IntPtr>();
+            UserData.RegisterType<UIntPtr>();
+            UserData.RegisterType<EditorActionEvent>();
 
             // ImGui
             UserData.RegisterType<ImGuiInputTextFlags>();
@@ -160,7 +162,12 @@ namespace Quaver.Shared.Scripting
             Watcher.EnableRaisingEvents = true;
         }
 
-        public static void Perform(IEditorAction editorAction, bool? isUndo) => s_events?.Invoke(editorAction, isUndo);
+        /// <summary>
+        ///     Invokes all listeners for editor changes.
+        /// </summary>
+        /// <param name="change">The editor change.</param>
+        /// <param name="kind">Whether the change is a new edit, undo, or redo.</param>
+        public static void Inform(IEditorAction change, EditorActionEvent kind) => s_events?.Invoke(change, kind);
 
         /// <inheritdoc />
         /// <summary>
@@ -467,14 +474,14 @@ namespace Quaver.Shared.Scripting
         /// <param name="_">The script execution context. This parameter is unused.</param>
         /// <param name="args">The arguments.</param>
         /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
-        private DynValue OnEvent(ScriptExecutionContext _, CallbackArguments args)
+        private DynValue OnActionEvent(ScriptExecutionContext _, CallbackArguments args)
         {
             var count = args.Count;
 
             for (var i = 0; i < count; i++)
                 if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
                 {
-                    Action<IEditorAction, bool?> editorAction = (x, y) => function.Call(x, y);
+                    Action<IEditorAction, EditorActionEvent> editorAction = (x, y) => function.Call(x, y);
                     Events.Add(editorAction);
                     s_events += editorAction;
                 }
@@ -581,10 +588,11 @@ namespace Quaver.Shared.Scripting
             {
                 Globals =
                 {
+                    ["editor_action_event"] = typeof(EditorActionEvent),
                     ["eval"] = Eval,
                     ["evalExpr"] = EvalExpr,
                     ["imgui"] = typeof(ImGuiWrapper),
-                    ["onEvent"] = OnEvent,
+                    ["onActionEvent"] = OnActionEvent,
                     ["print"] = Print,
                     ["read"] = Read,
                     ["state"] = State,

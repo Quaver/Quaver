@@ -311,7 +311,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Perform();
             UndoStack.Push(action);
             RedoStack.Clear();
-            LuaImGui.Perform(action, null);
+            LuaImGui.Inform(action, EditorActionEvent.New);
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Undo();
 
             RedoStack.Push(action);
-            LuaImGui.Perform(action, true);
+            LuaImGui.Inform(action, EditorActionEvent.Undo);
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Perform();
 
             UndoStack.Push(action);
-            LuaImGui.Perform(action, false);
+            LuaImGui.Inform(action, EditorActionEvent.Redo);
         }
 
         /// <summary>
