@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Numerics;
 using MoonSharp.Interpreter;
 
 namespace Quaver.Shared.Scripting
