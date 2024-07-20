@@ -311,6 +311,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Perform();
             UndoStack.Push(action);
             RedoStack.Clear();
+            LuaImGui.Perform(action, null);
         }
 
         /// <summary>
@@ -331,6 +332,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Undo();
 
             RedoStack.Push(action);
+            LuaImGui.Perform(action, true);
         }
 
         /// <summary>
@@ -345,6 +347,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Perform();
 
             UndoStack.Push(action);
+            LuaImGui.Perform(action, false);
         }
 
         /// <summary>
@@ -787,8 +790,6 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-
-            LuaImGui.TriggerEvent(type, args);
         }
 
         /// <inheritdoc />

@@ -10,6 +10,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Debugging;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
@@ -32,7 +33,7 @@ namespace Quaver.Shared.Scripting
 
         static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
 
-        static Action<EditorActionType, EventArgs> s_events;
+        static Action<IEditorAction, bool?> s_events;
 
         /// <summary>
         /// </summary>
@@ -80,11 +81,11 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private string ScriptText { get; set; }
 
-        private Action<EditorActionType, EventArgs> Events { get; set; }
-
         /// <summary>
         /// </summary>
         private FileSystemWatcher Watcher { get; }
+
+        private List<Action<IEditorAction, bool?>> Events { get; } = new();
 
         /// <summary>
         /// </summary>
@@ -152,8 +153,6 @@ namespace Quaver.Shared.Scripting
             if (IsResource)
                 return;
 
-            s_events += Events;
-
             Watcher = new(Path.GetDirectoryName(filePath) ?? "") { Filter = Path.GetFileName(filePath) };
             Watcher.Changed += OnFileChanged;
             Watcher.Created += OnFileChanged;
@@ -161,14 +160,14 @@ namespace Quaver.Shared.Scripting
             Watcher.EnableRaisingEvents = true;
         }
 
-        public static void TriggerEvent(EditorActionType type, EventArgs args) => s_events?.Invoke(type, args);
+        public static void Perform(IEditorAction editorAction, bool? isUndo) => s_events?.Invoke(editorAction, isUndo);
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override void Destroy()
         {
-            s_events -= Events;
+            ClearEvents();
             Watcher?.Dispose();
             base.Destroy();
         }
@@ -389,21 +388,7 @@ namespace Quaver.Shared.Scripting
                     DataType.String => value.String,
                     DataType.Table => ToSimpleObject(value.Table, depth),
                     DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
-                    DataType.UserData => value.UserData.Object switch
-                    {
-                        Vector2 v => new[] { v.X, v.Y },
-                        Vector3 v => new[] { v.X, v.Y, v.Z },
-                        Vector4 v => new[] { v.X, v.Y, v.Z, v.W },
-                        BookmarkInfo i => new { i.Note, i.StartTime },
-                        CustomAudioSampleInfo i => new { i.Path, i.UnaffectedByRate },
-                        EditorLayerInfo i => new { i.ColorRgb, i.Hidden, i.Name },
-                        HitObjectInfo i => new { i.EditorLayer, i.EndTime, i.HitSound, i.Lane, i.StartTime },
-                        KeySoundInfo i => new { i.Sample, i.Volume },
-                        SliderVelocityInfo i => new { i.Multiplier, i.StartTime },
-                        SoundEffectInfo i => new { i.Sample, i.StartTime, i.Volume },
-                        TimingPointInfo i => new { i.Bpm, i.Hidden, i.StartTime, i.Signature },
-                        var o => o,
-                    },
+                    DataType.UserData => UserDataToSimpleObject(value.UserData.Object, depth),
                     DataType.ClrFunction => value.Callback.Name,
                     DataType.YieldRequest => Array.ConvertAll(value.YieldRequest.ReturnValues, x => ToSimpleObject(x, depth - 1)),
                     DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
@@ -441,6 +426,35 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Converts the <see cref="UserData"/> <see cref="object"/> to a primitive, string, array, or dictionary.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <param name="depth">The depth of the recursion.</param>
+        /// <returns>The converted value.</returns>
+        private static object UserDataToSimpleObject(object value, int depth) =>
+            depth <= 0
+                ? value.ToString()
+                : value switch
+                {
+                    Vector2 v => new[] { v.X, v.Y },
+                    Vector3 v => new[] { v.X, v.Y, v.Z },
+                    Vector4 v => new[] { v.X, v.Y, v.Z, v.W },
+                    BookmarkInfo i => new { i.Note, i.StartTime },
+                    CustomAudioSampleInfo i => new { i.Path, i.UnaffectedByRate },
+                    EditorLayerInfo i => new { i.ColorRgb, i.Hidden, i.Name },
+                    HitObjectInfo i => new { i.EditorLayer, i.EndTime, i.HitSound, i.Lane, i.StartTime },
+                    KeySoundInfo i => new { i.Sample, i.Volume },
+                    SliderVelocityInfo i => new { i.Multiplier, i.StartTime },
+                    SoundEffectInfo i => new { i.Sample, i.StartTime, i.Volume },
+                    TimingPointInfo i => new { i.Bpm, i.Hidden, i.StartTime, i.Signature },
+                    IEditorAction i => i.GetType()
+                       .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                       .Where(x => x.PropertyType != typeof(Qua) && x.PropertyType != typeof(EditorActionManager))
+                       .ToDictionary(x => x.Name, x => UserDataToSimpleObject(x.GetMethod?.Invoke(i, null), depth - 1)),
+                    _ => value,
+                };
+
+        /// <summary>
         ///     Hooks all <see cref="Closure"/> instances.
         /// </summary>
         /// <param name="_">The script execution context. This parameter is unused.</param>
@@ -448,9 +462,15 @@ namespace Quaver.Shared.Scripting
         /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
         private DynValue OnEvent(ScriptExecutionContext _, CallbackArguments args)
         {
-            for (var i = 0; i < args.Count; i++)
+            var count = args.Count;
+
+            for (var i = 0; i < count; i++)
                 if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
-                    Events += (x, y) => function.Call(x, y);
+                {
+                    Action<IEditorAction, bool?> editorAction = (x, y) => function.Call(x, y);
+                    Events.Add(editorAction);
+                    s_events += editorAction;
+                }
 
             return DynValue.Nil;
         }
@@ -532,6 +552,17 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Clears all events.
+        /// </summary>
+        private void ClearEvents()
+        {
+            foreach (var e in Events)
+                s_events -= e;
+
+            Events.Clear(); // Lets the GC clean up delegates that won't be invoked again in case this stays in memory.
+        }
+
+        /// <summary>
         ///     Loads the text from the script
         /// </summary>
         private void LazyLoadScript()
@@ -546,6 +577,7 @@ namespace Quaver.Shared.Scripting
                     ["eval"] = Eval,
                     ["evalExpr"] = EvalExpr,
                     ["imgui"] = typeof(ImGuiWrapper),
+                    ["onEvent"] = OnEvent,
                     ["print"] = Print,
                     ["read"] = Read,
                     ["state"] = State,
@@ -553,13 +585,13 @@ namespace Quaver.Shared.Scripting
                     ["vector2"] = typeof(Vector2),
                     ["vector3"] = typeof(Vector3),
                     ["vector4"] = typeof(Vector4),
-                    ["onEvent"] = OnEvent,
                     ["write"] = Write,
                 },
             };
 
             try
             {
+                ClearEvents();
                 LoadScriptText();
 
                 if (WorkingScript.DoString(ScriptText) is var ret && ret.Type is not DataType.Void)
