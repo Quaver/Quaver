@@ -51,6 +51,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -269,7 +270,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a bookmark has been removed.
         /// </summary>
         public event EventHandler<EditorActionBookmarkRemovedEventArgs> BookmarkRemoved;
-        
+
         /// <summary>
         ///     Event invoked when a bookmark has been added.
         /// </summary>
@@ -289,7 +290,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of bookmark's offsets have been changed.
         /// </summary>
         public event EventHandler<EditorActionChangeBookmarkOffsetBatchEventArgs> BookmarkBatchOffsetChanged;
-        
+
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
@@ -633,7 +634,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="bookmark"></param>
         public void RemoveBookmark(BookmarkInfo bookmark) => Perform(new EditorActionRemoveBookmark(this, WorkingMap, bookmark));
-        
+
         /// <summary>
         ///     Removes a batch of bookmarks from the map.
         /// </summary>
@@ -652,8 +653,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="bookmarks"></param>
         /// <param name="offset"></param>
-        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset)); 
-        
+        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset));
+
         /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
@@ -786,6 +787,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+
+            LuaImGui.TriggerEvent(type, args);
         }
 
         /// <inheritdoc />

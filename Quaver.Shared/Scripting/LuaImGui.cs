@@ -13,6 +13,7 @@ using MoonSharp.Interpreter.Debugging;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -30,6 +31,8 @@ namespace Quaver.Shared.Scripting
         const int Limit = 10;
 
         static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
+
+        static Action<EditorActionType, EventArgs> s_events;
 
         /// <summary>
         /// </summary>
@@ -76,6 +79,8 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         /// </summary>
         private string ScriptText { get; set; }
+
+        private Action<EditorActionType, EventArgs> Events { get; set; }
 
         /// <summary>
         /// </summary>
@@ -147,20 +152,23 @@ namespace Quaver.Shared.Scripting
             if (IsResource)
                 return;
 
+            s_events += Events;
+
             Watcher = new(Path.GetDirectoryName(filePath) ?? "") { Filter = Path.GetFileName(filePath) };
             Watcher.Changed += OnFileChanged;
             Watcher.Created += OnFileChanged;
             Watcher.Renamed += OnFileChanged;
-
-            // Begin watching.
             Watcher.EnableRaisingEvents = true;
         }
+
+        public static void TriggerEvent(EditorActionType type, EventArgs args) => s_events?.Invoke(type, args);
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override void Destroy()
         {
+            s_events -= Events;
             Watcher?.Dispose();
             base.Destroy();
         }
@@ -433,6 +441,49 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Hooks all <see cref="Closure"/> instances.
+        /// </summary>
+        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
+        private DynValue OnEvent(ScriptExecutionContext _, CallbackArguments args)
+        {
+            for (var i = 0; i < args.Count; i++)
+                if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
+                    Events += (x, y) => function.Call(x, y);
+
+            return DynValue.Nil;
+        }
+
+        /// <summary>
+        ///     Intercepted print function to display a notification.
+        /// </summary>
+        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="args">The arguments to print.</param>
+        /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
+        private DynValue Print(ScriptExecutionContext _, CallbackArguments args)
+        {
+            var a = args.GetArray();
+
+            NotificationLevel? level = a.FirstOrDefault()?.CastToString()?.ToUpperInvariant() switch
+            {
+                "I" or "I!" or "INF" or "INF!" or "INFO" or "INFO!" => NotificationLevel.Info,
+                "W" or "W!" or "WRN" or "WRN!" or "WARN" or "WARN!" or "WARNING" or "WARNING!" => NotificationLevel.Warning,
+                "E" or "E!" or "ERR" or "ERR!" or "ERROR" or "ERROR!" => NotificationLevel.Error,
+                "S" or "S!" or "YAY" or "YAY!" or "SUCCESS" or "SUCCESS!" => NotificationLevel.Success,
+                _ => null,
+            };
+
+            NotificationManager.Show(
+                level ?? NotificationLevel.Info,
+                $"{(level is null || a[0].CastToString().LastOrDefault() is not '!' ? $"{Name}: " : "")}" +
+                $"{string.Join("\n", a.Skip(level is null ? 0 : 1).Select(Display))}"
+            );
+
+            return DynValue.Nil;
+        }
+
+        /// <summary>
         ///     Reads the config file.
         /// </summary>
         /// <param name="context">The script execution context.</param>
@@ -458,7 +509,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="_">The script execution context. This parameter is unused.</param>
         /// <param name="args">The arguments.</param>
-        /// <returns>The value indicating whether the write was successful.</returns>
+        /// <returns>The value indicating whether the writing was successful.</returns>
         private DynValue Write(ScriptExecutionContext _, CallbackArguments args)
         {
             try
@@ -493,16 +544,17 @@ namespace Quaver.Shared.Scripting
                 Globals =
                 {
                     ["eval"] = Eval,
-                    ["eval_expr"] = EvalExpr,
+                    ["evalExpr"] = EvalExpr,
                     ["imgui"] = typeof(ImGuiWrapper),
-                    ["print"] = CallbackFunction.FromDelegate(null, Print),
-                    ["read"] = CallbackFunction.FromDelegate(null, Read),
+                    ["print"] = Print,
+                    ["read"] = Read,
                     ["state"] = State,
                     ["vector"] = typeof(LuaVectorWrapper),
                     ["vector2"] = typeof(Vector2),
                     ["vector3"] = typeof(Vector3),
                     ["vector4"] = typeof(Vector4),
-                    ["write"] = CallbackFunction.FromDelegate(null, Write),
+                    ["onEvent"] = OnEvent,
+                    ["write"] = Write,
                 },
             };
 
@@ -601,48 +653,6 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
-        ///     Intercepted print function to display a notification.
-        /// </summary>
-        /// <param name="args">The arguments to print.</param>
-        private void Print(params DynValue[] args)
-        {
-            NotificationLevel? level = args.FirstOrDefault()?.CastToString()?.ToUpperInvariant() switch
-            {
-                "I" or "I!" or "INF" or "INF!" or "INFO" or "INFO!" => NotificationLevel.Info,
-                "W" or "W!" or "WRN" or "WRN!" or "WARN" or "WARN!" or "WARNING" or "WARNING!" => NotificationLevel.Warning,
-                "E" or "E!" or "ERR" or "ERR!" or "ERROR" or "ERROR!" => NotificationLevel.Error,
-                "S" or "S!" or "YAY" or "YAY!" or "SUCCESS" or "SUCCESS!" => NotificationLevel.Success,
-                _ => null,
-            };
-
-            NotificationManager.Show(
-                level ?? NotificationLevel.Info,
-                $"{(level is null || args[0].CastToString().LastOrDefault() is not '!' ? $"{Name}: " : "")}" +
-                $"{string.Join("\n", args.Skip(level is null ? 0 : 1).Select(Display))}"
-            );
-        }
-
-        /// <summary>
-        ///     Invokes the user-defined function, returning an <see cref="Exception"/> if it failed.
-        /// </summary>
-        /// <returns>The <see cref="Exception"/> if it failed.</returns>
-        private Exception CallUserDefinedFunction(string functionName)
-        {
-            try
-            {
-                if (WorkingScript.Globals[functionName] is Closure draw)
-                    WorkingScript.Call(draw);
-
-                LastErrorMessage = null;
-                return null;
-            }
-            catch (Exception e)
-            {
-                return e;
-            }
-        }
-
-        /// <summary>
         ///     Formats the exception to be readable in a notification.
         /// </summary>
         /// <param name="e">The exception to format.</param>
@@ -671,6 +681,26 @@ namespace Quaver.Shared.Scripting
             };
 
             return $"Plugin \"{Name}\" caused {summary} error{message}{CallStack(e)}";
+        }
+
+        /// <summary>
+        ///     Invokes the user-defined function, returning an <see cref="Exception"/> if it failed.
+        /// </summary>
+        /// <returns>The <see cref="Exception"/> if it failed.</returns>
+        private Exception CallUserDefinedFunction(string functionName)
+        {
+            try
+            {
+                if (WorkingScript.Globals[functionName] is Closure draw)
+                    WorkingScript.Call(draw);
+
+                LastErrorMessage = null;
+                return null;
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
         }
     }
 }
