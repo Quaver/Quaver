@@ -271,14 +271,6 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
-        ///     Indicates a failure to coerce a value to a vector.
-        /// </summary>
-        /// <param name="dynVal">The value that failed to coerce.</param>
-        /// <returns>The exception to throw.</returns>
-        private static Exception UnableToCoerce(DynValue dynVal) =>
-            new ArgumentException($"Value cannot be converted to a vector type: {Display(dynVal)}");
-
-        /// <summary>
         ///     Gets the call stack.
         /// </summary>
         /// <param name="e">The exception.</param>
@@ -310,66 +302,6 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
-        ///     Evaluates code.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="args">The arguments.</param>
-        /// <returns>
-        /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
-        /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
-        /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
-        /// </returns>
-        private static DynValue Eval(ScriptExecutionContext context, CallbackArguments args)
-        {
-            try
-            {
-                var code = args.RawGet(0, false).String;
-
-                // Eval engine doesn't like empty code.
-                if (string.IsNullOrWhiteSpace(code))
-                    return DynValue.Nil;
-
-                var ok = context.GetScript().DoString(code);
-                return DynValue.NewTuple(ok, DynValue.Nil);
-            }
-            catch (Exception e)
-            {
-                var err = DynValue.NewString(e.Message);
-                return DynValue.NewTuple(DynValue.Nil, err);
-            }
-        }
-
-        /// <summary>
-        ///     Evaluates a code expression.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="args">The arguments.</param>
-        /// <returns>
-        /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
-        /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
-        /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
-        /// </returns>
-        private static DynValue Expr(ScriptExecutionContext context, CallbackArguments args)
-        {
-            try
-            {
-                var code = args.RawGet(0, false).String;
-
-                // Eval engine doesn't like empty code.
-                if (string.IsNullOrWhiteSpace(code))
-                    return DynValue.Nil;
-
-                var ok = context.GetScript().CreateDynamicExpression(code).Evaluate(context);
-                return DynValue.NewTuple(ok, DynValue.Nil);
-            }
-            catch (Exception e)
-            {
-                var err = DynValue.NewString(e.Message);
-                return DynValue.NewTuple(DynValue.Nil, err);
-            }
-        }
-
-        /// <summary>
         ///     Creates the string representation of the dynamic value.
         /// </summary>
         /// <param name="value">The value to create the string for.</param>
@@ -393,9 +325,9 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="value">The value to create the string for.</param>
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
-        private static string DisplayDictionary(ICollection value)
+        private static string DisplayDictionary(IDictionary value)
         {
-            var elements = value.OfType<DictionaryEntry>().Select(x => $"{x.Key} = {x.Value}");
+            var elements = AsEnumerable(value).Select(x => $"{DisplayObject(x.Key)} = {DisplayObject(x.Value)}");
             var truncated = value.Count > IterationLimit ? elements.Take(IterationLimit).Append("…") : elements;
             return $"{{ {string.Join(", ", truncated)} }}";
         }
@@ -430,7 +362,7 @@ namespace Quaver.Shared.Scripting
                     DataType.String => value.String,
                     DataType.Table => ToSimpleObject(value.Table, depth),
                     DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
-                    DataType.UserData => UserDataToSimpleObject(value.UserData.Object, depth - 1),
+                    DataType.UserData => UserDataToSimpleObject(value.UserData.Object, depth),
                     DataType.ClrFunction => value.Callback.Name,
                     DataType.YieldRequest => Array.ConvertAll(
                         value.YieldRequest.ReturnValues,
@@ -503,111 +435,90 @@ namespace Quaver.Shared.Scripting
                 };
 
         /// <summary>
-        ///     Hooks all <see cref="Closure"/> instances.
+        ///     Evaluates code.
         /// </summary>
-        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="context">The context.</param>
         /// <param name="args">The arguments.</param>
-        /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
-        private DynValue On(ScriptExecutionContext _, CallbackArguments args)
-        {
-            var count = args.Count;
-
-            for (var i = 0; i < count; i++)
-                if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
-                {
-                    void EditorAction(IEditorAction change, HistoryType kind)
-                    {
-                        try
-                        {
-                            function.Call(change, kind);
-                        }
-                        catch (Exception e)
-                        {
-                            HandleLuaException(e);
-                        }
-                    }
-
-                    var action = EditorAction;
-                    Events.Add(action);
-                    s_events += action;
-                }
-
-            return DynValue.Nil;
-        }
-
-        /// <summary>
-        ///     Intercepted print function to display a notification.
-        /// </summary>
-        /// <param name="_">The script execution context. This parameter is unused.</param>
-        /// <param name="args">The arguments to print.</param>
-        /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
-        private DynValue Print(ScriptExecutionContext _, CallbackArguments args)
-        {
-            var a = args.GetArray();
-
-            NotificationLevel? level = a.FirstOrDefault()?.CastToString()?.ToUpperInvariant() switch
-            {
-                "I" or "I!" or "INF" or "INF!" or "INFO" or "INFO!" => NotificationLevel.Info,
-                "W" or "W!" or "WRN" or "WRN!" or "WARN" or "WARN!" or "WARNING" or "WARNING!" => NotificationLevel.Warning,
-                "E" or "E!" or "ERR" or "ERR!" or "ERROR" or "ERROR!" => NotificationLevel.Error,
-                "S" or "S!" or "YAY" or "YAY!" or "SUCCESS" or "SUCCESS!" => NotificationLevel.Success,
-                _ => null,
-            };
-
-            NotificationManager.Show(
-                level ?? NotificationLevel.Info,
-                $"{(level is null || a[0].CastToString().LastOrDefault() is not '!' ? $"{Name}: " : "")}" +
-                $"{string.Join("\n", a.Skip(level is null ? 0 : 1).Select(Display))}"
-            );
-
-            return DynValue.Nil;
-        }
-
-        /// <summary>
-        ///     Reads the config file.
-        /// </summary>
-        /// <param name="context">The script execution context.</param>
-        /// <param name="args">The arguments.</param>
-        /// <returns>The deserialized object.</returns>
-        private DynValue Read(ScriptExecutionContext context, CallbackArguments args)
+        /// <returns>
+        /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
+        /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
+        /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
+        /// </returns>
+        private static DynValue Eval(ScriptExecutionContext context, CallbackArguments args)
         {
             try
             {
-                using FileStream file = new(ConfigFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
-                using StreamReader fileReader = new(file);
-                var obj = new DeserializerBuilder().Build().Deserialize(fileReader);
-                return DynValue.FromObject(context.GetScript(), obj);
+                var code = args.RawGet(0, false).String;
+
+                // Eval engine doesn't like empty code.
+                if (string.IsNullOrWhiteSpace(code))
+                    return DynValue.Nil;
+
+                var ok = context.GetScript().DoString(code);
+                return DynValue.NewTuple(ok, DynValue.Nil);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return DynValue.Nil;
+                var err = DynValue.NewString(e.Message);
+                return DynValue.NewTuple(DynValue.Nil, err);
             }
         }
 
         /// <summary>
-        ///     Writes the config file.
+        ///     Evaluates a code expression.
         /// </summary>
-        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="context">The context.</param>
         /// <param name="args">The arguments.</param>
-        /// <returns>The value indicating whether the writing was successful.</returns>
-        private DynValue Write(ScriptExecutionContext _, CallbackArguments args)
+        /// <returns>
+        /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
+        /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
+        /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
+        /// </returns>
+        private static DynValue Expr(ScriptExecutionContext context, CallbackArguments args)
         {
             try
             {
-                var toSerialize = args.GetArray() is var array && array.Length is 1
-                    ? ToSimpleObject(array[0])
-                    : Array.ConvertAll(array, x => ToSimpleObject(x));
+                var code = args.RawGet(0, false).String;
 
-                var serializer = new Serializer();
-                var stringWriter = new StringWriter();
-                serializer.Serialize(stringWriter, toSerialize);
-                var serialized = stringWriter.ToString();
-                File.WriteAllText(ConfigFilePath, serialized);
-                return DynValue.True;
+                // Eval engine doesn't like empty code.
+                if (string.IsNullOrWhiteSpace(code))
+                    return DynValue.Nil;
+
+                var ok = context.GetScript().CreateDynamicExpression(code).Evaluate(context);
+                return DynValue.NewTuple(ok, DynValue.Nil);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return DynValue.False;
+                var err = DynValue.NewString(e.Message);
+                return DynValue.NewTuple(DynValue.Nil, err);
+            }
+        }
+
+        /// <summary>
+        ///     Indicates a failure to coerce a value to a vector.
+        /// </summary>
+        /// <param name="dynVal">The value that failed to coerce.</param>
+        /// <returns>The exception to throw.</returns>
+        private static Exception UnableToCoerce(DynValue dynVal) =>
+            new ArgumentException($"Value cannot be converted to a vector type: {Display(dynVal)}");
+
+        /// <summary>
+        ///     Gets the enumeration of <see cref="DictionaryEntry"/> from the <see cref="IDictionary"/> instance.
+        /// </summary>
+        /// <param name="value">The value to enumerate.</param>
+        /// <returns>The enumeration of the parameter <paramref name="value"/>.</returns>
+        private static IEnumerable<DictionaryEntry> AsEnumerable(IDictionary value)
+        {
+            var e = value.GetEnumerator();
+
+            try
+            {
+                while (e.MoveNext())
+                    yield return e.Entry;
+            }
+            finally
+            {
+                (e as IDisposable)?.Dispose();
             }
         }
 
@@ -638,7 +549,7 @@ namespace Quaver.Shared.Scripting
                     ["expr"] = Expr,
                     ["history_type"] = typeof(HistoryType),
                     ["imgui"] = typeof(ImGuiWrapper),
-                    ["on"] = On,
+                    ["listen"] = Listen,
                     ["print"] = Print,
                     ["read"] = Read,
                     ["state"] = State,
@@ -774,6 +685,115 @@ namespace Quaver.Shared.Scripting
             };
 
             return $"Plugin \"{Name}\" caused {summary} error{message}{CallStack(e)}";
+        }
+
+        /// <summary>
+        ///     Hooks all <see cref="Closure"/> instances.
+        /// </summary>
+        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
+        private DynValue Listen(ScriptExecutionContext _, CallbackArguments args)
+        {
+            var count = args.Count;
+
+            for (var i = 0; i < count; i++)
+                if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
+                {
+                    void EditorAction(IEditorAction change, HistoryType kind)
+                    {
+                        try
+                        {
+                            function.Call(change, kind);
+                        }
+                        catch (Exception e)
+                        {
+                            HandleLuaException(e);
+                        }
+                    }
+
+                    var action = EditorAction;
+                    Events.Add(action);
+                    s_events += action;
+                }
+
+            return DynValue.Nil;
+        }
+
+        /// <summary>
+        ///     Intercepted print function to display a notification.
+        /// </summary>
+        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="args">The arguments to print.</param>
+        /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
+        private DynValue Print(ScriptExecutionContext _, CallbackArguments args)
+        {
+            var a = args.GetArray();
+
+            NotificationLevel? level = a.FirstOrDefault()?.CastToString()?.ToUpperInvariant() switch
+            {
+                "I" or "I!" or "INF" or "INF!" or "INFO" or "INFO!" => NotificationLevel.Info,
+                "W" or "W!" or "WRN" or "WRN!" or "WARN" or "WARN!" or "WARNING" or "WARNING!" => NotificationLevel.Warning,
+                "E" or "E!" or "ERR" or "ERR!" or "ERROR" or "ERROR!" => NotificationLevel.Error,
+                "S" or "S!" or "YAY" or "YAY!" or "SUCCESS" or "SUCCESS!" => NotificationLevel.Success,
+                _ => null,
+            };
+
+            NotificationManager.Show(
+                level ?? NotificationLevel.Info,
+                $"{(level is null || a[0].CastToString().LastOrDefault() is not '!' ? $"{Name}: " : "")}" +
+                $"{string.Join("\n", a.Skip(level is null ? 0 : 1).Select(Display))}"
+            );
+
+            return DynValue.Nil;
+        }
+
+        /// <summary>
+        ///     Reads the config file.
+        /// </summary>
+        /// <param name="context">The script execution context.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The deserialized object.</returns>
+        private DynValue Read(ScriptExecutionContext context, CallbackArguments args)
+        {
+            try
+            {
+                using FileStream file = new(ConfigFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using StreamReader fileReader = new(file);
+                var obj = new DeserializerBuilder().Build().Deserialize(fileReader);
+                return DynValue.FromObject(context.GetScript(), obj);
+            }
+            catch (Exception)
+            {
+                return DynValue.Nil;
+            }
+        }
+
+        /// <summary>
+        ///     Writes the config file.
+        /// </summary>
+        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The value indicating whether the writing was successful.</returns>
+        private DynValue Write(ScriptExecutionContext _, CallbackArguments args)
+        {
+            try
+            {
+                var toSerialize = args.GetArray() is var array && array.Length is 1
+                    ? ToSimpleObject(array[0])
+                    : Array.ConvertAll(array, x => ToSimpleObject(x));
+
+                var serializer = new Serializer();
+                var stringWriter = new StringWriter();
+                serializer.Serialize(stringWriter, toSerialize);
+                var serialized = stringWriter.ToString();
+                File.WriteAllText(ConfigFilePath, serialized);
+                return DynValue.True;
+            }
+            catch (Exception)
+            {
+                return DynValue.False;
+            }
         }
 
         /// <summary>
