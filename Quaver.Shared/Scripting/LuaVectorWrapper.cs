@@ -11,17 +11,6 @@ namespace Quaver.Shared.Scripting
     [MoonSharpUserData]
     static class LuaVectorWrapper
     {
-        public static DynValue Add(DynValue first, DynValue second) =>
-            Create(
-                0 switch
-                {
-                    _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Add(x, y),
-                    _ when TryCoerce<Vector3>(first, second) is var (x, y) => Vector3.Add(x, y),
-                    _ when TryCoerce<Vector4>(first, second) is var (x, y) => Vector4.Add(x, y),
-                    _ => throw Unreachable(first, second),
-                }
-            );
-
         public static DynValue Abs(DynValue value) =>
             Create(
                 CoerceToVectorOrFloat(value) switch
@@ -31,6 +20,17 @@ namespace Quaver.Shared.Scripting
                     Vector3 v => Vector3.Abs(v),
                     Vector4 v => Vector4.Abs(v),
                     _ => throw Unreachable(value),
+                }
+            );
+
+        public static DynValue Add(DynValue first, DynValue second) =>
+            Create(
+                0 switch
+                {
+                    _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector2.Add(x, y),
+                    _ when TryCoerce<Vector3>(first, second) is var (x, y) => Vector3.Add(x, y),
+                    _ when TryCoerce<Vector4>(first, second) is var (x, y) => Vector4.Add(x, y),
+                    _ => throw Unreachable(first, second),
                 }
             );
 
