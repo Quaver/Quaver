@@ -33,7 +33,7 @@ namespace Quaver.Shared.Scripting
 
         private static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
 
-        private static Action<IEditorAction, EditorActionEvent> s_events;
+        private static Action<IEditorAction, HistoryType> s_events;
 
         /// <summary>
         /// </summary>
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private FileSystemWatcher Watcher { get; }
 
-        private List<Action<IEditorAction, EditorActionEvent>> Events { get; } = new();
+        private List<Action<IEditorAction, HistoryType>> Events { get; } = new();
 
         /// <summary>
         /// </summary>
@@ -111,7 +111,7 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterType<IntPtr>();
             UserData.RegisterType<UIntPtr>();
-            UserData.RegisterType<EditorActionEvent>();
+            UserData.RegisterType<HistoryType>();
 
             // ImGui
             UserData.RegisterType<ImGuiInputTextFlags>();
@@ -167,7 +167,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="change">The editor change.</param>
         /// <param name="kind">Whether the change is a new edit, undo, or redo.</param>
-        public static void Inform(IEditorAction change, EditorActionEvent kind) => s_events?.Invoke(change, kind);
+        public static void Inform(IEditorAction change, HistoryType kind) => s_events?.Invoke(change, kind);
 
         /// <inheritdoc />
         /// <summary>
@@ -345,7 +345,7 @@ namespace Quaver.Shared.Scripting
         /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
         /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
         /// </returns>
-        private static DynValue EvalExpr(ScriptExecutionContext context, CallbackArguments args)
+        private static DynValue Expr(ScriptExecutionContext context, CallbackArguments args)
         {
             try
             {
@@ -474,14 +474,14 @@ namespace Quaver.Shared.Scripting
         /// <param name="_">The script execution context. This parameter is unused.</param>
         /// <param name="args">The arguments.</param>
         /// <returns>The value <see cref="DynValue.Nil"/>.</returns>
-        private DynValue OnActionEvent(ScriptExecutionContext _, CallbackArguments args)
+        private DynValue On(ScriptExecutionContext _, CallbackArguments args)
         {
             var count = args.Count;
 
             for (var i = 0; i < count; i++)
                 if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
                 {
-                    Action<IEditorAction, EditorActionEvent> editorAction = (x, y) => function.Call(x, y);
+                    Action<IEditorAction, HistoryType> editorAction = (x, y) => function.Call(x, y);
                     Events.Add(editorAction);
                     s_events += editorAction;
                 }
@@ -588,11 +588,11 @@ namespace Quaver.Shared.Scripting
             {
                 Globals =
                 {
-                    ["editor_action_event"] = typeof(EditorActionEvent),
                     ["eval"] = Eval,
-                    ["evalExpr"] = EvalExpr,
+                    ["expr"] = Expr,
+                    ["history_type"] = typeof(HistoryType),
                     ["imgui"] = typeof(ImGuiWrapper),
-                    ["onActionEvent"] = OnActionEvent,
+                    ["on"] = On,
                     ["print"] = Print,
                     ["read"] = Read,
                     ["state"] = State,

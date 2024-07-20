@@ -4,7 +4,7 @@ namespace Quaver.Shared.Scripting;
 /// <summary>
 ///     Represents the type of changes done on the edit stack within editor actions.
 /// </summary>
-public enum EditorActionEvent
+public enum HistoryType
 {
     /// <summary>
     ///     Indicates the editor action is a new edit that is pushed to the stack.
