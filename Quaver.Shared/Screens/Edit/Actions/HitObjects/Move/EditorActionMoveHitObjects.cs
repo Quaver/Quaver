@@ -23,24 +23,24 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         ///     The value in which the objects lanes will be added to.
         ///     Example: An object originally at lane 1 moved at a lane offset of +2 will be newly in lane 3.
         /// </summary>
-        private int LaneOffset { get; }
+        public int LaneOffset { get; }
 
         /// <summary>
         ///     The offset at which the objects have been dragged
         /// </summary>
-        private int DragOffset { get; }
+        public int DragOffset { get; }
 
         /// <summary>
         ///     If true, <see cref="Perform"/> will do any moving of the objects.
         ///     If false, only the event will be called
         /// </summary>
-        private bool ShouldPerform { get; set; }
+        public bool ShouldPerform { get; private set; }
 
         /// <summary>
         /// </summary>

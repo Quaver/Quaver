@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Add
 
         private Qua WorkingMap { get; }
 
-        private SliderVelocityInfo ScrollVelocity { get; }
+        public SliderVelocityInfo ScrollVelocity { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddScrollVelocity(EditorActionManager manager, Qua workingMap, SliderVelocityInfo sv)

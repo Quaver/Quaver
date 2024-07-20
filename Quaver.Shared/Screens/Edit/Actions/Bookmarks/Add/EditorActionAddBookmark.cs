@@ -10,12 +10,12 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add
     public class EditorActionAddBookmark : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.AddBookmark;
-        
+
         private EditorActionManager ActionManager { get; }
 
         private Qua WorkingMap { get; }
 
-        private BookmarkInfo Bookmark { get; }
+        public BookmarkInfo Bookmark { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddBookmark(EditorActionManager manager, Qua map, BookmarkInfo bookmark)
@@ -24,13 +24,13 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add
             WorkingMap = map;
             Bookmark = bookmark;
         }
-        
+
         [MoonSharpVisible(false)]
         public void Perform()
         {
             WorkingMap.Bookmarks.Add(Bookmark);
             WorkingMap.Sort();
-            
+
             ActionManager.TriggerEvent(Type, new EditorActionBookmarkAddedEventArgs(Bookmark));
         }
 

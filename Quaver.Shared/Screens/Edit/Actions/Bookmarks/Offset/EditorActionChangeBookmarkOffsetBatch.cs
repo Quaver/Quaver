@@ -10,14 +10,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
     public class EditorActionChangeBookmarkOffsetBatch : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangeBookmarkOffsetBatch;
-        
+
         private EditorActionManager ActionManager { get; }
 
         private Qua WorkingMap { get; }
 
-        private List<BookmarkInfo> Bookmarks { get; }
+        public List<BookmarkInfo> Bookmarks { get; }
 
-        private int Offset { get; }
+        public int Offset { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeBookmarkOffsetBatch(EditorActionManager manager, Qua map, List<BookmarkInfo> bookmarks, int offset)
@@ -27,13 +27,13 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
             Bookmarks = bookmarks;
             Offset = offset;
         }
-        
+
         [MoonSharpVisible(false)]
         public void Perform()
         {
             foreach (var bookmark in Bookmarks)
                 bookmark.StartTime += Offset;
-            
+
             WorkingMap.Sort();
             ActionManager.TriggerEvent(Type, new EditorActionChangeBookmarkOffsetBatchEventArgs(Bookmarks, Offset));
         }

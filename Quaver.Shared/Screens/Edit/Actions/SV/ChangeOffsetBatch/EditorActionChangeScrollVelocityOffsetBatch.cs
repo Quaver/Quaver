@@ -15,9 +15,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch
 
         private Qua WorkingMap { get; }
 
-        private List<SliderVelocityInfo> ScrollVelocities { get; }
+        public List<SliderVelocityInfo> ScrollVelocities { get; }
 
-        private float Offset { get; }
+        public float Offset { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeScrollVelocityOffsetBatch(EditorActionManager manager, Qua workingMap, List<SliderVelocityInfo> svs,

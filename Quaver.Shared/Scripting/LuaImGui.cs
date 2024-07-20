@@ -15,6 +15,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -109,9 +110,10 @@ namespace Quaver.Shared.Scripting
 
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
-            UserData.RegisterType<IntPtr>();
-            UserData.RegisterType<UIntPtr>();
+            UserData.RegisterType<EditorActionResnapHitObjects.NoteAdjustment>();
             UserData.RegisterType<HistoryType>();
+            UserData.RegisterType<UIntPtr>();
+            UserData.RegisterType<IntPtr>();
 
             // ImGui
             UserData.RegisterType<ImGuiInputTextFlags>();
@@ -481,9 +483,21 @@ namespace Quaver.Shared.Scripting
             for (var i = 0; i < count; i++)
                 if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
                 {
-                    Action<IEditorAction, HistoryType> editorAction = (x, y) => function.Call(x, y);
-                    Events.Add(editorAction);
-                    s_events += editorAction;
+                    void EditorAction(IEditorAction change, HistoryType kind)
+                    {
+                        try
+                        {
+                            function.Call(change, kind);
+                        }
+                        catch (Exception e)
+                        {
+                            HandleLuaException(e);
+                        }
+                    }
+
+                    var action = EditorAction;
+                    Events.Add(action);
+                    s_events += action;
                 }
 
             return DynValue.Nil;

@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Remove
 
         private Qua WorkingMap { get; }
 
-        private SliderVelocityInfo ScrollVelocity { get; }
+        public SliderVelocityInfo ScrollVelocity { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionRemoveScrollVelocity(EditorActionManager manager, Qua workingMap, SliderVelocityInfo sv)

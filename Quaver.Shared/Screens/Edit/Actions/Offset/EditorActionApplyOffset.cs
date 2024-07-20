@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Offset
 
         private Qua WorkingMap { get; }
 
-        private int Offset { get; }
+        public int Offset { get; }
 
         public EditorActionApplyOffset(EditorActionManager actiomManager, Qua workingMap, int offset)
         {
@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Offset
                 Offset).Perform();
 
             new EditorActionChangePreviewTime(ActionManager, WorkingMap, WorkingMap.SongPreviewTime + Offset).Perform();
-            
+
             new EditorActionChangeBookmarkOffsetBatch(ActionManager, WorkingMap, WorkingMap.Bookmarks, Offset).Perform();
         }
 

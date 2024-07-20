@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
 
         private Qua WorkingMap { get; }
 
-        private BookmarkInfo Bookmark { get; }
+        public BookmarkInfo Bookmark { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionRemoveBookmark(EditorActionManager manager, Qua map, BookmarkInfo bookmark)
@@ -22,13 +22,13 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
             WorkingMap = map;
             Bookmark = bookmark;
         }
-        
+
         [MoonSharpVisible(false)]
         public void Perform()
         {
             WorkingMap.Bookmarks.Remove(Bookmark);
             WorkingMap.Sort();
-            
+
             ActionManager.TriggerEvent(Type, new EditorActionBookmarkRemovedEventArgs(Bookmark));
         }
 
