@@ -10,7 +10,6 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Debugging;
-using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
@@ -399,7 +398,10 @@ namespace Quaver.Shared.Scripting
                     DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
                     DataType.UserData => UserDataToSimpleObject(value.UserData.Object, depth - 1),
                     DataType.ClrFunction => value.Callback.Name,
-                    DataType.YieldRequest => Array.ConvertAll(value.YieldRequest.ReturnValues, x => ToSimpleObject(x, depth - 1)),
+                    DataType.YieldRequest => Array.ConvertAll(
+                        value.YieldRequest.ReturnValues,
+                        x => ToSimpleObject(x, depth - 1)
+                    ),
                     DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
                     _ => null,
                 };
@@ -445,23 +447,24 @@ namespace Quaver.Shared.Scripting
                 ? value.ToString()
                 : value switch
                 {
-                    Vector2 v => new[] { v.X, v.Y },
-                    Vector3 v => new[] { v.X, v.Y, v.Z },
-                    Vector4 v => new[] { v.X, v.Y, v.Z, v.W },
-                    BookmarkInfo i => new { i.Note, i.StartTime },
-                    CustomAudioSampleInfo i => new { i.Path, i.UnaffectedByRate },
-                    EditorLayerInfo i => new { i.ColorRgb, i.Hidden, i.Name },
-                    HitObjectInfo i => new { i.EditorLayer, i.EndTime, i.HitSound, i.Lane, i.StartTime },
-                    KeySoundInfo i => new { i.Sample, i.Volume },
-                    SliderVelocityInfo i => new { i.Multiplier, i.StartTime },
-                    SoundEffectInfo i => new { i.Sample, i.StartTime, i.Volume },
-                    TimingPointInfo i => new { i.Bpm, i.Hidden, i.StartTime, i.Signature },
-                    IEditorAction i => i.GetType()
-                       .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                       .ToDictionary(
-                            object (x) => x.Name,
-                            x => UserDataToSimpleObject(x.GetMethod?.Invoke(i, null), depth - 1)
-                        ),
+                    Vector2 v => new object[] { v.X, v.Y },
+                    Vector3 v => new object[] { v.X, v.Y, v.Z },
+                    Vector4 v => new object[] { v.X, v.Y, v.Z, v.W },
+                    BookmarkInfo or
+                        CustomAudioSampleInfo or
+                        EditorLayerInfo or
+                        HitObjectInfo or
+                        IEditorAction or
+                        KeySoundInfo or
+                        SliderVelocityInfo or
+                        SoundEffectInfo or
+                        TimingPointInfo => value
+                           .GetType()
+                           .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                           .ToDictionary(
+                                object (x) => x.Name,
+                                x => UserDataToSimpleObject(x.GetMethod?.Invoke(value, null), depth - 1)
+                            ),
                     _ => value,
                 };
 
