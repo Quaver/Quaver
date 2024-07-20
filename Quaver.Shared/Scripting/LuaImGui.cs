@@ -457,12 +457,7 @@ namespace Quaver.Shared.Scripting
                     SoundEffectInfo i => new { i.Sample, i.StartTime, i.Volume },
                     TimingPointInfo i => new { i.Bpm, i.Hidden, i.StartTime, i.Signature },
                     IEditorAction i => i.GetType()
-                       .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                       .Where(
-                            x => x.CanRead &&
-                                x.PropertyType != typeof(EditorActionManager) &&
-                                x.PropertyType != typeof(Qua)
-                        )
+                       .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                        .ToDictionary(
                             object (x) => x.Name,
                             x => UserDataToSimpleObject(x.GetMethod?.Invoke(i, null), depth - 1)
