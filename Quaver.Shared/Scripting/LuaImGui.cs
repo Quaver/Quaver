@@ -372,12 +372,41 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="value">The value to create the string for.</param>
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
-        private static string Display(DynValue value) =>
-            ToSimpleObject(value) switch
+        private static string Display(DynValue value) => DisplayObject(ToSimpleObject(value)) ?? value.ToPrintString();
+
+        /// <summary>
+        ///     Creates the string representation of the array.
+        /// </summary>
+        /// <param name="value">The value to create the string for.</param>
+        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
+        private static string DisplayArray(ICollection value)
+        {
+            var elements = value.Cast<object>().Select(x => DisplayObject(x) ?? x.ToString());
+            return $"[{string.Join(", ", value.Count > Limit ? elements.Take(Limit).Append("…") : elements)}]";
+        }
+
+        /// <summary>
+        ///     Creates the string representation of the dictionary.
+        /// </summary>
+        /// <param name="value">The value to create the string for.</param>
+        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
+        private static string DisplayDictionary(ICollection value)
+        {
+            var elements = value.OfType<DictionaryEntry>().Select(x => $"{x.Key} = {x.Value}");
+            return $"{{ {string.Join(", ", value.Count > Limit ? elements.Take(Limit).Append("…") : elements)} }}";
+        }
+
+        /// <summary>
+        ///     Creates the string representation of the <see cref="object"/>.
+        /// </summary>
+        /// <param name="value">The value to create the string for.</param>
+        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
+        private static string DisplayObject(object value) =>
+            value switch
             {
-                Dictionary<object, object> x => $"{{ {string.Join(", ", x.Count > Limit ? x.Take(Limit).Select(x => $"{x.Key} = {x.Value}").Append("…") : x.Select(x => $"{x.Key} = {x.Value}"))} }}",
-                object[] x => $"[{string.Join(", ", x.Length > Limit ? x.Take(Limit).Append("…") : x)}]",
-                _ => value.ToPrintString(),
+                IDictionary x => DisplayDictionary(x),
+                ICollection x => DisplayArray(x),
+                _ => null,
             };
 
         /// <summary>
@@ -448,7 +477,6 @@ namespace Quaver.Shared.Scripting
                 ? value.ToString()
                 : value switch
                 {
-                    IEnumerable i => i.Cast<object>().Select(x => UserDataToSimpleObject(x, depth - 1)).ToArray(),
                     Vector2 v => new object[] { v.X, v.Y },
                     Vector3 v => new object[] { v.X, v.Y, v.Z },
                     Vector4 v => new object[] { v.X, v.Y, v.Z, v.W },
