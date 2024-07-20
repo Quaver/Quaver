@@ -191,7 +191,7 @@ namespace Quaver.Shared.Scripting
             }
 
             if (CallUserDefinedFunction("draw") is { } drawException)
-                HandleLuaException(drawException, true);
+                HandleLuaException(drawException);
 
             AfterRender();
         }
@@ -618,6 +618,8 @@ namespace Quaver.Shared.Scripting
             }
 
             IsFirstDrawCall = true;
+            LastErrorMessage = null;
+            LastException = default;
         }
 
         /// <summary>
@@ -647,13 +649,14 @@ namespace Quaver.Shared.Scripting
                 return;
             }
 
-            const int Retries = 10;
+            const int Retries = 20;
 
             // There is no way to wait for the file lock to release. Every solution found in libraries,
-            // stackoverflow answers etc. are a variation on the brute force approach which is used here.
+            // stackoverflow answers, etc. are a variation on the brute force approach which is used here.
             for (var i = 0; i < Retries; i++)
                 try
                 {
+                    Thread.Sleep(50);
                     using FileStream file = new(FilePath, FileMode.Open, FileAccess.Read, FileShare.None);
                     using StreamReader reader = new(file);
                     var text = reader.ReadToEnd();
@@ -668,8 +671,6 @@ namespace Quaver.Shared.Scripting
                 {
                     if (i == Retries - 1)
                         throw;
-
-                    Thread.Sleep(50);
                 }
         }
 
@@ -677,13 +678,12 @@ namespace Quaver.Shared.Scripting
         ///     Handles an exception that comes from the lua interpreter.
         /// </summary>
         /// <param name="e">The exception.</param>
-        /// <param name="displayWhenDifferent">Whether to display the message only if it differs from the last.</param>
-        private void HandleLuaException(Exception e, bool displayWhenDifferent = false)
+        private void HandleLuaException(Exception e)
         {
             LastException = DateTime.Now;
             var message = FormatException(e);
 
-            if (displayWhenDifferent && message == LastErrorMessage)
+            if (message == LastErrorMessage)
                 return;
 
             LastErrorMessage = message;

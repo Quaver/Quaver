@@ -34,15 +34,6 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-        public static Vector3 Cross(DynValue first, DynValue second) =>
-            0 switch
-            {
-                _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector3.Cross(x.ToVector3(), y.ToVector3()),
-                _ when TryCoerce<Vector3>(first, second) is var (x, y) => Vector3.Cross(x, y),
-                _ when TryCoerce<Vector4>(first, second) is var (x, y) => Vector3.Cross(x.ToVector3(), y.ToVector3()),
-                _ => throw Unreachable(first, second),
-            };
-
         public static DynValue Clamp(DynValue first, DynValue second, DynValue third) =>
             Create(
                 0 switch
@@ -53,6 +44,15 @@ namespace Quaver.Shared.Scripting
                     _ => throw Unreachable(first, second, third),
                 }
             );
+
+        public static Vector3 Cross(DynValue first, DynValue second) =>
+            0 switch
+            {
+                _ when TryCoerce<Vector2>(first, second) is var (x, y) => Vector3.Cross(x.ToVector3(), y.ToVector3()),
+                _ when TryCoerce<Vector3>(first, second) is var (x, y) => Vector3.Cross(x, y),
+                _ when TryCoerce<Vector4>(first, second) is var (x, y) => Vector3.Cross(x.ToVector3(), y.ToVector3()),
+                _ => throw Unreachable(first, second),
+            };
 
         public static float Distance(DynValue first, DynValue second) =>
             0 switch
