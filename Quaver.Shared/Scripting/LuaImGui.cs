@@ -30,7 +30,9 @@ namespace Quaver.Shared.Scripting
 {
     public class LuaImGui : SpriteImGui
     {
-        private const int Limit = 10;
+        private const int IterationLimit = 10;
+
+        private const int RecursionLimit = 10;
 
         private static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
 
@@ -382,7 +384,8 @@ namespace Quaver.Shared.Scripting
         private static string DisplayArray(ICollection value)
         {
             var elements = value.Cast<object>().Select(x => DisplayObject(x) ?? x.ToString());
-            return $"[{string.Join(", ", value.Count > Limit ? elements.Take(Limit).Append("…") : elements)}]";
+            var truncated = value.Count > IterationLimit ? elements.Take(IterationLimit).Append("…") : elements;
+            return $"[{string.Join(", ", truncated)}]";
         }
 
         /// <summary>
@@ -393,7 +396,8 @@ namespace Quaver.Shared.Scripting
         private static string DisplayDictionary(ICollection value)
         {
             var elements = value.OfType<DictionaryEntry>().Select(x => $"{x.Key} = {x.Value}");
-            return $"{{ {string.Join(", ", value.Count > Limit ? elements.Take(Limit).Append("…") : elements)} }}";
+            var truncated = value.Count > IterationLimit ? elements.Take(IterationLimit).Append("…") : elements;
+            return $"{{ {string.Join(", ", truncated)} }}";
         }
 
         /// <summary>
@@ -415,7 +419,7 @@ namespace Quaver.Shared.Scripting
         /// <param name="value">The value to convert.</param>
         /// <param name="depth">The depth of the recursion.</param>
         /// <returns>The converted value.</returns>
-        private static object ToSimpleObject(DynValue value, int depth = Limit) =>
+        private static object ToSimpleObject(DynValue value, int depth = RecursionLimit) =>
             depth <= 0
                 ? value.ToString()
                 : value.Type switch
