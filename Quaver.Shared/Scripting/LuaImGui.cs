@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -447,6 +448,7 @@ namespace Quaver.Shared.Scripting
                 ? value.ToString()
                 : value switch
                 {
+                    IEnumerable i => i.Cast<object>().Select(x => UserDataToSimpleObject(x, depth - 1)).ToArray(),
                     Vector2 v => new object[] { v.X, v.Y },
                     Vector3 v => new object[] { v.X, v.Y, v.Z },
                     Vector4 v => new object[] { v.X, v.Y, v.Z, v.W },
