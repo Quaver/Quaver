@@ -388,7 +388,7 @@ namespace Quaver.Shared.Scripting
                     DataType.String => value.String,
                     DataType.Table => ToSimpleObject(value.Table, depth),
                     DataType.Tuple => Array.ConvertAll(value.Tuple, x => ToSimpleObject(x, depth - 1)),
-                    DataType.UserData => UserDataToSimpleObject(value.UserData.Object, depth),
+                    DataType.UserData => UserDataToSimpleObject(value.UserData.Object, depth - 1),
                     DataType.ClrFunction => value.Callback.Name,
                     DataType.YieldRequest => Array.ConvertAll(value.YieldRequest.ReturnValues, x => ToSimpleObject(x, depth - 1)),
                     DataType.Function or DataType.TailCallRequest or DataType.Thread => value.ToString(),
@@ -449,8 +449,15 @@ namespace Quaver.Shared.Scripting
                     TimingPointInfo i => new { i.Bpm, i.Hidden, i.StartTime, i.Signature },
                     IEditorAction i => i.GetType()
                        .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                       .Where(x => x.PropertyType != typeof(Qua) && x.PropertyType != typeof(EditorActionManager))
-                       .ToDictionary(x => x.Name, x => UserDataToSimpleObject(x.GetMethod?.Invoke(i, null), depth - 1)),
+                       .Where(
+                            x => x.CanRead &&
+                                x.PropertyType != typeof(EditorActionManager) &&
+                                x.PropertyType != typeof(Qua)
+                        )
+                       .ToDictionary(
+                            object (x) => x.Name,
+                            x => UserDataToSimpleObject(x.GetMethod?.Invoke(i, null), depth - 1)
+                        ),
                     _ => value,
                 };
 
