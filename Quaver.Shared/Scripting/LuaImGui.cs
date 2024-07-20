@@ -302,20 +302,33 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Creates the string representation of the <see cref="object"/>.
+        /// </summary>
+        /// <param name="value">The value to create the string for.</param>
+        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
+        private static string Display(object value) =>
+            value switch
+            {
+                IDictionary x => Display(x),
+                ICollection x => Display(x),
+                _ => null,
+            };
+
+        /// <summary>
         ///     Creates the string representation of the dynamic value.
         /// </summary>
         /// <param name="value">The value to create the string for.</param>
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
-        private static string Display(DynValue value) => DisplayObject(ToSimpleObject(value)) ?? value.ToPrintString();
+        private static string Display(DynValue value) => Display(ToSimpleObject(value)) ?? value.ToPrintString();
 
         /// <summary>
         ///     Creates the string representation of the array.
         /// </summary>
         /// <param name="value">The value to create the string for.</param>
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
-        private static string DisplayArray(ICollection value)
+        private static string Display(ICollection value)
         {
-            var elements = value.Cast<object>().Select(x => DisplayObject(x) ?? x.ToString());
+            var elements = value.Cast<object>().Select(x => Display(x) ?? x);
             var truncated = value.Count > IterationLimit ? elements.Take(IterationLimit).Append("…") : elements;
             return $"[{string.Join(", ", truncated)}]";
         }
@@ -325,25 +338,12 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="value">The value to create the string for.</param>
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
-        private static string DisplayDictionary(IDictionary value)
+        private static string Display(IDictionary value)
         {
-            var elements = AsEnumerable(value).Select(x => $"{DisplayObject(x.Key)} = {DisplayObject(x.Value)}");
+            var elements = Iterate(value).Select(x => $"{Display(x.Key) ?? x.Key} = {Display(x.Value) ?? x.Value}");
             var truncated = value.Count > IterationLimit ? elements.Take(IterationLimit).Append("…") : elements;
             return $"{{ {string.Join(", ", truncated)} }}";
         }
-
-        /// <summary>
-        ///     Creates the string representation of the <see cref="object"/>.
-        /// </summary>
-        /// <param name="value">The value to create the string for.</param>
-        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
-        private static string DisplayObject(object value) =>
-            value switch
-            {
-                IDictionary x => DisplayDictionary(x),
-                ICollection x => DisplayArray(x),
-                _ => null,
-            };
 
         /// <summary>
         ///     Converts the <see cref="DynValue"/> to a primitive, string, array, or dictionary.
@@ -507,7 +507,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="value">The value to enumerate.</param>
         /// <returns>The enumeration of the parameter <paramref name="value"/>.</returns>
-        private static IEnumerable<DictionaryEntry> AsEnumerable(IDictionary value)
+        private static IEnumerable<DictionaryEntry> Iterate(IDictionary value)
         {
             var e = value.GetEnumerator();
 
