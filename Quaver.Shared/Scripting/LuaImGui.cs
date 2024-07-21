@@ -539,6 +539,10 @@ namespace Quaver.Shared.Scripting
             if (LoadedVersion == Version)
                 return;
 
+            // A `ScriptRuntimeException` will be thrown if we don't clear the globals first.
+            // This is because all globals must be owned by no more than one `Script` instance.
+            WorkingScript?.Globals?.Clear();
+
             WorkingScript = new(CoreModules.Preset_SoftSandbox ^ CoreModules.Dynamic)
             {
                 Globals =
@@ -559,9 +563,10 @@ namespace Quaver.Shared.Scripting
                 },
             };
 
+            ClearEvents();
+
             try
             {
-                ClearEvents();
                 LoadScriptText();
 
                 if (WorkingScript.DoString(ScriptText) is var ret && ret.Type is not DataType.Void)
