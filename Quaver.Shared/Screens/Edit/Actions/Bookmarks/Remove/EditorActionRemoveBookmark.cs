@@ -1,3 +1,4 @@
+using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
@@ -5,6 +6,7 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
 {
+    [MoonSharpUserData]
     public class EditorActionRemoveBookmark : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.RemoveBookmark;

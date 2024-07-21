@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
@@ -12,6 +13,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Offset
 {
+    [MoonSharpUserData]
     public class EditorActionApplyOffset : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ApplyOffset;

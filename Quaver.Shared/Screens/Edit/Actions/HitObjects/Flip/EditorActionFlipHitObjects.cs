@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip
 {
+    [MoonSharpUserData]
     public class EditorActionFlipHitObjects : IEditorAction
     {
         /// <inheritdoc />

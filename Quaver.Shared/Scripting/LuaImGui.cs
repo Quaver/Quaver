@@ -15,7 +15,6 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -112,7 +111,6 @@ namespace Quaver.Shared.Scripting
 
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
-            UserData.RegisterType<EditorActionResnapHitObjects.NoteAdjustment>();
             UserData.RegisterType<HistoryType>();
             UserData.RegisterType<UIntPtr>();
             UserData.RegisterType<IntPtr>();

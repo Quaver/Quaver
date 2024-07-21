@@ -47,6 +47,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
         /// </summary>
         public bool ShowNotif { get; }
 
+        [MoonSharpUserData]
         public readonly struct NoteAdjustment
         {
             public readonly int OriginalStartTime;
