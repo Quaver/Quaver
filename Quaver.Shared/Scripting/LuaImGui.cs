@@ -338,9 +338,20 @@ namespace Quaver.Shared.Scripting
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
         private static string Display(IDictionary value)
         {
-            var elements = Iterate(value).Select(x => $"{Display(x.Key) ?? x.Key} = {Display(x.Value) ?? x.Value}");
+            var elements = Iterate(value).Select(x => $"{ToSimpleDisplay(x.Key)} = {ToSimpleDisplay(x.Value)}");
             var truncated = value.Count > IterationLimit ? elements.Take(IterationLimit).Append("…") : elements;
             return $"{{ {string.Join(", ", truncated)} }}";
+        }
+
+        /// <summary>
+        ///     Creates the string representation of the <see cref="object"/>.
+        /// </summary>
+        /// <param name="value">The value to create the string for.</param>
+        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
+        private static object ToSimpleDisplay(object value)
+        {
+            var v = UserDataToSimpleObject(value, RecursionLimit);
+            return Display(v) ?? v;
         }
 
         /// <summary>
@@ -414,6 +425,10 @@ namespace Quaver.Shared.Scripting
                     Vector2 v => new object[] { v.X, v.Y },
                     Vector3 v => new object[] { v.X, v.Y, v.Z },
                     Vector4 v => new object[] { v.X, v.Y, v.Z, v.W },
+                    IEnumerable i and not IDictionary and not string => i
+                       .Cast<object>()
+                       .Select(x => UserDataToSimpleObject(x, depth - 1))
+                       .ToArray(),
                     BookmarkInfo or
                         CustomAudioSampleInfo or
                         EditorLayerInfo or
