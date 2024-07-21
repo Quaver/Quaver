@@ -307,6 +307,7 @@ namespace Quaver.Shared.Scripting
         private static string Display(object value) =>
             value switch
             {
+                bool x => x ? "true" : "false",
                 IDictionary x => Display(x),
                 ICollection x => Display(x),
                 _ => null,
