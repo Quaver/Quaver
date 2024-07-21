@@ -34,30 +34,12 @@ public class ModChartUtils : ModChartGlobalVariable
     }
 
     /// <summary>
-    ///     Same as <see cref="Beat"/>, but separating beat to <see cref="beat"/> + <see cref="numerator"/> / <see cref="denominator"/>
-    /// </summary>
-    /// <param name="measure"></param>
-    /// <param name="beat"></param>
-    /// <param name="numerator"></param>
-    /// <param name="denominator"></param>
-    /// <returns></returns>
-    /// <seealso cref="Beat"/>
-    /// <exception cref="ScriptRuntimeException">Denominator is 0</exception>
-    public float BeatFraction(int measure, int beat, int numerator, int denominator)
-    {
-        if (denominator == 0)
-            throw new ScriptRuntimeException("Beat denominator is 0!");
-
-        return Beat(measure, beat + (float)numerator / denominator);
-    }
-
-    /// <summary>
     ///     Gets the time at the specified measure and beat
     /// </summary>
     /// <param name="measure">Bar number. Should be same as shown in the editor.</param>
     /// <param name="beat">Number of beats (fraction of measure) starting at 0. Can be a float.</param>
     /// <returns></returns>
-    public float Beat(int measure, float beat)
+    public float BeatToTime(int measure, float beat)
     {
         measure--;
         var timingPointIndex = _timingPointMeasures.BinarySearch(measure);
@@ -77,7 +59,7 @@ public class ModChartUtils : ModChartGlobalVariable
     /// </summary>
     /// <param name="measure">Bar number + fraction of measure</param>
     /// <returns></returns>
-    public float Measure(float measure)
+    public float MeasureToTime(float measure)
     {
         measure--;
         var timingPointIndex = _timingPointMeasures.BinarySearch((int)measure);
@@ -90,5 +72,22 @@ public class ModChartUtils : ModChartGlobalVariable
         var startingMeasure = _timingPointMeasures[timingPointIndex];
         var totalBeats = (measure - startingMeasure) * (int)timingPoint.Signature;
         return timingPoint.StartTime + totalBeats * timingPoint.MillisecondsPerBeat;
+    }
+
+    public DynValue Beat(ScriptExecutionContext ctx, CallbackArguments args)
+    {
+        if (args.Count == 0) throw new ScriptRuntimeException($"No arguments given to beat!");
+        var measure = args[0].Number;
+        if (args.Count == 1)
+            return DynValue.NewNumber(MeasureToTime((float)measure));
+        var beat = args[1].Number;
+        if (args.Count > 4)
+            throw new ScriptRuntimeException($"beat() accepts 1-4 parameters but {args.Count} are given!");
+        if (args.Count == 3)
+            beat += args[2].Number;
+        else if (args.Count == 4)
+            beat += args[2].Number / args[3].Number;
+
+        return DynValue.NewNumber(BeatToTime((int)measure, (float)beat));
     }
 }

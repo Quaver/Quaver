@@ -210,8 +210,6 @@ public class ModChartScript
         WorkingScript.Globals["Fonts"] = typeof(Fonts);
         WorkingScript.Globals["Events"] = ModChartEvents;
         WorkingScript.Globals["beat"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.Beat);
-        WorkingScript.Globals["beatFrac"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.BeatFraction);
-        WorkingScript.Globals["measure"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.Measure);
         WorkingScript.Globals["setUpdateInterval"] = CallbackFunction.FromDelegate(WorkingScript, SetUpdateInterval);
 
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
@@ -302,12 +300,12 @@ public class ModChartScript
                 var tuple = dynVal.Table;
                 return tuple.Length switch
                 {
-                    1 => (int)ModChartUtils.Measure((float)tuple.Get(1).Number),
-                    2 => (int)ModChartUtils.Beat((int)tuple.Get(1).Number, (float)tuple.Get(2).Number),
-                    3 => (int)ModChartUtils.Beat((int)tuple.Get(1).Number,
+                    1 => (int)ModChartUtils.MeasureToTime((float)tuple.Get(1).Number),
+                    2 => (int)ModChartUtils.BeatToTime((int)tuple.Get(1).Number, (float)tuple.Get(2).Number),
+                    3 => (int)ModChartUtils.BeatToTime((int)tuple.Get(1).Number,
                         (int)tuple.Get(2).Number + (float)tuple.Get(3).Number),
-                    4 => (int)ModChartUtils.BeatFraction((int)tuple.Get(1).Number, (int)tuple.Get(2).Number,
-                        (int)tuple.Get(3).Number, (int)tuple.Get(4).Number),
+                    4 => (int)ModChartUtils.BeatToTime((int)tuple.Get(1).Number, (float)(tuple.Get(2).Number +
+                        tuple.Get(3).Number / tuple.Get(4).Number)),
                     _ => throw new ScriptRuntimeException($"Cannot convert tuple {dynVal} to time")
                 };
             });
