@@ -213,6 +213,10 @@ public class ModChartNew : ModChartGlobalVariable
     public ScalableVector2 ScalableVector2(float x, float y) => new(x, y);
     public ScalableVector2 ScalableVector2(float x, float y, float scaleX, float scaleY) => new(x, y, scaleX, scaleY);
 
+    public ModChartVector Vector(params double[] values) => new(values);
+
+    public ModChartVector Vector(List<double> values) => new(values.ToArray());
+
     #endregion
 
     #region Shader
