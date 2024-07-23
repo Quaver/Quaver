@@ -138,8 +138,21 @@ public class ModChartScript
 
         ModChartUtils.InitializeMeasures();
 
+        RegisterTypesAndImplicitConversions();
+
+        LoadScript();
+    }
+
+    /// <summary>
+    /// </summary>
+    private void RegisterTypesAndImplicitConversions()
+    {
+        // Register types
+        
+        // The Vector type needs special care for swizzling
         UserData.RegisterType<ModChartVector>(new ModChartVectorDescriptor(typeof(ModChartVector),
             InteropAccessMode.Default, "Vector"));
+
         UserData.RegisterExtensionType(typeof(EventHelper));
         UserData.RegisterType<EasingDelegate>();
         UserData.RegisterType<LerpDelegate<float>>();
@@ -167,7 +180,7 @@ public class ModChartScript
         UserData.RegisterProxyType<GameplayHitObjectKeysInfoProxy, GameplayHitObjectKeysInfo>(s =>
             new GameplayHitObjectKeysInfoProxy(s), friendlyName: "GameplayHitObjectKeys");
 
-
+        // Register implicit conversions
         RegisterAllVectors();
         RegisterClosures();
         RegisterEasingType();
@@ -182,14 +195,13 @@ public class ModChartScript
         RegisterLayer();
         RegisterBeat();
 
+        // Register all other types in assemblies
         UserData.RegisterAssembly(Assembly.GetCallingAssembly());
         UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
-
-        LoadScript();
     }
 
 
-    public void LoadScript()
+    private void LoadScript()
     {
         WorkingScript = new Script(CoreModules.Preset_HardSandbox);
 
@@ -244,22 +256,51 @@ public class ModChartScript
         });
     }
 
-    private void RegisterEnum<T>(string globalVariableName) => RegisterEnum(typeof(T), globalVariableName);
-
-    private void RegisterEnum(Type enumType, string globalVariableName)
+    /// <summary>
+    ///     Performs one update to the entire script, unless halted.
+    ///     The tick should be called every <see cref="updateInterval"/>
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public void Tick(object sender, EventArgs e)
     {
-        UserData.RegisterType(enumType);
-        WorkingScript.Globals[globalVariableName] = enumType;
-        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.String, enumType,
-            dynVal => Enum.TryParse(enumType, dynVal.String, true, out var result)
-                ? result
-                : throw new ScriptRuntimeException($"Failed to parse '{dynVal.String}' as {globalVariableName}"));
+        if (Halted)
+            return;
+
+        if (ModChartScriptHelper.CounterExceeded)
+        {
+            Halted = true;
+            clock.Stop();
+            NotificationManager.Show(NotificationLevel.Error,
+                $"Script stopped executing because there are {ModChartScriptHelper.ErrorCount} errors and" +
+                $" {ModChartScriptHelper.TimeLimitExceedCount} calls that exceed" +
+                $" {ModChartScriptHelper.MaxInstructionsPerCall} instructions per call!",
+                forceShow: true);
+            return;
+        }
+
+        var time = Shortcut.GameplayScreen.Timing.Time;
+
+        State.SongTime = time;
+        State.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        State.CurrentTimingPoint = GameplayScreenView.Screen.Map.GetTimingPointAt(State.SongTime);
+        State.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+
+        TriggerManager.Update((int)time);
+        SegmentManager.Update((int)time);
+        ModChartStateMachines.RootMachine.Update();
+
+        ModChartEvents.DeferredEventQueue.Dispatch();
     }
 
     public void Update(GameTime gameTime) => clock.Update(gameTime);
 
     #region Global Functions
 
+    /// <summary>
+    ///     Sets the interval between each <see cref="Tick"/>
+    /// </summary>
+    /// <param name="milliseconds"></param>
     private void SetUpdateInterval(double milliseconds)
     {
         updateInterval = TimeSpan.FromMilliseconds(milliseconds);
@@ -328,43 +369,46 @@ public class ModChartScript
 
     #endregion
 
-    public void Tick(object sender, EventArgs e)
+    #region Registry
+
+    /// <summary>
+    /// </summary>
+    private void RegisterEnum<T>(string globalVariableName) => RegisterEnum(typeof(T), globalVariableName);
+
+    /// <summary>
+    ///     Registers an enum type, also providing an implicit conversion from string to the enum
+    /// </summary>
+    /// <param name="enumType"></param>
+    /// <param name="globalVariableName"></param>
+    /// <exception cref="ScriptRuntimeException"></exception>
+    private void RegisterEnum(Type enumType, string globalVariableName)
     {
-        if (Halted)
-            return;
-
-        if (ModChartScriptHelper.CounterExceeded)
-        {
-            Halted = true;
-            clock.Stop();
-            NotificationManager.Show(NotificationLevel.Error,
-                $"Script stopped executing because there are {ModChartScriptHelper.ErrorCount} errors and" +
-                $" {ModChartScriptHelper.TimeLimitExceedCount} calls that exceed" +
-                $" {ModChartScriptHelper.MaxInstructionsPerCall} instructions per call!",
-                forceShow: true);
-            return;
-        }
-
-        var time = Shortcut.GameplayScreen.Timing.Time;
-
-        State.SongTime = time;
-        State.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        State.CurrentTimingPoint = GameplayScreenView.Screen.Map.GetTimingPointAt(State.SongTime);
-        State.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
-
-        TriggerManager.Update((int)time);
-        SegmentManager.Update((int)time);
-        ModChartStateMachines.RootMachine.Update();
-
-        ModChartEvents.DeferredEventQueue.Dispatch();
+        UserData.RegisterType(enumType);
+        WorkingScript.Globals[globalVariableName] = enumType;
+        Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.String, enumType,
+            dynVal => Enum.TryParse(enumType, dynVal.String, true, out var result)
+                ? result
+                : throw new ScriptRuntimeException($"Failed to parse '{dynVal.String}' as {globalVariableName}"));
     }
 
+    /// <summary>
+    ///     Provides implicit conversion from string to layer (looks up the name of layer)
+    /// </summary>
     private void RegisterLayer()
     {
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.String, typeof(Layer),
             dynVal => ModChartLayers[dynVal.String]);
     }
 
+    /// <summary>
+    ///     Provides implicit conversion from beat number to time in milliseconds.
+    ///     Formats:
+    ///     1. {measure}
+    ///     2. {measure, beat}
+    ///     3. {measure, beat, fraction}
+    ///     4. {measure, beat, numerator, denominator}
+    /// </summary>
+    /// <exception cref="ScriptRuntimeException"></exception>
     private void RegisterBeat()
     {
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(int),
@@ -384,6 +428,12 @@ public class ModChartScript
             });
     }
 
+    /// <summary>
+    ///     Provides implicit conversion from <see cref="Easing"/> to <see cref="EasingDelegate"/>,
+    ///     implicit conversion from string to <see cref="EasingDelegate"/>, where the string is an enum name of <see cref="Easing"/>,
+    ///     implicit conversion from a function to <see cref="EasingDelegate"/>
+    /// </summary>
+    /// <exception cref="ScriptRuntimeException"></exception>
     private void RegisterEasingType()
     {
         // Implicitly converts Easing to EasingWrapperFunction, so you can directly pass Easing in Timeline.Tween
@@ -408,6 +458,10 @@ public class ModChartScript
             dynVal => new EasingDelegate(p => dynVal.Function?.SafeCall(p)?.ToObject<float>() ?? 0));
     }
 
+    /// <summary>
+    ///     Registers implicit conversion from table to <see cref="Keyframe{T}"/> 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     private void RegisterKeyframe<T>()
     {
         // Constructs keyframes with tables {time, value, easingFunction}.
@@ -425,6 +479,10 @@ public class ModChartScript
         );
     }
 
+    /// <summary>
+    ///     Provides implicit conversion for function -> trigger/segment/SM, <see cref="ModChartEventType"/> -> trigger/segment/SM
+    /// </summary>
+    /// <exception cref="ScriptRuntimeException"></exception>
     private void RegisterClosures()
     {
         Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function, typeof(ITriggerPayload),
@@ -583,6 +641,10 @@ public class ModChartScript
             (script, vector) => UserData.Create(new ModChartVector(vector.Left, vector.Right, vector.Up, vector.Down)));
     }
 
+    #endregion
+
+    #region Vector Conversion
+
     private object TableToPadding(DynValue dynVal)
     {
         var table = dynVal.Table;
@@ -700,4 +762,6 @@ public class ModChartScript
         var table = dynVal.ToObject<ModChartVector>();
         return table.ToVector2();
     }
+
+    #endregion
 }
