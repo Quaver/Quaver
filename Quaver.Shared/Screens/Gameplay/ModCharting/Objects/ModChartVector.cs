@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Helpers;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
@@ -54,6 +55,22 @@ public class ModChartVector
         var values = new double[dimension];
         values[unitDimension - 1] = 1;
         return new ModChartVector(values);
+    }
+
+    /// <summary>
+    ///     Returns a unit vector in random direction
+    /// </summary>
+    /// <param name="dimension"></param>
+    /// <returns></returns>
+    public static ModChartVector RandomUnit(int dimension)
+    {
+        var values = new double[dimension];
+        for (var i = 0; i < values.Length; i++)
+        {
+            values[i] = RandomHelper.RandomGauss();
+        }
+
+        return new ModChartVector(values).Normalise();
     }
 
     /// <summary>

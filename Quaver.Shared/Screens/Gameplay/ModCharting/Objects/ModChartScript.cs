@@ -173,6 +173,7 @@ public class ModChartScript
         RegisterEasingType();
         RegisterKeyframe<float>();
         RegisterKeyframe<Vector2>();
+        RegisterKeyframe<ModChartVector>();
         RegisterKeyframe<ScalableVector2>();
         RegisterKeyframe<Color>();
         RegisterKeyframe<XnaVector2>();
