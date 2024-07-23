@@ -218,6 +218,8 @@ public class ModChartScript
         WorkingScript.Globals["Vector"] = typeof(ModChartVector);
         WorkingScript.Globals["beat"] = CallbackFunction.FromDelegate(WorkingScript, ModChartUtils.Beat);
         WorkingScript.Globals["setUpdateInterval"] = CallbackFunction.FromDelegate(WorkingScript, SetUpdateInterval);
+        WorkingScript.Globals["eval"] = CallbackFunction.FromDelegate(WorkingScript, Eval);
+        WorkingScript.Globals["expr"] = CallbackFunction.FromDelegate(WorkingScript, Expr);
 
         WorkingScript.Options.DebugPrint = s => Logger.Debug(s, LogType.Runtime);
 
@@ -256,11 +258,75 @@ public class ModChartScript
 
     public void Update(GameTime gameTime) => clock.Update(gameTime);
 
+    #region Global Functions
+
     private void SetUpdateInterval(double milliseconds)
     {
         updateInterval = TimeSpan.FromMilliseconds(milliseconds);
         clock.Interval = updateInterval;
     }
+
+    /// <summary>
+    ///     Evaluates code.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="args">The arguments.</param>
+    /// <returns>
+    /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
+    /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
+    /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
+    /// </returns>
+    private static DynValue Eval(ScriptExecutionContext context, CallbackArguments args)
+    {
+        try
+        {
+            var code = args.RawGet(0, false).String;
+
+            // Eval engine doesn't like empty code.
+            if (string.IsNullOrWhiteSpace(code))
+                return DynValue.Nil;
+
+            var ok = context.GetScript().DoString(code);
+            return DynValue.NewTuple(ok, DynValue.Nil);
+        }
+        catch (Exception e)
+        {
+            var err = DynValue.NewString(e.Message);
+            return DynValue.NewTuple(DynValue.Nil, err);
+        }
+    }
+
+    /// <summary>
+    ///     Evaluates a code expression.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="args">The arguments.</param>
+    /// <returns>
+    /// The tuple with 2 elements, representing an <c>ok</c> and <c>err</c> value.
+    /// The left element is the evaluated value, or <see cref="DynValue.Nil"/> if an exception occurred.
+    /// The right element is the <see cref="Exception"/>, or <see cref="DynValue.Nil"/> if it succeeded.
+    /// </returns>
+    private static DynValue Expr(ScriptExecutionContext context, CallbackArguments args)
+    {
+        try
+        {
+            var code = args.RawGet(0, false).String;
+
+            // Eval engine doesn't like empty code.
+            if (string.IsNullOrWhiteSpace(code))
+                return DynValue.Nil;
+
+            var ok = context.GetScript().CreateDynamicExpression(code).Evaluate(context);
+            return DynValue.NewTuple(ok, DynValue.Nil);
+        }
+        catch (Exception e)
+        {
+            var err = DynValue.NewString(e.Message);
+            return DynValue.NewTuple(DynValue.Nil, err);
+        }
+    }
+
+    #endregion
 
     public void Tick(object sender, EventArgs e)
     {
