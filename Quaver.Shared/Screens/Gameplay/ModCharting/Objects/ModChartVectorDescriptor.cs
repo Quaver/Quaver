@@ -28,8 +28,6 @@ public class ModChartVectorDescriptor : StandardUserDataDescriptor
                     return indices.Length == 1
                         ? DynValue.NewNumber(vector[indices[0]])
                         : DynValue.FromObject(script, vector.GetEntries(indices));
-                case DataType.Tuple:
-                    return DynValue.FromObject(script, vector.GetEntries(DynValuesToIndices(index.Tuple)));
                 case DataType.Table:
                     return DynValue.FromObject(script, vector.GetEntries(DynValuesToIndices(index.Table.Values)));
             }
@@ -46,9 +44,6 @@ public class ModChartVectorDescriptor : StandardUserDataDescriptor
             {
                 case DataType.String when vector.TryParseShorthand(index.String, out var indices):
                     vector.SetEntries(indices, value);
-                    return true;
-                case DataType.Tuple:
-                    vector.SetEntries(DynValuesToIndices(index.Tuple), value);
                     return true;
                 case DataType.Table:
                     vector.SetEntries(DynValuesToIndices(index.Table.Values), value);

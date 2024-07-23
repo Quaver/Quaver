@@ -92,6 +92,17 @@ public class ModChartVector
     }
 
     /// <summary>
+    ///     Operates on a continuous range of components of the vector
+    /// </summary>
+    /// <param name="startInclusive"></param>
+    /// <param name="endInclusive"></param>
+    public ModChartVector this[int startInclusive, int endInclusive]
+    {
+        get => GetRange(startInclusive, endInclusive);
+        set => SetRange(startInclusive, endInclusive, value);
+    }
+
+    /// <summary>
     ///     Gets or sets the components at the indices specified by the <see cref="vectorIndex"/>
     /// </summary>
     /// <param name="vectorIndex"></param>
