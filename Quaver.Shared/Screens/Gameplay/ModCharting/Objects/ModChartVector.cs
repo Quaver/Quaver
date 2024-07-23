@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -63,6 +64,10 @@ public class ModChartVector
     [MoonSharpHidden]
     public Table ToTable(Script ownerScript) => new(ownerScript, _values.Select(DynValue.NewNumber).ToArray());
 
+    /// <summary>
+    ///     Gets or sets the component at the specified <see cref="index"/>
+    /// </summary>
+    /// <param name="index"></param>
     public double this[int index]
     {
         get => _values[index - 1];
@@ -70,31 +75,73 @@ public class ModChartVector
     }
 
     /// <summary>
-    ///     Selects components of the indices and returns a vector of the two.
-    ///     If set with a number, both component will be set the value
+    ///     Gets or sets the components at the indices specified by the <see cref="vectorIndex"/>
     /// </summary>
-    /// <param name="i1"></param>
-    /// <param name="i2"></param>
-    public DynValue this[int i1, int i2]
+    /// <param name="vectorIndex"></param>
+    /// <seealso cref="GetEntries"/>
+    /// <seealso cref="SetEntries"/>
+    public DynValue this[ModChartVector vectorIndex]
     {
-        get => UserData.Create(GetEntries(new[] { i1, i2 }));
-        set => SetEntries(new[] { i1, i2 }, value);
+        get => UserData.Create(GetEntries(vectorIndex._values.Select(v => (int)v).ToArray()));
+        set => SetEntries(vectorIndex._values.Select(v => (int)v).ToArray(), value);
     }
 
-    /// <inheritdoc cref="this[int, int]"/>
-    public DynValue this[int i1, int i2, int i3]
+    /// <summary>
+    ///     Tries to parse the field name shorthand (rgba, xyzw, xXxX, etc.) and outputs the parsed indices
+    /// </summary>
+    /// <param name="shorthand"></param>
+    /// <param name="oneIndexedIndices"></param>
+    /// <returns></returns>
+    public bool TryParseShorthand(string shorthand, out int[] oneIndexedIndices)
     {
-        get => UserData.Create(GetEntries(new[] { i1, i2, i3 }));
-        set => SetEntries(new[] { i1, i2, i3 }, value);
+        oneIndexedIndices = new int[shorthand.Length];
+
+        if (Dimension == 0)
+            return false;
+
+        for (var index = 0; index < shorthand.Length; index++)
+        {
+            var c = shorthand[index];
+            switch (char.ToLower(c))
+            {
+                case 'r':
+                    oneIndexedIndices[index] = 1;
+                    break;
+                case 'g' when Dimension >= 2:
+                    oneIndexedIndices[index] = 2;
+                    break;
+                case 'b' when Dimension >= 3:
+                    oneIndexedIndices[index] = 3;
+                    break;
+                case 'a' when Dimension >= 4:
+                    oneIndexedIndices[index] = 4;
+                    break;
+                case 'x':
+                    oneIndexedIndices[index] = 1;
+                    break;
+                case 'y' when Dimension >= 2:
+                    oneIndexedIndices[index] = 2;
+                    break;
+                case 'z' when Dimension >= 3:
+                    oneIndexedIndices[index] = 3;
+                    break;
+                case 'w' when Dimension >= 4:
+                    oneIndexedIndices[index] = 4;
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        return true;
     }
 
-    /// <inheritdoc cref="this[int, int]"/>
-    public DynValue this[int i1, int i2, int i3, int i4]
-    {
-        get => UserData.Create(GetEntries(new[] { i1, i2, i3, i4 }));
-        set => SetEntries(new[] { i1, i2, i3, i4 }, value);
-    }
-
+    /// <summary>
+    ///     Retrieves the components from <see cref="startInclusive"/> to <see cref="endInclusive"/>, inclusively
+    /// </summary>
+    /// <param name="startInclusive"></param>
+    /// <param name="endInclusive"></param>
+    /// <returns></returns>
     public ModChartVector GetRange(int startInclusive, int endInclusive)
     {
         var extractedValues = new double[endInclusive - startInclusive + 1];
@@ -108,6 +155,12 @@ public class ModChartVector
         return new ModChartVector(extractedValues);
     }
 
+    /// <summary>
+    ///     Sets the components from <see cref="startInclusive"/> to <see cref="endInclusive"/>, inclusively, to <see cref="value"/>
+    /// </summary>
+    /// <param name="startInclusive"></param>
+    /// <param name="endInclusive"></param>
+    /// <param name="value"></param>
     public void SetRange(int startInclusive, int endInclusive, double value)
     {
         for (var i = startInclusive - 1; i < endInclusive; i++)
@@ -116,6 +169,12 @@ public class ModChartVector
         }
     }
 
+    /// <summary>
+    ///     Sets the components from <see cref="startInclusive"/> to <see cref="endInclusive"/>, inclusively, to <see cref="vector"/>
+    /// </summary>
+    /// <param name="startInclusive"></param>
+    /// <param name="endInclusive"></param>
+    /// <param name="vector"></param>
     public void SetRange(int startInclusive, int endInclusive, ModChartVector vector)
     {
         for (var i = startInclusive - 1; i < endInclusive; i++)
@@ -180,6 +239,7 @@ public class ModChartVector
     /// <summary>
     ///     Shorthand for vector[0]
     /// </summary>
+    [MoonSharpHidden]
     public double X
     {
         get => _values[0];
@@ -190,6 +250,7 @@ public class ModChartVector
     /// <summary>
     ///     Shorthand for vector[1]
     /// </summary>
+    [MoonSharpHidden]
     public double Y
     {
         get => _values[1];
@@ -200,6 +261,7 @@ public class ModChartVector
     /// <summary>
     ///     Shorthand for vector[2]
     /// </summary>
+    [MoonSharpHidden]
     public double Z
     {
         get => _values[2];
@@ -210,30 +272,68 @@ public class ModChartVector
     /// <summary>
     ///     Shorthand for vector[3]
     /// </summary>
+    [MoonSharpHidden]
     public double W
     {
         get => _values[3];
         set => _values[3] = value;
     }
 
+    /// <summary>
+    ///     Sum of the squares of all the components
+    /// </summary>
+    /// <returns></returns>
     public double LengthSquared() => _values.Sum(value => value * value);
 
+    /// <inheritdoc cref="LengthSquared()"/>
     public static double LengthSquared(ModChartVector vector) => vector.LengthSquared();
 
+    /// <summary>
+    ///     Square root sum of the squares of all the components, i.e. Euclidean distance.
+    /// </summary>
+    /// <returns></returns>
     public double Length() => Math.Sqrt(LengthSquared());
 
+    /// <inheritdoc cref="Length()"/> 
     public static double Length(ModChartVector vector) => vector.Length();
 
+    /// <summary>
+    ///     Distance to the <see cref="other"/> vector, squared
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     public double DistanceSquared(ModChartVector other) => (this - other).LengthSquared();
 
+    /// <summary>
+    ///     Distance between the two vectors, squared
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <returns></returns>
     public static double DistanceSquared(ModChartVector vector1, ModChartVector vector2) =>
         (vector1 - vector2).LengthSquared();
 
+    /// <summary>
+    ///     Distance to the <see cref="other"/> vector
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     public double Distance(ModChartVector other) => Math.Sqrt(DistanceSquared(other));
 
+    /// <summary>
+    ///     Distance between the two vectors
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <returns></returns>
     public static double Distance(ModChartVector vector1, ModChartVector vector2) =>
         Math.Sqrt(DistanceSquared(vector1, vector2));
 
+    /// <summary>
+    ///     Dot product of the two vectors
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     public double Dot(ModChartVector other)
     {
         var result = 0.0;
@@ -246,8 +346,22 @@ public class ModChartVector
         return result;
     }
 
+    /// <summary>
+    ///     Dot product of the two vectors
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <returns></returns>
     public static double Dot(ModChartVector vector1, ModChartVector vector2) => vector1.Dot(vector2);
 
+    /// <summary>
+    ///     Cross product of the two vectors. This will give the vector perpendicular to both vectors.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    /// <exception cref="ScriptRuntimeException"></exception>
+    /// <remarks>The <see cref="Dimension"/> of the vectors must be 3. In the future, we could consider cross products in higher dimensions,
+    /// with n-ary operator</remarks>
     public ModChartVector Cross(ModChartVector other)
     {
         if (Dimension != 3 || other.Dimension != 3)
@@ -256,52 +370,119 @@ public class ModChartVector
         return new ModChartVector(Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X);
     }
 
+    /// <inheritdoc cref="Cross(Quaver.Shared.Screens.Gameplay.ModCharting.Objects.ModChartVector)"/> 
     public static ModChartVector Cross(ModChartVector vector1, ModChartVector vector2) => vector1.Cross(vector2);
 
+    /// <summary>
+    ///     Normalise the vector
+    /// </summary>
+    /// <returns>The vector with the same direction as before, but with a unit length</returns>
     public ModChartVector Normalise()
     {
         return this / Length();
     }
 
+    /// <summary>
+    ///     Normalise the <see cref="vector"/>
+    /// </summary>
+    /// <param name="vector"></param>
+    /// <returns>The vector with the same direction as before, but with a unit length</returns>
     public static ModChartVector Normalise(ModChartVector vector) => vector.Normalise();
 
+    /// <summary>
+    ///     Reflects the vector over a surface with the <see cref="normal"/>
+    /// </summary>
+    /// <param name="normal"></param>
+    /// <returns></returns>
     public ModChartVector Reflect(ModChartVector normal)
     {
         var dot = Dot(normal);
         return this - 2 * dot * normal;
     }
 
+    /// <summary>
+    ///     Reflects the <see cref="vector"/> over a surface with the <see cref="normal"/>
+    /// </summary>
+    /// <param name="vector"></param>
+    /// <param name="normal"></param>
+    /// <returns></returns>
     public static ModChartVector Reflect(ModChartVector vector, ModChartVector normal) => vector.Reflect(normal);
 
+    /// <summary>
+    ///     Takes the square root of each component
+    /// </summary>
+    /// <returns></returns>
     public ModChartVector SquareRoot()
     {
         return ScalarOperation(Math.Sqrt);
     }
 
+    /// <summary>
+    ///     Takes the square root of each component
+    /// </summary>
+    /// <param name="vector"></param>
+    /// <returns></returns>
     public static ModChartVector SquareRoot(ModChartVector vector) => vector.SquareRoot();
 
+    /// <summary>
+    ///     Sequential minimum of the components of each vector
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <returns></returns>
     public static ModChartVector Min(ModChartVector vector1, ModChartVector vector2)
     {
         return vector1.SequentialOperation(vector2, Math.Min, double.MaxValue);
     }
 
+    /// <summary>
+    ///     Sequential maximum of the components of each vector
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <returns></returns>
     public static ModChartVector Max(ModChartVector vector1, ModChartVector vector2)
     {
         return vector1.SequentialOperation(vector2, Math.Max, double.MinValue);
     }
 
+    /// <summary>
+    ///     Sequential clamp of the components of each vector
+    /// </summary>
+    /// <param name="vector"></param>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
     public static ModChartVector Clamp(ModChartVector vector, ModChartVector min, ModChartVector max)
     {
         return Min(Max(vector, min), max);
     }
 
+    /// <summary>
+    ///     Linearly interpolate from <see cref="vector1"/> to <see cref="vector2"/>
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <param name="amount">[0..1] the progress of interpolation</param>
+    /// <returns></returns>
     public static ModChartVector Lerp(ModChartVector vector1, ModChartVector vector2, float amount)
     {
         return vector1 * (1 - amount) + vector2 * amount;
     }
 
+    /// <summary>
+    ///     Angle between this and the <see cref="other"/> vector
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     public double Angle(ModChartVector other) => Angle(this, other);
 
+    /// <summary>
+    ///     Angle between the two vectors
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <returns></returns>
     public static double Angle(ModChartVector vector1, ModChartVector vector2)
     {
         return Math.Acos(Dot(Normalise(vector1), Normalise(vector2)));

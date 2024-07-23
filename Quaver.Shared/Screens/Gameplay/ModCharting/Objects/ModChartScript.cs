@@ -138,10 +138,9 @@ public class ModChartScript
 
         ModChartUtils.InitializeMeasures();
 
-        UserData.RegisterAssembly(Assembly.GetCallingAssembly());
-        UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+        UserData.RegisterType<ModChartVector>(new ModChartVectorDescriptor(typeof(ModChartVector),
+            InteropAccessMode.Default, "Vector"));
         UserData.RegisterExtensionType(typeof(EventHelper));
-        UserData.RegisterType<ModChartVector>();
         UserData.RegisterType<EasingDelegate>();
         UserData.RegisterType<LerpDelegate<float>>();
         UserData.RegisterType<LerpDelegate<Vector2>>();
@@ -181,6 +180,10 @@ public class ModChartScript
         RegisterKeyframe<Vector4>();
         RegisterLayer();
         RegisterBeat();
+
+        UserData.RegisterAssembly(Assembly.GetCallingAssembly());
+        UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+
         LoadScript();
     }
 
