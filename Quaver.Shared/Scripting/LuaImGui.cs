@@ -11,10 +11,12 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Debugging;
+using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -32,6 +34,22 @@ namespace Quaver.Shared.Scripting
         private const int IterationLimit = 10;
 
         private const int RecursionLimit = 10;
+
+        private static readonly IUserDataDescriptor s_imgui = UserData.RegisterType(typeof(ImGui));
+
+        private static readonly IUserDataDescriptor s_imguiRedirects = UserData.RegisterType(typeof(ImGuiRedirect));
+
+        private static readonly Dictionary<string, DynValue> s_imguiMethods = MethodNamesOf(typeof(ImGui))
+           .Distinct()
+           .ToDictionary(x => x, GetWrappedFunctionThatPacksReturnedVectors, StringComparer.Ordinal);
+
+        private static readonly HashSet<string> s_imguiRedirectMethodNames =
+            MethodNamesOf(typeof(ImGuiRedirect)).ToHashSet(StringComparer.Ordinal);
+
+        private static readonly List<Type> s_imguiTypes =
+            typeof(ImGui).Assembly.GetTypes().Where(x => x.Name.StartsWith("Im")).ToList();
+
+        private static readonly Regex s_capitals = new(@"\p{Lu}", RegexOptions.Compiled);
 
         private static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
 
@@ -93,6 +111,21 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         public LuaPluginState State { get; }
 
+        static LuaImGui()
+        {
+            UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+            UserData.RegisterAssembly(Assembly.GetCallingAssembly());
+            s_imguiTypes.ForEach(x => UserData.RegisterType(x));
+            UserData.RegisterType<HistoryType>();
+            UserData.RegisterType<Vector2>();
+            UserData.RegisterType<Vector3>();
+            UserData.RegisterType<Vector4>();
+            UserData.RegisterType<UIntPtr>();
+            UserData.RegisterType<IntPtr>();
+            UserData.RegisterType<Keys>();
+            RegisterAllVectors();
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -108,50 +141,6 @@ namespace Quaver.Shared.Scripting
 
             // ReSharper disable once VirtualMemberCallInConstructor
             State = GetStateObject();
-
-            UserData.RegisterAssembly(Assembly.GetCallingAssembly());
-            UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
-            UserData.RegisterType<HistoryType>();
-            UserData.RegisterType<UIntPtr>();
-            UserData.RegisterType<IntPtr>();
-
-            // ImGui
-            UserData.RegisterType<ImGuiInputTextFlags>();
-            UserData.RegisterType<ImGuiDataType>();
-            UserData.RegisterType<ImGuiTreeNodeFlags>();
-            UserData.RegisterType<ImGuiSelectableFlags>();
-            UserData.RegisterType<ImGuiMouseCursor>();
-            UserData.RegisterType<ImGuiCond>();
-            UserData.RegisterType<ImGuiWindowFlags>();
-            UserData.RegisterType<ImGuiDir>();
-            UserData.RegisterType<ImGuiDragDropFlags>();
-            UserData.RegisterType<ImGuiTabBarFlags>();
-            UserData.RegisterType<ImGuiTabItemFlags>();
-            UserData.RegisterType<ImGuiColorEditFlags>();
-            UserData.RegisterType<ImGuiKey>();
-            UserData.RegisterType<ImGuiCol>();
-            UserData.RegisterType<ImGuiStyleVar>();
-            UserData.RegisterType<ImDrawListPtr>();
-            UserData.RegisterType<ImGuiStylePtr>();
-            UserData.RegisterType<ImGuiStoragePtr>();
-            UserData.RegisterType<ImGuiIOPtr>();
-            UserData.RegisterType<ImGuiPayloadPtr>();
-            UserData.RegisterType<ImDrawDataPtr>();
-            UserData.RegisterType<ImFontPtr>();
-            UserData.RegisterType<ImGuiIOPtr>();
-            UserData.RegisterType<ImGuiComboFlags>();
-            UserData.RegisterType<ImGuiFocusedFlags>();
-            UserData.RegisterType<ImGuiHoveredFlags>();
-
-            // Vectors, since imgui.CreateVectorN exists.
-            UserData.RegisterType<Vector2>();
-            UserData.RegisterType<Vector3>();
-            UserData.RegisterType<Vector4>();
-
-            // MonoGame
-            UserData.RegisterType<Keys>();
-
-            RegisterAllVectors();
             LazyLoadScript();
 
             if (IsResource)
@@ -216,26 +205,19 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         public virtual void SetFrameState()
         {
+            void AddGlobal(Type x)
+            {
+                if (x == typeof(ImGui) || x.IsEnum)
+                    WorkingScript.Globals[$"imgui{s_capitals.Replace(x.Name[5..], x => $"_{x.Value.ToLower()}")}"] =
+                        x == typeof(ImGui)
+                            ? new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = IndexImGui } }
+                            : x;
+            }
+
             State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
-            WorkingScript.Globals["imgui_input_text_flags"] = typeof(ImGuiInputTextFlags);
-            WorkingScript.Globals["imgui_data_type"] = typeof(ImGuiDataType);
-            WorkingScript.Globals["imgui_tree_node_flags"] = typeof(ImGuiTreeNodeFlags);
-            WorkingScript.Globals["imgui_selectable_flags"] = typeof(ImGuiSelectableFlags);
-            WorkingScript.Globals["imgui_mouse_cursor"] = typeof(ImGuiMouseCursor);
-            WorkingScript.Globals["imgui_cond"] = typeof(ImGuiCond);
-            WorkingScript.Globals["imgui_window_flags"] = typeof(ImGuiWindowFlags);
-            WorkingScript.Globals["imgui_dir"] = typeof(ImGuiDir);
-            WorkingScript.Globals["imgui_drag_drop_flags"] = typeof(ImGuiDragDropFlags);
-            WorkingScript.Globals["imgui_tab_bar_flags"] = typeof(ImGuiTabBarFlags);
-            WorkingScript.Globals["imgui_tab_item_flags"] = typeof(ImGuiTabItemFlags);
-            WorkingScript.Globals["imgui_color_edit_flags"] = typeof(ImGuiColorEditFlags);
-            WorkingScript.Globals["imgui_key"] = typeof(ImGuiKey);
-            WorkingScript.Globals["imgui_col"] = typeof(ImGuiCol);
-            WorkingScript.Globals["imgui_style_var"] = typeof(ImGuiStyleVar);
-            WorkingScript.Globals["imgui_combo_flags"] = typeof(ImGuiComboFlags);
-            WorkingScript.Globals["imgui_focused_flags"] = typeof(ImGuiFocusedFlags);
-            WorkingScript.Globals["imgui_hovered_flags"] = typeof(ImGuiHoveredFlags);
-            WorkingScript.Globals["keys"] = typeof(Keys);
+
+            if (IsFirstDrawCall)
+                s_imguiTypes.ForEach(AddGlobal);
         }
 
         /// <summary>
@@ -266,6 +248,17 @@ namespace Quaver.Shared.Scripting
                 typeof(Vector4),
                 x => LuaVectorWrapper.TryCoerceTo<Vector4>(x) ?? throw UnableToCoerce(x)
             );
+
+            // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+            foreach (var imgui in s_imguiTypes)
+                if (imgui.IsEnum)
+                    Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                        DataType.Number,
+                        imgui,
+                        x => Enum.TryParse(imgui, x.String, true, out var result)
+                            ? result
+                            : Enum.ToObject(imgui, (int)(x.CastToNumber() ?? throw UnableToCoerce(x)))
+                    );
         }
 
         /// <summary>
@@ -509,12 +502,66 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Gets the dynamic value, but ensuring that the function returned will return
+        ///     a table instead of a vector to retain backwards compatibility.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        private static DynValue GetWrappedFunctionThatPacksReturnedVectors(string x) =>
+            s_imgui.Index(null, null, DynValue.NewString(x), true) is var ret &&
+            ret is { Callback.ClrCallback: { } clr }
+                ? DynValue.NewCallback(
+                    (context, args) => clr(context, args) switch
+                    {
+                        { UserData.Object: Vector2 v } => DynValue.NewTable(
+                            null,
+                            DynValue.NewNumber(v.X),
+                            DynValue.NewNumber(v.Y)
+                        ),
+                        { UserData.Object: Vector3 v } => DynValue.NewTable(
+                            null,
+                            DynValue.NewNumber(v.X),
+                            DynValue.NewNumber(v.Y),
+                            DynValue.NewNumber(v.Z)
+                        ),
+                        { UserData.Object: Vector4 v } => DynValue.NewTable(
+                            null,
+                            DynValue.NewNumber(v.X),
+                            DynValue.NewNumber(v.Y),
+                            DynValue.NewNumber(v.Z),
+                            DynValue.NewNumber(v.W)
+                        ),
+                        var v => v,
+                    }
+                )
+                : ret;
+
+        /// <summary>
+        ///     Performs the index operation for the <c>imgui</c> global table.
+        /// </summary>
+        /// <param name="context">The script execution context.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The function for the index operation.</returns>
+        private static DynValue IndexImGui(ScriptExecutionContext context, CallbackArguments args) =>
+            context.OwnerScript is var owner && args.RawGet(1, false) is not { String: var str } key ? DynValue.Nil :
+            s_imguiRedirectMethodNames.Contains(str) ? s_imguiRedirects.Index(owner, null, key, true) :
+            s_imguiMethods.TryGetValue(str, out var ret) ? ret : DynValue.Nil;
+
+        /// <summary>
         ///     Indicates a failure to coerce a value to a vector.
         /// </summary>
         /// <param name="dynVal">The value that failed to coerce.</param>
         /// <returns>The exception to throw.</returns>
         private static Exception UnableToCoerce(DynValue dynVal) =>
-            new ArgumentException($"Value cannot be converted to a vector type: {Display(dynVal)}");
+            new ArgumentException($"Value cannot be converted to the destination type: {Display(dynVal)}");
+
+        /// <summary>
+        ///     Gets the enumeration of method names from the <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The type to get the method names from.</param>
+        /// <returns>The method names in the given <see cref="Type"/> object.</returns>
+        private static IEnumerable<string> MethodNamesOf(Type type) =>
+            type.GetMethods().Where(x => !x.IsConstructor).Select(x => x.Name);
 
         /// <summary>
         ///     Gets the enumeration of <see cref="DictionaryEntry"/> from the <see cref="IDictionary"/> instance.
@@ -566,7 +613,7 @@ namespace Quaver.Shared.Scripting
                     ["eval"] = Eval,
                     ["expr"] = Expr,
                     ["history_type"] = typeof(HistoryType),
-                    ["imgui"] = typeof(ImGuiWrapper),
+                    ["keys"] = typeof(Keys),
                     ["listen"] = Listen,
                     ["print"] = Print,
                     ["read"] = Read,
@@ -721,6 +768,9 @@ namespace Quaver.Shared.Scripting
                 {
                     void EditorAction(IEditorAction change, HistoryType kind)
                     {
+                        if (this is IEditorPlugin { IsActive: false })
+                            return;
+
                         try
                         {
                             function.Call(change, kind);
