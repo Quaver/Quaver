@@ -38,6 +38,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ZoomOutLarge,
             KeybindActions.SeekForwards,
             KeybindActions.SeekBackwards,
+            KeybindActions.SeekForwardsLarge,
+            KeybindActions.SeekBackwardsLarge,
             KeybindActions.SeekForwards1ms,
             KeybindActions.SeekBackwards1ms,
             KeybindActions.IncreasePlaybackRate,
@@ -160,6 +162,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                     break;
                 case KeybindActions.SeekBackwards:
                     Screen.SeekInDirection(Direction.Backward);
+                    break;
+                case KeybindActions.SeekForwardsLarge:
+                    Screen.SeekInDirection(Direction.Forward, 0.25f);
+                    break;
+                case KeybindActions.SeekBackwardsLarge:
+                    Screen.SeekInDirection(Direction.Backward, 0.25f);
                     break;
                 case KeybindActions.SeekForwards1ms:
                     if (!Screen.Track.IsPlaying)

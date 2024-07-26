@@ -593,12 +593,10 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         /// <param name="direction"></param>
-        public void SeekInDirection(Direction direction)
+        /// <param name="snapFactor"></param>
+        public void SeekInDirection(Direction direction, float snapFactor = 1)
         {
-            var snap = (float)BeatSnap.Value;
-
-            if (KeyboardManager.IsCtrlDown())
-                snap /= 4;
+            var snap = BeatSnap.Value * snapFactor;
 
             var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, snap, Track.Time);
 
