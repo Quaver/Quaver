@@ -274,8 +274,11 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.TogglePitchRate:
                     ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
                     break;
-                case KeybindActions.TestPlay:
+                case KeybindActions.PlayTest:
                     Screen.ExitToTestPlay();
+                    break;
+                case KeybindActions.PlayTestFromBeginning:
+                    Screen.ExitToTestPlay(true);
                     break;
                 case KeybindActions.ToggleLayerViewMode:
                     Screen.ToggleViewLayers();
