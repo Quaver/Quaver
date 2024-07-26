@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
@@ -10,6 +11,8 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Logging;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Edit.Input
 {
@@ -252,6 +255,29 @@ namespace Quaver.Shared.Screens.Edit.Input
                     break;
                 case KeybindActions.OpenModifiersDialog:
                     Screen.OpenModifiersDialog();
+                    break;
+                case KeybindActions.OpenQuaFile:
+                    try
+                    {
+                        Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}/{Screen.Map.Path}");
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, LogType.Runtime);
+                    }
+                    break;
+                case KeybindActions.OpenFolder:
+                    try
+                    {
+                        Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}");
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, LogType.Runtime);
+                    }
+                    break;
+                case KeybindActions.Export:
+                    Screen.ExportToZip();
                     break;
                 case KeybindActions.ToggleBpmPanel:
                     Screen.ToggleBuiltinPlugin(EditorBuiltInPlugin.TimingPointEditor);
