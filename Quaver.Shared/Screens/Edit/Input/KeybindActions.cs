@@ -69,6 +69,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         Copy,
         Paste,
         SelectAllNotes,
+        MirrorNotesLeftRight,
         Deselect,
         Save
     }

@@ -322,6 +322,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SelectAllNotes:
                     Screen.SelectAllObjects();
                     break;
+                case KeybindActions.MirrorNotesLeftRight:
+                    Screen.FlipSelectedObjects();
+                    break;
                 case KeybindActions.Deselect:
                     Screen.SelectedHitObjects.Clear();
                     break;
