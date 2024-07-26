@@ -225,6 +225,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {TestPlay, new KeybindList(new [] {new Keybind(Keys.F4)})},
             {ToggleBpmPanel, new KeybindList(new [] {new Keybind(Keys.F5)})},
             {ToggleSvPanel, new KeybindList(new [] {new Keybind(Keys.F6)})},
+            {ToggleAutoMod, new KeybindList(new [] {new Keybind(Keys.M), new Keybind(KeyModifiers.Ctrl, Keys.M)})},
             {ToggleHitsounds, new KeybindList(new [] {new Keybind(Keys.D8)})},
             {ToggleMetronome, new KeybindList(new [] {new Keybind(Keys.D9)})},
             {TogglePitchRate, new KeybindList(new [] {new Keybind(Keys.D0), new Keybind(KeyModifiers.Ctrl, Keys.D0)})},

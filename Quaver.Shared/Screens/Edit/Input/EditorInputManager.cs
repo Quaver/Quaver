@@ -256,6 +256,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ToggleSvPanel:
                     Screen.ToggleBuiltinPlugin(EditorBuiltInPlugin.ScrollVelocityEditor);
                     break;
+                case KeybindActions.ToggleAutoMod:
+                    View.AutoMod.IsActive.Value = !View.AutoMod.IsActive.Value;
+                    break;
                 case KeybindActions.ToggleGotoPanel:
                     Screen.ToggleBuiltinPlugin(EditorBuiltInPlugin.GoToObjects);
                     break;

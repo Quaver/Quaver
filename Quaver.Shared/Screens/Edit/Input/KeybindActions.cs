@@ -45,6 +45,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         OpenModifiersDialog,
         ToggleBpmPanel,
         ToggleSvPanel,
+        ToggleAutoMod,
         ToggleGotoPanel,
         ToggleLayerViewMode,
         ToggleGameplayPreview,
