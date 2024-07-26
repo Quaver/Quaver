@@ -78,6 +78,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         SelectAllNotes,
         MirrorNotesLeftRight,
         Deselect,
-        Save
+        Save,
+        ApplyOffsetToMap
     }
 }

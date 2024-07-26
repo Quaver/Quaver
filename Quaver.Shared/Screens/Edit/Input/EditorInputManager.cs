@@ -377,6 +377,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.Save:
                     Screen.Save();
                     break;
+                case KeybindActions.ApplyOffsetToMap:
+                    DialogManager.Show(new EditorApplyOffsetDialog(Screen));
+                    break;
                 default:
                     return;
             }
