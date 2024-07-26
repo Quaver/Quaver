@@ -80,7 +80,7 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         /// Determines whether the first draw call has been made.
         /// </summary>
-        private bool IsFirstDrawCall { get; set; }
+        public bool IsFirstDrawCall { get; set; }
 
         /// <summary>
         /// Determines whether the plugin is a resource.
@@ -160,6 +160,15 @@ namespace Quaver.Shared.Scripting
         /// <param name="kind">Whether the change is a new edit, undo, or redo.</param>
         public static void Inform(IEditorAction change, HistoryType kind) => s_events?.Invoke(change, kind);
 
+        protected static void RegisterEnumConversion(Type type) =>
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Number,
+                type,
+                x => Enum.TryParse(type, x.String, true, out var result)
+                    ? result
+                    : Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x)))
+            );
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -205,19 +214,19 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         public virtual void SetFrameState()
         {
-            void AddGlobal(Type x)
+            if (!IsFirstDrawCall)
+                return;
+
+            foreach (var x in s_imguiTypes)
             {
-                if (x == typeof(ImGui) || x.IsEnum)
-                    WorkingScript.Globals[$"imgui{s_capitals.Replace(x.Name[5..], x => $"_{x.Value.ToLower()}")}"] =
-                        x == typeof(ImGui)
-                            ? new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = IndexImGui } }
-                            : x;
+                var isImGui = x == typeof(ImGui);
+
+                if (!isImGui && !x.IsEnum)
+                    continue;
+
+                WorkingScript.Globals[$"imgui{s_capitals.Replace(x.Name[5..], x => $"_{x.Value.ToLower()}")}"] =
+                    isImGui ? new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = Index } } : x;
             }
-
-            State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
-
-            if (IsFirstDrawCall)
-                s_imguiTypes.ForEach(AddGlobal);
         }
 
         /// <summary>
@@ -252,13 +261,7 @@ namespace Quaver.Shared.Scripting
             // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
             foreach (var imgui in s_imguiTypes)
                 if (imgui.IsEnum)
-                    Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
-                        DataType.Number,
-                        imgui,
-                        x => Enum.TryParse(imgui, x.String, true, out var result)
-                            ? result
-                            : Enum.ToObject(imgui, (int)(x.CastToNumber() ?? throw UnableToCoerce(x)))
-                    );
+                    RegisterEnumConversion(imgui);
         }
 
         /// <summary>
@@ -542,7 +545,7 @@ namespace Quaver.Shared.Scripting
         /// <param name="context">The script execution context.</param>
         /// <param name="args">The arguments.</param>
         /// <returns>The function for the index operation.</returns>
-        private static DynValue IndexImGui(ScriptExecutionContext context, CallbackArguments args) =>
+        private static DynValue Index(ScriptExecutionContext context, CallbackArguments args) =>
             context.OwnerScript is var owner && args.RawGet(1, false) is not { String: var str } key ? DynValue.Nil :
             s_imguiRedirectMethodNames.Contains(str) ? s_imguiRedirects.Index(owner, null, key, true) :
             s_imguiMethods.TryGetValue(str, out var ret) ? ret : DynValue.Nil;

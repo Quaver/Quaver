@@ -43,6 +43,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         public EditorPluginMap EditorPluginMap { get; set; }
 
+        static EditorPlugin()
+        {
+            UserData.RegisterType<GameMode>();
+            UserData.RegisterType<HitSounds>();
+            UserData.RegisterType<TimeSignature>();
+            UserData.RegisterType<EditorActionType>();
+            RegisterEnumConversion(typeof(GameMode));
+            RegisterEnumConversion(typeof(HitSounds));
+            RegisterEnumConversion(typeof(TimeSignature));
+            RegisterEnumConversion(typeof(EditorActionType));
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -63,15 +75,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             IsBuiltIn = isResource;
             Directory = directory;
             IsWorkshop = isWorkshop;
-
             EditorPluginUtils.EditScreen = editScreen;
-
             EditorPluginMap = new EditorPluginMap();
-
-            UserData.RegisterType<GameMode>();
-            UserData.RegisterType<HitSounds>();
-            UserData.RegisterType<TimeSignature>();
-            UserData.RegisterType<EditorActionType>();
         }
 
         /// <inheritdoc />
@@ -86,37 +91,19 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public override void SetFrameState()
         {
-            WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
-            WorkingScript.Globals["game_mode"] = typeof(GameMode);
-            WorkingScript.Globals["hitsounds"] = typeof(HitSounds);
-            WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
-            WorkingScript.Globals["action_type"] = typeof(EditorActionType);
-            WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
-
-            var state = (EditorPluginState)State;
-
-            state.SongTime = Editor.Track.Time;
-            state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
-            state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
-            state.CurrentSnap = Editor.BeatSnap.Value;
-            state.CurrentLayer = Editor.SelectedLayer.Value ?? Editor.DefaultLayer;
-
-            state.WindowSize = DynValue.NewTable(
-                null,
-                DynValue.NewNumber(ConfigManager.WindowWidth.Value),
-                DynValue.NewNumber(ConfigManager.WindowHeight.Value)
-            );
-
-            EditorPluginMap.Map = Editor.WorkingMap;
-            EditorPluginMap.Track = Editor.Track;
-            EditorPluginMap.DefaultLayer = Editor.DefaultLayer;
-            EditorPluginMap.SetFrameState();
-            WorkingScript.Globals["map"] = EditorPluginMap;
+            if (IsFirstDrawCall)
+            {
+                WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
+                WorkingScript.Globals["game_mode"] = typeof(GameMode);
+                WorkingScript.Globals["hitsounds"] = typeof(HitSounds);
+                WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
+                WorkingScript.Globals["action_type"] = typeof(EditorActionType);
+                WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
+                WorkingScript.Globals["map"] = EditorPluginMap;
+            }
 
             base.SetFrameState();
-
-            state.PushImguiStyle();
+            ((EditorPluginState)State).PushImguiStyle();
             PushDefaultStyles();
         }
 
@@ -127,17 +114,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         {
             ImGui.PopStyleVar();
             IsWindowHovered = State.IsWindowHovered;
-
             base.AfterRender();
         }
 
         /// <summary>
         ///     To push any default styling for plugin windows
         /// </summary>
-        private void PushDefaultStyles()
-        {
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
-        }
+        private static void PushDefaultStyles() => ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
 
         /// <inheritdoc />
         /// <summary>

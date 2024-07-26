@@ -938,7 +938,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void SetHitSoundObjectIndex()
         {
-            HitsoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= Track.Time);
+            HitsoundObjectIndex = WorkingMap.HitObjects.IndexAtTime((float)Track.Time);
             HitsoundObjectIndex++;
         }
 
