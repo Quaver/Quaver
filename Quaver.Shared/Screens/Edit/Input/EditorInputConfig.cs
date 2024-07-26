@@ -199,6 +199,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {SeekToEnd, new KeybindList(KeyModifiers.Free, Keys.End)},
             {IncreasePlaybackRate, new KeybindList(new[] {new Keybind(Keys.OemPlus), new Keybind(KeyModifiers.Ctrl, Keys.OemPlus)})},
             {DecreasePlaybackRate, new KeybindList(new[] {new Keybind(Keys.OemMinus), new Keybind(KeyModifiers.Ctrl, Keys.OemMinus)})},
+            {SetPreviewTime, new KeybindList(KeyModifiers.Ctrl, Keys.T)},
             {ChangeToolUp, new KeybindList()},
             {ChangeToolDown, new KeybindList()},
             {ChangeToolToSelect, new KeybindList(Keys.Q)},

@@ -184,6 +184,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.DecreasePlaybackRate:
                     Screen.ChangeAudioPlaybackRate(Direction.Backward);
                     break;
+                case KeybindActions.SetPreviewTime:
+                    Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
+                    break;
                 case KeybindActions.ChangeToolUp:
                     Screen.ChangeTool(Direction.Backward);
                     break;
