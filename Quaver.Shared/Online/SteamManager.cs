@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -96,6 +97,13 @@ namespace Quaver.Shared.Online
         /// </summary>
         public static void Initialize()
         {
+            [DoesNotReturn]
+            static void Fail(string log)
+            {
+                Console.Write('\a'); // Plays a bell sound.
+                Logger.Error(log, LogType.Runtime);
+                throw new InvalidOperationException(log);
+            }
 #if DEBUG
             // Creates a file with the Steam Application Id, this is required for debugging
             File.WriteAllText($"{Directory.GetCurrentDirectory()}/steam_appid.txt", ApplicationId.ToString());
@@ -110,25 +118,13 @@ namespace Quaver.Shared.Online
             UserAvatarsLarge = new ConcurrentDictionary<ulong, Texture2D>();
 
             if (!IsInitialized)
-            {
-                var log = $"SteamAPI.Init() call has failed! Steam is not initialized";
-                Logger.Error(log, LogType.Network);
-                throw new InvalidOperationException(log);
-            }
+                Fail("SteamAPI.Init() call has failed! Steam is not initialized");
 
             if (!Packsize.Test())
-            {
-                var log = $"The incorrect Steamworks.NET assembly was loaded for this platform!";
-                Logger.Error(log, LogType.Runtime);
-                throw new InvalidOperationException(log);
-            }
+                Fail("The incorrect Steamworks.NET assembly was loaded for this platform!");
 
             if (!DllCheck.Test())
-            {
-                var log = "The wrong dlls were loaded for this platform!";
-                Logger.Error(log, LogType.Runtime);
-                throw new InvalidOperationException(log);
-            }
+                Fail("The wrong dlls were loaded for this platform!");
 
             Logger.Important($"Successfully initialized and logged into Steam as : {SteamFriends.GetPersonaName()} " +
                               $"<{SteamUser.GetSteamID()}>", LogType.Runtime);
@@ -145,7 +141,7 @@ namespace Quaver.Shared.Online
             // have am initial value for State and details, so it doesn't just show "%state%: %details%" on Beta warning screen.
             SteamFriends.SetRichPresence("State", "Loading");
             SteamFriends.SetRichPresence("Details", "Launching the game");
-            // set our "displayed key" to #Status.  
+            // set our "displayed key" to #Status.
             SteamFriends.SetRichPresence("steam_display", "#Status");
 
 
@@ -273,9 +269,9 @@ namespace Quaver.Shared.Online
                 SteamUGC.SetItemPreview(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.PreviewFilePath);
 
             SteamUGC.SetItemContent(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.FolderPath);
-            
-            var tagUpdate = false; 
-            
+
+            var tagUpdate = false;
+
             if (File.Exists($"{SteamWorkshopItem.Current.FolderPath}/skin.ini"))
                 tagUpdate = SteamUGC.SetItemTags(SteamWorkshopItem.Current.Handle, new List<string> {"Skins"});
             else if (File.Exists($"{SteamWorkshopItem.Current.FolderPath}/settings.ini"))
