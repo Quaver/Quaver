@@ -66,7 +66,11 @@ namespace Quaver.Shared.Screens.Edit.Input
                 var allModifiers = Enum.GetValues(typeof(KeyModifiers)).Cast<KeyModifiers>();
                 var freeModifiers = allModifiers.Except(Modifiers).ToList();
                 foreach (var modifiers in PowerSetOfModifiers(freeModifiers))
+                {
+                    modifiers.UnionWith(Modifiers);
+                    modifiers.Remove(KeyModifiers.Free);
                     set.Add(new Keybind(modifiers, Key));
+                }
             }
 
             return set;
