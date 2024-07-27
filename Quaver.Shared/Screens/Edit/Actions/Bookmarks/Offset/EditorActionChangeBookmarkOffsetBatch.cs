@@ -34,7 +34,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset
             foreach (var bookmark in Bookmarks)
                 bookmark.StartTime += Offset;
 
-            WorkingMap.Sort();
             ActionManager.TriggerEvent(Type, new EditorActionChangeBookmarkOffsetBatchEventArgs(Bookmarks, Offset));
         }
 

@@ -3,6 +3,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Helpers;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch
@@ -29,9 +30,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.AddBatch
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            Bookmarks.ForEach(x => WorkingMap.Bookmarks.Add(x));
-            WorkingMap.Sort();
-
+            WorkingMap.Bookmarks.InsertSorted(Bookmarks);
             ActionManager.TriggerEvent(Type, new EditorActionBookmarkBatchAddedEventArgs(Bookmarks));
         }
 

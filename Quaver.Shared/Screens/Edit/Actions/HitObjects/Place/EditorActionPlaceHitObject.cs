@@ -3,6 +3,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Helpers;
 
 namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Place
 {
@@ -45,9 +46,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Place
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            WorkingMap.HitObjects.Add(HitObject);
-            WorkingMap.Sort();
-
+            WorkingMap.HitObjects.InsertSorted(HitObject);
             ActionManager.TriggerEvent(Type, new EditorHitObjectPlacedEventArgs(HitObject));
         }
 

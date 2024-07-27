@@ -4,6 +4,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Helpers;
 
 namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
 {
@@ -46,9 +47,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            HitObjects.ForEach(x => WorkingMap.HitObjects.Add(x));
-            WorkingMap.Sort();
-
+            WorkingMap.HitObjects.InsertSorted(HitObjects);
             ActionManager.TriggerEvent(EditorActionType.PlaceHitObjectBatch, new EditorHitObjectBatchPlacedEventArgs(HitObjects));
         }
 

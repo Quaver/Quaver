@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset
         public void Perform()
         {
             TimingPoint.StartTime = NewOffset;
-            WorkingMap.Sort();
+            WorkingMap.SortTimingPoints();
             ActionManager.TriggerEvent(Type, new  EditorTimingPointOffsetChangedEventArgs(OriginalOffset, NewOffset));
         }
 

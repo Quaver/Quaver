@@ -35,7 +35,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch
             foreach (var tp in TimingPoints)
                 tp.StartTime += Offset;
 
-            WorkingMap.Sort();
             ActionManager.TriggerEvent(Type, new EditorChangedTimingPointOffsetBatchEventArgs(TimingPoints, Offset));
         }
 

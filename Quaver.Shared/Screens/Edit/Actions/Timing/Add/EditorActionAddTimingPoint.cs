@@ -3,6 +3,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Helpers;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Timing.Add
 {
@@ -28,9 +29,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.Add
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            WorkingMap.TimingPoints.Add(TimingPoint);
-            WorkingMap.Sort();
-
+            WorkingMap.TimingPoints.InsertSorted(TimingPoint);
             ActionManager.TriggerEvent(Type, new EditorTimingPointAddedEventArgs(TimingPoint));
         }
 

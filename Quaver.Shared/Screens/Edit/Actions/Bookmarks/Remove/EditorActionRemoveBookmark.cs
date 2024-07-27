@@ -29,8 +29,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove
         public void Perform()
         {
             WorkingMap.Bookmarks.Remove(Bookmark);
-            WorkingMap.Sort();
-
             ActionManager.TriggerEvent(Type, new EditorActionBookmarkRemovedEventArgs(Bookmark));
         }
 
