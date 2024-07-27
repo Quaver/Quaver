@@ -17,8 +17,8 @@ public class SwapLanePreset : ModChartPreset
 
     protected override void PlacePreset(int startTime, int endTime)
     {
-        var laneContainer1 = new DrawableProxy(Stage.LaneContainer(Lane1));
-        var laneContainer2 = new DrawableProxy(Stage.LaneContainer(Lane2));
+        var laneContainer1 = new DrawableProxy(Stage.Lanes[Lane1 - 1]);
+        var laneContainer2 = new DrawableProxy(Stage.Lanes[Lane2 - 1]);
         Timeline.Add(startTime, endTime,
             laneContainer1.XProp.TweenSwap(laneContainer2.XProp, EasingDelegate));
         Timeline.Add(startTime, endTime,

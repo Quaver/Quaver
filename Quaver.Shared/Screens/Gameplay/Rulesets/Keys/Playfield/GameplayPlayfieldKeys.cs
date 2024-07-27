@@ -154,11 +154,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         internal float[] ReceptorPositionY { get; private set; }
 
         /// <summary>
-        ///     Direction in which the hit objects fall towards the receptor, in radians
-        /// </summary>
-        internal float[] HitObjectFallRotation { get; private set; }
-
-        /// <summary>
         ///     Position for each Column Lighting relative from the top of the screen.
         /// </summary>
         internal float[] ColumnLightingPositionY { get; private set; }
@@ -300,7 +295,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             ReceptorPositionY = new float[ScrollDirections.Length];
-            HitObjectFallRotation = new float[ScrollDirections.Length];
             ColumnLightingPositionY = new float[ScrollDirections.Length];
             HitPositionY = new float[ScrollDirections.Length];
             HoldHitPositionY = new float[ScrollDirections.Length];

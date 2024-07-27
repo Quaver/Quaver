@@ -21,8 +21,7 @@ public class ModChartStage : ModChartGlobalVariable
     {
     }
 
-    public GameplayPlayfieldLane LaneContainer(int lane) =>
-        Shortcut.GameplayPlayfieldKeysStage.LaneContainers[lane - 1];
+    public List<GameplayPlayfieldLane> Lanes => Shortcut.GameplayPlayfieldKeysStage.LaneContainers;
 
     public Sprite BgMask => Shortcut.GameplayPlayfieldKeysStage.BgMask;
     public Sprite Background => Shortcut.GameplayScreenView.Background;
@@ -47,11 +46,6 @@ public class ModChartStage : ModChartGlobalVariable
     /// </summary>
     /// <returns></returns>
     public float LaneSeparationWidth => LaneSize + ReceptorPadding;
-
-    public float HitObjectFallRotation(int lane) => Shortcut.GameplayPlayfieldKeys.HitObjectFallRotation[lane - 1];
-
-    public void HitObjectFallRotation(int lane, float rotationRad) =>
-        Shortcut.GameplayPlayfieldKeys.HitObjectFallRotation[lane - 1] = rotationRad;
 
     /// <summary>
     ///     Positions of each receptor
