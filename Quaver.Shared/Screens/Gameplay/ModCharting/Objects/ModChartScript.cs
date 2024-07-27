@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Gameplay.ModCharting.Timeline;
 using Quaver.Shared.Screens.Gameplay.ModCharting.Tween;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -148,7 +149,7 @@ public class ModChartScript
     private void RegisterTypesAndImplicitConversions()
     {
         // Register types
-        
+
         // The Vector type needs special care for swizzling
         UserData.RegisterType<ModChartVector>(new ModChartVectorDescriptor(typeof(ModChartVector),
             InteropAccessMode.Default, "Vector"));
@@ -171,6 +172,8 @@ public class ModChartScript
         UserData.RegisterProxyType<ContainerProxy, Container>(s => new ContainerProxy(s));
         UserData.RegisterProxyType<LaneContainerProxy, GameplayPlayfieldLane>(s => new LaneContainerProxy(s));
         UserData.RegisterProxyType<DrawableProxy, Drawable>(s => new DrawableProxy(s));
+        UserData.RegisterProxyType<GameplayNumberDisplayProxy, GameplayNumberDisplay>(s =>
+            new GameplayNumberDisplayProxy(s));
         UserData.RegisterProxyType<ShaderProxy, Shader>(s => new ShaderProxy(s));
         UserData.RegisterProxyType<SpriteBatchOptionsProxy, SpriteBatchOptions>(s => new SpriteBatchOptionsProxy(s));
         UserData.RegisterProxyType<Texture2DProxy, Texture2D>(t => new Texture2DProxy(t));

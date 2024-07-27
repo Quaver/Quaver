@@ -6,6 +6,9 @@ using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Gameplay.UI;
+using Quaver.Shared.Screens.Gameplay.UI.Counter;
+using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -21,13 +24,38 @@ public class ModChartStage : ModChartGlobalVariable
     {
     }
 
-    public List<GameplayPlayfieldLane> Lanes => Shortcut.GameplayPlayfieldKeysStage.LaneContainers;
+
+    #region PlayfieldStage
 
     public Sprite BgMask => Shortcut.GameplayPlayfieldKeysStage.BgMask;
-    public Sprite Background => Shortcut.GameplayScreenView.Background;
-    public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
-    public Container PlayfieldContainer => Shortcut.GameplayPlayfieldKeys.Container;
+    public GameplayNumberDisplay ComboDisplay => Shortcut.GameplayPlayfieldKeysStage.ComboDisplay;
+    public HealthBar HealthBar => Shortcut.GameplayPlayfieldKeysStage.HealthBar;
+    public List<GameplayPlayfieldLane> Lanes => Shortcut.GameplayPlayfieldKeysStage.LaneContainers;
+    public List<JudgementHitBurst> JudgementHitBursts => Shortcut.GameplayPlayfieldKeysStage.JudgementHitBursts;
+    public List<HitLighting> HitLightingObjects => Shortcut.GameplayPlayfieldKeysStage.HitLightingObjects;
+    public HitErrorBar HitError => Shortcut.GameplayPlayfieldKeysStage.HitError;
+    public Sprite StageLeft => Shortcut.GameplayPlayfieldKeysStage.StageLeft;
+    public Sprite StageRight => Shortcut.GameplayPlayfieldKeysStage.StageRight;
+    public Sprite DistantOverlay => Shortcut.GameplayPlayfieldKeysStage.DistantOverlay;
 
+    #endregion
+
+    #region View
+
+    public Sprite Background => Shortcut.GameplayScreenView.Background;
+    public GameplayNumberDisplay AccuracyDisplay => Shortcut.GameplayScreenView.AccuracyDisplay;
+    public GameplayNumberDisplay RatingDisplay => Shortcut.GameplayScreenView.RatingDisplay;
+    public KeysPerSecond KpsDisplay => Shortcut.GameplayScreenView.KpsDisplay;
+    public GradeDisplay GradeDisplay => Shortcut.GameplayScreenView.GradeDisplay;
+    public JudgementCounter JudgementCounter => Shortcut.GameplayScreenView.JudgementCounter;
+
+    #endregion
+
+    #region Playfield
+
+    public Container ForegroundContainer => Shortcut.GameplayPlayfieldKeys.ForegroundContainer;
+    public Container BackgroundContainer => Shortcut.GameplayPlayfieldKeys.BackgroundContainer;
+    public Container PlayfieldContainer => Shortcut.GameplayPlayfieldKeys.Container;
 
     /// <summary>
     ///     Width of lane (receptor alone)
@@ -40,6 +68,8 @@ public class ModChartStage : ModChartGlobalVariable
     /// </summary>
     /// <returns></returns>
     public float ReceptorPadding => Shortcut.GameplayPlayfieldKeys.ReceptorPadding;
+
+    #endregion
 
     /// <summary>
     ///     Separation between lanes
