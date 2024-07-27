@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public Container Container { get; set; }
+        public LayeredContainer Container { get; set; }
 
         /// <summary>
         ///     The foreground container will be drawn in this layer
@@ -206,14 +206,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
         private void InitializeLayers()
         {
-            GameplayForegroundLayer = GameplayLayerManager.NewLayer($"Foreground");
-            GameplayBackgroundLayer = GameplayLayerManager.NewLayer($"Background");
+            GameplayForegroundLayer = GameplayLayerManager.NewLayer($"PlayfieldForeground");
+            GameplayBackgroundLayer = GameplayLayerManager.NewLayer($"PlayfieldBackground");
             LayerManager.RequireOrder(new []
             {
                 GameplayLayerManager.TopLayer,
                 GameplayForegroundLayer,
                 GameplayBackgroundLayer,
-                GameplayLayerManager.DefaultLayer
+                GameplayLayerManager.BottomLayer
             });
         }
 

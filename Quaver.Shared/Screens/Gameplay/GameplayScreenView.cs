@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
+ */
 
 using System;
 using System.Collections.Generic;
@@ -62,6 +62,31 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     Reference to the gameplay screen.
         /// </summary>
         public new GameplayScreen Screen { get; }
+
+        /// <summary>
+        ///     The layer that draws the background image
+        /// </summary>
+        public Layer BackgroundLayer { get; set; }
+
+        /// <summary>
+        ///     Accuracy, rating, judgement counter, etc. are drawn in this layer
+        /// </summary>
+        public Layer HudLayer { get; set; }
+
+        /// <summary>
+        ///     Progress bar
+        /// </summary>
+        public Layer ProgressBarLayer { get; set; }
+
+        /// <summary>
+        ///     Draws the transitioner
+        /// </summary>
+        public Layer TransitionerLayer { get; set; }
+
+        /// <summary>
+        ///     Draws the pause screen, which should be at the very top
+        /// </summary>
+        public Layer PauseScreenLayer { get; set; }
 
         /// <summary>
         ///     Handles calculating rating
@@ -203,12 +228,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         /// </summary>
         private ReplayController ReplayController { get; }
-        
+
         /// <summary>
         ///     The script loaded that controls the storyboard
         /// </summary>
         public ModChartScript ModChartScript { get; set; }
-        
+
 
         /// <inheritdoc />
         /// <summary>
@@ -217,14 +242,16 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
-            RatingProcessor = new RatingProcessorKeys(Screen.Map.SolveDifficulty(ModManager.Mods, true).OverallDifficulty);
+            InitializeLayeredContainer();
+            RatingProcessor =
+                new RatingProcessorKeys(Screen.Map.SolveDifficulty(ModManager.Mods, true).OverallDifficulty);
 
             CreateBackground();
 
             if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale
                                                   && ConfigManager.EnableBattleRoyaleBackgroundFlashing.Value)
             {
-                BattleRoyaleBackgroundAlerter = new BattleRoyaleBackgroundAlerter(this);
+                BattleRoyaleBackgroundAlerter = new BattleRoyaleBackgroundAlerter(this) { Layer = HudLayer };
             }
 
             if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
@@ -234,31 +261,45 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateScoreDisplay();
             CreateRatingDisplay();
             CreateAccuracyDisplay();
-            
+
             if (!string.IsNullOrEmpty(Screen.Map.AnimationFile))
                 ModChartScript = new ModChartScript(Screen.Map.GetAnimationScriptPath(), this);
 
             if (ConfigManager.DisplayComboAlerts.Value && !Screen.IsSongSelectPreview)
-                ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
+                ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor)
+                {
+                    Parent = Container,
+                    Layer = HudLayer
+                };
 
             // Create judgement status display
             if (ConfigManager.DisplayJudgementCounter.Value)
             {
-                if (OnlineManager.CurrentGame == null || OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
-                    JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+                if (OnlineManager.CurrentGame == null ||
+                    OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
+                    JudgementCounter = new JudgementCounter(Screen)
+                    {
+                        Parent = Container,
+                        Layer = HudLayer
+                    };
             }
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
 
-            SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
+            SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip)
+            {
+                Parent = Container,
+                Layer = HudLayer
+            };
 
             if (Screen.IsMultiplayerGame)
             {
                 MultiplayerEndTime = new MultiplayerEndGameWaitTime
                 {
                     Parent = Container,
-                    Alignment = Alignment.MidCenter
+                    Alignment = Alignment.MidCenter,
+                    Layer = HudLayer
                 };
             }
 
@@ -268,7 +309,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     Parent = Container,
                     Alignment = Alignment.MidCenter,
-                    Alpha = 0
+                    Alpha = 0,
+                    Layer = HudLayer
                 };
             }
 
@@ -277,7 +319,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 Parent = Container,
                 Y = 120,
                 Alignment = Alignment.TopRight,
-                X = -10
+                X = -10,
+                Layer = HudLayer
             };
 
             if (Screen.InReplayMode && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview)
@@ -286,7 +329,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     Parent = Container,
                     Alignment = Alignment.BotRight,
-                    Position = new ScalableVector2(-12, -110)
+                    Position = new ScalableVector2(-12, -110),
+                    Layer = HudLayer
                 };
             }
 
@@ -301,12 +345,13 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     // Fade in from black.
                     new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 1500)
-                }
+                },
+                Layer = HudLayer
             };
 
             // Create pause screen last.
             if (Screen.SpectatorClient == null)
-                PauseScreen = new PauseScreen(Screen) { Parent = Container };
+                PauseScreen = new PauseScreen(Screen) { Parent = Container, Layer = HudLayer };
 
             // Notify the user if their local offset is actually set for this map.
             if (!Screen.IsSongSelectPreview && MapManager.Selected.Value.LocalOffset != 0)
@@ -320,12 +365,36 @@ namespace Quaver.Shared.Screens.Gameplay
                 Tip = new OffsetCalibratorTip
                 {
                     Parent = Container,
-                    Alignment = Alignment.MidCenter
+                    Alignment = Alignment.MidCenter,
+                    Layer = HudLayer
                 };
             }
 
             if (OnlineManager.Client != null && !Screen.IsSongSelectPreview)
                 OnlineManager.Client.OnGameEnded += OnGameEnded;
+        }
+
+        private void InitializeLayeredContainer()
+        {
+            var playfield = Screen.Ruleset.Playfield;
+            var layerManager = playfield.Container.LayerManager;
+            BackgroundLayer = layerManager.NewLayer("Background");
+            HudLayer = layerManager.NewLayer("HUD");
+            ProgressBarLayer = layerManager.NewLayer("ProgressBar");
+            TransitionerLayer = layerManager.NewLayer("Transitioner");
+            PauseScreenLayer = layerManager.NewLayer("PauseScreen");
+            LayerManager.RequireOrder(new[]
+            {
+                layerManager.TopLayer,
+                PauseScreenLayer,
+                TransitionerLayer,
+                ProgressBarLayer,
+                HudLayer,
+                playfield.GameplayForegroundLayer,
+                playfield.GameplayBackgroundLayer,
+                BackgroundLayer,
+                layerManager.BottomLayer
+            });
         }
 
 
@@ -373,10 +442,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
-            Background.Draw(gameTime);
-            BattleRoyaleBackgroundAlerter?.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
-            Container?.WrappedDraw(gameTime);
         }
 
         /// <inheritdoc />
@@ -403,7 +469,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // We don't set a parent here because we have to manually call draw on the background, as the
             // ScreenView's container is drawn after the ruleset.
-            Background = new BackgroundImage(background, 100 - ConfigManager.BackgroundBrightness.Value, false);
+            Background = new BackgroundImage(background, 100 - ConfigManager.BackgroundBrightness.Value, false)
+            {
+                Layer = BackgroundLayer
+            };
         }
 
         /// <summary>
@@ -416,12 +485,14 @@ namespace Quaver.Shared.Screens.Gameplay
 
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
-            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width, 4), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
+            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width, 4), 0,
+                Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
                 skin.SongTimeProgressInactiveColor, skin.SongTimeProgressActiveColor)
             {
                 Parent = Container,
                 Alignment = skin.SongTimeProgressPositionAtTop ? Alignment.TopLeft : Alignment.BotLeft,
-                DestroyIfParentIsNull = false
+                DestroyIfParentIsNull = false,
+                Layer = HudLayer
             };
         }
 
@@ -438,7 +509,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX,
-                Y = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosY
+                Y = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosY,
+                Layer = HudLayer
             };
         }
 
@@ -455,7 +527,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].RatingDisplayPosX,
-                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].RatingDisplayPosY
+                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].RatingDisplayPosY,
+                Layer = HudLayer
             };
         }
 
@@ -472,7 +545,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX,
-                Y = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosY
+                Y = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosY,
+                Layer = HudLayer
             };
         }
 
@@ -500,12 +574,14 @@ namespace Quaver.Shared.Screens.Gameplay
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             // Create KPS display
-            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(skin.KpsDisplayScale / 100f, skin.KpsDisplayScale / 100f))
+            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0",
+                new Vector2(skin.KpsDisplayScale / 100f, skin.KpsDisplayScale / 100f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX,
-                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY
+                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY,
+                Layer = HudLayer
             };
         }
 
@@ -517,7 +593,8 @@ namespace Quaver.Shared.Screens.Gameplay
             Parent = Container,
             Alignment = Alignment.TopRight,
             X = AccuracyDisplay.X - AccuracyDisplay.Width - 8,
-            Y = AccuracyDisplay.Y
+            Y = AccuracyDisplay.Y,
+            Layer = HudLayer
         };
 
         /// <summary>
@@ -528,38 +605,45 @@ namespace Quaver.Shared.Screens.Gameplay
             // Use the replay's name for the scoreboard if we're watching one.
             var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
 
-            var selfAvatar = ConfigManager.Username.Value == scoreboardName ? SteamManager.GetAvatarOrUnknown(SteamUser.GetSteamID().m_SteamID)
+            var selfAvatar = ConfigManager.Username.Value == scoreboardName
+                ? SteamManager.GetAvatarOrUnknown(SteamUser.GetSteamID().m_SteamID)
                 : UserInterface.UnknownAvatar;
 
             SelfScoreboard = new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAvatar,
                 ModManager.Mods, null, RatingProcessor)
             {
                 Parent = Container,
-                Alignment = Alignment.MidLeft
+                Alignment = Alignment.MidLeft,
+                Layer = HudLayer
             };
 
-            var users = new List<ScoreboardUser> {SelfScoreboard};
+            var users = new List<ScoreboardUser> { SelfScoreboard };
 
             if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
             {
                 // Blue Team
                 ScoreboardRight = new Scoreboard(ScoreboardType.Teams,
-                    OnlineManager.GetTeam(OnlineManager.Self.OnlineUser.Id) == MultiplayerTeam.Blue ? users : new List<ScoreboardUser>(), MultiplayerTeam.Blue)
+                    OnlineManager.GetTeam(OnlineManager.Self.OnlineUser.Id) == MultiplayerTeam.Blue
+                        ? users
+                        : new List<ScoreboardUser>(), MultiplayerTeam.Blue)
                 {
                     Parent = Container,
                     Alignment = Alignment.TopLeft,
+                    Layer = HudLayer
                 };
             }
 
             var scoreboardType = OnlineManager.CurrentGame != null &&
                                  OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team
-                                ? ScoreboardType.Teams
-                                : ScoreboardType.FreeForAll;
+                ? ScoreboardType.Teams
+                : ScoreboardType.FreeForAll;
 
             // Red team/normal leaderboard
             ScoreboardLeft = new Scoreboard(scoreboardType,
-                OnlineManager.CurrentGame == null || OnlineManager.GetTeam(OnlineManager.Self.OnlineUser.Id) == MultiplayerTeam.Red ?
-                    users : new List<ScoreboardUser>()) { Parent = Container };
+                OnlineManager.CurrentGame == null ||
+                OnlineManager.GetTeam(OnlineManager.Self.OnlineUser.Id) == MultiplayerTeam.Red
+                    ? users
+                    : new List<ScoreboardUser>()) { Parent = Container, Layer = HudLayer};
 
             ScoreboardLeft?.Users.ForEach(x => x.SetImage());
             ScoreboardRight?.Users.ForEach(x => x.SetImage());
@@ -617,7 +701,8 @@ namespace Quaver.Shared.Screens.Gameplay
                         judgements, UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
-                        Alignment = Alignment.MidLeft
+                        Alignment = Alignment.MidLeft,
+                        Layer = HudLayer
                     };
 
                     if (OnlineManager.CurrentGame != null &&
@@ -663,7 +748,8 @@ namespace Quaver.Shared.Screens.Gameplay
                         judgements, UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
-                        Alignment = Alignment.MidLeft
+                        Alignment = Alignment.MidLeft,
+                        Layer = HudLayer
                     };
 
                     if (OnlineManager.CurrentGame != null &&
@@ -699,16 +785,6 @@ namespace Quaver.Shared.Screens.Gameplay
 
             ScoreboardLeft.SetTargetYPositions();
             ScoreboardRight?.SetTargetYPositions();
-
-            // Re-change the transitioner and pause screen's parent so that they appear on top of the scoreboard
-            // again.
-            if (ProgressBar != null)
-                ProgressBar.Parent = Container;
-
-            Transitioner.Parent = Container;
-
-            if (PauseScreen != null)
-                PauseScreen.Parent = Container;
 
             StopCheckingForScoreboardUsers = true;
             Screen.SetRichPresence();
@@ -973,6 +1049,15 @@ namespace Quaver.Shared.Screens.Gameplay
                 MultiplayerEndTime.Alpha = 0;
                 MultiplayerEndTime.FadeTo(1, Easing.Linear, 400);
             }
+        }
+
+        public void ShowPlayfieldOnly()
+        {
+            BackgroundLayer.Visible = false;
+            HudLayer.Visible = false;
+            ProgressBarLayer.Visible = false;
+            TransitionerLayer.Visible = false;
+            PauseScreenLayer.Visible = false;
         }
     }
 }

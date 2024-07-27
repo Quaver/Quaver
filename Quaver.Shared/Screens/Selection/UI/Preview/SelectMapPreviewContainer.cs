@@ -244,6 +244,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             AddScheduledUpdate(() =>
             {
                 var playfield = (GameplayPlayfieldKeys) LoadedGameplayScreen.Ruleset.Playfield;
+                var view = (GameplayScreenView)LoadedGameplayScreen.View;
 
                 playfield.Stage.HealthBar.Visible = false;
 
@@ -256,6 +257,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 playfield.Container.X = 0;
                 playfield.ForegroundContainer.X = 0;
                 playfield.BackgroundContainer.X = 0;
+                view.ShowPlayfieldOnly();
                 playfield.Stage.HitLightingObjects.ForEach(x =>
                 {
                     x.StopHolding();

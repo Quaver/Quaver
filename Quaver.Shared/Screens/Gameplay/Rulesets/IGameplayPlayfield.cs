@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
+ */
 
 using Microsoft.Xna.Framework;
 using Wobble.Graphics;
@@ -15,7 +15,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <summary>
         ///     Container that has the entire playfield in it.
         /// </summary>
-        Container Container { get; set; }
+        LayeredContainer Container { get; set; }
+
+        /// <summary>
+        ///     The topmost layer of the playfield
+        /// </summary>
+        Layer GameplayForegroundLayer { get; }
+
+        /// <summary>
+        ///     The bottommost layer of the playfield
+        /// </summary>
+        Layer GameplayBackgroundLayer { get; }
 
         /// <summary>
         ///     Handles what happens to the playfield on failure.
