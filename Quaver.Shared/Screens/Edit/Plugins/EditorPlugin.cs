@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         /// <summary>
         /// </summary>
-        public bool IsWindowHovered { get; set; }
+        public bool IsWindowHovered => State.IsWindowHovered;
 
         /// <summary>
         /// </summary>
@@ -113,7 +113,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public override void AfterRender()
         {
             ImGui.PopStyleVar();
-            IsWindowHovered = State.IsWindowHovered;
             base.AfterRender();
         }
 

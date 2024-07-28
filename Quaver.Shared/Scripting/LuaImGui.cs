@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -48,6 +49,12 @@ namespace Quaver.Shared.Scripting
 
         private static readonly List<Type> s_imguiTypes =
             typeof(ImGui).Assembly.GetTypes().Where(x => x.Name.StartsWith("Im")).ToList();
+
+        private static readonly DynValue s_imguiCol = DefineEnum(
+            ("TabActive", ImGuiCol.TabSelected),
+            ("TabUnfocused", ImGuiCol.TabDimmed),
+            ("TabUnfocusedActive", ImGuiCol.TabDimmedSelected)
+        );
 
         private static readonly Regex s_capitals = new(@"\p{Lu}", RegexOptions.Compiled);
 
@@ -227,6 +234,8 @@ namespace Quaver.Shared.Scripting
                 WorkingScript.Globals[$"imgui{s_capitals.Replace(x.Name[5..], x => $"_{x.Value.ToLower()}")}"] =
                     isImGui ? new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = Index } } : x;
             }
+
+            WorkingScript.Globals["imgui_col"] = s_imguiCol;
         }
 
         /// <summary>
@@ -445,6 +454,31 @@ namespace Quaver.Shared.Scripting
                 };
 
         /// <summary>
+        ///     Creates the enum <see cref="Table"/> with the specified <paramref name="additions"/>.
+        /// </summary>
+        /// <remarks><para>
+        ///     Used to polyfill the missing declarations within enums for backwards compatibility.
+        /// </para></remarks>
+        /// <param name="additions"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private static DynValue DefineEnum<T>(params (string Key, T Value)[] additions)
+            where T : struct, Enum
+        {
+            static int ToInt32(T value) => ((IConvertible)value).ToInt32(CultureInfo.InvariantCulture);
+
+            var table = new Table(null);
+
+            foreach (var value in Enum.GetValues<T>())
+                table[ToInt32(value)] = table[$"{value}"] = value;
+
+            foreach (var (key, value) in additions)
+                table[key] = table[ToInt32(value)] = value;
+
+            return DynValue.NewTable(table).AsReadOnly();
+        }
+
+        /// <summary>
         ///     Evaluates code.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -513,30 +547,7 @@ namespace Quaver.Shared.Scripting
         private static DynValue GetWrappedFunctionThatPacksReturnedVectors(string x) =>
             s_imgui.Index(null, null, DynValue.NewString(x), true) is var ret &&
             ret is { Callback.ClrCallback: { } clr }
-                ? DynValue.NewCallback(
-                    (context, args) => clr(context, args) switch
-                    {
-                        { UserData.Object: Vector2 v } => DynValue.NewTable(
-                            null,
-                            DynValue.NewNumber(v.X),
-                            DynValue.NewNumber(v.Y)
-                        ),
-                        { UserData.Object: Vector3 v } => DynValue.NewTable(
-                            null,
-                            DynValue.NewNumber(v.X),
-                            DynValue.NewNumber(v.Y),
-                            DynValue.NewNumber(v.Z)
-                        ),
-                        { UserData.Object: Vector4 v } => DynValue.NewTable(
-                            null,
-                            DynValue.NewNumber(v.X),
-                            DynValue.NewNumber(v.Y),
-                            DynValue.NewNumber(v.Z),
-                            DynValue.NewNumber(v.W)
-                        ),
-                        var v => v,
-                    }
-                )
+                ? DynValue.NewCallback((context, args) => PackVector(clr(context, args))).AsReadOnly()
                 : ret;
 
         /// <summary>
@@ -549,6 +560,36 @@ namespace Quaver.Shared.Scripting
             context.OwnerScript is var owner && args.RawGet(1, false) is not { String: var str } key ? DynValue.Nil :
             s_imguiRedirectMethodNames.Contains(str) ? s_imguiRedirects.Index(owner, null, key, true) :
             s_imguiMethods.TryGetValue(str, out var ret) ? ret : DynValue.Nil;
+
+        /// <summary>
+        ///     Packs the vector into the table, which includes within tuples.
+        /// </summary>
+        /// <param name="value">The value to pack.</param>
+        /// <returns>The packed value.</returns>
+        private static DynValue PackVector(DynValue value) =>
+            value switch
+            {
+                { Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, PackVector)),
+                { UserData.Object: Vector2 v } => DynValue.NewTable(
+                    null,
+                    DynValue.NewNumber(v.X),
+                    DynValue.NewNumber(v.Y)
+                ),
+                { UserData.Object: Vector3 v } => DynValue.NewTable(
+                    null,
+                    DynValue.NewNumber(v.X),
+                    DynValue.NewNumber(v.Y),
+                    DynValue.NewNumber(v.Z)
+                ),
+                { UserData.Object: Vector4 v } => DynValue.NewTable(
+                    null,
+                    DynValue.NewNumber(v.X),
+                    DynValue.NewNumber(v.Y),
+                    DynValue.NewNumber(v.Z),
+                    DynValue.NewNumber(v.W)
+                ),
+                _ => value,
+            };
 
         /// <summary>
         ///     Indicates a failure to coerce a value to a vector.

@@ -620,7 +620,7 @@ namespace Quaver.Shared.Scripting
             if (v is null)
                 throw new ArgumentNullException(nameof(v), $"Second argument of {caller} must not be nil.");
 
-            if (v.Length >= expected)
+            if (v.Length < expected)
                 throw new ArgumentOutOfRangeException(
                     nameof(v),
                     $"Second argument of {caller} expected at least {expected} elements, got {v.Length}."
