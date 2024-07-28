@@ -54,6 +54,63 @@ namespace Quaver.Shared.Scripting
             int values_count,
             int values_offset,
             string overlay_text,
+            float scale_min
+        ) =>
+            ImGui.PlotHistogram(
+                label,
+                ref Safe(values, values_count - values_offset),
+                values_count,
+                values_offset,
+                overlay_text,
+                scale_min
+            );
+
+        public static void PlotHistogram(
+            string label,
+            float[] values,
+            int values_count,
+            int values_offset,
+            string overlay_text,
+            float scale_min,
+            float scale_max
+        ) =>
+            ImGui.PlotHistogram(
+                label,
+                ref Safe(values, values_count - values_offset),
+                values_count,
+                values_offset,
+                overlay_text,
+                scale_min,
+                scale_max
+            );
+
+        public static void PlotHistogram(
+            string label,
+            float[] values,
+            int values_count,
+            int values_offset,
+            string overlay_text,
+            float scale_min,
+            float scale_max,
+            Vector2 graph_size
+        ) =>
+            ImGui.PlotHistogram(
+                label,
+                ref Safe(values, values_count - values_offset),
+                values_count,
+                values_offset,
+                overlay_text,
+                scale_min,
+                scale_max,
+                graph_size
+            );
+
+        public static void PlotHistogram(
+            string label,
+            float[] values,
+            int values_count,
+            int values_offset,
+            string overlay_text,
             float scale_min,
             float scale_max,
             Vector2 graph_size,
@@ -92,6 +149,63 @@ namespace Quaver.Shared.Scripting
                 values_count,
                 values_offset,
                 overlay_text
+            );
+
+        public static void PlotLines(
+            string label,
+            float[] values,
+            int values_count,
+            int values_offset,
+            string overlay_text,
+            float scale_min
+        ) =>
+            ImGui.PlotLines(
+                label,
+                ref Safe(values, values_count - values_offset),
+                values_count,
+                values_offset,
+                overlay_text,
+                scale_min
+            );
+
+        public static void PlotLines(
+            string label,
+            float[] values,
+            int values_count,
+            int values_offset,
+            string overlay_text,
+            float scale_min,
+            float scale_max
+        ) =>
+            ImGui.PlotLines(
+                label,
+                ref Safe(values, values_count - values_offset),
+                values_count,
+                values_offset,
+                overlay_text,
+                scale_min,
+                scale_max
+            );
+
+        public static void PlotLines(
+            string label,
+            float[] values,
+            int values_count,
+            int values_offset,
+            string overlay_text,
+            float scale_min,
+            float scale_max,
+            Vector2 graph_size
+        ) =>
+            ImGui.PlotLines(
+                label,
+                ref Safe(values, values_count - values_offset),
+                values_count,
+                values_offset,
+                overlay_text,
+                scale_min,
+                scale_max,
+                graph_size
             );
 
         public static void PlotLines(
@@ -609,6 +723,8 @@ namespace Quaver.Shared.Scripting
             v.W = span[3];
             return ret;
         }
+
+        public static float GetContentRegionAvailWidth() => ImGui.GetContentRegionAvail().X;
 
         public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetForegroundDrawList();
 
