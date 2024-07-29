@@ -427,7 +427,9 @@ namespace Quaver.Shared.Scripting
         private static float? TryCoerceToFloat(this DynValue value, int index, string name, string otherName) =>
             value.Type switch
             {
-                DataType.Tuple => value.Tuple.ElementAtOrDefault(index)?.TryCoerceToFloat(),
+                DataType.Tuple => index > 0 && index <= value.Tuple.Length
+                    ? value.Tuple[index - 1].TryCoerceToFloat()
+                    : null,
                 DataType.Table => value.Table.Get(index).TryCoerceToFloat() ??
                     value.Table.Get(name).TryCoerceToFloat() ??
                     value.Table.Get(otherName).TryCoerceToFloat(),
