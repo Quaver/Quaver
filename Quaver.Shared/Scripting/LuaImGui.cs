@@ -567,8 +567,8 @@ namespace Quaver.Shared.Scripting
         /// <param name="args">The arguments.</param>
         /// <returns>The function for the index operation.</returns>
         private static DynValue Index(ScriptExecutionContext context, CallbackArguments args) =>
-            context.OwnerScript is var owner && args.RawGet(1, false) is not { String: var str } key ? DynValue.Nil :
-            s_imguiRedirectMethodNames.Contains(str) ? s_imguiRedirects.Index(owner, null, key, true) :
+            context.OwnerScript is var x && args.RawGet(1, false) is not { String: var str } key ? DynValue.Nil :
+            s_imguiRedirectMethodNames.Contains(str) ? PackVector(context, s_imguiRedirects.Index(x, null, key, true)) :
             s_imguiMethods.TryGetValue(str, out var ret) ? ret : throw new FormatException($"Invalid method: {str}");
 
         /// <summary>
@@ -584,7 +584,7 @@ namespace Quaver.Shared.Scripting
                 // but additionally removes a long-standing mistake where the game would pack the vector incorrectly.
                 _ when context.OwnerScript.Globals.RawGet("imgui_return_vectors") is
                     { Type: DataType.Boolean, Boolean: true } => value,
-                { Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
+                { Type: DataType.Tuple, Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
                 { UserData.Object: Vector2 v } => DynValue.NewTable(
                     null,
                     DynValue.NewNumber(v.X),

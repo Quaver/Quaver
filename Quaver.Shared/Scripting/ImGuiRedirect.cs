@@ -760,6 +760,17 @@ namespace Quaver.Shared.Scripting
             return t;
         }
 
+        [MoonSharpHidden]
+        public static DynValue Debug(
+            this DynValue t,
+            Converter<DynValue, object> converter,
+            [CallerArgumentExpression("t")] string expression = null
+        )
+        {
+            Logger.Important($"{expression} = {converter(t)}", LogType.Runtime);
+            return t;
+        }
+
         // Superseded by 'SetNextItemAllowOverlap' (called before an item)
         public static DynValue SetItemAllowOverlap(ScriptExecutionContext _, CallbackArguments __) => DynValue.Nil;
 
