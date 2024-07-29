@@ -100,7 +100,7 @@ namespace Quaver.Shared.Online
             [DoesNotReturn]
             static void Fail(string log)
             {
-                Console.Write('\a'); // Plays a bell sound.
+                Console.Beep();
                 Logger.Error(log, LogType.Runtime);
                 throw new InvalidOperationException(log);
             }
