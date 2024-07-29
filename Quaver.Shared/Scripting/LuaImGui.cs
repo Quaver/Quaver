@@ -120,6 +120,15 @@ namespace Quaver.Shared.Scripting
 
         static LuaImGui()
         {
+            s_imguiMethods["CaptureKeyboardFromApp"] = s_imguiMethods[nameof(ImGui.SetNextFrameWantCaptureKeyboard)];
+            s_imguiMethods["CaptureMouseFromApp"] = s_imguiMethods[nameof(ImGui.SetNextFrameWantCaptureMouse)];
+            s_imguiMethods["SetNextTreeNodeOpen"] = s_imguiMethods[nameof(ImGui.SetNextItemOpen)];
+            s_imguiMethods["PushAllowKeyboardFocus"] = s_imguiMethods[nameof(ImGui.PushTabStop)];
+            s_imguiMethods["PopAllowKeyboardFocus"] = s_imguiMethods[nameof(ImGui.PopTabStop)];
+            s_imguiMethods["BeginChildFrame"] = s_imguiMethods[nameof(ImGui.BeginChild)];
+            s_imguiMethods["ListBoxHeader"] = s_imguiMethods[nameof(ImGui.BeginListBox)];
+            s_imguiMethods["ListBoxFooter"] = s_imguiMethods[nameof(ImGui.EndListBox)];
+            s_imguiMethods["EndChildFrame"] = s_imguiMethods[nameof(ImGui.EndChild)];
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             s_imguiTypes.ForEach(x => UserData.RegisterType(x));
@@ -127,8 +136,8 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<Vector2>();
             UserData.RegisterType<Vector3>();
             UserData.RegisterType<Vector4>();
-            UserData.RegisterType<UIntPtr>();
-            UserData.RegisterType<IntPtr>();
+            UserData.RegisterType<nuint>();
+            UserData.RegisterType<nint>();
             UserData.RegisterType<Keys>();
             RegisterAllVectors();
         }
@@ -171,9 +180,10 @@ namespace Quaver.Shared.Scripting
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.Number,
                 type,
-                x => Enum.TryParse(type, x.String, true, out var result)
-                    ? result
-                    : Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x)))
+                x => Enum.TryParse(type, x.String, true, out var result) ? result :
+                    type != typeof(ImGuiChildFlags) || x.Type is not DataType.Boolean ?
+                        Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x))) :
+                        x.Boolean ? ImGuiChildFlags.Border : ImGuiChildFlags.None
             );
 
         /// <inheritdoc />
@@ -559,7 +569,7 @@ namespace Quaver.Shared.Scripting
         private static DynValue Index(ScriptExecutionContext context, CallbackArguments args) =>
             context.OwnerScript is var owner && args.RawGet(1, false) is not { String: var str } key ? DynValue.Nil :
             s_imguiRedirectMethodNames.Contains(str) ? s_imguiRedirects.Index(owner, null, key, true) :
-            s_imguiMethods.TryGetValue(str, out var ret) ? ret : DynValue.Nil;
+            s_imguiMethods.TryGetValue(str, out var ret) ? ret : throw new FormatException($"Invalid method: {str}");
 
         /// <summary>
         ///     Packs the vector into the table, which includes within tuples.

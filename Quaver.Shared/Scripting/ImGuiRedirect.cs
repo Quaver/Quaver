@@ -25,6 +25,19 @@ namespace Quaver.Shared.Scripting
 
         public static DynValue CreateVector4 => s_pack;
 
+        public static void BeginPopupContextWindow() => ImGui.BeginPopupContextWindow();
+
+        public static void BeginPopupContextWindow(string str_id) => ImGui.BeginPopupContextWindow(str_id);
+
+        public static void BeginPopupContextWindow(string str_id, ImGuiPopupFlags popup_flags) =>
+            ImGui.BeginPopupContextWindow(str_id, popup_flags);
+
+        public static void BeginPopupContextWindow(string str_id, ImGuiPopupFlags popup_flags, bool also_over_items) =>
+            ImGui.BeginPopupContextWindow(
+                str_id,
+                popup_flags | (also_over_items ? ImGuiPopupFlags.NoOpenOverItems : ImGuiPopupFlags.None)
+            );
+
         public static void PlotHistogram(string label, float[] values) => PlotHistogram(label, values, values.Length);
 
         public static void PlotHistogram(string label, float[] values, int values_count) =>
@@ -234,6 +247,15 @@ namespace Quaver.Shared.Scripting
         public static void SaveIniSettingsToDisk(string ini_filename) =>
             throw new NotSupportedException("Please use the 'write' global instead.");
 
+        public static void TreeAdvanceToLabelPos() =>
+            ImGui.SetCursorPosX(ImGui.GetCursorPosX() + ImGui.GetTreeNodeToLabelSpacing());
+
+        public static void TreePush() => ImGui.TreePush(null);
+
+        public static void TreePush(nint ptr_id) => ImGui.TreePush(ptr_id);
+
+        public static void TreePush(string str_id) => ImGui.TreePush(str_id);
+
         public static bool DragInt2(string label, ref int[] v) => ImGui.DragInt2(label, ref Safe(v));
 
         public static bool DragInt2(string label, ref int[] v, float v_speed) =>
@@ -336,13 +358,6 @@ namespace Quaver.Shared.Scripting
             ImGuiSliderFlags flags
         ) =>
             ImGui.DragInt3(label, ref Safe(v), v_speed, v_min, v_max, format, flags);
-
-        [MoonSharpHidden]
-        public static DynValue Debug(this DynValue t, [CallerArgumentExpression("t")] string expression = null)
-        {
-            Logger.Important($"{expression} = {t} - {t.UserData?.Object}", LogType.Runtime);
-            return t;
-        }
 
         public static bool DragInt3(string label, ref Vector3 v, float v_speed)
         {
@@ -724,7 +739,29 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
+        public static bool IsMouseDragging() => ImGui.IsMouseDragging(0);
+
+        public static bool IsMouseDragging(ImGuiMouseButton button) => ImGui.IsMouseDragging(button);
+
+        public static bool IsMouseDragging(ImGuiMouseButton button, float lock_threshold) =>
+            ImGui.IsMouseDragging(button, lock_threshold);
+
+        public static int GetKeyIndex(ImGuiKey key) => (int)key;
+
         public static float GetContentRegionAvailWidth() => ImGui.GetContentRegionAvail().X;
+
+        public static float GetWindowRegionAvailWidth() =>
+            ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X;
+
+        [MoonSharpHidden]
+        public static DynValue Debug(this DynValue t, [CallerArgumentExpression("t")] string expression = null)
+        {
+            Logger.Important($"{expression} = {t} - {t.UserData?.Object}", LogType.Runtime);
+            return t;
+        }
+
+        // Superseded by 'SetNextItemAllowOverlap' (called before an item)
+        public static DynValue SetItemAllowOverlap(ScriptExecutionContext _, CallbackArguments __) => DynValue.Nil;
 
         public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetForegroundDrawList();
 
