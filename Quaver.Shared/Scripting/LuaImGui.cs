@@ -36,16 +36,20 @@ namespace Quaver.Shared.Scripting
 
         private const int RecursionLimit = 10;
 
+        private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;
+
         private static readonly IUserDataDescriptor s_imgui = UserData.RegisterType(typeof(ImGui));
 
         private static readonly IUserDataDescriptor s_imguiRedirects = UserData.RegisterType(typeof(ImGuiRedirect));
 
         private static readonly Dictionary<string, DynValue> s_imguiMethods = MethodNamesOf(typeof(ImGui))
            .Distinct()
-           .ToDictionary(x => x, GetWrappedFunctionThatPacksReturnedVectors, StringComparer.OrdinalIgnoreCase);
+           .ToDictionary(x => x, s_imgui.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
-        private static readonly HashSet<string> s_imguiRedirectMethodNames =
-            MethodNamesOf(typeof(ImGuiRedirect)).ToHashSet(StringComparer.Ordinal);
+        private static readonly Dictionary<string, DynValue> s_imguiRedirectMethods =
+            MethodNamesOf(typeof(ImGuiRedirect))
+               .Distinct()
+               .ToDictionary(x => x, s_imguiRedirects.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
         private static readonly List<Type> s_imguiTypes =
             typeof(ImGui).Assembly.GetTypes().Where(x => x.Name.StartsWith("Im")).ToList();
@@ -175,6 +179,13 @@ namespace Quaver.Shared.Scripting
         /// <param name="change">The editor change.</param>
         /// <param name="kind">Whether the change is a new edit, undo, or redo.</param>
         public static void Inform(IEditorAction change, HistoryType kind) => s_events?.Invoke(change, kind);
+
+        /// <summary>
+        ///     Creates the string representation of the dynamic value.
+        /// </summary>
+        /// <param name="value">The value to create the string for.</param>
+        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
+        public static string Display(DynValue value) => Display(ToSimpleObject(value)) ?? value.ToPrintString();
 
         protected static void RegisterEnumConversion(Type type) =>
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
@@ -327,13 +338,6 @@ namespace Quaver.Shared.Scripting
                 ICollection x => Display(x),
                 _ => null,
             };
-
-        /// <summary>
-        ///     Creates the string representation of the dynamic value.
-        /// </summary>
-        /// <param name="value">The value to create the string for.</param>
-        /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
-        private static string Display(DynValue value) => Display(ToSimpleObject(value)) ?? value.ToPrintString();
 
         /// <summary>
         ///     Creates the string representation of the array.
@@ -549,62 +553,15 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
-        ///     Gets the dynamic value, but ensuring that the function returned will return
-        ///     a table instead of a vector to retain backwards compatibility.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        private static DynValue GetWrappedFunctionThatPacksReturnedVectors(string x) =>
-            s_imgui.Index(null, null, DynValue.NewString(x), true) is var ret &&
-            ret is { Callback.ClrCallback: { } clr }
-                ? DynValue.NewCallback((context, args) => PackVector(context, clr(context, args))).AsReadOnly()
-                : ret;
-
-        /// <summary>
         ///     Performs the index operation for the <c>imgui</c> global table.
         /// </summary>
         /// <param name="context">The script execution context.</param>
         /// <param name="args">The arguments.</param>
         /// <returns>The function for the index operation.</returns>
         private static DynValue Index(ScriptExecutionContext context, CallbackArguments args) =>
-            context.OwnerScript is var x && args.RawGet(1, false) is not { String: var str } key ? DynValue.Nil :
-            s_imguiRedirectMethodNames.Contains(str) ? PackVector(context, s_imguiRedirects.Index(x, null, key, true)) :
+            args.RawGet(1, false) is not { String: var str } ? DynValue.Nil :
+            s_imguiRedirectMethods.TryGetValue(str, out var prioritizedRet) ? prioritizedRet :
             s_imguiMethods.TryGetValue(str, out var ret) ? ret : throw new FormatException($"Invalid method: {str}");
-
-        /// <summary>
-        ///     Packs the vector into the table, which includes within tuples.
-        /// </summary>
-        /// <param name="context">The script execution context.</param>
-        /// <param name="value">The value to pack.</param>
-        /// <returns>The packed value.</returns>
-        private static DynValue PackVector(IScriptPrivateResource context, DynValue value) =>
-            value switch
-            {
-                // This feature flag exists not just to allow newer plugins to benefit from the Vector CLR types,
-                // but additionally removes a long-standing mistake where the game would pack the vector incorrectly.
-                _ when context.OwnerScript.Globals.RawGet("imgui_return_vectors") is
-                    { Type: DataType.Boolean, Boolean: true } => value,
-                { Type: DataType.Tuple, Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
-                { UserData.Object: Vector2 v } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(v.X),
-                    DynValue.NewNumber(v.Y)
-                ),
-                { UserData.Object: Vector3 v } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(v.X),
-                    DynValue.NewNumber(v.Y),
-                    DynValue.NewNumber(v.Z)
-                ),
-                { UserData.Object: Vector4 v } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(v.W), // I hate this. To retain backwards compatibility, we must intentionally
-                    DynValue.NewNumber(v.X), // order this incorrectly or else plugins such as iceSV would break.
-                    DynValue.NewNumber(v.Y),
-                    DynValue.NewNumber(v.Z)
-                ),
-                _ => value,
-            };
 
         /// <summary>
         ///     Indicates a failure to coerce a value to a vector.

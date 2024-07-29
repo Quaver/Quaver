@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using ImGuiNET;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.CoreLib;
+using MoonSharp.Interpreter.Interop;
 using Wobble.Logging;
 
 #pragma warning disable
@@ -771,10 +772,60 @@ namespace Quaver.Shared.Scripting
             return t;
         }
 
+        /// <summary>
+        ///     Gets the dynamic value, but ensuring that the function returned will return
+        ///     a table instead of a vector to retain backwards compatibility.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        [MoonSharpHidden]
+        public static DynValue GetWrappedFunctionThatPacksReturnedVectors(this IUserDataDescriptor that, string str) =>
+            that.Index(null, null, DynValue.NewString(str), true) is var ret &&
+            ret is { Callback.ClrCallback: { } clr }
+                ? DynValue.NewCallback((context, args) => PackVector(context, clr(context, args))).AsReadOnly()
+                : ret;
+
         // Superseded by 'SetNextItemAllowOverlap' (called before an item)
         public static DynValue SetItemAllowOverlap(ScriptExecutionContext _, CallbackArguments __) => DynValue.Nil;
 
         public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetForegroundDrawList();
+
+        /// <summary>
+        ///     Packs the vector into the table, which includes within tuples.
+        /// </summary>
+        /// <param name="context">The script execution context.</param>
+        /// <param name="value">The value to pack.</param>
+        /// <returns>The packed value.</returns>
+        private static DynValue PackVector(IScriptPrivateResource context, DynValue value) =>
+            value switch
+            {
+                // This feature flag exists not just to allow newer plugins to benefit from the Vector CLR types,
+                // but additionally removes a long-standing mistake where the game would pack the vector incorrectly.
+                _ when context.OwnerScript.Globals.RawGet("imgui_return_vectors") is
+                    { Type: DataType.Boolean, Boolean: true } => value,
+                // _ when context.OwnerScript.Globals.RawGet("help") is { Type: DataType.Boolean, Boolean: true } &&
+                //     value.Debug(LuaImGui.Display) is null => null,
+                { Type: DataType.Tuple, Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
+                { UserData.Object: Vector2 v } => DynValue.NewTable(
+                    null,
+                    DynValue.NewNumber(v.X),
+                    DynValue.NewNumber(v.Y)
+                ),
+                { UserData.Object: Vector3 v } => DynValue.NewTable(
+                    null,
+                    DynValue.NewNumber(v.X),
+                    DynValue.NewNumber(v.Y),
+                    DynValue.NewNumber(v.Z)
+                ),
+                { UserData.Object: Vector4 v } => DynValue.NewTable(
+                    null,
+                    DynValue.NewNumber(v.W), // I hate this. To retain backwards compatibility, we must intentionally
+                    DynValue.NewNumber(v.X), // order this incorrectly or else plugins such as iceSV would break.
+                    DynValue.NewNumber(v.Y),
+                    DynValue.NewNumber(v.Z)
+                ),
+                _ => value,
+            };
 
         private static ref T Safe<T>(T[]? v, [CallerMemberName] string caller = " ") =>
             ref Safe(v, caller[^1] - '0', caller);
