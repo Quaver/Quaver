@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using MoreLinq.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Quaver.API.Maps;
 using Quaver.API.Maps.AutoMod;
 using Quaver.API.Maps.AutoMod.Issues;
@@ -44,20 +47,23 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             // Lastly, submit for rank.
             try
             {
-                var response = OnlineManager.Client?.SubmitForRank(screen.Map.MapSetId, screen.Map.Mapset.Maps.Select(x => x.Md5Checksum).ToList());
+                var response = OnlineManager.Client?.SubmitForRank(screen.Map.MapSetId);
 
                 if (response == null)
                     throw new ArgumentNullException($"No response received from the server.");
 
-                switch ((int) response["status"])
+                var responseParsed = (JToken) JsonConvert.DeserializeObject(response.Content);
+
+
+                switch (response.StatusCode)
                 {
-                    case 200:
-                        var msg = response["message"]?.ToString();
+                    case HttpStatusCode.OK:
+                        var msg = responseParsed!["message"]?.ToString();
                         NotificationManager.Show(NotificationLevel.Success, msg);
                         Logger.Important($"Successfully submitted mapset for rank - {msg}", LogType.Network);
                         break;
                     default:
-                        var err = response["error"]?.ToString();
+                        var err = responseParsed!["error"]?.ToString();
                         NotificationManager.Show(NotificationLevel.Error, err);
                         Logger.Important($"Failed to submit mapset for rank - {err}", LogType.Network);
                         break;
