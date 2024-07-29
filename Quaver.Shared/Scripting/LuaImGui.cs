@@ -42,7 +42,7 @@ namespace Quaver.Shared.Scripting
 
         private static readonly Dictionary<string, DynValue> s_imguiMethods = MethodNamesOf(typeof(ImGui))
            .Distinct()
-           .ToDictionary(x => x, GetWrappedFunctionThatPacksReturnedVectors, StringComparer.Ordinal);
+           .ToDictionary(x => x, GetWrappedFunctionThatPacksReturnedVectors, StringComparer.OrdinalIgnoreCase);
 
         private static readonly HashSet<string> s_imguiRedirectMethodNames =
             MethodNamesOf(typeof(ImGuiRedirect)).ToHashSet(StringComparer.Ordinal);
