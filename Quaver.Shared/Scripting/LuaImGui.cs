@@ -557,7 +557,7 @@ namespace Quaver.Shared.Scripting
         private static DynValue GetWrappedFunctionThatPacksReturnedVectors(string x) =>
             s_imgui.Index(null, null, DynValue.NewString(x), true) is var ret &&
             ret is { Callback.ClrCallback: { } clr }
-                ? DynValue.NewCallback((context, args) => PackVector(clr(context, args))).AsReadOnly()
+                ? DynValue.NewCallback((context, args) => PackVector(context, clr(context, args))).AsReadOnly()
                 : ret;
 
         /// <summary>
@@ -574,12 +574,17 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Packs the vector into the table, which includes within tuples.
         /// </summary>
+        /// <param name="context">The script execution context.</param>
         /// <param name="value">The value to pack.</param>
         /// <returns>The packed value.</returns>
-        private static DynValue PackVector(DynValue value) =>
+        private static DynValue PackVector(IScriptPrivateResource context, DynValue value) =>
             value switch
             {
-                { Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, PackVector)),
+                // This feature flag exists not just to allow newer plugins to benefit from the Vector CLR types,
+                // but additionally removes a long-standing mistake where the game would pack the vector incorrectly.
+                _ when context.OwnerScript.Globals.RawGet("imgui_return_vectors") is
+                    { Type: DataType.Boolean, Boolean: true } => value,
+                { Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
                 { UserData.Object: Vector2 v } => DynValue.NewTable(
                     null,
                     DynValue.NewNumber(v.X),
@@ -593,10 +598,10 @@ namespace Quaver.Shared.Scripting
                 ),
                 { UserData.Object: Vector4 v } => DynValue.NewTable(
                     null,
-                    DynValue.NewNumber(v.X),
+                    DynValue.NewNumber(v.W), // I hate this. To retain backwards compatibility, we must intentionally
+                    DynValue.NewNumber(v.X), // order this incorrectly or else plugins such as iceSV would break.
                     DynValue.NewNumber(v.Y),
-                    DynValue.NewNumber(v.Z),
-                    DynValue.NewNumber(v.W)
+                    DynValue.NewNumber(v.Z)
                 ),
                 _ => value,
             };
