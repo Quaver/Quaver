@@ -281,6 +281,59 @@ namespace Quaver.Shared.Scripting
         ) =>
             ImGui.DragInt2(label, ref Safe(v), v_speed, v_min, v_max, format, flags);
 
+        public static bool DragInt2(string label, ref Vector2 v, float v_speed)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.DragInt2(label, ref span[0], v_speed);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
+        public static bool DragInt2(string label, ref Vector2 v, float v_speed, int v_min)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
+        public static bool DragInt2(string label, ref Vector2 v, float v_speed, int v_min, int v_max)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min, v_max);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
+        public static bool DragInt2(string label, ref Vector2 v, float v_speed, int v_min, int v_max, string format)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min, v_max, format);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
+        public static bool DragInt2(
+            string label,
+            ref Vector2 v,
+            float v_speed,
+            int v_min,
+            int v_max,
+            string format,
+            ImGuiSliderFlags flags
+        )
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min, v_max, format, flags);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
         public static bool DragInt3(string label, ref int[] v) => ImGui.DragInt3(label, ref Safe(v));
 
         public static bool DragInt3(string label, ref int[] v, float v_speed) =>
@@ -305,6 +358,64 @@ namespace Quaver.Shared.Scripting
             ImGuiSliderFlags flags
         ) =>
             ImGui.DragInt3(label, ref Safe(v), v_speed, v_min, v_max, format, flags);
+
+        public static bool DragInt3(string label, ref Vector3 v, float v_speed)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.DragInt3(label, ref span[0], v_speed);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
+
+        public static bool DragInt3(string label, ref Vector3 v, float v_speed, int v_min)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
+
+        public static bool DragInt3(string label, ref Vector3 v, float v_speed, int v_min, int v_max)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min, v_max);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
+
+        public static bool DragInt3(string label, ref Vector3 v, float v_speed, int v_min, int v_max, string format)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min, v_max, format);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
+
+        public static bool DragInt3(
+            string label,
+            ref Vector3 v,
+            float v_speed,
+            int v_min,
+            int v_max,
+            string format,
+            ImGuiSliderFlags flags
+        )
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min, v_max, format, flags);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
 
         public static bool DragInt4(string label, ref int[] v) => ImGui.DragInt4(label, ref Safe(v));
 
@@ -331,118 +442,7 @@ namespace Quaver.Shared.Scripting
         ) =>
             ImGui.DragInt4(label, ref Safe(v), v_speed, v_min, v_max, format, flags);
 
-        public static bool DragVector(string label, ref Vector2 v, float v_speed)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.DragInt2(label, ref span[0], v_speed);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector2 v, float v_speed, int v_min)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector2 v, float v_speed, int v_min, int v_max)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min, v_max);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector2 v, float v_speed, int v_min, int v_max, string format)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min, v_max, format);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool DragVector(
-            string label,
-            ref Vector2 v,
-            float v_speed,
-            int v_min,
-            int v_max,
-            string format,
-            ImGuiSliderFlags flags
-        )
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.DragInt2(label, ref span[0], v_speed, v_min, v_max, format, flags);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector3 v, float v_speed)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.DragInt3(label, ref span[0], v_speed);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector3 v, float v_speed, int v_min)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector3 v, float v_speed, int v_min, int v_max)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min, v_max);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector3 v, float v_speed, int v_min, int v_max, string format)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min, v_max, format);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool DragVector(
-            string label,
-            ref Vector3 v,
-            float v_speed,
-            int v_min,
-            int v_max,
-            string format,
-            ImGuiSliderFlags flags
-        )
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.DragInt3(label, ref span[0], v_speed, v_min, v_max, format, flags);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool DragVector(string label, ref Vector4 v, float v_speed)
+        public static bool DragInt4(string label, ref Vector4 v, float v_speed)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.DragInt4(label, ref span[0], v_speed);
@@ -453,7 +453,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool DragVector(string label, ref Vector4 v, float v_speed, int v_min)
+        public static bool DragInt4(string label, ref Vector4 v, float v_speed, int v_min)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.DragInt4(label, ref span[0], v_speed, v_min);
@@ -464,7 +464,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool DragVector(string label, ref Vector4 v, float v_speed, int v_min, int v_max)
+        public static bool DragInt4(string label, ref Vector4 v, float v_speed, int v_min, int v_max)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.DragInt4(label, ref span[0], v_speed, v_min, v_max);
@@ -475,7 +475,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool DragVector(string label, ref Vector4 v, float v_speed, int v_min, int v_max, string format)
+        public static bool DragInt4(string label, ref Vector4 v, float v_speed, int v_min, int v_max, string format)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.DragInt4(label, ref span[0], v_speed, v_min, v_max, format);
@@ -486,7 +486,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool DragVector(
+        public static bool DragInt4(
             string label,
             ref Vector4 v,
             float v_speed,
@@ -510,17 +510,7 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt2(string label, ref int[] v, ImGuiInputTextFlags flags) =>
             ImGui.InputInt2(label, ref Safe(v), flags);
 
-        public static bool InputInt3(string label, ref int[] v) => ImGui.InputInt2(label, ref Safe(v));
-
-        public static bool InputInt3(string label, ref int[] v, ImGuiInputTextFlags flags) =>
-            ImGui.InputInt2(label, ref Safe(v), flags);
-
-        public static bool InputInt4(string label, ref int[] v) => ImGui.InputInt2(label, ref Safe(v));
-
-        public static bool InputInt4(string label, ref int[] v, ImGuiInputTextFlags flags) =>
-            ImGui.InputInt2(label, ref Safe(v), flags);
-
-        public static bool InputVector(string label, ref Vector2 v)
+        public static bool InputInt2(string label, ref Vector2 v)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
             var ret = ImGui.InputInt2(label, ref span[0]);
@@ -529,7 +519,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool InputVector(string label, ref Vector2 v, ImGuiInputTextFlags flags)
+        public static bool InputInt2(string label, ref Vector2 v, ImGuiInputTextFlags flags)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
             var ret = ImGui.InputInt2(label, ref span[0], flags);
@@ -538,7 +528,12 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool InputVector(string label, ref Vector3 v)
+        public static bool InputInt3(string label, ref int[] v) => ImGui.InputInt2(label, ref Safe(v));
+
+        public static bool InputInt3(string label, ref int[] v, ImGuiInputTextFlags flags) =>
+            ImGui.InputInt2(label, ref Safe(v), flags);
+
+        public static bool InputInt3(string label, ref Vector3 v)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
             var ret = ImGui.InputInt3(label, ref span[0]);
@@ -548,7 +543,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool InputVector(string label, ref Vector3 v, ImGuiInputTextFlags flags)
+        public static bool InputInt3(string label, ref Vector3 v, ImGuiInputTextFlags flags)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
             var ret = ImGui.InputInt3(label, ref span[0], flags);
@@ -558,7 +553,12 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool InputVector(string label, ref Vector4 v)
+        public static bool InputInt4(string label, ref int[] v) => ImGui.InputInt2(label, ref Safe(v));
+
+        public static bool InputInt4(string label, ref int[] v, ImGuiInputTextFlags flags) =>
+            ImGui.InputInt2(label, ref Safe(v), flags);
+
+        public static bool InputInt4(string label, ref Vector4 v)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.InputInt4(label, ref span[0]);
@@ -569,7 +569,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool InputVector(string label, ref Vector4 v, ImGuiInputTextFlags flags)
+        public static bool InputInt4(string label, ref Vector4 v, ImGuiInputTextFlags flags)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.InputInt4(label, ref span[0], flags);
@@ -596,6 +596,40 @@ namespace Quaver.Shared.Scripting
         ) =>
             ImGui.SliderInt2(label, ref Safe(v), v_min, v_max, format, flags);
 
+        public static bool SliderInt2(string label, ref Vector2 v, int v_min, int v_max)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.SliderInt2(label, ref span[0], v_min, v_max);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
+        public static bool SliderInt2(string label, ref Vector2 v, int v_min, int v_max, string format)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.SliderInt2(label, ref span[0], v_min, v_max, format);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
+        public static bool SliderInt2(
+            string label,
+            ref Vector2 v,
+            int v_min,
+            int v_max,
+            string format,
+            ImGuiSliderFlags flags
+        )
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
+            var ret = ImGui.SliderInt2(label, ref span[0], v_min, v_max, format, flags);
+            v.X = span[0];
+            v.Y = span[1];
+            return ret;
+        }
+
         public static bool SliderInt3(string label, ref int[] v, int v_min, int v_max) =>
             ImGui.SliderInt3(label, ref Safe(v), v_min, v_max);
 
@@ -611,6 +645,43 @@ namespace Quaver.Shared.Scripting
             ImGuiSliderFlags flags
         ) =>
             ImGui.SliderInt3(label, ref Safe(v), v_min, v_max, format, flags);
+
+        public static bool SliderInt3(string label, ref Vector3 v, int v_min, int v_max)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.SliderInt3(label, ref span[0], v_min, v_max);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
+
+        public static bool SliderInt3(string label, ref Vector3 v, int v_min, int v_max, string format)
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.SliderInt3(label, ref span[0], v_min, v_max, format);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
+
+        public static bool SliderInt3(
+            string label,
+            ref Vector3 v,
+            int v_min,
+            int v_max,
+            string format,
+            ImGuiSliderFlags flags
+        )
+        {
+            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
+            var ret = ImGui.SliderInt3(label, ref span[0], v_min, v_max, format, flags);
+            v.X = span[0];
+            v.Y = span[1];
+            v.Z = span[2];
+            return ret;
+        }
 
         public static bool SliderInt4(string label, ref int[] v, int v_min, int v_max) =>
             ImGui.SliderInt4(label, ref Safe(v), v_min, v_max);
@@ -628,78 +699,7 @@ namespace Quaver.Shared.Scripting
         ) =>
             ImGui.SliderInt4(label, ref Safe(v), v_min, v_max, format, flags);
 
-        public static bool SliderVector(string label, ref Vector2 v, int v_min, int v_max)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.SliderInt2(label, ref span[0], v_min, v_max);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool SliderVector(string label, ref Vector2 v, int v_min, int v_max, string format)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.SliderInt2(label, ref span[0], v_min, v_max, format);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool SliderVector(
-            string label,
-            ref Vector2 v,
-            int v_min,
-            int v_max,
-            string format,
-            ImGuiSliderFlags flags
-        )
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.SliderInt2(label, ref span[0], v_min, v_max, format, flags);
-            v.X = span[0];
-            v.Y = span[1];
-            return ret;
-        }
-
-        public static bool SliderVector(string label, ref Vector3 v, int v_min, int v_max)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.SliderInt3(label, ref span[0], v_min, v_max);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool SliderVector(string label, ref Vector3 v, int v_min, int v_max, string format)
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.SliderInt3(label, ref span[0], v_min, v_max, format);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool SliderVector(
-            string label,
-            ref Vector3 v,
-            int v_min,
-            int v_max,
-            string format,
-            ImGuiSliderFlags flags
-        )
-        {
-            Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.SliderInt3(label, ref span[0], v_min, v_max, format, flags);
-            v.X = span[0];
-            v.Y = span[1];
-            v.Z = span[2];
-            return ret;
-        }
-
-        public static bool SliderVector(string label, ref Vector4 v, int v_min, int v_max)
+        public static bool SliderInt4(string label, ref Vector4 v, int v_min, int v_max)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.SliderInt4(label, ref span[0], v_min, v_max);
@@ -710,7 +710,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool SliderVector(string label, ref Vector4 v, int v_min, int v_max, string format)
+        public static bool SliderInt4(string label, ref Vector4 v, int v_min, int v_max, string format)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
             var ret = ImGui.SliderInt4(label, ref span[0], v_min, v_max, format);
@@ -721,7 +721,7 @@ namespace Quaver.Shared.Scripting
             return ret;
         }
 
-        public static bool SliderVector(
+        public static bool SliderInt4(
             string label,
             ref Vector4 v,
             int v_min,
