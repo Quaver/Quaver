@@ -971,6 +971,44 @@ namespace Quaver.Shared.Screens.Edit
             }
         }
 
+        /// <summary>
+        ///     Place or remove a hit object at the specified lane and current time (can be snapped)
+        /// </summary>
+        /// <param name="lane"></param>
+        public void PlaceOrRemoveHitObjectAtCurrentTime(int lane)
+        {
+            var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+            PlaceOrRemoveHitObject(lane, time);
+        }
+
+        /// <summary>
+        ///     Place or remove a hit object at the specified lane and time (can be snapped)
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        public void PlaceOrRemoveHitObject(int lane, int time)
+        {
+            // Only snaps the time if the audio is playing
+            if (ConfigManager.EditorLiveMapSnap.Value && AudioEngine.Track.IsPlaying)
+            {
+                time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(
+                    time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
+            }
+
+            var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
+
+            // Can be multiple if overlap
+            var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
+
+            if (hitObjectsAtTime.Count > 0)
+            {
+                foreach (var note in hitObjectsAtTime)
+                    ActionManager.RemoveHitObject(note);
+            }
+            else
+                ActionManager.PlaceHitObject(lane, time, 0, layer);
+        }
+
         #endregion
 
         #region EDITOR ACTIONS

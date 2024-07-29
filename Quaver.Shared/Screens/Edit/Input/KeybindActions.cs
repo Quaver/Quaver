@@ -3,6 +3,7 @@
 namespace Quaver.Shared.Screens.Edit.Input
 {
     [Serializable]
+    [Flags]
     public enum KeybindActions
     {
         ExitEditor,
@@ -79,6 +80,18 @@ namespace Quaver.Shared.Screens.Edit.Input
         MirrorNotesLeftRight,
         Deselect,
         Save,
-        ApplyOffsetToMap
+        ApplyOffsetToMap,
+        // This can save us from repetitive work
+        PlaceNoteAtLane = 1 << 16,
+        PlaceNoteAtLane1,
+        PlaceNoteAtLane2,
+        PlaceNoteAtLane3,
+        PlaceNoteAtLane4,
+        PlaceNoteAtLane5,
+        PlaceNoteAtLane6,
+        PlaceNoteAtLane7,
+        PlaceNoteAtLane8,
+        PlaceNoteAtLane9,
+        PlaceNoteAtLane10
     }
 }

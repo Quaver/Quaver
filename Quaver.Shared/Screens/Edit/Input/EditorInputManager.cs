@@ -380,6 +380,20 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ApplyOffsetToMap:
                     DialogManager.Show(new EditorApplyOffsetDialog(Screen));
                     break;
+                case KeybindActions.PlaceNoteAtLane1:
+                case KeybindActions.PlaceNoteAtLane2:
+                case KeybindActions.PlaceNoteAtLane3:
+                case KeybindActions.PlaceNoteAtLane4:
+                case KeybindActions.PlaceNoteAtLane5:
+                case KeybindActions.PlaceNoteAtLane6:
+                case KeybindActions.PlaceNoteAtLane7:
+                case KeybindActions.PlaceNoteAtLane8:
+                case KeybindActions.PlaceNoteAtLane9:
+                case KeybindActions.PlaceNoteAtLane10:
+                    var lane = (int)(action ^ KeybindActions.PlaceNoteAtLane);
+                    Screen.PlaceOrRemoveHitObjectAtCurrentTime(lane);
+                    break;
+                case KeybindActions.PlaceNoteAtLane:
                 default:
                     return;
             }
