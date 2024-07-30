@@ -1,5 +1,5 @@
 using System;
-using Quaver.Server.Common.Enums;
+using Quaver.Server.Client.Enums;
 
 namespace Quaver.Shared.Online
 {

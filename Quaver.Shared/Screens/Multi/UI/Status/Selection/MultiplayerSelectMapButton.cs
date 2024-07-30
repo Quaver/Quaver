@@ -1,14 +1,12 @@
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
-using Quaver.Shared.Screens.Multi.UI.Status.Name;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Multi.UI.Status.Selection
 {

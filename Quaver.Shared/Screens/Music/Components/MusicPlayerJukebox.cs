@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Listening;
+using Quaver.Server.Client.Objects.Listening;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;

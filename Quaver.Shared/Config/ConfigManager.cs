@@ -17,7 +17,7 @@ using IniFileParser.Exceptions;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
-using Quaver.Server.Common.Helpers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;

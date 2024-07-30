@@ -5,7 +5,7 @@ using Quaver.API.Enums;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
+using Quaver.Server.Client.Enums;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;

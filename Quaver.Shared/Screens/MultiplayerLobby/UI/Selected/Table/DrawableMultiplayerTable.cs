@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Wobble.Bindables;

@@ -7,7 +7,7 @@
 
 using System;
 using Quaver.API.Maps;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 
 namespace Quaver.Shared.Screens.Editor
 {

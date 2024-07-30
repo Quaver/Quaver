@@ -1,12 +1,6 @@
 using Microsoft.Xna.Framework;
-using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
-using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Download;
 using Wobble;
-using Wobble.Graphics;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Tests.OnlineHubDownloads

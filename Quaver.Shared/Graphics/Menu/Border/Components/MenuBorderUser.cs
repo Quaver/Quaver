@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online;

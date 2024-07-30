@@ -11,7 +11,7 @@ using System.IO;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Replays;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;

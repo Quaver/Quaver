@@ -1,11 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Online;
 using Wobble.Bindables;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {

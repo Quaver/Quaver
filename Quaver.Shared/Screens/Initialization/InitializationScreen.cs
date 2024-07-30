@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Backgrounds;
