@@ -269,6 +269,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {Copy, new KeybindList(new[] {new Keybind(Keys.C), new Keybind(KeyModifiers.Ctrl, Keys.C), new Keybind(KeyModifiers.Ctrl, Keys.Insert)})},
             {Paste, new KeybindList(new[] {new Keybind(Keys.V), new Keybind(KeyModifiers.Ctrl, Keys.V), new Keybind(Keys.Insert), new Keybind(KeyModifiers.Shift, Keys.Insert), new Keybind(KeyModifiers.Alt, Keys.Insert)})},
             {SelectAllNotes, new KeybindList(new[] {new Keybind(Keys.A), new Keybind(KeyModifiers.Ctrl, Keys.A)})},
+            {SelectAllNotesInLayer, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.A)})},
             {MirrorNotesLeftRight, new KeybindList(new []{new Keybind(Keys.H), new Keybind(KeyModifiers.Ctrl, Keys.H)})},
             {Save, new KeybindList(new[] {new Keybind(Keys.S), new Keybind(KeyModifiers.Ctrl, Keys.S)})},
             {Deselect, new KeybindList(new[] {new Keybind(Keys.D), new Keybind(KeyModifiers.Ctrl, Keys.D)})},
