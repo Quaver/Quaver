@@ -51,8 +51,7 @@ namespace Quaver.Shared.Scripting
                .Distinct()
                .ToDictionary(x => x, s_imguiRedirects.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
-        private static readonly List<Type> s_imguiTypes =
-            typeof(ImGui).Assembly.GetTypes().Where(x => x.Name.StartsWith("Im")).ToList();
+        private static readonly Type[] s_imguiTypes = typeof(ImGui).Assembly.GetTypes();
 
         private static readonly Dictionary<Type, DynValue> s_imguiEnumOverrides = new()
         {
@@ -162,9 +161,11 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
+            foreach (var type in s_imguiTypes)
+                UserData.RegisterType(type);
+
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
-            s_imguiTypes.ForEach(x => UserData.RegisterType(x));
             UserData.RegisterType<HistoryType>();
             UserData.RegisterType<Vector2>();
             UserData.RegisterType<Vector3>();
@@ -271,6 +272,25 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         public virtual void SetFrameState()
         {
+            const int MaxStack = 1024;
+
+            static string Lower(Match x)
+            {
+                var length = x.ValueSpan.Length;
+                var span = length <= MaxStack ? stackalloc char[length] : GC.AllocateUninitializedArray<char>(length);
+                _ = x.ValueSpan.ToLowerInvariant(span);
+                return span.ToString();
+            }
+
+            static string UnderscoreLower(Match x)
+            {
+                var length = x.ValueSpan.Length + 1;
+                var span = length <= MaxStack ? stackalloc char[length] : GC.AllocateUninitializedArray<char>(length);
+                span[0] = '_';
+                _ = x.ValueSpan.ToLowerInvariant(span[1..]);
+                return span.ToString();
+            }
+
             if (!IsFirstDrawCall)
                 return;
 
@@ -281,8 +301,10 @@ namespace Quaver.Shared.Scripting
                 if (!isImGui && !type.IsEnum)
                     continue;
 
-                WorkingScript.Globals[$"imgui{s_capitals.Replace(type.Name[5..], x => $"_{x.Value.ToLower()}")}"] =
-                    isImGui ? new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = Index } } :
+                var key = type.Name.Replace(s_capitals, Lower, 2).Replace(s_capitals, UnderscoreLower);
+
+                WorkingScript.Globals[key] = isImGui ?
+                    new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = Index } } :
                     s_imguiEnumOverrides.TryGetValue(type, out var table) ? table : type;
             }
         }
@@ -316,7 +338,7 @@ namespace Quaver.Shared.Scripting
                 x => LuaVectorWrapper.TryCoerceTo<Vector4>(x) ?? throw UnableToCoerce(x)
             );
 
-            // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+            // ReSharper disable once LoopCanBePartlyConvertedToQuery
             foreach (var imgui in s_imguiTypes)
                 if (imgui.IsEnum)
                     RegisterEnumConversion(imgui);

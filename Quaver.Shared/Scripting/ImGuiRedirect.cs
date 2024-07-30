@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using ImGuiNET;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.CoreLib;
@@ -753,6 +754,22 @@ namespace Quaver.Shared.Scripting
 
         public static float GetWindowRegionAvailWidth() =>
             ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X;
+
+        /// <summary>
+        ///     Replaces the matched patterns with the result of the evaluator.
+        /// </summary>
+        /// <param name="pattern">The pattern to match.</param>
+        /// <param name="regex">The regex to test.</param>
+        /// <param name="evaluator">The function that converts matches.</param>
+        /// <param name="count">If specified, the maximum number of times the replacement will occur.</param>
+        /// <returns>
+        /// The new <see cref="string"/> containing the result of the parameter <paramref name="evaluator"/> invoked
+        /// with each match of the parameter <paramref name="pattern"/> onto the parameter <paramref name="regex"/>
+        /// with the maximum number of times being the parameter <paramref name="count"/>, if specified.
+        /// </returns>
+        [MoonSharpHidden]
+        public static string Replace(this string pattern, Regex regex, MatchEvaluator evaluator, int? count = null) =>
+            count is { } c ? regex.Replace(pattern, evaluator, c) : regex.Replace(pattern, evaluator);
 
         [MoonSharpHidden]
         public static DynValue Debug(this DynValue t, [CallerArgumentExpression("t")] string expression = null)
