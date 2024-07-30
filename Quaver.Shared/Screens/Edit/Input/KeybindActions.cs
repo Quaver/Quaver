@@ -76,6 +76,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         DeleteSelection,
         Copy,
         Paste,
+        SelectNotesAtCurrentTime,
         SelectAllNotes,
         SelectAllNotesInLayer,
         MirrorNotesLeftRight,

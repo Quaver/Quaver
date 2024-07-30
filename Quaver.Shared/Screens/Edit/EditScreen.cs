@@ -912,6 +912,16 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Select any object that are at the current time
+        /// </summary>
+        public void SelectObjectsAtCurrentTime()
+        {
+            SelectedHitObjects.AddRange(WorkingMap.HitObjects
+                .Where(hitObject => Math.Abs(hitObject.StartTime - Track.Time) < 2)
+                .ToList());
+        }
+
+        /// <summary>
         ///     Selects every single object in the map
         /// </summary>
         public void SelectAllObjects()
