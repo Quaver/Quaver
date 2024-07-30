@@ -82,6 +82,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         Deselect,
         Save,
         ApplyOffsetToMap,
+        ResnapToCurrentBeatSnap,
         // This can save us from repetitive work
         PlaceNoteAtLane = 1 << 16,
         PlaceNoteAtLane1,

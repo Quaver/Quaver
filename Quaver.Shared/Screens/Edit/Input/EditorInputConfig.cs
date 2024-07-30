@@ -273,7 +273,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {MirrorNotesLeftRight, new KeybindList(new []{new Keybind(Keys.H), new Keybind(KeyModifiers.Ctrl, Keys.H)})},
             {Save, new KeybindList(new[] {new Keybind(Keys.S), new Keybind(KeyModifiers.Ctrl, Keys.S)})},
             {Deselect, new KeybindList(new[] {new Keybind(Keys.D), new Keybind(KeyModifiers.Ctrl, Keys.D)})},
-            {ApplyOffsetToMap, new KeybindList(KeyModifiers.Ctrl, Keys.B)}
+            {ApplyOffsetToMap, new KeybindList(KeyModifiers.Ctrl, Keys.B)},
+            {ResnapToCurrentBeatSnap, new KeybindList(new[] {new Keybind(Keys.R), new Keybind(KeyModifiers.Ctrl, Keys.R)})}
         };
     }
 }

@@ -410,6 +410,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ApplyOffsetToMap:
                     DialogManager.Show(new EditorApplyOffsetDialog(Screen));
                     break;
+                case KeybindActions.ResnapToCurrentBeatSnap:
+                    Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
+                    break;
                 case KeybindActions.PlaceNoteAtLane1:
                 case KeybindActions.PlaceNoteAtLane2:
                 case KeybindActions.PlaceNoteAtLane3:
