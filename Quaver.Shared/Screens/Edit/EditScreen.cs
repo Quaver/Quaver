@@ -594,7 +594,21 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <param name="direction"></param>
         /// <param name="snapFactor"></param>
-        public void SeekInDirection(Direction direction, float snapFactor = 1)
+        public void SeekInDirectionAndSelect(Direction direction, float snapFactor = 1)
+        {
+            var minTime = Track.Time;
+            var maxTime = SeekInDirection(direction, snapFactor);
+            if (minTime > maxTime)
+                (minTime, maxTime) = (maxTime, minTime);
+            SelectedHitObjects.AddRange(WorkingMap.HitObjects
+                .Where(hitObject => hitObject.StartTime >= minTime - 2 && hitObject.StartTime <= maxTime + 2).ToList());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="snapFactor"></param>
+        public double SeekInDirection(Direction direction, float snapFactor = 1)
         {
             var snap = BeatSnap.Value * snapFactor;
 
@@ -607,6 +621,7 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             SeekTo(time);
+            return time;
         }
 
         public void SeekTo(double time, bool enableMoving = true)

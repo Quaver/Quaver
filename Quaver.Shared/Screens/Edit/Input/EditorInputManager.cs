@@ -38,7 +38,9 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ZoomOut,
             KeybindActions.ZoomOutLarge,
             KeybindActions.SeekForwards,
+            KeybindActions.SeekForwardsAndSelect,
             KeybindActions.SeekBackwards,
+            KeybindActions.SeekBackwardsAndSelect,
             KeybindActions.SeekForwardsLarge,
             KeybindActions.SeekBackwardsLarge,
             KeybindActions.SeekForwards1ms,
@@ -187,8 +189,14 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SeekForwards:
                     Screen.SeekInDirection(Direction.Forward);
                     break;
+                case KeybindActions.SeekForwardsAndSelect:
+                    Screen.SeekInDirectionAndSelect(Direction.Forward);
+                    break;
                 case KeybindActions.SeekBackwards:
                     Screen.SeekInDirection(Direction.Backward);
+                    break;
+                case KeybindActions.SeekBackwardsAndSelect:
+                    Screen.SeekInDirectionAndSelect(Direction.Backward);
                     break;
                 case KeybindActions.SeekForwardsLarge:
                     Screen.SeekInDirection(Direction.Forward, 0.25f);
