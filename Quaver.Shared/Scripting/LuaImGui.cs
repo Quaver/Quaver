@@ -143,7 +143,7 @@ namespace Quaver.Shared.Scripting
             static void AddMethodAliases(object anonymous)
             {
                 foreach (var property in anonymous.GetType().GetProperties())
-                    s_imguiMethods[property.Name] = s_imguiMethods[$"{property.GetValue(null)}"];
+                    s_imguiMethods[property.Name] = s_imguiMethods[$"{property.GetValue(anonymous)}"];
             }
 
             AddMethodAliases(
