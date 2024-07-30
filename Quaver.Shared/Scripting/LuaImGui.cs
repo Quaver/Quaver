@@ -54,11 +54,28 @@ namespace Quaver.Shared.Scripting
         private static readonly List<Type> s_imguiTypes =
             typeof(ImGui).Assembly.GetTypes().Where(x => x.Name.StartsWith("Im")).ToList();
 
-        private static readonly DynValue s_imguiCol = DefineEnum(
-            ("TabActive", ImGuiCol.TabSelected),
-            ("TabUnfocused", ImGuiCol.TabDimmed),
-            ("TabUnfocusedActive", ImGuiCol.TabDimmedSelected)
-        );
+        private static readonly Dictionary<Type, DynValue> s_imguiEnumOverrides = new()
+        {
+            [typeof(ImGuiCol)] = DefineEnum(
+                ("TabActive", ImGuiCol.TabSelected),
+                ("TabUnfocused", ImGuiCol.TabDimmed),
+                ("TabUnfocusedActive", ImGuiCol.TabDimmedSelected)
+            ),
+            [typeof(ImGuiColorEditFlags)] = DefineEnum(
+                ("_DataTypeMask", ImGuiColorEditFlags.DataTypeMask),
+                ("_DisplayMask", ImGuiColorEditFlags.DisplayMask),
+                ("_InputMask", ImGuiColorEditFlags.InputMask),
+                ("_OptionsDefault", ImGuiColorEditFlags.DefaultOptions),
+                ("_PickerMask", ImGuiColorEditFlags.PickerMask)
+            ),
+            [typeof(ImGuiDragDropFlags)] =
+                DefineEnum(("SourceAutoExpirePayload", ImGuiDragDropFlags.PayloadAutoExpire)),
+            [typeof(ImGuiInputTextFlags)] = DefineEnum(
+                ("AlwaysInsertMode", ImGuiInputTextFlags.AlwaysOverwrite),
+                ("Multiline", ImGuiInputTextFlags.None)
+            ),
+            [typeof(ImGuiTreeNodeFlags)] = DefineEnum(("AllowItemOverlap", ImGuiTreeNodeFlags.AllowOverlap)),
+        };
 
         private static readonly Regex s_capitals = new(@"\p{Lu}", RegexOptions.Compiled);
 
@@ -124,15 +141,27 @@ namespace Quaver.Shared.Scripting
 
         static LuaImGui()
         {
-            s_imguiMethods["CaptureKeyboardFromApp"] = s_imguiMethods[nameof(ImGui.SetNextFrameWantCaptureKeyboard)];
-            s_imguiMethods["CaptureMouseFromApp"] = s_imguiMethods[nameof(ImGui.SetNextFrameWantCaptureMouse)];
-            s_imguiMethods["SetNextTreeNodeOpen"] = s_imguiMethods[nameof(ImGui.SetNextItemOpen)];
-            s_imguiMethods["PushAllowKeyboardFocus"] = s_imguiMethods[nameof(ImGui.PushTabStop)];
-            s_imguiMethods["PopAllowKeyboardFocus"] = s_imguiMethods[nameof(ImGui.PopTabStop)];
-            s_imguiMethods["BeginChildFrame"] = s_imguiMethods[nameof(ImGui.BeginChild)];
-            s_imguiMethods["ListBoxHeader"] = s_imguiMethods[nameof(ImGui.BeginListBox)];
-            s_imguiMethods["ListBoxFooter"] = s_imguiMethods[nameof(ImGui.EndListBox)];
-            s_imguiMethods["EndChildFrame"] = s_imguiMethods[nameof(ImGui.EndChild)];
+            static void AddMethodAliases(object anonymous)
+            {
+                foreach (var property in anonymous.GetType().GetProperties())
+                    s_imguiMethods[property.Name] = s_imguiMethods[$"{property.GetValue(null)}"];
+            }
+
+            AddMethodAliases(
+                new
+                {
+                    BeginChildFrame = nameof(ImGui.BeginChild),
+                    CaptureKeyboardFromApp = nameof(ImGui.SetNextFrameWantCaptureKeyboard),
+                    CaptureMouseFromApp = nameof(ImGui.SetNextFrameWantCaptureMouse),
+                    EndChildFrame = nameof(ImGui.EndChild),
+                    ListBoxHeader = nameof(ImGui.BeginListBox),
+                    ListBoxFooter = nameof(ImGui.EndListBox),
+                    PopAllowKeyboardFocus = nameof(ImGui.PopTabStop),
+                    PushAllowKeyboardFocus = nameof(ImGui.PushTabStop),
+                    SetNextTreeNodeOpen = nameof(ImGui.SetNextItemOpen),
+                }
+            );
+
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             s_imguiTypes.ForEach(x => UserData.RegisterType(x));
@@ -245,18 +274,17 @@ namespace Quaver.Shared.Scripting
             if (!IsFirstDrawCall)
                 return;
 
-            foreach (var x in s_imguiTypes)
+            foreach (var type in s_imguiTypes)
             {
-                var isImGui = x == typeof(ImGui);
+                var isImGui = type == typeof(ImGui);
 
-                if (!isImGui && !x.IsEnum)
+                if (!isImGui && !type.IsEnum)
                     continue;
 
-                WorkingScript.Globals[$"imgui{s_capitals.Replace(x.Name[5..], x => $"_{x.Value.ToLower()}")}"] =
-                    isImGui ? new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = Index } } : x;
+                WorkingScript.Globals[$"imgui{s_capitals.Replace(type.Name[5..], x => $"_{x.Value.ToLower()}")}"] =
+                    isImGui ? new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = Index } } :
+                    s_imguiEnumOverrides.TryGetValue(type, out var table) ? table : type;
             }
-
-            WorkingScript.Globals["imgui_col"] = s_imguiCol;
         }
 
         /// <summary>
