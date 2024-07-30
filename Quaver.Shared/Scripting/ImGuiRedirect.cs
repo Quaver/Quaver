@@ -799,30 +799,23 @@ namespace Quaver.Shared.Scripting
         private static DynValue PackVector(IScriptPrivateResource context, DynValue value) =>
             value switch
             {
-                // This feature flag exists not just to allow newer plugins to benefit from the Vector CLR types,
-                // but additionally removes a long-standing mistake where the game would pack the vector incorrectly.
-                _ when context.OwnerScript.Globals.RawGet("imgui_return_vectors") is
+                _ when context.OwnerScript.Globals.RawGet("imgui_disable_vector_packing") is
                     { Type: DataType.Boolean, Boolean: true } => value,
+                // Uncomment below to display the control flow of this function.
                 // _ when context.OwnerScript.Globals.RawGet("help") is { Type: DataType.Boolean, Boolean: true } &&
                 //     value.Debug(LuaImGui.Display) is null => null,
-                { Type: DataType.Tuple, Tuple: { } tuple } => DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
-                { UserData.Object: Vector2 v } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(v.X),
-                    DynValue.NewNumber(v.Y)
-                ),
-                { UserData.Object: Vector3 v } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(v.X),
-                    DynValue.NewNumber(v.Y),
-                    DynValue.NewNumber(v.Z)
-                ),
+                { Type: DataType.Tuple, Tuple: { } tuple } =>
+                    DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
+                { UserData.Object: Vector2 v } =>
+                    DynValue.NewTable(null, DynValue.NewNumber(v.X), DynValue.NewNumber(v.Y)),
+                { UserData.Object: Vector3 v } =>
+                    DynValue.NewTable(null, DynValue.NewNumber(v.X), DynValue.NewNumber(v.Y), DynValue.NewNumber(v.Z)),
                 { UserData.Object: Vector4 v } => DynValue.NewTable(
                     null,
-                    DynValue.NewNumber(v.W), // I hate this. To retain backwards compatibility, we must intentionally
-                    DynValue.NewNumber(v.X), // order this incorrectly or else plugins such as iceSV would break.
+                    DynValue.NewNumber(v.X),
                     DynValue.NewNumber(v.Y),
-                    DynValue.NewNumber(v.Z)
+                    DynValue.NewNumber(v.Z),
+                    DynValue.NewNumber(v.W)
                 ),
                 _ => value,
             };
