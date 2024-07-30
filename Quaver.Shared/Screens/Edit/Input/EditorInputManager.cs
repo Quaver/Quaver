@@ -8,6 +8,7 @@ using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -56,13 +57,39 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
         };
 
+        private static Dictionary<KeybindActions, Bindable<bool>> InvertScrollingActions = new();
+
         public EditorInputManager(EditScreen screen)
         {
             InputConfig = EditorInputConfig.LoadFromConfig();
-            KeybindDictionary = InputConfig.ReverseDictionary();
+            KeybindDictionary = InputConfig.ReverseDictionary(InvertScrollingActions);
             PreviousKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
             Screen = screen;
             View = (EditScreenView)screen.View;
+
+            ConstructInvertScrollingActions();
+            Screen.InvertBeatSnapScroll.ValueChanged += InvertScrollingValueChanged;
+            ConfigManager.InvertEditorScrolling.ValueChanged += InvertScrollingValueChanged;
+        }
+
+        private void ConstructInvertScrollingActions()
+        {
+            InvertScrollingActions = new Dictionary<KeybindActions, Bindable<bool>>
+            {
+                [KeybindActions.IncreaseSnap] = Screen.InvertBeatSnapScroll,
+                [KeybindActions.DecreaseSnap] = Screen.InvertBeatSnapScroll,
+                [KeybindActions.SeekForwards] = ConfigManager.InvertEditorScrolling,
+                [KeybindActions.SeekForwardsLarge] = ConfigManager.InvertEditorScrolling,
+                [KeybindActions.SeekForwards1ms] = ConfigManager.InvertEditorScrolling,
+                [KeybindActions.SeekBackwards] = ConfigManager.InvertEditorScrolling,
+                [KeybindActions.SeekBackwardsLarge] = ConfigManager.InvertEditorScrolling,
+                [KeybindActions.SeekBackwards1ms] = ConfigManager.InvertEditorScrolling
+            };
+        }
+
+        private void InvertScrollingValueChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            KeybindDictionary = InputConfig.ReverseDictionary(InvertScrollingActions);
         }
 
         public void HandleInput()
@@ -96,7 +123,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     }
                     else if (CanRepeat(action))
                         HandleAction(action);
-                    else if (CanHold(action))
+                    else if (CanHold(action) || pressedKeybind.Key.ScrollDirection != null)
                         HandleAction(action, false);
                 }
             }
@@ -399,6 +426,13 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
 
             LastActionTime[action] = GameBase.Game.TimeRunning;
+        }
+
+        ~EditorInputManager()
+        {
+            ConfigManager.InvertEditorScrolling.ValueChanged -= InvertScrollingValueChanged;
+            if (Screen?.InvertBeatSnapScroll != null)
+                Screen.InvertBeatSnapScroll.ValueChanged -= InvertScrollingValueChanged;
         }
 
         private void HandleMouseInputs()

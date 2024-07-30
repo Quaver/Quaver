@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
+using Wobble.Bindables;
+using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Platform;
 using YamlDotNet.Core;
@@ -132,13 +134,16 @@ namespace Quaver.Shared.Screens.Edit.Input
             Logger.Debug("Reset editor keybind config file", LogType.Runtime);
         }
 
-        public Dictionary<Keybind, HashSet<KeybindActions>> ReverseDictionary()
+        public Dictionary<Keybind, HashSet<KeybindActions>> ReverseDictionary(
+            Dictionary<KeybindActions, Bindable<bool>> invertScrollingActions)
         {
             var dict = new Dictionary<Keybind, HashSet<KeybindActions>>();
 
             foreach (var (action, keybinds) in Keybinds)
             {
-                foreach (var keybind in keybinds.MatchingKeybinds())
+                var invertScrolling = invertScrollingActions.TryGetValue(action, out var invert)
+                                      && invert.Value;
+                foreach (var keybind in keybinds.MatchingKeybinds(invertScrolling))
                 {
                     if (dict.ContainsKey(keybind))
                         dict[keybind].Add(action);
@@ -189,8 +194,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ZoomInLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageUp)},
             {ZoomOut, new KeybindList(Keys.PageDown)},
             {ZoomOutLarge, new KeybindList(KeyModifiers.Ctrl, Keys.PageDown)},
-            {SeekForwards, new KeybindList(new[] {new Keybind(Keys.Up), new Keybind(Keys.I)})},
-            {SeekBackwards, new KeybindList(new[] {new Keybind(Keys.Down), new Keybind(Keys.K)})},
+            {SeekForwards, new KeybindList(new[] {new Keybind(Keys.Up), new Keybind(Keys.I), new Keybind(MouseScrollDirection.Up)})},
+            {SeekBackwards, new KeybindList(new[] {new Keybind(Keys.Down), new Keybind(Keys.K), new Keybind(MouseScrollDirection.Down)})},
             {SeekForwardsLarge, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.Up), new Keybind(KeyModifiers.Ctrl, Keys.I)})},
             {SeekBackwardsLarge, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.Down), new Keybind(KeyModifiers.Ctrl, Keys.K)})},
             {SeekForwards1ms, new KeybindList(KeyModifiers.Free, Keys.OemPeriod)},
@@ -207,8 +212,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ChangeToolToSelect, new KeybindList(Keys.Q)},
             {ChangeToolToNote, new KeybindList(Keys.W)},
             {ChangeToolToLongNote, new KeybindList(Keys.E)},
-            {IncreaseSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Right), new Keybind(KeyModifiers.Free, Keys.L)})},
-            {DecreaseSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Left), new Keybind(KeyModifiers.Free, Keys.J)})},
+            {IncreaseSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Right), new Keybind(KeyModifiers.Free, Keys.L), new Keybind(KeyModifiers.Ctrl, MouseScrollDirection.Up)})},
+            {DecreaseSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Left), new Keybind(KeyModifiers.Free, Keys.J), new Keybind(KeyModifiers.Ctrl, MouseScrollDirection.Down)})},
             {ChangeSnapTo1, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D1), new Keybind(KeyModifiers.Shift, Keys.D1)})},
             {ChangeSnapTo2, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D2), new Keybind(KeyModifiers.Shift, Keys.D2)})},
             {ChangeSnapTo3, new KeybindList(new [] {new Keybind(KeyModifiers.Alt, Keys.D3), new Keybind(KeyModifiers.Shift, Keys.D3)})},
