@@ -29,6 +29,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
@@ -594,6 +595,19 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <param name="direction"></param>
         /// <param name="snapFactor"></param>
+        public void SeekInDirectionAndMove(Direction direction, float snapFactor = 1)
+        {
+            var originalTime = Track.Time;
+            var targetTime = SeekInDirection(direction, snapFactor);
+            var dt = (int)(targetTime - originalTime);
+            ActionManager.Perform(
+                new EditorActionMoveHitObjects(ActionManager, WorkingMap, SelectedHitObjects.Value, 0, dt));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="snapFactor"></param>
         public void SeekInDirectionAndSelect(Direction direction, float snapFactor = 1)
         {
             var minTime = Track.Time;
@@ -601,7 +615,9 @@ namespace Quaver.Shared.Screens.Edit
             if (minTime > maxTime)
                 (minTime, maxTime) = (maxTime, minTime);
             SelectedHitObjects.AddRange(WorkingMap.HitObjects
-                .Where(hitObject => hitObject.StartTime >= minTime - 2 && hitObject.StartTime <= maxTime + 2).ToList());
+                .Where(hitObject => hitObject.StartTime >= minTime - 2
+                                    && hitObject.StartTime <= maxTime + 2
+                                    && !SelectedHitObjects.Value.Contains(hitObject)).ToList());
         }
 
         /// <summary>
@@ -932,7 +948,8 @@ namespace Quaver.Shared.Screens.Edit
         public void SelectObjectsAtCurrentTime()
         {
             SelectedHitObjects.AddRange(WorkingMap.HitObjects
-                .Where(hitObject => Math.Abs(hitObject.StartTime - Track.Time) < 2)
+                .Where(hitObject => Math.Abs(hitObject.StartTime - Track.Time) < 2
+                                    && !SelectedHitObjects.Value.Contains(hitObject))
                 .ToList());
         }
 
