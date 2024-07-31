@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Sprite that displays the current combo.
         /// </summary>
-        public GameplayNumberDisplay ComboDisplay { get; private set; }
+        public ComboDisplay ComboDisplay { get; private set; }
 
         /// <summary>
         ///     The combo in the previous frame. Used to determine if we should update it.
@@ -119,7 +119,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The original value for the combo display's Y position,
         ///     so we can use this to set it back after it's done with its animation.
         /// </summary>
-        public float OriginalComboDisplayY { get; set; }
+        public float OriginalComboDisplayY
+        {
+            get => ComboDisplay.OriginalPosY;
+            set => ComboDisplay.OriginalPosY = value;
+        }
 
         /// <summary>
         ///     The HitError bar.
@@ -489,16 +493,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             // Create the combo display.
-            ComboDisplay = new GameplayNumberDisplay(NumberDisplayType.Combo, "0",
-                new Vector2(skin.ComboDisplayScale / 100f, skin.ComboDisplayScale / 100f))
+            ComboDisplay = new ComboDisplay(NumberDisplayType.Combo, "0",
+                new Vector2(skin.ComboDisplayScale / 100f, skin.ComboDisplayScale / 100f),
+                Screen,
+                Skin.ComboPosY)
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
-                X = Skin.ComboPosX,
-                Y = Skin.ComboPosY
+                X = Skin.ComboPosX
             };
-
-            OriginalComboDisplayY = ComboDisplay.Y;
 
             // Start off the map by making the display invisible.
             ComboDisplay.MakeInvisible();
@@ -510,20 +513,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <param name="gameTime"></param>
         private void UpdateComboDisplay(GameTime gameTime)
         {
-            // Gradually tween the position back to what it was originally.
-            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / Skin.ComboDisplayBumpTime, 1) / 2);
-
             if (OldCombo == Screen.Ruleset.ScoreProcessor.Combo)
                 return;
 
             // Set the new one
             ComboDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Combo);
+            ComboDisplay.StartBump();
 
-            // Set the position and scale  of the combo display, so that we can perform some animations.
-            ComboDisplay.Y = OriginalComboDisplayY + Skin.ComboDisplayBumpY;
-
-            // Gradually tween the position back to what it was originally.
-            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / Skin.ComboDisplayBumpTime, 1) / 2);
             OldCombo = Screen.Ruleset.ScoreProcessor.Combo;
         }
 

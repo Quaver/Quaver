@@ -167,7 +167,7 @@ namespace Quaver.Shared.Skinning
 
         internal int ComboDisplayBumpY { get; private set; } = -5;
 
-        internal int ComboDisplayBumpTime { get; private set; } = 30;
+        internal int ComboDisplayBumpTime { get; private set; } = 370;
 
         [FixedScale]
         internal float JudgementBurstPosY { get; private set; }
@@ -265,7 +265,7 @@ namespace Quaver.Shared.Skinning
 
         internal int JudgementHitBurstBumpY { get; private set; } = -5;
 
-        internal int JudgementHitBurstBumpTime { get; private set; } = 30;
+        internal int JudgementHitBurstBumpTime { get; private set; } = 183;
 
         [FixedScale]
         internal int WidthForNoteHeightScale { get; private set; }
