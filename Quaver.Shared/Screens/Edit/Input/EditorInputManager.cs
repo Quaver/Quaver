@@ -232,6 +232,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SeekToEnd:
                     Screen.SeekToEnd();
                     break;
+                case KeybindActions.SeekToStartAndSelect:
+                    Screen.SeekToStart(true);
+                    break;
+                case KeybindActions.SeekToEndAndSelect:
+                    Screen.SeekToEnd(true);
+                    break;
                 case KeybindActions.IncreasePlaybackRate:
                     Screen.ChangeAudioPlaybackRate(Direction.Forward);
                     break;
