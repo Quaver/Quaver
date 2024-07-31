@@ -330,6 +330,13 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.Export:
                     Screen.ExportToZip();
                     break;
+                case KeybindActions.Upload:
+                    Screen.UploadMapset();
+                    break;
+                case KeybindActions.UploadAndSubmitForRank:
+                    Screen.UploadMapset();
+                    Screen.SubmitForRank();
+                    break;
                 case KeybindActions.ToggleBpmPanel:
                     Screen.ToggleBuiltinPlugin(EditorBuiltInPlugin.TimingPointEditor);
                     break;

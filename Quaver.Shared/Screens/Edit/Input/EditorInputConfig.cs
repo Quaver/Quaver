@@ -246,6 +246,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {OpenQuaFile, new KeybindList(KeyModifiers.Ctrl, Keys.Q)},
             {OpenFolder, new KeybindList(KeyModifiers.Ctrl, Keys.W)},
             {Export, new KeybindList(KeyModifiers.Ctrl, Keys.E)},
+            {Upload, new KeybindList(KeyModifiers.Ctrl, Keys.U)},
+            {UploadAndSubmitForRank, new KeybindList(new Keybind(new List<KeyModifiers> { KeyModifiers.Ctrl, KeyModifiers.Shift }, Keys.U))},
             {ToggleGotoPanel, new KeybindList(new [] {new Keybind(Keys.F3), new Keybind(Keys.F), new Keybind(KeyModifiers.Ctrl, Keys.F)})},
             {PlayTest, new KeybindList(new [] {new Keybind(Keys.F4)})},
             {PlayTestFromBeginning, new KeybindList(new [] {new Keybind(KeyModifiers.Ctrl, Keys.F4)})},

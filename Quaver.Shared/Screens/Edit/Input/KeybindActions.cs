@@ -54,6 +54,8 @@ namespace Quaver.Shared.Screens.Edit.Input
         OpenQuaFile,
         OpenFolder,
         Export,
+        Upload,
+        UploadAndSubmitForRank,
         ToggleBpmPanel,
         ToggleSvPanel,
         ToggleAutoMod,
