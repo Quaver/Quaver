@@ -16,17 +16,17 @@ public class ComboDisplay : GameplayNumberDisplay
     /// <summary>
     ///     Timer for bumping the combo
     /// </summary>
-    private readonly CountdownTimer _bumpTimer;
+    private readonly CountdownTimer bumpTimer;
 
     /// <summary>
     ///     Time to bump
     /// </summary>
-    private readonly TimeSpan _bumpTime;
+    private readonly TimeSpan bumpTime;
 
     /// <summary>
     ///     Start Y of bumping
     /// </summary>
-    private float _bumpY;
+    private float bumpY;
 
     /// <summary>
     ///     The original Y position of the combo display.
@@ -42,27 +42,27 @@ public class ComboDisplay : GameplayNumberDisplay
         OriginalPosY = originalPosY;
         Y = OriginalPosY;
 
-        _bumpTime = TimeSpan.FromMilliseconds(Skin.ComboDisplayBumpTime);
-        _bumpTimer = new CountdownTimer(_bumpTime);
-        _bumpTimer.TimeRemainingChanged += LerpY;
-        _bumpTimer.Stopped += LerpY;
+        bumpTime = TimeSpan.FromMilliseconds(Skin.ComboDisplayBumpTime);
+        bumpTimer = new CountdownTimer(bumpTime);
+        bumpTimer.TimeRemainingChanged += LerpY;
+        bumpTimer.Stopped += LerpY;
     }
 
     private void LerpY(object sender, EventArgs e)
     {
-        var t = 1 - _bumpTimer.TimeRemaining / _bumpTime;
-        Y = EasingFunctions.EaseOutExpo(_bumpY, OriginalPosY, (float)t);
+        var t = 1 - bumpTimer.TimeRemaining / bumpTime;
+        Y = EasingFunctions.EaseOutExpo(bumpY, OriginalPosY, (float)t);
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        _bumpTimer.Update(gameTime);
+        bumpTimer.Update(gameTime);
     }
 
     public void StartBump()
     {
-        _bumpY = OriginalPosY + Skin.ComboDisplayBumpY;
-        _bumpTimer.Restart();
+        bumpY = OriginalPosY + Skin.ComboDisplayBumpY;
+        bumpTimer.Restart();
     }
 }

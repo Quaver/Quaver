@@ -116,16 +116,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private int OldCombo { get; set; }
 
         /// <summary>
-        ///     The original value for the combo display's Y position,
-        ///     so we can use this to set it back after it's done with its animation.
-        /// </summary>
-        public float OriginalComboDisplayY
-        {
-            get => ComboDisplay.OriginalPosY;
-            set => ComboDisplay.OriginalPosY = value;
-        }
-
-        /// <summary>
         ///     The HitError bar.
         /// </summary>
         public HitErrorBar HitError { get; private set; }
