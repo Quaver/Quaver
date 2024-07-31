@@ -805,15 +805,20 @@ namespace Quaver.Shared.Scripting
         }
 
         /// <summary>
+        ///     Hot-reloads the script.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnFileChanged(object sender, FileSystemEventArgs e)
+        /// <param name="sender">The sender used to lock updates.</param>
+        /// <param name="_">The <see cref="EventArgs"/> instance. This parameter is unused.</param>
+        private void OnFileChanged(object sender, FileSystemEventArgs _)
         {
-            if (DateTime.Now - LastWatcher < TimeSpan.FromMilliseconds(50))
-                return;
+            lock (sender)
+            {
+                if (DateTime.Now - LastWatcher < TimeSpan.FromMilliseconds(200))
+                    return;
 
-            LastWatcher = DateTime.Now;
+                LastWatcher = DateTime.Now;
+            }
+
             Version++;
             Logger.Important($"Script: \"{FilePath}\" will be hot-reloaded. (Revision #{Version})", LogType.Runtime);
             LazyLoadScript();
