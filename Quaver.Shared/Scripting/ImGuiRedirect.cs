@@ -808,33 +808,42 @@ namespace Quaver.Shared.Scripting
         public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetForegroundDrawList();
 
         /// <summary>
+        ///     Determines whether the given global is set to <see keyword="true"/>.
+        /// </summary>
+        /// <param name="context">The script execution context.</param>
+        /// <param name="key">The key to access.</param>
+        /// <returns>The value <see keyword="true"/> if the global is <see keyword="true"/>.</returns>
+        private static bool IsGlobalTrue(this IScriptPrivateResource context, string key) =>
+            context.OwnerScript.Globals.RawGet(key) is { Type: DataType.Boolean, Boolean: true };
+
+        /// <summary>
+        ///     Packs the numbers into a table.
+        /// </summary>
+        /// <param name="context">The script execution context.</param>
+        /// <param name="numbers">The numbers to pack.</param>
+        /// <returns>The packed value.</returns>
+        private static DynValue Pack(IScriptPrivateResource context, params double[] numbers) =>
+            DynValue.NewTable(context.OwnerScript, Array.ConvertAll(numbers, DynValue.NewNumber));
+
+        /// <summary>
         ///     Packs the vector into the table, which includes within tuples.
         /// </summary>
         /// <param name="context">The script execution context.</param>
         /// <param name="value">The value to pack.</param>
         /// <returns>The packed value.</returns>
-        private static DynValue PackVector(IScriptPrivateResource context, DynValue value) =>
-            value switch
+        private static DynValue PackVector(IScriptPrivateResource context, DynValue x) =>
+            x switch
             {
-                _ when context.OwnerScript.Globals.RawGet("imgui_disable_vector_packing") is
-                    { Type: DataType.Boolean, Boolean: true } => value,
+                _ when context.IsGlobalTrue("imgui_disable_vector_packing") => x,
                 // Uncomment below to display the control flow of this function.
-                // _ when context.OwnerScript.Globals.RawGet("help") is { Type: DataType.Boolean, Boolean: true } &&
-                //     value.Debug(LuaImGui.Display) is null => null,
-                { Type: DataType.Tuple, Tuple: { } tuple } =>
-                    DynValue.NewTuple(Array.ConvertAll(tuple, x => PackVector(context, x))),
-                { UserData.Object: Vector2 v } =>
-                    DynValue.NewTable(null, DynValue.NewNumber(v.X), DynValue.NewNumber(v.Y)),
-                { UserData.Object: Vector3 v } =>
-                    DynValue.NewTable(null, DynValue.NewNumber(v.X), DynValue.NewNumber(v.Y), DynValue.NewNumber(v.Z)),
-                { UserData.Object: Vector4 v } => DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(v.X),
-                    DynValue.NewNumber(v.Y),
-                    DynValue.NewNumber(v.Z),
-                    DynValue.NewNumber(v.W)
-                ),
-                _ => value,
+                // _ when context.IsGlobalTrue("help") && value.Debug(LuaImGui.Display) is null => null,
+                { Type: DataType.Tuple } => DynValue.NewTuple(Array.ConvertAll(x.Tuple, x => PackVector(context, x))),
+                { UserData.Object: Vector2 v } => Pack(context, v.X, v.Y),
+                { UserData.Object: Vector3 v } => Pack(context, v.X, v.Y, v.Z),
+                { UserData.Object: Vector4 v } => context.IsGlobalTrue("imgui_enable_bugged_vector4_packing")
+                    ? Pack(context, v.W, v.X, v.Y, v.Z)
+                    : Pack(context, v.X, v.Y, v.Z, v.W),
+                _ => x,
             };
 
         private static ref T Safe<T>(T[]? v, [CallerMemberName] string caller = " ") =>
