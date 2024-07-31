@@ -245,6 +245,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             {OpenModifiersDialog, new KeybindList(new [] {new Keybind(Keys.F2)})},
             {OpenQuaFile, new KeybindList(KeyModifiers.Ctrl, Keys.Q)},
             {OpenFolder, new KeybindList(KeyModifiers.Ctrl, Keys.W)},
+            {CreateNewDifficulty, new KeybindList(KeyModifiers.Ctrl, Keys.N)},
+            {CreateNewDifficultyFromCurrent, new KeybindList(new Keybind(new List<KeyModifiers>{ KeyModifiers.Ctrl, KeyModifiers.Shift }, Keys.N))},
             {Export, new KeybindList(KeyModifiers.Ctrl, Keys.E)},
             {Upload, new KeybindList(KeyModifiers.Ctrl, Keys.U)},
             {UploadAndSubmitForRank, new KeybindList(new Keybind(new List<KeyModifiers> { KeyModifiers.Ctrl, KeyModifiers.Shift }, Keys.U))},

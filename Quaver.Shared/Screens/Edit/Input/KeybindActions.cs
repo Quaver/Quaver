@@ -53,6 +53,8 @@ namespace Quaver.Shared.Screens.Edit.Input
         OpenModifiersDialog,
         OpenQuaFile,
         OpenFolder,
+        CreateNewDifficulty,
+        CreateNewDifficultyFromCurrent,
         Export,
         Upload,
         UploadAndSubmitForRank,

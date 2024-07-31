@@ -327,6 +327,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                         Logger.Error(e, LogType.Runtime);
                     }
                     break;
+                case KeybindActions.CreateNewDifficulty:
+                    Screen.CreateNewDifficulty(false);
+                    break;
+                case KeybindActions.CreateNewDifficultyFromCurrent:
+                    Screen.CreateNewDifficulty();
+                    break;
                 case KeybindActions.Export:
                     Screen.ExportToZip();
                     break;
