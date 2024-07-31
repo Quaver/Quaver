@@ -162,7 +162,19 @@ namespace Quaver.Shared.Scripting
             );
 
             foreach (var type in s_imguiTypes)
+            {
                 UserData.RegisterType(type);
+
+                // The reason we are instantiating generics instead of making `DefineEnum` take `Type` is to eliminate
+                // the runtime checks that would be necessary every single time the enum is used. This speeds
+                // up functions like __pairs and __ipairs by not having to use Enum.Parse(Type) and similar.
+                if (s_imguiEnumOverrides.ContainsKey(type))
+                    s_imguiEnumOverrides[type] = (DynValue)((Converter<(string, BindingFlags)[], DynValue>)DefineEnum)
+                       .Method
+                       .GetGenericMethodDefinition()
+                       .MakeGenericMethod(type)
+                       .Invoke(null, null);
+            }
 
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
@@ -523,21 +535,39 @@ namespace Quaver.Shared.Scripting
         /// <remarks><para>
         ///     Used to polyfill the missing declarations within enums for backwards compatibility.
         /// </para></remarks>
-        /// <param name="additions"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of enum.</typeparam>
+        /// <param name="additions">The aliases.</param>
+        /// <returns>The table representing the enum.</returns>
         private static DynValue DefineEnum<T>(params (string Key, T Value)[] additions)
             where T : struct, Enum
         {
-            static int ToInt32(T value) => ((IConvertible)value).ToInt32(CultureInfo.InvariantCulture);
+            var values = Enum.GetValues<T>();
 
-            var table = new Table(null);
+            var inext = DynValue.NewCallback(
+                (_, args) => (int)args[1].Number + 1 is var next && next < values.Length
+                    ? DynValue.NewNumber(next)
+                    : DynValue.Nil
+            );
 
-            foreach (var value in Enum.GetValues<T>())
-                table[ToInt32(value)] = table[$"{value}"] = value;
+            var next = DynValue.NewCallback(
+                (_, args) => args[1].String is { } str ?
+                    Array.IndexOf(values, Enum.Parse<T>(str)) + 1 is var i && i < values.Length
+                        ? DynValue.NewString(values[i].ToString())
+                        : DynValue.Nil :
+                    values.Length is 0 ? DynValue.Nil : DynValue.NewString(values[0].ToString())
+            );
+
+            DynValue Ipairs(ScriptExecutionContext context, CallbackArguments args) => inext;
+
+            DynValue Pairs(ScriptExecutionContext context, CallbackArguments args) => next;
+
+            Table table = new(null) { MetaTable = new(null) { ["__ipairs"] = Ipairs, ["__pairs"] = Pairs } };
+
+            foreach (var value in values)
+                table[((IConvertible)value).ToInt32(CultureInfo.InvariantCulture)] = table[$"{value}"] = value;
 
             foreach (var (key, value) in additions)
-                table[key] = table[ToInt32(value)] = value;
+                table[key] = value;
 
             return DynValue.NewTable(table).AsReadOnly();
         }
@@ -934,13 +964,16 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Invokes the user-defined function, returning an <see cref="Exception"/> if it failed.
         /// </summary>
+        /// <param name="closureName">
+        /// The name of the global that contains the <see cref="Closure"/> instance to invoke.
+        /// </param>
         /// <returns>The <see cref="Exception"/> if it failed.</returns>
-        private Exception CallUserDefinedFunction(string functionName)
+        private Exception CallUserDefinedFunction(string closureName)
         {
             try
             {
-                if (WorkingScript.Globals[functionName] is Closure draw)
-                    WorkingScript.Call(draw);
+                if (WorkingScript.Globals[closureName] is Closure closure)
+                    WorkingScript.Call(closure);
 
                 LastErrorMessage = null;
                 return null;
