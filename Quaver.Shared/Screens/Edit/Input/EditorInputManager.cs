@@ -220,6 +220,22 @@ namespace Quaver.Shared.Screens.Edit.Input
                     if (!Screen.Track.IsPlaying)
                         Screen.SeekTo(Screen.Track.Time - 1);
                     break;
+                case KeybindActions.SeekForwards1msAndMove:
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time + 1, enableMoving: true);
+                    break;
+                case KeybindActions.SeekBackwards1msAndMove:
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time - 1, enableMoving: true);
+                    break;
+                case KeybindActions.SeekForwards1msAndSelect:
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time + 1, enableSelection: true);
+                    break;
+                case KeybindActions.SeekBackwards1msAndSelect:
+                    if (!Screen.Track.IsPlaying)
+                        Screen.SeekTo(Screen.Track.Time - 1, enableSelection: true);
+                    break;
                 case KeybindActions.SeekToStartOfSelection:
                     Screen.SeekToStartOfSelection();
                     break;
