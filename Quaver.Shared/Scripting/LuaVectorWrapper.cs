@@ -267,18 +267,10 @@ namespace Quaver.Shared.Scripting
                 ? value
                 : (value.CastToNumber() ?? (value.Type is DataType.UserData ? value.UserData?.Object : null)) switch
                 {
-                    float f => DynValue.NewTable(null, DynValue.NewNumber(f)),
-                    Vector2 { X: var x, Y: var y } =>
-                        DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y)),
-                    Vector3 { X: var x, Y: var y, Z: var z } =>
-                        DynValue.NewTable(null, DynValue.NewNumber(x), DynValue.NewNumber(y), DynValue.NewNumber(z)),
-                    Vector4 { X: var x, Y: var y, Z: var z, W: var w } => DynValue.NewTable(
-                        null,
-                        DynValue.NewNumber(x),
-                        DynValue.NewNumber(y),
-                        DynValue.NewNumber(z),
-                        DynValue.NewNumber(w)
-                    ),
+                    float f => ImGuiRedirect.Pack(f),
+                    Vector2 { X: var x, Y: var y } => ImGuiRedirect.Pack(x, y),
+                    Vector3 { X: var x, Y: var y, Z: var z } => ImGuiRedirect.Pack(x, y, z),
+                    Vector4 { X: var x, Y: var y, Z: var z, W: var w } => ImGuiRedirect.Pack(x, y, z, w),
                     _ => DynValue.NewTable(null, value),
                 };
 

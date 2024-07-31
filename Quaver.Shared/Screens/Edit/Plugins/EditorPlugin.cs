@@ -12,6 +12,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 {
     public class EditorPlugin : LuaImGui, IEditorPlugin
     {
+        static readonly DynValue s_actionType = DefineEnum<EditorActionType>();
+
+        static readonly DynValue s_hitSounds = DefineEnum<HitSounds>();
+
+        static readonly DynValue s_gameMode = DefineEnum<GameMode>();
+
+        static readonly DynValue s_timeSignature = DefineEnum<TimeSignature>();
+
         /// <summary>
         /// </summary>
         private EditScreen Editor { get; }
@@ -45,10 +53,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         static EditorPlugin()
         {
-            UserData.RegisterType<GameMode>();
-            UserData.RegisterType<HitSounds>();
-            UserData.RegisterType<TimeSignature>();
-            UserData.RegisterType<EditorActionType>();
             RegisterIfEnum(typeof(GameMode));
             RegisterIfEnum(typeof(HitSounds));
             RegisterIfEnum(typeof(TimeSignature));
@@ -93,13 +97,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         {
             if (IsFirstDrawCall)
             {
-                WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
-                WorkingScript.Globals["game_mode"] = typeof(GameMode);
-                WorkingScript.Globals["hitsounds"] = typeof(HitSounds);
-                WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
-                WorkingScript.Globals["action_type"] = typeof(EditorActionType);
-                WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
-                WorkingScript.Globals["map"] = EditorPluginMap;
+                var globals = WorkingScript.Globals;
+                globals["utils"] = typeof(EditorPluginUtils);
+                globals["game_mode"] = s_gameMode;
+                globals["hitsounds"] = s_hitSounds;
+                globals["time_signature"] = s_timeSignature;
+                globals["action_type"] = s_actionType;
+                globals["actions"] = Editor.ActionManager.PluginActionManager;
+                globals["map"] = EditorPluginMap;
             }
 
             base.SetFrameState();

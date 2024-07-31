@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -51,9 +52,10 @@ namespace Quaver.Shared.Scripting
                .Distinct()
                .ToDictionary(x => x, s_imguiRedirects.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
-        private static readonly Dictionary<Type, DynValue> s_overrides = new()
+        private static readonly Dictionary<Type, DynValue> s_enums = new()
         {
-            [typeof(ImGui)] = DynValue.NewTable(new Table(null) { MetaTable = new(null) { ["__index"] = Index } }),
+            [typeof(ImGui)] = DynValue.NewTable(new Table(null) { MetaTable = new(null) { ["__index"] = Index } })
+               .AsReadOnly(),
             [typeof(ImGuiCol)] = DefineEnum(
                 ("TabActive", ImGuiCol.TabSelected),
                 ("TabUnfocused", ImGuiCol.TabDimmed),
@@ -81,7 +83,7 @@ namespace Quaver.Shared.Scripting
 
         private static readonly Type[] s_types = typeof(ImGui).Assembly.GetTypes();
 
-        private static Action<IEditorAction, HistoryType> s_events;
+        private static Action<IEditorAction, HistoryType, bool> s_events;
 
         /// <summary>
         /// </summary>
@@ -133,7 +135,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private FileSystemWatcher Watcher { get; }
 
-        private List<Action<IEditorAction, HistoryType>> Events { get; } = new();
+        private List<Action<IEditorAction, HistoryType, bool>> Events { get; } = new();
 
         /// <summary>
         /// </summary>
@@ -174,30 +176,24 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-            foreach (var type in s_types)
+            foreach (var type in s_types.Append(typeof(HistoryType)).Append(typeof(Keys)))
             {
                 UserData.RegisterType(type);
 
                 // The reason we are instantiating generics instead of making `DefineEnum` take `Type` is to eliminate
                 // the runtime checks that would be necessary every single time the enum is used. This speeds
                 // up functions like __pairs and __ipairs by not having to use Enum.Parse(Type) and similar.
-                if (RegisterIfEnum(type) && !s_overrides.ContainsKey(type))
-                    s_overrides[type] = (DynValue)((Converter<(string, BindingFlags)[], DynValue>)DefineEnum)
-                       .Method
-                       .GetGenericMethodDefinition()
-                       .MakeGenericMethod(type)
-                       .Invoke(null, new object[] { null });
+                if (RegisterIfEnum(type) && !s_enums.ContainsKey(type))
+                    s_enums[type] = DefineEnum(type);
             }
 
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
-            UserData.RegisterType<HistoryType>();
             RegisterWithConversion<Vector2>();
             RegisterWithConversion<Vector3>();
             RegisterWithConversion<Vector4>();
             UserData.RegisterType<nuint>();
             UserData.RegisterType<nint>();
-            UserData.RegisterType<Keys>();
         }
 
         /// <inheritdoc />
@@ -232,7 +228,9 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="change">The editor change.</param>
         /// <param name="kind">Whether the change is a new edit, undo, or redo.</param>
-        public static void Inform(IEditorAction change, HistoryType kind) => s_events?.Invoke(change, kind);
+        /// <param name="fromLua">Whether the action was generated from the plugin.</param>
+        public static void Inform(IEditorAction change, HistoryType kind, bool fromLua) =>
+            s_events?.Invoke(change, kind, fromLua);
 
         /// <summary>
         ///     Creates the string representation of the dynamic value.
@@ -240,23 +238,6 @@ namespace Quaver.Shared.Scripting
         /// <param name="value">The value to create the string for.</param>
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
         public static string Display(DynValue value) => Display(ToSimpleObject(value)) ?? value.ToPrintString();
-
-        protected static bool RegisterIfEnum(Type type)
-        {
-            if (!type.IsEnum)
-                return false;
-
-            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
-                DataType.Number,
-                type,
-                x => Enum.TryParse(type, x.String, true, out var result) ? result :
-                    type != typeof(ImGuiChildFlags) || x.Type is not DataType.Boolean ?
-                        Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x))) :
-                        x.Boolean ? ImGuiChildFlags.Border : ImGuiChildFlags.None
-            );
-
-            return true;
-        }
 
         /// <inheritdoc />
         /// <summary>
@@ -266,30 +247,6 @@ namespace Quaver.Shared.Scripting
             ClearEvents();
             Watcher?.Dispose();
             base.Destroy();
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        protected override void RenderImguiLayout()
-        {
-            if (DateTime.Now - LastException < TimeSpan.FromSeconds(1))
-                return;
-
-            SetFrameState();
-
-            if (IsFirstDrawCall)
-            {
-                IsFirstDrawCall = false;
-
-                if (CallUserDefinedFunction("awake") is { } awakeException)
-                    HandleLuaException(awakeException);
-            }
-
-            if (CallUserDefinedFunction("draw") is { } drawException)
-                HandleLuaException(drawException);
-
-            AfterRender();
         }
 
         /// <summary>
@@ -326,7 +283,7 @@ namespace Quaver.Shared.Scripting
                 return;
 
             foreach (var type in s_types)
-                if (s_overrides.TryGetValue(type, out var value) &&
+                if (s_enums.TryGetValue(type, out var value) &&
                     type.Name.Replace(s_capitals, Lower, 2).Replace(s_capitals, UnderscoreLower) is var key)
                     WorkingScript.Globals[key] = value;
         }
@@ -336,6 +293,112 @@ namespace Quaver.Shared.Scripting
         ///     Should be used to pop any styles
         /// </summary>
         public virtual void AfterRender() { }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        protected override void RenderImguiLayout()
+        {
+            if (DateTime.Now - LastException < TimeSpan.FromSeconds(1))
+                return;
+
+            SetFrameState();
+
+            if (IsFirstDrawCall)
+            {
+                IsFirstDrawCall = false;
+
+                if (CallUserDefinedFunction("awake") is { } awakeException)
+                    HandleLuaException(awakeException);
+            }
+
+            if (CallUserDefinedFunction("draw") is { } drawException)
+                HandleLuaException(drawException);
+
+            AfterRender();
+        }
+
+        /// <summary>
+        ///     Registers the enum, and returning whether it succeeded.
+        /// </summary>
+        /// <param name="type">The type to register.</param>
+        /// <returns>Whether the registration succeeded.</returns>
+        protected static bool RegisterIfEnum(Type type)
+        {
+            if (!type.IsEnum)
+                return false;
+
+            UserData.RegisterType(type);
+
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Number,
+                type,
+                x => Enum.TryParse(type, x.String, true, out var result) ? result :
+                    type != typeof(ImGuiChildFlags) || x.Type is not DataType.Boolean ?
+                        Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x))) :
+                        x.Boolean ? ImGuiChildFlags.Border : ImGuiChildFlags.None
+            );
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Creates the enum <see cref="Table"/> with the specified <paramref name="additions"/>.
+        /// </summary>
+        /// <remarks><para>
+        ///     Used to polyfill the missing declarations within enums for backwards compatibility.
+        /// </para></remarks>
+        /// <typeparam name="T">The type of enum.</typeparam>
+        /// <param name="additions">The aliases.</param>
+        /// <returns>The table representing the enum.</returns>
+        protected static DynValue DefineEnum<T>(params (string Key, T Value)[] additions)
+            where T : struct, Enum
+        {
+            var values = Enum.GetValues<T>();
+
+            DynValue Inext(ScriptExecutionContext context, CallbackArguments args) =>
+                (int)args[1].Number + 1 is var x && x < values.Length
+                    ? DynValue.NewTuple(DynValue.NewNumber(x), DynValue.FromObject(context.OwnerScript, values[x]))
+                    : DynValue.Nil;
+
+            DynValue Next(ScriptExecutionContext context, CallbackArguments args) =>
+                args[1].String is { } str ? Array.IndexOf(values, Enum.Parse<T>(str)) + 1 is var i && i < values.Length
+                    ? DynValue.NewTuple(
+                        DynValue.NewString(values[i].ToString()),
+                        DynValue.FromObject(context.OwnerScript, values[i])
+                    )
+                    : DynValue.Nil :
+                values.Length is 0 ? DynValue.Nil : DynValue.NewTuple(
+                    DynValue.NewString(values[0].ToString()),
+                    DynValue.FromObject(context.OwnerScript, values[0])
+                );
+
+            var inext = DynValue.NewCallback(Inext);
+            var next = DynValue.NewCallback(Next);
+
+            DynValue Iterator(ScriptExecutionContext context, CallbackArguments args) =>
+                // ReSharper disable once GenericEnumeratorNotDisposed
+                DynValue.FromObject(null, values.AsEnumerable().GetEnumerator());
+
+            DynValue Ipairs(ScriptExecutionContext context, CallbackArguments args) => inext;
+
+            DynValue Pairs(ScriptExecutionContext context, CallbackArguments args) => next;
+
+            Table table = new(null)
+            {
+                MetaTable = new(null) { ["__ipairs"] = Ipairs, ["__iterator"] = Iterator, ["__pairs"] = Pairs },
+            };
+
+            foreach (var value in values)
+                table[((IConvertible)value).ToInt32(CultureInfo.InvariantCulture)] = table[$"{value}"] = value;
+
+            // ReSharper disable once InvertIf
+            if (additions is not null)
+                foreach (var (key, value) in additions)
+                    table[key] = value;
+
+            return DynValue.NewTable(table).AsReadOnly();
+        }
 
         /// <summary>
         ///     Gets the call stack.
@@ -511,49 +574,18 @@ namespace Quaver.Shared.Scripting
                 };
 
         /// <summary>
-        ///     Creates the enum <see cref="Table"/> with the specified <paramref name="additions"/>.
+        ///     Creates the enum <see cref="Table"/>.
         /// </summary>
-        /// <remarks><para>
-        ///     Used to polyfill the missing declarations within enums for backwards compatibility.
-        /// </para></remarks>
-        /// <typeparam name="T">The type of enum.</typeparam>
-        /// <param name="additions">The aliases.</param>
+        /// <param name="type">The type of enum.</param>
         /// <returns>The table representing the enum.</returns>
-        private static DynValue DefineEnum<T>(params (string Key, T Value)[] additions)
-            where T : struct, Enum
-        {
-            var values = Enum.GetValues<T>();
-
-            var inext = DynValue.NewCallback(
-                (_, args) => (int)args[1].Number + 1 is var next && next < values.Length
-                    ? DynValue.NewNumber(next)
-                    : DynValue.Nil
-            );
-
-            var next = DynValue.NewCallback(
-                (_, args) => args[1].String is { } str ?
-                    Array.IndexOf(values, Enum.Parse<T>(str)) + 1 is var i && i < values.Length
-                        ? DynValue.NewString(values[i].ToString())
-                        : DynValue.Nil :
-                    values.Length is 0 ? DynValue.Nil : DynValue.NewString(values[0].ToString())
-            );
-
-            DynValue Ipairs(ScriptExecutionContext context, CallbackArguments args) => inext;
-
-            DynValue Pairs(ScriptExecutionContext context, CallbackArguments args) => next;
-
-            Table table = new(null) { MetaTable = new(null) { ["__ipairs"] = Ipairs, ["__pairs"] = Pairs } };
-
-            foreach (var value in values)
-                table[((IConvertible)value).ToInt32(CultureInfo.InvariantCulture)] = table[$"{value}"] = value;
-
-            // ReSharper disable once InvertIf
-            if (additions is not null)
-                foreach (var (key, value) in additions)
-                    table[key] = value;
-
-            return DynValue.NewTable(table).AsReadOnly();
-        }
+        private static DynValue DefineEnum(Type type) =>
+            type.IsEnum
+                ? (DynValue)((Converter<(string, BindingFlags)[], DynValue>)DefineEnum)
+               .Method
+               .GetGenericMethodDefinition()
+               .MakeGenericMethod(type)
+               .Invoke(null, new object[] { null })
+                : DynValue.Nil;
 
         /// <summary>
         ///     Evaluates code.
@@ -691,8 +723,8 @@ namespace Quaver.Shared.Scripting
                 {
                     ["eval"] = Eval,
                     ["expr"] = Expr,
-                    ["history_type"] = typeof(HistoryType),
-                    ["keys"] = typeof(Keys),
+                    ["history_type"] = s_enums[typeof(HistoryType)],
+                    ["keys"] = s_enums[typeof(Keys)],
                     ["listen"] = Listen,
                     ["print"] = Print,
                     ["read"] = Read,
@@ -816,8 +848,8 @@ namespace Quaver.Shared.Scripting
                 SyntaxErrorException => "a syntax",
                 InterpreterException => "an interpreter",
                 IOException => "an IO",
-                // Engine causes an IndexOutOfRangeException on stack overflows
-                IndexOutOfRangeException => "a stack overflow",
+                IndexOutOfRangeException => "a stack overflow", // Thrown by `Engine` in the event of a stack overflow.
+                NullReferenceException => "an internal",
                 _ => "an unknown",
             };
 
@@ -845,14 +877,14 @@ namespace Quaver.Shared.Scripting
             for (var i = 0; i < count; i++)
                 if (args.RawGet(i, false) is { Type: DataType.Function, Function: var function })
                 {
-                    void EditorAction(IEditorAction change, HistoryType kind)
+                    void EditorAction(IEditorAction change, HistoryType kind, bool fromLua)
                     {
                         if (this is IEditorPlugin { IsActive: false })
                             return;
 
                         try
                         {
-                            function.Call(change, kind);
+                            function.Call(change, kind, fromLua);
                         }
                         catch (Exception e)
                         {

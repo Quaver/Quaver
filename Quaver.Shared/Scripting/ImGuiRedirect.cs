@@ -779,6 +779,18 @@ namespace Quaver.Shared.Scripting
         }
 
         [MoonSharpHidden]
+        public static CallbackArguments Debug(
+            this CallbackArguments t,
+            [CallerArgumentExpression("t")] string expression = null
+        )
+        {
+            for (var i = 0; i < t.Count; i++)
+                t[i].Debug($"{expression}[{i}]");
+
+            return t;
+        }
+
+        [MoonSharpHidden]
         public static DynValue Debug(
             this DynValue t,
             Converter<DynValue, object> converter,
@@ -802,6 +814,24 @@ namespace Quaver.Shared.Scripting
                 ? DynValue.NewCallback((context, args) => PackVector(context, clr(context, args))).AsReadOnly()
                 : ret;
 
+        /// <summary>
+        ///     Packs the numbers into a table.
+        /// </summary>
+        /// <param name="numbers">The numbers to pack.</param>
+        /// <returns>The packed value.</returns>
+        [MoonSharpHidden]
+        public static DynValue Pack(params double[] numbers) => Pack(null, numbers);
+
+        /// <summary>
+        ///     Packs the numbers into a table.
+        /// </summary>
+        /// <param name="context">The script execution context.</param>
+        /// <param name="numbers">The numbers to pack.</param>
+        /// <returns>The packed value.</returns>
+        [MoonSharpHidden]
+        public static DynValue Pack(IScriptPrivateResource context, params double[] numbers) =>
+            DynValue.NewTable(context?.OwnerScript, Array.ConvertAll(numbers, DynValue.NewNumber));
+
         // Superseded by 'SetNextItemAllowOverlap' (called before an item)
         public static DynValue SetItemAllowOverlap(ScriptExecutionContext _, CallbackArguments __) => DynValue.Nil;
 
@@ -815,15 +845,6 @@ namespace Quaver.Shared.Scripting
         /// <returns>The value <see keyword="true"/> if the global is <see keyword="true"/>.</returns>
         private static bool IsGlobalTrue(this IScriptPrivateResource context, string key) =>
             context.OwnerScript.Globals.RawGet(key) is { Type: DataType.Boolean, Boolean: true };
-
-        /// <summary>
-        ///     Packs the numbers into a table.
-        /// </summary>
-        /// <param name="context">The script execution context.</param>
-        /// <param name="numbers">The numbers to pack.</param>
-        /// <returns>The packed value.</returns>
-        private static DynValue Pack(IScriptPrivateResource context, params double[] numbers) =>
-            DynValue.NewTable(context.OwnerScript, Array.ConvertAll(numbers, DynValue.NewNumber));
 
         /// <summary>
         ///     Packs the vector into the table, which includes within tuples.

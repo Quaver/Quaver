@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Edit.Plugins;
 using Wobble;
 
 #pragma warning disable CA1822
@@ -37,21 +38,21 @@ namespace Quaver.Shared.Scripting
         public bool IsWindowHovered { get; set; }
 
         /// <summary>
+        ///     Gets the current ImGui scaling.
+        /// </summary>
+        public float Scale => EditorPluginUtils.EditScreen.ImGuiScale;
+
+        /// <summary>
         ///     Any state that the user wants to store for their plugin
         /// </summary>
-        public Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
+        public Dictionary<string, object> Values { get; } = new();
 
         /// <summary>
         ///     Width and height of the current Quaver window
         /// </summary>
         public DynValue WindowSize
         {
-            get =>
-                DynValue.NewTable(
-                    null,
-                    DynValue.NewNumber(ConfigManager.WindowWidth.Value),
-                    DynValue.NewNumber(ConfigManager.WindowHeight.Value)
-                );
+            get => ImGuiRedirect.Pack(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
             set => _ = value;
         }
 
