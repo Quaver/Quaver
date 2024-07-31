@@ -168,7 +168,7 @@ namespace Quaver.Shared.Scripting
                 // The reason we are instantiating generics instead of making `DefineEnum` take `Type` is to eliminate
                 // the runtime checks that would be necessary every single time the enum is used. This speeds
                 // up functions like __pairs and __ipairs by not having to use Enum.Parse(Type) and similar.
-                if (s_imguiEnumOverrides.ContainsKey(type))
+                if (!s_imguiEnumOverrides.ContainsKey(type))
                     s_imguiEnumOverrides[type] = (DynValue)((Converter<(string, BindingFlags)[], DynValue>)DefineEnum)
                        .Method
                        .GetGenericMethodDefinition()
