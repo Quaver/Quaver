@@ -389,6 +389,19 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.TogglePitchRate:
                     ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
                     break;
+                case KeybindActions.ToggleWaveform:
+                    Screen.ShowWaveform.Value = !Screen.ShowWaveform.Value;
+                    break;
+                case KeybindActions.ToggleWaveformLowPass:
+                    Screen.WaveformFilter.Value = Screen.WaveformFilter.Value == EditorPlayfieldWaveformFilter.LowPass
+                        ? EditorPlayfieldWaveformFilter.None
+                        : EditorPlayfieldWaveformFilter.LowPass;
+                    break;
+                case KeybindActions.ToggleWaveformHighPass:
+                    Screen.WaveformFilter.Value = Screen.WaveformFilter.Value == EditorPlayfieldWaveformFilter.HighPass
+                        ? EditorPlayfieldWaveformFilter.None
+                        : EditorPlayfieldWaveformFilter.HighPass;
+                    break;
                 case KeybindActions.PlayTest:
                     Screen.ExitToTestPlay();
                     break;
