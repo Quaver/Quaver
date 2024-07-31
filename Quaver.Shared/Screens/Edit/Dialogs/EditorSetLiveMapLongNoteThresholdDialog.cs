@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
@@ -41,14 +42,14 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50),
                 FontManager.GetWobbleFont(Fonts.LatoBlack),
                 20, ConfigManager.EditorLiveMapLongNoteThreshold.Value.ToString(),
-                "Enter an threshold of LNs during livemapping...", OnSubmit)
+                "Enter a threshold of LNs during livemapping...", OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,
                 Y = -100,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
-                AllowedCharacters = new Regex(@"^[0-9-]*$")
+                AllowedCharacters = new Regex(@"^[0-9]*$")
             };
 
             Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
@@ -65,15 +66,13 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
         private void OnSubmit(string s)
         {
-            try
+            if (!int.TryParse(s, out var val))
             {
-                var val = int.Parse(s);
-                ConfigManager.EditorLiveMapLongNoteThreshold.Value = val;
+                NotificationManager.Show(NotificationLevel.Error, $"Invalid value: '{s}'");
+                return;
             }
-            catch (Exception)
-            {
-                // ignored
-            }
+
+            ConfigManager.EditorLiveMapLongNoteThreshold.Value = val;
         }
     }
 }
