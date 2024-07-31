@@ -595,36 +595,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <param name="direction"></param>
         /// <param name="snapFactor"></param>
-        public void SeekInDirectionAndMove(Direction direction, float snapFactor = 1)
-        {
-            var originalTime = Track.Time;
-            var targetTime = SeekInDirection(direction, snapFactor);
-            var dt = (int)(targetTime - originalTime);
-            ActionManager.Perform(
-                new EditorActionMoveHitObjects(ActionManager, WorkingMap, SelectedHitObjects.Value, 0, dt));
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="snapFactor"></param>
-        public void SeekInDirectionAndSelect(Direction direction, float snapFactor = 1)
-        {
-            var minTime = Track.Time;
-            var maxTime = SeekInDirection(direction, snapFactor);
-            if (minTime > maxTime)
-                (minTime, maxTime) = (maxTime, minTime);
-            SelectedHitObjects.AddRange(WorkingMap.HitObjects
-                .Where(hitObject => hitObject.StartTime >= minTime - 2
-                                    && hitObject.StartTime <= maxTime + 2
-                                    && !SelectedHitObjects.Value.Contains(hitObject)).ToList());
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="snapFactor"></param>
-        public double SeekInDirection(Direction direction, float snapFactor = 1)
+        /// <param name="enableMoving"></param>
+        /// <param name="enableSelection"></param>
+        public double SeekInDirection(Direction direction, float snapFactor = 1, bool enableMoving = false, bool enableSelection = false)
         {
             var snap = BeatSnap.Value * snapFactor;
 
@@ -636,32 +609,43 @@ namespace Quaver.Shared.Screens.Edit
                     time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, snap, time);
             }
 
-            SeekTo(time);
+            SeekTo(time, enableMoving, enableSelection);
+
             return time;
         }
 
-        public void SeekTo(double time, bool enableMoving = true)
+        public void SeekTo(double time, bool enableMoving = false, bool enableSelection = false)
         {
             if (Track == null || Track.IsDisposed || !CanSeek()) return;
+
+            var originalTime = Track.Time;
 
             time = Math.Clamp(time, 0, Track.Length - 100);
             LastSeekDistance = time - Track.Time;
 
-            // TODO: Implement selection with shift and move with alt
-
             Track.Seek(time);
+
+            if (enableSelection)
+                SelectObjectsInRange(originalTime, time);
+
+            if (enableMoving)
+            {
+                var dt = (int)(time - originalTime);
+                ActionManager.Perform(
+                    new EditorActionMoveHitObjects(ActionManager, WorkingMap, SelectedHitObjects.Value, 0, dt));
+            }
         }
 
-        public void SeekToStart()
+        public void SeekToStart(bool enableSelection = false)
         {
-            if (WorkingMap.HitObjects.Count == 0) SeekTo(0);
-            SeekTo(WorkingMap.HitObjects.Min(h => h.StartTime));
+            if (WorkingMap.HitObjects.Count == 0) SeekTo(0, enableSelection: enableSelection);
+            SeekTo(WorkingMap.HitObjects.Min(h => h.StartTime), enableSelection: enableSelection);
         }
 
-        public void SeekToEnd()
+        public void SeekToEnd(bool enableSelection = false)
         {
-            if (WorkingMap.HitObjects.Count == 0) SeekTo(Track.Length);
-            SeekTo(WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)));
+            if (WorkingMap.HitObjects.Count == 0) SeekTo(Track.Length, enableSelection: enableSelection);
+            SeekTo(WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)), enableSelection: enableSelection);
         }
 
         public void SeekToStartOfSelection()
@@ -951,6 +935,18 @@ namespace Quaver.Shared.Screens.Edit
                 .Where(hitObject => Math.Abs(hitObject.StartTime - Track.Time) < 2
                                     && !SelectedHitObjects.Value.Contains(hitObject))
                 .ToList());
+        }
+
+        public void SelectObjectsInRange(double time1, double time2)
+        {
+            const float toleranceMs = 2;
+            if (time1 > time2)
+                (time1, time2) = (time2, time1);
+
+            SelectedHitObjects.AddRange(WorkingMap.HitObjects
+                .Where(hitObject => hitObject.StartTime >= time1 - toleranceMs
+                                    && hitObject.StartTime <= time2 + toleranceMs
+                                    && !SelectedHitObjects.Value.Contains(hitObject)).ToList());
         }
 
         /// <summary>
