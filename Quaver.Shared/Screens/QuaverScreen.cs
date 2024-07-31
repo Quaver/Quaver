@@ -8,7 +8,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;

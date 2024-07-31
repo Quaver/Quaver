@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Quaver.API.Enums;
-using Quaver.Server.Common.Objects.Multiplayer;
-using Quaver.Shared.Screens.Gameplay.Rulesets;
+using Quaver.Server.Client.Objects.Multiplayer;
 
 namespace Quaver.Shared.Online.API.Multiplayer;
 

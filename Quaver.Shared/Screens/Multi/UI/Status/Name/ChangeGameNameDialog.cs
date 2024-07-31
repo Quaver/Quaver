@@ -1,9 +1,6 @@
-using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
-using Quaver.Shared.Helpers;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs;
-using Wobble.Graphics.Animations;
 
 namespace Quaver.Shared.Screens.Multi.UI.Status.Name
 {

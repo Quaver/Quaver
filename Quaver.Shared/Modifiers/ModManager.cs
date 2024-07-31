@@ -12,7 +12,7 @@ using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers.Mods;

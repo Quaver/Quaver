@@ -23,13 +23,8 @@
       Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj"
       Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"
     />
-    <ProjectReference
-      Include="../Quaver.Server.Common/Quaver.Server.Common/Quaver.Server.Common.csproj"
-      Condition="Exists('../Quaver.Server.Common/Quaver.Server.Common/Quaver.Server.Common.csproj')"
-    />
 
     <Reference Include="Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"/>
-    <Reference Include="Quaver.Server.Common.dll" Condition="!Exists('../Quaver.Server.Common/Quaver.Server.Common/Quaver.Server.Common.csproj')"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="Content/**">

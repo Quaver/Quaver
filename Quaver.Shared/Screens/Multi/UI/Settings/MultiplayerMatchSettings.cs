@@ -1,4 +1,4 @@
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Selected;
 using Wobble.Bindables;
 
