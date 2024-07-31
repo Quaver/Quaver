@@ -49,10 +49,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             UserData.RegisterType<HitSounds>();
             UserData.RegisterType<TimeSignature>();
             UserData.RegisterType<EditorActionType>();
-            RegisterEnumConversion(typeof(GameMode));
-            RegisterEnumConversion(typeof(HitSounds));
-            RegisterEnumConversion(typeof(TimeSignature));
-            RegisterEnumConversion(typeof(EditorActionType));
+            RegisterIfEnum(typeof(GameMode));
+            RegisterIfEnum(typeof(HitSounds));
+            RegisterIfEnum(typeof(TimeSignature));
+            RegisterIfEnum(typeof(EditorActionType));
         }
 
         /// <inheritdoc />

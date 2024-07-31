@@ -36,25 +36,24 @@ namespace Quaver.Shared.Scripting
 
         private const int RecursionLimit = 10;
 
-        private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;
-
         private static readonly IUserDataDescriptor s_imgui = UserData.RegisterType(typeof(ImGui));
 
         private static readonly IUserDataDescriptor s_imguiRedirects = UserData.RegisterType(typeof(ImGuiRedirect));
 
-        private static readonly Dictionary<string, DynValue> s_imguiMethods = MethodNamesOf(typeof(ImGui))
+        private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;
+
+        private static readonly Dictionary<string, DynValue> s_methods = MethodNamesOf(typeof(ImGui))
            .Distinct()
            .ToDictionary(x => x, s_imgui.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
-        private static readonly Dictionary<string, DynValue> s_imguiRedirectMethods =
+        private static readonly Dictionary<string, DynValue> s_redirectMethods =
             MethodNamesOf(typeof(ImGuiRedirect))
                .Distinct()
                .ToDictionary(x => x, s_imguiRedirects.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
-        private static readonly Type[] s_imguiTypes = typeof(ImGui).Assembly.GetTypes();
-
-        private static readonly Dictionary<Type, DynValue> s_imguiEnumOverrides = new()
+        private static readonly Dictionary<Type, DynValue> s_overrides = new()
         {
+            [typeof(ImGui)] = DynValue.NewTable(new Table(null) { MetaTable = new(null) { ["__index"] = Index } }),
             [typeof(ImGuiCol)] = DefineEnum(
                 ("TabActive", ImGuiCol.TabSelected),
                 ("TabUnfocused", ImGuiCol.TabDimmed),
@@ -79,6 +78,8 @@ namespace Quaver.Shared.Scripting
         private static readonly Regex s_capitals = new(@"\p{Lu}", RegexOptions.Compiled);
 
         private static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
+
+        private static readonly Type[] s_types = typeof(ImGui).Assembly.GetTypes();
 
         private static Action<IEditorAction, HistoryType> s_events;
 
@@ -143,7 +144,19 @@ namespace Quaver.Shared.Scripting
             static void AddMethodAliases(object anonymous)
             {
                 foreach (var property in anonymous.GetType().GetProperties())
-                    s_imguiMethods[property.Name] = s_imguiMethods[$"{property.GetValue(anonymous)}"];
+                    s_methods[property.Name] = s_methods[$"{property.GetValue(anonymous)}"];
+            }
+
+            static void RegisterWithConversion<T>()
+                where T : struct, IFormattable
+            {
+                UserData.RegisterType<T>();
+
+                Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                    DataType.Table,
+                    typeof(T),
+                    x => LuaVectorWrapper.TryCoerceTo<T>(x) ?? throw UnableToCoerce(x)
+                );
             }
 
             AddMethodAliases(
@@ -161,31 +174,30 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
-            foreach (var type in s_imguiTypes)
+            foreach (var type in s_types)
             {
                 UserData.RegisterType(type);
 
                 // The reason we are instantiating generics instead of making `DefineEnum` take `Type` is to eliminate
                 // the runtime checks that would be necessary every single time the enum is used. This speeds
                 // up functions like __pairs and __ipairs by not having to use Enum.Parse(Type) and similar.
-                if (!s_imguiEnumOverrides.ContainsKey(type))
-                    s_imguiEnumOverrides[type] = (DynValue)((Converter<(string, BindingFlags)[], DynValue>)DefineEnum)
+                if (RegisterIfEnum(type) && !s_overrides.ContainsKey(type))
+                    s_overrides[type] = (DynValue)((Converter<(string, BindingFlags)[], DynValue>)DefineEnum)
                        .Method
                        .GetGenericMethodDefinition()
                        .MakeGenericMethod(type)
-                       .Invoke(null, null);
+                       .Invoke(null, new object[] { null });
             }
 
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             UserData.RegisterType<HistoryType>();
-            UserData.RegisterType<Vector2>();
-            UserData.RegisterType<Vector3>();
-            UserData.RegisterType<Vector4>();
+            RegisterWithConversion<Vector2>();
+            RegisterWithConversion<Vector3>();
+            RegisterWithConversion<Vector4>();
             UserData.RegisterType<nuint>();
             UserData.RegisterType<nint>();
             UserData.RegisterType<Keys>();
-            RegisterAllVectors();
         }
 
         /// <inheritdoc />
@@ -229,7 +241,11 @@ namespace Quaver.Shared.Scripting
         /// <returns>The string representation of the parameter <paramref name="value"/>.</returns>
         public static string Display(DynValue value) => Display(ToSimpleObject(value)) ?? value.ToPrintString();
 
-        protected static void RegisterEnumConversion(Type type) =>
+        protected static bool RegisterIfEnum(Type type)
+        {
+            if (!type.IsEnum)
+                return false;
+
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.Number,
                 type,
@@ -238,6 +254,9 @@ namespace Quaver.Shared.Scripting
                         Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x))) :
                         x.Boolean ? ImGuiChildFlags.Border : ImGuiChildFlags.None
             );
+
+            return true;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -306,19 +325,10 @@ namespace Quaver.Shared.Scripting
             if (!IsFirstDrawCall)
                 return;
 
-            foreach (var type in s_imguiTypes)
-            {
-                var isImGui = type == typeof(ImGui);
-
-                if (!isImGui && !type.IsEnum)
-                    continue;
-
-                var key = type.Name.Replace(s_capitals, Lower, 2).Replace(s_capitals, UnderscoreLower);
-
-                WorkingScript.Globals[key] = isImGui ?
-                    new Table(WorkingScript) { MetaTable = new(WorkingScript) { ["__index"] = Index } } :
-                    s_imguiEnumOverrides.TryGetValue(type, out var table) ? table : type;
-            }
+            foreach (var type in s_types)
+                if (s_overrides.TryGetValue(type, out var value) &&
+                    type.Name.Replace(s_capitals, Lower, 2).Replace(s_capitals, UnderscoreLower) is var key)
+                    WorkingScript.Globals[key] = value;
         }
 
         /// <summary>
@@ -326,35 +336,6 @@ namespace Quaver.Shared.Scripting
         ///     Should be used to pop any styles
         /// </summary>
         public virtual void AfterRender() { }
-
-        /// <summary>
-        ///     Handles registering the Vector types for the script
-        /// </summary>
-        private static void RegisterAllVectors()
-        {
-            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
-                DataType.Table,
-                typeof(Vector2),
-                x => LuaVectorWrapper.TryCoerceTo<Vector2>(x) ?? throw UnableToCoerce(x)
-            );
-
-            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
-                DataType.Table,
-                typeof(Vector3),
-                x => LuaVectorWrapper.TryCoerceTo<Vector3>(x) ?? throw UnableToCoerce(x)
-            );
-
-            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
-                DataType.Table,
-                typeof(Vector4),
-                x => LuaVectorWrapper.TryCoerceTo<Vector4>(x) ?? throw UnableToCoerce(x)
-            );
-
-            // ReSharper disable once LoopCanBePartlyConvertedToQuery
-            foreach (var imgui in s_imguiTypes)
-                if (imgui.IsEnum)
-                    RegisterEnumConversion(imgui);
-        }
 
         /// <summary>
         ///     Gets the call stack.
@@ -566,8 +547,10 @@ namespace Quaver.Shared.Scripting
             foreach (var value in values)
                 table[((IConvertible)value).ToInt32(CultureInfo.InvariantCulture)] = table[$"{value}"] = value;
 
-            foreach (var (key, value) in additions)
-                table[key] = value;
+            // ReSharper disable once InvertIf
+            if (additions is not null)
+                foreach (var (key, value) in additions)
+                    table[key] = value;
 
             return DynValue.NewTable(table).AsReadOnly();
         }
@@ -640,8 +623,8 @@ namespace Quaver.Shared.Scripting
         /// <returns>The function for the index operation.</returns>
         private static DynValue Index(ScriptExecutionContext context, CallbackArguments args) =>
             args.RawGet(1, false) is not { String: var str } ? DynValue.Nil :
-            s_imguiRedirectMethods.TryGetValue(str, out var prioritizedRet) ? prioritizedRet :
-            s_imguiMethods.TryGetValue(str, out var ret) ? ret : throw new FormatException($"Invalid method: {str}");
+            s_redirectMethods.TryGetValue(str, out var prioritizedRet) ? prioritizedRet :
+            s_methods.TryGetValue(str, out var ret) ? ret : throw new FormatException($"Invalid method: {str}");
 
         /// <summary>
         ///     Indicates a failure to coerce a value to a vector.
