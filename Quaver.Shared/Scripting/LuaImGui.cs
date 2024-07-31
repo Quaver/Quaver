@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -308,11 +307,11 @@ namespace Quaver.Shared.Scripting
             {
                 IsFirstDrawCall = false;
 
-                if (CallUserDefinedFunction("awake") is { } awakeException)
+                if (CallUserDefinedFunction("Awake", "awake") is { } awakeException)
                     HandleLuaException(awakeException);
             }
 
-            if (CallUserDefinedFunction("draw") is { } drawException)
+            if (CallUserDefinedFunction("Draw", "draw") is { } drawException)
                 HandleLuaException(drawException);
 
             AfterRender();
@@ -982,13 +981,19 @@ namespace Quaver.Shared.Scripting
         /// <param name="closureName">
         /// The name of the global that contains the <see cref="Closure"/> instance to invoke.
         /// </param>
+        /// <param name="otherClosureName">
+        /// The name of the other global that contains the <see cref="Closure"/> instance to invoke.
+        /// </param>
         /// <returns>The <see cref="Exception"/> if it failed.</returns>
-        private Exception CallUserDefinedFunction(string closureName)
+        private Exception CallUserDefinedFunction(string closureName, string otherClosureName)
         {
             try
             {
                 if (WorkingScript.Globals[closureName] is Closure closure)
                     WorkingScript.Call(closure);
+
+                if (WorkingScript.Globals[otherClosureName] is Closure otherClosure)
+                    WorkingScript.Call(otherClosure);
 
                 LastErrorMessage = null;
                 return null;
