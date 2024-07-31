@@ -369,17 +369,31 @@ namespace Quaver.Shared.Scripting
                     ? DynValue.NewTuple(DynValue.NewNumber(x), DynValue.FromObject(context.OwnerScript, values[x]))
                     : DynValue.Nil;
 
-            DynValue Next(ScriptExecutionContext context, CallbackArguments args) =>
-                args[1].String is { } str ? Array.IndexOf(values, Enum.Parse<T>(str)) + 1 is var i && i < values.Length
-                    ? DynValue.NewTuple(
+            DynValue Next(ScriptExecutionContext context, CallbackArguments args)
+            {
+                var str = args[1].String;
+
+                if (str is not null)
+                {
+                    var i = Array.IndexOf(values, Enum.Parse<T>(str)) + 1;
+
+                    if (i >= values.Length)
+                        return DynValue.Nil;
+
+                    return DynValue.NewTuple(
                         DynValue.NewString(values[i].ToString()),
                         DynValue.FromObject(context.OwnerScript, values[i])
-                    )
-                    : DynValue.Nil :
-                values.Length is 0 ? DynValue.Nil : DynValue.NewTuple(
+                    );
+                }
+
+                if (values.Length is 0)
+                    return DynValue.Nil;
+
+                return DynValue.NewTuple(
                     DynValue.NewString(values[0].ToString()),
                     DynValue.FromObject(context.OwnerScript, values[0])
                 );
+            }
 
             var inext = DynValue.NewCallback(Inext);
             var next = DynValue.NewCallback(Next);
