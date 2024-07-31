@@ -97,13 +97,6 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private const int MaximumCustomFps = 500;
 
-        /// <summary>
-        ///     If the fps is capped, the previous custom fps value.
-        ///     Otherwise, it will be 0
-        ///     When the screen is destroyed, the FPS cap should return to <see cref="previousCustomFps"/>
-        /// </summary>
-        private int previousCustomFps;
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -113,7 +106,6 @@ namespace Quaver.Shared.Screens.Edit
             if (ConfigManager.FpsLimiterType.Value == FpsLimitType.Custom &&
                 ConfigManager.CustomFpsLimit.Value > MaximumCustomFps)
             {
-                previousCustomFps = ConfigManager.CustomFpsLimit.Value;
                 Container.ScheduleUpdate(() =>
                     ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, MaximumCustomFps)
                 );
@@ -181,8 +173,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override void Destroy()
         {
-            if (previousCustomFps != 0)
-                ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, previousCustomFps);
+            if (ConfigManager.FpsLimiterType.Value == FpsLimitType.Custom)
+                ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, ConfigManager.CustomFpsLimit.Value);
 
             Container?.Destroy();
 
