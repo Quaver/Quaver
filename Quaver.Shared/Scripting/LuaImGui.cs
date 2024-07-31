@@ -186,6 +186,12 @@ namespace Quaver.Shared.Scripting
                     s_enums[type] = DefineEnum(type);
             }
 
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Boolean,
+                typeof(ImGuiChildFlags),
+                x => x.Boolean ? ImGuiChildFlags.Border : ImGuiChildFlags.None
+            );
+
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             RegisterWithConversion<Vector2>();
@@ -330,12 +336,15 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType(type);
 
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.String,
+                type,
+                x => Enum.Parse(type, x.String)
+            );
+
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.Number,
                 type,
-                x => Enum.TryParse(type, x.String, true, out var result) ? result :
-                    type != typeof(ImGuiChildFlags) || x.Type is not DataType.Boolean ?
-                        Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x))) :
-                        x.Boolean ? ImGuiChildFlags.Border : ImGuiChildFlags.None
+                x => Enum.ToObject(type, (int)(x.CastToNumber() ?? throw UnableToCoerce(x)))
             );
 
             return true;
@@ -672,7 +681,7 @@ namespace Quaver.Shared.Scripting
         /// <param name="args">The arguments.</param>
         /// <returns>The deserialized object.</returns>
         private static DynValue ToNumber(ScriptExecutionContext context, CallbackArguments args) =>
-            args.RawGet(1, false)?.UserData?.Object is Enum e ? Number(e) : BasicModule.tonumber(context, args);
+            args.RawGet(0, false)?.UserData?.Object is Enum e ? Number(e) : BasicModule.tonumber(context, args);
 
         /// <summary>
         ///     Indicates a failure to coerce a value to a vector.
