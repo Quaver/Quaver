@@ -402,6 +402,18 @@ namespace Quaver.Shared.Screens.Edit.Input
                         ? EditorPlayfieldWaveformFilter.None
                         : EditorPlayfieldWaveformFilter.HighPass;
                     break;
+                case KeybindActions.ToggleReferenceDifficulty:
+                    if (Screen.UneditableMap.Value != null)
+                        Screen.UneditableMap.Value = null;
+                    else
+                        Screen.ShowReferenceDifficulty();
+                    break;
+                case KeybindActions.NextReferenceDifficulty:
+                    Screen.ReferenceDifficultyIndex.Value++;
+                    break;
+                case KeybindActions.PreviousReferenceDifficulty:
+                    Screen.ReferenceDifficultyIndex.Value--;
+                    break;
                 case KeybindActions.PlayTest:
                     Screen.ExitToTestPlay();
                     break;

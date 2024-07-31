@@ -97,6 +97,11 @@ namespace Quaver.Shared.Screens.Edit
         public Bindable<Qua> UneditableMap { get; }
 
         /// <summary>
+        ///     The index of the difficulty to reference (<see cref="UneditableMap"/>)
+        /// </summary>
+        public BindableInt ReferenceDifficultyIndex { get; set; } = new (0, 0, int.MaxValue);
+
+        /// <summary>
         ///     The AudioTrack to be used during this edit session
         /// </summary>
         public IAudioTrack Track { get; private set; }
@@ -332,6 +337,9 @@ namespace Quaver.Shared.Screens.Edit
 
             SkinManager.SkinLoaded += OnSkinLoaded;
             GameBase.Game.Window.FileDropped += OnFileDropped;
+
+            ReferenceDifficultyIndex = new BindableInt(0, 0, Map.Mapset.Maps.Count - 1);
+            ReferenceDifficultyIndex.ValueChanged += LoadReferenceDifficulty;
 
             InitializeDiscordRichPresence();
             AddFileWatcher();
@@ -1729,6 +1737,34 @@ namespace Quaver.Shared.Screens.Edit
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, Map.MapId, "",
             (byte)WorkingMap.Mode, $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", 0);
+
+        /// <summary>
+        ///     Reload <see cref="UneditableMap"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LoadReferenceDifficulty(object sender, BindableValueChangedEventArgs<int> e)
+        {
+            ShowReferenceDifficulty();
+        }
+
+        /// <summary>
+        ///     Reload <see cref="UneditableMap"/>
+        /// </summary>
+        public void ShowReferenceDifficulty()
+        {
+            ThreadScheduler.Run(() =>
+            {
+                var map = Map.Mapset.Maps[ReferenceDifficultyIndex.Value];
+                if (UneditableMap.Value != null)
+                {
+                    lock (UneditableMap.Value)
+                        UneditableMap.Value = map.LoadQua();
+                }
+                else
+                    UneditableMap.Value = map.LoadQua();
+            });
+        }
 
         void MakeScheduledMapBackup(object _)
         {
