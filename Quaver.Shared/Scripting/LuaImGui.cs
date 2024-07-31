@@ -11,6 +11,7 @@ using System.Threading;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.CoreLib;
 using MoonSharp.Interpreter.Debugging;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps.Structures;
@@ -389,7 +390,7 @@ namespace Quaver.Shared.Scripting
             };
 
             foreach (var value in values)
-                table[((IConvertible)value).ToInt32(CultureInfo.InvariantCulture)] = table[$"{value}"] = value;
+                table[Number(value)] = table[$"{value}"] = value;
 
             // ReSharper disable once InvertIf
             if (additions is not null)
@@ -658,6 +659,23 @@ namespace Quaver.Shared.Scripting
             s_methods.TryGetValue(str, out var ret) ? ret : throw new FormatException($"Invalid method: {str}");
 
         /// <summary>
+        ///     Converts the userdata to the <see cref="DynValue"/> containing the number.
+        /// </summary>
+        /// <param name="i">The instance to convert.</param>
+        /// <returns>The boxed number.</returns>
+        private static DynValue Number(IConvertible i) =>
+            DynValue.NewNumber(Convert.ToDouble(Convert.ChangeType(i, i.GetTypeCode())));
+
+        /// <summary>
+        ///     Reads the config file.
+        /// </summary>
+        /// <param name="context">The script execution context.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The deserialized object.</returns>
+        private static DynValue ToNumber(ScriptExecutionContext context, CallbackArguments args) =>
+            args.RawGet(1, false)?.UserData?.Object is Enum e ? Number(e) : BasicModule.tonumber(context, args);
+
+        /// <summary>
         ///     Indicates a failure to coerce a value to a vector.
         /// </summary>
         /// <param name="dynVal">The value that failed to coerce.</param>
@@ -720,14 +738,15 @@ namespace Quaver.Shared.Scripting
             {
                 Globals =
                 {
-                    ["eval"] = Eval,
+                    [nameof(DynamicModule.eval)] = Eval,
                     ["expr"] = Expr,
                     ["history_type"] = s_enums[typeof(HistoryType)],
                     ["keys"] = s_enums[typeof(Keys)],
                     ["listen"] = Listen,
-                    ["print"] = Print,
+                    [nameof(BasicModule.print)] = Print,
                     ["read"] = Read,
                     ["state"] = State,
+                    [nameof(BasicModule.tonumber)] = ToNumber,
                     ["vector"] = typeof(LuaVectorWrapper),
                     ["vector2"] = typeof(Vector2),
                     ["vector3"] = typeof(Vector3),
