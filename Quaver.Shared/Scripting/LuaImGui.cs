@@ -32,9 +32,9 @@ namespace Quaver.Shared.Scripting
 {
     public class LuaImGui : SpriteImGui
     {
-        private const int IterationLimit = 10;
+        public const int RecursionLimit = 10;
 
-        private const int RecursionLimit = 10;
+        private const int IterationLimit = 10;
 
         private static readonly IUserDataDescriptor s_imgui = UserData.RegisterType(typeof(ImGui));
 
@@ -138,7 +138,7 @@ namespace Quaver.Shared.Scripting
 
         /// <summary>
         /// </summary>
-        public LuaPluginState State { get; }
+        public LuaPluginState State { get; private set; }
 
         static LuaImGui()
         {
@@ -749,12 +749,22 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         private void LazyLoadScript()
         {
+            static DynValue Warn(DynValue input)
+            {
+                var reason = input.Type is DataType.Table or DataType.Tuple
+                    ? "being too deeply nested"
+                    : "relying on the previous loaded script";
+
+                var message =
+                    $"The \"state\" global contains an invalid value that will be coerced to nil due to it {reason}. Please refactor the code such that the following object is not within the global: {Display(input)}";
+
+                NotificationManager.Show(NotificationLevel.Warning, message);
+                Logger.Warning(message, LogType.Runtime);
+                return DynValue.Nil;
+            }
+
             if (LoadedVersion == Version)
                 return;
-
-            // A `ScriptRuntimeException` will be thrown if we don't clear the globals first.
-            // This is because all globals must be owned by no more than one `Script` instance.
-            WorkingScript?.Globals?.Clear();
 
             WorkingScript = new(CoreModules.Preset_SoftSandbox ^ CoreModules.Dynamic)
             {
@@ -767,7 +777,7 @@ namespace Quaver.Shared.Scripting
                     ["listen"] = Listen,
                     [nameof(BasicModule.print)] = Print,
                     ["read"] = Read,
-                    ["state"] = State,
+                    ["state"] = State = State.Clone(Warn),
                     [nameof(BasicModule.tonumber)] = ToNumber,
                     ["vector"] = typeof(LuaVectorWrapper),
                     ["vector2"] = typeof(Vector2),

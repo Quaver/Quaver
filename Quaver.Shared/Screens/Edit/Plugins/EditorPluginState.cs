@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ImGuiNET;
@@ -64,5 +65,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     Pushes all styles to the current imgui context
         /// </summary>
         public void PushImguiStyle() => ImGui.PushFont(Options.Fonts.First().Context);
+
+        /// <summary>
+        ///     Creates the deep copy of this instance.
+        /// </summary>
+        /// <returns>The deep copy of this instance.</returns>
+        public override LuaPluginState Clone(Converter<DynValue, DynValue> nonconvertible) =>
+            new EditorPluginState(Options) { IsWindowHovered = IsWindowHovered, Values = CloneValues(nonconvertible) };
     }
 }
