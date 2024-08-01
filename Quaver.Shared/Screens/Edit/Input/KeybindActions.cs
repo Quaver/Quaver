@@ -28,6 +28,8 @@ namespace Quaver.Shared.Screens.Edit.Input
         SeekBackwards1msAndSelect,
         SeekToStartOfSelection,
         SeekToEndOfSelection,
+        SeekToStartOfSelectionAndSelect,
+        SeekToEndOfSelectionAndSelect,
         SeekToStart,
         SeekToEnd,
         SeekToStartAndSelect,

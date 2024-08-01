@@ -293,6 +293,12 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SeekToEndOfSelection:
                     Screen.SeekToEndOfSelection();
                     break;
+                case KeybindActions.SeekToStartOfSelectionAndSelect:
+                    Screen.SeekToStartOfSelection(true);
+                    break;
+                case KeybindActions.SeekToEndOfSelectionAndSelect:
+                    Screen.SeekToEndOfSelection(true);
+                    break;
                 case KeybindActions.SeekToStart:
                     Screen.SeekToStart();
                     break;

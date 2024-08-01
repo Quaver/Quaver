@@ -656,16 +656,16 @@ namespace Quaver.Shared.Screens.Edit
             SeekTo(WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)), enableSelection: enableSelection);
         }
 
-        public void SeekToStartOfSelection()
+        public void SeekToStartOfSelection(bool enableSelection = false)
         {
             if (SelectedHitObjects.Value.Count == 0) return;
-            SeekTo(SelectedHitObjects.Value.Min(h => h.StartTime));
+            SeekTo(SelectedHitObjects.Value.Min(h => h.StartTime), enableSelection: enableSelection);
         }
 
-        public void SeekToEndOfSelection()
+        public void SeekToEndOfSelection(bool enableSelection = false)
         {
             if (SelectedHitObjects.Value.Count == 0) return;
-            SeekTo(SelectedHitObjects.Value.Max(h => Math.Max(h.StartTime, h.EndTime)));
+            SeekTo(SelectedHitObjects.Value.Max(h => Math.Max(h.StartTime, h.EndTime)), enableSelection: enableSelection);
         }
 
         #endregion
