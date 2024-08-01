@@ -18,13 +18,11 @@ namespace Quaver.Shared.Screens.Edit.Input
     {
         [YamlIgnore] public static string ConfigPath = ConfigManager.GameDirectory?.Value + "/editor_keys.yaml";
 
-        public bool ReverseScrollSeekDirection { get; private set; }
         public Dictionary<KeybindActions, KeybindList> Keybinds { get; private set; }
         public Dictionary<string, KeybindList> PluginKeybinds { get; private set; }
 
         public EditorInputConfig()
         {
-            ReverseScrollSeekDirection = true;
             Keybinds = DefaultKeybinds;
             PluginKeybinds = new Dictionary<string, KeybindList>();
         }
@@ -128,7 +126,6 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public void ResetConfigFile()
         {
-            ReverseScrollSeekDirection = true;
             Keybinds = DefaultKeybinds;
             PluginKeybinds = new Dictionary<string, KeybindList>();
             SaveToConfig();

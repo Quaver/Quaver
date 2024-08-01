@@ -529,9 +529,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
 
-            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
-                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
-
             ImGui.Separator();
 
             if (ImGui.BeginMenu("Waveform"))
@@ -953,6 +950,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("Keybinds"))
                 return;
+
+            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
+                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
+
+            if (ImGui.MenuItem("Invert Scrolling", "", ConfigManager.InvertEditorScrolling.Value))
+                ConfigManager.InvertEditorScrolling.Value = !ConfigManager.InvertEditorScrolling.Value;
+
+            ImGui.Separator();
 
             if (ImGui.MenuItem("Fill Missing Actions"))
             {
