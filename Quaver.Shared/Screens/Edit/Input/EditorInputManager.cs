@@ -156,11 +156,18 @@ namespace Quaver.Shared.Screens.Edit.Input
 
                     var lane = (int)(action ^ KeybindActions.SwapNoteAtLane);
                     if (uniqueKeyPresses.Contains(keybind))
+                    {
                         uniquePressLane = lane;
+                        // If two actions are uniquely pressed at the same time, both will be registered
+                        if (heldLane == -1)
+                            heldLane = uniquePressLane;
+                    }
                     else
+                    {
                         heldLane = lane;
+                    }
 
-                    if (uniquePressLane == -1 || heldLane == -1)
+                    if (uniquePressLane == -1 || heldLane == -1 || heldLane == uniquePressLane)
                         continue;
 
                     success = true;
