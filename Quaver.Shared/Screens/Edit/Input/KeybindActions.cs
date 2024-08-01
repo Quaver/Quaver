@@ -115,6 +115,17 @@ namespace Quaver.Shared.Screens.Edit.Input
         PlaceNoteAtLane7,
         PlaceNoteAtLane8,
         PlaceNoteAtLane9,
-        PlaceNoteAtLane10
+        PlaceNoteAtLane10,
+        SwapNoteAtLane = 1 << 17,
+        SwapNoteAtLane1,
+        SwapNoteAtLane2,
+        SwapNoteAtLane3,
+        SwapNoteAtLane4,
+        SwapNoteAtLane5,
+        SwapNoteAtLane6,
+        SwapNoteAtLane7,
+        SwapNoteAtLane8,
+        SwapNoteAtLane9,
+        SwapNoteAtLane10
     }
 }

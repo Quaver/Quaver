@@ -112,11 +112,12 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             var keyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
             var uniqueKeyPresses = keyState.UniqueKeyPresses(PreviousKeyState);
+            var allMatchedActions = new Dictionary<Keybind, HashSet<KeybindActions>>();
             foreach (var pressedKeybind in keyState.PressedKeybinds())
             {
-                HashSet<KeybindActions> actions;
+                if (!KeybindDictionary.TryGetValue(pressedKeybind, out var actions)) continue;
 
-                if (!KeybindDictionary.TryGetValue(pressedKeybind, out actions)) continue;
+                allMatchedActions.Add(pressedKeybind, actions);
 
                 foreach (var action in actions)
                 {
@@ -131,8 +132,48 @@ namespace Quaver.Shared.Screens.Edit.Input
                         HandleAction(action, false);
                 }
             }
+            HandleActionCombination(allMatchedActions, uniqueKeyPresses);
 
             PreviousKeyState = keyState;
+        }
+
+        private void HandleActionCombination(Dictionary<Keybind, HashSet<KeybindActions>> actions, HashSet<Keybind> uniqueKeyPresses)
+        {
+            HandleSwapLane(actions, uniqueKeyPresses);
+        }
+
+        private void HandleSwapLane(Dictionary<Keybind, HashSet<KeybindActions>> keybindActions, HashSet<Keybind> uniqueKeyPresses)
+        {
+            var heldLane = -1;
+            var uniquePressLane = -1;
+            var success = false;
+            foreach (var (keybind, actionsSet) in keybindActions)
+            {
+                foreach (var action in actionsSet)
+                {
+                    if (!action.HasFlag(KeybindActions.SwapNoteAtLane))
+                        continue;
+
+                    var lane = (int)(action ^ KeybindActions.SwapNoteAtLane);
+                    if (uniqueKeyPresses.Contains(keybind))
+                        uniquePressLane = lane;
+                    else
+                        heldLane = lane;
+
+                    if (uniquePressLane == -1 || heldLane == -1)
+                        continue;
+
+                    success = true;
+                    break;
+                }
+
+                if (success) break;
+            }
+
+            if (!success)
+                return;
+
+            Screen.SwapSelectedObjects(heldLane, uniquePressLane);
         }
 
         private void HandleKeyReleasesAfterHoldAction()
@@ -503,9 +544,21 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.PlaceNoteAtLane9:
                 case KeybindActions.PlaceNoteAtLane10:
                     var lane = (int)(action ^ KeybindActions.PlaceNoteAtLane);
-                    Screen.PlaceOrRemoveHitObjectAtCurrentTime(lane);
+                    if (lane <= Screen.WorkingMap.GetKeyCount())
+                        Screen.PlaceOrRemoveHitObjectAtCurrentTime(lane);
                     break;
                 case KeybindActions.PlaceNoteAtLane:
+                case KeybindActions.SwapNoteAtLane:
+                case KeybindActions.SwapNoteAtLane1:
+                case KeybindActions.SwapNoteAtLane2:
+                case KeybindActions.SwapNoteAtLane3:
+                case KeybindActions.SwapNoteAtLane4:
+                case KeybindActions.SwapNoteAtLane5:
+                case KeybindActions.SwapNoteAtLane6:
+                case KeybindActions.SwapNoteAtLane7:
+                case KeybindActions.SwapNoteAtLane8:
+                case KeybindActions.SwapNoteAtLane9:
+                case KeybindActions.SwapNoteAtLane10:
                 default:
                     return;
             }
