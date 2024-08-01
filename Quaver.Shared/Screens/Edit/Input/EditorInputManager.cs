@@ -591,6 +591,13 @@ namespace Quaver.Shared.Screens.Edit.Input
                 if (keybinds.IsUniquePress())
                 {
                     // Toggle plugin
+                    foreach (var plugin in Screen.Plugins)
+                    {
+                        if (plugin.Name != pluginName)
+                            continue;
+
+                        Screen.TogglePlugin(plugin);
+                    }
                 }
             }
         }

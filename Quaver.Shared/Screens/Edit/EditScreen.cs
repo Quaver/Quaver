@@ -825,12 +825,12 @@ namespace Quaver.Shared.Screens.Edit
             TogglePlugin(BuiltInPlugins[plugin]);
         }
 
-        public void TogglePlugin(IEditorPlugin timingPointPlugin)
+        public void TogglePlugin(IEditorPlugin plugin)
         {
-            timingPointPlugin.IsActive = !timingPointPlugin.IsActive;
+            plugin.IsActive = !plugin.IsActive;
 
-            if (timingPointPlugin.IsActive)
-                timingPointPlugin.Initialize();
+            if (plugin.IsActive)
+                plugin.Initialize();
         }
 
         #endregion
