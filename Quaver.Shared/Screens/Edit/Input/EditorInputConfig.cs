@@ -44,7 +44,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             {
                 using (var file = File.OpenText(ConfigPath))
                     config = Deserialize(file);
-                config.FillMissingKeys(true);
                 Logger.Debug("Loaded editor key config", LogType.Runtime);
                 config.SaveToConfig(); // Reformat after loading
             }
@@ -104,7 +103,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
         }
 
-        public void FillMissingKeys(bool fillWithDefaultBinds)
+        public int FillMissingKeys(bool fillWithDefaultBinds)
         {
             var count = 0;
 
@@ -123,6 +122,8 @@ namespace Quaver.Shared.Screens.Edit.Input
                 SaveToConfig();
                 Logger.Debug($"Filled {count} missing action keybinds in key config file", LogType.Runtime);
             }
+
+            return count;
         }
 
         public void ResetConfigFile()

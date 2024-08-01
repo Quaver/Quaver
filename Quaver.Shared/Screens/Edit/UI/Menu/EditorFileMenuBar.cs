@@ -9,6 +9,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
@@ -85,6 +86,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             CreateWebSection();
             CreateToolsSection();
             CreatePluginsSection();
+            CreateKeybindsSection();
             CreateHelpSection();
 
             ImGui.EndMenuBar();
@@ -938,6 +940,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     Screen.MetronomePlayHalfBeats.Value = !Screen.MetronomePlayHalfBeats.Value;
 
                 ImGui.EndMenu();
+            }
+
+            ImGui.EndMenu();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateKeybindsSection()
+        {
+            ImGui.PushFont(Options.Fonts.First().Context);
+
+            if (!ImGui.BeginMenu("Keybinds"))
+                return;
+
+            if (ImGui.MenuItem("Fill Missing Actions"))
+            {
+                var filledCount = Screen.InputManager.InputConfig.FillMissingKeys(true);
+                NotificationManager.Show(NotificationLevel.Info, $"Filled {filledCount} missing actions!");
+            }
+
+            if (ImGui.MenuItem("Reset All Keybinds"))
+            {
+                DialogManager.Show(new YesNoDialog($"RESET ALL KEYBINDS", $"Are you sure you want to reset all keybinds?",
+                    () =>
+                    {
+                        Screen.InputManager.InputConfig.ResetConfigFile();
+                        NotificationManager.Show(NotificationLevel.Info, $"All keybinds have been reset!");
+                    }));
             }
 
             ImGui.EndMenu();
