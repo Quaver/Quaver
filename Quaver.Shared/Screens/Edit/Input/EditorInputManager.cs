@@ -155,6 +155,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                         continue;
 
                     var lane = (int)(action ^ KeybindActions.SwapNoteAtLane);
+                    if (lane > Screen.WorkingMap.GetKeyCount())
+                        continue;
+
                     if (uniqueKeyPresses.Contains(keybind))
                     {
                         uniquePressLane = lane;
