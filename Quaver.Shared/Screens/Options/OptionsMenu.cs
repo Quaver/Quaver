@@ -225,7 +225,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsSlider(containerRect, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
                         new OptionsItemCheckbox(containerRect, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                         new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
-                        new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                        new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover),
+                        new OptionsItemCheckbox(containerRect, "Display Receptors Over Lane Covers", ConfigManager.ReceptorsOverLaneCover)
                     })
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
@@ -447,6 +448,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Warning For Failing", ConfigManager.DisplayFailWarning),
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
+                        new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport)
                     }),
                 }),
             };

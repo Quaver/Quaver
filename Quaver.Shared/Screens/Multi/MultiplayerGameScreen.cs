@@ -17,6 +17,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Multi.UI.Dialogs;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
@@ -248,7 +249,7 @@ namespace Quaver.Shared.Screens.Multi
                     ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
                 else
                 {
-                    Exit(() => new MultiplayerLobbyScreen());
+                    DialogManager.Show(new ConfirmExitToLobby(this));
                     return;
                 }
             }

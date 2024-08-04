@@ -1603,7 +1603,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (!InReplayMode)
                 {
                     inputManager.ReplayInputManager = null;
-                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
+                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
 
                     for (var i = 0; i < Map.GetKeyCount(); i++)
                     {
