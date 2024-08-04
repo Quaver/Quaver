@@ -75,6 +75,17 @@ namespace Quaver.Shared.Graphics.Graphs
         /// </summary>
         protected List<Sprite> Bars { get; set; }
 
+        /// <summary>
+        ///     When the timer reaches <see cref="RecreateBarsTimeout"/>, <see cref="CreateBars"/> will be called.
+        ///     (Debouncing)
+        /// </summary>
+        private TimeSpan recreateBarsTimer = TimeSpan.MaxValue;
+
+        /// <summary>
+        ///     The duration that needs to be passed before <see cref="CreateBars"/> is called.
+        /// </summary>
+        private static readonly TimeSpan RecreateBarsTimeout = TimeSpan.FromMilliseconds(200);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -135,6 +146,16 @@ namespace Quaver.Shared.Graphics.Graphs
             if (SeekBarLine != null)
                 SeekBarLine.Y = Height - (float) (Track.Time  / Track.Length) * Height;
 
+            if (recreateBarsTimer != TimeSpan.MaxValue)
+            {
+                recreateBarsTimer += gameTime.ElapsedGameTime;
+                if (recreateBarsTimer > RecreateBarsTimeout)
+                {
+                    AddScheduledUpdate(CreateBars);
+                    recreateBarsTimer = TimeSpan.MaxValue;
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -145,6 +166,14 @@ namespace Quaver.Shared.Graphics.Graphs
         {
             AudioSeeked = null;
             base.Destroy();
+        }
+
+        /// <summary>
+        ///     Resets the timer to 0 so <see cref="CreateBars"/> will start debouncing
+        /// </summary>
+        protected void ScheduleCreateBars()
+        {
+            recreateBarsTimer = TimeSpan.Zero;
         }
 
         /// <summary>
