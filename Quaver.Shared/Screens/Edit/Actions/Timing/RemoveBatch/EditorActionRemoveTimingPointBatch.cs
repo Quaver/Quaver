@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch
 
         private Qua WorkingMap { get; }
 
-        private List<TimingPointInfo> TimingPoints { get; }
+        public List<TimingPointInfo> TimingPoints { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionRemoveTimingPointBatch(EditorActionManager manager, Qua workingMap, List<TimingPointInfo> tps)

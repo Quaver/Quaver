@@ -14,11 +14,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Rename
 
         private Qua WorkingMap { get; }
 
-        private EditorLayerInfo Layer { get; }
+        public EditorLayerInfo Layer { get; }
 
-        private string Name { get; }
+        public string Name { get; }
 
-        private string Previous { get; set; }
+        public string Previous { get; set; }
 
         [MoonSharpVisible(false)]
         public EditorActionRenameLayer(EditorActionManager manager, Qua map, EditorLayerInfo layer, string name)

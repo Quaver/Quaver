@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.AddBatch
 
         private Qua WorkingMap { get; }
 
-        private List<SliderVelocityInfo> ScrollVelocities { get; }
+        public List<SliderVelocityInfo> ScrollVelocities { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddScrollVelocityBatch(EditorActionManager manager, Qua workingMap, List<SliderVelocityInfo> svs)

@@ -20,16 +20,16 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Remove
 
         private Qua WorkingMap { get; }
 
-        private EditorLayerInfo Layer { get; }
+        public EditorLayerInfo Layer { get; }
 
         /// <summary>
         ///     The list of objects that existed in this layer
         /// </summary>
-        private List<HitObjectInfo> HitObjectsInLayer { get; set; }
+        public List<HitObjectInfo> HitObjectsInLayer { get; set; }
 
-        private BindableList<HitObjectInfo> SelectedHitObjects { get; }
+        public BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
-        private int Index { get; set; }
+        public int Index { get; set; }
 
         /// <summary>
         /// </summary>

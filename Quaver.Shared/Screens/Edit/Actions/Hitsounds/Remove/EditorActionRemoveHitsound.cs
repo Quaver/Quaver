@@ -18,11 +18,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         /// </summary>
-        private HitSounds Sound { get; }
+        public HitSounds Sound { get; }
 
         /// <summary>
         /// </summary>

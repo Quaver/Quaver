@@ -16,11 +16,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Colors
 
         private Qua WorkingMap { get; }
 
-        private EditorLayerInfo Layer { get; }
+        public EditorLayerInfo Layer { get; }
 
-        private Color NewColor { get; }
+        public Color NewColor { get; }
 
-        private Color OriginalColor { get; }
+        public Color OriginalColor { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeLayerColor(EditorActionManager manager, Qua workingMap, EditorLayerInfo layer, Color color)

@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.Add
 
         private Qua WorkingMap { get; }
 
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddTimingPoint(EditorActionManager manager, Qua workingMap, TimingPointInfo tp)
