@@ -107,7 +107,7 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.CustomFpsLimit.Value > MaximumCustomFps)
             {
                 Container.ScheduleUpdate(() =>
-                    ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, MaximumCustomFps)
+                    ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Unlimited, MaximumCustomFps)
                 );
             }
 
