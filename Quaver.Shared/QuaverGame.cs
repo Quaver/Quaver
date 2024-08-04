@@ -536,11 +536,15 @@ namespace Quaver.Shared
         private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
 
         /// <summary>
-        ///    Handles limiting/unlimiting FPS based on user config
+        ///     Uses a custom fps config
         /// </summary>
-        public void InitializeFpsLimiting()
+        /// <param name="fpsLimitType"></param>
+        /// <param name="customFpsLimit"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
-            switch (ConfigManager.FpsLimiterType.Value)
+            
+            switch (fpsLimitType)
             {
                 case FpsLimitType.Unlimited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
@@ -565,15 +569,22 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Custom:
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    TargetElapsedTime = TimeSpan.FromSeconds(1d / ConfigManager.CustomFpsLimit.Value);
+                    TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
                     IsFixedTimeStep = true;
                     WaylandVsync = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
             Graphics.ApplyChanges();
+        }
+
+        /// <summary>
+        ///    Handles limiting/unlimiting FPS based on user config
+        /// </summary>
+        public void InitializeFpsLimiting()
+        {
+            SetFps(ConfigManager.FpsLimiterType.Value, ConfigManager.CustomFpsLimit.Value);
         }
 
         /// <summary>
