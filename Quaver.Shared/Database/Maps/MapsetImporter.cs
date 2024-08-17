@@ -468,17 +468,9 @@ namespace Quaver.Shared.Database.Maps
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
 
-                    var info = OnlineManager.Client?.RetrieveMapInfo(map.MapId);
-
-                    if (info != null)
-                    {
-                        map.RankedStatus = info.Map.RankedStatus;
-                        map.DateLastUpdated = info.Map.DateLastUpdated;
-                        map.OnlineOffset = info.Map.OnlineOffset;
-                    }
-
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map);
+                    MapsetInfoRetriever.Enqueue(map);
                     lastImported = map;
                 }
             }
