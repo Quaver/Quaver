@@ -362,7 +362,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             foreach (var player in Players)
             {
                 var settings = player == Players.First() ? Player1WinCountSettings : Player2WinCountSettings;
-                WinCounts.Add(new TournamentPlayerWinCount(Game, player, settings) {Parent = this});
+                WinCounts.Add(new TournamentPlayerWinCount(Game, player, settings) { Parent = this });
             }
         }
 
@@ -371,7 +371,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             foreach (var player in Players)
             {
                 var settings = player == Players.First() ? Player1AccuracySettings : Player2AccuracySettings;
-                new TournamentPlayerAccuracy(settings, player, Players) {Parent = this};
+                new TournamentPlayerAccuracy(settings, player, Players) { Parent = this };
             }
         }
 
@@ -380,7 +380,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             foreach (var player in Players)
             {
                 var settings = player == Players.First() ? Player1RatingSettings : Player2RatingSettings;
-                new TournamentPlayerRating(settings, player, Players) {Parent = this};
+                new TournamentPlayerRating(settings, player, Players) { Parent = this };
             }
         }
 
@@ -389,7 +389,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             foreach (var player in Players)
             {
                 var settings = player == Players.First() ? Player1ModifierSettings : Player2ModifierSettings;
-                new TournamentPlayerModifiers(settings, player) {Parent = this};
+                new TournamentPlayerModifiers(settings, player) { Parent = this };
             }
         }
 
@@ -405,14 +405,14 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         }
 
         // ReSharper disable twice ObjectCreationAsStatement
-        private void CreateDifficultyNameSettings() => new TournamentDifficultyName(Qua, DifficultyNameSettings, Players) {Parent = this};
+        private void CreateDifficultyNameSettings() => new TournamentDifficultyName(Qua, DifficultyNameSettings, Players) { Parent = this };
         private void CreateSongArtistAndTitle() => SongTitle = new TournamentSongArtistAndTitle(Qua, SongTitleSettings) { Parent = this };
-        private void CreateSongLength() => new TournamentSongLength(Qua, SongLengthSettings) {Parent = this};
-        private void CreateSongBpm() => new TournamentBpm(Qua, SongBpmSettings) {Parent = this};
-        private void CreateDifficultyRating() => new TournamentDifficultyRating(Qua, DifficultyRatingSettings, Players) {Parent = this};
-        private void CreateMapCreator() => new TournamentMapCreator(Qua, MapCreatorSettings) {Parent = this};
-        private void CreateMatchRound() => new TournamentCustomText(MatchRoundSettings) {Parent = this};
-        private void CreateBestOf() => new TournamentCustomText(BestOfSettings) {Parent = this};
+        private void CreateSongLength() => new TournamentSongLength(Qua, SongLengthSettings) { Parent = this };
+        private void CreateSongBpm() => new TournamentBpm(Qua, SongBpmSettings) { Parent = this };
+        private void CreateDifficultyRating() => new TournamentDifficultyRating(Qua, DifficultyRatingSettings, Players) { Parent = this };
+        private void CreateMapCreator() => new TournamentMapCreator(Qua, MapCreatorSettings) { Parent = this };
+        private void CreateMatchRound() => new TournamentCustomText(MatchRoundSettings) { Parent = this };
+        private void CreateBestOf() => new TournamentCustomText(BestOfSettings) { Parent = this };
         private void CreateBanner() => new TournamentMapBanner(BannerSettings, new ScalableVector2(300, 200)) { Parent = this };
     }
 }

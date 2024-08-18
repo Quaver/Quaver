@@ -106,10 +106,10 @@ namespace Quaver.Shared.Screens.Editor.Timing
             // This can depend on if the user wants 8 beats or 4.
             var totalBeats = (time - point.StartTime) / (point.MillisecondsPerBeat / (PlayHalfBeats.Value ? 2 : 1));
 
-            CurrentTotalBeats = (int) Math.Floor(totalBeats);
+            CurrentTotalBeats = (int)Math.Floor(totalBeats);
 
-            var signature = point.Signature != 0 ? Math.Abs((int) point.Signature) : 4;
-            CurrentBeat = (int) totalBeats % signature;
+            var signature = point.Signature != 0 ? Math.Abs((int)point.Signature) : 4;
+            CurrentBeat = (int)totalBeats % signature;
 
             // Play samples
             if (CurrentTotalBeats == 0 && LastTotalBeats < 0 || CurrentBeat != LastBeat)

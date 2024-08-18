@@ -109,7 +109,7 @@ namespace Quaver.Shared.Graphics.Graphs
             AlignRightToLeft = alignRightToLeft;
             BarWidthScale = barWidthScale;
 
-            Processor = (DifficultyProcessorKeys) Map.SolveDifficulty(Mods);
+            Processor = (DifficultyProcessorKeys)Map.SolveDifficulty(Mods);
 
             Track = track ?? AudioEngine.Track ?? new AudioTrackVirtual(Map.Length + 5000);
 
@@ -144,7 +144,7 @@ namespace Quaver.Shared.Graphics.Graphs
             }
 
             if (SeekBarLine != null)
-                SeekBarLine.Y = Height - (float) (Track.Time  / Track.Length) * Height;
+                SeekBarLine.Y = Height - (float)(Track.Time / Track.Length) * Height;
 
             if (recreateBarsTimer != TimeSpan.MaxValue)
             {
@@ -187,7 +187,7 @@ namespace Quaver.Shared.Graphics.Graphs
                 return;
 
             var rate = ModHelper.GetRateFromMods(Mods);
-            var sampleTime = (int) Math.Ceiling(Track.Length / rate / MaxBars);
+            var sampleTime = (int)Math.Ceiling(Track.Length / rate / MaxBars);
             var regularLength = Track.Length / rate;
             var diff = (DifficultyProcessorKeys)Map.SolveDifficulty(Mods);
 
@@ -196,7 +196,7 @@ namespace Quaver.Shared.Graphics.Graphs
             for (var time = 0; time < regularLength; time += sampleTime)
             {
                 var valuesInBin = diff.StrainSolverData.Where(s => s.StartTime >= time && s.StartTime < time + sampleTime);
-                var pos = (float) (time / regularLength);
+                var pos = (float)(time / regularLength);
                 bins.Add((pos, valuesInBin.ToList()));
             }
 
@@ -220,7 +220,7 @@ namespace Quaver.Shared.Graphics.Graphs
                     {
                         Parent = this,
                         Alignment = AlignRightToLeft ? Alignment.BotRight : Alignment.BotLeft,
-                        Size = new ScalableVector2((int) (width * BarWidthScale), BarSize),
+                        Size = new ScalableVector2((int)(width * BarWidthScale), BarSize),
                         Y = -Height * pos - 2,
                         Tint = ColorHelper.DifficultyToColor(rating)
                     };
@@ -239,7 +239,7 @@ namespace Quaver.Shared.Graphics.Graphs
             Parent = this,
             Size = new ScalableVector2(Width, 4),
             Tint = Color.White,
-            Y = (float) (Track.Time / Track.Length) * Height
+            Y = (float)(Track.Time / Track.Length) * Height
         };
 
         /// <summary>
@@ -247,10 +247,10 @@ namespace Quaver.Shared.Graphics.Graphs
         /// </summary>
         private void SeekToPos(double targetPos)
         {
-            if(Track.IsDisposed)
+            if (Track.IsDisposed)
                 return;
 
-            if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= Track.Length)
+            if ((int)targetPos != (int)Track.Time && targetPos >= 0 && targetPos <= Track.Length)
             {
                 if (Math.Abs(Track.Time - targetPos) < 500)
                     return;

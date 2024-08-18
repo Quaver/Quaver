@@ -128,7 +128,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
             return layer;
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="startTime"></param>
@@ -207,11 +207,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     return new EditorActionChangeScrollVelocityMultiplierBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<SliderVelocityInfo>>(), args[1].ToObject<float>());
                 case EditorActionType.AddBookmark:
-                    return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>()); 
+                    return new EditorActionAddBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>());
                 case EditorActionType.RemoveBookmark:
                     return new EditorActionRemoveBookmark(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<BookmarkInfo>());
                 case EditorActionType.AddBookmarkBatch:
-                    return new EditorActionAddBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>()); 
+                    return new EditorActionAddBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>());
                 case EditorActionType.RemoveBookmarkBatch:
                     return new EditorActionRemoveBookmarkBatch(EditScreen.ActionManager, EditScreen.WorkingMap, args[0].ToObject<List<BookmarkInfo>>());
                 case EditorActionType.EditBookmark:

@@ -83,7 +83,7 @@ namespace Quaver.Shared.Graphics.Notifications
             Button.Size = new ScalableVector2(Width - Border.Thickness * 2, Height - Border.Thickness * 2);
             Button.Alpha = Button.IsHovered ? 0.35f : 0;
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (Container != null)
                 Button.IsClickable = game.OnlineHub.SelectedSection == game.OnlineHub.Sections[OnlineHubSectionType.Notifications];
@@ -144,7 +144,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
                 if (Container != null)
                 {
-                    var container = (NotificationScrollContainer) Container;
+                    var container = (NotificationScrollContainer)Container;
                     container.Remove(Item, false);
                 }
             })

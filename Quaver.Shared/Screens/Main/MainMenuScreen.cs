@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Main
             OriginalAutoLoadOsuBeatmapsValue = ConfigManager.AutoLoadOsuBeatmaps.Value;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             TheaterCheat = new CheatCodeTheater();
-            
+
             View = new MainMenuScreenView(this);
         }
 
@@ -273,8 +273,8 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus()
-            => new UserClientStatus(ClientStatus.InMenus, -1, "", (byte) ConfigManager.SelectedGameMode.Value,
-                "", (long) ModManager.Mods);
+            => new UserClientStatus(ClientStatus.InMenus, -1, "", (byte)ConfigManager.SelectedGameMode.Value,
+                "", (long)ModManager.Mods);
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>

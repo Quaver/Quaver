@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Music.Components
         /// </summary>
         public void SelectNextTrack(Direction direction)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (AvailableSongs.Value.Count == 0 || game.CurrentScreen != null && game.CurrentScreen.Exiting)
                 return;

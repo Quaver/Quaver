@@ -12,7 +12,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
 {
     public class LegalAcceptanceDialog : YesNoDialog
     {
-        private ScrollContainer Container { get; set;}
+        private ScrollContainer Container { get; set; }
 
         public LegalAcceptanceDialog(string header, string name, APIRequest<string> request) : base(header,
             $"By clicking \"Accept\", You acknowledge that you have read and agree to the\n{name}.")

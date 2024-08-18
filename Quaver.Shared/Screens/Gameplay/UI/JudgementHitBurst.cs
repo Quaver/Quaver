@@ -162,7 +162,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             // Tween the position if need be
             if (bumpTimer.State == TimerState.Completed)
             {
-                Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(dt / 240, 1));
+                Alpha = MathHelper.Lerp(Alpha, 0, (float)Math.Min(dt / 240, 1));
 
                 if (Alpha <= 0)
                     IsAnimatingWithOneFrame = false;

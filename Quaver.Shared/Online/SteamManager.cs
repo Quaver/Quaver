@@ -101,7 +101,7 @@ namespace Quaver.Shared.Online
             File.WriteAllText($"{Directory.GetCurrentDirectory()}/steam_appid.txt", ApplicationId.ToString());
 #endif
             // Make sure the game is started with Steam.
-            if (SteamAPI.RestartAppIfNecessary((AppId_t) ApplicationId))
+            if (SteamAPI.RestartAppIfNecessary((AppId_t)ApplicationId))
                 Environment.Exit(0);
 
             IsInitialized = SteamAPI.Init();
@@ -258,7 +258,7 @@ namespace Quaver.Shared.Online
 
             var publishedFileId = result.m_nPublishedFileId;
 
-            SteamWorkshopItem.Current.Handle = SteamUGC.StartItemUpdate((AppId_t) ApplicationId, publishedFileId);
+            SteamWorkshopItem.Current.Handle = SteamUGC.StartItemUpdate((AppId_t)ApplicationId, publishedFileId);
 
             // Write a file with the workshop id
             File.WriteAllText(SteamWorkshopItem.Current.WorkshopIdFilePath, result.m_nPublishedFileId.m_PublishedFileId.ToString());
@@ -273,13 +273,13 @@ namespace Quaver.Shared.Online
                 SteamUGC.SetItemPreview(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.PreviewFilePath);
 
             SteamUGC.SetItemContent(SteamWorkshopItem.Current.Handle, SteamWorkshopItem.Current.FolderPath);
-            
-            var tagUpdate = false; 
-            
+
+            var tagUpdate = false;
+
             if (File.Exists($"{SteamWorkshopItem.Current.FolderPath}/skin.ini"))
-                tagUpdate = SteamUGC.SetItemTags(SteamWorkshopItem.Current.Handle, new List<string> {"Skins"});
+                tagUpdate = SteamUGC.SetItemTags(SteamWorkshopItem.Current.Handle, new List<string> { "Skins" });
             else if (File.Exists($"{SteamWorkshopItem.Current.FolderPath}/settings.ini"))
-                tagUpdate = SteamUGC.SetItemTags(SteamWorkshopItem.Current.Handle, new List<string> {"Plugins"});
+                tagUpdate = SteamUGC.SetItemTags(SteamWorkshopItem.Current.Handle, new List<string> { "Plugins" });
 
             if (!tagUpdate)
                 NotificationManager.Show(NotificationLevel.Error, $"Failed to update tags for the workshop item. Please report this!");
@@ -387,7 +387,7 @@ namespace Quaver.Shared.Online
             {
                 var numSubscribed = SteamUGC.GetNumSubscribedItems();
 
-                PublishedFileId_t[] fileIds = {};
+                PublishedFileId_t[] fileIds = { };
                 var entries = SteamUGC.GetSubscribedItems(fileIds, 1);
 
                 Logger.Important($"Found {fileIds.Length} subscribed workshop items | # of subscribed: " +

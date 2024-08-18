@@ -91,38 +91,38 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         private static void PostMapQueue()
         {
-             var game = GameBase.Game as QuaverGame;
-             var screen = game.CurrentScreen;
+            var game = GameBase.Game as QuaverGame;
+            var screen = game.CurrentScreen;
 
-             if (screen.Exiting)
-                 return;
+            if (screen.Exiting)
+                return;
 
-             if (screen.Type == QuaverScreenType.Select)
-             {
-                 if (OnlineManager.CurrentGame != null)
-                 {
-                     var select = game.CurrentScreen as SelectionScreen;
-                     screen.Exit(() => new ImportingScreen(null, true));
-                     return;
-                 }
+            if (screen.Type == QuaverScreenType.Select)
+            {
+                if (OnlineManager.CurrentGame != null)
+                {
+                    var select = game.CurrentScreen as SelectionScreen;
+                    screen.Exit(() => new ImportingScreen(null, true));
+                    return;
+                }
 
-                 screen.Exit(() => new ImportingScreen());
-                 return;
-             }
+                screen.Exit(() => new ImportingScreen());
+                return;
+            }
 
-             if (screen.Type == QuaverScreenType.Music)
-             {
-                 screen.Exit(() => new ImportingScreen());
-                 return;
-             }
+            if (screen.Type == QuaverScreenType.Music)
+            {
+                screen.Exit(() => new ImportingScreen());
+                return;
+            }
 
-             if (screen.Type == QuaverScreenType.Multiplayer)
-             {
-                 var multi = (MultiplayerGameScreen)screen;
-                 multi.DontLeaveGameUponScreenSwitch = true;
+            if (screen.Type == QuaverScreenType.Multiplayer)
+            {
+                var multi = (MultiplayerGameScreen)screen;
+                multi.DontLeaveGameUponScreenSwitch = true;
 
-                 screen.Exit(() => new ImportingScreen());
-             }
+                screen.Exit(() => new ImportingScreen());
+            }
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Quaver.Shared.Database.Maps
                     Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
-            // Skins
+                // Skins
             }
             else if (path.EndsWith(".qs"))
             {
@@ -408,7 +408,7 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="extractPath"></param>
         private static void ExtractQuaverMapset(string fileName, string extractPath)
         {
-            var options = new ExtractionOptions {ExtractFullPath = true, Overwrite = true};
+            var options = new ExtractionOptions { ExtractFullPath = true, Overwrite = true };
 
             using (var archive = ArchiveFactory.Open(fileName))
             {

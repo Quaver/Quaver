@@ -109,7 +109,7 @@ namespace Quaver.Shared.Graphics.Overlays.Toolbar
             // Change the size of the line based on if it's hovered/already selected.
             if (IsHovered)
             {
-                BottomLine.Width = MathHelper.Lerp(BottomLine.Width, Width, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 60f, 1));
+                BottomLine.Width = MathHelper.Lerp(BottomLine.Width, Width, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 60f, 1));
                 Alpha = 0.05f;
 
                 // Make sure the hover sound only plays one time.

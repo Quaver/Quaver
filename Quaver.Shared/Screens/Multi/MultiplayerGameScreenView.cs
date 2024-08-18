@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Multi
     {
         /// <summary>
         /// </summary>
-        private MultiplayerGameScreen GameScreen => (MultiplayerGameScreen) Screen;
+        private MultiplayerGameScreen GameScreen => (MultiplayerGameScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Multi
         public MultiplayerGameScreenView(Screen screen) : base(screen)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new SelectJukebox(GameScreen, true) {Parent = Container};
+            new SelectJukebox(GameScreen, true) { Parent = Container };
 
             CreateBackground();
             CreateHeader();
@@ -140,7 +140,7 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new MenuHeaderMain {Parent = Container};
+        private void CreateHeader() => Header = new MenuHeaderMain { Parent = Container };
 
         /// <summary>
         /// </summary>
@@ -214,7 +214,7 @@ namespace Quaver.Shared.Screens.Multi
         private void CreateMapPreview()
         {
             MapPreview = new SelectMapPreviewContainer(GameScreen.IsPlayTestingInPreview, GameScreen.ActiveLeftPanel,
-                (int) (WindowManager.Height - MenuBorder.HEIGHT * 2 - StatusPanel.Height))
+                (int)(WindowManager.Height - MenuBorder.HEIGHT * 2 - StatusPanel.Height))
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,

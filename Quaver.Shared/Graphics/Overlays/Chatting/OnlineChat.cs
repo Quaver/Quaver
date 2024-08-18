@@ -122,7 +122,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         public void Close()
         {
             ClearAnimations();
-            MoveToY((int) Height + 10, Easing.OutQuint, 500);
+            MoveToY((int)Height + 10, Easing.OutQuint, 500);
             IsOpen = false;
         }
 
@@ -169,7 +169,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// <summary>
         /// </summary>
         private void CreateChatChannelList()
-            => ChannelList = new ChatChannelList(ActiveChannel, new ScalableVector2(250, Height)) {Parent = this};
+            => ChannelList = new ChatChannelList(ActiveChannel, new ScalableVector2(250, Height)) { Parent = this };
 
         /// <summary>
         /// </summary>
@@ -311,7 +311,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
 
             foreach (var message in channel.Messages)
             {
-                var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) message.Time);
+                var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)message.Time);
                 var time = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";
 
                 messageStr.AppendLine($"[{time}] {message.SenderName}: {message.Message}");

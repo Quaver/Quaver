@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Theater
         /// </summary>
         public override void Destroy()
         {
-            var screen = (TheaterScreen) Screen;
+            var screen = (TheaterScreen)Screen;
             screen.ReplayLoaded -= OnReplayLoaded;
 
             Container?.Destroy();
@@ -85,11 +85,11 @@ namespace Quaver.Shared.Screens.Theater
         /// <summary>
         /// </summary>
         private void CreateBackground() => Background = new BackgroundImage(UserInterface.Triangles, 0, false)
-            {Parent = Container};
+        { Parent = Container };
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new MenuHeaderMain {Parent = Container};
+        private void CreateHeader() => Header = new MenuHeaderMain { Parent = Container };
 
         /// <summary>
         /// </summary>

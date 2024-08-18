@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Download
         public MapsetDownload(JToken mapset, string artist, string title, bool download = true)
         {
             Mapset = mapset;
-            MapsetId = (int) Mapset["id"];
+            MapsetId = (int)Mapset["id"];
 
             Artist = artist;
             Title = title;

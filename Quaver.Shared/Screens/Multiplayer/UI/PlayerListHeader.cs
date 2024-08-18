@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 else
                 {
                     var targetTime = OnlineManager.CurrentGame.CountdownStartTime + 5000;
-                    var timeLeft = (int) ((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - targetTime) / 1000);
+                    var timeLeft = (int)((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - targetTime) / 1000);
 
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (LastNearestSecond != timeLeft)
