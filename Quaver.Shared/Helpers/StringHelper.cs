@@ -61,9 +61,9 @@ namespace Quaver.Shared.Helpers
         /// <returns></returns>
         public static string AddOrdinal(int num)
         {
-            if( num <= 0 ) return num.ToString();
+            if (num <= 0) return num.ToString();
 
-            switch(num % 100)
+            switch (num % 100)
             {
                 case 11:
                 case 12:
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Helpers
                     return num + "th";
             }
 
-            switch(num % 10)
+            switch (num % 10)
             {
                 case 1:
                     return num + "st";
@@ -84,7 +84,7 @@ namespace Quaver.Shared.Helpers
             }
 
         }
-        
+
         /// <summary>
         ///     Checks whether the candidate is a subdirectory of the other, recursively.
         ///     Adapted from https://stackoverflow.com/a/23354773/23723435

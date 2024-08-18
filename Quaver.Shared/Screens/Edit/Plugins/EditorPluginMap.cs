@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     The non-default editor layers that are currently in the map
         /// </summary>
         public List<EditorLayerInfo> EditorLayers { get; [MoonSharpVisible(false)] set; }
-        
+
         /// <summary>
         ///     The bookmarks that are currently in the map
         /// </summary>

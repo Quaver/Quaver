@@ -429,7 +429,7 @@ namespace Quaver.Shared.Screens.Results
             // Local offset is scaled with rate, so the adjustment depends on the rate the
             // score was played on.
             var change = stats.Mean * ModHelper.GetRateFromMods(Processor.Value.Mods);
-            var newOffset = (int) Math.Round(Map.LocalOffset - change);
+            var newOffset = (int)Math.Round(Map.LocalOffset - change);
 
             var dialog = new YesNoDialog("FIX LOCAL OFFSET",
                 $"Your local offset for this map will be changed from {Map.LocalOffset} ms to {newOffset} ms.", () =>
@@ -475,7 +475,7 @@ namespace Quaver.Shared.Screens.Results
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
                 return;
 
-            var index = (int) ActiveTab.Value;
+            var index = (int)ActiveTab.Value;
             var length = Enum.GetNames(typeof(ResultsScreenTabType)).Length;
 
             int newIndex;
@@ -494,7 +494,7 @@ namespace Quaver.Shared.Screens.Results
                     newIndex = 0;
             }
 
-            var val = (ResultsScreenTabType) newIndex;
+            var val = (ResultsScreenTabType)newIndex;
 
             if (val == ResultsScreenTabType.Multiplayer && MultiplayerGame == null)
                 return;
@@ -566,7 +566,7 @@ namespace Quaver.Shared.Screens.Results
                 }
             };
 
-            var inputManager = (KeysInputManager) screen.Ruleset.InputManager;
+            var inputManager = (KeysInputManager)screen.Ruleset.InputManager;
 
             if (screen.InReplayMode)
             {
@@ -628,7 +628,7 @@ namespace Quaver.Shared.Screens.Results
                         var replay = new Replay(path);
 
                         var qua = MapManager.Selected.Value.LoadQua();
-                        qua.ApplyMods((ModIdentifier) Score.Mods);
+                        qua.ApplyMods((ModIdentifier)Score.Mods);
                         if (replay.Mods.HasFlag(ModIdentifier.Randomize))
                         {
                             qua.RandomizeLanes(replay.RandomizeModifierSeed);
@@ -638,7 +638,7 @@ namespace Quaver.Shared.Screens.Results
                         virtualPlayer.PlayAllFrames();
 
                         Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
-                        Processor.Value.StandardizedProcessor = new ScoreProcessorKeys(qua, (ModIdentifier) Score.Mods) { Accuracy = (float) Score.RankedAccuracy };
+                        Processor.Value.StandardizedProcessor = new ScoreProcessorKeys(qua, (ModIdentifier)Score.Mods) { Accuracy = (float)Score.RankedAccuracy };
 
                         Replay = replay;
                     }

@@ -23,7 +23,7 @@ namespace Quaver.Shared.Helpers
         public static double StandardDeviation(this IEnumerable<double> values)
         {
             var avg = values.Average();
-            return Math.Sqrt(values.Average(v=>Math.Pow(v-avg,2)));
+            return Math.Sqrt(values.Average(v => Math.Pow(v - avg, 2)));
         }
 
         public static IEnumerable<TSource> DistinctionBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)

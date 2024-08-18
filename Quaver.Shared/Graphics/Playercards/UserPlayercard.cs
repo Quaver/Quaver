@@ -270,7 +270,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Key = {UsePreviousSpriteBatchOptions = true},
+                Key = { UsePreviousSpriteBatchOptions = true },
                 Value =
                 {
                     Parent = this,
@@ -293,7 +293,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Key = {UsePreviousSpriteBatchOptions = true},
+                Key = { UsePreviousSpriteBatchOptions = true },
                 Value =
                 {
                     Parent = this,
@@ -316,7 +316,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Key = {UsePreviousSpriteBatchOptions = true},
+                Key = { UsePreviousSpriteBatchOptions = true },
                 Value =
                 {
                     Parent = this,
@@ -337,8 +337,8 @@ namespace Quaver.Shared.Graphics.Playercards
         {
             Avatar.Image = UserInterface.UnknownAvatar;
 
-            if (User != null && SteamManager.UserAvatars != null && SteamManager.UserAvatars.ContainsKey((ulong) User.OnlineUser.SteamId))
-                Avatar.Image = SteamManager.UserAvatars[(ulong) User.OnlineUser.SteamId];
+            if (User != null && SteamManager.UserAvatars != null && SteamManager.UserAvatars.ContainsKey((ulong)User.OnlineUser.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong)User.OnlineUser.SteamId];
 
             Avatar.Border.Tint = Colors.GetUserChatColor(User?.OnlineUser?.UserGroups ?? UserGroups.Normal);
 
@@ -346,7 +346,7 @@ namespace Quaver.Shared.Graphics.Playercards
 
             Username.Text = User?.OnlineUser?.Username ?? "Player";
             Username.Tint = Avatar.Border.Tint;
-            Username.TruncateWithEllipsis((int) Width - 30);
+            Username.TruncateWithEllipsis((int)Width - 30);
 
             Status.Text = GetStatusText();
             ModeButton.Image = GetModeImage();
@@ -355,7 +355,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 GlobalRanking.Value.Text = $"#{User.Stats[ActiveMode].Rank:n0}";
                 OverallRating.Value.Text = StringHelper.RatingToString(User.Stats[ActiveMode].OverallPerformanceRating);
-                OverallAccuracy.Value.Text = StringHelper.AccuracyToString((float) User.Stats[ActiveMode].OverallAccuracy);
+                OverallAccuracy.Value.Text = StringHelper.AccuracyToString((float)User.Stats[ActiveMode].OverallAccuracy);
             }
         });
 

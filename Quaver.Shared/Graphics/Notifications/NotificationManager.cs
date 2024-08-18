@@ -81,7 +81,7 @@ namespace Quaver.Shared.Graphics.Notifications
         internal static void Show(NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false)
         {
             var info = new NotificationInfo(level, text, true, onClick, forceShow);
-            var notification = new DrawableNotification(null, info, -1) {  Alignment = Alignment.TopRight };
+            var notification = new DrawableNotification(null, info, -1) { Alignment = Alignment.TopRight };
 
             lock (QueuedNotifications)
             {
@@ -154,7 +154,7 @@ namespace Quaver.Shared.Graphics.Notifications
                     if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
                         targetY = -targetY;
 
-                    notification.Y = MathHelper.Lerp(notification.Y, targetY, (float) Math.Min(dt / 60, 1));
+                    notification.Y = MathHelper.Lerp(notification.Y, targetY, (float)Math.Min(dt / 60, 1));
                 }
 
                 if (!notification.Item.WasClicked && !notification.HasSlidOut)

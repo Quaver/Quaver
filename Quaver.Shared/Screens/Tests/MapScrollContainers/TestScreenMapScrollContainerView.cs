@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Tests.MapScrollContainers
 
         public TestScreenMapScrollContainerView(FilterPanelTestScreen screen) : base(screen)
         {
-            var visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 65, 6)
+            var visualizer = new MenuAudioVisualizer((int)WindowManager.Width, 600, 65, 6)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
@@ -45,9 +45,9 @@ namespace Quaver.Shared.Screens.Tests.MapScrollContainers
                 Value = SelectScrollContainerType.Mapsets
             };
 
-            new SelectJukebox() {Parent = Container};
+            new SelectJukebox() { Parent = Container };
 
-            MapsetContainer  = new MapsetScrollContainer(screen.AvailableMapsets, ActiveScrollContainer)
+            MapsetContainer = new MapsetScrollContainer(screen.AvailableMapsets, ActiveScrollContainer)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Tests.MapScrollContainers
 
         public override void Destroy()
         {
-            var screen = (TestScreenMapScrollContainer) Screen;
+            var screen = (TestScreenMapScrollContainer)Screen;
             // ReSharper disable once DelegateSubtraction
             screen.AvailableMapsets.ValueChanged -= OnAvailableMapsetsChanged;
 

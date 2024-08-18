@@ -138,7 +138,7 @@ namespace Quaver.Shared.Database.Playlists
             }
 
             Directory.Delete(tempFolder, true);
-            Logger.Important($"Playlist `{Name} (#{Id}) has been successfully exported`",LogType.Runtime);
+            Logger.Important($"Playlist `{Name} (#{Id}) has been successfully exported`", LogType.Runtime);
 
             Utils.NativeUtils.HighlightInFileManager(outputPath);
         }

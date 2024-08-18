@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Options
                 if (!Menu.IsHovered())
                     Close();
             };
-            
+
             WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
         }
 
@@ -34,7 +34,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         public override void CreateContent()
         {
-            var quaver = (QuaverGame) GameBase.Game;
+            var quaver = (QuaverGame)GameBase.Game;
 
             Menu = new OptionsMenu()
             {

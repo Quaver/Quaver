@@ -543,7 +543,7 @@ namespace Quaver.Shared
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
-            
+
             switch (fpsLimitType)
             {
                 case FpsLimitType.Unlimited:
@@ -640,10 +640,10 @@ namespace Quaver.Shared
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F7))
                 return;
 
-            var index = (int) ConfigManager.FpsLimiterType.Value;
+            var index = (int)ConfigManager.FpsLimiterType.Value;
 
             if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
-                ConfigManager.FpsLimiterType.Value = (FpsLimitType) index + 1;
+                ConfigManager.FpsLimiterType.Value = (FpsLimitType)index + 1;
             else
                 ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
 
@@ -777,7 +777,7 @@ namespace Quaver.Shared
 
                 texture.Dispose();
 
-                NotificationManager.Show(NotificationLevel.Success, $"Screenshot saved. Click here to view!" ,
+                NotificationManager.Show(NotificationLevel.Success, $"Screenshot saved. Click here to view!",
                     (sender, args) => Utils.NativeUtils.HighlightInFileManager(path));
 
                 // Upload file to imgur
@@ -877,7 +877,7 @@ namespace Quaver.Shared
             if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
                 return true;
 
-            var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
+            var dialog = (OnlineHubDialog)DialogManager.Dialogs.Last();
             dialog?.Close();
 
             return true;
@@ -893,7 +893,7 @@ namespace Quaver.Shared
             if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
                 WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
 
-            var ratio = (float) ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
+            var ratio = (float)ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
 
             if (ratio >= 16 / 9f)
                 WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
@@ -918,7 +918,7 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
                     break;
                 case QuaverScreenType.Multiplayer:
-                    var screen = (MultiplayerGameScreen) CurrentScreen;
+                    var screen = (MultiplayerGameScreen)CurrentScreen;
                     screen.DontLeaveGameUponScreenSwitch = true;
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;

@@ -158,7 +158,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             // Fade in on map start
             if (Screen.Timing.Time < -500)
             {
-                var alpha = MathHelper.Lerp(Title.Alpha, 1, (float) Math.Min(dt / AnimationScale, 1));
+                var alpha = MathHelper.Lerp(Title.Alpha, 1, (float)Math.Min(dt / AnimationScale, 1));
 
                 Title.Alpha = alpha;
                 Difficulty.Alpha = alpha;

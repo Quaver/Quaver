@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Multi
             }
             MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
             OnlineManager.SendGameDifficultyRatings(OnlineManager.CurrentGame.MapMd5, OnlineManager.CurrentGame.AlternativeMd5);
-            
+
             base.OnFirstUpdate();
         }
 
@@ -156,7 +156,7 @@ namespace Quaver.Shared.Screens.Multi
         private void CreateGameBindable()
         {
             var game = OnlineManager.CurrentGame ?? GetTestGame();
-            Game = new Bindable<MultiplayerGame>(game) {Value = game};
+            Game = new Bindable<MultiplayerGame>(game) { Value = game };
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         private void InitializeTestPlayingBindable()
-            => IsPlayTestingInPreview = new Bindable<bool>(false) {Value = false};
+            => IsPlayTestingInPreview = new Bindable<bool>(false) { Value = false };
 
         /// <summary>
         ///     Finds and selects the multiplayer map
@@ -398,7 +398,7 @@ namespace Quaver.Shared.Screens.Multi
                 Name = "Example Game",
                 Type = MultiplayerGameType.Friendly,
                 Ruleset = MultiplayerGameRuleset.Battle_Royale,
-                GameMode = (byte) GameMode.Keys4,
+                GameMode = (byte)GameMode.Keys4,
                 PlayerIds = new List<int>(),
                 MaxPlayers = 16,
                 MapMd5 = "None",
@@ -410,7 +410,7 @@ namespace Quaver.Shared.Screens.Multi
                 HostId = 1,
                 PlayersReady = new List<int>() { 3, 6, 13, 7 },
                 RedTeamPlayers = new List<int> { 0, 1, 2, 3, 4, 5, 6 },
-                BlueTeamPlayers = new List<int> { 7, 8, 9, 10, 11, 12, 13, 14},
+                BlueTeamPlayers = new List<int> { 7, 8, 9, 10, 11, 12, 13, 14 },
                 PlayersWithoutMap = new List<int>()
                 {
                     8, 9, 7, 2

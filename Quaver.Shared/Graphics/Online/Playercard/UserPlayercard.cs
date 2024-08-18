@@ -333,8 +333,8 @@ namespace Quaver.Shared.Graphics.Online.Playercard
             if (Type == PlayercardType.Self && SteamManager.UserAvatars.ContainsKey(SteamUser.GetSteamID().m_SteamID))
                 Avatar.Image = SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID];
             // We've got the user's avatar, so use it.
-            else if (User != null && SteamManager.UserAvatars.ContainsKey((ulong) User.OnlineUser.SteamId))
-                Avatar.Image = SteamManager.UserAvatars[(ulong) User.OnlineUser.SteamId];
+            else if (User != null && SteamManager.UserAvatars.ContainsKey((ulong)User.OnlineUser.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong)User.OnlineUser.SteamId];
             // Need to retrieve user's avatar.
             else
             {
@@ -342,7 +342,7 @@ namespace Quaver.Shared.Graphics.Online.Playercard
                 Avatar.Image = UserInterface.UnknownAvatar;
 
                 if (User != null)
-                    SteamManager.SendAvatarRetrievalRequest((ulong) User.OnlineUser.SteamId);
+                    SteamManager.SendAvatarRetrievalRequest((ulong)User.OnlineUser.SteamId);
             }
 
             Avatar.AddBorder(Color.LightGray, 2);
@@ -388,7 +388,7 @@ namespace Quaver.Shared.Graphics.Online.Playercard
             Size = new ScalableVector2(70, 70),
         };
 
-         /// <summary>
+        /// <summary>
         ///     Creates the user stats w/ icons.
         /// </summary>
         private void CreateStats(bool isVisible)
@@ -526,8 +526,8 @@ namespace Quaver.Shared.Graphics.Online.Playercard
         private void SetStats()
         {
             GameMode = ConfigManager.SelectedGameMode.Value;
-            OverallRating = (float) User.Stats[GameMode].OverallPerformanceRating;
-            OverallAccuracy = (float) User.Stats[GameMode].OverallAccuracy;
+            OverallRating = (float)User.Stats[GameMode].OverallPerformanceRating;
+            OverallAccuracy = (float)User.Stats[GameMode].OverallAccuracy;
             CountryRank = User.Stats[GameMode].CountryRank;
             GlobalRank = User.Stats[GameMode].Rank;
             PlayCount = User.Stats[GameMode].PlayCount;
@@ -612,7 +612,7 @@ namespace Quaver.Shared.Graphics.Online.Playercard
                 return;
 
             // If it doesn't apply to this message.
-            if (e.SteamId != (ulong) User.OnlineUser.SteamId)
+            if (e.SteamId != (ulong)User.OnlineUser.SteamId)
                 return;
 
             try
