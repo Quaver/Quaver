@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace Quaver.Shared.Discord
 {
-    	// https://github.com/discordapp/discord-rpc/blob/master/examples/button-clicker/Assets/DiscordRpc.cs
+	// https://github.com/discordapp/discord-rpc/blob/master/examples/button-clicker/Assets/DiscordRpc.cs
 	public class DiscordRpc
 	{
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]

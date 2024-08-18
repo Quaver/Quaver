@@ -50,7 +50,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             MaxHeight = maxHeight;
 
             RecalculateContainerHeight();
-            ChangeHeightTo((int) Math.Min(ContentContainer.Height, maxHeight), Easing.OutQuint, 450);
+            ChangeHeightTo((int)Math.Min(ContentContainer.Height, maxHeight), Easing.OutQuint, 450);
         }
 
         /// <inheritdoc />

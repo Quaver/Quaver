@@ -17,7 +17,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D Get(CompetitveBadge badge)
         {
             // ReSharper disable once ArrangeMethodOrOperatorBody
-            return AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get($"Quaver.Resources/Textures/UI/Competitive/comp-{(int) badge}.png"));
+            return AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get($"Quaver.Resources/Textures/UI/Competitive/comp-{(int)badge}.png"));
         }
     }
 }

@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Size = new ScalableVector2(Height * 1.70f, Height - 4),
                 Alignment = Alignment.MidLeft,
                 X = 2,
-                Image = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? BackgroundHelper.RawTexture: UserInterface.MenuBackground,
+                Image = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? BackgroundHelper.RawTexture : UserInterface.MenuBackground,
                 Alpha = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? 1 : 0
             };
 
@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             AddContainedDrawable(ArtistTitle);
 
-            Mode = new SpriteTextBitmap(FontsBitmap.GothamRegular, "["  + ModeHelper.ToShortHand((GameMode) game.GameMode) + "]")
+            Mode = new SpriteTextBitmap(FontsBitmap.GothamRegular, "[" + ModeHelper.ToShortHand((GameMode)game.GameMode) + "]")
             {
                 Parent = this,
                 X = ArtistTitle.X,
@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 X = Mode.X + Mode.Width + 8,
                 Y = Mode.Y,
                 FontSize = 14,
-                Tint = ColorHelper.DifficultyToColor((float) game.DifficultyRating)
+                Tint = ColorHelper.DifficultyToColor((float)game.DifficultyRating)
             };
 
             AddContainedDrawable(DifficultyRating);
@@ -175,7 +175,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (!HasMap || OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
             {
                 DownloadButton.Alpha = MathHelper.Lerp(DownloadButton.Alpha, DownloadButton.IsHovered ? 0.3f : 0f,
-                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+                    (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
             }
 
             base.Update(gameTime);
@@ -368,7 +368,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Game.AllDifficultyRatings = e.AllDifficultyRatings;
             Game.GameMode = e.GameMode;
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen.Type == QuaverScreenType.Gameplay || game.CurrentScreen.Type == QuaverScreenType.Results)
                 return;
@@ -420,7 +420,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             // Go to song select if host
             if (OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
             {
-                var game = (QuaverGame) GameBase.Game;
+                var game = (QuaverGame)GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
                 screen?.Exit(() => new SelectionScreen(), 0, QuaverScreenChangeType.AddToStack);
                 return;

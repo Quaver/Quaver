@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Downloading
     {
         /// <summary>
         /// </summary>
-        public DownloadingScreen DownloadingScreen => (DownloadingScreen) Screen;
+        public DownloadingScreen DownloadingScreen => (DownloadingScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -91,11 +91,11 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        private void CreateTriangles() => Triangles = new BackgroundImage(UserInterface.Triangles, 0, false) {Parent = Container};
+        private void CreateTriangles() => Triangles = new BackgroundImage(UserInterface.Triangles, 0, false) { Parent = Container };
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new MenuHeaderMain {Parent = Container};
+        private void CreateHeader() => Header = new MenuHeaderMain { Parent = Container };
 
         /// <summary>
         /// </summary>

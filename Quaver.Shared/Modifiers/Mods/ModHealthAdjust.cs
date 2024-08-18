@@ -29,7 +29,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool ChangesMapObjects { get; set; }
 
-        public ModIdentifier[] IncompatibleMods { get; set; } = new ModIdentifier[] {};
+        public ModIdentifier[] IncompatibleMods { get; set; } = new ModIdentifier[] { };
 
         public Color ModColor { get; } = ColorHelper.HexToColor("#F2C94C");
 

@@ -109,7 +109,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             for (var i = 0; i < SectionButtons.Count; i++)
             {
                 if (performAnimation)
-                    SectionButtons[i].MoveToY((int) totalHeight, Easing.OutQuint, 350);
+                    SectionButtons[i].MoveToY((int)totalHeight, Easing.OutQuint, 350);
                 else
                     SectionButtons[i].Y = totalHeight;
 

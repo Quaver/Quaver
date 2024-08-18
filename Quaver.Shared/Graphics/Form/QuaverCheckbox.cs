@@ -25,7 +25,7 @@ namespace Quaver.Shared.Graphics.Form
             InactiveTexutre, false)
         {
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -33,7 +33,7 @@ namespace Quaver.Shared.Graphics.Form
         public override void Update(GameTime gameTime)
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.75f : 1, (float) Math.Min(dt / 60, 1));
+            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.75f : 1, (float)Math.Min(dt / 60, 1));
 
             base.Update(gameTime);
         }

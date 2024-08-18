@@ -128,7 +128,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
             // Fade out super fast if the button was clicked.
             if (HasBeenClicked)
-                Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 60, 1));
+                Alpha = MathHelper.Lerp(Alpha, 0, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 60, 1));
 
             // Fade out if it has been shown a long time.
             if (!HasBeenClicked && TimeElapsedSinceShown >= 4000)

@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
             // there's no need to manually dump frames as the play goes on.
             if (Screen.InReplayMode && Screen.SpectatorClient == null)
             {
-                var inputManager = (KeysInputManager) InputManager;
+                var inputManager = (KeysInputManager)InputManager;
 
                 StandardizedReplayPlayer.Replay.Frames = inputManager.ReplayInputManager.Replay.Frames;
                 StandardizedReplayPlayer.PlayAllFrames();
@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
                 StandardizedReplayPlayer.Replay.AddFrame(frame.Time, frame.Keys);
                 StandardizedReplayPlayer.PlayNextFrame();
 
-                var view = (GameplayScreenView) Screen.View;
+                var view = (GameplayScreenView)Screen.View;
                 view.UpdateScoreAndAccuracyDisplays();
 
                 if (view.ScoreboardLeft?.Users.Count != 0 && view.ScoreboardLeft?.Users.First().Type == ScoreboardUserType.Self)

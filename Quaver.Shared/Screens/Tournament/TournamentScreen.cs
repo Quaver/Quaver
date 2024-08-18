@@ -245,7 +245,7 @@ namespace Quaver.Shared.Screens.Tournament
                         x.SkipToNextObject();
                         x.IsPaused = true;
 
-                        var view = (TournamentScreenView) View;
+                        var view = (TournamentScreenView)View;
 
                         var player = view.TournamentPlayers.Find(y => y.User == x.SpectatorClient?.Player);
 
@@ -373,7 +373,7 @@ namespace Quaver.Shared.Screens.Tournament
 
             foreach (var screen in GameplayScreens)
             {
-                var inputManager = (KeysInputManager) screen.Ruleset.InputManager;
+                var inputManager = (KeysInputManager)screen.Ruleset.InputManager;
 
                 var replay = inputManager.ReplayInputManager.Replay;
 
@@ -409,7 +409,7 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 screen.IsPaused = hasNoFrames;
 
-                var inputManager = (KeysInputManager) screen.Ruleset.InputManager;
+                var inputManager = (KeysInputManager)screen.Ruleset.InputManager;
                 var replayInput = inputManager.ReplayInputManager;
                 replayInput.VirtualPlayer.PlayAllFrames();
             }
@@ -424,7 +424,7 @@ namespace Quaver.Shared.Screens.Tournament
                     foreach (var screen in GameplayScreens)
                     {
                         screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.PlayerName = screen.SpectatorClient.Player.OnlineUser.Username;
-                        screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.SteamId = (ulong) screen.SpectatorClient.Player.OnlineUser.SteamId;
+                        screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.SteamId = (ulong)screen.SpectatorClient.Player.OnlineUser.SteamId;
                         processors.Add(screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor);
                     }
 
@@ -447,7 +447,7 @@ namespace Quaver.Shared.Screens.Tournament
 
             foreach (var screen in GameplayScreens)
             {
-                var view = (GameplayScreenView) screen.View;
+                var view = (GameplayScreenView)screen.View;
                 users.AddRange(view.ScoreboardLeft.Users);
 
                 if (view.ScoreboardRight != null)

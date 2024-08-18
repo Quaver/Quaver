@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             {
                 if (Bindable.Value > 0)
                 {
-                    var currTime = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int) Bindable.Value);
+                    var currTime = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.Value);
                     CurrentTime.Value = currTime.ToString("mm:ss");
                 }
 

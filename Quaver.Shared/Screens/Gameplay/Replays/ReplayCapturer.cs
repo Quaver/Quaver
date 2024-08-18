@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
             // replay frames.
             if (Screen.InReplayMode)
             {
-                var inputManager = (KeysInputManager) Screen.Ruleset.InputManager;
+                var inputManager = (KeysInputManager)Screen.Ruleset.InputManager;
                 var replayInputManager = inputManager.ReplayInputManager;
 
                 // Sync up to current frame
@@ -117,12 +117,12 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
             if (LastRecordedJudgementCount != judgementCount)
                 AddFrame(currentPressState);
 
-           /* // Add frame for 60 fps.
-            if (TimeSinceLastCapture >= 1000 / 60f)
-            {
-                AddFrame(currentPressState);
-                TimeSinceLastCapture = 0;
-            }*/
+            /* // Add frame for 60 fps.
+             if (TimeSinceLastCapture >= 1000 / 60f)
+             {
+                 AddFrame(currentPressState);
+                 TimeSinceLastCapture = 0;
+             }*/
 
             LastKeyPressState = GetKeyPressState();
             LastRecordedJudgementCount = judgementCount;

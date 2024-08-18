@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         return;
                     }
 
-                    AudioEngine.Track.Seek(MathHelper.Clamp((int) Screen.PlayTestAudioTime - delay, 0, (int) AudioEngine.Track.Length));
+                    AudioEngine.Track.Seek(MathHelper.Clamp((int)Screen.PlayTestAudioTime - delay, 0, (int)AudioEngine.Track.Length));
                     Time = AudioEngine.Track.Time;
                     return;
                 }

@@ -95,9 +95,9 @@ namespace Quaver.Shared.Graphics
 
             Clicked += (sender, args) =>
             {
-                if (Panel.IsHovered()) 
+                if (Panel.IsHovered())
                     return;
-                
+
                 NoAction?.Invoke();
                 Close();
             };

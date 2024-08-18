@@ -318,7 +318,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 // Give custom banners first priority
                 var bannerExists = true;
 
-                var extensions = new[] {".png", ".jpg", ".jpg"};
+                var extensions = new[] { ".png", ".jpg", ".jpg" };
 
                 var path = "";
 

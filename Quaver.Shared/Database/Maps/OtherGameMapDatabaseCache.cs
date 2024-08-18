@@ -305,7 +305,7 @@ namespace Quaver.Shared.Database.Maps
                 }
 
                 // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
-                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7  || x.CircleSize == 8)).ToList();
+                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7 || x.CircleSize == 8)).ToList();
                 osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
 
                 var osuToQuaverMaps = new List<OtherGameMap>();
@@ -380,7 +380,7 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         public static bool OnSyncableScreen()
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             switch (game.CurrentScreen?.Type)
             {
@@ -439,12 +439,12 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Insert(map);
                                 break;
                             case MapGame.Osu:
-                                var osuMap = (OtherGameMap) map;
+                                var osuMap = (OtherGameMap)map;
                                 osuMap.SyncVersion = OtherGameMap.OsuSyncVersion;
                                 conn.Insert(osuMap);
                                 break;
                             case MapGame.Etterna:
-                                var etternaChart = (OtherGameMap) map;
+                                var etternaChart = (OtherGameMap)map;
                                 etternaChart.SyncVersion = OtherGameMap.EtternaSyncVersion;
                                 conn.Insert(etternaChart);
                                 break;
@@ -504,12 +504,12 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Update(map);
                                 break;
                             case MapGame.Osu:
-                                var osuMap = (OtherGameMap) map;
+                                var osuMap = (OtherGameMap)map;
                                 osuMap.SyncVersion = OtherGameMap.OsuSyncVersion;
                                 conn.Update(osuMap);
                                 break;
                             case MapGame.Etterna:
-                                var etternaChart = (OtherGameMap) map;
+                                var etternaChart = (OtherGameMap)map;
                                 etternaChart.SyncVersion = OtherGameMap.EtternaSyncVersion;
                                 conn.Update(etternaChart);
                                 break;
@@ -548,7 +548,7 @@ namespace Quaver.Shared.Database.Maps
                             break;
                         case MapGame.Osu:
                         case MapGame.Etterna:
-                            conn.Delete((OtherGameMap) map);
+                            conn.Delete((OtherGameMap)map);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

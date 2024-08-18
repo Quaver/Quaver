@@ -72,20 +72,20 @@ namespace Quaver.Shared.Online
         /// </summary>
         public void PlayNewMap(List<ReplayFrame> frames, bool createNewReplay = true, bool forceIfImporting = false)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (createNewReplay)
             {
                 FinishedPlayingMap = false;
 
-                var mods = (ModIdentifier) Player.CurrentStatus.Modifiers;
+                var mods = (ModIdentifier)Player.CurrentStatus.Modifiers;
 
                 // Get correct modifiers if in the tournament viewer
                 if (OnlineManager.CurrentGame != null)
                     mods = OnlineManager.GetUserActivatedMods(Player.OnlineUser.Id, OnlineManager.CurrentGame);
 
                 // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
-                Replay = new Replay((GameMode) Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
+                Replay = new Replay((GameMode)Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
                     mods, Player.CurrentStatus.MapMd5);
 
                 // Add all existing frames
@@ -110,7 +110,7 @@ namespace Quaver.Shared.Online
             {
                 if (!HasNotifiedForThisMap)
                 {
-                    NotificationManager.Show(NotificationLevel.Error,"You do not have the map the host is playing!");
+                    NotificationManager.Show(NotificationLevel.Error, "You do not have the map the host is playing!");
                     HasNotifiedForThisMap = true;
 
                     DownloadMap();
@@ -217,7 +217,7 @@ namespace Quaver.Shared.Online
 
                     var download = MapsetDownloadManager.Download(response.Map.MapsetId, response.Map.Artist, response.Map.Title);
 
-                    var game = (QuaverGame) GameBase.Game;
+                    var game = (QuaverGame)GameBase.Game;
 
                     // Automatically start importing
                     download.Completed.ValueChanged += (sender, args) =>
