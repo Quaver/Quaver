@@ -183,7 +183,7 @@ namespace Quaver.Shared
                     return "Local Development Build";
 
                 var assembly = AssemblyName;
-                return $@"{assembly.Version.Major}.{assembly.Version.Minor}.{assembly.Version.Build}";
+                return $@"{assembly.Version.Major}.{assembly.Version.Minor}.{assembly.Version.Build}.{assembly.Version.Revision}";
             }
         }
 
