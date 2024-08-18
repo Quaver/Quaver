@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Main.UI
     public class MenuFooterButtonQuit : IconTextButton
     {
         public MenuFooterButtonQuit() : base(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Quit Game", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.LatoBlack), "Quit Game", (sender, args) =>
             {
                 DialogManager.Show(new QuitDialog());
             })

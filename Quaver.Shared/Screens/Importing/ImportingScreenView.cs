@@ -170,7 +170,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private void CreateVisualizers()
         {
-            VisualizerTop = new MenuAudioVisualizer((int) WindowManager.Width, 750, 220, 3, 8)
+            VisualizerTop = new MenuAudioVisualizer((int)WindowManager.Width, 750, 220, 3, 8)
             {
                 Parent = Banner,
                 Alignment = Alignment.TopLeft,
@@ -183,7 +183,7 @@ namespace Quaver.Shared.Screens.Importing
                 x.Tint = Banner.Border.Tint;
             });
 
-            VisualizerBottom = new MenuAudioVisualizer((int) WindowManager.Width, 750, 220, 3, 8)
+            VisualizerBottom = new MenuAudioVisualizer((int)WindowManager.Width, 750, 220, 3, 8)
             {
                 Parent = Banner,
                 Alignment = Alignment.BotLeft,

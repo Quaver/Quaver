@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Tournament
     {
         /// <summary>
         /// </summary>
-        public TournamentScreen TournamentScreen => (TournamentScreen) Screen;
+        public TournamentScreen TournamentScreen => (TournamentScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -128,7 +128,7 @@ namespace Quaver.Shared.Screens.Tournament
             for (var i = 0; i < TournamentScreen.GameplayScreens.Count; i++)
             {
                 var screen = TournamentScreen.GameplayScreens[i];
-                var playfield = (GameplayPlayfieldKeys) screen.Ruleset.Playfield;
+                var playfield = (GameplayPlayfieldKeys)screen.Ruleset.Playfield;
 
                 playfield.Container.Width = playfield.Width + playfield.Stage.HealthBar.Width;
 
@@ -160,7 +160,7 @@ namespace Quaver.Shared.Screens.Tournament
         {
             var widthSum = TournamentScreen.GameplayScreens.Sum(x =>
             {
-                var playfield = (GameplayPlayfieldKeys) x.Ruleset.Playfield;
+                var playfield = (GameplayPlayfieldKeys)x.Ruleset.Playfield;
                 return playfield.Width + playfield.Stage.HealthBar.Width;
             });
 
@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Tournament
 
             for (var i = 0; i < TournamentScreen.GameplayScreens.Count; i++)
             {
-                var playfield = (GameplayPlayfieldKeys)  TournamentScreen.GameplayScreens[i].Ruleset.Playfield;
+                var playfield = (GameplayPlayfieldKeys)TournamentScreen.GameplayScreens[i].Ruleset.Playfield;
                 playfield.Container.Width = playfield.Width + playfield.Stage.HealthBar.Width;
                 playfield.Container.X = widthPer;
 
@@ -185,12 +185,12 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void PositionPlayfieldItems()
         {
-            if (TournamentScreen.GameplayScreens.Count == 2 &&!ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
+            if (TournamentScreen.GameplayScreens.Count == 2 && !ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
                 return;
 
             foreach (var screen in TournamentScreen.GameplayScreens)
             {
-                var view = (GameplayScreenView) screen.View;
+                var view = (GameplayScreenView)screen.View;
 
                 view.ScoreDisplay.Visible = false;
                 view.KpsDisplay.Visible = false;
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void CreateUsernames()
         {
-            if (TournamentScreen.GameplayScreens.Count == 2 &&!ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
+            if (TournamentScreen.GameplayScreens.Count == 2 && !ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
                 return;
 
             Usernames = new List<SpriteTextPlus>();
@@ -287,11 +287,11 @@ namespace Quaver.Shared.Screens.Tournament
         {
             foreach (var screen in TournamentScreen.GameplayScreens)
             {
-                var view = (GameplayScreenView) screen.View;
+                var view = (GameplayScreenView)screen.View;
 
-               view.UpdateGradeDisplay();
-               view.GradeDisplay.X = -view.AccuracyDisplay.Width / 2f - view.GradeDisplay.Width - 4;
-               screen.Ruleset?.Playfield.Update(gameTime);
+                view.UpdateGradeDisplay();
+                view.GradeDisplay.X = -view.AccuracyDisplay.Width / 2f - view.GradeDisplay.Width - 4;
+                screen.Ruleset?.Playfield.Update(gameTime);
             }
         }
 
@@ -309,7 +309,7 @@ namespace Quaver.Shared.Screens.Tournament
         /// <param name="gameTime"></param>
         private void DrawScreenTransitioner(GameTime gameTime)
         {
-            var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
+            var view = (GameplayScreenView)TournamentScreen.MainGameplayScreen.View;
             view.Transitioner.Draw(gameTime);
         }
 
@@ -324,7 +324,7 @@ namespace Quaver.Shared.Screens.Tournament
                 return;
             }
 
-            var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
+            var view = (GameplayScreenView)TournamentScreen.MainGameplayScreen.View;
             view.SkipDisplay.Update(gameTime);
         }
 
@@ -338,7 +338,7 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 return;
             }
-            var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
+            var view = (GameplayScreenView)TournamentScreen.MainGameplayScreen.View;
             view.SkipDisplay.Draw(gameTime);
         }
 
@@ -350,7 +350,7 @@ namespace Quaver.Shared.Screens.Tournament
             if (!ConfigManager.DisplaySongTimeProgress.Value)
                 return;
 
-            var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
+            var view = (GameplayScreenView)TournamentScreen.MainGameplayScreen.View;
             view.ProgressBar?.Update(gameTime);
         }
 
@@ -362,7 +362,7 @@ namespace Quaver.Shared.Screens.Tournament
             if (!ConfigManager.DisplaySongTimeProgress.Value)
                 return;
 
-            var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
+            var view = (GameplayScreenView)TournamentScreen.MainGameplayScreen.View;
             view.ProgressBar?.Draw(gameTime);
         }
     }

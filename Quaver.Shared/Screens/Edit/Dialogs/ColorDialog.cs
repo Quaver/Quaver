@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             }
             catch (Exception)
             {
-                return new Color(255,255,255);
+                return new Color(255, 255, 255);
             }
         }
 

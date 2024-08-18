@@ -397,7 +397,7 @@ namespace Quaver.Shared.Config
         ///     Whether long notes can be placed when live mapping
         /// </summary>
         internal static Bindable<bool> EditorLiveMapLongNote { get; private set; }
-        
+
         /// <summary>
         ///     Minimum time needed to press the key to place a long note when live mapping
         /// </summary>

@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens
 
             HandleTooltipAnimation();
 
-            if (DialogManager.Dialogs.Count == 0 &&  MouseManager.IsUniqueClick(MouseButton.Left)
+            if (DialogManager.Dialogs.Count == 0 && MouseManager.IsUniqueClick(MouseButton.Left)
                 && ActiveCheckboxContainer != null && ActiveCheckboxContainer.IsOpen && !ActiveCheckboxContainer.IsHovered())
             {
                 ActiveCheckboxContainer.Close();

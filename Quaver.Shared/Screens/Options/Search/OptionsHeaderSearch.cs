@@ -36,7 +36,7 @@ namespace Quaver.Shared.Screens.Options.Search
         /// <param name="currentSearchQuery"></param>
         /// <param name="isOptionFocused"></param>
         public OptionsHeaderSearch(Bindable<string> currentSearchQuery, Bindable<bool> isOptionFocused)
-            : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.LatoBlack),20, "",
+            : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "",
                 "Search for options...")
         {
             CurrentSearchQuery = currentSearchQuery;
@@ -89,13 +89,13 @@ namespace Quaver.Shared.Screens.Options.Search
             var target = InputText.Width < Width - 20 - SearchIcon.Width ? 1 : 0;
 
             SearchIcon.Alpha = MathHelper.Lerp(SearchIcon.Alpha, target,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 120, 1));
+                (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 120, 1));
         }
 
         /// <summary>
         ///     Called when the user has stopped typing in the textbox
         /// </summary>
         /// <param name="filter"></param>
-        private void StoppedTyping(string filter) =>  CurrentSearchQuery.Value = filter;
+        private void StoppedTyping(string filter) => CurrentSearchQuery.Value = filter;
     }
 }

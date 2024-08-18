@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
-        private Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") {Value = ""};
+        private Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") { Value = "" };
 
         /// <summary>
         /// </summary>
@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Options
         /// <summary>
         ///     Whether or not an option is currently focused
         /// </summary>
-        public Bindable<bool> IsOptionFocused { get; } = new Bindable<bool>(false) {Value = false};
+        public Bindable<bool> IsOptionFocused { get; } = new Bindable<bool>(false) { Value = false };
 
         /// <summary>
         /// </summary>
@@ -453,7 +453,7 @@ namespace Quaver.Shared.Screens.Options
                 }),
             };
 
-            SelectedSection = new Bindable<OptionsSection>(Sections.First()) {Value = Sections.First()};
+            SelectedSection = new Bindable<OptionsSection>(Sections.First()) { Value = Sections.First() };
         }
 
         /// <summary>
@@ -545,7 +545,7 @@ namespace Quaver.Shared.Screens.Options
                     categoryName += "s";
 
                 var newSection = new OptionsSection(string.Empty, FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
-                    new List<OptionsSubcategory> {new OptionsSubcategory(categoryName, items)});
+                    new List<OptionsSubcategory> { new OptionsSubcategory(categoryName, items) });
 
                 ContentContainers.Add(newSection, new OptionsContentContainer(newSection, Content.Size));
                 SelectedSection.Value = newSection;

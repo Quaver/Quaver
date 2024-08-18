@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Music
         ///     Initializes the bindable which stores the available mapsets for the screen <see cref="AvailableSongs"/>
         /// </summary>
         private void InitializeAvailableSongsBindable()
-            => AvailableSongs= new Bindable<List<Mapset>>(null) { Value = new List<Mapset>()};
+            => AvailableSongs = new Bindable<List<Mapset>>(null) { Value = new List<Mapset>() };
 
         /// <summary>
         /// </summary>
@@ -143,7 +143,7 @@ namespace Quaver.Shared.Screens.Music
                 return new UserClientStatus(ClientStatus.Listening, -1, "-1", 1, "", 0);
 
             return new UserClientStatus(ClientStatus.Listening, MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum,
-                (byte) MapManager.Selected.Value.Mode, $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}", 0);
+                (byte)MapManager.Selected.Value.Mode, $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}", 0);
         }
 
         /// <summary>

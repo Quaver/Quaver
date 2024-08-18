@@ -65,7 +65,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
         public override void Update(GameTime gameTime)
         {
             Button.Alpha = MathHelper.Lerp(Button.Alpha, Button.IsHovered ? 0.4f : 0f,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+                (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
 
             base.Update(gameTime);
         }

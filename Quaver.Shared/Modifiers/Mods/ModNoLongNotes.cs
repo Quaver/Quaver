@@ -33,6 +33,6 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public Color ModColor { get; } = ColorHelper.HexToColor("#F2994A");
 
-        public void InitializeMod() {}
+        public void InitializeMod() { }
     }
 }

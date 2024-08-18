@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Selection
     {
         /// <summary>
         /// </summary>
-        private SelectionScreen SelectScreen => (SelectionScreen) Screen;
+        private SelectionScreen SelectScreen => (SelectionScreen)Screen;
 
         /// <summary>
         ///     Plays the audio for the song select screen
@@ -173,7 +173,7 @@ namespace Quaver.Shared.Screens.Selection
             PlaylistManager.PlaylistSynced -= OnPlaylistSynced;
             PlaylistContainer.ContainerInitialized -= OnPlaylistContainerInitialized;
             SelectScreen.ScreenExiting -= OnExiting;
-            FilterPanel.SearchBox.OnStoppedTyping -= OnSearchingStopped;;
+            FilterPanel.SearchBox.OnStoppedTyping -= OnSearchingStopped; ;
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void CreateAudioVisualizer()
         {
-            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 65, 3, 8)
+            Visualizer = new MenuAudioVisualizer((int)WindowManager.Width, 600, 65, 3, 8)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
@@ -263,7 +263,7 @@ namespace Quaver.Shared.Screens.Selection
         private void CreateMapPreviewContainer()
         {
             MapPreviewContainer = new SelectMapPreviewContainer(SelectScreen.IsPlayTestingInPreview, SelectScreen.ActiveLeftPanel,
-                (int) (WindowManager.Height - MenuBorder.HEIGHT * 2 - FilterPanel.Height))
+                (int)(WindowManager.Height - MenuBorder.HEIGHT * 2 - FilterPanel.Height))
             {
                 Parent = Container,
                 Y = FilterPanel.Y + FilterPanel.Height
@@ -294,7 +294,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void CreateMapsetContainer()
         {
-            MapsetContainer  = new MapsetScrollContainer(SelectScreen.AvailableMapsets, SelectScreen.ActiveScrollContainer)
+            MapsetContainer = new MapsetScrollContainer(SelectScreen.AvailableMapsets, SelectScreen.ActiveScrollContainer)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -563,7 +563,7 @@ namespace Quaver.Shared.Screens.Selection
                     {
                         ConfigManager.SelectGroupMapsetsBy.Value = GroupMapsetsBy.Playlists;
                         SelectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
-                    },250);
+                    }, 250);
                     break;
                 case SelectScrollContainerType.Playlists:
                     PlaylistContainer.ClearAnimations();

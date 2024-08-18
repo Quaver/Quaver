@@ -194,7 +194,7 @@ namespace Quaver.Shared.Database.Maps
             get
             {
                 var hitObjectCount = RegularNoteCount + LongNoteCount;
-                return hitObjectCount == 0 ? 0 : ((float) LongNoteCount / hitObjectCount * 100);
+                return hitObjectCount == 0 ? 0 : ((float)LongNoteCount / hitObjectCount * 100);
             }
         }
 
@@ -260,7 +260,7 @@ namespace Quaver.Shared.Database.Maps
         public double Difficulty19X { get; set; }
         public double Difficulty195X { get; set; }
         public double Difficulty20X { get; set; }
- #endregion
+        #endregion
 
         /// <summary>
         ///     Determines if this map is an osu! map.
@@ -331,7 +331,7 @@ namespace Quaver.Shared.Database.Maps
                 Source = qua.Source,
                 Tags = qua.Tags,
                 Genre = qua.Genre,
-                SongLength =  qua.Length,
+                SongLength = qua.Length,
                 Mode = qua.Mode,
                 RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),
                 LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote),

@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         [YamlIgnore] public static Keybind None = new Keybind(Keys.None);
 
         public HashSet<KeyModifiers> Modifiers { get; } = new HashSet<KeyModifiers>();
-        public GenericKey Key { get; } = new GenericKey() {KeyboardKey = Keys.None};
+        public GenericKey Key { get; } = new GenericKey() { KeyboardKey = Keys.None };
 
         public Keybind(string notation)
         {
@@ -35,17 +35,17 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
         }
 
-        public Keybind(Keys key) => Key = new GenericKey() {KeyboardKey = key};
+        public Keybind(Keys key) => Key = new GenericKey() { KeyboardKey = key };
 
         public Keybind(KeyModifiers mod, Keys key)
         {
-            Key = new GenericKey() {KeyboardKey = key};
+            Key = new GenericKey() { KeyboardKey = key };
             Modifiers.Add(mod);
         }
 
         public Keybind(ICollection<KeyModifiers> mods, Keys key)
         {
-            Key = new GenericKey() {KeyboardKey = key};
+            Key = new GenericKey() { KeyboardKey = key };
             Modifiers = new HashSet<KeyModifiers>(mods);
         }
 
