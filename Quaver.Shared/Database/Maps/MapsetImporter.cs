@@ -311,6 +311,7 @@ namespace Quaver.Shared.Database.Maps
 
             var done = -1;
 
+            MapsetInfoRetriever.InfoUpdateEnabled = false;
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
@@ -374,6 +375,7 @@ namespace Quaver.Shared.Database.Maps
 
             MapDatabaseCache.OrderAndSetMapsets(true);
             Queue.Clear();
+            MapsetInfoRetriever.InfoUpdateEnabled = true;
 
             if (MapManager.Mapsets.Count == 0)
                 return;

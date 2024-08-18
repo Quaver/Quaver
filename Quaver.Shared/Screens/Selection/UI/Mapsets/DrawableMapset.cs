@@ -158,7 +158,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Select();
         }
 
-        private void OnMapsetInfoRetrieved(object sender, Map m) => UpdateContent(Item, Index);
+        private void OnMapsetInfoRetrieved(object sender, EventArgs args) => UpdateContent(Item, Index);
 
         /// <summary>
         /// </summary>
