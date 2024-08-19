@@ -69,7 +69,7 @@ public static class MapsetInfoRetriever
     public static void Enqueue(Map map)
     {
         RequestQueue.Enqueue(new MapsetInfoRequest(map));
-        NotificationManager.Show(NotificationLevel.Info, $"Retrieving status for mapset {map.MapId}");
+        Logger.Debug($"Retrieving status for mapset {map.MapId}", LogType.Runtime);
 
         if (TokenSource == null)
             StartWorkers();
@@ -126,7 +126,7 @@ public static class MapsetInfoRetriever
                 response.Map.DateLastUpdated = response.MapsResponse.Map.DateLastUpdated;
                 response.Map.OnlineOffset = response.MapsResponse.Map.OnlineOffset;
                 MapDatabaseCache.UpdateMap(response.Map);
-                Logger.Important(
+                Logger.Debug(
                     $"Info for map {response.Map.MapId} has been updated", LogType.Runtime);
             }
 
