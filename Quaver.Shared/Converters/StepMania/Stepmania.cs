@@ -22,7 +22,7 @@ namespace Quaver.Shared.Converters.StepMania
         /// </summary>
         public static void ConvertFile(string file, string extractDirectory)
         {
-            var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+            var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
             var tempFolder = $@"{ConfigManager.TempDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}";
 
             if (Directory.Exists(tempFolder))

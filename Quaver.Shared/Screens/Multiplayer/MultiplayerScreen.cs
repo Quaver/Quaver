@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             if (PlayTrackOnFirstUpdate)
             {
-                var view = (MultiplayerScreenView) View;
+                var view = (MultiplayerScreenView)View;
                 view.Map.UpdateContent();
             }
 
@@ -99,7 +99,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// <param name="user"></param>
         public void RemovePlayer(OnlineUser user)
         {
-            var view = (MultiplayerScreenView) View;
+            var view = (MultiplayerScreenView)View;
             view.PlayerList.RemovePlayer(user);
         }
 
@@ -177,7 +177,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                     PlayerId = x.Key,
                     SteamId = x.Value.OnlineUser.SteamId,
                     Name = x.Value.OnlineUser.Username,
-                    Mods = (long) OnlineManager.GetUserActivatedMods(x.Value.OnlineUser.Id),
+                    Mods = (long)OnlineManager.GetUserActivatedMods(x.Value.OnlineUser.Id),
                     IsMultiplayer = true,
                     IsOnline = true
                 });
@@ -235,7 +235,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             {
                 try
                 {
-                    var view = (MultiplayerScreenView) View;
+                    var view = (MultiplayerScreenView)View;
 
                     if (!view.Map.HasMap)
                     {

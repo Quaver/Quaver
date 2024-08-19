@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         public override void Emit(SequenceStartEventInfo eventInfo, IEmitter emitter)
         {
             if (typeof(IEnumerable<Keybind>).IsAssignableFrom(eventInfo.Source.Type))
-                eventInfo = new SequenceStartEventInfo(eventInfo.Source) {Style = SequenceStyle.Flow};
+                eventInfo = new SequenceStartEventInfo(eventInfo.Source) { Style = SequenceStyle.Flow };
             nextEmitter.Emit(eventInfo, emitter);
         }
     }

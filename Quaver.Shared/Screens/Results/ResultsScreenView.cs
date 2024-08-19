@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Results
     {
         /// <summary>
         /// </summary>
-        private ResultsScreen ResultsScreen => (ResultsScreen) Screen;
+        private ResultsScreen ResultsScreen => (ResultsScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -122,7 +122,7 @@ namespace Quaver.Shared.Screens.Results
         /// <summary>
         /// </summary>
         private void CreateBackground() => Background = new BackgroundImage(SkinManager.Skin.Results.ResultsBackgroundType == ResultsBackgroundType.Background ?
-           BackgroundHelper.RawTexture : SkinManager.Skin?.Results?.ResultsBackground ?? UserInterface.Triangles, 0,false)
+           BackgroundHelper.RawTexture : SkinManager.Skin?.Results?.ResultsBackground ?? UserInterface.Triangles, 0, false)
         {
             Parent = Container,
             Y = 0,
@@ -131,7 +131,7 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new MenuHeaderMain {Parent = Container};
+        private void CreateHeader() => Header = new MenuHeaderMain { Parent = Container };
 
         /// <summary>
         /// </summary>

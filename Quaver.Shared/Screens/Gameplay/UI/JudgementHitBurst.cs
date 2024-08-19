@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     Start Y of bumping
         /// </summary>
-        private readonly float bumpY;
+        private float bumpY;
 
         /// <summary>
         ///     The original size of the hit burst.
@@ -85,7 +85,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             bumpTimer = new CountdownTimer(bumpTime);
             bumpTimer.TimeRemainingChanged += LerpY;
             bumpTimer.Stopped += LerpY;
-            bumpY = OriginalPosY + Skin.JudgementHitBurstBumpY;
         }
 
         private void LerpY(object sender, EventArgs e)
@@ -137,6 +136,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             }
             else
             {
+                bumpY = OriginalPosY + Skin.JudgementHitBurstBumpY;
                 bumpTimer.Restart();
                 IsAnimatingWithOneFrame = true;
             }
@@ -162,7 +162,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             // Tween the position if need be
             if (bumpTimer.State == TimerState.Completed)
             {
-                Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(dt / 240, 1));
+                Alpha = MathHelper.Lerp(Alpha, 0, (float)Math.Min(dt / 240, 1));
 
                 if (Alpha <= 0)
                     IsAnimatingWithOneFrame = false;

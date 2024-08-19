@@ -28,7 +28,7 @@ public class APIRequestMultiplayerMatchInformation : APIRequest<MultiplayerMatch
         var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
         var response = client.Execute(request);
-        
+
         var json = JObject.Parse(response.Content);
 
         var responseParsed = JsonConvert.DeserializeObject<MultiplayerMatchInformationResponse>(json.ToString());

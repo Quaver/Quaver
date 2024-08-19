@@ -190,7 +190,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
             for (var i = 0; i < Sections.Count; i++)
             {
-                var section = Sections[(OnlineHubSectionType) i];
+                var section = Sections[(OnlineHubSectionType)i];
 
                 // Update the container once
                 section.Container.Update(new GameTime());

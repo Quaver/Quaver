@@ -25,7 +25,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
 
         /// <summary>
         /// </summary>
-        public Slider Slider{ get; private set; }
+        public Slider Slider { get; private set; }
 
         /// <summary>
         /// </summary>

@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Initialization
         {
             Logger.Important($"Performing game initialization task... ", LogType.Runtime);
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             game.SetProcessPriority();
             game.PerformGameSetup();

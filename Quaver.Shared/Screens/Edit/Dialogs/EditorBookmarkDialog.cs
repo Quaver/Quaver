@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private EditorActionManager ActionManager { get; }
 
         private IAudioTrack Track { get; }
-        
+
         /// <summary>
         ///     The bookmark that's currently being edited. If none is provided in the constructor,
         ///     then the purpose of the dialog will be to add a new one.
@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private BookmarkInfo EditingBookmark { get; }
         protected Textbox Textbox { get; set; }
 
-        public EditorBookmarkDialog(EditorActionManager manager, IAudioTrack track, BookmarkInfo editingBookmark) 
+        public EditorBookmarkDialog(EditorActionManager manager, IAudioTrack track, BookmarkInfo editingBookmark)
             : base(editingBookmark == null ? "ADD BOOKMARK" : "EDIT BOOKMARK", "Add a custom note for your bookmark...")
         {
             ActionManager = manager;
@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
             YesAction += () => OnSubmit(Textbox.RawText);
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             Textbox.Visible = false;
             base.Close();
         }
-        
+
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
@@ -63,9 +63,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 AllowSubmission = false
             };
 
-            Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);    
+            Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
         }
-        
+
         private void OnSubmit(string note)
         {
             if (EditingBookmark != null)
@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 ActionManager.EditBookmark(EditingBookmark, note);
                 return;
             }
-            
+
             ActionManager.AddBookmark((int)Track.Time, note);
         }
     }

@@ -47,9 +47,9 @@ namespace Quaver
         public static void Main(string[] args)
         {
             // Prevents more than one instance of Quaver to run at a time
-            using(var mutex = new Mutex(false, "Global\\" + Guid))
+            using (var mutex = new Mutex(false, "Global\\" + Guid))
             {
-                if(!mutex.WaitOne(0, false))
+                if (!mutex.WaitOne(0, false))
                 {
                     Logger.Error("Quaver is already running", LogType.Runtime);
 
@@ -165,7 +165,7 @@ namespace Quaver
         /// </summary>
         private static void SendCrashLog(Exception e)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             // Exclude non-steam builds
             if (!game.IsDeployedBuild)

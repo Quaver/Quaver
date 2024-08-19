@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 StopLoop();
 
             var targetAlpha = Screen.EligibleToSkip ? 1 : 0;
-            Alpha = MathHelper.Lerp(Alpha, targetAlpha, (float) Math.Min(dt / (120 / AudioEngine.Track.Rate), 1));
+            Alpha = MathHelper.Lerp(Alpha, targetAlpha, (float)Math.Min(dt / (120 / AudioEngine.Track.Rate), 1));
 
             base.Update(gameTime);
         }
