@@ -2,10 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Online;
-
 using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Maps;
@@ -15,12 +13,14 @@ public static class MapsetInfoRetriever
     /// <summary>
     ///     Info retrieval requests yet to be processed
     /// </summary>
-    private static readonly Channel<MapsetInfoRequest> RequestChannel = Channel.CreateUnbounded<MapsetInfoRequest>();
+    private static readonly Channel<MapsetInfoRequest> RequestChannel =
+        Channel.CreateUnbounded<MapsetInfoRequest>(new UnboundedChannelOptions { SingleWriter = true });
 
     /// <summary>
     ///     The info retrieved that is yet to be synced to the database
     /// </summary>
-    private static readonly Channel<MapsetInfoResponse> ResponseChannel = Channel.CreateUnbounded<MapsetInfoResponse>();
+    private static readonly Channel<MapsetInfoResponse> ResponseChannel =
+        Channel.CreateUnbounded<MapsetInfoResponse>(new UnboundedChannelOptions { SingleReader = true });
 
     /// <summary>
     ///     <see cref="CancellationTokenSource"/> that can be used to cancel all running tasks
