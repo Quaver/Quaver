@@ -299,6 +299,13 @@ namespace Quaver.Shared.Screens.Edit
         private double TimeSinceLastPlayfieldZoom { get; set; }
 
         /// <summary>
+        ///     The hit objects that are being placed, while the keybind is not released.
+        ///     This is used to place LN in livemapping.
+        ///     The 0th element is not used. Use 1-indexed lane number to index into this array.
+        /// </summary>
+        private readonly HitObjectInfo[] heldLivemapHitObjectInfos;
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -312,6 +319,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 OriginalQua = map.LoadQua();
                 WorkingMap = OriginalQua.DeepClone();
+                heldLivemapHitObjectInfos = new HitObjectInfo[WorkingMap.GetKeyCount() + 1];
             }
             catch (Exception e)
             {
@@ -1018,41 +1026,49 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
-        ///     Place or remove a hit object at the specified lane and current time (can be snapped)
+        ///     At current time and lane, either places a note, or adjusts the LN length of it,
+        ///     depending on the state of <see cref="isUniquePress"/>.
         /// </summary>
-        /// <param name="lane"></param>
-        public void PlaceOrRemoveHitObjectAtCurrentTime(int lane)
+        /// <param name="lane">1-indexed lane number</param>
+        /// <param name="isUniquePress"></param>
+        /// <param name="isRelease"></param>
+        public void HandleHitObjectPlacement(int lane, bool isUniquePress, bool isRelease)
         {
-            var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
-            PlaceOrRemoveHitObject(lane, time);
-        }
+            if (isRelease)
+            {
+                heldLivemapHitObjectInfos[lane] = null;
+                return;
+            }
 
-        /// <summary>
-        ///     Place or remove a hit object at the specified lane and time (can be snapped)
-        /// </summary>
-        /// <param name="lane"></param>
-        /// <param name="time"></param>
-        public void PlaceOrRemoveHitObject(int lane, int time)
-        {
+            var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+
             // Only snaps the time if the audio is playing
             if (ConfigManager.EditorLiveMapSnap.Value && AudioEngine.Track.IsPlaying)
             {
-                time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(
-                    time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
+                time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
             }
 
             var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
 
-            // Can be multiple if overlap
-            var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
-
-            if (hitObjectsAtTime.Count > 0)
+            if (isUniquePress)
             {
-                foreach (var note in hitObjectsAtTime)
-                    ActionManager.RemoveHitObject(note);
+                // Can be multiple if overlap
+                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time)
+                    .ToList();
+
+                if (hitObjectsAtTime.Count > 0)
+                {
+                    foreach (var note in hitObjectsAtTime)
+                        ActionManager.RemoveHitObject(note);
+                }
+                else
+                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer);
             }
-            else
-                ActionManager.PlaceHitObject(lane, time, 0, layer);
+            else if (heldLivemapHitObjectInfos[lane] != null && ConfigManager.EditorLiveMapLongNote.Value)
+            {
+                if (time - heldLivemapHitObjectInfos[lane].StartTime > ConfigManager.EditorLiveMapLongNoteThreshold.Value)
+                    ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[lane], heldLivemapHitObjectInfos[lane].EndTime, time);
+            }
         }
 
         #endregion

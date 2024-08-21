@@ -55,6 +55,16 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private static HashSet<KeybindActions> HoldAndReleaseActions = new HashSet<KeybindActions>()
         {
+            KeybindActions.PlaceNoteAtLane1,
+            KeybindActions.PlaceNoteAtLane2,
+            KeybindActions.PlaceNoteAtLane3,
+            KeybindActions.PlaceNoteAtLane4,
+            KeybindActions.PlaceNoteAtLane5,
+            KeybindActions.PlaceNoteAtLane6,
+            KeybindActions.PlaceNoteAtLane7,
+            KeybindActions.PlaceNoteAtLane8,
+            KeybindActions.PlaceNoteAtLane9,
+            KeybindActions.PlaceNoteAtLane10,
         };
 
         private static HashSet<KeybindActions> EnabledActionsDuringGameplayPreview = new HashSet<KeybindActions>()
@@ -561,7 +571,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.PlaceNoteAtLane10:
                     var lane = (int)(action ^ KeybindActions.PlaceNoteAtLane);
                     if (lane <= Screen.WorkingMap.GetKeyCount())
-                        Screen.PlaceOrRemoveHitObjectAtCurrentTime(lane);
+                        Screen.HandleHitObjectPlacement(lane, isKeyPress, isRelease);
                     break;
                 case KeybindActions.PlaceNoteAtLane:
                 case KeybindActions.SwapNoteAtLane:
