@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Quaver.Shared.Config;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI;
@@ -23,15 +21,15 @@ namespace Quaver.Shared.Screens.Edit.Input
         public EditScreen Screen { get; }
         private EditScreenView View { get; }
 
-        private Dictionary<Keybind, HashSet<KeybindActions>> KeybindDictionary;
-        private GenericKeyState PreviousKeyState;
+        private Dictionary<Keybind, HashSet<KeybindActions>> keybindDictionary;
+        private GenericKeyState previousKeyState;
 
         private const int HoldRepeatActionDelay = 250;
         private const int HoldRepeatActionInterval = 25;
-        private Dictionary<KeybindActions, long> LastActionPress = new Dictionary<KeybindActions, long>();
-        private Dictionary<KeybindActions, long> LastActionTime = new Dictionary<KeybindActions, long>();
+        private readonly Dictionary<KeybindActions, long> lastActionPress = new Dictionary<KeybindActions, long>();
+        private readonly Dictionary<KeybindActions, long> lastActionTime = new Dictionary<KeybindActions, long>();
 
-        private static HashSet<KeybindActions> HoldRepeatActions = new HashSet<KeybindActions>()
+        private static readonly HashSet<KeybindActions> HoldRepeatActions = new HashSet<KeybindActions>()
         {
             KeybindActions.ZoomIn,
             KeybindActions.ZoomInLarge,
@@ -53,7 +51,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.ChangeToolDown,
         };
 
-        private static HashSet<KeybindActions> HoldAndReleaseActions = new HashSet<KeybindActions>()
+        private static readonly HashSet<KeybindActions> HoldAndReleaseActions = new HashSet<KeybindActions>()
         {
             KeybindActions.PlaceNoteAtLane1,
             KeybindActions.PlaceNoteAtLane2,
@@ -67,17 +65,15 @@ namespace Quaver.Shared.Screens.Edit.Input
             KeybindActions.PlaceNoteAtLane10,
         };
 
-        private static HashSet<KeybindActions> EnabledActionsDuringGameplayPreview = new HashSet<KeybindActions>()
-        {
-        };
+        private static HashSet<KeybindActions> EnabledActionsDuringGameplayPreview = new HashSet<KeybindActions>() { };
 
         private static Dictionary<KeybindActions, Bindable<bool>> InvertScrollingActions = new();
 
         public EditorInputManager(EditScreen screen)
         {
             InputConfig = EditorInputConfig.LoadFromConfig();
-            KeybindDictionary = InputConfig.ReverseDictionary(InvertScrollingActions);
-            PreviousKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
+            keybindDictionary = InputConfig.ReverseDictionary(InvertScrollingActions);
+            previousKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
             Screen = screen;
             View = (EditScreenView)screen.View;
 
@@ -103,7 +99,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private void InvertScrollingValueChanged(object sender, BindableValueChangedEventArgs<bool> e)
         {
-            KeybindDictionary = InputConfig.ReverseDictionary(InvertScrollingActions);
+            keybindDictionary = InputConfig.ReverseDictionary(InvertScrollingActions);
         }
 
         public void HandleInput()
@@ -121,11 +117,11 @@ namespace Quaver.Shared.Screens.Edit.Input
         private void HandleKeyPresses()
         {
             var keyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
-            var uniqueKeyPresses = keyState.UniqueKeyPresses(PreviousKeyState);
+            var uniqueKeyPresses = keyState.UniqueKeyPresses(previousKeyState);
             var allMatchedActions = new Dictionary<Keybind, HashSet<KeybindActions>>();
             foreach (var pressedKeybind in keyState.PressedKeybinds())
             {
-                if (!KeybindDictionary.TryGetValue(pressedKeybind, out var actions)) continue;
+                if (!keybindDictionary.TryGetValue(pressedKeybind, out var actions)) continue;
 
                 allMatchedActions.Add(pressedKeybind, actions);
 
@@ -134,7 +130,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     if (uniqueKeyPresses.Contains(pressedKeybind))
                     {
                         HandleAction(action);
-                        LastActionPress[action] = GameBase.Game.TimeRunning;
+                        lastActionPress[action] = GameBase.Game.TimeRunning;
                     }
                     else if (CanRepeat(action))
                         HandleAction(action);
@@ -142,17 +138,20 @@ namespace Quaver.Shared.Screens.Edit.Input
                         HandleAction(action, false);
                 }
             }
+
             HandleActionCombination(allMatchedActions, uniqueKeyPresses);
 
-            PreviousKeyState = keyState;
+            previousKeyState = keyState;
         }
 
-        private void HandleActionCombination(Dictionary<Keybind, HashSet<KeybindActions>> actions, HashSet<Keybind> uniqueKeyPresses)
+        private void HandleActionCombination(Dictionary<Keybind, HashSet<KeybindActions>> actions,
+            HashSet<Keybind> uniqueKeyPresses)
         {
             HandleSwapLane(actions, uniqueKeyPresses);
         }
 
-        private void HandleSwapLane(Dictionary<Keybind, HashSet<KeybindActions>> keybindActions, HashSet<Keybind> uniqueKeyPresses)
+        private void HandleSwapLane(Dictionary<Keybind, HashSet<KeybindActions>> keybindActions,
+            HashSet<Keybind> uniqueKeyPresses)
         {
             var heldLane = -1;
             var uniquePressLane = -1;
@@ -208,15 +207,21 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
         }
 
-        private long TimeSinceLastPress(KeybindActions action) => GameBase.Game.TimeRunning - LastActionPress.GetValueOrDefault(action, GameBase.Game.TimeRunning);
-        private long TimeSinceLastAction(KeybindActions action) => GameBase.Game.TimeRunning - LastActionTime.GetValueOrDefault(action, GameBase.Game.TimeRunning);
+        private long TimeSinceLastPress(KeybindActions action) => GameBase.Game.TimeRunning -
+                                                                  lastActionPress.GetValueOrDefault(action,
+                                                                      GameBase.Game.TimeRunning);
+
+        private long TimeSinceLastAction(KeybindActions action) => GameBase.Game.TimeRunning -
+                                                                   lastActionTime.GetValueOrDefault(action,
+                                                                       GameBase.Game.TimeRunning);
 
         private bool CanRepeat(KeybindActions action)
         {
             if (!HoldRepeatActions.Contains(action))
                 return false;
 
-            return TimeSinceLastAction(action) > HoldRepeatActionInterval && TimeSinceLastPress(action) > HoldRepeatActionDelay;
+            return TimeSinceLastAction(action) > HoldRepeatActionInterval &&
+                   TimeSinceLastPress(action) > HoldRepeatActionDelay;
         }
 
         private bool CanHold(KeybindActions action)
@@ -328,7 +333,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.ChangeAudioPlaybackRate(Direction.Backward);
                     break;
                 case KeybindActions.SetPreviewTime:
-                    Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
+                    Screen.ActionManager.SetPreviewTime((int)Screen.Track.Time);
                     break;
                 case KeybindActions.ChangeToolUp:
                     Screen.ChangeTool(Direction.Backward);
@@ -399,12 +404,14 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.OpenQuaFile:
                     try
                     {
-                        Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}/{Screen.Map.Path}");
+                        Utils.NativeUtils.OpenNatively(
+                            $"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}/{Screen.Map.Path}");
                     }
                     catch (Exception e)
                     {
                         Logger.Error(e, LogType.Runtime);
                     }
+
                     break;
                 case KeybindActions.OpenFolder:
                     try
@@ -415,6 +422,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     {
                         Logger.Error(e, LogType.Runtime);
                     }
+
                     break;
                 case KeybindActions.CreateNewDifficulty:
                     Screen.CreateNewDifficulty(false);
@@ -557,7 +565,8 @@ namespace Quaver.Shared.Screens.Edit.Input
                     DialogManager.Show(new EditorApplyOffsetDialog(Screen));
                     break;
                 case KeybindActions.ResnapToCurrentBeatSnap:
-                    Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
+                    Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value },
+                        Screen.SelectedHitObjects.Value);
                     break;
                 case KeybindActions.PlaceNoteAtLane1:
                 case KeybindActions.PlaceNoteAtLane2:
@@ -589,7 +598,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     return;
             }
 
-            LastActionTime[action] = GameBase.Game.TimeRunning;
+            lastActionTime[action] = GameBase.Game.TimeRunning;
         }
 
         ~EditorInputManager()

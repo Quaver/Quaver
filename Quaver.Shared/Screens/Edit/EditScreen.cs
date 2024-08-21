@@ -21,7 +21,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
-using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -53,7 +52,6 @@ using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -99,7 +97,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     The index of the difficulty to reference (<see cref="UneditableMap"/>)
         /// </summary>
-        public BindableInt ReferenceDifficultyIndex { get; set; } = new (0, 0, int.MaxValue);
+        public BindableInt ReferenceDifficultyIndex { get; set; } = new(0, 0, int.MaxValue);
 
         /// <summary>
         ///     The AudioTrack to be used during this edit session
@@ -128,7 +126,17 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     All of the available beat snaps to use in the editor.
         /// </summary>
-        public static List<int> AvailableBeatSnaps { get; set; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
+        public static List<int> AvailableBeatSnaps { get; set; } = new List<int>
+        {
+            1,
+            2,
+            3,
+            4,
+            6,
+            8,
+            12,
+            16
+        };
 
         /// <summary>
         ///     In Menu -> Edit -> Resnap All/Selected Notes, the divisions to choose
@@ -141,27 +149,33 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public BindableInt PlayfieldScrollSpeed { get; } = ConfigManager.EditorScrollSpeedKeys ?? new BindableInt(20, 1, 40);
+        public BindableInt PlayfieldScrollSpeed { get; } =
+            ConfigManager.EditorScrollSpeedKeys ?? new BindableInt(20, 1, 40);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> AnchorHitObjectsAtMidpoint { get; } = ConfigManager.EditorHitObjectsMidpointAnchored ?? new Bindable<bool>(true);
+        public Bindable<bool> AnchorHitObjectsAtMidpoint { get; } =
+            ConfigManager.EditorHitObjectsMidpointAnchored ?? new Bindable<bool>(true);
 
         /// <summary>
         /// </summary>
-        public BindableInt BackgroundBrightness { get; } = ConfigManager.EditorBackgroundBrightness ?? new BindableInt(40, 1, 100);
+        public BindableInt BackgroundBrightness { get; } =
+            ConfigManager.EditorBackgroundBrightness ?? new BindableInt(40, 1, 100);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableMetronome { get; } = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> EnableMetronome { get; } =
+            ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> MetronomePlayHalfBeats { get; } = ConfigManager.EditorMetronomePlayHalfBeats ?? new Bindable<bool>(false);
+        public Bindable<bool> MetronomePlayHalfBeats { get; } =
+            ConfigManager.EditorMetronomePlayHalfBeats ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableHitsounds { get; } = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> EnableHitsounds { get; } =
+            ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
@@ -169,38 +183,48 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ScaleScrollSpeedWithRate { get; } = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> ScaleScrollSpeedWithRate { get; } =
+            ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> ShowWaveform { get; } =
+            ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ShowSpectrogram { get; } = ConfigManager.EditorShowSpectrogram ?? new Bindable<bool>(true) { Value = true };
+        public Bindable<bool> ShowSpectrogram { get; } =
+            ConfigManager.EditorShowSpectrogram ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
-        public BindableInt WaveformBrightness { get; } = ConfigManager.EditorWaveformBrightness ?? new BindableInt(50, 1, 100);
+        public BindableInt WaveformBrightness { get; } =
+            ConfigManager.EditorWaveformBrightness ?? new BindableInt(50, 1, 100);
 
         /// <summary>
         /// </summary>
-        public BindableInt SpectrogramBrightness { get; } = ConfigManager.EditorSpectrogramBrightness ?? new BindableInt(50, 1, 100);
+        public BindableInt SpectrogramBrightness { get; } =
+            ConfigManager.EditorSpectrogramBrightness ?? new BindableInt(50, 1, 100);
 
         public BindableInt SpectrogramFftSize { get; } =
             ConfigManager.EditorSpectrogramFftSize ?? new BindableInt(256, 256, 16384);
 
         /// <summary>
         /// </summary>
-        public Bindable<EditorPlayfieldWaveformAudioDirection> AudioDirection { get; } = ConfigManager.EditorAudioDirection ?? new Bindable<EditorPlayfieldWaveformAudioDirection>(EditorPlayfieldWaveformAudioDirection.Both);
+        public Bindable<EditorPlayfieldWaveformAudioDirection> AudioDirection { get; } =
+            ConfigManager.EditorAudioDirection ??
+            new Bindable<EditorPlayfieldWaveformAudioDirection>(EditorPlayfieldWaveformAudioDirection.Both);
 
         /// <summary>
         /// </summary>
-        public Bindable<EditorPlayfieldWaveformFilter> WaveformFilter { get; } = ConfigManager.EditorAudioFilter ?? new Bindable<EditorPlayfieldWaveformFilter>(EditorPlayfieldWaveformFilter.None);
+        public Bindable<EditorPlayfieldWaveformFilter> WaveformFilter { get; } = ConfigManager.EditorAudioFilter ??
+            new Bindable<EditorPlayfieldWaveformFilter>(EditorPlayfieldWaveformFilter.None);
 
         /// <summary>
         /// </summary>
-        public Bindable<EditorBeatSnapColor> BeatSnapColor { get; } = ConfigManager.EditorBeatSnapColorType ?? new Bindable<EditorBeatSnapColor>(EditorBeatSnapColor.Default);
+        public Bindable<EditorBeatSnapColor> BeatSnapColor { get; } = ConfigManager.EditorBeatSnapColorType ??
+                                                                      new Bindable<EditorBeatSnapColor>(
+                                                                          EditorBeatSnapColor.Default);
 
         /// <summary>
         /// </summary>
@@ -208,19 +232,23 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<EditorCompositionTool> CompositionTool { get; } = new Bindable<EditorCompositionTool>(EditorCompositionTool.Select);
+        public Bindable<EditorCompositionTool> CompositionTool { get; } =
+            new Bindable<EditorCompositionTool>(EditorCompositionTool.Select);
 
         /// <summary>
         /// </summary>
-        public BindableInt LongNoteOpacity { get; } = ConfigManager.EditorLongNoteOpacity ?? new BindableInt(100, 30, 100);
+        public BindableInt LongNoteOpacity { get; } =
+            ConfigManager.EditorLongNoteOpacity ?? new BindableInt(100, 30, 100);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> DisplayGameplayPreview { get; } = ConfigManager.EditorDisplayGameplayPreview ?? new Bindable<bool>(false);
+        public Bindable<bool> DisplayGameplayPreview { get; } =
+            ConfigManager.EditorDisplayGameplayPreview ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> PlaceObjectsOnNearestTick { get; } = ConfigManager.EditorPlaceObjectsOnNearestTick ?? new Bindable<bool>(true);
+        public Bindable<bool> PlaceObjectsOnNearestTick { get; } =
+            ConfigManager.EditorPlaceObjectsOnNearestTick ?? new Bindable<bool>(true);
 
         /// <summary>
         /// </summary>
@@ -228,7 +256,8 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> InvertBeatSnapScroll { get; } = ConfigManager.EditorInvertBeatSnapScroll ?? new Bindable<bool>(false);
+        public Bindable<bool> InvertBeatSnapScroll { get; } =
+            ConfigManager.EditorInvertBeatSnapScroll ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>
@@ -248,7 +277,8 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public BindableList<HitObjectInfo> SelectedHitObjects { get; set; } = new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
+        public BindableList<HitObjectInfo> SelectedHitObjects { get; set; } =
+            new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
 
         /// <summary>
         /// </summary>
@@ -271,9 +301,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public EditorLayerInfo DefaultLayer { get; } = new EditorLayerInfo
         {
-            Name = "Default Layer",
-            Hidden = false,
-            ColorRgb = "255,255,255"
+            Name = "Default Layer", Hidden = false, ColorRgb = "255,255,255"
         };
 
 
@@ -283,7 +311,8 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; set; } = new Bindable<SelectContainerPanel>(SelectContainerPanel.MapPreview);
+        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; set; } =
+            new Bindable<SelectContainerPanel>(SelectContainerPanel.MapPreview);
 
         /// <summary>
         /// </summary>
@@ -326,7 +355,8 @@ namespace Quaver.Shared.Screens.Edit
                 Exit(() => new SelectionScreen());
 
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while loading this map in the editor.");
+                NotificationManager.Show(NotificationLevel.Error,
+                    "There was an issue while loading this map in the editor.");
                 return;
             }
 
@@ -334,7 +364,8 @@ namespace Quaver.Shared.Screens.Edit
 
             ActionManager = new EditorActionManager(this, WorkingMap);
             UneditableMap = new Bindable<Qua>(null);
-            Metronome = new Metronome(WorkingMap, Track, ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
+            Metronome = new Metronome(WorkingMap, Track,
+                ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             LoadSkin();
             SetHitSoundObjectIndex();
@@ -582,7 +613,17 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     Removes All Custom Beat Snaps added by the user in CustomBeatSnapDialog.
         /// </summary>
-        private void RemoveCustomBeatSnaps() => AvailableBeatSnaps = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
+        private void RemoveCustomBeatSnaps() => AvailableBeatSnaps = new List<int>
+        {
+            1,
+            2,
+            3,
+            4,
+            6,
+            8,
+            12,
+            16
+        };
 
         /// <summary>
         /// </summary>
@@ -613,7 +654,8 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="snapFactor"></param>
         /// <param name="enableMoving"></param>
         /// <param name="enableSelection"></param>
-        public double SeekInDirection(Direction direction, float snapFactor = 1, bool enableMoving = false, bool enableSelection = false)
+        public double SeekInDirection(Direction direction, float snapFactor = 1, bool enableMoving = false,
+            bool enableSelection = false)
         {
             var snap = BeatSnap.Value * snapFactor;
 
@@ -673,7 +715,8 @@ namespace Quaver.Shared.Screens.Edit
         public void SeekToEndOfSelection(bool enableSelection = false)
         {
             if (SelectedHitObjects.Value.Count == 0) return;
-            SeekTo(SelectedHitObjects.Value.Max(h => Math.Max(h.StartTime, h.EndTime)), enableSelection: enableSelection);
+            SeekTo(SelectedHitObjects.Value.Max(h => Math.Max(h.StartTime, h.EndTime)),
+                enableSelection: enableSelection);
         }
 
         #endregion
@@ -694,7 +737,8 @@ namespace Quaver.Shared.Screens.Edit
             return nextLayer;
         }
 
-        public void ChangeSelectedLayer(Direction direction) => SelectedLayer.Value = GetNextLayerInDirection(direction, SelectedLayer.Value);
+        public void ChangeSelectedLayer(Direction direction) =>
+            SelectedLayer.Value = GetNextLayerInDirection(direction, SelectedLayer.Value);
 
         public void ToggleSelectedLayerVisibility() => ActionManager.ToggleLayerVisibility(SelectedLayer.Value);
 
@@ -705,19 +749,20 @@ namespace Quaver.Shared.Screens.Edit
             ActionManager.ToggleLayerVisibility(DefaultLayer);
         }
 
-        public void MoveSelectedNotesToCurrentLayer() => ActionManager.MoveHitObjectsToLayer(SelectedLayer.Value, SelectedHitObjects.Value);
+        public void MoveSelectedNotesToCurrentLayer() =>
+            ActionManager.MoveHitObjectsToLayer(SelectedLayer.Value, SelectedHitObjects.Value);
 
         public void AddNewLayer()
         {
             var layer = new EditorLayerInfo
             {
-                Name = $"Layer {WorkingMap.EditorLayers.Count + 1}",
-                ColorRgb = "255,255,255"
+                Name = $"Layer {WorkingMap.EditorLayers.Count + 1}", ColorRgb = "255,255,255"
             };
 
             // FindIndex() returns -1 when the default layer is selected
             int index = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 2;
-            ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer, index));
+            ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer,
+                index));
         }
 
         public void DeleteLayer()
@@ -728,13 +773,16 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
-            ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects, SelectedLayer.Value));
+            ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects,
+                SelectedLayer.Value));
             NotificationManager.Show(NotificationLevel.Success, $"Deleted layer '{SelectedLayer.Value.Name}'");
         }
 
-        public void RenameLayer() => DialogManager.Show(new DialogRenameLayer(SelectedLayer.Value, ActionManager, WorkingMap));
+        public void RenameLayer() =>
+            DialogManager.Show(new DialogRenameLayer(SelectedLayer.Value, ActionManager, WorkingMap));
 
-        public void RecolorLayer() => DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
+        public void RecolorLayer() =>
+            DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
 
         #endregion
 
@@ -774,14 +822,20 @@ namespace Quaver.Shared.Screens.Edit
 
             BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, IEditorPlugin>()
             {
-                {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
-                {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
-                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
-                    $"{dir}/BpmCalculator/plugin.lua", true)},
-                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
-                    $"{dir}/BpmDetector/plugin.lua", true)},
-                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
-                    $"{dir}/GoToObjects/plugin.lua", true)}
+                { EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this) },
+                { EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this) },
+                {
+                    EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
+                        $"{dir}/BpmCalculator/plugin.lua", true)
+                },
+                {
+                    EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
+                        $"{dir}/BpmDetector/plugin.lua", true)
+                },
+                {
+                    EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
+                        $"{dir}/GoToObjects/plugin.lua", true)
+                }
             };
 
             foreach (var plugin in BuiltInPlugins)
@@ -801,13 +855,15 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (!File.Exists(pluginPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file",
+                        LogType.Runtime);
                     continue;
                 }
 
                 if (!File.Exists(settingsPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file",
+                        LogType.Runtime);
                     continue;
                 }
 
@@ -909,7 +965,8 @@ namespace Quaver.Shared.Screens.Edit
             if (resnapObjects)
             {
                 // Don't add to undo stack
-                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> { 16, 12 }, clonedObjects, false);
+                var resnapAction = new EditorActionResnapHitObjects(ActionManager, WorkingMap, new List<int> { 16, 12 },
+                    clonedObjects, false);
                 resnapAction.Perform();
             }
 
@@ -984,7 +1041,8 @@ namespace Quaver.Shared.Screens.Edit
             if (SelectedLayer.Value != null)
                 layer = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value) + 1;
 
-            var objects = WorkingMap.HitObjects.FindAll(x => x.EditorLayer == layer && !SelectedHitObjects.Value.Contains(x));
+            var objects =
+                WorkingMap.HitObjects.FindAll(x => x.EditorLayer == layer && !SelectedHitObjects.Value.Contains(x));
             SelectedHitObjects.AddRange(objects);
         }
 
@@ -996,7 +1054,8 @@ namespace Quaver.Shared.Screens.Edit
             if (SelectedHitObjects.Value.Count == 0)
                 return;
 
-            ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+            ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap,
+                new List<HitObjectInfo>(SelectedHitObjects.Value)));
         }
 
         /// <summary>
@@ -1045,7 +1104,8 @@ namespace Quaver.Shared.Screens.Edit
             // Only snaps the time if the audio is playing
             if (ConfigManager.EditorLiveMapSnap.Value && AudioEngine.Track.IsPlaying)
             {
-                time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
+                time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(
+                    time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
             }
 
             var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
@@ -1066,8 +1126,10 @@ namespace Quaver.Shared.Screens.Edit
             }
             else if (heldLivemapHitObjectInfos[lane] != null && ConfigManager.EditorLiveMapLongNote.Value)
             {
-                if (time - heldLivemapHitObjectInfos[lane].StartTime > ConfigManager.EditorLiveMapLongNoteThreshold.Value)
-                    ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[lane], heldLivemapHitObjectInfos[lane].EndTime, time);
+                if (time - heldLivemapHitObjectInfos[lane].StartTime >
+                    ConfigManager.EditorLiveMapLongNoteThreshold.Value)
+                    ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[lane],
+                        heldLivemapHitObjectInfos[lane].EndTime, time);
             }
         }
 
@@ -1096,7 +1158,9 @@ namespace Quaver.Shared.Screens.Edit
             switch (direction)
             {
                 case Direction.Forward:
-                    BeatSnap.Value = index + 1 < AvailableBeatSnaps.Count ? AvailableBeatSnaps[index + 1] : AvailableBeatSnaps.First();
+                    BeatSnap.Value = index + 1 < AvailableBeatSnaps.Count
+                        ? AvailableBeatSnaps[index + 1]
+                        : AvailableBeatSnaps.First();
                     break;
                 case Direction.Backward:
                     BeatSnap.Value = index - 1 >= 0 ? AvailableBeatSnaps[index - 1] : AvailableBeatSnaps.Last();
@@ -1127,7 +1191,8 @@ namespace Quaver.Shared.Screens.Edit
 
             if (targetRate <= 0 || targetRate > 2.0f)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot change the audio rate this way any further!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "You cannot change the audio rate this way any further!");
                 return;
             }
 
@@ -1274,7 +1339,8 @@ namespace Quaver.Shared.Screens.Edit
             if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                 MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
 
-            NotificationManager.Show(NotificationLevel.Info, $"The cached data for this file will be updated when you leave the editor.");
+            NotificationManager.Show(NotificationLevel.Info,
+                $"The cached data for this file will be updated when you leave the editor.");
         }
 
         /// <summary>
@@ -1313,13 +1379,15 @@ namespace Quaver.Shared.Screens.Edit
 
             if (WorkingMap.HitObjects.Count(x => x.StartTime >= Track.Time) == 0)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "There aren't any hitobjects to play past this point!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "There aren't any hitobjects to play past this point!");
                 return;
             }
 
             if (WorkingMap.TimingPoints.Count == 0)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "A timing point must be added to your map before test playing!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "A timing point must be added to your map before test playing!");
                 return;
             }
 
@@ -1344,7 +1412,8 @@ namespace Quaver.Shared.Screens.Edit
 
                 var startTime = fromStart ? 0 : Track.Time;
 
-                return new GameplayScreen(map, "", new List<Score>(), null, true, startTime, false, null, null, false, true);
+                return new GameplayScreen(map, "", new List<Score>(), null, true, startTime, false, null, null, false,
+                    true);
             });
         }
 
@@ -1423,7 +1492,8 @@ namespace Quaver.Shared.Screens.Edit
                 File.Copy(audioFile, $"{dir}/{audioFileName}");
 
                 // Save the new .qua file into the directory
-                var path = $"{dir}/{StringHelper.FileNameSafeString($"{TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                var path =
+                    $"{dir}/{StringHelper.FileNameSafeString($"{TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
                 qua.Save(path);
 
                 // Create a new database map
@@ -1526,7 +1596,8 @@ namespace Quaver.Shared.Screens.Edit
                         qua.HitObjects.Clear();
 
                     var dir = $"{ConfigManager.SongDirectory.Value}/{Map.Directory}";
-                    var path = $"{dir}/{StringHelper.FileNameSafeString($"{TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                    var path =
+                        $"{dir}/{StringHelper.FileNameSafeString($"{TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
                     qua.Save(path);
 
                     // Add the new map to the db.
@@ -1548,7 +1619,8 @@ namespace Quaver.Shared.Screens.Edit
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new difficulty.");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        "There was an issue while creating a new difficulty.");
                 }
             });
         }
@@ -1569,7 +1641,8 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (!OnlineManager.Connected)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to submit your mapset for rank!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "You must be logged in to submit your mapset for rank!");
                 return;
             }
 
@@ -1578,7 +1651,8 @@ namespace Quaver.Shared.Screens.Edit
 
             if (ActionManager.HasUnsavedChanges)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Your map has unsaved changes. Please save & upload before submitting for rank.");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "Your map has unsaved changes. Please save & upload before submitting for rank.");
                 return;
             }
 
@@ -1644,7 +1718,8 @@ namespace Quaver.Shared.Screens.Edit
 
             if (Map.Game != MapGame.Quaver)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot set a new background for a map loaded from another game.");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "You cannot set a new background for a map loaded from another game.");
                 return;
             }
 
@@ -1667,11 +1742,7 @@ namespace Quaver.Shared.Screens.Edit
             if (!Directory.Exists(dir))
                 return;
 
-            FileWatcher = new FileSystemWatcher(dir)
-            {
-                NotifyFilter = NotifyFilters.LastWrite,
-                Filter = $"{Map.Path}"
-            };
+            FileWatcher = new FileSystemWatcher(dir) { NotifyFilter = NotifyFilters.LastWrite, Filter = $"{Map.Path}" };
 
             FileWatcher.Changed += (sender, args) =>
             {
@@ -1733,7 +1804,8 @@ namespace Quaver.Shared.Screens.Edit
             {
                 DiscordHelper.Presence.StartTimestamp = (long)(TimeHelper.GetUnixTimestampMilliseconds() / 1000);
                 DiscordHelper.Presence.EndTimestamp = 0;
-                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+                DiscordHelper.Presence.LargeImageText =
+                    OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
                 DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
                 DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
 
