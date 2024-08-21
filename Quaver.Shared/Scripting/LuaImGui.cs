@@ -35,8 +35,8 @@ namespace Quaver.Shared.Scripting
         // </summary>
         public virtual string Name
         {
-        	get => Path.GetFileName(Path.GetDirectoryName(FilePath));
-        	set { }
+            get => Path.GetFileName(Path.GetDirectoryName(FilePath));
+            set { }
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Quaver.Shared.Scripting
                 }
 
                 if (WorkingScript.DoString(ScriptText) is var ret && ret.Type is not DataType.Void)
-                	NotificationManager.Show(NotificationLevel.Info, $"Plugin {Name} returned {ret}.");
+                    NotificationManager.Show(NotificationLevel.Info, $"Plugin {Name} returned {ret}.");
             }
             catch (Exception e)
             {
@@ -244,7 +244,8 @@ namespace Quaver.Shared.Scripting
         {
             // Vector 2
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector2),
-                dynVal => {
+                dynVal =>
+                {
                     var table = dynVal.Table;
                     var x = (float)(double)table[1];
                     var y = (float)(double)table[2];
@@ -253,7 +254,8 @@ namespace Quaver.Shared.Scripting
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
-                (script, vector) => {
+                (script, vector) =>
+                {
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var dynVal = DynValue.NewTable(script, x, y);
@@ -263,7 +265,8 @@ namespace Quaver.Shared.Scripting
 
             // Vector3
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector3),
-                dynVal => {
+                dynVal =>
+                {
                     var table = dynVal.Table;
                     var x = (float)((double)table[1]);
                     var y = (float)((double)table[2]);
@@ -273,7 +276,8 @@ namespace Quaver.Shared.Scripting
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
-                (script, vector) => {
+                (script, vector) =>
+                {
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var z = DynValue.NewNumber(vector.Z);
@@ -284,7 +288,8 @@ namespace Quaver.Shared.Scripting
 
             // Vector4
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector4),
-                dynVal => {
+                dynVal =>
+                {
                     var table = dynVal.Table;
                     var x = (float)((double)table[1]);
                     var y = (float)((double)table[2]);
@@ -295,7 +300,8 @@ namespace Quaver.Shared.Scripting
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
-                (script, vector) => {
+                (script, vector) =>
+                {
                     var x = DynValue.NewNumber(vector.X);
                     var y = DynValue.NewNumber(vector.Y);
                     var z = DynValue.NewNumber(vector.Z);
@@ -312,12 +318,12 @@ namespace Quaver.Shared.Scripting
         private void HandleLuaException(Exception e)
         {
             if (DateTime.Now - LastException < TimeSpan.FromMilliseconds(100))
-            	return;
+                return;
 
             LastException = DateTime.Now;
             Logger.Error(e, LogType.Runtime);
 
-    	    var summary = e switch
+            var summary = e switch
             {
                 DynamicExpressionException => "a dynamic expression",
                 InternalErrorException => "an internal",

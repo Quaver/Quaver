@@ -28,10 +28,10 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool ChangesMapObjects { get; set; }
 
-        public ModIdentifier[] IncompatibleMods { get; set; } = {};
+        public ModIdentifier[] IncompatibleMods { get; set; } = { };
 
         public Color ModColor { get; }
 
-        public void InitializeMod() {}
+        public void InitializeMod() { }
     }
 }

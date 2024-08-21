@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Options.Content
                 foreach (var item in subcategory.Items)
                 {
                     if (item is OptionsItemDropdown)
-                        dropdowns.Add((OptionsItemDropdown) item);
+                        dropdowns.Add((OptionsItemDropdown)item);
                     else
                         AddContainedDrawable(item);
 
@@ -143,7 +143,7 @@ namespace Quaver.Shared.Screens.Options.Content
         /// <param name="e"></param>
         private void OnScrolledToCategory(object sender, EventArgs e)
         {
-            var category = (OptionsSubcategory) sender;
+            var category = (OptionsSubcategory)sender;
 
             foreach (var child in ContentContainer.Children)
             {

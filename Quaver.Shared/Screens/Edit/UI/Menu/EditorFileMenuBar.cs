@@ -245,7 +245,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 for (var i = 1; i <= Screen.WorkingMap.GetKeyCount(); i++)
                 {
                     if (ImGui.BeginMenu($"Lane {i}"))
-                    { 
+                    {
                         for (var j = 1; j <= Screen.WorkingMap.GetKeyCount(); j++)
                         {
                             if (i == j) continue;
@@ -525,9 +525,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Snap Notes When Live Mapping", "", ConfigManager.EditorLiveMapSnap.Value))
                 ConfigManager.EditorLiveMapSnap.Value = !ConfigManager.EditorLiveMapSnap.Value;
-            
+
             if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
+
+            if (ImGui.MenuItem("Place Long Notes When Live Mapping", "", ConfigManager.EditorLiveMapLongNote.Value))
+                ConfigManager.EditorLiveMapLongNote.Value = !ConfigManager.EditorLiveMapLongNote.Value;
+
+            if (ImGui.MenuItem("Set Minimum Length Of Long Notes Placed During Live Mapping"))
+                DialogManager.Show(new EditorSetLiveMapLongNoteThresholdDialog(Screen));
 
             ImGui.Separator();
 
@@ -579,7 +585,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 ImGui.EndMenu();
             }
-            
+
             if (ImGui.BeginMenu("Spectrogram"))
             {
                 if (ImGui.MenuItem("Visible", "", Screen.ShowSpectrogram.Value))
@@ -600,7 +606,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Precision"))
                 {
                     for (var interleaveCount = 1; interleaveCount <= 16; interleaveCount *= 2)
@@ -623,7 +629,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Frequency Scale"))
                 {
                     foreach (var scale in Enum.GetValues<EditorPlayfieldSpectrogramFrequencyScale>())
@@ -644,7 +650,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Intensity Factor"))
                 {
                     for (var i = 0; i < 10; i++)
@@ -655,13 +661,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Minimum Frequency"))
                 {
                     for (var f = 0; f <= 1500; f += 125)
                     {
                         if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMinimumFrequency.Value == f,
-                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f)) 
+                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f))
                             ConfigManager.EditorSpectrogramMinimumFrequency.Value = f;
                     }
                     ImGui.EndMenu();
@@ -672,12 +678,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     for (var f = 5000; f <= 10000; f += 1000)
                     {
                         if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMaximumFrequency.Value == f,
-                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f)) 
+                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f))
                             ConfigManager.EditorSpectrogramMaximumFrequency.Value = f;
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 ImGui.EndMenu();
             }
 

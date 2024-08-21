@@ -253,7 +253,7 @@ namespace Quaver.Shared.Screens.Menu
         /// <summary>
         ///     Creates the audio visaulizer container for the screen
         /// </summary>12
-        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
+        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int)WindowManager.Width, 400, 150, 5)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft,
@@ -383,7 +383,7 @@ namespace Quaver.Shared.Screens.Menu
                 return;
             }
 
-            var button = (Button) sender;
+            var button = (Button)sender;
             button.IsClickable = false;
 
             screen?.Exit(() =>
@@ -417,7 +417,7 @@ namespace Quaver.Shared.Screens.Menu
                 return;
             }
 
-            var screen = (QuaverScreen) Screen;
+            var screen = (QuaverScreen)Screen;
 
             if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
             {

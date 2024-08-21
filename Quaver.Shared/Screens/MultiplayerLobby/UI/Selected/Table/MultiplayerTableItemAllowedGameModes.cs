@@ -1,7 +1,7 @@
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table

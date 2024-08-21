@@ -146,7 +146,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                     if (dict.ContainsKey(keybind))
                         dict[keybind].Add(action);
                     else
-                        dict[keybind] = new HashSet<KeybindActions>() {action};
+                        dict[keybind] = new HashSet<KeybindActions>() { action };
                 }
             }
 
@@ -179,12 +179,13 @@ namespace Quaver.Shared.Screens.Edit.Input
                 .DisableAliases()
                 .Build();
 
-            var stringWriter = new StringWriter {NewLine = "\r\n"};
+            var stringWriter = new StringWriter { NewLine = "\r\n" };
             serializer.Serialize(stringWriter, this);
             return stringWriter.ToString();
         }
 
-        [YamlIgnore] public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
+        [YamlIgnore]
+        public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
         {
             {ExitEditor, new KeybindList(Keys.Escape)},
             {PlayPause, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Space), new Keybind(KeyModifiers.Free, Keys.Enter)})},

@@ -4,7 +4,7 @@ using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Screens.Results;
@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Tests.ResultsMulti
             CountGood = 13,
             CountOkay = 4,
             CountMiss = 45,
-            Mods = (long) (ModIdentifier.Speed12X | ModIdentifier.Mirror | ModIdentifier.NoLongNotes | ModIdentifier.NoFail),
+            Mods = (long)(ModIdentifier.Speed12X | ModIdentifier.Mirror | ModIdentifier.NoLongNotes | ModIdentifier.NoFail),
             JudgementWindowMarv = 16,
             JudgementWindowPerf = 43,
             JudgementWindowGreat = 76,

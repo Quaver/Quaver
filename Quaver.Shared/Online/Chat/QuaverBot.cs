@@ -5,14 +5,11 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Helpers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 

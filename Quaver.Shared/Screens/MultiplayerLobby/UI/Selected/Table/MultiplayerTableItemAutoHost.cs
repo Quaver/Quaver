@@ -1,9 +1,8 @@
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Online;
 using Wobble.Bindables;
-using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {

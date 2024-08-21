@@ -1,22 +1,12 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
-using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Graphics.Playercards;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
-using Quaver.Shared.Screens.Tests.UI;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Graphics;
-using Wobble.Graphics.Animations;
-using Wobble.Input;
-using Wobble.Managers;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Tests.Border
@@ -30,7 +20,7 @@ namespace Quaver.Shared.Screens.Tests.Border
         public MenuBorderTestScreenView(Screen screen) : base(screen)
         {
             // ReSharper disable twice ObjectCreationAsStatement
-            new TestMenuBorderHeader {Parent = Container};
+            new TestMenuBorderHeader { Parent = Container };
             new TestMenuBorderFooter
             {
                 Parent = Container,
@@ -51,9 +41,9 @@ namespace Quaver.Shared.Screens.Tests.Border
                 UserGroups = UserGroups.Normal,
                 Username = "TestUser27"
             })
-                {
-                    CurrentStatus = new UserClientStatus(ClientStatus.Paused, -1, "", 1, "", 0)
-                })
+            {
+                CurrentStatus = new UserClientStatus(ClientStatus.Paused, -1, "", 1, "", 0)
+            })
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,

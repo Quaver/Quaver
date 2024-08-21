@@ -25,9 +25,9 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Dialogs
 {
-   public class ConfirmCancelDialog : DialogScreen
+    public class ConfirmCancelDialog : DialogScreen
     {
-         /// <summary>
+        /// <summary>
         ///     The box where all the content is contained.
         /// </summary>
         public Sprite ContainingBox { get; set; }

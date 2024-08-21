@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Quaver.API.Maps;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Client.Structures.v2;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -58,19 +62,22 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 Logger.Important("Successfully saved the current map", LogType.Network);
 
                 var path = MapManager.Selected.Value.Mapset.ExportToZip(false);
-                var response = OnlineManager.Client.UploadMapset(path);
-                
+                var response = OnlineManager.Client.UploadMapsetV2(path);
+
                 Logger.Important(response.ToString(), LogType.Network);
 
                 var folderPath = $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}";
 
+                var json = JObject.Parse(response.Content);
+                var responseParsed = JsonConvert.DeserializeObject<V2UploadMapsetResponse>(json.ToString());
+
                 // Successful upload
-                if (response.Code == MapsetSubmissionStatusCode.SuccessUpdated || response.Code == MapsetSubmissionStatusCode.SuccessUploaded)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var newMaps = new List<Map>();
                     Map sameDifficultyMap = null;
 
-                    foreach (var map in response.Maps)
+                    foreach (var map in responseParsed.Mapset.Maps)
                     {
                         if (map == null)
                             continue;
@@ -129,8 +136,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                             File.Delete(file);
                     }
 
-                    var uploadStr = response.Code == MapsetSubmissionStatusCode.SuccessUploaded ? "uploaded" : "updated";
-                    NotificationManager.Show(NotificationLevel.Success, $"Your mapset has been successfully {uploadStr}!");
+                    NotificationManager.Show(NotificationLevel.Success, $"Your mapset has been successfully uploaded!");
 
                     // If for some reason the map with the same difficulty
                     if (sameDifficultyMap == null)
@@ -148,8 +154,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                     return;
                 }
 
-                Logger.Important($"Error uploading mapset: {response.Code} | {response.Status} | {StatusCodeMessages[response.Code]}", LogType.Network);
-                NotificationManager.Show(NotificationLevel.Error, StatusCodeMessages[response.Code]);
+                Logger.Important($"Error uploading mapset: {response.ResponseStatus} | {responseParsed.Error}", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, $"Error uploading mapset: {responseParsed.Error}");
             }
             catch (Exception e)
             {

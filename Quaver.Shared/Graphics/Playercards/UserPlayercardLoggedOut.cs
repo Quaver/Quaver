@@ -90,7 +90,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),"", 20)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,

@@ -114,7 +114,8 @@ namespace Quaver.Shared.Screens.Main
         private void CreateBackground()
         {
             Background = new BackgroundImage(SkinManager.Skin?.MainMenu?.Background ?? UserInterface.TrianglesWallpaper, 0,
-                false) {Parent = Container};
+                false)
+            { Parent = Container };
         }
 
         /// <summary>
@@ -256,7 +257,7 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         private void CreateAudioVisualizer()
         {
-            var visBottom = new MenuAudioVisualizer((int) WindowManager.Width, 750, 220, 3, 8)
+            var visBottom = new MenuAudioVisualizer((int)WindowManager.Width, 750, 220, 3, 8)
             {
                 Parent = Container,
                 Y = -MenuBorder.HEIGHT,
@@ -267,7 +268,7 @@ namespace Quaver.Shared.Screens.Main
             {
                 bar.Alignment = Alignment.BotRight;
                 bar.X = -bar.X;
-                bar.Alpha =  SkinManager.Skin?.MainMenu?.AudioVisualizerOpacity ?? 0.85f;
+                bar.Alpha = SkinManager.Skin?.MainMenu?.AudioVisualizerOpacity ?? 0.85f;
                 bar.Tint = SkinManager.Skin?.MainMenu?.AudioVisualizerColor ?? Colors.MainBlue;
             });
         }

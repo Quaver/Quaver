@@ -20,7 +20,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
         /// </summary>
         /// <param name="container"></param>
         /// <param name="clickAction"></param>
-        public MenuDialogItemButton(PoolableScrollContainer<IMenuDialogOption> container, EventHandler clickAction = null) 
+        public MenuDialogItemButton(PoolableScrollContainer<IMenuDialogOption> container, EventHandler clickAction = null)
             : base(UserInterface.BlankBox, clickAction)
         {
             Container = container;

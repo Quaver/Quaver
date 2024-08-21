@@ -23,13 +23,8 @@
       Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj"
       Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"
     />
-    <ProjectReference
-      Include="../Quaver.Server.Common/Quaver.Server.Common/Quaver.Server.Common.csproj"
-      Condition="Exists('../Quaver.Server.Common/Quaver.Server.Common/Quaver.Server.Common.csproj')"
-    />
 
     <Reference Include="Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"/>
-    <Reference Include="Quaver.Server.Common.dll" Condition="!Exists('../Quaver.Server.Common/Quaver.Server.Common/Quaver.Server.Common.csproj')"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="Content/**">
@@ -71,7 +66,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RestSharp" Version="106.12.0" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
     <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.6" />
     <PackageReference Include="SQLitePCLRaw.core" Version="2.0.6" />

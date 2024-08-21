@@ -64,7 +64,7 @@ namespace Quaver.Shared.Audio
                 for (var i = 0; i < 8; i++)
                 {
                     var average = 0f;
-                    var sampleCount = (int) Math.Pow(2, i) * 2;
+                    var sampleCount = (int)Math.Pow(2, i) * 2;
 
                     if (i == 7)
                     {

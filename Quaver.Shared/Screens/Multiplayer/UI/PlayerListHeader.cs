@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Helpers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Audio;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
-using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -120,7 +116,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 else
                 {
                     var targetTime = OnlineManager.CurrentGame.CountdownStartTime + 5000;
-                    var timeLeft = (int) ((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - targetTime) / 1000);
+                    var timeLeft = (int)((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - targetTime) / 1000);
 
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (LastNearestSecond != timeLeft)

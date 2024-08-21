@@ -55,9 +55,9 @@ namespace Quaver.Shared.Graphics.Menu
         /// <param name="scale"></param>
         private void FadeTextToColor(Color color, double dt, int scale)
         {
-            var r = MathHelper.Lerp(Text.Tint.R, color.R, (float) Math.Min(dt / scale, 1));
-            var g = MathHelper.Lerp(Text.Tint.G, color.G, (float) Math.Min(dt / scale, 1));
-            var b = MathHelper.Lerp(Text.Tint.B, color.B, (float) Math.Min(dt / scale, 1));
+            var r = MathHelper.Lerp(Text.Tint.R, color.R, (float)Math.Min(dt / scale, 1));
+            var g = MathHelper.Lerp(Text.Tint.G, color.G, (float)Math.Min(dt / scale, 1));
+            var b = MathHelper.Lerp(Text.Tint.B, color.B, (float)Math.Min(dt / scale, 1));
 
             Text.Tint = new Color((int)r, (int)g, (int)b);
         }

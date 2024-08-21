@@ -5,7 +5,7 @@ using Quaver.API.Enums;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
+using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
@@ -13,13 +13,10 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
-using SQLite;
-using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Playercards
@@ -273,7 +270,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Key = {UsePreviousSpriteBatchOptions = true},
+                Key = { UsePreviousSpriteBatchOptions = true },
                 Value =
                 {
                     Parent = this,
@@ -296,7 +293,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Key = {UsePreviousSpriteBatchOptions = true},
+                Key = { UsePreviousSpriteBatchOptions = true },
                 Value =
                 {
                     Parent = this,
@@ -319,7 +316,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Key = {UsePreviousSpriteBatchOptions = true},
+                Key = { UsePreviousSpriteBatchOptions = true },
                 Value =
                 {
                     Parent = this,
@@ -340,8 +337,8 @@ namespace Quaver.Shared.Graphics.Playercards
         {
             Avatar.Image = UserInterface.UnknownAvatar;
 
-            if (User != null && SteamManager.UserAvatars != null && SteamManager.UserAvatars.ContainsKey((ulong) User.OnlineUser.SteamId))
-                Avatar.Image = SteamManager.UserAvatars[(ulong) User.OnlineUser.SteamId];
+            if (User != null && SteamManager.UserAvatars != null && SteamManager.UserAvatars.ContainsKey((ulong)User.OnlineUser.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong)User.OnlineUser.SteamId];
 
             Avatar.Border.Tint = Colors.GetUserChatColor(User?.OnlineUser?.UserGroups ?? UserGroups.Normal);
 
@@ -349,7 +346,7 @@ namespace Quaver.Shared.Graphics.Playercards
 
             Username.Text = User?.OnlineUser?.Username ?? "Player";
             Username.Tint = Avatar.Border.Tint;
-            Username.TruncateWithEllipsis((int) Width - 30);
+            Username.TruncateWithEllipsis((int)Width - 30);
 
             Status.Text = GetStatusText();
             ModeButton.Image = GetModeImage();
@@ -358,7 +355,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 GlobalRanking.Value.Text = $"#{User.Stats[ActiveMode].Rank:n0}";
                 OverallRating.Value.Text = StringHelper.RatingToString(User.Stats[ActiveMode].OverallPerformanceRating);
-                OverallAccuracy.Value.Text = StringHelper.AccuracyToString((float) User.Stats[ActiveMode].OverallAccuracy);
+                OverallAccuracy.Value.Text = StringHelper.AccuracyToString((float)User.Stats[ActiveMode].OverallAccuracy);
             }
         });
 

@@ -148,8 +148,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             DateTime.TryParse(startUploadDate, out var startDate);
             DateTime.TryParse(endUploadDate, out var endDate);
 
-            UploadStartDate = (long) DateTimeToUnixTimestamp(startDate);
-            UploadEndDate = (long) DateTimeToUnixTimestamp(endDate);
+            UploadStartDate = (long)DateTimeToUnixTimestamp(startDate);
+            UploadEndDate = (long)DateTimeToUnixTimestamp(endDate);
 
             // Update Date
             if (string.IsNullOrEmpty(startUpdateDate))
@@ -161,8 +161,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             DateTime.TryParse(startUpdateDate, out var startLastUpdateDate);
             DateTime.TryParse(endUpdateDate, out var endLastUpdateDate);
 
-            LastUpdatedStartDate = (long) DateTimeToUnixTimestamp(startLastUpdateDate);
-            LastUpdatedEndDate = (long) DateTimeToUnixTimestamp(endLastUpdateDate);
+            LastUpdatedStartDate = (long)DateTimeToUnixTimestamp(startLastUpdateDate);
+            LastUpdatedEndDate = (long)DateTimeToUnixTimestamp(endLastUpdateDate);
         }
 
         /// <summary>
@@ -191,8 +191,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("maxlns", MaxLongNotePercent.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("mindate", UploadStartDate.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("maxdate", UploadEndDate.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("mindatelastupdated",LastUpdatedStartDate.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxdatelastupdated",LastUpdatedEndDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("mindatelastupdated", LastUpdatedStartDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("maxdatelastupdated", LastUpdatedEndDate.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("mincombo", MinCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("maxcombo", MaxCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("page", Page.ToString());
@@ -204,7 +204,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             }
             catch (Exception e)
             {
-                Logger.Error(e,LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
 
                 return new APIResponseMapsetSearch
                 {
@@ -227,11 +227,11 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                     if (mode == DownloadFilterMode.All)
                         continue;
 
-                    request.AddQueryParameter("mode", ((int) mode).ToString());
+                    request.AddQueryParameter("mode", ((int)mode).ToString());
                 }
             }
             else
-                request.AddQueryParameter("mode", ((int) Mode).ToString());
+                request.AddQueryParameter("mode", ((int)Mode).ToString());
         }
 
         /// <summary>
@@ -246,12 +246,12 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                     if (status == DownloadFilterRankedStatus.All)
                         continue;
 
-                    request.AddQueryParameter("status", ((int) status).ToString());
+                    request.AddQueryParameter("status", ((int)status).ToString());
                 }
             }
             else
             {
-                request.AddQueryParameter("status", ((int) Status).ToString());
+                request.AddQueryParameter("status", ((int)Status).ToString());
             }
         }
 
@@ -264,7 +264,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             var unixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             var unixTimeStampInTicks = (dateTime.ToUniversalTime() - unixStart).Ticks;
 
-            return (double) unixTimeStampInTicks / TimeSpan.TicksPerSecond * 1000;
+            return (double)unixTimeStampInTicks / TimeSpan.TicksPerSecond * 1000;
         }
     }
 }

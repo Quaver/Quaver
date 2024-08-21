@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Beta
         /// <summary>
         /// </summary>
         private Sprite TextBackground { get; }
-        
+
         /// <summary>
         /// </summary>
         private SpriteTextPlus WelcomeText { get; set; }
@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Beta
         /// </summary>
         private SpriteTextPlus PressToSkipText { get; set; }
 
-        private static Color DisclaimerColor { get; } = ColorHelper.HexToColor("#ffcc00"); 
+        private static Color DisclaimerColor { get; } = ColorHelper.HexToColor("#ffcc00");
 
         /// <inheritdoc />
         /// <summary>
@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Beta
                 Tint = DisclaimerColor,
                 Alpha = 0.75f,
             };
-            
+
             // ReSharper disable once ObjectCreationAsStatement
             new Sprite()
             {
@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Beta
                 Tint = DisclaimerColor,
                 Alpha = 0.75f,
             };
-            
+
             CreateWarningText();
             CreateBetaText();
             CreateThanksText();
@@ -159,7 +159,7 @@ namespace Quaver.Shared.Screens.Beta
             Alpha = 0,
             Animations = { new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 1800) }
         };
-        
+
         /// <summary>
         /// </summary>
         private void CreatePressToSkipText() => PressToSkipText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),

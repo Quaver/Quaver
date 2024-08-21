@@ -1,10 +1,9 @@
 using System;
 using System.Threading;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Online;
-using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
 {
