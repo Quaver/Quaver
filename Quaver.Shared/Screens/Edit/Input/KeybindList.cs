@@ -46,10 +46,10 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public bool IsNotBound() => Count == 1 && Contains(Keybind.None);
 
-        public HashSet<Keybind> MatchingKeybinds()
+        public HashSet<Keybind> MatchingKeybinds(bool invertScrolling)
         {
             var binds = new HashSet<Keybind>();
-            foreach (var keybind in this) binds.UnionWith(keybind.MatchingKeybinds());
+            foreach (var keybind in this) binds.UnionWith(keybind.MatchingKeybinds(invertScrolling));
             return binds;
         }
 

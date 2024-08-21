@@ -9,6 +9,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
@@ -85,6 +86,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             CreateWebSection();
             CreateToolsSection();
             CreatePluginsSection();
+            CreateKeybindsSection();
             CreateHelpSection();
 
             ImGui.EndMenuBar();
@@ -243,7 +245,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 for (var i = 1; i <= Screen.WorkingMap.GetKeyCount(); i++)
                 {
                     if (ImGui.BeginMenu($"Lane {i}"))
-                    { 
+                    {
                         for (var j = 1; j <= Screen.WorkingMap.GetKeyCount(); j++)
                         {
                             if (i == j) continue;
@@ -523,7 +525,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Snap Notes When Live Mapping", "", ConfigManager.EditorLiveMapSnap.Value))
                 ConfigManager.EditorLiveMapSnap.Value = !ConfigManager.EditorLiveMapSnap.Value;
-            
+
             if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
 
@@ -532,9 +534,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Set Minimum Length Of Long Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapLongNoteThresholdDialog(Screen));
-
-            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
-                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
 
             ImGui.Separator();
 
@@ -586,7 +585,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 ImGui.EndMenu();
             }
-            
+
             if (ImGui.BeginMenu("Spectrogram"))
             {
                 if (ImGui.MenuItem("Visible", "", Screen.ShowSpectrogram.Value))
@@ -607,7 +606,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Precision"))
                 {
                     for (var interleaveCount = 1; interleaveCount <= 16; interleaveCount *= 2)
@@ -630,7 +629,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Frequency Scale"))
                 {
                     foreach (var scale in Enum.GetValues<EditorPlayfieldSpectrogramFrequencyScale>())
@@ -651,7 +650,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Intensity Factor"))
                 {
                     for (var i = 0; i < 10; i++)
@@ -662,13 +661,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Minimum Frequency"))
                 {
                     for (var f = 0; f <= 1500; f += 125)
                     {
                         if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMinimumFrequency.Value == f,
-                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f)) 
+                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f))
                             ConfigManager.EditorSpectrogramMinimumFrequency.Value = f;
                     }
                     ImGui.EndMenu();
@@ -679,12 +678,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     for (var f = 5000; f <= 10000; f += 1000)
                     {
                         if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMaximumFrequency.Value == f,
-                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f)) 
+                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f))
                             ConfigManager.EditorSpectrogramMaximumFrequency.Value = f;
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 ImGui.EndMenu();
             }
 
@@ -944,6 +943,42 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     Screen.MetronomePlayHalfBeats.Value = !Screen.MetronomePlayHalfBeats.Value;
 
                 ImGui.EndMenu();
+            }
+
+            ImGui.EndMenu();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateKeybindsSection()
+        {
+            ImGui.PushFont(Options.Fonts.First().Context);
+
+            if (!ImGui.BeginMenu("Keybinds"))
+                return;
+
+            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
+                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
+
+            if (ImGui.MenuItem("Invert Scrolling", "", ConfigManager.InvertEditorScrolling.Value))
+                ConfigManager.InvertEditorScrolling.Value = !ConfigManager.InvertEditorScrolling.Value;
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Fill Missing Actions"))
+            {
+                var filledCount = Screen.InputManager.InputConfig.FillMissingKeys(true);
+                NotificationManager.Show(NotificationLevel.Info, $"Filled {filledCount} missing actions!");
+            }
+
+            if (ImGui.MenuItem("Reset All Keybinds"))
+            {
+                DialogManager.Show(new YesNoDialog($"RESET ALL KEYBINDS", $"Are you sure you want to reset all keybinds?",
+                    () =>
+                    {
+                        Screen.InputManager.InputConfig.ResetConfigFile();
+                        NotificationManager.Show(NotificationLevel.Info, $"All keybinds have been reset!");
+                    }));
             }
 
             ImGui.EndMenu();
