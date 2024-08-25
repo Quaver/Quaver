@@ -40,6 +40,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// </summary>
         internal ReplayInputManagerKeys ReplayInputManager { get; set; }
 
+        public event Action<GameplayHitObjectKeysInfo, int, Judgement> OnKeyPress;
+        public event Action<GameplayHitObjectKeysInfo, int, Judgement> OnKeyRelease;
+
         /// <summary>
         ///     Ctor -
         /// </summary>
@@ -168,6 +171,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press, ReplayInputManager == null);
             var lane = info.Lane - 1;
 
+            OnKeyPress?.Invoke(info, time, judgement);
+
             // Ignore Ghost Taps
             if (judgement == Judgement.Ghost)
                 return;
@@ -278,6 +283,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get hit burst lane
             var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
 
+            OnKeyRelease?.Invoke(info, time, judgement);
+            
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {

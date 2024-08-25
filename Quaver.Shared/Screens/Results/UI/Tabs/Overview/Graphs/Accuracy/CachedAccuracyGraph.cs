@@ -101,7 +101,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// </summary>
         public override void Cache()
         {
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            GameBase.Game.ScheduledRenderTargetDraws.Add(_ =>
             {
                 try
                 {
@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                     GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
                     AccuracyGraph.Draw(new GameTime());
-                    _ = GameBase.Game.TryEndBatch();
+                    GameBase.Game.TryEndBatch();
 
                     GameBase.Game.GraphicsDevice.SetRenderTarget(null);
                     CachedSprite.Image = RenderTarget;

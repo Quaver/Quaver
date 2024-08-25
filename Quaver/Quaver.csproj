@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <Description>
     </Description>
@@ -37,13 +37,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.Shared\Quaver.Shared.csproj" />
-    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ZetaIpc" Version="1.0.0.9" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\Wobble\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Quaver.Server.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\Quaver.Shared\Quaver.Server.Client.dll</HintPath>
     </Reference>

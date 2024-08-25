@@ -8,13 +8,9 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using System;
 using System.Linq;
-using Quaver.Shared.Screens.Gameplay.UI;
-using Quaver.Shared.Window;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Window;
@@ -36,7 +32,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public Container Container { get; set; }
+        public LayeredContainer Container { get; set; }
+
+        /// <summary>
+        ///     The foreground container will be drawn in this layer
+        /// </summary>
+        public Layer GameplayForegroundLayer { get; private set; }
+
+        /// <summary>
+        ///     The background container will be drawn in this layer
+        /// </summary>
+        public Layer GameplayBackgroundLayer { get; private set; }
+
+        /// <summary>
+        ///     Shortcut to container's layer manager
+        /// </summary>
+        public LayerManager GameplayLayerManager => ((LayeredContainer)Container)?.LayerManager;
 
         /// <summary>
         ///     The background of the playfield.
@@ -186,10 +197,24 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Screen = screen;
             Ruleset = ruleset;
-            Container = new Container();
+            Container = new LayeredContainer();
+            InitializeLayers();
             SetLaneScrollDirections();
             SetReferencePositions();
             CreateElementContainers();
+        }
+
+        private void InitializeLayers()
+        {
+            GameplayForegroundLayer = GameplayLayerManager.NewLayer($"PlayfieldForeground");
+            GameplayBackgroundLayer = GameplayLayerManager.NewLayer($"PlayfieldBackground");
+            LayerManager.RequireOrder(new []
+            {
+                GameplayLayerManager.TopLayer,
+                GameplayForegroundLayer,
+                GameplayBackgroundLayer,
+                GameplayLayerManager.BottomLayer
+            });
         }
 
 
@@ -205,6 +230,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Size = new ScalableVector2(Width, WindowManager.Height),
                 Alignment = Alignment.TopCenter,
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment,
+                Layer = GameplayBackgroundLayer
             };
 
             // Create the foreground container.
@@ -213,7 +239,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
                 Alignment = Alignment.TopCenter,
-                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment,
+                Layer = GameplayForegroundLayer
             };
 
             Stage = new GameplayPlayfieldKeysStage(Screen, this);
@@ -289,36 +316,34 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 else
                     LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
 
-                var oldHitpos = skin.HitPosOffsetY;
+                var hitPosOffsetY = skin.HitPosOffsetY;
 
                 if (Ruleset.Screen.IsSongSelectPreview)
-                    skin.HitPosOffsetY *= LaneSize / skin.ColumnSize;
+                    hitPosOffsetY *= LaneSize / skin.ColumnSize;
                 else
-                    skin.HitPosOffsetY *= WindowManager.BaseToVirtualRatio;
+                    hitPosOffsetY *= WindowManager.BaseToVirtualRatio;
 
                 switch (ScrollDirections[i])
                 {
                     case ScrollDirection.Down:
                         ReceptorPositionY[i] = WindowManager.Height - skin.ReceptorPosOffsetY - receptorOffset;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.ColumnLightingOffsetY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;
-                        HitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
-                        HoldEndHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdEndOffset;
-                        TimingLinePositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
+                        HitPositionY[i] = ReceptorPositionY[i] + hitPosOffsetY - hitObOffset;
+                        HoldHitPositionY[i] = ReceptorPositionY[i] + hitPosOffsetY - holdHitObOffset;
+                        HoldEndHitPositionY[i] = ReceptorPositionY[i] + hitPosOffsetY - holdEndOffset;
+                        TimingLinePositionY[i] = ReceptorPositionY[i] + hitPosOffsetY;
                         break;
                     case ScrollDirection.Up:
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
-                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
-                        HoldEndHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HitPositionY[i] = ReceptorPositionY[i] - hitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[i] = ReceptorPositionY[i] - hitPosOffsetY + receptorOffset;
+                        HoldEndHitPositionY[i] = ReceptorPositionY[i] - hitPosOffsetY + receptorOffset;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.ColumnLightingOffsetY;
                         TimingLinePositionY[i] = HitPositionY[i];
                         break;
                     default:
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");
                 }
-
-                skin.HitPosOffsetY = oldHitpos;
             }
         }
 
@@ -336,7 +361,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Draw(GameTime gameTime) => Container.Draw(gameTime);
+        public void Draw(GameTime gameTime) => Container.WrappedDraw(gameTime);
 
         /// <inheritdoc />
         /// <summary>
