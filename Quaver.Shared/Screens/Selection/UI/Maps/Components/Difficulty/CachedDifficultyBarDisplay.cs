@@ -118,7 +118,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
                     GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
                     DifficultyBar.Draw(new GameTime());
-                    _ = GameBase.Game.TryEndBatch();
+                    GameBase.Game.TryEndBatch();
 
                     GameBase.Game.GraphicsDevice.SetRenderTarget(null);
                     CachedSprite.Image = RenderTarget;

@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
                     GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
                     HitDifferenceGraph.Draw(new GameTime());
-                    _ = GameBase.Game.TryEndBatch();
+                    GameBase.Game.TryEndBatch();
 
                     GameBase.Game.GraphicsDevice.SetRenderTarget(null);
                     CachedSprite.Image = RenderTarget;
