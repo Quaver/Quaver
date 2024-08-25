@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,12 +39,12 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The avatars for steam users.
         /// </summary>
-        public static Dictionary<ulong, Texture2D> UserAvatars { get; private set; }
+        public static ConcurrentDictionary<ulong, Texture2D> UserAvatars { get; private set; }
 
         /// <summary>
         ///     Large Steam user avatars
         /// </summary>
-        public static Dictionary<ulong, Texture2D> UserAvatarsLarge { get; private set; }
+        public static ConcurrentDictionary<ulong, Texture2D> UserAvatarsLarge { get; private set; }
 
         /// <summary>
         ///     A user's steam avatar has loaded.
@@ -105,8 +106,8 @@ namespace Quaver.Shared.Online
 
             IsInitialized = SteamAPI.Init();
 
-            UserAvatars = new Dictionary<ulong, Texture2D>();
-            UserAvatarsLarge = new Dictionary<ulong, Texture2D>();
+            UserAvatars = new ConcurrentDictionary<ulong, Texture2D>();
+            UserAvatarsLarge = new ConcurrentDictionary<ulong, Texture2D>();
 
             if (!IsInitialized)
             {

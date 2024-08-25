@@ -221,8 +221,8 @@ namespace Quaver.Shared.Screens
             if (ActiveTooltip == null)
                 return;
 
-            ActiveTooltip.X = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width, 5, WindowManager.Width - 5);
-            ActiveTooltip.Y = MathHelper.Clamp(MouseManager.CurrentState.Y - ActiveTooltip.Height - 2, 5, WindowManager.Height - 5);
+            ActiveTooltip.X = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width / 2.0f, 5, WindowManager.Width - ActiveTooltip.Width - 5);
+            ActiveTooltip.Y = MathHelper.Clamp(MouseManager.CurrentState.Y - ActiveTooltip.Height - 2, 5, WindowManager.Height - ActiveTooltip.Height - 5);
         }
 
         /// <summary>

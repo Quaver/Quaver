@@ -65,8 +65,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer
         /// <param name="game"></param>
         /// <param name="team1"></param>
         /// <param name="team2"></param>
-        public ResultsMultiplayerTab(Map map, Bindable<ScoreProcessor> processor, Bindable<ResultsScreenTabType> activeTab,
-            MultiplayerGame game, List<ScoreProcessor> team1, List<ScoreProcessor> team2) : base(map, processor, activeTab,
+        /// <param name="b"></param>
+        public ResultsMultiplayerTab(Map map, Bindable<ScoreProcessor> processor,
+            Bindable<ResultsScreenTabType> activeTab,
+            MultiplayerGame game, List<ScoreProcessor> team1, List<ScoreProcessor> team2, bool skipApiResultFetch = false) : base(map, processor, activeTab,
             null, null)
         {
             Game = game;
@@ -76,7 +78,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer
             CreateContentContainer();
             CreateMatchPlayedText();
             CreateWinner();
-            CreateTable();
+            CreateTable(skipApiResultFetch);
             CreateTeamHeader();
         }
 
@@ -150,7 +152,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer
 
         /// <summary>
         /// </summary>
-        private void CreateTable() => Table = new ResultsMultiplayerTable(Map, Processor, Game, Team1Players, Team2Players)
+        /// <param name="skipApiResultFetch"></param>
+        private void CreateTable(bool skipApiResultFetch) => Table = new ResultsMultiplayerTable(Map, Processor, Game, Team1Players, Team2Players, skipApiResultFetch)
         {
             Parent = ContentContainer,
             Alignment = Alignment.BotLeft,

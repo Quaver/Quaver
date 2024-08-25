@@ -207,6 +207,10 @@ namespace Quaver.Shared.Skinning
         [MoonSharpVisible(true)]
         internal float ComboDisplayScale { get; private set; }
 
+        internal int ComboDisplayBumpY { get; private set; } = -5;
+
+        internal int ComboDisplayBumpTime { get; private set; } = 370;
+
         [FixedScale]
         [MoonSharpVisible(true)]
         internal float JudgementBurstPosY { get; private set; }
@@ -338,6 +342,10 @@ namespace Quaver.Shared.Skinning
 
         [MoonSharpVisible(true)]
         internal int JudgementHitBurstFps { get; private set; }
+
+        internal int JudgementHitBurstBumpY { get; private set; } = -5;
+
+        internal int JudgementHitBurstBumpTime { get; private set; } = 183;
 
         [FixedScale]
         [MoonSharpVisible(true)]
@@ -617,6 +625,8 @@ namespace Quaver.Shared.Skinning
             RatingDisplayScale = ConfigHelper.ReadInt32((int) RatingDisplayScale, ini["RatingDisplayScale"]);
             AccuracyDisplayScale = ConfigHelper.ReadInt32((int) AccuracyDisplayScale, ini["AccuracyDisplayScale"]);
             ComboDisplayScale = ConfigHelper.ReadInt32((int) ComboDisplayScale, ini["ComboDisplayScale"]);
+            ComboDisplayBumpY = ConfigHelper.ReadInt32(ComboDisplayBumpY, ini["ComboDisplayBumpY"]);
+            ComboDisplayBumpTime = ConfigHelper.ReadInt32(ComboDisplayBumpTime, ini["ComboDisplayBumpTime"]);
             KpsDisplayScale = ConfigHelper.ReadInt32((int) KpsDisplayScale, ini["KpsDisplayScale"]);
             SongTimeProgressScale = ConfigHelper.ReadInt32((int) SongTimeProgressScale, ini["SongTimeProgressScale"]);
             SongTimeProgressPositionAtTop = ConfigHelper.ReadBool(SongTimeProgressPositionAtTop, ini["SongTimeProgressPositionAtTop"]);
@@ -632,6 +642,8 @@ namespace Quaver.Shared.Skinning
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
             RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
             JudgementHitBurstFps = ConfigHelper.ReadInt32(JudgementHitBurstFps, ini["JudgementHitBurstFps"]);
+            JudgementHitBurstBumpY = ConfigHelper.ReadInt32(JudgementHitBurstBumpY, ini["JudgementHitBurstBumpY"]);
+            JudgementHitBurstBumpTime = ConfigHelper.ReadInt32(JudgementHitBurstBumpTime, ini["JudgementHitBurstBumpTime"]);
             WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
 
             var defaultSkin = ini["DefaultSkin"];

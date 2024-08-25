@@ -5,6 +5,7 @@ using System.Numerics;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
@@ -71,7 +72,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorScrollVelocityPanel(EditScreen screen) : base(false, GetOptions())
+        public EditorScrollVelocityPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();
@@ -403,7 +404,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (ImGui.Button($"{TimeSpan.FromMilliseconds(sv.StartTime):mm\\:ss\\.fff}"))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
-                    if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                    if (KeyboardManager.IsCtrlDown())
                     {
                         if (isSelected)
                             SelectedScrollVelocities.Remove(sv);
@@ -462,8 +463,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (!IsWindowHovered)
                 return;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (KeyboardManager.IsCtrlDown())
             {
                 // Select all
                 if (KeyboardManager.IsUniqueKeyPress(Keys.A))

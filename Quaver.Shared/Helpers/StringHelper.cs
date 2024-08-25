@@ -5,6 +5,8 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -81,6 +83,40 @@ namespace Quaver.Shared.Helpers
                     return num + "th";
             }
 
+        }
+        
+        /// <summary>
+        ///     Checks whether the candidate is a subdirectory of the other, recursively.
+        ///     Adapted from https://stackoverflow.com/a/23354773/23723435
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool IsSubDirectoryOf(this string candidate, string other)
+        {
+            var isChild = false;
+            try
+            {
+                var candidateInfo = new DirectoryInfo(candidate);
+                var otherInfo = new DirectoryInfo(other);
+
+                while (candidateInfo.Parent != null)
+                {
+                    if (candidateInfo.Parent.FullName == otherInfo.FullName)
+                    {
+                        isChild = true;
+                        break;
+                    }
+                    candidateInfo = candidateInfo.Parent;
+                }
+            }
+            catch (Exception error)
+            {
+                var message = $"Unable to check directories {candidate} and {other}: {error}";
+                Trace.WriteLine(message);
+            }
+
+            return isChild;
         }
     }
 }

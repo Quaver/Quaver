@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.WebSockets;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
+using Quaver.API.Replays;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -380,17 +382,17 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnDisconnection(object sender, DisconnectedEventArgs e)
         {
-            Logger.Important($"Disconnected from the server for reason: {e.CloseEventArgs.Reason} with code: {e.CloseEventArgs.Code}", LogType.Network);
+            Logger.Important($"Disconnected from the server for reason: {e.SocketCloseEventArgs.Reason} with code: {e.SocketCloseEventArgs.CloseStatus}", LogType.Network);
 
             // If the user can't initially connect to the server (server is down.)
-            switch (e.CloseEventArgs.Code)
+            switch (e.SocketCloseEventArgs.CloseStatus)
             {
                 // Error ocurred while connecting.
-                case 1006:
+                case (WebSocketCloseStatus)1006:
                     NotificationManager.Show(NotificationLevel.Error, "You have been disconnected from the server.");
                     return;
                 // Authentication Failed
-                case 1002:
+                case WebSocketCloseStatus.ProtocolError:
                     NotificationManager.Show(NotificationLevel.Error, "You have failed to authenticate to the server.");
                     return;
             }
@@ -557,8 +559,8 @@ namespace Quaver.Shared.Online
                 map.OnlineOffset = e.Response.OnlineOffset;
                 MapDatabaseCache.UpdateMap(map);
 
-                var game = GameBase.Game as QuaverGame;
-
+                // var game = GameBase.Game as QuaverGame;
+                //
                 // // If in song select, update the banner of the currently selected map.
                 // if (game.CurrentScreen is SelectScreen screen)
                 // {
@@ -749,7 +751,9 @@ namespace Quaver.Shared.Online
 
             game.CurrentScreen.Exit(() =>
             {
-                Logger.Important($"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
+                if (CurrentGame is not null)
+                    Logger.Important($"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
+                
                 return new MultiplayerGameScreen();
             });
         }
@@ -1107,7 +1111,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 return;
 
-            Console.WriteLine($"NEW PLAYHER COUJNT: " + e.MaxPlayers);
+            Logger.Important($"New player count: {e.MaxPlayers}", LogType.Network);
             CurrentGame.MaxPlayers = e.MaxPlayers;
         }
 
@@ -1170,7 +1174,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 return;
 
-            if (CurrentGame.Players.Any(x => x.Id != e.UserId))
+            if (CurrentGame.Players.All(x => x.Id != e.UserId))
                 CurrentGame.Players.Add(OnlineUsers[e.UserId].OnlineUser);
 
             if (!CurrentGame.PlayerIds.Contains(e.UserId))
@@ -1197,12 +1201,18 @@ namespace Quaver.Shared.Online
             CurrentGame.BlueTeamPlayers.Remove(e.UserId);
             CurrentGame.Players.Remove(OnlineUsers[e.UserId].OnlineUser);
 
+            var currentScreen = ((QuaverGame) GameBase.Game).CurrentScreen;
             if (CurrentGame.PlayerIds.Count == 0)
             {
-                var quaver = (QuaverGame) GameBase.Game;
-
-                if (quaver.CurrentScreen.Type == QuaverScreenType.Multiplayer)
-                    quaver.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
+                if (currentScreen.Type == QuaverScreenType.Multiplayer)
+                    currentScreen.Exit(() => new MultiplayerLobbyScreen());
+            }
+            else if (currentScreen is TournamentScreen tournamentScreen)
+            {
+                if (tournamentScreen.GameplayScreens.Any(s => s.SpectatorClient.Player.OnlineUser.Id == e.UserId))
+                {
+                    currentScreen.Exit(() => new MultiplayerGameScreen());
+                }
             }
         }
 
@@ -1258,13 +1268,11 @@ namespace Quaver.Shared.Online
 
                 BackgroundHelper.Load(MapManager.Selected.Value);
 
-                if (!game.CurrentScreen.Exiting)
-                {
-                    foreach (var spect in SpectatorClients.Values)
-                        spect.WatchUserImmediately();
+                foreach (var spect in SpectatorClients.Values)
+                    spect.WatchUserImmediately();
 
-                    game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()));
-                }
+                game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.OrderBy(s => s.Player?.OnlineUser?.Id ?? 0).ToList()),
+                    delay: 500);
 
                 return;
             }
@@ -1952,13 +1960,13 @@ namespace Quaver.Shared.Online
         /// <returns></returns>
         private static List<Score> GetScoresFromMultiplayerUsers()
         {
-            var users = OnlineUsers.ToList();
-
-            var playingUsers = users.FindAll(x =>
-                CurrentGame.PlayerIds.Contains(x.Value.OnlineUser.Id) &&
-                !CurrentGame.PlayersWithoutMap.Contains(x.Value.OnlineUser.Id) &&
-                CurrentGame.RefereeUserId != x.Value.OnlineUser.Id &&
-                x.Value != Self);
+            
+            var playingUsers = CurrentGame.Players.FindAll(x =>
+                x.Id != CurrentGame.RefereeUserId &&
+                !CurrentGame.PlayersWithoutMap.Contains(x.Id) &&
+                CurrentGame.PlayerIds.Contains(x.Id) &&
+                x.Id != Self.OnlineUser.Id
+            );
 
             var scores = new List<Score>();
 
@@ -1966,10 +1974,10 @@ namespace Quaver.Shared.Online
             {
                 scores.Add(new Score
                 {
-                    PlayerId = x.Key,
-                    SteamId = x.Value.OnlineUser.SteamId,
-                    Name = x.Value.OnlineUser.Username,
-                    Mods = (long) GetUserActivatedMods(x.Value.OnlineUser.Id),
+                    PlayerId = x.Id,
+                    SteamId = x.SteamId,
+                    Name = x.Username,
+                    Mods = (long) GetUserActivatedMods(x.Id),
                     IsMultiplayer = true,
                     IsOnline = true
                 });

@@ -6,6 +6,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using TagLib.Matroska;
 using TagLib.Riff;
@@ -74,7 +75,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorTimingPointPanel(EditScreen screen) : base(false, GetOptions())
+        public EditorTimingPointPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();
@@ -440,7 +441,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (ImGui.Button($"{TimeSpan.FromMilliseconds(point.StartTime):mm\\:ss\\.fff}"))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
-                    if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                    if (KeyboardManager.IsCtrlDown())
                     {
                         if (isSelected)
                             SelectedTimingPoints.Remove(point);
@@ -509,8 +510,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (!IsWindowHovered)
                 return;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (KeyboardManager.IsCtrlDown())
             {
                 // Select all
                 if (KeyboardManager.IsUniqueKeyPress(Keys.A))

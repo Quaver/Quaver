@@ -47,6 +47,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -334,12 +335,25 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If true, the gameplay screen is solely for song select preview usage
         /// </summary>
         public bool IsSongSelectPreview { get; }
+        
+        /// <summary>
+        ///     If true, the gameplay screen won't seek to the start when loaded.
+        ///     This is used for skin hot-reloading.
+        /// </summary>
+        public bool UseExistingAudioTime { get; }
 
         /// <summary>
         ///     Used to reset the input manager when toggling autoplay on/off.
         ///     Prevents having to virtually play all replay frames again
         /// </summary>
         private ReplayInputManagerKeys CachedReplayInputManager { get; set; }
+
+        /// <summary>
+        ///     true iff we are spectating a tournament
+        ///     This is used for appropriate judgement windows applied to score, grade and rating display
+        /// </summary>
+        public bool IsSpectatingTournament => this is TournamentGameplayScreen tournamentGameplayScreen &&
+                                              tournamentGameplayScreen.Type == TournamentScreenType.Spectator;
 
         /// <summary>
         /// </summary>
@@ -371,9 +385,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="options"></param>
         /// <param name="isSongSelectPreview"></param>
         /// <param name="isTestPlayingInNewEditor"></param>
+        /// <param name="useExistingAudioTime"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
-            bool isTestPlayingInNewEditor = false)
+            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false)
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -398,6 +413,7 @@ namespace Quaver.Shared.Screens.Gameplay
             SpectatorClient = spectatorClient;
             TournamentOptions = options;
             IsSongSelectPreview = isSongSelectPreview;
+            UseExistingAudioTime = useExistingAudioTime;
 
             if (TournamentOptions != null && !(this is TournamentGameplayScreen))
                 throw new InvalidOperationException("Cannot provide tournament options for a non-tournament gameplay screen");
@@ -477,7 +493,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame && !IsSongSelectPreview)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
-            if (OnlineManager.IsBeingSpectated && !InReplayMode)
+            if (!InReplayMode)
                 OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
 
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -487,6 +503,12 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
+
+            if (InReplayMode && !IsPlayTesting && !IsSongSelectPreview && !IsCalibratingOffset)
+            {
+                SkinManager.StartWatching();
+                ScreenExiting += (_, _) => SkinManager.StopWatching();
+            }
 
             base.OnFirstUpdate();
         }
@@ -578,8 +600,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
 
             // CTRL+ input while play testing
-            if (!IsSongSelectPreview && IsPlayTesting && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                                  KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsCtrlDown())
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.P))
                 {
@@ -1308,6 +1329,14 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
+        public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen) 
+            ? tournamentScreen.GameplayScreens.Min(s =>
+            {
+                // We are guaranteed to find a minimum because of the return condition above.
+                var replayFrames = s.SpectatorClient.Replay.Frames;
+                return (replayFrames?.Count ?? 0) == 0 ? int.MaxValue : replayFrames.Last()?.Time ?? int.MaxValue;
+            })
+            : SpectatorClient.Replay.Frames.Last().Time;
         /// <summary>
         /// </summary>
         private void HandleSpectatorSkipping()
@@ -1315,22 +1344,26 @@ namespace Quaver.Shared.Screens.Gameplay
             if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
                 return;
 
+            var targetSyncTime = SpectatorClient.Replay.Frames.Last().Time;
             // User can only be two seconds out of sync with the user
-            if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
+            if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000)
                 return;
 
-            var skipTime = SpectatorClient.Replay.Frames.Last().Time;
+            SkipTo(targetSyncTime);
+        }
 
+        public void SkipTo(float targetSyncTime)
+        {
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 AudioTrack.AllowPlayback = true;
-                AudioEngine.Track?.Seek(skipTime);
+                AudioEngine.Track?.Seek(targetSyncTime);
                 Timing.Time = AudioEngine.Track.Time;
             }
             catch (Exception e)
-            {;
-                Timing.Time = skipTime;
+            {
+                Timing.Time = targetSyncTime;
             }
             finally
             {
@@ -1349,7 +1382,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the client is currently being spectated, replay frames should be sent to the server
         /// </summary>
-        public void SendReplayFramesToServer(bool force = false)
+        public void SendReplayFramesToServer(bool force = false, bool appendFinishSong = false)
         {
             if (!OnlineManager.IsBeingSpectated || InReplayMode || IsSongSelectPreview)
                 return;
@@ -1384,9 +1417,18 @@ namespace Quaver.Shared.Screens.Gameplay
                     status = SpectatorClientStatus.Playing;
 
                 if (status == SpectatorClientStatus.Playing && frames.Count == 0)
+                {
+                    if (appendFinishSong)
+                        OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                            new List<ReplayFrame>());
                     return;
+                }
 
                 OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames);
+
+                if (appendFinishSong)
+                    OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.FinishedSong, int.MaxValue,
+                        new List<ReplayFrame>());
             });
         }
 
@@ -1561,7 +1603,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (!InReplayMode)
                 {
                     inputManager.ReplayInputManager = null;
-                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
+                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
 
                     for (var i = 0; i < Map.GetKeyCount(); i++)
                     {
@@ -1583,8 +1625,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
             {
                 var change = 5;
-                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                    KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                if (KeyboardManager.IsCtrlDown())
                 {
                     change = 1;
                 }

@@ -23,6 +23,7 @@ using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
@@ -95,6 +96,8 @@ namespace Quaver.Shared.Screens.Main
 
             GameBase.Game.GlobalUserInterface.Cursor.Show(1);
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            SkinManager.StartWatching();
+            ScreenExiting += (_, _) => SkinManager.StopWatching();
 
             base.OnFirstUpdate();
         }
@@ -145,7 +148,7 @@ namespace Quaver.Shared.Screens.Main
         ///	</summary>
         private void HandleKeyPressF5()
         {
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))

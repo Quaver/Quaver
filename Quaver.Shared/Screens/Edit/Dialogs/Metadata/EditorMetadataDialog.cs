@@ -34,7 +34,21 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private EditorMetadataModeDropdown GameMode { get; set; }
 
+        private Tooltip CurrentToolTip { get; set; }
+
         private LabelledCheckbox BpmAffectsScrollVelocity { get; set; }
+
+        private Tooltip BpmAffectsScrollVelocityTooltip { get; } = new(
+            "When set to ON, A BPM change will also change the Scroll Velocity.\nFor instance, going from 120BPM to 240BPM effectively creates\nan implicit 2x Scroll Velocity multiplier starting from the beginning\nof that BPM change until the next. Scroll Velocity is still applied.",
+            Color.White
+        );
+
+        private LabelledCheckbox LegacyLNRendering { get; set; }
+
+        private Tooltip LegacyLNRenderingTooltip { get; } = new(
+            "When set to ON, forces the use of the old LN renderer. If your map has no Scroll\nVelocity changes, you can safely ignore this option. The current LN renderer places\nthe head and tail to the earliest and latest positions reached, respectively. The old LN\nrenderer instead places them both wherever the playfield happens to be at the time.",
+            Color.White
+        );
 
         private TextboxTabControl TabControl { get; }
 
@@ -44,7 +58,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private const int TextboxLabelSpacing = 12;
 
-        private const int Spacing = 31;
+        private const int Spacing = 23;
 
         public EditorMetadataDialog(EditScreen screen) : base("EDIT METADATA", "Edit the values to change the metadata...")
         {
@@ -60,6 +74,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             CreateTagsTextbox();
             CreateGameModeDropdown();
             CreateBpmAffectsSvCheckbox();
+            CreateLegacyLNRenderingCheckbox();
 
             TabControl = new TextboxTabControl(new List<Textbox>()
             {
@@ -74,10 +89,23 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = this,
             };
 
+            const int Spread = 25;
+            YesButton.X -= Spread;
+            NoButton.X += Spread;
+
             YesButton.Y += 32;
             NoButton.Y = YesButton.Y;
 
             YesAction = OnClickedYes;
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            if (!TryActivate(BpmAffectsScrollVelocityTooltip, BpmAffectsScrollVelocity) &&
+                !TryActivate(LegacyLNRenderingTooltip, LegacyLNRendering))
+                DeactivateTooltip();
         }
 
         private void CreateArtistTextbox()
@@ -166,20 +194,33 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             {
                 Parent = Panel,
                 Y = Tags.Y + Tags.Height + Spacing,
-                X = -80,
-                Alignment = Alignment.TopRight,
+                X = 70,
+                Alignment = Alignment.TopLeft,
             };
         }
 
         private void CreateBpmAffectsSvCheckbox()
         {
-            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 20,
+            // Trailing whitespace needed to keep it left-aligned.
+            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:               ", 20,
                 new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
-                Y = GameMode.Y + 6,
-                X = -GameMode.X,
-                Alignment = Alignment.TopLeft,
+                Y = GameMode.Y + 7,
+                X = -GameMode.X + 25,
+                Alignment = Alignment.TopRight,
+            };
+        }
+
+        private void CreateLegacyLNRenderingCheckbox()
+        {
+            LegacyLNRendering = new LabelledCheckbox("LEGACY LN RENDERING:", 20,
+                new QuaverCheckbox(new Bindable<bool>(WorkingMap.LegacyLNRendering)) { DisposeBindableOnDestroy = true })
+            {
+                Parent = Panel,
+                Y = BpmAffectsScrollVelocity.Y + BpmAffectsScrollVelocity.Height + Spacing,
+                X = BpmAffectsScrollVelocity.X,
+                Alignment = Alignment.TopRight,
             };
         }
 
@@ -193,6 +234,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             Tags.Visible = false;
             GameMode.Visible = false;
             BpmAffectsScrollVelocity.Visible = false;
+            LegacyLNRendering.Visible = false;
 
             base.Close();
         }
@@ -211,6 +253,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             WorkingMap.DifficultyName = DifficultyName.Textbox.RawText.Trim();
             WorkingMap.Source = Source.Textbox.RawText.Trim();
             WorkingMap.Tags = Tags.Textbox.RawText.Trim();
+            WorkingMap.LegacyLNRendering = LegacyLNRendering.Checkbox.BindedValue.Value;
 
             if (WorkingMap.TimingPoints.Count > 0)
             {
@@ -239,7 +282,31 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
 
                 return new EditScreen(Screen.Map, AudioEngine.LoadMapAudioTrack(Screen.Map));
-            });
+            }
+            );
+        }
+
+        private void DeactivateTooltip()
+        {
+            if (CurrentToolTip is null)
+                return;
+
+            CurrentToolTip = null;
+            Screen.DeactivateTooltip();
+        }
+
+        private bool TryActivate(Tooltip tooltip, Drawable drawable)
+        {
+            if (drawable is null || !drawable.IsHovered())
+                return false;
+
+            if (tooltip == CurrentToolTip)
+                return true;
+
+            CurrentToolTip = tooltip;
+            Screen.ActivateTooltip(tooltip);
+            Screen.ActiveTooltip.Parent = this;
+            return true;
         }
     }
 }

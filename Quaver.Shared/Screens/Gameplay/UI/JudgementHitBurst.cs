@@ -9,10 +9,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Timers;
 using Quaver.API.Enums;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.UI
@@ -32,6 +34,21 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         ///     If we are currently animating the hit burst with only one frame.
         /// </summary>
         public bool IsAnimatingWithOneFrame { get; private set; }
+
+        /// <summary>
+        ///     Timer for bumping the burst if <see cref="IsAnimatingWithOneFrame"/>
+        /// </summary>
+        private readonly CountdownTimer bumpTimer;
+
+        /// <summary>
+        ///     Time to bump
+        /// </summary>
+        private readonly TimeSpan bumpTime;
+
+        /// <summary>
+        ///     Start Y of bumping
+        /// </summary>
+        private readonly float bumpY;
 
         /// <summary>
         ///     The original size of the hit burst.
@@ -63,6 +80,18 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Whenever the judgement is finished looping, then we'll make it invisible.
             FinishedLooping += (o, e) => Visible = false;
+
+            bumpTime = TimeSpan.FromMilliseconds(Skin.JudgementHitBurstBumpTime);
+            bumpTimer = new CountdownTimer(bumpTime);
+            bumpTimer.TimeRemainingChanged += LerpY;
+            bumpTimer.Stopped += LerpY;
+            bumpY = OriginalPosY + Skin.JudgementHitBurstBumpY;
+        }
+
+        private void LerpY(object sender, EventArgs e)
+        {
+            var t = 1 - bumpTimer.TimeRemaining / bumpTime;
+            Y = EasingFunctions.EaseOutExpo(bumpY, OriginalPosY, (float)t);
         }
 
         /// <inheritdoc />
@@ -74,6 +103,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             PerformOneFrameAnimation(gameTime);
 
             base.Update(gameTime);
+            bumpTimer.Update(gameTime);
         }
 
         /// <summary>
@@ -107,7 +137,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             }
             else
             {
-                Y = OriginalPosY - 5;
+                bumpTimer.Restart();
                 IsAnimatingWithOneFrame = true;
             }
 
@@ -130,10 +160,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Tween the position if need be
-            if (Math.Abs(Y - OriginalPosY) > 0.01)
-                Y = MathHelper.Lerp(Y, OriginalPosY, (float) Math.Min(dt / 30, 1));
-            // If we've already tweened it, then we can begin to fade it out.
-            else
+            if (bumpTimer.State == TimerState.Completed)
             {
                 Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(dt / 240, 1));
 

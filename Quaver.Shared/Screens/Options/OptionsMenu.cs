@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Options
                 {
                     foreach (var item in subcategory.Items)
                     {
-                        item.Destroy();
+                        item?.Destroy();
                     }
                 }
             }
@@ -225,7 +225,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsSlider(containerRect, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
                         new OptionsItemCheckbox(containerRect, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                         new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
-                        new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                        new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover),
+                        new OptionsItemCheckbox(containerRect, "Display Receptors Over Lane Covers", ConfigManager.ReceptorsOverLaneCover)
                     })
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
@@ -408,7 +409,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
                         {
                             Tags = new List<string> {"linux"}
-                        }
+                        },
+                        new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage)
                     }),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()
                     {
@@ -429,7 +431,8 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Skin", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display 1v1 Tournament Overlay", ConfigManager.Display1v1TournamentOverlay),
-                        new OptionsItemCheckbox(containerRect, "Display 1v1 Playfield Scores", ConfigManager.TournamentDisplay1v1PlayfieldScores)
+                        new OptionsItemCheckbox(containerRect, "Display 1v1 Playfield Scores", ConfigManager.TournamentDisplay1v1PlayfieldScores),
+                        new OptionsItemCheckbox(containerRect, "Reload Skin On Change", ConfigManager.ReloadSkinOnChange)
                     }),
                     new OptionsSubcategory("Input", new List<OptionsItem>()
                     {
@@ -445,6 +448,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Warning For Failing", ConfigManager.DisplayFailWarning),
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
+                        new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport)
                     }),
                 }),
             };

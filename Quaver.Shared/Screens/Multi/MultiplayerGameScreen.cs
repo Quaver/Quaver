@@ -19,6 +19,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Multi.UI.Dialogs;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
@@ -101,9 +102,16 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         public override void OnFirstUpdate()
         {
-            if (OnlineManager.IsSpectatingSomeone)
+            if (OnlineManager.IsSpectatingSomeone && !(OnlineManager.CurrentGame?.IsSpectating ?? false))
                 OnlineManager.Client?.StopSpectating();
 
+            if (OnlineManager.CurrentGame == null)
+            {
+                // Tournament Screen view exited the screen
+                // One cause of it is the server forbids spectating a match without player number != 2
+                // CurrentGame is null because we sent a LeaveGame packet in TournamentScreenView
+                return;
+            }
             MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
             OnlineManager.SendGameDifficultyRatings(OnlineManager.CurrentGame.MapMd5, OnlineManager.CurrentGame.AlternativeMd5);
             
@@ -243,7 +251,7 @@ namespace Quaver.Shared.Screens.Multi
                     ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
                 else
                 {
-                    Exit(() => new MultiplayerLobbyScreen());
+                    DialogManager.Show(new ConfirmExitToLobby(this));
                     return;
                 }
             }
@@ -280,9 +288,9 @@ namespace Quaver.Shared.Screens.Multi
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
                 {
                     if (ModManager.IsActivated(ModIdentifier.Mirror))
-                        ModManager.RemoveMod(ModIdentifier.Mirror);
+                        ModManager.RemoveMod(ModIdentifier.Mirror, true);
                     else
-                        ModManager.AddMod(ModIdentifier.Mirror);
+                        ModManager.AddMod(ModIdentifier.Mirror, true);
                 }
             }
         }

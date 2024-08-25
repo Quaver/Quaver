@@ -257,6 +257,9 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
+
+            if (Environment.GetEnvironmentVariable("QUAVER_LOGLEVEL") is null)
+                Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
         }
 
         /// <inheritdoc />
@@ -306,7 +309,7 @@ namespace Quaver.Shared
         {
             base.LoadContent();
 
-            Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
+            Logger.Important($"Currently running Quaver version: `{Version}`", LogType.Runtime);
             IsReadyToUpdate = true;
 
 #if VISUAL_TESTS
@@ -330,6 +333,7 @@ namespace Quaver.Shared
             DiscordHelper.Shutdown();
             base.UnloadContent();
             OnlineManager.Client?.Disconnect();
+            SteamAPI.Shutdown();
         }
 
         /// <inheritdoc />
@@ -532,11 +536,15 @@ namespace Quaver.Shared
         private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
 
         /// <summary>
-        ///    Handles limiting/unlimiting FPS based on user config
+        ///     Uses a custom fps config
         /// </summary>
-        public void InitializeFpsLimiting()
+        /// <param name="fpsLimitType"></param>
+        /// <param name="customFpsLimit"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
-            switch (ConfigManager.FpsLimiterType.Value)
+            
+            switch (fpsLimitType)
             {
                 case FpsLimitType.Unlimited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
@@ -561,15 +569,22 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Custom:
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    TargetElapsedTime = TimeSpan.FromSeconds(1d / ConfigManager.CustomFpsLimit.Value);
+                    TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
                     IsFixedTimeStep = true;
                     WaylandVsync = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
             Graphics.ApplyChanges();
+        }
+
+        /// <summary>
+        ///    Handles limiting/unlimiting FPS based on user config
+        /// </summary>
+        public void InitializeFpsLimiting()
+        {
+            SetFps(ConfigManager.FpsLimiterType.Value, ConfigManager.CustomFpsLimit.Value);
         }
 
         /// <summary>
@@ -661,8 +676,7 @@ namespace Quaver.Shared
         /// </summary>
         private void HandleKeyPressCtrlO()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.O))
@@ -692,7 +706,7 @@ namespace Quaver.Shared
         private void HandleKeyPressCtrlS()
         {
             // Check for modifier keys
-            if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.S))
@@ -779,8 +793,11 @@ namespace Quaver.Shared
                         var request = new APIRequestImgurUpload(path);
                         var response = request.ExecuteRequest();
 
-                        if (response == null)
-                            throw new Exception("Failed to upload screenshot to imgur");
+                        if (response is null)
+                        {
+                            Logger.Error("Failed to upload screenshot to imgur", LogType.Network);
+                            NotificationManager.Show(NotificationLevel.Error, "Failed to upload screenshot!");
+                        }
 
                         Clipboard.NativeClipboard.SetText(response);
                         BrowserHelper.OpenURL(response, true);
@@ -795,7 +812,7 @@ namespace Quaver.Shared
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }

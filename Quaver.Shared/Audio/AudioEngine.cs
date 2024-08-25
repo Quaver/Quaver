@@ -65,12 +65,12 @@ namespace Quaver.Shared.Audio
                 Track = newTrack;
                 Track.ApplyRate(ConfigManager.Pitched.Value);
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                if (Track != null && !Track.IsDisposed)
+                if (Track is { IsDisposed: false })
                     Track.Dispose();
 
                 Track = new AudioTrackVirtual(time);
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Audio
                         Track?.Play();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ignored
             }

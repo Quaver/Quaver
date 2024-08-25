@@ -17,6 +17,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Screens.Tournament.Overlay;
 using Quaver.Shared.Skinning;
@@ -60,6 +61,11 @@ namespace Quaver.Shared.Screens.Tournament
         /// <param name="screen"></param>
         public TournamentScreenView(Screen screen) : base(screen)
         {
+            if (TournamentScreen.GameplayScreens.Count == 0)
+            {
+                OnlineManager.LeaveGame();
+                TournamentScreen.Exit(() => new MultiplayerLobbyScreen());
+            }
             CreateBackground();
             SetPlayfieldPositions();
             PositionPlayfieldItems();
@@ -245,10 +251,10 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void CreateOverlay()
         {
+            TournamentPlayers = new List<TournamentPlayer>();
+
             if (TournamentScreen.GameplayScreens.Count > 2 || !ConfigManager.Display1v1TournamentOverlay.Value)
                 return;
-
-            TournamentPlayers = new List<TournamentPlayer>();
 
             // Create overlay for spectator
             if (OnlineManager.CurrentGame != null)
@@ -257,7 +263,7 @@ namespace Quaver.Shared.Screens.Tournament
                 {
                     var difficulty = screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty;
 
-                    TournamentPlayers.Add(new TournamentPlayer(screen.SpectatorClient.Player, screen.Ruleset.ScoreProcessor, difficulty));
+                    TournamentPlayers.Add(new TournamentPlayer(screen.SpectatorClient.Player, screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor, difficulty));
                 }
 
                 Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, OnlineManager.CurrentGame, TournamentPlayers) { Parent = Container };

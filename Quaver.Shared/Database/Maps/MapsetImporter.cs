@@ -21,6 +21,7 @@ using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Edit;
@@ -94,35 +95,34 @@ namespace Quaver.Shared.Database.Maps
              var screen = game.CurrentScreen;
 
              if (screen.Exiting)
-                    return;
+                 return;
 
-                if (screen.Type == QuaverScreenType.Select)
-                {
-                    if (OnlineManager.CurrentGame != null)
-                    {
-                        var select = game.CurrentScreen as SelectionScreen;
-                        screen.Exit(() => new ImportingScreen(null, true));
-                        return;
-                    }
+             if (screen.Type == QuaverScreenType.Select)
+             {
+                 if (OnlineManager.CurrentGame != null)
+                 {
+                     var select = game.CurrentScreen as SelectionScreen;
+                     screen.Exit(() => new ImportingScreen(null, true));
+                     return;
+                 }
 
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
+                 screen.Exit(() => new ImportingScreen());
+                 return;
+             }
 
-                if (screen.Type == QuaverScreenType.Music)
-                {
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
+             if (screen.Type == QuaverScreenType.Music)
+             {
+                 screen.Exit(() => new ImportingScreen());
+                 return;
+             }
 
-                if (screen.Type == QuaverScreenType.Multiplayer)
-                {
-                    var multi = (MultiplayerGameScreen)screen;
-                    multi.DontLeaveGameUponScreenSwitch = true;
+             if (screen.Type == QuaverScreenType.Multiplayer)
+             {
+                 var multi = (MultiplayerGameScreen)screen;
+                 multi.DontLeaveGameUponScreenSwitch = true;
 
-                    screen.Exit(() => new ImportingScreen());
-                    return;
-                }
+                 screen.Exit(() => new ImportingScreen());
+             }
         }
 
         /// <summary>
@@ -132,6 +132,27 @@ namespace Quaver.Shared.Database.Maps
         private static bool AcceptedMapType(string path)
         {
             return path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc");
+        }
+
+        /// <summary>
+        ///     Adds the map dragged into the window to be scheduled to import
+        /// </summary>
+        /// <param name="path"></param>
+        private static void AddMapImportToQueue(string path)
+        {
+            // Only one .mc file under the same directory should be imported
+            // since .mc import 
+            if (Path.GetExtension(path) == ".mc")
+            {
+                foreach (var scheduledPath in Queue)
+                {
+                    if (Path.GetDirectoryName(scheduledPath) == Path.GetDirectoryName(path)) return;
+                }
+            }
+
+            NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
+            Queue.Add(path);
+            PostMapQueue();
         }
 
         /// <summary>
@@ -146,12 +167,7 @@ namespace Quaver.Shared.Database.Maps
             // Mapset files (or directory of Mapset files)
             if (AcceptedMapType(path))
             {
-                Queue.Add(path);
-
-                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
-                NotificationManager.Show(NotificationLevel.Info, log);
-
-                PostMapQueue();
+                AddMapImportToQueue(path);
             }
             // Quaver Replay
             else if (path.EndsWith(".qr"))
@@ -271,8 +287,7 @@ namespace Quaver.Shared.Database.Maps
                 {
                     if (AcceptedMapType(subPath))
                     {
-                        NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(subPath)} to be imported!");
-                        Queue.Add(subPath);
+                        AddMapImportToQueue(subPath);
                     }
                 }
                 foreach (var subDir in dirs)
@@ -299,24 +314,31 @@ namespace Quaver.Shared.Database.Maps
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
-                var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+                var extension = Path.GetExtension(file);
+                // Use directory of .sm files, because during scheduled bulk import, there can be multiple files named file.sm, for example
+                var isPartOfMapset = extension == ".sm";
+                var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
 
-                var folderName = Path.GetFileNameWithoutExtension(file);
+                var folderName = isPartOfMapset
+                    ? Path.GetFileName(Path.GetDirectoryName(file))
+                    : Path.GetFileNameWithoutExtension(file);
                 folderName = folderName.Substring(0, Math.Min(folderName.Length, 100));
 
                 var extractDirectory = $@"{ConfigManager.SongDirectory}/{folderName} - {time}/";
 
                 try
                 {
+                    // If we are importing map files, not zipped mapsets, we should never delete them
+                    var deleteOriginalFile = false;
                     if (file.EndsWith(".qp"))
                     {
                         ExtractQuaverMapset(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
                     else if (file.EndsWith(".osz"))
                     {
                         Osu.ConvertOsz(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
                     else if (file.EndsWith(".sm"))
                         Stepmania.ConvertFile(file, extractDirectory);
@@ -325,8 +347,16 @@ namespace Quaver.Shared.Database.Maps
                     else if (file.EndsWith(".mcz"))
                     {
                         Malody.ExtractZip(file, extractDirectory);
-                        File.Delete(file);
+                        deleteOriginalFile = true;
                     }
+
+                    // Delete if the player has the option Delete Original File After Import on
+                    // and the file to delete is a mapset, not a map file
+                    // If we are importing a mapset downloaded from in-game downloader,
+                    // We should delete it no matter what
+                    if ((deleteOriginalFile && ConfigManager.DeleteOriginalFileAfterImport.Value)
+                        || file.IsSubDirectoryOf(ConfigManager.DataDirectory.Value))
+                        File.Delete(file);
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 

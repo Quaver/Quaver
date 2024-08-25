@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Collections.Generic;
 using ManagedBass;
 using Microsoft.Xna.Framework;
@@ -28,6 +29,18 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         ///     The max height of the bars.
         /// </summary>
         public int MaxBarHeight { get; }
+
+        /// <summary>
+        ///     Timer used to record time passed since last interpolation
+        /// </summary>
+        private TimeSpan interpolationTimer = TimeSpan.Zero;
+
+        /// <summary>
+        ///     Minimum time that needs to pass before the bars are interpolated again
+        /// </summary>
+        private readonly TimeSpan barInterpolateInterval = TimeSpan.FromMilliseconds(50);
+
+        private readonly float[]  spectrumData = new float[2048];
 
         /// <inheritdoc />
         ///   <summary>
@@ -68,7 +81,15 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         public override void Update(GameTime gameTime)
         {
             if (ConfigManager.DisplayMenuAudioVisualizer != null && ConfigManager.DisplayMenuAudioVisualizer.Value)
-                InterpolateBars();
+            {
+                interpolationTimer += gameTime.ElapsedGameTime;
+                // ReSharper disable once InconsistentlySynchronizedField
+                if (interpolationTimer >= barInterpolateInterval)
+                {
+                    interpolationTimer = TimeSpan.Zero;
+                    InterpolateBars();
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -88,13 +109,13 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// </summary>
         private void InterpolateBars()
         {
-            var spectrumData = new float[2048];
-
             if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
                 return;
 
             if (AudioEngine.Track.IsPlaying)
-                Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
+                _ = Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
+            else
+                Array.Clear(spectrumData);
 
             for (var i = 0; i < Bars.Count; i++)
             {
@@ -112,7 +133,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
                 {
                     bar.Animations.Clear();
                     bar.Animations.Add(new Animation(AnimationProperty.Height, Easing.Linear,
-                        bar.Height, targetHeight, 50f));
+                        bar.Height, targetHeight, (float)barInterpolateInterval.TotalMilliseconds));
                 }
             }
         }
