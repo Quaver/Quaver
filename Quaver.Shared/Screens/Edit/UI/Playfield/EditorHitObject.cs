@@ -17,7 +17,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield
 {
-    public class EditorHitObject : Sprite
+    public class EditorHitObject : Sprite, IStartTime
     {
         /// <summary>
         /// </summary>
@@ -30,6 +30,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         public HitObjectInfo Info { get; }
+
+        /// <inheritdoc />
+        float IStartTime.StartTime
+        {
+            get => Info.StartTime;
+            set => Info.StartTime = (int)value;
+        }
 
         /// <summary>
         /// </summary>

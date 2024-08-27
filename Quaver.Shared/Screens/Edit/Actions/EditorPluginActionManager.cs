@@ -1,12 +1,8 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
-using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Components;
 
 namespace Quaver.Shared.Screens.Edit.Actions
@@ -28,17 +24,21 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="action"></param>
-        public void Perform(IEditorAction action) => ActionManager.Perform(action);
+        public void Perform(IEditorAction action) => ActionManager.Perform(action, true);
 
         /// <summary>
         /// </summary>
         /// <param name="actions"></param>
-        public void PerformBatch(List<IEditorAction> actions) => ActionManager.PerformBatch(actions);
+        public void PerformBatch(List<IEditorAction> actions) => ActionManager.PerformBatch(actions, true);
+
+        public void Redo() => ActionManager.Redo(true);
+
+        public void Undo() => ActionManager.Undo(true);
 
         /// <summary>
         /// </summary>
         /// <param name="h"></param>
-        public void PlaceHitObject(HitObjectInfo h) => ActionManager.PlaceHitObject(h);
+        public void PlaceHitObject(HitObjectInfo h) => ActionManager.PlaceHitObject(h, true);
 
         /// <summary>
         /// </summary>
@@ -47,111 +47,117 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="endTime"></param>
         /// <param name="layer"></param>
         /// <param name="hitsounds"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0)
-            => ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds);
+        public HitObjectInfo PlaceHitObject(
+            int lane,
+            int startTime,
+            int endTime = 0,
+            int layer = 0,
+            HitSounds hitsounds = 0
+        ) =>
+            ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds, true);
 
         /// <summary>
         /// </summary>
         /// <param name="hitObjects"></param>
-        public void PlaceHitObjectBatch(List<HitObjectInfo> hitObjects) => ActionManager.PlaceHitObjectBatch(hitObjects);
+        public void PlaceHitObjectBatch(List<HitObjectInfo> hitObjects) => ActionManager.PlaceHitObjectBatch(hitObjects, true);
 
         /// <summary>
         /// </summary>
         /// <param name="h"></param>
-        public void RemoveHitObject(HitObjectInfo h) => ActionManager.RemoveHitObject(h);
+        public void RemoveHitObject(HitObjectInfo h) => ActionManager.RemoveHitObject(h, true);
 
         /// <summary>
         /// </summary>
         /// <param name="hitObjects"></param>
         public void RemoveHitObjectBatch(List<HitObjectInfo> hitObjects) =>
-            ActionManager.RemoveHitObjectBatch(hitObjects);
+            ActionManager.RemoveHitObjectBatch(hitObjects, true);
 
         /// <summary>
         /// </summary>
         /// <param name="h"></param>
         /// <param name="originalTime"></param>
         /// <param name="time"></param>
-        public void ResizeLongNote(HitObjectInfo h, int originalTime, int time) => ActionManager.ResizeLongNote(h, originalTime, time);
+        public void ResizeLongNote(HitObjectInfo h, int originalTime, int time) => ActionManager.ResizeLongNote(h, originalTime, time, true);
 
         /// <summary>
         /// </summary>
         /// <param name="sv"></param>
-        public void PlaceScrollVelocity(SliderVelocityInfo sv) => ActionManager.PlaceScrollVelocity(sv);
+        public void PlaceScrollVelocity(SliderVelocityInfo sv) => ActionManager.PlaceScrollVelocity(sv, true);
 
         /// <summary>
         /// </summary>
         /// <param name="svs"></param>
-        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.PlaceScrollVelocityBatch(svs);
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.PlaceScrollVelocityBatch(svs, true);
 
         /// <summary>
         /// </summary>
         /// <param name="sv"></param>
-        public void RemoveScrollVelocity(SliderVelocityInfo sv) => ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv });
+        public void RemoveScrollVelocity(SliderVelocityInfo sv) => ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv }, true);
 
         /// <summary>
         /// </summary>
         /// <param name="svs"></param>
-        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.RemoveScrollVelocityBatch(svs);
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.RemoveScrollVelocityBatch(svs, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tp"></param>
-        public void PlaceTimingPoint(TimingPointInfo tp) => ActionManager.PlaceTimingPoint(tp);
+        public void PlaceTimingPoint(TimingPointInfo tp) => ActionManager.PlaceTimingPoint(tp, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tp"></param>
-        public void RemoveTimingPoint(TimingPointInfo tp) => ActionManager.RemoveTimingPoint(tp);
+        public void RemoveTimingPoint(TimingPointInfo tp) => ActionManager.RemoveTimingPoint(tp, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tps"></param>
-        public void PlaceTimingPointBatch(List<TimingPointInfo> tps) => ActionManager.PlaceTimingPointBatch(tps);
+        public void PlaceTimingPointBatch(List<TimingPointInfo> tps) => ActionManager.PlaceTimingPointBatch(tps, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tps"></param>
-        public void RemoveTimingPointBatch(List<TimingPointInfo> tps) => ActionManager.RemoveTimingPointBatch(tps);
+        public void RemoveTimingPointBatch(List<TimingPointInfo> tps) => ActionManager.RemoveTimingPointBatch(tps, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="offset"></param>
-        public void ChangeTimingPointOffset(TimingPointInfo tp, float offset) => ActionManager.ChangeTimingPointOffset(tp, offset);
+        public void ChangeTimingPointOffset(TimingPointInfo tp, float offset) => ActionManager.ChangeTimingPointOffset(tp, offset, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="bpm"></param>
-        public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => ActionManager.ChangeTimingPointBpm(tp, bpm);
+        public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => ActionManager.ChangeTimingPointBpm(tp, bpm, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="hidden"></param>
-        public void ChangeTimingPointHidden(TimingPointInfo tp, bool hidden) => ActionManager.ChangeTimingPointHidden(tp, hidden);
+        public void ChangeTimingPointHidden(TimingPointInfo tp, bool hidden) => ActionManager.ChangeTimingPointHidden(tp, hidden, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tps"></param>
         /// <param name="bpm"></param>
-        public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm) => ActionManager.ChangeTimingPointBpmBatch(tps, bpm);
+        public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm) => ActionManager.ChangeTimingPointBpmBatch(tps, bpm, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tps"></param>
         /// <param name="offset"></param>
-        public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset) => ActionManager.ChangeTimingPointOffsetBatch(tps, offset);
+        public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset) => ActionManager.ChangeTimingPointOffsetBatch(tps, offset, true);
 
         /// <summary>
         /// </summary>
         /// <param name="tp"></param>
-        public void ResetTimingPoint(TimingPointInfo tp) => ActionManager.ResetTimingPoint(tp);
+        public void ResetTimingPoint(TimingPointInfo tp) => ActionManager.ResetTimingPoint(tp, true);
 
         /// <summary>
         /// </summary>
         /// <param name="input"></param>
-        public void GoToObjects(string input) => ActionManager.GoToObjects(input);
+        public void GoToObjects(string input) => ActionManager.GoToObjects(input, true);
 
         /// <summary>
         /// </summary>
@@ -166,35 +172,36 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="time"></param>
-        public void SetPreviewTime(int time) => ActionManager.SetPreviewTime(time);
+        public void SetPreviewTime(int time) => ActionManager.SetPreviewTime(time, true);
 
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
-        public void CreateLayer(EditorLayerInfo layer, int index = -1) => ActionManager.CreateLayer(layer, index);
+        public void CreateLayer(EditorLayerInfo layer, int index = -1) => ActionManager.CreateLayer(layer, index, true);
 
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
-        public void RemoveLayer(EditorLayerInfo layer) => ActionManager.RemoveLayer(layer);
+        public void RemoveLayer(EditorLayerInfo layer) => ActionManager.RemoveLayer(layer, true);
 
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="name"></param>
-        public void RenameLayer(EditorLayerInfo layer, string name) => ActionManager.RenameLayer(layer, name);
+        public void RenameLayer(EditorLayerInfo layer, string name) => ActionManager.RenameLayer(layer, name, true);
 
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="hitObjects"></param>
-        public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => ActionManager.MoveHitObjectsToLayer(layer, hitObjects);
+        public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => ActionManager.MoveHitObjectsToLayer(layer, hitObjects, true);
 
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="color"></param>
-        public void ChangeLayerColor(EditorLayerInfo layer, int r, int g, int b) => ActionManager.ChangeLayerColor(layer, new Color(r, g, b));
+        public void ChangeLayerColor(EditorLayerInfo layer, int r, int g, int b) =>
+            ActionManager.ChangeLayerColor(layer, new(r, g, b), true);
 
         /// <summary>
         /// </summary>
@@ -206,17 +213,21 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="snaps"></param>
         /// <param name="hitObjectsToResnap"></param>
         public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) =>
-            ActionManager.ResnapNotes(snaps, hitObjectsToResnap);
+            ActionManager.ResnapNotes(snaps, hitObjectsToResnap, true);
 
-        public void AddBookmark(BookmarkInfo bookmarkInfo) => ActionManager.AddBookmark(bookmarkInfo);
-        public void AddBookmark(int time, string note) => ActionManager.AddBookmark(time, note);
-        public void AddBookmarkBatch(List<BookmarkInfo> bookmarks) => ActionManager.AddBookmarkBatch(bookmarks);
+        public void AddBookmark(BookmarkInfo bookmarkInfo) => ActionManager.AddBookmark(bookmarkInfo, true);
 
-        public void RemoveBookmark(BookmarkInfo bookmark) => ActionManager.RemoveBookmark(bookmark);
-        public void RemoveBookmarkBatch(List<BookmarkInfo> bookmarks) => ActionManager.RemoveBookmarkBatch(bookmarks);
+        public void AddBookmark(int time, string note) => ActionManager.AddBookmark(time, note, true);
 
-        public void EditBookmark(BookmarkInfo bookmark, string note) => ActionManager.EditBookmark(bookmark, note);
+        public void AddBookmarkBatch(List<BookmarkInfo> bookmarks) => ActionManager.AddBookmarkBatch(bookmarks, true);
 
-        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => ActionManager.ChangeBookmarkBatchOffset(bookmarks, offset);
+        public void RemoveBookmark(BookmarkInfo bookmark) => ActionManager.RemoveBookmark(bookmark, true);
+
+        public void RemoveBookmarkBatch(List<BookmarkInfo> bookmarks) => ActionManager.RemoveBookmarkBatch(bookmarks, true);
+
+        public void EditBookmark(BookmarkInfo bookmark, string note) => ActionManager.EditBookmark(bookmark, note, true);
+
+        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) =>
+            ActionManager.ChangeBookmarkBatchOffset(bookmarks, offset, true);
     }
 }

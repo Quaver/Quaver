@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.Remove
 
         private Qua WorkingMap { get; }
 
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionRemoveTimingPoint(EditorActionManager manager, Qua workingMap, TimingPointInfo tp)
