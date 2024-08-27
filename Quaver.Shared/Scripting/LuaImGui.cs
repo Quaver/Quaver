@@ -689,7 +689,7 @@ namespace Quaver.Shared.Scripting
             DynValue.NewNumber(Convert.ToDouble(Convert.ChangeType(i, i.GetTypeCode())));
 
         /// <summary>
-        ///     Reads the config file.
+        ///     Overrides lua'a <c>tonumber</c> to allow the underlying number of an enum to be extracted.
         /// </summary>
         /// <param name="context">The script execution context.</param>
         /// <param name="args">The arguments.</param>
