@@ -3,6 +3,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Helpers;
 
 namespace Quaver.Shared.Screens.Edit.Actions.SF.Add
 {
@@ -28,8 +29,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.Add
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            WorkingMap.ScrollSpeedFactors.Add(ScrollSpeedFactor);
-            WorkingMap.Sort();
+            WorkingMap.ScrollSpeedFactors.InsertSorted(ScrollSpeedFactor);
 
             ActionManager.TriggerEvent(Type, new EditorScrollSpeedFactorAddedEventArgs(ScrollSpeedFactor));
         }

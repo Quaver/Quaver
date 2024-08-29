@@ -4,6 +4,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Helpers;
 
 namespace Quaver.Shared.Screens.Edit.Actions.SF.AddBatch
 {
@@ -29,8 +30,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.AddBatch
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            ScrollSpeedFactors.ForEach(x => WorkingMap.ScrollSpeedFactors.Add(x));
-            WorkingMap.Sort();
+            WorkingMap.ScrollSpeedFactors.InsertSorted(ScrollSpeedFactors);
 
             ActionManager.TriggerEvent(Type, new EditorScrollSpeedFactorBatchAddedEventArgs(ScrollSpeedFactors));
         }
