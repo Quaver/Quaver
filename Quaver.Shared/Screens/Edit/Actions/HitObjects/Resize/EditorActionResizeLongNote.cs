@@ -24,17 +24,17 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize
 
         /// <summary>
         /// </summary>
-        private HitObjectInfo HitObject { get; }
+        public HitObjectInfo HitObject { get; }
 
         /// <summary>
         ///     The original end time of the long note
         /// </summary>
-        private int OriginalTime { get; }
+        public int OriginalTime { get; }
 
         /// <summary>
         ///     The new end time of the long note
         /// </summary>
-        private int NewTime { get; }
+        public int NewTime { get; }
 
         /// <summary>
         /// </summary>

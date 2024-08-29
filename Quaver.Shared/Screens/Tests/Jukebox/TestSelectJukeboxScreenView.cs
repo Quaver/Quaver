@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Tests.Jukebox
     {
         public TestSelectJukeboxScreenView(FilterPanelTestScreen screen) : base(screen)
         {
-            new SelectJukebox() {Parent = Container};
+            new SelectJukebox() { Parent = Container };
         }
     }
 }

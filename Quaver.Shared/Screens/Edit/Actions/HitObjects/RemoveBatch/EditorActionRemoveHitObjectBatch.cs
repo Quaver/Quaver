@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         /// </summary>
@@ -49,10 +49,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            HitObjects.ForEach(x => WorkingMap.HitObjects.Remove(x));
-            WorkingMap.Sort();
+            var hitObjects = WorkingMap.HitObjects;
+            var selectedHitObjects = ActionManager.EditScreen.SelectedHitObjects;
 
-            HitObjects.ForEach(x => ActionManager.EditScreen.SelectedHitObjects.Remove(x));
+            foreach (var hitObject in HitObjects)
+            {
+                hitObjects.Remove(hitObject);
+                selectedHitObjects.Remove(hitObject);
+            }
 
             ActionManager.TriggerEvent(EditorActionType.RemoveHitObjectBatch, new EditorHitObjectBatchRemovedEventArgs(HitObjects));
         }

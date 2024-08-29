@@ -15,14 +15,13 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Server.Client;
-using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
-using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -334,7 +333,21 @@ namespace Quaver.Shared.Database.Maps
                         "map",
                         () =>
                         {
-                            File.Delete(path);
+                            try
+                            {
+                                File.Delete(path);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error(e, LogType.Runtime);
+                            }
+
+                            if (File.Exists(path))
+                            {
+                                NotificationManager.Show(NotificationLevel.Error, "Unable to delete the map. Is the file protected?");
+                                return;
+                            }
+
                             MapDatabaseCache.RemoveMap(map);
                             map.Mapset.Maps.Remove(map);
 
@@ -400,10 +413,23 @@ namespace Quaver.Shared.Database.Maps
                 if (!Rubbish.Move(directory) && Directory.Exists(directory))
                 {
                     ShowFallbackMapDeletionDialog(
-                    	"mapset",
-                    	() =>
-	                    {
-                            Directory.Delete(directory, true);
+                        "mapset",
+                        () =>
+                        {
+                            try
+                            {
+                                Directory.Delete(directory, true);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error(e, LogType.Runtime);
+                            }
+
+                            if (Directory.Exists(directory))
+                            {
+                                NotificationManager.Show(NotificationLevel.Error, "Unable to delete the mapset. Is the directory protected?");
+                                return;
+                            }
 
                             try
                             {

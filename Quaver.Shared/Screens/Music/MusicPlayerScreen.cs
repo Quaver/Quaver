@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Server.Client;
-using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
-using Quaver.Server.Common.Objects.Listening;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;
@@ -14,9 +11,6 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
-using Quaver.Shared.Screens.Multiplayer;
-using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
@@ -127,7 +121,7 @@ namespace Quaver.Shared.Screens.Music
         ///     Initializes the bindable which stores the available mapsets for the screen <see cref="AvailableSongs"/>
         /// </summary>
         private void InitializeAvailableSongsBindable()
-            => AvailableSongs= new Bindable<List<Mapset>>(null) { Value = new List<Mapset>()};
+            => AvailableSongs = new Bindable<List<Mapset>>(null) { Value = new List<Mapset>() };
 
         /// <summary>
         /// </summary>
@@ -149,7 +143,7 @@ namespace Quaver.Shared.Screens.Music
                 return new UserClientStatus(ClientStatus.Listening, -1, "-1", 1, "", 0);
 
             return new UserClientStatus(ClientStatus.Listening, MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum,
-                (byte) MapManager.Selected.Value.Mode, $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}", 0);
+                (byte)MapManager.Selected.Value.Mode, $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}", 0);
         }
 
         /// <summary>

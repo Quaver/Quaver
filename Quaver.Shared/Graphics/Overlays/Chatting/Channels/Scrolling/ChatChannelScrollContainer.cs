@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
+using Quaver.Server.Client.Enums;
 using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;

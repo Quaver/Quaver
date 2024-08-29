@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading;
 using Quaver.Shared.Skinning;
-using Wobble.Assets;
 using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Header

@@ -19,7 +19,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
-using Quaver.Server.Common.Helpers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
@@ -183,7 +183,7 @@ namespace Quaver.Shared
                     return "Local Development Build";
 
                 var assembly = AssemblyName;
-                return $@"{assembly.Version.Major}.{assembly.Version.Minor}.{assembly.Version.Build}";
+                return $@"{assembly.Version.Major}.{assembly.Version.Minor}.{assembly.Version.Build}.{assembly.Version.Revision}";
             }
         }
 
@@ -257,7 +257,9 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
-            Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
+
+            if (Environment.GetEnvironmentVariable("QUAVER_LOGLEVEL") is null)
+                Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
         }
 
         /// <inheritdoc />
@@ -307,7 +309,7 @@ namespace Quaver.Shared
         {
             base.LoadContent();
 
-            Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
+            Logger.Important($"Currently running Quaver version: `{Version}`", LogType.Runtime);
             IsReadyToUpdate = true;
 
 #if VISUAL_TESTS
@@ -534,11 +536,15 @@ namespace Quaver.Shared
         private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
 
         /// <summary>
-        ///    Handles limiting/unlimiting FPS based on user config
+        ///     Uses a custom fps config
         /// </summary>
-        public void InitializeFpsLimiting()
+        /// <param name="fpsLimitType"></param>
+        /// <param name="customFpsLimit"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
-            switch (ConfigManager.FpsLimiterType.Value)
+
+            switch (fpsLimitType)
             {
                 case FpsLimitType.Unlimited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
@@ -563,15 +569,22 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Custom:
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    TargetElapsedTime = TimeSpan.FromSeconds(1d / ConfigManager.CustomFpsLimit.Value);
+                    TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
                     IsFixedTimeStep = true;
                     WaylandVsync = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
             Graphics.ApplyChanges();
+        }
+
+        /// <summary>
+        ///    Handles limiting/unlimiting FPS based on user config
+        /// </summary>
+        public void InitializeFpsLimiting()
+        {
+            SetFps(ConfigManager.FpsLimiterType.Value, ConfigManager.CustomFpsLimit.Value);
         }
 
         /// <summary>
@@ -627,10 +640,10 @@ namespace Quaver.Shared
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F7))
                 return;
 
-            var index = (int) ConfigManager.FpsLimiterType.Value;
+            var index = (int)ConfigManager.FpsLimiterType.Value;
 
             if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
-                ConfigManager.FpsLimiterType.Value = (FpsLimitType) index + 1;
+                ConfigManager.FpsLimiterType.Value = (FpsLimitType)index + 1;
             else
                 ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
 
@@ -764,7 +777,7 @@ namespace Quaver.Shared
 
                 texture.Dispose();
 
-                NotificationManager.Show(NotificationLevel.Success, $"Screenshot saved. Click here to view!" ,
+                NotificationManager.Show(NotificationLevel.Success, $"Screenshot saved. Click here to view!",
                     (sender, args) => Utils.NativeUtils.HighlightInFileManager(path));
 
                 // Upload file to imgur
@@ -864,7 +877,7 @@ namespace Quaver.Shared
             if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
                 return true;
 
-            var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
+            var dialog = (OnlineHubDialog)DialogManager.Dialogs.Last();
             dialog?.Close();
 
             return true;
@@ -880,7 +893,7 @@ namespace Quaver.Shared
             if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
                 WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
 
-            var ratio = (float) ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
+            var ratio = (float)ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
 
             if (ratio >= 16 / 9f)
                 WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
@@ -905,7 +918,7 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
                     break;
                 case QuaverScreenType.Multiplayer:
-                    var screen = (MultiplayerGameScreen) CurrentScreen;
+                    var screen = (MultiplayerGameScreen)CurrentScreen;
                     screen.DontLeaveGameUponScreenSwitch = true;
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;

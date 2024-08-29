@@ -16,11 +16,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
 
         private Qua WorkingMap { get; }
 
-        private EditorLayerInfo Layer { get; }
+        public EditorLayerInfo Layer { get; }
 
-        private BindableList<HitObjectInfo> SelectedHitObjects { get; }
+        public BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
-        private int Index { get; }
+        public int Index { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionCreateLayer(Qua workingMap, EditorActionManager actionManager, BindableList<HitObjectInfo> selectedHitObjects,

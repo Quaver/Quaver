@@ -7,8 +7,8 @@ namespace Quaver.Shared.Screens.Edit.Input
 {
     public class GenericKeyState
     {
-        public HashSet<KeyModifiers> Modifiers {get;}
-        public HashSet<GenericKey> Pressed {get;}
+        public HashSet<KeyModifiers> Modifiers { get; }
+        public HashSet<GenericKey> Pressed { get; }
 
         public GenericKeyState(IEnumerable<GenericKey> keys)
         {
@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private void CheckForModifier(Keys key, KeyModifiers modifier)
         {
-            var genericKey = new GenericKey() {KeyboardKey = key};
+            var genericKey = new GenericKey() { KeyboardKey = key };
             if (Pressed.Contains(genericKey))
             {
                 Pressed.Remove(genericKey);

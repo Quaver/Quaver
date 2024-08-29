@@ -12,6 +12,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 {
     public class EditorPlugin : LuaImGui, IEditorPlugin
     {
+        static readonly DynValue s_actionType = DefineEnum<EditorActionType>();
+
+        static readonly DynValue s_hitSounds = DefineEnum<HitSounds>();
+
+        static readonly DynValue s_gameMode = DefineEnum<GameMode>();
+
+        static readonly DynValue s_timeSignature = DefineEnum<TimeSignature>();
+
         /// <summary>
         /// </summary>
         private EditScreen Editor { get; }
@@ -22,10 +30,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         /// <summary>
         /// </summary>
-        public bool IsWindowHovered { get; set; }
-
-        /// <inheritdoc/>
-        public override string Name { get; set; }
+        public bool IsWindowHovered => State.IsWindowHovered;
 
         /// <summary>
         /// </summary>
@@ -46,6 +51,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         public EditorPluginMap EditorPluginMap { get; set; }
 
+        static EditorPlugin()
+        {
+            RegisterIfEnum(typeof(GameMode));
+            RegisterIfEnum(typeof(HitSounds));
+            RegisterIfEnum(typeof(TimeSignature));
+            RegisterIfEnum(typeof(EditorActionType));
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -58,24 +71,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="directory"></param>
         /// <param name="isWorkshop"></param>
         public EditorPlugin(EditScreen editScreen, string name, string author, string description, string filePath,
-            bool isResource = false, string directory = null, bool isWorkshop = false) : base(filePath, isResource)
+            bool isResource = false, string directory = null, bool isWorkshop = false) : base(filePath, isResource, name)
         {
             Editor = editScreen;
-            Name = name;
             Author = author;
             Description = description;
             IsBuiltIn = isResource;
             Directory = directory;
             IsWorkshop = isWorkshop;
-
             EditorPluginUtils.EditScreen = editScreen;
-
             EditorPluginMap = new EditorPluginMap();
-
-            UserData.RegisterType<GameMode>();
-            UserData.RegisterType<HitSounds>();
-            UserData.RegisterType<TimeSignature>();
-            UserData.RegisterType<EditorActionType>();
         }
 
         /// <inheritdoc />
@@ -90,32 +95,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public override void SetFrameState()
         {
-            WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
-            WorkingScript.Globals["game_mode"] = typeof(GameMode);
-            WorkingScript.Globals["hitsounds"] = typeof(HitSounds);
-            WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
-            WorkingScript.Globals["action_type"] = typeof(EditorActionType);
-            WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
-
-            var state = (EditorPluginState)State;
-
-            state.SongTime = Editor.Track.Time;
-            state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
-            state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
-            state.CurrentSnap = Editor.BeatSnap.Value;
-            state.CurrentLayer = Editor.SelectedLayer.Value ?? Editor.DefaultLayer;
-            state.WindowSize = new Vector2(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
-
-            EditorPluginMap.Map = Editor.WorkingMap;
-            EditorPluginMap.Track = Editor.Track;
-            EditorPluginMap.DefaultLayer = Editor.DefaultLayer;
-            EditorPluginMap.SetFrameState();
-            WorkingScript.Globals["map"] = EditorPluginMap;
+            if (IsFirstDrawCall)
+            {
+                var globals = WorkingScript.Globals;
+                globals["utils"] = typeof(EditorPluginUtils);
+                globals["game_mode"] = s_gameMode;
+                globals["hitsounds"] = s_hitSounds;
+                globals["time_signature"] = s_timeSignature;
+                globals["action_type"] = s_actionType;
+                globals["actions"] = Editor.ActionManager.PluginActionManager;
+                globals["map"] = EditorPluginMap;
+            }
 
             base.SetFrameState();
-
-            state.PushImguiStyle();
+            ((EditorPluginState)State).PushImguiStyle();
             PushDefaultStyles();
         }
 
@@ -125,18 +118,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public override void AfterRender()
         {
             ImGui.PopStyleVar();
-            IsWindowHovered = State.IsWindowHovered;
-
             base.AfterRender();
         }
 
         /// <summary>
         ///     To push any default styling for plugin windows
         /// </summary>
-        private void PushDefaultStyles()
-        {
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
-        }
+        private static void PushDefaultStyles() => ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
 
         /// <inheritdoc />
         /// <summary>

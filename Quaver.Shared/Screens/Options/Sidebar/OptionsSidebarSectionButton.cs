@@ -82,7 +82,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Alpha = MathHelper.Lerp(Alpha, alpha, (float) Math.Min(dt / 20f, 1));
+            Alpha = MathHelper.Lerp(Alpha, alpha, (float)Math.Min(dt / 20f, 1));
             TickerFlag.Alpha = Alpha;
 
             FadeToColor(color, dt, 20);

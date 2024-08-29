@@ -280,9 +280,9 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = processor.CurrentJudgements[Judgement.Good],
                 CountOkay = processor.CurrentJudgements[Judgement.Okay],
                 CountMiss = processor.CurrentJudgements[Judgement.Miss],
-                Mods = (long) processor.Mods,
+                Mods = (long)processor.Mods,
                 ScrollSpeed = scrollSpeed,
-                PauseCount =  pauseCount,
+                PauseCount = pauseCount,
                 RandomizeModifierSeed = seed,
                 JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()),
                 JudgementWindowPreset = windows.Name,
@@ -305,7 +305,7 @@ namespace Quaver.Shared.Database.Scores
         public static Score FromOnlineScoreboardScore(OnlineScoreboardScore score)
         {
             // Unix timestamp is seconds past epoch
-            var dtDateTime = new DateTime(1970,1,1,0,0,0,0,DateTimeKind.Utc);
+            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(score.Timestamp / 1000f).ToLocalTime();
 
             var localScore = new Score()
@@ -320,7 +320,7 @@ namespace Quaver.Shared.Database.Scores
                 Mode = score.Mode,
                 TotalScore = score.TotalScore,
                 PerformanceRating = score.PerformanceRating,
-                Grade = GradeHelper.GetGradeFromAccuracy((float) score.Accuracy),
+                Grade = GradeHelper.GetGradeFromAccuracy((float)score.Accuracy),
                 Accuracy = score.Accuracy,
                 MaxCombo = score.MaxCombo,
                 CountMarv = score.CountMarv,
@@ -329,7 +329,7 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = score.CountGood,
                 CountOkay = score.CountOkay,
                 CountMiss = score.CountMiss,
-                Mods = (long) score.Mods,
+                Mods = (long)score.Mods,
                 Country = score.Country
             };
 
@@ -367,7 +367,7 @@ namespace Quaver.Shared.Database.Scores
         ///     Converts the score object into a blank replay.
         /// </summary>
         /// <returns></returns>
-        public Replay ToReplay() => new Replay(Mode, Name, (ModIdentifier) Mods, MapMd5)
+        public Replay ToReplay() => new Replay(Mode, Name, (ModIdentifier)Mods, MapMd5)
         {
             PlayerName = Name ?? "",
             Date = Convert.ToDateTime(DateTime, CultureInfo.InvariantCulture),

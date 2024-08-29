@@ -6,8 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Containers;
@@ -15,17 +14,13 @@ using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Music.UI.ListenerList;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites.Text;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
-using Wobble.Logging;
 using Wobble.Managers;
-using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 {

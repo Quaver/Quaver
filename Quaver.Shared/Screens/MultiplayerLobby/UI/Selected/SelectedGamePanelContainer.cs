@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;

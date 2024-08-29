@@ -19,14 +19,14 @@ namespace Quaver.Shared.Database.Scores
 {
     public static class ScoreDatabaseCache
     {
-         /// <summary>
-         ///     Event invoked when a score has been deleted
-         /// </summary>
-         public static event EventHandler<ScoreDeletedEventArgs> ScoreDeleted;
+        /// <summary>
+        ///     Event invoked when a score has been deleted
+        /// </summary>
+        public static event EventHandler<ScoreDeletedEventArgs> ScoreDeleted;
 
-         /// <summary>
-         ///     Event invoked when a map's local scores have been deleted
-         /// </summary>
+        /// <summary>
+        ///     Event invoked when a map's local scores have been deleted
+        /// </summary>
         public static event EventHandler<LocalScoresDeletedEventArgs> LocalMapScoresDeleted;
 
         /// <summary>

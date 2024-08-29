@@ -11,7 +11,7 @@ using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
-    internal class ModNoSliderVelocities: IGameplayModifier
+    internal class ModNoSliderVelocities : IGameplayModifier
     {
         public string Name { get; set; } = "No Scroll Velocities";
 
@@ -33,6 +33,6 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public Color ModColor { get; } = ColorHelper.HexToColor("#EB5757");
 
-        public void InitializeMod() {}
+        public void InitializeMod() { }
     }
 }

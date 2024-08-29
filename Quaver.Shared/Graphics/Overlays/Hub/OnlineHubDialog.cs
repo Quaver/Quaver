@@ -41,7 +41,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// </summary>
         public OnlineHubDialog() : base(0)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
             Hub = game.OnlineHub;
             Chat = game.OnlineChat;
 
@@ -60,7 +60,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             Hub.Alignment = Alignment.TopRight;
 

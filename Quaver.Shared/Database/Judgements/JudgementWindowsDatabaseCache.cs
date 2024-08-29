@@ -110,24 +110,24 @@ namespace Quaver.Shared.Database.Judgements
 
             const float constant = 1.1f;
 
-            windows.Marvelous /= (float) Math.Pow(constant, n);
-            windows.Perfect /= (float) Math.Pow(constant, n);
-            windows.Great /= (float) Math.Pow(constant, n);
-            windows.Good /= (float) Math.Pow(constant, n);
+            windows.Marvelous /= (float)Math.Pow(constant, n);
+            windows.Perfect /= (float)Math.Pow(constant, n);
+            windows.Great /= (float)Math.Pow(constant, n);
+            windows.Good /= (float)Math.Pow(constant, n);
             // Only scale the miss timing on easier windows because scaling the bad timings
             // on harder windows enables for less penalty than what easier window players would recieve.
             if (n < 0)
             {
-                windows.Okay /= (float) Math.Pow(constant, n);
-                windows.Miss /= (float) Math.Pow(constant, n);
+                windows.Okay /= (float)Math.Pow(constant, n);
+                windows.Miss /= (float)Math.Pow(constant, n);
             }
 
-            windows.Marvelous = (int) windows.Marvelous;
-            windows.Perfect = (int) windows.Perfect;
-            windows.Great = (int) windows.Great;
-            windows.Good = (int) windows.Good;
-            windows.Okay = (int) windows.Okay;
-            windows.Miss = (int) windows.Miss;
+            windows.Marvelous = (int)windows.Marvelous;
+            windows.Perfect = (int)windows.Perfect;
+            windows.Great = (int)windows.Great;
+            windows.Good = (int)windows.Good;
+            windows.Okay = (int)windows.Okay;
+            windows.Miss = (int)windows.Miss;
 
             Logger.Important($"Created preset judgement windows `{windows.Name}` " +
                              $"- Marv: {windows.Marvelous} | Perf: {windows.Perfect} | " +
