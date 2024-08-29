@@ -738,7 +738,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var point = new ScrollSpeedFactorInfo()
                 {
                     StartTime = obj.StartTime + difference,
-                    Factor = obj.Factor
+                    Factor = obj.Factor,
+                    LaneMask = obj.LaneMask
                 };
 
                 clonedObjects.Add(point);
