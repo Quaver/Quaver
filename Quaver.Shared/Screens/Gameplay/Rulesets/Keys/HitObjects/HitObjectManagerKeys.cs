@@ -138,6 +138,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public List<long> VelocityPositionMarkers { get; set; } = new List<long>();
 
         /// <summary>
+        ///     List of scroll speed factor changes split to each lane.
+        /// </summary>
+        public List<ScrollSpeedFactorInfo>[] ScrollSpeedFactorInfos { get; set; }
+
+        /// <summary>
         ///     Loose upper bound of the number of hitobjects on screen at one time.
         /// </summary>
         public int MaxHitObjectCount { get; private set; }
@@ -145,7 +150,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Only objects within this distance of the <see cref="CurrentTrackPosition"/> are rendered.
         /// </summary>
-        public long RenderThreshold => (long)(WindowManager.Height * TrackRounding / ScrollSpeed);
+        public long RenderThreshold => (long)(WindowManager.Height * TrackRounding / ScrollSpeed / CurrentMinimumScrollSpeedFactor);
 
         /// <summary>
         ///     Current position of the receptors
@@ -153,10 +158,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public long CurrentTrackPosition { get; private set; }
 
         /// <summary>
+        ///     Current scroll speed factor for each lane
+        /// </summary>
+        public float[] CurrentScrollSpeedFactor { get; private set; }
+
+        /// <summary>
+        ///     The currently minimum scroll speed factor. This is used to determine render threshold
+        /// </summary>
+        public float CurrentMinimumScrollSpeedFactor { get; private set; }
+
+        /// <summary>
         ///     Current SV index used for optimization when using UpdateCurrentPosition()
         ///     Default value is 0. "0" means that Current time has not passed first SV point yet.
         /// </summary>
         private int CurrentSvIndex { get; set; } = 0;
+
+        /// <summary>
+        ///     Current SF index for each lane.
+        ///     Defaults to -1 which makes <see cref="GetScrollSpeedFactorFromTime"/> return 1.
+        /// </summary>
+        private int[] CurrentSfIndex { get; set; }
 
         /// <summary>
         ///     Current audio position relative to start of audio, with song and user offset values applied.
@@ -321,6 +342,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             Length = Map.Length;
             KeyCount = Map.GetKeyCount(Map.HasScratchKey);
 
+            // Initialize SF
+            InitializeScrollSpeedFactors();
+
             // Initialize SV
             InitializePositionMarkers();
             UpdateCurrentTrackPosition();
@@ -346,6 +370,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ConfigManager.ScrollSpeed7K.ValueChanged -= On7KScrollSpeedChanged;
 
             base.Destroy();
+        }
+
+        private void InitializeScrollSpeedFactors()
+        {
+            ScrollSpeedFactorInfos = new List<ScrollSpeedFactorInfo>[KeyCount];
+            CurrentScrollSpeedFactor = new float[KeyCount];
+            CurrentSfIndex = new int[KeyCount];
+            Array.Fill(CurrentSfIndex, -1);
+
+            for (var i = 0; i < KeyCount; i++)
+            {
+                ScrollSpeedFactorInfos[i] = new List<ScrollSpeedFactorInfo>();
+            }
+
+            foreach (var scrollSpeedFactor in Map.ScrollSpeedFactors)
+            {
+                foreach (var lane in scrollSpeedFactor.GetLaneMaskLanes(KeyCount))
+                {
+                    ScrollSpeedFactorInfos[lane].Add(scrollSpeedFactor);
+                }
+            }
         }
 
         /// <summary>
@@ -777,6 +822,49 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
+        ///     Finds the appropriate SF index and returns the SF at that time
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public float GetScrollSpeedFactorFromTime(int lane, double time)
+        {
+            var sfIndex = ScrollSpeedFactorInfos[lane]
+                .BinarySearch(new ScrollSpeedFactorInfo { StartTime = (float)time },
+                    ScrollSpeedFactorInfo.StartTimeComparer);
+            if (sfIndex < 0)
+            {
+                sfIndex = ~sfIndex - 1;
+            }
+
+            if (sfIndex < 0)
+                return 1;
+
+            return GetScrollSpeedFactorFromTime(lane, time, sfIndex);
+        }
+
+        /// <summary>
+        ///     Returns the scroll speed factor at that time on <see cref="sfIndex"/>.
+        ///     The factor is lerped with the next factor, unless it is already the last.
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        /// <param name="sfIndex"></param>
+        /// <returns></returns>
+        private float GetScrollSpeedFactorFromTime(int lane, double time, int sfIndex)
+        {
+            sfIndex = Math.Min(sfIndex, ScrollSpeedFactorInfos[lane].Count - 1);
+            if (sfIndex < 0 || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
+                return 1;
+            var sf = ScrollSpeedFactorInfos[lane][sfIndex];
+            if (sfIndex == ScrollSpeedFactorInfos[lane].Count - 1)
+                return sf.Factor;
+            var nextSf = ScrollSpeedFactorInfos[lane][sfIndex + 1];
+            return EasingFunctions.Linear(sf.Factor, nextSf.Factor,
+                ((float)time - sf.StartTime) / (nextSf.StartTime - sf.StartTime));
+        }
+
+        /// <summary>
         ///     Get Hit Object (End/Start) position from audio time (Unoptimized.)
         /// </summary>
         /// <param name="time"></param>
@@ -920,6 +1008,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 CurrentSvIndex++;
             }
+
+            CurrentMinimumScrollSpeedFactor = float.MaxValue;
+            for (var i = 0; i < KeyCount; i++)
+            {
+                while (CurrentSfIndex[i] < ScrollSpeedFactorInfos[i].Count - 1 && CurrentVisualAudioOffset >= ScrollSpeedFactorInfos[i][CurrentSfIndex[i] + 1].StartTime)
+                {
+                    CurrentSfIndex[i]++;
+                }
+
+                CurrentScrollSpeedFactor[i] = GetScrollSpeedFactorFromTime(i, CurrentVisualAudioOffset, CurrentSfIndex[i]);
+                CurrentMinimumScrollSpeedFactor =
+                    MathF.Min(CurrentMinimumScrollSpeedFactor, CurrentScrollSpeedFactor[i]);
+            }
+
             CurrentTrackPosition = GetPositionFromTime(CurrentVisualAudioOffset, CurrentSvIndex);
         }
 
@@ -929,6 +1031,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void HandleSkip()
         {
             CurrentSvIndex = 0;
+            Array.Fill(CurrentSfIndex, -1);
             UpdateCurrentTrackPosition();
 
             ResetHitObjectInfo();

@@ -107,7 +107,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void UpdateSpritePosition(long offset)
         {
             CurrentTrackPosition = offset - Info.TrackOffset;
-            Y = TrackOffset + (CurrentTrackPosition * (ScrollDirection.Equals(ScrollDirection.Down) ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+            // TODO we might have to make keyCount amount of timing lines if we wanna support per lane sf
+            Y = TrackOffset + (CurrentTrackPosition *
+                               (ScrollDirection.Equals(ScrollDirection.Down)
+                                   ? HitObjectManagerKeys.ScrollSpeed
+                                   : -HitObjectManagerKeys.ScrollSpeed) *
+                               ((HitObjectManagerKeys)Ruleset.HitObjectManager).CurrentMinimumScrollSpeedFactor /
+                               HitObjectManagerKeys.TrackRounding);
         }
     }
 }

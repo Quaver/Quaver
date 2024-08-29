@@ -7,6 +7,7 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
@@ -41,6 +42,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.Offset
 
             new EditorActionChangeScrollVelocityOffsetBatch(ActionManager, WorkingMap, new List<SliderVelocityInfo>(WorkingMap.SliderVelocities),
                 Offset).Perform();
+
+            new EditorActionChangeScrollSpeedFactorOffsetBatch(ActionManager, WorkingMap,
+                new List<ScrollSpeedFactorInfo>(WorkingMap.ScrollSpeedFactors), Offset).Perform();
 
             new EditorActionChangePreviewTime(ActionManager, WorkingMap, WorkingMap.SongPreviewTime + Offset).Perform();
 

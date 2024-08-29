@@ -63,6 +63,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
         /// </summary>
         private long PerfectPosition { get; set; }
 
+        private int Lane { get; }
+
         /// <summary>
         /// </summary>
         public bool Visible
@@ -113,6 +115,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
         {
             Manager = manager;
             JudgeColors = SkinManager.Skin.Keys[ruleset.Mode].JudgeColors;
+            Lane = lane;
 
             var playfield = (GameplayPlayfieldKeys) ruleset.Playfield;
             
@@ -176,7 +179,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             (initial - offset) *
             (ScrollDirection.Equals(ScrollDirection.Down)
                 ? -HitObjectManagerKeys.ScrollSpeed
-                : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding;
+                : HitObjectManagerKeys.ScrollSpeed) * Manager.CurrentScrollSpeedFactor[Lane - 1] / HitObjectManagerKeys.TrackRounding;
 
         /// <summary>
         ///     Calculates the position of the indicator with a position offset.
