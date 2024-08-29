@@ -44,7 +44,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.ChangeLaneMaskBatch
             ActionManager.TriggerEvent(Type,
                 new EditorChangedScrollSpeedFactorLaneMaskBatchEventArgs(ScrollSpeedFactors, ActiveLaneMask,
                     InactiveLaneMask));
-            WorkingMap.Sort();
         }
 
         [MoonSharpVisible(false)]
