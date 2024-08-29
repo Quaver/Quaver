@@ -159,7 +159,7 @@ namespace Quaver.Shared.Screens.Edit
                     DrawPlugins(gameTime);
 
                 MenuBar?.Draw(gameTime);
-                GameBase.Game.SpriteBatch.End();
+                GameBase.Game.TryEndBatch();
 
                 if (ImGui.IsAnyItemHovered())
                     IsImGuiHovered = true;
