@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quaver.Server.Client;
-using Quaver.Shared.Online.API.Playlists;
 using RestSharp;
 
 namespace Quaver.Shared.Online.API.Mapsets

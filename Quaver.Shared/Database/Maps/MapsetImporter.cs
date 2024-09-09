@@ -140,7 +140,7 @@ namespace Quaver.Shared.Database.Maps
         private static void AddMapImportToQueue(string path)
         {
             // Only one .mc file under the same directory should be imported
-            // since .mc import 
+            // since .mc import
             if (Path.GetExtension(path) == ".mc")
             {
                 foreach (var scheduledPath in Queue)
@@ -462,8 +462,8 @@ namespace Quaver.Shared.Database.Maps
                     if (info != null)
                     {
                         map.RankedStatus = info.Map.RankedStatus;
-                        map.DateLastUpdated = info.Map.DateLastUpdated;
                         map.OnlineOffset = info.Map.OnlineOffset;
+                        // map.DateLastUpdated = info.DateLastUpdated; (v1-only)
                     }
 
                     map.CalculateDifficulties();
