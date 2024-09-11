@@ -147,7 +147,7 @@ namespace Quaver.Shared.Graphics.Online
             PerformLoadingWheelRotation();
 
             Button.Alpha = MathHelper.Lerp(Button.Alpha, Button.IsHovered ? 0.4f : 0f,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+                (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
 
             base.Update(gameTime);
         }
@@ -187,7 +187,7 @@ namespace Quaver.Shared.Graphics.Online
                     if (OnlineManager.Self.Stats.ContainsKey(ConfigManager.SelectedGameMode.Value))
                     {
                         var stats = OnlineManager.Self.Stats[ConfigManager.SelectedGameMode.Value];
-                        Status.Text = $"#{stats.Rank:n0} - {stats.OverallPerformanceRating:00.00} ({StringHelper.AccuracyToString((float) stats.OverallAccuracy)})";
+                        Status.Text = $"#{stats.Rank:n0} - {stats.OverallPerformanceRating:00.00} ({StringHelper.AccuracyToString((float)stats.OverallAccuracy)})";
                     }
 
                     LoadingWheel.Visible = false;
@@ -239,7 +239,7 @@ namespace Quaver.Shared.Graphics.Online
             if (OnlineManager.Status.Value == ConnectionStatus.Connected)
             {
                 options.Add(new MenuDialogOption("View Profile", () =>
-                    BrowserHelper.OpenURL($"https://quavergame.com/profile/{OnlineManager.Self.OnlineUser.Id}?mode={(int) ConfigManager.SelectedGameMode.Value}")));
+                    BrowserHelper.OpenURL($"https://quavergame.com/profile/{OnlineManager.Self.OnlineUser.Id}?mode={(int)ConfigManager.SelectedGameMode.Value}")));
 
                 options.Add(new MenuDialogOption("Steam Profile", () => BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{OnlineManager.Self.OnlineUser.SteamId}")));
             }
@@ -264,7 +264,7 @@ namespace Quaver.Shared.Graphics.Online
                 options.Add(new MenuDialogOption("Logout", () => OnlineManager.Client?.Disconnect()));
             }
 
-            options.Add(new MenuDialogOption("Close", () => {}));
+            options.Add(new MenuDialogOption("Close", () => { }));
 
             var dialog = new MenuDialog("Options", options);
 

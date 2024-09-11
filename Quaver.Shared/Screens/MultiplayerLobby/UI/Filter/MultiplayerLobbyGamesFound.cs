@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Online;

@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Tests.AutoMods
     {
         public AutoModTestScreenView(Screen screen) : base(screen)
         {
-            var mapset = new List<Qua> {  };
+            var mapset = new List<Qua> { };
 
             _ = new EditorAutoModPanel(mapset.First(), mapset, Container as EditorAutoModPanelContainer)
             {

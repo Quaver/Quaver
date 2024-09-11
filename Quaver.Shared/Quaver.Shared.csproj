@@ -1,137 +1,80 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Configurations>Debug;Release;Visual Tests</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Visual Tests|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;VISUAL_TESTS</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
-    <ProjectReference Include="..\Quaver.Dependencies\TimeAgo\TimeAgo\TimeAgo.csproj" />
-    <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
-    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
-    <ProjectReference Include="..\Wobble\Wobble.Extended\Wobble.Extended.csproj" />
-    <ProjectReference Include="..\Wobble\Wobble.Resources\Wobble.Resources.csproj" />
-    <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="RestSharp, Version=106.4.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
-      <HintPath>RestSharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Content\aller-regular.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\aller-regular_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\code-pro.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\code-pro_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\code-pro_1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\exo2-regular.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\exo2-regular_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\muli-bold.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\muli-bold_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\muli.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\muli_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="discord-rpc.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="libdiscord-rpc.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="libdiscord-rpc.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="libsteam_api.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="libsteam_api.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="steam_api.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="MonoGame.Extended.Content.Pipeline.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="MonoGame.Extended.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="steam_api64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="quaver.sh">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\code-pro-bold_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\code-pro-bold_1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\code-pro-bold_2.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\code-pro-bold.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\gotham.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\gotham_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\gotham-bold.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\gotham-bold_0.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Emik.Rubbish" Version="1.1.0" />
-    <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.1" />
-    <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
-    <PackageReference Include="MoonSharp" Version="2.0.0" />
-    <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RestSharp" Version="106.12.0" />
-    <PackageReference Include="SharpCompress" Version="0.22.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.6" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.6" />
-    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.6" />
-    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="2.0.6" />
-    <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
-    <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
-    <PackageReference Include="Steamworks.NET" Version="20.2.0" IncludeAssets="all" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Configurations>Debug;Release;Visual Tests</Configurations>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Visual Tests|AnyCPU'">
+        <DefineConstants>TRACE;DEBUG;VISUAL_TESTS</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Quaver.API/Quaver.API/Quaver.API.csproj" />
+        <ProjectReference Include="../Quaver.Dependencies/TimeAgo/TimeAgo/TimeAgo.csproj" />
+        <ProjectReference Include="../Quaver.Resources/Quaver.Resources.csproj" />
+        <ProjectReference Include="../Wobble/MonoGame/MonoGame.Framework/MonoGame.Framework.DesktopGL.csproj" />
+        <ProjectReference Include="../Wobble/Wobble.Extended/Wobble.Extended.csproj" />
+        <ProjectReference Include="../Wobble/Wobble.Resources/Wobble.Resources.csproj" />
+        <ProjectReference Include="../Wobble/Wobble/Wobble.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference
+                Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj"
+                Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"
+        />
+
+        <Reference Include="Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Content/**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+        <None Update="discord-rpc.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="libdiscord-rpc.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="libdiscord-rpc.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="libsteam_api.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="libsteam_api.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="steam_api.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="steam_api64.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="quaver.sh">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Emik.Rubbish" Version="1.1.0" />
+        <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.1" />
+        <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
+        <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+        <PackageReference Include="MoonSharp" Version="2.0.0" />
+        <PackageReference Include="morelinq" Version="3.3.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="RestSharp" Version="106.12.0" />
+        <PackageReference Include="SharpCompress" Version="0.22.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
+        <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+        <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.6" />
+        <PackageReference Include="SQLitePCLRaw.core" Version="2.0.6" />
+        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.0.6" />
+        <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="2.0.6" />
+        <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
+        <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
+        <PackageReference Include="Steamworks.NET" Version="20.2.0" IncludeAssets="all" />
+    </ItemGroup>
 </Project>

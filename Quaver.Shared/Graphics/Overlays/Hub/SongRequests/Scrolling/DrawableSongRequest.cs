@@ -1,12 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Media;
-using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Selection.UI.Maps.Components;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;

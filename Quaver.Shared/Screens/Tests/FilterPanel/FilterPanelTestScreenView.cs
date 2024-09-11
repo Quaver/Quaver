@@ -42,7 +42,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
             };
 
             // ReSharper disable twice ObjectCreationAsStatement
-            Header = new TestMenuBorderHeader {Parent = Container};
+            Header = new TestMenuBorderHeader { Parent = Container };
             Footer = new TestMenuBorderFooter
             {
                 Parent = Container,
@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
             // Random map selection
             if (KeyboardManager.IsUniqueKeyPress(Keys.PageUp) && MapManager.Mapsets?.Count != 0)
             {
-                var screen = (FilterPanelTestScreen) Screen;
+                var screen = (FilterPanelTestScreen)Screen;
 
                 MapManager.Selected.Value = screen.AvailableMapsets?.Value[RNG.Next(0, screen.AvailableMapsets.Value.Count - 1)].Maps?.First();
                 BackgroundHelper.Load(MapManager.Selected.Value);

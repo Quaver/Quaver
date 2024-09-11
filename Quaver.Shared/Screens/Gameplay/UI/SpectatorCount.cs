@@ -34,9 +34,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 FontSize = 16,
                 X = Eye.X + Eye.Width + 10
             };
-            
+
             UpdateSpectatorText();
-            
+
             if (OnlineManager.Client != null)
             {
                 OnlineManager.Client.OnSpectatorJoined += OnSpectatorJoined;

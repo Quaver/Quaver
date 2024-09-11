@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Multiplayer;
-using Quaver.Shared.Graphics.Dialogs.Menu;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Multiplayer.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
 {

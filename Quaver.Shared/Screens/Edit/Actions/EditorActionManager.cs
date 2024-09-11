@@ -269,7 +269,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a bookmark has been removed.
         /// </summary>
         public event EventHandler<EditorActionBookmarkRemovedEventArgs> BookmarkRemoved;
-        
+
         /// <summary>
         ///     Event invoked when a bookmark has been added.
         /// </summary>
@@ -289,7 +289,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of bookmark's offsets have been changed.
         /// </summary>
         public event EventHandler<EditorActionChangeBookmarkOffsetBatchEventArgs> BookmarkBatchOffsetChanged;
-        
+
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
@@ -633,7 +633,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="bookmark"></param>
         public void RemoveBookmark(BookmarkInfo bookmark) => Perform(new EditorActionRemoveBookmark(this, WorkingMap, bookmark));
-        
+
         /// <summary>
         ///     Removes a batch of bookmarks from the map.
         /// </summary>
@@ -652,8 +652,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="bookmarks"></param>
         /// <param name="offset"></param>
-        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset)); 
-        
+        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset));
+
         /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
@@ -766,22 +766,22 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     HitObjectsReversed?.Invoke(this, (EditorHitObjectsReversedEventArgs)args);
                     break;
                 case EditorActionType.AddBookmark:
-                    BookmarkAdded?.Invoke(this, (EditorActionBookmarkAddedEventArgs) args);
+                    BookmarkAdded?.Invoke(this, (EditorActionBookmarkAddedEventArgs)args);
                     break;
                 case EditorActionType.RemoveBookmark:
-                    BookmarkRemoved?.Invoke(this, (EditorActionBookmarkRemovedEventArgs) args);
+                    BookmarkRemoved?.Invoke(this, (EditorActionBookmarkRemovedEventArgs)args);
                     break;
                 case EditorActionType.AddBookmarkBatch:
-                    BookmarkBatchAdded?.Invoke(this, (EditorActionBookmarkBatchAddedEventArgs) args);
+                    BookmarkBatchAdded?.Invoke(this, (EditorActionBookmarkBatchAddedEventArgs)args);
                     break;
                 case EditorActionType.RemoveBookmarkBatch:
-                    BookmarkBatchRemoved?.Invoke(this, (EditorActionBookmarkBatchRemovedEventArgs) args);
+                    BookmarkBatchRemoved?.Invoke(this, (EditorActionBookmarkBatchRemovedEventArgs)args);
                     break;
                 case EditorActionType.EditBookmark:
-                    BookmarkEdited?.Invoke(this, (EditorActionBookmarkEditedEventArgs) args);
+                    BookmarkEdited?.Invoke(this, (EditorActionBookmarkEditedEventArgs)args);
                     break;
                 case EditorActionType.ChangeBookmarkOffsetBatch:
-                    BookmarkBatchOffsetChanged?.Invoke(this, (EditorActionChangeBookmarkOffsetBatchEventArgs) args);
+                    BookmarkBatchOffsetChanged?.Invoke(this, (EditorActionChangeBookmarkOffsetBatchEventArgs)args);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

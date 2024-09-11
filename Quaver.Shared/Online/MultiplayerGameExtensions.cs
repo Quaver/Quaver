@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 
 namespace Quaver.Shared.Online
 {

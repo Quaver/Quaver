@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MoreLinq.Extensions;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Header;

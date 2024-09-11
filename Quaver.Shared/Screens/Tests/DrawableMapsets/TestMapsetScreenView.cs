@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Tests.DrawableMapsets
         public TestMapsetScreenView(TestMapsetScreen screen) : base(screen)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new SelectJukebox() {Parent = Container};
+            new SelectJukebox() { Parent = Container };
 
             SeedMapset(TestMapset, 6);
 
