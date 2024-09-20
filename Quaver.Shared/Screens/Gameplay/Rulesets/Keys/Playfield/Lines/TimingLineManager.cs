@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void InitializeTimingLineInfo(Qua map)
         {
             // Using cell size equal to render area guarantees a consistent two cells accessed per update
-            SpatialHashMap = new SpatialHashMap<TimingLineInfo>(HitObjectManager.RenderThreshold * 2);
+            SpatialHashMap = new SpatialHashMap<TimingLineInfo>(HitObjectManager.GlobalGroupController.RenderThreshold * 2);
 
             // Generate timing line info
             var mapLength = map.Length;
@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 // Initialize timing lines between current timing point and target position
                 for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
                 {
-                    var offset = HitObjectManager.GetPositionFromTime(songPos);
+                    var offset = HitObjectManager.GlobalGroupController.GetPositionFromTime(songPos);
 					SpatialHashMap.Add(offset, new TimingLineInfo(songPos, offset));
                 }
             }
@@ -174,8 +174,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             // start rendering lines that entered the range
             InRangeTimingLineInfos.Clear();
-            InRangeTimingLineInfos.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition - HitObjectManager.RenderThreshold));
-            InRangeTimingLineInfos.UnionWith(SpatialHashMap.GetValues(HitObjectManager.CurrentTrackPosition + HitObjectManager.RenderThreshold));
+            InRangeTimingLineInfos.UnionWith(SpatialHashMap.GetValues(HitObjectManager.GlobalGroupController.CurrentTrackPosition - HitObjectManager.GlobalGroupController.RenderThreshold));
+            InRangeTimingLineInfos.UnionWith(SpatialHashMap.GetValues(HitObjectManager.GlobalGroupController.CurrentTrackPosition + HitObjectManager.GlobalGroupController.RenderThreshold));
             InRangeTimingLineInfos.RemoveWhere(info => info.Line != null || !TimingLineInRange(info));
 
             foreach (var info in InRangeTimingLineInfos)
@@ -191,13 +191,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             // update sprite positions
 			foreach (var info in RenderedLineInfos)
 			{
-				info.Line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
+				info.Line.UpdateSpritePosition(HitObjectManager.GlobalGroupController.CurrentTrackPosition);
 			}
         }
 
         private bool TimingLineInRange(TimingLineInfo info)
         {
-            return Math.Abs(info.TrackOffset - HitObjectManager.CurrentTrackPosition) <= HitObjectManager.RenderThreshold;
+            return Math.Abs(info.TrackOffset - HitObjectManager.GlobalGroupController.CurrentTrackPosition) <= HitObjectManager.GlobalGroupController.RenderThreshold;
         }
     }
 }
