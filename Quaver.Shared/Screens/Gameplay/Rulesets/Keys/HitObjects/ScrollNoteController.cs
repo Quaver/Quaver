@@ -59,8 +59,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
             else
             {
-                SVDirectionChanges =
-                    (ScrollGroupController).GetSVDirectionChanges(StartTime, EndTime);
+                SVDirectionChanges = ScrollGroupController.GetSVDirectionChanges(StartTime, EndTime);
                 EndTrackPosition = TimingGroupController.GetPositionFromTime(EndTime);
 
                 var earliestPosition = Math.Min(InitialTrackPosition, EndTrackPosition);

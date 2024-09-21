@@ -52,19 +52,19 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     /// </summary>
     private void InitializePositionMarkers()
     {
-        if (ScrollGroup.ScrollVelocities.Count == 0)
+        var scrollVelocities = ScrollGroup.ScrollVelocities;
+        if (scrollVelocities.Count == 0)
             return;
 
         // Compute for Change Points
-        var position = (long)(ScrollGroup.ScrollVelocities[0].StartTime * ScrollGroup.InitialScrollVelocity *
+        var position = (long)(scrollVelocities[0].StartTime * ScrollGroup.InitialScrollVelocity *
                               HitObjectManagerKeys.TrackRounding);
         VelocityPositionMarkers.Add(position);
 
-        for (var i = 1; i < ScrollGroup.ScrollVelocities.Count; i++)
+        for (var i = 1; i < scrollVelocities.Count; i++)
         {
-            position += (long)((ScrollGroup.ScrollVelocities[i].StartTime -
-                                ScrollGroup.ScrollVelocities[i - 1].StartTime)
-                               * ScrollGroup.ScrollVelocities[i - 1].Multiplier * HitObjectManagerKeys.TrackRounding);
+            position += (long)((scrollVelocities[i].StartTime - scrollVelocities[i - 1].StartTime)
+                               * scrollVelocities[i - 1].Multiplier * HitObjectManagerKeys.TrackRounding);
             VelocityPositionMarkers.Add(position);
         }
     }
@@ -124,6 +124,7 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     /// <returns></returns>
     public List<SVDirectionChange> GetSVDirectionChanges(double startTime, double endTime)
     {
+        var scrollVelocities = ScrollGroup.ScrollVelocities;
         var changes = new List<SVDirectionChange>();
 
         if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
@@ -131,9 +132,9 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
 
         // Find the first SV index.
         int i;
-        for (i = 0; i < ScrollGroup.ScrollVelocities.Count; i++)
+        for (i = 0; i < scrollVelocities.Count; i++)
         {
-            if (startTime < ScrollGroup.ScrollVelocities[i].StartTime)
+            if (startTime < scrollVelocities[i].StartTime)
                 break;
         }
 
@@ -141,12 +142,12 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
         if (i == 0)
             forward = ScrollGroup.InitialScrollVelocity >= 0;
         else
-            forward = ScrollGroup.ScrollVelocities[i - 1].Multiplier >= 0;
+            forward = scrollVelocities[i - 1].Multiplier >= 0;
 
         // Loop over SV changes between startTime and endTime.
-        for (; i < ScrollGroup.ScrollVelocities.Count && endTime >= ScrollGroup.ScrollVelocities[i].StartTime; i++)
+        for (; i < scrollVelocities.Count && endTime >= scrollVelocities[i].StartTime; i++)
         {
-            var multiplier = ScrollGroup.ScrollVelocities[i].Multiplier;
+            var multiplier = scrollVelocities[i].Multiplier;
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (multiplier == 0)
                 // Zero speed means we're staying in the same spot.
@@ -159,7 +160,7 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
             forward = multiplier > 0;
             changes.Add(new SVDirectionChange
             {
-                StartTime = ScrollGroup.ScrollVelocities[i].StartTime, Position = VelocityPositionMarkers[i]
+                StartTime = scrollVelocities[i].StartTime, Position = VelocityPositionMarkers[i]
             });
         }
 
@@ -178,9 +179,10 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
 
         // Find the SV index at time.
         int i;
-        for (i = 0; i < ScrollGroup.ScrollVelocities.Count; i++)
+        var scrollVelocities = ScrollGroup.ScrollVelocities;
+        for (i = 0; i < scrollVelocities.Count; i++)
         {
-            if (time < ScrollGroup.ScrollVelocities[i].StartTime)
+            if (time < scrollVelocities[i].StartTime)
                 break;
         }
 
@@ -190,14 +192,14 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
         for (; i >= 0; i--)
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (ScrollGroup.ScrollVelocities[i].Multiplier != 0)
+            if (scrollVelocities[i].Multiplier != 0)
                 break;
         }
 
         if (i == -1)
             return ScrollGroup.InitialScrollVelocity < 0;
 
-        return ScrollGroup.ScrollVelocities[i].Multiplier < 0;
+        return scrollVelocities[i].Multiplier < 0;
     }
 
     public override void HandleSkip()
@@ -212,8 +214,9 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     public override void UpdateCurrentTrackPosition()
     {
         // Update SV index if necessary. Afterwards update Position.
-        while (CurrentSvIndex < ScrollGroup.ScrollVelocities.Count &&
-               Manager.CurrentVisualAudioOffset >= ScrollGroup.ScrollVelocities[CurrentSvIndex].StartTime)
+        var scrollVelocities = ScrollGroup.ScrollVelocities;
+        while (CurrentSvIndex < scrollVelocities.Count &&
+               Manager.CurrentVisualAudioOffset >= scrollVelocities[CurrentSvIndex].StartTime)
         {
             CurrentSvIndex++;
         }
