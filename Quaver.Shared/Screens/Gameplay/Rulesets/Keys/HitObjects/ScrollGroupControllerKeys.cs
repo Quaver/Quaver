@@ -3,11 +3,6 @@ using System.Diagnostics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Audio;
-using Quaver.Shared.Config;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
-using Wobble;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -35,35 +30,6 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     ///     Default value is 0. "0" means that Current time has not passed first SV point yet.
     /// </summary>
     private int CurrentSvIndex { get; set; } = 0;
-
-
-    /// <summary>
-    ///     The speed at which objects travel across the screen.
-    /// </summary>
-    public float ScrollSpeed
-    {
-        get
-        {
-            var speed = ConfigManager.ScrollSpeed4K;
-
-            if (MapManager.Selected.Value.Qua != null)
-                speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4
-                    ? ConfigManager.ScrollSpeed4K
-                    : ConfigManager.ScrollSpeed7K;
-
-            var scalingFactor = QuaverGame.SkinScalingFactor;
-
-            var game = GameBase.Game as QuaverGame;
-
-            if (game?.CurrentScreen is IHasLeftPanel)
-                scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH) / 1366f;
-
-            var scrollSpeed = (speed.Value / 10f) / (20f * AudioEngine.Track.Rate) * scalingFactor *
-                              WindowManager.BaseToVirtualRatio;
-
-            return scrollSpeed;
-        }
-    }
 
     /// <summary>
     ///     List of added hit object positions calculated from SV. Used for optimization

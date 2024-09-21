@@ -111,7 +111,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <returns></returns>
         public override float GetSpritePosition(float hitPosition, float initialPos) =>
             hitPosition + ((initialPos - TimingGroupController.CurrentTrackPosition) *
-                           (HitObject.ScrollDirection == ScrollDirection.Down
+                           (ScrollDirection == ScrollDirection.Down
                                ? -ScrollGroupController.ScrollSpeed
                                : ScrollGroupController.ScrollSpeed)
                            / HitObjectManagerKeys.TrackRounding);

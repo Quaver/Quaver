@@ -1,7 +1,14 @@
 using System.Collections.Generic;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Wobble;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
@@ -13,6 +20,35 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     /// <summary>
     /// </summary>
     public HitObjectManagerKeys Manager { get; }
+
+
+    /// <summary>
+    ///     The speed at which objects travel across the screen.
+    /// </summary>
+    public virtual float ScrollSpeed
+    {
+        get
+        {
+            var speed = ConfigManager.ScrollSpeed4K;
+
+            if (MapManager.Selected.Value.Qua != null)
+                speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4
+                    ? ConfigManager.ScrollSpeed4K
+                    : ConfigManager.ScrollSpeed7K;
+
+            var scalingFactor = QuaverGame.SkinScalingFactor;
+
+            var game = GameBase.Game as QuaverGame;
+
+            if (game?.CurrentScreen is IHasLeftPanel)
+                scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH) / 1366f;
+
+            var scrollSpeed = (speed.Value / 10f) / (20f * AudioEngine.Track.Rate) * scalingFactor *
+                              WindowManager.BaseToVirtualRatio;
+
+            return scrollSpeed;
+        }
+    }
 
     /// <summary>
     /// </summary>
@@ -30,7 +66,7 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     /// <summary>
     ///     List of <see cref="NoteControllerKeys"/> that are in this group
     /// </summary>
-    protected List<NoteControllerKeys> NoteControllers { get; } = new();
+    protected List<NoteControllerKeys> NoteControllersToRender { get; } = new();
 
     /// <summary>
     ///     Really long LNs that would take up all the memory in the universe if they were added to the spatial hash map.
@@ -61,7 +97,7 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     /// </summary>
     public void GenerateFromNoteControllers()
     {
-        foreach (var info in NoteControllers)
+        foreach (var info in NoteControllersToRender)
         {
             if (!info.IsLongNote)
             {

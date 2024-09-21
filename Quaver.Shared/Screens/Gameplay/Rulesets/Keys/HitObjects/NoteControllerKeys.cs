@@ -1,6 +1,8 @@
 using System;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
@@ -34,7 +36,12 @@ public abstract class NoteControllerKeys : NoteController
     /// <summary>
     ///     Original hitobject info
     /// </summary>
-    public HitObjectInfo HitObjectInfo { get; private set; }
+    public HitObjectInfo HitObjectInfo { get; }
+
+    /// <summary>
+    ///     The direction this hit object is traveling.
+    /// </summary>
+    public ScrollDirection ScrollDirection { get; }
 
     protected NoteControllerKeys(HitObjectInfo hitObjectInfo, TimingGroupControllerKeys timingGroupController,
         GameplayHitObjectKeys hitObject)
@@ -43,6 +50,8 @@ public abstract class NoteControllerKeys : NoteController
         TimingGroupController = timingGroupController;
         HitObject = hitObject;
         Manager = TimingGroupController.Manager;
+        var playfield = (GameplayPlayfieldKeys)Manager.Ruleset.Playfield;
+        ScrollDirection = playfield.ScrollDirections[hitObjectInfo.Lane - 1];
     }
 
     public int StartTime => HitObjectInfo.StartTime;

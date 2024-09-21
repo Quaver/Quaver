@@ -40,31 +40,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public static float TrackRounding { get; } = 100;
 
         /// <summary>
-        ///     The speed at which objects travel across the screen.
-        /// </summary>
-        public static float ScrollSpeed
-        {
-            get
-            {
-                var speed = ConfigManager.ScrollSpeed4K;
-
-                if (MapManager.Selected.Value.Qua != null)
-                    speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
-
-                var scalingFactor = QuaverGame.SkinScalingFactor;
-
-                var game = GameBase.Game as QuaverGame;
-
-                if (game?.CurrentScreen is IHasLeftPanel)
-                    scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH) / 1366f;
-
-                var scrollSpeed = (speed.Value / 10f) / (20f * AudioEngine.Track.Rate) * scalingFactor * WindowManager.BaseToVirtualRatio;
-
-                return scrollSpeed;
-            }
-        }
-
-        /// <summary>
         ///     Reference to the ruleset this HitObject manager is for.
         /// </summary>
         public GameplayRulesetKeys Ruleset { get; }
