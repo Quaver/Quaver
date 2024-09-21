@@ -274,21 +274,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             KeyCount = Map.GetKeyCount(Map.HasScratchKey);
 
             // Initialize SV
-            GlobalGroupController = new ScrollGroupControllerKeys(
-                new ScrollGroup
-                {
-                    InitialScrollVelocity = Map.InitialScrollVelocity, ScrollVelocities = Map.SliderVelocities
-                }, Map, this);
-            GlobalGroupController.Initialize();
 
-            foreach (var scrollController in Map.ScrollGroups)
+            foreach (var (id, scrollController) in Map.TimingGroups)
             {
-                if (TimingGroupControllers.TryGetValue(scrollController.Id, out TimingGroupControllerKeys timingGroup))
+                if (TimingGroupControllers.TryGetValue(id, out TimingGroupControllerKeys timingGroup))
                     continue;
                 timingGroup = new ScrollGroupControllerKeys(
                     scrollController, Map, this);
                 timingGroup.Initialize();
-                TimingGroupControllers.Add(scrollController.Id, timingGroup);
+                TimingGroupControllers.Add(id, timingGroup);
             }
 
             InitializeHitStats();
