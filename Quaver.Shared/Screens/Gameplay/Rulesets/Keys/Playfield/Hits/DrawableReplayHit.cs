@@ -74,6 +74,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             }
         }
 
+        private NoteControllerKeys NoteController { get; set; }
+
         /// <summary>
         ///     Computes the hit position and the perfect hit position.
         /// </summary>
@@ -84,6 +86,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             
             var hitStat = HitStat.Value;
             var info = hitStat.HitObject;
+            NoteController = Manager.GlobalGroupController.CreateNoteController(info, false);
             
             if (hitStat.KeyPressType == KeyPressType.Release || 
                 hitStat.KeyPressType == KeyPressType.None && hitStat.Judgement == Judgement.Okay)
@@ -167,27 +170,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
         }
 
         /// <summary>
-        ///     Calculates the screen position offset from the initial track position and current track offset.
-        /// </summary>
-        /// <param name="initial"></param>
-        /// <returns></returns>
-        private float GetPosition(long initial) =>
-            (initial - Manager.GlobalGroupController.CurrentTrackPosition) *
-            (ScrollDirection.Equals(ScrollDirection.Down)
-                ? -HitObjectManagerKeys.ScrollSpeed
-                : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding;
-
-        /// <summary>
         ///     Calculates the position of the indicator with a position offset.
         /// </summary>
         /// <returns></returns>
-        private float GetIndicatorPosition() => LineHitPosition + GetPosition(Position);
+        private float GetIndicatorPosition() => NoteController.GetSpritePosition(LineHitPosition, Position);
 
         /// <summary>
         ///     Calculates the position of the perfect hit with a position offset.
         /// </summary>
         /// <returns></returns>
-        private float GetPerfectPosition() => LineHitPosition + GetPosition(PerfectPosition);
+        private float GetPerfectPosition() => NoteController.GetSpritePosition(LineHitPosition, PerfectPosition);
 
         /// <summary>
         ///     Updates the sprite positions.

@@ -19,5 +19,5 @@ public abstract class TimingGroupController<THitObject, TNoteController> where T
     protected Qua Map { get; }
     protected TimingGroup TimingGroup { get; set; }
 
-    public abstract TNoteController CreateNoteController(THitObject hitObject);
+    public abstract TNoteController CreateNoteController(THitObject hitObject, bool render = true);
 }

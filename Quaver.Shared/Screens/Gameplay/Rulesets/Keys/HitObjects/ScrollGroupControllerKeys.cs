@@ -223,11 +223,13 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     ///     Creates a <see cref="ScrollNoteController"/> that controls <see cref="hitObject"/> from <see cref="ScrollGroup"/>
     /// </summary>
     /// <param name="hitObject"></param>
+    /// <param name="render"></param>
     /// <returns></returns>
-    public override NoteControllerKeys CreateNoteController(HitObjectInfo hitObject)
+    public override NoteControllerKeys CreateNoteController(HitObjectInfo hitObject, bool render)
     {
         var scrollNoteController = new ScrollNoteController(hitObject, this);
-        NoteControllers.Add(scrollNoteController);
+        if (render)
+            NoteControllersToRender.Add(scrollNoteController);
         return scrollNoteController;
     }
 }
