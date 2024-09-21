@@ -306,7 +306,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 }, Map, this);
             GlobalGroupController.Initialize();
 
-            foreach (var scrollController in Map.ScrollControllers)
+            foreach (var scrollController in Map.ScrollGroups)
             {
                 if (TimingGroupControllers.TryGetValue(scrollController.Id, out TimingGroupControllerKeys timingGroup))
                     continue;
