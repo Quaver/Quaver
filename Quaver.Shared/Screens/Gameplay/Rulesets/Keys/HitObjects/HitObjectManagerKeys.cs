@@ -280,10 +280,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         public Dictionary<string, TimingGroupControllerKeys> TimingGroupControllers { get; set; } = new();
 
-        public ScrollGroupControllerKeys GlobalGroupController
+        public TimingGroupControllerKeys GlobalGroupController
         {
-            get => (ScrollGroupControllerKeys)TimingGroupControllers[""];
-            protected set => TimingGroupControllers[""] = value;
+            get => TimingGroupControllers[""];
+            private init => TimingGroupControllers[""] = value;
         }
 
         /// <inheritdoc />
@@ -308,9 +308,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             foreach (var scrollController in Map.ScrollControllers)
             {
-                TimingGroupControllers[scrollController.Id] = new ScrollGroupControllerKeys(
+                if (TimingGroupControllers.TryGetValue(scrollController.Id, out TimingGroupControllerKeys timingGroup))
+                    continue;
+                timingGroup = new ScrollGroupControllerKeys(
                     scrollController, Map, this);
-                TimingGroupControllers[scrollController.Id].Initialize();
+                timingGroup.Initialize();
+                TimingGroupControllers.Add(scrollController.Id, timingGroup);
             }
 
             InitializeHitStats();
@@ -368,7 +371,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void InitializeHitObjectInfo(Qua map)
         {
             HitObjectInfos = map.HitObjects
-                .Select(info => TimingGroupControllers[info.TimingGroup ?? ""].CreateNoteController(info)).ToList();
+                .Select(info =>
+                {
+                    var groupController = TimingGroupControllers.GetValueOrDefault(info.TimingGroup ?? "", GlobalGroupController);
+                    return groupController.CreateNoteController(info);
+                }).ToList();
 
             TimingGroupControllers.ForEach(pair => pair.Value.GenerateFromNoteControllers());
 
