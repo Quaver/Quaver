@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -156,5 +157,36 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
 
         // really long LNs aren't added to the spatial hash map to avoid using all the memory in the universe
         inRangeHitObjectInfos.UnionWith(LongLNs);
+    }
+
+    /// <summary>
+    ///     Determines if a note controller is in the rendering range
+    /// </summary>
+    /// <param name="info"></param>
+    /// <returns></returns>
+    public bool InRange(NoteControllerKeys info)
+    {
+        if (!info.IsLongNote)
+        {
+            return Math.Abs(info.InitialTrackPosition - CurrentTrackPosition) <= RenderThreshold;
+        }
+        else
+        {
+            if (Math.Abs(info.EarliestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
+                return true;
+
+            if (Math.Abs(info.LatestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
+                return true;
+
+            if (info.EarliestTrackPosition <= CurrentTrackPosition - RenderThreshold &&
+                CurrentTrackPosition - RenderThreshold <= info.LatestTrackPosition)
+                return true;
+
+            if (info.EarliestTrackPosition <= CurrentTrackPosition + RenderThreshold &&
+                CurrentTrackPosition + RenderThreshold <= info.LatestTrackPosition)
+                return true;
+
+            return false;
+        }
     }
 }

@@ -475,7 +475,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // stop rendering hitobjects outside range
             bool removeIfNotVisible(NoteControllerKeys info)
             {
-                if (info.State == HitObjectState.Removed || !HitObjectInRange(info))
+                if (info.State == HitObjectState.Removed || !info.InRange())
                 {
                     // remove dead objects when they become out of range
                     if (info.State == HitObjectState.Dead)
@@ -499,7 +499,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
 
             // filter out hitobjects that aren't visible
-            InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
+            InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !info.InRange());
 
             foreach (var info in InRangeHitObjectInfos)
             {
@@ -515,43 +515,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var info in RenderedHitObjectInfos)
             {
                 info.HitObject.UpdateSpritePositions(CurrentVisualAudioOffset);
-            }
-        }
-
-        /// <summary>
-        ///     Determine if the hitobject is inside rendering range.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns>true if the hitobject should be rendered, otherwise false.</returns>
-        private bool HitObjectInRange(NoteControllerKeys info)
-        {
-            var groupController = info.TimingGroupController;
-            if (!info.IsLongNote)
-            {
-                return Math.Abs(info.InitialTrackPosition - groupController.CurrentTrackPosition) <=
-                       groupController.RenderThreshold;
-            }
-            else
-            {
-                if (Math.Abs(info.EarliestTrackPosition - groupController.CurrentTrackPosition) <=
-                    groupController.RenderThreshold)
-                    return true;
-
-                if (Math.Abs(info.LatestTrackPosition - groupController.CurrentTrackPosition) <=
-                    groupController.RenderThreshold)
-                    return true;
-
-                if (info.EarliestTrackPosition <=
-                    groupController.CurrentTrackPosition - groupController.RenderThreshold &&
-                    groupController.CurrentTrackPosition - groupController.RenderThreshold <= info.LatestTrackPosition)
-                    return true;
-
-                if (info.EarliestTrackPosition <=
-                    groupController.CurrentTrackPosition + groupController.RenderThreshold &&
-                    groupController.CurrentTrackPosition + groupController.RenderThreshold <= info.LatestTrackPosition)
-                    return true;
-
-                return false;
             }
         }
 

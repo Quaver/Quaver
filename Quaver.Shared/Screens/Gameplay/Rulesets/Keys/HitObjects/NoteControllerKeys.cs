@@ -149,6 +149,15 @@ public abstract class NoteControllerKeys : NoteController
 
     public abstract float GetSpritePosition(float hitPosition, float initialPos);
     public abstract void InitializeLongNoteSize();
+
+    /// <summary>
+    ///     Determine if the hitobject is inside rendering range.
+    /// </summary>
+    /// <returns>true if the hitobject should be rendered, otherwise false.</returns>
+    public bool InRange()
+    {
+        return TimingGroupController.InRange(this);
+    }
 }
 
 /// <summary>
