@@ -76,10 +76,12 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     /// <returns></returns>
     public override long GetPositionFromTime(double time)
     {
+        var scrollVelocities = ScrollGroup.ScrollVelocities;
         int i;
-        for (i = 0; i < ScrollGroup.ScrollVelocities.Count; i++)
+
+        for (i = 0; i < scrollVelocities.Count; i++)
         {
-            if (time < ScrollGroup.ScrollVelocities[i].StartTime)
+            if (time < scrollVelocities[i].StartTime)
                 break;
         }
 
