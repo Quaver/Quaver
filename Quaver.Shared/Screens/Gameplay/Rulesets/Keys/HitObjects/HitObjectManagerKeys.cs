@@ -275,14 +275,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Initialize SV
 
-            foreach (var (id, scrollController) in Map.TimingGroups)
+            foreach (var (id, timingGroup) in Map.TimingGroups)
             {
-                if (TimingGroupControllers.TryGetValue(id, out TimingGroupControllerKeys timingGroup))
+                if (TimingGroupControllers.TryGetValue(id, out TimingGroupControllerKeys timingGroupController))
                     continue;
-                timingGroup = new ScrollGroupControllerKeys(
-                    scrollController, Map, this);
-                timingGroup.Initialize();
-                TimingGroupControllers.Add(id, timingGroup);
+                if (timingGroup is ScrollGroup)
+                    timingGroupController = new ScrollGroupControllerKeys(timingGroup, Map, this);
+                else
+                    throw new InvalidOperationException();
+
+                timingGroupController.Initialize();
+                TimingGroupControllers.Add(id, timingGroupController);
             }
 
             InitializeHitStats();
