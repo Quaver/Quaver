@@ -17,7 +17,11 @@ public abstract class TimingGroupController<THitObject, TNoteController> where T
     }
 
     protected Qua Map { get; }
-    protected TimingGroup TimingGroup { get; set; }
+
+    /// <summary>
+    ///     Timing Group associated with this controller
+    /// </summary>
+    public TimingGroup TimingGroup { get; }
 
     public abstract TNoteController CreateNoteController(THitObject hitObject, bool render = true);
 }
