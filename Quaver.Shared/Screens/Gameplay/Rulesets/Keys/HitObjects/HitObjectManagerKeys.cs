@@ -255,11 +255,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         public Dictionary<string, TimingGroupControllerKeys> TimingGroupControllers { get; set; } = new();
 
-        public TimingGroupControllerKeys GlobalGroupController
-        {
-            get => TimingGroupControllers[""];
-            private init => TimingGroupControllers[""] = value;
-        }
+        public TimingGroupControllerKeys GlobalGroupController => TimingGroupControllers[Qua.GlobalScrollGroupId];
 
         /// <inheritdoc />
         /// <summary>
