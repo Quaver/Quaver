@@ -341,7 +341,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectInfos = map.HitObjects
                 .Select(info =>
                 {
-                    var groupController = TimingGroupControllers.GetValueOrDefault(info.TimingGroup ?? "", GlobalGroupController);
+                    var groupController = TimingGroupControllers.GetValueOrDefault(info.TimingGroup ?? Qua.GlobalScrollGroupId, GlobalGroupController);
                     return groupController.CreateNoteController(info);
                 }).ToList();
 
