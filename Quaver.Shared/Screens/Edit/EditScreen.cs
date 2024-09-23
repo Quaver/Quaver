@@ -1791,7 +1791,7 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     StartTime = (float)Track.Time,
                     Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
-                });
+                }, null);
             }
             else
             {

@@ -3,9 +3,9 @@ using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.SetTimingGroupBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
-using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Add;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
 
 namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove
 {
@@ -53,14 +53,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove
             }
 
             ActionManager.TriggerEvent(Type, new EditorTimingGroupRemovedEventArgs(Id, TimingGroup, ChildHitObjects));
-            new EditorActionSetTimingGroupBatch(ActionManager, WorkingMap, ChildHitObjects, Qua.GlobalScrollGroupId)
+            new EditorActionMoveObjectsToTimingGroup(ActionManager, WorkingMap, ChildHitObjects, Qua.GlobalScrollGroupId)
                 .Perform();
         }
 
         [MoonSharpVisible(false)]
         public void Undo()
         {
-            new EditorActionAddTimingGroup(ActionManager, WorkingMap, Id, TimingGroup, ChildHitObjects).Perform();
+            new EditorActionCreateTimingGroup(ActionManager, WorkingMap, Id, TimingGroup, ChildHitObjects).Perform();
         }
     }
 }

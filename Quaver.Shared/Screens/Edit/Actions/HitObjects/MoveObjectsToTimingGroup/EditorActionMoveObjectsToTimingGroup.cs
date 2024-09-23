@@ -4,12 +4,12 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
-namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.SetTimingGroupBatch
+namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.MoveObjectsToTimingGroup
 {
     [MoonSharpUserData]
-    public class EditorActionSetTimingGroupBatch : IEditorAction
+    public class EditorActionMoveObjectsToTimingGroup : IEditorAction
     {
-        public EditorActionType Type { get; } = EditorActionType.SetHitObjectTimingGroupBatch;
+        public EditorActionType Type { get; } = EditorActionType.MoveObjectsToTimingGroup;
 
         private EditorActionManager ActionManager { get; }
 
@@ -22,13 +22,13 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.SetTimingGroupBatch
         public string TimingGroupId { get; }
 
         [MoonSharpVisible(false)]
-        public EditorActionSetTimingGroupBatch(EditorActionManager manager, Qua workingMap, List<HitObjectInfo> hitObjectInfos,
+        public EditorActionMoveObjectsToTimingGroup(EditorActionManager manager, Qua workingMap, List<HitObjectInfo> hitObjectInfos,
             string timingGroupId)
         {
             ActionManager = manager;
             WorkingMap = workingMap;
             HitObjects = hitObjectInfos;
-            TimingGroupId = timingGroupId == Qua.GlobalScrollGroupId ? null : timingGroupId;
+            TimingGroupId = timingGroupId;
 
             HitObjects.ForEach(x => OriginalTimingGroupIds.Add(x.TimingGroup));
         }
@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.SetTimingGroupBatch
         public void Perform()
         {
             HitObjects.ForEach(x => x.TimingGroup = TimingGroupId);
-            ActionManager.TriggerEvent(Type, new EditorChangedSetTimingGroupBatchEventArgs(HitObjects, TimingGroupId));
+            ActionManager.TriggerEvent(Type, new EditorMoveObjectsToTimingGroupEventArgs(HitObjects, TimingGroupId));
         }
 
         [MoonSharpVisible(false)]
@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.SetTimingGroupBatch
             for (var i = 0; i < HitObjects.Count; i++)
                 HitObjects[i].TimingGroup = OriginalTimingGroupIds[i];
 
-            ActionManager.TriggerEvent(Type, new EditorChangedSetTimingGroupBatchEventArgs(HitObjects, TimingGroupId));
+            ActionManager.TriggerEvent(Type, new EditorMoveObjectsToTimingGroupEventArgs(HitObjects, TimingGroupId));
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch
 {
     public class EditorScrollVelocityBatchRemovedEventArgs : EditorScrollVelocityBatchAddedEventArgs
     {
-        public EditorScrollVelocityBatchRemovedEventArgs(List<SliderVelocityInfo> svs) : base(svs)
+        public EditorScrollVelocityBatchRemovedEventArgs(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup) : base(svs, scrollGroup)
         {
         }
     }

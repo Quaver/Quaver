@@ -3,8 +3,7 @@ using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.SetTimingGroupBatch;
-using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Add;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 
 namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename
@@ -56,7 +55,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename
             }
 
             ActionManager.TriggerEvent(Type, new EditorTimingGroupRenamedEventArgs(OldId, NewId, ChildHitObjects));
-            new EditorActionSetTimingGroupBatch(ActionManager, WorkingMap, ChildHitObjects, NewId)
+            new EditorActionMoveObjectsToTimingGroup(ActionManager, WorkingMap, ChildHitObjects, NewId)
                 .Perform();
         }
 

@@ -19,22 +19,26 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.AddBatch
 
         public List<SliderVelocityInfo> ScrollVelocities { get; }
 
+        public ScrollGroup ScrollGroup { get; }
+
         [MoonSharpVisible(false)]
-        public EditorActionAddScrollVelocityBatch(EditorActionManager manager, Qua workingMap, List<SliderVelocityInfo> svs)
+        public EditorActionAddScrollVelocityBatch(EditorActionManager manager, Qua workingMap, List<SliderVelocityInfo> svs, ScrollGroup scrollGroup)
         {
             ActionManager = manager;
             WorkingMap = workingMap;
             ScrollVelocities = svs;
+            ScrollGroup = scrollGroup;
         }
 
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            WorkingMap.SliderVelocities.InsertSorted(ScrollVelocities);
-            ActionManager.TriggerEvent(Type, new EditorScrollVelocityBatchAddedEventArgs(ScrollVelocities));
+            var svs = ScrollGroup?.ScrollVelocities ?? WorkingMap.SliderVelocities;
+            svs.InsertSorted(ScrollVelocities);
+            ActionManager.TriggerEvent(Type, new EditorScrollVelocityBatchAddedEventArgs(ScrollVelocities, ScrollGroup));
         }
 
         [MoonSharpVisible(false)]
-        public void Undo() => new EditorActionRemoveScrollVelocityBatch(ActionManager, WorkingMap, ScrollVelocities).Perform();
+        public void Undo() => new EditorActionRemoveScrollVelocityBatch(ActionManager, WorkingMap, ScrollVelocities, ScrollGroup).Perform();
     }
 }

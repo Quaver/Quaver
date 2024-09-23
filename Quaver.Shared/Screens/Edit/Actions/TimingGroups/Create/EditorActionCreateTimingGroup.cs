@@ -1,19 +1,17 @@
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
-using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.SetTimingGroupBatch;
-using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 
-namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Add
+namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create
 {
     [MoonSharpUserData]
-    public class EditorActionAddTimingGroup : IEditorAction
+    public class EditorActionCreateTimingGroup : IEditorAction
     {
-        public EditorActionType Type { get; } = EditorActionType.AddTimingGroup;
+        public EditorActionType Type { get; } = EditorActionType.CreateTimingGroup;
 
         private EditorActionManager ActionManager { get; }
 
@@ -25,10 +23,10 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Add
 
         public List<HitObjectInfo> ChildHitObjects { get; }
 
-        private EditorActionSetTimingGroupBatch SetTimingGroupBatch { get; set; }
+        private EditorActionMoveObjectsToTimingGroup MoveObjectsToTimingGroup { get; set; }
 
         [MoonSharpVisible(false)]
-        public EditorActionAddTimingGroup(EditorActionManager manager, Qua workingMap, string id,
+        public EditorActionCreateTimingGroup(EditorActionManager manager, Qua workingMap, string id,
             TimingGroup timingGroup, List<HitObjectInfo> childHitObjects)
         {
             ActionManager = manager;
@@ -36,22 +34,22 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Add
             TimingGroup = timingGroup;
             ChildHitObjects = childHitObjects;
             Id = id;
-            SetTimingGroupBatch = new EditorActionSetTimingGroupBatch(ActionManager, WorkingMap, ChildHitObjects, Id);
+            MoveObjectsToTimingGroup = new EditorActionMoveObjectsToTimingGroup(ActionManager, WorkingMap, ChildHitObjects, Id);
         }
 
         [MoonSharpVisible(false)]
         public void Perform()
         {
             WorkingMap.TimingGroups.Add(Id, TimingGroup);
-            ActionManager.TriggerEvent(Type, new EditorTimingGroupAddedEventArgs(Id, TimingGroup, ChildHitObjects));
-            SetTimingGroupBatch.Perform();
+            ActionManager.TriggerEvent(Type, new EditorTimingGroupCreatedEventArgs(Id, TimingGroup, ChildHitObjects));
+            MoveObjectsToTimingGroup.Perform();
         }
 
         [MoonSharpVisible(false)]
         public void Undo()
         {
             new EditorActionRemoveTimingGroup(ActionManager, WorkingMap, Id, TimingGroup, ChildHitObjects).Perform();
-            SetTimingGroupBatch.Undo();
+            MoveObjectsToTimingGroup.Undo();
         }
     }
 }

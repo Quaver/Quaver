@@ -82,22 +82,32 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="sv"></param>
-        public void PlaceScrollVelocity(SliderVelocityInfo sv) => ActionManager.PlaceScrollVelocity(sv, true);
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup) => ActionManager.PlaceScrollVelocity(sv, scrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="svs"></param>
-        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.PlaceScrollVelocityBatch(svs, true);
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup = null) =>
+            ActionManager.PlaceScrollVelocityBatch(svs,
+                scrollGroup ?? ActionManager.EditScreen.WorkingMap.GlobalScrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="sv"></param>
-        public void RemoveScrollVelocity(SliderVelocityInfo sv) => ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv }, true);
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup = null) =>
+            ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv },
+                scrollGroup ?? ActionManager.EditScreen.WorkingMap.GlobalScrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="svs"></param>
-        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.RemoveScrollVelocityBatch(svs, true);
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup = null) =>
+            ActionManager.RemoveScrollVelocityBatch(svs,
+                scrollGroup ?? ActionManager.EditScreen.WorkingMap.GlobalScrollGroup, true);
 
         /// <summary>
         /// </summary>
