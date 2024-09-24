@@ -151,9 +151,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             if (ImGui.Button($"Select Notes"))
             {
-                Screen.SelectedHitObjects.Clear();
-                Screen.SelectedHitObjects.AddRange(Screen.WorkingMap.HitObjects
-                    .Where(note => SelectedTimingGroups.Contains(note.TimingGroup)).ToList());
+                if (KeyboardManager.IsCtrlDown() || KeyboardManager.IsShiftDown())
+                {
+                    Screen.SelectedHitObjects.AddRange(Screen.WorkingMap.HitObjects
+                        .Where(note => SelectedTimingGroups.Contains(note.TimingGroup)
+                                       && !Screen.SelectedHitObjects.Value.Contains(note)).ToList());
+                }
+                else
+                {
+                    Screen.SelectedHitObjects.Clear();
+                    Screen.SelectedHitObjects.AddRange(Screen.WorkingMap.HitObjects
+                        .Where(note => SelectedTimingGroups.Contains(note.TimingGroup)).ToList());
+                }
             }
         }
 
