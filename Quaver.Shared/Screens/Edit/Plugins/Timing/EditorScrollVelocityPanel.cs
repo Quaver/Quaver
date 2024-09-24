@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
@@ -85,6 +86,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             Screen = screen;
             Initialize();
+            Screen.ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
+        }
+
+        private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
+        {
+            if (e.OldId == CurrentScrollGroupId)
+                CurrentScrollGroupId = e.NewId;
         }
 
         /// <inheritdoc />
@@ -632,5 +640,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14),
         }, false);
+
+        public override void Destroy()
+        {
+            Screen.ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
+            base.Destroy();
+        }
     }
 }
