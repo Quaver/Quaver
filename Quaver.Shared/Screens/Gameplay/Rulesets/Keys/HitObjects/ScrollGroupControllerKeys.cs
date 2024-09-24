@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Wobble.Window;
@@ -70,21 +72,14 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     }
 
     /// <summary>
-    ///     Get Hit Object (End/Start) position from audio time (Unoptimized.)
+    ///     Get Hit Object (End/Start) position from audio time
     /// </summary>
     /// <param name="time"></param>
     /// <returns></returns>
     public override long GetPositionFromTime(double time)
     {
         var scrollVelocities = ScrollGroup.ScrollVelocities;
-        int i;
-
-        for (i = 0; i < scrollVelocities.Count; i++)
-        {
-            if (time < scrollVelocities[i].StartTime)
-                break;
-        }
-
+        var i = Math.Clamp(scrollVelocities.IndexAtTime((float)time) + 1, 0, scrollVelocities.Count);
         return GetPositionFromTime(time, i);
     }
 
