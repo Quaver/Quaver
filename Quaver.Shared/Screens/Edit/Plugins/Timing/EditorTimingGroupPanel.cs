@@ -162,10 +162,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawHeaderText()
         {
             ImGui.TextWrapped(
-                "Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.");
+                "Timing Groups group together a set of notes. Each group has their own visual behavior applied to the notes.");
             ImGui.Dummy(new Vector2(0, 10));
             ImGui.TextWrapped(
-                "You can click on an individual SV point to edit it and double-click to go to its position in time.");
+                "You can click on an individual timing group to edit it and double-click to go to the first note in the group.");
         }
 
         /// <summary>
@@ -207,8 +207,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (SelectedTimingGroups.Count == 0)
                     return;
 
-                var lastPoint = SelectedTimingGroups.Last();
-
                 Screen.ActionManager.PerformBatch(SelectedTimingGroups.Select(
                         IEditorAction (id) =>
                             new EditorActionRemoveTimingGroup(Screen.ActionManager, Screen.WorkingMap, id,
@@ -247,11 +245,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             var id = SelectedTimingGroups.First();
             var newId = id;
+            var hint = "Alphanumeric characters or underscore are allowed";
             var inputTextFlags = ImGuiInputTextFlags.EnterReturnsTrue;
-            if (id == Qua.GlobalScrollGroupId)
-                inputTextFlags |= ImGuiInputTextFlags.ReadOnly;
 
-            if (ImGui.InputTextWithHint("##Name", "alphanumerial characters or underscore are allowed", ref newId, 256,
+            if (id == Qua.GlobalScrollGroupId)
+            {
+                inputTextFlags |= ImGuiInputTextFlags.ReadOnly;
+                hint = "You cannot rename the default timing group!";
+            }
+
+
+            if (ImGui.InputTextWithHint("##Name", hint, ref newId, 256,
                     inputTextFlags))
             {
                 _lastNameEditError = !Screen.ActionManager.RenameTimingGroup(id, newId);
@@ -277,7 +281,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawSelectedCountLabel()
         {
             var count = SelectedTimingGroups.Count;
-            var labelText = count > 1 ? $"{count} scroll velocities selected" : "";
+            var labelText = count > 1 ? $"{count} timing groups selected" : "";
             ImGui.Text(labelText);
         }
 
@@ -312,9 +316,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Columns(3);
             ImGui.SetColumnWidth(0, 160);
 
-            const int ElementBaseHeight = 12;
-            const int NumberOfColumns = 3;
-            var elementHeight = Screen.ImGuiScale * ElementBaseHeight;
+            const int elementBaseHeight = 12;
+            const int numberOfColumns = 3;
+            var elementHeight = Screen.ImGuiScale * elementBaseHeight;
             var y = ImGui.GetWindowContentRegionMax().Y - ImGui.GetWindowContentRegionMin().Y;
 
             var start = Math.Min(
@@ -322,7 +326,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 Screen.WorkingMap.TimingGroups.Count - (int)(y / elementHeight)
             );
 
-            for (var j = 0; j < NumberOfColumns; j++)
+            for (var j = 0; j < numberOfColumns; j++)
             {
                 ImGui.Dummy(new(0, start * elementHeight));
                 ImGui.NextColumn();
@@ -378,7 +382,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.PopID();
             }
 
-            for (var j = 0; j < NumberOfColumns; j++)
+            for (var j = 0; j < numberOfColumns; j++)
             {
                 ImGui.Dummy(new(0, (Screen.WorkingMap.TimingGroups.Count - end) * elementHeight));
                 ImGui.NextColumn();
@@ -477,8 +481,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public static ImGuiOptions GetOptions() => new ImGuiOptions(
-            new List<ImGuiFont> { new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14), }, false);
+        public static ImGuiOptions GetOptions() => new(
+            new List<ImGuiFont> { new($"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14), }, false);
 
         public override void Destroy()
         {
