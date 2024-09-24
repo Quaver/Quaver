@@ -38,6 +38,7 @@ using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Edit.UI;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay;
@@ -195,7 +196,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ViewLayers { get; } = ConfigManager.EditorViewLayers ?? new Bindable<bool>(false);
+        public Bindable<HitObjectColoring> ObjectColoring { get; } = ConfigManager.EditorObjectColoring ?? new Bindable<HitObjectColoring>(HitObjectColoring.None);
 
         /// <summary>
         /// </summary>
@@ -427,8 +428,8 @@ namespace Quaver.Shared.Screens.Edit
             if (BeatSnapColor != ConfigManager.EditorBeatSnapColorType)
                 BeatSnapColor.Dispose();
 
-            if (ViewLayers != ConfigManager.EditorViewLayers)
-                ViewLayers.Dispose();
+            if (ObjectColoring != ConfigManager.EditorObjectColoring)
+                ObjectColoring.Dispose();
 
             if (LongNoteOpacity != ConfigManager.EditorLongNoteOpacity)
                 LongNoteOpacity.Dispose();

@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        protected Bindable<bool> ViewLayers { get; }
+        protected Bindable<HitObjectColoring> Coloring { get; }
 
         /// <summary>
         /// </summary>
@@ -78,12 +78,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="skin"></param>
         /// <param name="track"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
-        /// <param name="viewLayers"></param>
+        /// <param name="coloring"></param>
         /// <param name="longNoteOpacity"></param>
         /// <param name="selectedHitObjects"></param>
         /// <param name="defaultLayer"></param>
         public EditorHitObject(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
-            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity,
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<HitObjectColoring> coloring, BindableInt longNoteOpacity,
             BindableList<HitObjectInfo> selectedHitObjects, EditorLayerInfo defaultLayer)
         {
             Map = map;
@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Skin = skin;
             Track = track;
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
-            ViewLayers = viewLayers;
+            Coloring = coloring;
             LongNoteOpacity = longNoteOpacity;
             SelectedHitObjects = selectedHitObjects;
             DefaultLayer = defaultLayer;
@@ -154,7 +154,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             var index = SkinMode.ColorObjectsBySnapDistance && Map.TimingPoints.Count > 0 ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
 
-            if (ViewLayers.Value)
+            if (Coloring.Value != HitObjectColoring.None)
                 return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];
 
             if (Info.IsLongNote)
@@ -185,10 +185,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (layer.Hidden && !Playfield.IsUneditable)
                     return HiddenLayerColor;
 
-                if (!ViewLayers.Value)
-                    return Color.White;
-
-                return ColorHelper.ToXnaColor(layer.GetColor());
+                switch (Coloring.Value)
+                {
+                    case HitObjectColoring.None:
+                        return Color.White;
+                    case HitObjectColoring.Layer:
+                        return ColorHelper.ToXnaColor(layer.GetColor());
+                    case HitObjectColoring.TimingGroup:
+                        return ColorHelper.ToXnaColor(Map.TimingGroups[Info.TimingGroup].GetColor());
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             catch (Exception)
             {

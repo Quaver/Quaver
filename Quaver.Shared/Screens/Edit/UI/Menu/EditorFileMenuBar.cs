@@ -706,8 +706,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Center Objects", "", Screen.AnchorHitObjectsAtMidpoint.Value))
                 Screen.AnchorHitObjectsAtMidpoint.Value = !Screen.AnchorHitObjectsAtMidpoint.Value;
 
-            if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
-                Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
+            if (ImGui.MenuItem($"View Layers", "", Screen.ObjectColoring.Value == HitObjectColoring.Layer))
+                Screen.ObjectColoring.Value = Screen.ObjectColoring.Value == HitObjectColoring.Layer
+                    ? HitObjectColoring.None
+                    : HitObjectColoring.Layer;
+
+            if (ImGui.MenuItem($"View Timing Groups", "", Screen.ObjectColoring.Value == HitObjectColoring.TimingGroup))
+                Screen.ObjectColoring.Value = Screen.ObjectColoring.Value == HitObjectColoring.TimingGroup
+                    ? HitObjectColoring.None
+                    : HitObjectColoring.TimingGroup;
 
             ImGui.Separator();
 

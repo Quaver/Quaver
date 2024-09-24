@@ -22,6 +22,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
@@ -471,7 +472,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     If true, it'll use hitobjects specifically for viewing layers in the editor.
         /// </summary>
-        internal static Bindable<bool> EditorViewLayers { get; private set; }
+        internal static Bindable<HitObjectColoring> EditorObjectColoring { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1149,7 +1150,7 @@ namespace Quaver.Shared.Config
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
             ReceptorsOverLaneCover = ReadValue(@"ReceptorsOverLaneCover", false, data);
-            EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
+            EditorObjectColoring = ReadValue(@"EditorViewLayers", HitObjectColoring.None, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
             LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);

@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -33,20 +34,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
-        private Bindable<bool> ViewLayers { get; }
+        private Bindable<HitObjectColoring> HitObjectColoring { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public EditorPanelLayers(EditorActionManager actionManager, Qua workingMap, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, BindableList<HitObjectInfo> selectedHitObjects, Bindable<bool> viewLayers) : base("Layers")
+            EditorLayerInfo defaultLayer, BindableList<HitObjectInfo> selectedHitObjects, Bindable<HitObjectColoring> hitObjectColoring) : base("Layers")
         {
             ActionManager = actionManager;
             WorkingMap = workingMap;
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
             SelectedHitObjects = selectedHitObjects;
-            ViewLayers = viewLayers;
+            HitObjectColoring = hitObjectColoring;
 
             Depth = 1;
 
@@ -113,15 +114,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateToggleLayersCheckbox()
         {
-            ToggleLayers = new Checkbox(ViewLayers, new Vector2(DeleteLayer.Width, DeleteLayer.Height),
-                FontAwesome.Get(FontAwesomeIcon.fa_eye_open),
-                FontAwesome.Get(FontAwesomeIcon.fa_eye_with_a_diagonal_line_interface_symbol_for_invisibility),
-                false)
-            {
-                Parent = Header,
-                Alignment = Alignment.MidRight,
-                X = CreateLayer.X - CreateLayer.Width + DeleteLayer.X
-            };
+            // ToggleLayers = new Checkbox(HitObjectColoring, new Vector2(DeleteLayer.Width, DeleteLayer.Height),
+            //     FontAwesome.Get(FontAwesomeIcon.fa_eye_open),
+            //     FontAwesome.Get(FontAwesomeIcon.fa_eye_with_a_diagonal_line_interface_symbol_for_invisibility),
+            //     false)
+            // {
+            //     Parent = Header,
+            //     Alignment = Alignment.MidRight,
+            //     X = CreateLayer.X - CreateLayer.Width + DeleteLayer.X
+            // };
         }
 
         /// <summary>
