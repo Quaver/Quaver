@@ -32,6 +32,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
@@ -334,12 +335,22 @@ namespace Quaver.Shared.Screens.Edit
 
             SkinManager.SkinLoaded += OnSkinLoaded;
             GameBase.Game.Window.FileDropped += OnFileDropped;
+            ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
 
             InitializeDiscordRichPresence();
             AddFileWatcher();
 
             View = new EditScreenView(this);
             InputManager = new EditorInputManager(this);
+        }
+
+        private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
+        {
+            foreach (var hitObjectInfo in Clipboard)
+            {
+                if (hitObjectInfo.TimingGroup == e.OldId)
+                    hitObjectInfo.TimingGroup = e.NewId;
+            }
         }
 
         /// <inheritdoc />
@@ -386,6 +397,8 @@ namespace Quaver.Shared.Screens.Edit
         {
             Track.Seeked -= OnTrackSeeked;
             GameBase.Game.Window.FileDropped -= OnFileDropped;
+            ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
+
             BackupScheduler?.Dispose();
             Track?.Dispose();
             Skin?.Value?.Dispose();
@@ -1229,7 +1242,10 @@ namespace Quaver.Shared.Screens.Edit
                     StartTime = h.StartTime + difference,
                     EditorLayer = h.EditorLayer,
                     HitSound = h.HitSound,
-                    Lane = h.Lane
+                    Lane = h.Lane,
+                    TimingGroup = WorkingMap.TimingGroups.ContainsKey(h.TimingGroup)
+                        ? h.TimingGroup
+                        : Qua.GlobalScrollGroupId
                 };
 
                 if (h.IsLongNote)
