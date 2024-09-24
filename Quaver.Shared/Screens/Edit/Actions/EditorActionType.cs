@@ -52,6 +52,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         RemoveTimingGroup,
         RenameTimingGroup,
         MoveObjectsToTimingGroup,
+        ColorTimingGroup,
         AddTimingGroupBatch,
         RemoveTimingGroupBatch
     }

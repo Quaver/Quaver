@@ -154,11 +154,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     while (Screen.WorkingMap.TimingGroups.ContainsKey(newGroupId = $"{newGroupPrefix}{newGroupNumber}"))
                         newGroupNumber++;
 
+                    var rgb = new byte[3];
+                    Random.Shared.NextBytes(rgb);
+
                     Screen.ActionManager.CreateTimingGroup(newGroupId,
                         new ScrollGroup
                         {
                             ScrollVelocities =
-                                new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } }
+                                new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } },
+                            ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
                         });
                     ImGui.EndTabItem();
                 }

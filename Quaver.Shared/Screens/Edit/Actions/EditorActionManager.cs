@@ -51,6 +51,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Colors;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
@@ -171,22 +172,27 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorLayerRenamedEventArgs> LayerRenamed;
 
         /// <summary>
-        ///     Event invoked when a layer has been created
+        ///     Event invoked when a timing group has been created
         /// </summary>
         public event EventHandler<EditorTimingGroupCreatedEventArgs> TimingGroupCreated;
 
         /// <summary>
-        ///     Event invoked when a layer has been deleted
+        ///     Event invoked when a timing group has been deleted
         /// </summary>
         public event EventHandler<EditorTimingGroupRemovedEventArgs> TimingGroupDeleted;
 
         /// <summary>
-        ///     Event invoked when a layer has been renamed
+        ///     Event invoked when a timing group has been renamed
         /// </summary>
         public event EventHandler<EditorTimingGroupRenamedEventArgs> TimingGroupRenamed;
 
         /// <summary>
-        ///     Event invoked when a layer has been renamed
+        ///     Event invoked when a timing group's color has been changed
+        /// </summary>
+        public event EventHandler<EditorTimingGroupColorChangedEventArgs> TimingGroupColorChanged;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been renamed
         /// </summary>
         public event EventHandler<EditorMoveObjectsToTimingGroupEventArgs> HitObjectsMovedToTimingGroup;
 
@@ -864,6 +870,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.RenameTimingGroup:
                     TimingGroupRenamed?.Invoke(this, (EditorTimingGroupRenamedEventArgs)args);
+                    break;
+                case EditorActionType.ColorTimingGroup:
+                    TimingGroupColorChanged?.Invoke(this, (EditorTimingGroupColorChangedEventArgs)args);
                     break;
                 case EditorActionType.MoveObjectsToTimingGroup:
                     HitObjectsMovedToTimingGroup?.Invoke(this, (EditorMoveObjectsToTimingGroupEventArgs)args);
