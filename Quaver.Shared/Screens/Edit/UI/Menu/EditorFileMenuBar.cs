@@ -17,6 +17,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
@@ -33,6 +34,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Window;
+using Color = System.Drawing.Color;
 using Utils = Wobble.Platform.Utils;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
@@ -276,6 +278,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                         Screen.ActionManager.Perform(new EditorActionMoveObjectsToLayer(Screen.ActionManager, Screen.WorkingMap, layer,
                             new List<HitObjectInfo>(Screen.SelectedHitObjects.Value)));
                     }
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu($"Move Objects To Timing Group", Screen.SelectedHitObjects.Value.Count > 0))
+            {
+                if (ImGui.MenuItem("Default Timing Group", ""))
+                {
+                    Screen.ActionManager.Perform(new EditorActionMoveObjectsToTimingGroup(Screen.ActionManager, Screen.WorkingMap,
+                        new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), Qua.GlobalScrollGroupId));
+                }
+
+                ImGui.Separator();
+
+                foreach ((string id, TimingGroup timingGroup) in Screen.WorkingMap.TimingGroups)
+                {
+                    if (id == Qua.GlobalScrollGroupId)
+                        continue;
+
+                    var color = timingGroup.GetColor();
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1f));
+                    if (ImGui.MenuItem(id))
+                    {
+                        Screen.ActionManager.Perform(new EditorActionMoveObjectsToTimingGroup(Screen.ActionManager, Screen.WorkingMap,
+                            new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), id));
+                    }
+                    ImGui.PopStyleColor();
                 }
 
                 ImGui.EndMenu();
