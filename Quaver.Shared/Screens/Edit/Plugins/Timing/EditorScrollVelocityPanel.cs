@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     if (timingGroup is not ScrollGroup)
                         continue;
 
-                    var prettyId = id == Qua.GlobalScrollGroupId ? "Default" : id;
+                    var prettyId = id == Qua.GlobalScrollGroupId ? "$Default" : id;
 
                     if (ImGui.BeginTabItem($"{prettyId}##TabItem"))
                     {
