@@ -175,21 +175,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         protected Color GetNoteTint()
         {
-            if (Info.EditorLayer == 0)
-                return DefaultLayer.Hidden & !Playfield.IsUneditable ? HiddenLayerColor : Color.White;
-
             try
             {
-                var layer = Map.EditorLayers[Info.EditorLayer - 1];
-
-                if (layer.Hidden && !Playfield.IsUneditable)
-                    return HiddenLayerColor;
-
                 switch (Coloring.Value)
                 {
                     case HitObjectColoring.None:
                         return Color.White;
                     case HitObjectColoring.Layer:
+                        var layer = Info.EditorLayer == 0 ? DefaultLayer : Map.EditorLayers[Info.EditorLayer - 1];
+                        if (layer.Hidden && !Playfield.IsUneditable)
+                            return HiddenLayerColor;
                         return ColorHelper.ToXnaColor(layer.GetColor());
                     case HitObjectColoring.TimingGroup:
                         return ColorHelper.ToXnaColor(Map.TimingGroups[Info.TimingGroup].GetColor());
