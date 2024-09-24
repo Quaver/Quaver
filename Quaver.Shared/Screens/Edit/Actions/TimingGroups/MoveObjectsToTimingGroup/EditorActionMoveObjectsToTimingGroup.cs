@@ -4,7 +4,7 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
-namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.MoveObjectsToTimingGroup
+namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup
 {
     [MoonSharpUserData]
     public class EditorActionMoveObjectsToTimingGroup : IEditorAction

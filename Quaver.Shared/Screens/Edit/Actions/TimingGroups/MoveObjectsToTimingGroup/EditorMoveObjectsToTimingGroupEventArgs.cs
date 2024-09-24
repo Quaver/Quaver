@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Quaver.API.Maps.Structures;
 
-namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.MoveObjectsToTimingGroup
+namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup
 {
     public class EditorMoveObjectsToTimingGroupEventArgs : EventArgs
     {

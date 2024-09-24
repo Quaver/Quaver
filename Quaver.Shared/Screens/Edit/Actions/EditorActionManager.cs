@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -15,7 +16,6 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
@@ -53,6 +53,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Colors;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Components;
@@ -628,11 +629,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="oldId"></param>
         /// <param name="newId"></param>
         /// <param name="fromLua"></param>
-        public void RenameTimingGroup(string oldId, string newId, bool fromLua = false)
+        public bool RenameTimingGroup(string oldId, string newId, bool fromLua = false)
         {
-            if (oldId != Qua.GlobalScrollGroupId && newId != Qua.GlobalScrollGroupId
-                && WorkingMap.TimingGroups.ContainsKey(oldId))
-                Perform(new EditorActionRenameTimingGroup(this, WorkingMap, oldId, newId, null), fromLua);
+            if (oldId == Qua.GlobalScrollGroupId
+                || newId == Qua.GlobalScrollGroupId
+                || !WorkingMap.TimingGroups.ContainsKey(oldId)
+                || WorkingMap.TimingGroups.ContainsKey(newId)
+                || !Regex.IsMatch(newId, "^[a-zA-Z0-9_]+$"))
+                return false;
+
+            Perform(new EditorActionRenameTimingGroup(this, WorkingMap, oldId, newId, null), fromLua);
+            return true;
+
         }
 
         /// <summary>
@@ -641,6 +649,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="timingGroupId"></param>
         /// <param name="hitObjects"></param>
         public void MoveHitObjectsToTimingGroup(string timingGroupId, List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionMoveObjectsToTimingGroup(this, WorkingMap, hitObjects, timingGroupId), fromLua);
+
+        /// <summary>
+        ///     Changes the color of a timing group
+        /// </summary>
+        /// <param name="timingGroup"></param>
+        /// <param name="color"></param>
+        public void ChangeTimingGroupColor(TimingGroup timingGroup, Color color, bool fromLua = false)
+        {
+            Perform(new EditorActionChangeTimingGroupColor(this, WorkingMap, timingGroup, color), fromLua);
+        }
 
         /// <summary>
         /// </summary>
