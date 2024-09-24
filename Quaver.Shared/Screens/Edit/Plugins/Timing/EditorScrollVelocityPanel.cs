@@ -433,6 +433,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 160);
 
+            // Emik's great optimization to the panel brought column misalignment
+            // He took 6+h and didn't figure out.
+            // So don't try fixing this unless you're bored. Optimization is better than view anyway.
             const int ElementBaseHeight = 12;
             const int NumberOfColumns = 2;
             var elementHeight = Screen.ImGuiScale * ElementBaseHeight;
