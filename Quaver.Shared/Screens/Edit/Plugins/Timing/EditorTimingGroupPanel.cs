@@ -211,11 +211,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawRemoveButton()
         {
+            ImGui.BeginDisabled(SelectedTimingGroups.Count == 0 || SelectedTimingGroups.Contains(Qua.GlobalScrollGroupId));
             if (ImGui.Button("Remove"))
             {
-                if (SelectedTimingGroups.Count == 0)
-                    return;
-
                 Screen.ActionManager.PerformBatch(SelectedTimingGroups.Select(
                         IEditorAction (id) =>
                             new EditorActionRemoveTimingGroup(Screen.ActionManager, Screen.WorkingMap, id,
@@ -224,6 +222,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 SelectedTimingGroups.Clear();
             }
+            ImGui.EndDisabled();
         }
 
         private void DrawColorInput()
@@ -263,12 +262,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 hint = "You cannot rename the default timing group!";
             }
 
-
+            ImGui.BeginDisabled(id == Qua.GlobalScrollGroupId);
             if (ImGui.InputTextWithHint("##Name", hint, ref newId, 256,
                     inputTextFlags))
             {
                 _lastNameEditError = !Screen.ActionManager.RenameTimingGroup(id, newId);
             }
+            ImGui.EndDisabled();
         }
 
         private void DrawColorEdit(TimingGroup timingGroup, ImGuiColorEditFlags colorOptions, string prefix)
