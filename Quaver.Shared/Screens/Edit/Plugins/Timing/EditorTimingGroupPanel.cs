@@ -397,7 +397,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.TextWrapped($"{timingGroup.GetType().Name}");
                 ImGui.NextColumn();
                 const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoPicker;
+                ImGui.BeginDisabled(id == Qua.GlobalScrollGroupId);
                 DrawColorEdit(timingGroup, colorOptions, $"Column_{id}");
+                ImGui.EndDisabled();
                 ImGui.NextColumn();
 
                 ImGui.PopID();
