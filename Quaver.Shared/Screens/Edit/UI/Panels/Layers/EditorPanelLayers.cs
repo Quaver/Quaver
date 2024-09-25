@@ -36,6 +36,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private Bindable<HitObjectColoring> HitObjectColoring { get; }
 
+        private Bindable<bool> ViewLayers { get; }
+
+        private bool _viewLayerNotifyEnabled = true;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -48,6 +52,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             DefaultLayer = defaultLayer;
             SelectedHitObjects = selectedHitObjects;
             HitObjectColoring = hitObjectColoring;
+            ViewLayers = new Bindable<bool>(HitObjectColoring.Value == Playfield.HitObjectColoring.Layer);
+            HitObjectColoring.ValueChanged += ColoringChanged;
+            ViewLayers.ValueChanged += ViewLayersChanged;
 
             Depth = 1;
 
@@ -55,6 +62,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             CreateAddButton();
             CreateToggleLayersCheckbox();
             CreateScrollContainer();
+        }
+
+        private void ViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (!_viewLayerNotifyEnabled)
+                return;
+
+            _viewLayerNotifyEnabled = false;
+            HitObjectColoring.Value = e.Value ? Playfield.HitObjectColoring.Layer : Playfield.HitObjectColoring.None;
+        }
+
+        private void ColoringChanged(object sender, BindableValueChangedEventArgs<HitObjectColoring> e)
+        {
+            _viewLayerNotifyEnabled = false;
+            ViewLayers.Value = e.Value == Playfield.HitObjectColoring.Layer;
+            _viewLayerNotifyEnabled = true;
         }
 
         /// <summary>
@@ -114,15 +137,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateToggleLayersCheckbox()
         {
-            // ToggleLayers = new Checkbox(HitObjectColoring, new Vector2(DeleteLayer.Width, DeleteLayer.Height),
-            //     FontAwesome.Get(FontAwesomeIcon.fa_eye_open),
-            //     FontAwesome.Get(FontAwesomeIcon.fa_eye_with_a_diagonal_line_interface_symbol_for_invisibility),
-            //     false)
-            // {
-            //     Parent = Header,
-            //     Alignment = Alignment.MidRight,
-            //     X = CreateLayer.X - CreateLayer.Width + DeleteLayer.X
-            // };
+            ToggleLayers = new Checkbox(ViewLayers, new Vector2(DeleteLayer.Width, DeleteLayer.Height),
+                FontAwesome.Get(FontAwesomeIcon.fa_eye_open),
+                FontAwesome.Get(FontAwesomeIcon.fa_eye_with_a_diagonal_line_interface_symbol_for_invisibility),
+                false)
+            {
+                Parent = Header,
+                Alignment = Alignment.MidRight,
+                X = CreateLayer.X - CreateLayer.Width + DeleteLayer.X
+            };
         }
 
         /// <summary>
@@ -136,6 +159,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Parent = Content,
                 X = 4
             };
+        }
+
+        public override void Destroy()
+        {
+            ViewLayers.ValueChanged -= ViewLayersChanged;
+            HitObjectColoring.ValueChanged -= ColoringChanged;
+            base.Destroy();
         }
     }
 }
