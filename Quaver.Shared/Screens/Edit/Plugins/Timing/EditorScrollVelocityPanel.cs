@@ -94,13 +94,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             Screen = screen;
             Initialize();
-            Screen.ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
-        }
-
-        private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
-        {
-            if (e.OldId == SelectedScrollGroupId)
-                SelectedScrollGroupId = e.NewId;
         }
 
         /// <inheritdoc />
@@ -678,11 +671,5 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <returns></returns>
         public static ImGuiOptions GetOptions() => new ImGuiOptions(
             new List<ImGuiFont> { new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14), }, false);
-
-        public override void Destroy()
-        {
-            Screen.ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
-            base.Destroy();
-        }
     }
 }

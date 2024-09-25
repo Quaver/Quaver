@@ -84,6 +84,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             Screen = screen;
             Initialize();
             Screen.ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
+            Screen.ActionManager.TimingGroupDeleted += ActionManagerOnTimingGroupDeleted;
+        }
+
+        private void ActionManagerOnTimingGroupDeleted(object sender, EditorTimingGroupRemovedEventArgs e)
+        {
+            SelectedTimingGroups.Remove(e.Id);
+            Clipboard.Remove(e.Id);
         }
 
         private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
@@ -517,6 +524,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         public override void Destroy()
         {
             Screen.ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
+            Screen.ActionManager.TimingGroupDeleted -= ActionManagerOnTimingGroupDeleted;
             base.Destroy();
         }
     }

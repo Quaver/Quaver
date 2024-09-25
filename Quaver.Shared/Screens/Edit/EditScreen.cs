@@ -32,6 +32,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
@@ -303,7 +304,11 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     The scroll group corresponding to <see cref="SelectedScrollGroupId"/>
         /// </summary>
-        public ScrollGroup SelectedScrollGroup => WorkingMap.TimingGroups[SelectedScrollGroupId] as ScrollGroup;
+        public ScrollGroup SelectedScrollGroup =>
+            WorkingMap.TimingGroups.TryGetValue(SelectedScrollGroupId, out var timingGroup) &&
+            timingGroup is ScrollGroup scrollGroup
+                ? scrollGroup
+                : WorkingMap.GlobalScrollGroup;
 
         /// <summary>
         /// </summary>
@@ -346,12 +351,25 @@ namespace Quaver.Shared.Screens.Edit
             SkinManager.SkinLoaded += OnSkinLoaded;
             GameBase.Game.Window.FileDropped += OnFileDropped;
             ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
+            ActionManager.TimingGroupDeleted += ActionManagerOnTimingGroupDeleted;
 
             InitializeDiscordRichPresence();
             AddFileWatcher();
 
             View = new EditScreenView(this);
             InputManager = new EditorInputManager(this);
+        }
+
+        private void ActionManagerOnTimingGroupDeleted(object sender, EditorTimingGroupRemovedEventArgs e)
+        {
+            foreach (var hitObjectInfo in Clipboard)
+            {
+                if (hitObjectInfo.TimingGroup == e.Id)
+                    hitObjectInfo.TimingGroup = Qua.GlobalScrollGroupId;
+            }
+
+            if (e.Id == SelectedScrollGroupId)
+                SelectedScrollGroupId = Qua.GlobalScrollGroupId;
         }
 
         private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
@@ -361,6 +379,9 @@ namespace Quaver.Shared.Screens.Edit
                 if (hitObjectInfo.TimingGroup == e.OldId)
                     hitObjectInfo.TimingGroup = e.NewId;
             }
+
+            if (e.OldId == SelectedScrollGroupId)
+                SelectedScrollGroupId = e.NewId;
         }
 
         /// <inheritdoc />
@@ -408,6 +429,7 @@ namespace Quaver.Shared.Screens.Edit
             Track.Seeked -= OnTrackSeeked;
             GameBase.Game.Window.FileDropped -= OnFileDropped;
             ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
+            ActionManager.TimingGroupDeleted -= ActionManagerOnTimingGroupDeleted;
 
             BackupScheduler?.Dispose();
             Track?.Dispose();
