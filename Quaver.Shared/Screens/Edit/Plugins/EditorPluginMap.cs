@@ -6,6 +6,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 
@@ -116,6 +117,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="id"></param>
         /// <returns></returns>
         public TimingGroup GetTimingGroup(string id) => Map.TimingGroups.GetValueOrDefault(id);
+
+        /// <summary>
+        ///     Gets the list of IDs of all timing groups in the map
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetTimingGroupIds() => Map.TimingGroups.Keys.ToList();
 
         /// <summary>
         ///     Gets the bookmark at a particular time in the current map

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
@@ -89,25 +90,22 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="svs"></param>
         /// <param name="scrollGroup"></param>
-        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup = null) =>
-            ActionManager.PlaceScrollVelocityBatch(svs,
-                scrollGroup ?? ActionManager.EditScreen.WorkingMap.GlobalScrollGroup, true);
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup) =>
+            ActionManager.PlaceScrollVelocityBatch(svs, scrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="sv"></param>
         /// <param name="scrollGroup"></param>
-        public void RemoveScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup = null) =>
-            ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv },
-                scrollGroup ?? ActionManager.EditScreen.WorkingMap.GlobalScrollGroup, true);
+        public void RemoveScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv }, scrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="svs"></param>
         /// <param name="scrollGroup"></param>
-        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup = null) =>
-            ActionManager.RemoveScrollVelocityBatch(svs,
-                scrollGroup ?? ActionManager.EditScreen.WorkingMap.GlobalScrollGroup, true);
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollVelocityBatch(svs, scrollGroup, true);
 
         /// <summary>
         /// </summary>
@@ -239,5 +237,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) =>
             ActionManager.ChangeBookmarkBatchOffset(bookmarks, offset, true);
+
+        public void PlaceTimingGroup(string id, TimingGroup timingGroup) => ActionManager.CreateTimingGroup(id, timingGroup, true);
+
+        public void RemoveTimingGroup(string id) => ActionManager.RemoveTimingGroup(id, true);
+
+        public void RenameTimingGroup(string id, string newId) => ActionManager.RenameTimingGroup(id, newId, true);
+
+        public void ChangeTimingGroupColor(TimingGroup timingGroup, int r, int g, int b) =>
+            ActionManager.ChangeTimingGroupColor(timingGroup, new Color(r, g, b), true);
+
+        public void MoveHitObjectsToTimingGroup(string timingGroupId, List<HitObjectInfo> hitObjects) =>
+            ActionManager.MoveHitObjectsToTimingGroup(timingGroupId, hitObjects, true);
     }
 }
