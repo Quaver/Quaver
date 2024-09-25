@@ -125,6 +125,43 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
 
+            DrawTabBar();
+
+            DrawSelectCurrentSVButton();
+            ImGui.Dummy(new Vector2(0, 10));
+
+            DrawAddButton();
+            ImGui.SameLine();
+            DrawRemoveButton();
+
+            ImGui.Dummy(new Vector2(0, 10));
+
+            if (SelectedScrollVelocities.Count <= 1)
+                DrawTimeTextbox();
+            else
+                DrawMoveOffsetByTextbox();
+
+            ImGui.Dummy(new Vector2(0, 10));
+            DrawMultiplierTextbox();
+
+            var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
+
+            ImGui.Dummy(new Vector2(0, 10));
+            DrawSelectedCountLabel();
+
+            ImGui.Dummy(new Vector2(0, 10));
+            DrawTable();
+
+            IsWindowHovered = IsWindowHovered || isHovered;
+
+            ImGui.End();
+        }
+
+        private void DrawTabBar()
+        {
+            if (Screen.WorkingMap.TimingGroups.Count == 1)
+                return;
+
             if (ImGui.BeginTabBar("Groups"))
             {
                 foreach (var (id, timingGroup) in Screen.WorkingMap.TimingGroups)
@@ -169,35 +206,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 ImGui.EndTabBar();
             }
-
-            DrawSelectCurrentSVButton();
-            ImGui.Dummy(new Vector2(0, 10));
-
-            DrawAddButton();
-            ImGui.SameLine();
-            DrawRemoveButton();
-
-            ImGui.Dummy(new Vector2(0, 10));
-
-            if (SelectedScrollVelocities.Count <= 1)
-                DrawTimeTextbox();
-            else
-                DrawMoveOffsetByTextbox();
-
-            ImGui.Dummy(new Vector2(0, 10));
-            DrawMultiplierTextbox();
-
-            var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
-
-            ImGui.Dummy(new Vector2(0, 10));
-            DrawSelectedCountLabel();
-
-            ImGui.Dummy(new Vector2(0, 10));
-            DrawTable();
-
-            IsWindowHovered = IsWindowHovered || isHovered;
-
-            ImGui.End();
         }
 
         /// <summary>
