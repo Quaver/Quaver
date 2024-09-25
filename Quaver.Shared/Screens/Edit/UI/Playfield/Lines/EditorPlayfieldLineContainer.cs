@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using MoreLinq.Extensions;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Add;
@@ -169,37 +170,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         {
             Lines = new List<DrawableEditorLine>();
 
-            var timingPointIndex = 0;
-            var svIndex = 0;
-            
-            // SV & Timing points are guaranteed to already be sorted, so there's no need to resort.
-            while (Lines.Count != Map.TimingPoints.Count + Map.SliderVelocities.Count)
+            foreach (var timingPointInfo in Map.TimingPoints)
             {
-                var pointExists = timingPointIndex < Map.TimingPoints.Count;
-                var svExists = svIndex < Map.SliderVelocities.Count;
-                
-                if (pointExists && svExists)
+                Lines.Add(new DrawableEditorLineTimingPoint(Playfield, timingPointInfo));
+            }
+
+            foreach (var (id, timingGroup) in Map.TimingGroups)
+            {
+                if (timingGroup is ScrollGroup scrollGroup)
                 {
-                    if (Map.TimingPoints[timingPointIndex].StartTime < Map.SliderVelocities[svIndex].StartTime)
+                    foreach (var scrollVelocity in scrollGroup.ScrollVelocities)
                     {
-                        Lines.Add(new DrawableEditorLineTimingPoint(Playfield, Map.TimingPoints[timingPointIndex]));
-                        timingPointIndex++;
+                        Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, scrollVelocity, timingGroup));
                     }
-                    else
-                    {
-                        Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, Map.SliderVelocities[svIndex]));
-                        svIndex++;
-                    }
-                }
-                else if (pointExists)
-                {
-                    Lines.Add(new DrawableEditorLineTimingPoint(Playfield, Map.TimingPoints[timingPointIndex]));
-                    timingPointIndex++;
-                }
-                else if (svExists)
-                {
-                    Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, Map.SliderVelocities[svIndex]));
-                    svIndex++;
                 }
             }
 
@@ -207,6 +190,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 Lines.Add(new DrawableEditorLineBookmark(Playfield, bookmark));
             
             PreviewLine = new DrawableEditorLinePreview(Playfield, Map.SongPreviewTime);
+
+            Lines.HybridSort();
+
             InitializeLinePool();
         }
 
@@ -268,7 +254,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="e"></param>
         private void OnScrollVelocityAdded(object sender, EditorScrollVelocityAddedEventArgs e)
         {
-            Lines.InsertSorted(new DrawableEditorLineScrollVelocity(Playfield, e.ScrollVelocity));
+            Lines.InsertSorted(new DrawableEditorLineScrollVelocity(Playfield, e.ScrollVelocity, e.TimingGroup));
             InitializeLinePool();
         }
 
@@ -278,7 +264,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="e"></param>
         private void OnScrollVelocityBatchAdded(object sender, EditorScrollVelocityBatchAddedEventArgs e)
         {
-            Lines.InsertSorted(e.ScrollVelocities.Select(sv => new DrawableEditorLineScrollVelocity(Playfield, sv)));
+            Lines.InsertSorted(e.ScrollVelocities.Select(sv => new DrawableEditorLineScrollVelocity(Playfield, sv, e.ScrollGroup)));
             InitializeLinePool();
         }
 

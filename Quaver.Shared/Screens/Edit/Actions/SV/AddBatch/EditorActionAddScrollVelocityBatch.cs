@@ -27,14 +27,13 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.AddBatch
             ActionManager = manager;
             WorkingMap = workingMap;
             ScrollVelocities = svs;
-            ScrollGroup = scrollGroup;
+            ScrollGroup = scrollGroup ?? WorkingMap.GlobalScrollGroup;
         }
 
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            var svs = ScrollGroup?.ScrollVelocities ?? WorkingMap.SliderVelocities;
-            svs.InsertSorted(ScrollVelocities);
+            ScrollGroup.ScrollVelocities.InsertSorted(ScrollVelocities);
             ActionManager.TriggerEvent(Type, new EditorScrollVelocityBatchAddedEventArgs(ScrollVelocities, ScrollGroup));
         }
 

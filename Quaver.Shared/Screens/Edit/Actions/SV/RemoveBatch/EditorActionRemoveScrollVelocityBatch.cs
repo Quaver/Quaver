@@ -26,16 +26,13 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch
             ActionManager = manager;
             WorkingMap = workingMap;
             ScrollVelocities = svs;
-            ScrollGroup = scrollGroup;
+            ScrollGroup = scrollGroup ?? WorkingMap.GlobalScrollGroup;
         }
 
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            var svs = ScrollGroup?.ScrollVelocities ?? WorkingMap.SliderVelocities;
-
-            foreach (var sv in ScrollVelocities)
-                svs.Remove(sv);
+            ScrollGroup.ScrollVelocities.RemoveAll(sv => ScrollVelocities.Contains(sv));
 
             ActionManager.TriggerEvent(Type, new EditorScrollVelocityBatchRemovedEventArgs(ScrollVelocities, ScrollGroup));
         }

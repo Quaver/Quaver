@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <seealso cref="SelectTimingGroup"/>
         private string PendingSelectScrollGroupId { get; set; }
 
-        private ScrollGroup CurrentScrollGroup => (ScrollGroup)Screen.WorkingMap.TimingGroups[CurrentScrollGroupId];
+        public ScrollGroup CurrentScrollGroup => (ScrollGroup)Screen.WorkingMap.TimingGroups[CurrentScrollGroupId];
 
         /// <inheritdoc />
         /// <summary>
