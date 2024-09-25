@@ -129,6 +129,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.SameLine();
             DrawSelectNotesButton();
 
+            if (SelectedTimingGroups.All(x =>
+                    Screen.WorkingMap.TimingGroups.TryGetValue(x, out var v) && v is ScrollGroup))
+                DrawScrollGroupOptions();
+
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawNameInput();
@@ -211,7 +215,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawRemoveButton()
         {
-            ImGui.BeginDisabled(SelectedTimingGroups.Count == 0 || SelectedTimingGroups.Contains(Qua.GlobalScrollGroupId));
+            ImGui.BeginDisabled(SelectedTimingGroups.Count == 0 ||
+                                SelectedTimingGroups.Contains(Qua.GlobalScrollGroupId));
             if (ImGui.Button("Remove"))
             {
                 Screen.ActionManager.PerformBatch(SelectedTimingGroups.Select(
@@ -222,6 +227,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 SelectedTimingGroups.Clear();
             }
+
             ImGui.EndDisabled();
         }
 
@@ -237,6 +243,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             const ImGuiColorEditFlags colorOptions =
                 ImGuiColorEditFlags.Float | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoPicker;
             DrawColorEdit(timingGroup, colorOptions, $"Input_{id}");
+        }
+
+        private void DrawScrollGroupOptions()
+        {
+            if (SelectedTimingGroups.Count == 1)
+            {
+                if (ImGui.Button("Edit in SV Editor"))
+                {
+                    var svPanel =
+                        (EditorScrollVelocityPanel)Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
+                    svPanel.SelectTimingGroup(SelectedTimingGroups.First());
+                    svPanel.IsActive = true;
+                }
+            }
         }
 
         private void DrawNameInput()
@@ -268,6 +288,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 _lastNameEditError = !Screen.ActionManager.RenameTimingGroup(id, newId);
             }
+
             ImGui.EndDisabled();
         }
 
