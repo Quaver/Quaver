@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.AddBatch
             ActionManager = manager;
             WorkingMap = workingMap;
             ScrollVelocities = svs;
-            ScrollGroup = scrollGroup ?? WorkingMap.GlobalScrollGroup;
+            ScrollGroup = scrollGroup ?? manager.EditScreen.SelectedScrollGroup;
         }
 
         [MoonSharpVisible(false)]

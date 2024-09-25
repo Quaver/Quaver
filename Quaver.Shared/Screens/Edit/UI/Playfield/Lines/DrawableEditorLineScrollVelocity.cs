@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public override void SetSize()
         {
             var svPlugin = (EditorScrollVelocityPanel)Playfield.ActionManager.EditScreen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
-            if (svPlugin.CurrentScrollGroup != TimingGroup)
+            if (svPlugin.SelectedScrollGroup != TimingGroup)
             {
                 Width = 0;
                 return;

@@ -296,6 +296,16 @@ namespace Quaver.Shared.Screens.Edit
         private HitObjectInfo[] heldLivemapHitObjectInfos;
 
         /// <summary>
+        ///     The scroll group id to place SVs to if the scroll group provided to <see cref="ActionManager"/> is null
+        /// </summary>
+        public string SelectedScrollGroupId { get; set; } = Qua.GlobalScrollGroupId;
+
+        /// <summary>
+        ///     The scroll group corresponding to <see cref="SelectedScrollGroupId"/>
+        /// </summary>
+        public ScrollGroup SelectedScrollGroup => WorkingMap.TimingGroups[SelectedScrollGroupId] as ScrollGroup;
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {

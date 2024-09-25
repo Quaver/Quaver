@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Remove
             ActionManager = manager;
             WorkingMap = workingMap;
             ScrollVelocity = sv;
-            ScrollGroup = scrollGroup ?? WorkingMap.GlobalScrollGroup;
+            ScrollGroup = scrollGroup ?? manager.EditScreen.SelectedScrollGroup;
         }
 
         [MoonSharpVisible(false)]
