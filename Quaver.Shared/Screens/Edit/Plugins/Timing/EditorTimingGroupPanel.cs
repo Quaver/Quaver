@@ -13,8 +13,10 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
+using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble;
 using Wobble.Graphics.ImGUI;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Vector2 = System.Numerics.Vector2;
@@ -143,7 +145,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawNameInput();
-            DrawColorInput();
 
             var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
@@ -238,20 +239,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.EndDisabled();
         }
 
-        private void DrawColorInput()
-        {
-            if (SelectedTimingGroups.Count != 1)
-                return;
-
-            ImGui.TextWrapped("Color");
-
-            var id = SelectedTimingGroups.First();
-            var timingGroup = Screen.WorkingMap.TimingGroups[id];
-            const ImGuiColorEditFlags colorOptions =
-                ImGuiColorEditFlags.Float | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoPicker;
-            DrawColorEdit(timingGroup, colorOptions, $"Input_{id}");
-        }
-
         private void DrawScrollGroupOptions()
         {
             if (SelectedTimingGroups.Count == 1)
@@ -302,14 +289,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawColorEdit(TimingGroup timingGroup, ImGuiColorEditFlags colorOptions, string prefix)
         {
             var color = timingGroup.GetColor();
-            var colorVec3 = new Vector3(color.R, color.G, color.B) / 256;
+            var colorVec3 = new Vector4(color.R, color.G, color.B, 255) / 256;
 
-            if (ImGui.ColorEdit3($"##{prefix}", ref colorVec3, colorOptions))
+            if (ImGui.ColorButton($"##{prefix}", colorVec3, colorOptions))
             {
-                var color256 = colorVec3 * 256;
-                Logger.Important($"Color edited: {color256}", LogType.Runtime);
-                Screen.ActionManager.ChangeTimingGroupColor(timingGroup,
-                    new Color((byte)color256.X, (byte)color256.Y, (byte)color256.Z));
+                DialogManager.Show(new EditorChangeTimingGroupColorDialog(timingGroup, Screen.ActionManager));
             }
         }
 
@@ -412,7 +396,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
                 ImGui.TextWrapped($"{timingGroup.GetType().Name}");
                 ImGui.NextColumn();
-                const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs;
+                const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoPicker;
                 DrawColorEdit(timingGroup, colorOptions, $"Column_{id}");
                 ImGui.NextColumn();
 
