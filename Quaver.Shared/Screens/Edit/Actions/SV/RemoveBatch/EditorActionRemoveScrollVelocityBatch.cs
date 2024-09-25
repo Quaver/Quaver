@@ -26,8 +26,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch
         {
             ActionManager = manager;
             WorkingMap = workingMap;
+            ScrollVelocities = svs;
             ScrollGroup = scrollGroup ?? manager.EditScreen.SelectedScrollGroup;
-            ScrollVelocities = svs.Intersect(ScrollGroup.ScrollVelocities).ToList();
         }
 
         [MoonSharpVisible(false)]

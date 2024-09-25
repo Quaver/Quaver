@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGro
         {
             ActionManager = manager;
             WorkingMap = workingMap;
-            HitObjects = hitObjectInfos;
+            HitObjects = new List<HitObjectInfo>(hitObjectInfos);
             TimingGroupId = timingGroupId;
 
             HitObjects.ForEach(x => OriginalTimingGroupIds.Add(x.TimingGroup));
