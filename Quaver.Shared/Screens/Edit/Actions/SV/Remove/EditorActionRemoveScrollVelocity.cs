@@ -19,6 +19,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Remove
 
         public SliderVelocityInfo ScrollVelocity { get; }
 
+        public bool Removed { get; private set; }
+
         [MoonSharpVisible(false)]
         public EditorActionRemoveScrollVelocity(EditorActionManager manager, Qua workingMap, SliderVelocityInfo sv, ScrollGroup scrollGroup = null)
         {
@@ -31,11 +33,16 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Remove
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            ScrollGroup.ScrollVelocities.Remove(ScrollVelocity);
+            Removed = ScrollGroup.ScrollVelocities.Remove(ScrollVelocity);
             ActionManager.TriggerEvent(Type, new EditorScrollVelocityRemovedEventArgs(ScrollVelocity, ScrollGroup));
         }
 
         [MoonSharpVisible(false)]
-        public void Undo() => new EditorActionAddScrollVelocity(ActionManager, WorkingMap, ScrollVelocity, ScrollGroup).Perform();
+        public void Undo()
+        {
+            if (!Removed)
+                return;
+            new EditorActionAddScrollVelocity(ActionManager, WorkingMap, ScrollVelocity, ScrollGroup).Perform();
+        }
     }
 }

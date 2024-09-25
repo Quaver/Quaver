@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
@@ -25,15 +26,14 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch
         {
             ActionManager = manager;
             WorkingMap = workingMap;
-            ScrollVelocities = svs;
             ScrollGroup = scrollGroup ?? manager.EditScreen.SelectedScrollGroup;
+            ScrollVelocities = svs.Intersect(ScrollGroup.ScrollVelocities).ToList();
         }
 
         [MoonSharpVisible(false)]
         public void Perform()
         {
             ScrollGroup.ScrollVelocities.RemoveAll(sv => ScrollVelocities.Contains(sv));
-
             ActionManager.TriggerEvent(Type, new EditorScrollVelocityBatchRemovedEventArgs(ScrollVelocities, ScrollGroup));
         }
 
