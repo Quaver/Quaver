@@ -746,6 +746,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     ? HitObjectColoring.None
                     : HitObjectColoring.TimingGroup;
 
+            if (ImGui.MenuItem($"Color SV Lines By Timing Group", "", ConfigManager.EditorColorSvLineByTimingGroup.Value))
+                ConfigManager.EditorColorSvLineByTimingGroup.Value = !ConfigManager.EditorColorSvLineByTimingGroup.Value;
+
             ImGui.Separator();
 
             if (ImGui.MenuItem("Test Play Modifiers", ""))

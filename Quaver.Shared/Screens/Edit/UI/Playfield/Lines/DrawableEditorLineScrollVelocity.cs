@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
@@ -19,7 +20,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             IsClickable = false;
         }
 
-        public override Color GetColor() => ColorHelper.HexToColor("#56FE6E");
+        public override Color GetColor() =>
+            ConfigManager.EditorColorSvLineByTimingGroup.Value && TimingGroup != null
+                ? ColorHelper.ToXnaColor(TimingGroup.GetColor())
+                : ColorHelper.HexToColor("#56FE6E");
 
         public override string GetValue() => "";
 
@@ -27,19 +31,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
         public override void SetSize()
         {
-            var svPlugin = (EditorScrollVelocityPanel)Playfield.ActionManager.EditScreen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
-            if (svPlugin.SelectedScrollGroup != TimingGroup)
+            Tint = GetColor();
+
+            var selectedScrollGroup = Playfield.ActionManager.EditScreen.SelectedScrollGroup;
+            if (selectedScrollGroup != TimingGroup)
             {
                 Width = 0;
                 return;
             }
 
             var multiplier = Math.Abs(ScrollVelocity.Multiplier);
-            var size = MathHelper.Clamp(DefaultSize.X.Value * multiplier, 10, 150);
+            var desiredWidth = MathHelper.Clamp(DefaultSize.X.Value * multiplier, 10, 150);
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (Width != size)
-                Width = size;
+            if (Width != desiredWidth)
+                Width = desiredWidth;
         }
     }
 }
