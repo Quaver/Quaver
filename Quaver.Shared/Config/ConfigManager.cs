@@ -1150,7 +1150,7 @@ namespace Quaver.Shared.Config
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
             ReceptorsOverLaneCover = ReadValue(@"ReceptorsOverLaneCover", false, data);
-            EditorObjectColoring = ReadValue(@"EditorViewLayers", HitObjectColoring.None, data);
+            EditorObjectColoring = ReadValue(@"EditorObjectColoring", HitObjectColoring.None, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
             LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);
