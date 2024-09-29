@@ -24,6 +24,8 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -91,6 +93,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.BookmarkRemoved += OnBookmarkRemoved;
             ActionManager.BookmarkBatchRemoved += OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
+            ActionManager.TimingGroupCreated += OnTimingGroupCreated;
+            ActionManager.TimingGroupDeleted += OnTimingGroupDeleted;
         }
         
         /// <inheritdoc />
@@ -159,6 +163,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
             ActionManager.BookmarkBatchRemoved -= OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
+            ActionManager.TimingGroupCreated -= OnTimingGroupCreated;
+            ActionManager.TimingGroupDeleted -= OnTimingGroupDeleted;
             
             base.Destroy();
         }
@@ -436,6 +442,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private void OnBookmarkBatchOffsetChanged(object sender, EditorActionChangeBookmarkOffsetBatchEventArgs e)
         {
             Lines.HybridSort();
+            InitializeLinePool();
+        }
+
+        private void OnTimingGroupDeleted(object sender, EditorTimingGroupRemovedEventArgs e)
+        {
+            if (e.TimingGroup is not ScrollGroup scrollGroup)
+                return;
+
+            Lines.RemoveAll(l =>
+                l is DrawableEditorLineScrollVelocity { ScrollVelocity: var sv } &&
+                scrollGroup.ScrollVelocities.Contains(sv));
+            InitializeLinePool();
+        }
+
+        private void OnTimingGroupCreated(object sender, EditorTimingGroupCreatedEventArgs e)
+        {
+            if (e.TimingGroup is not ScrollGroup scrollGroup)
+                return;
+
+            Lines.InsertSorted(scrollGroup.ScrollVelocities.Select(sv =>
+                new DrawableEditorLineScrollVelocity(Playfield, sv, scrollGroup)));
             InitializeLinePool();
         }
     }
