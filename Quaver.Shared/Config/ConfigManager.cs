@@ -243,6 +243,11 @@ namespace Quaver.Shared.Config
         ///     Delete the original mapset file after importing
         /// </summary>
         internal static Bindable<bool> DeleteOriginalFileAfterImport { get; private set; }
+        
+        /// <summary>
+        ///     Enable the Discord Rich Presence
+        /// </summary>
+        internal static Bindable<bool> DiscordRichPresence { get; private set; }
 
         /// <summary>
         ///     If the scoreboard is currently visible.
@@ -1048,6 +1053,7 @@ namespace Quaver.Shared.Config
             EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             DeleteOriginalFileAfterImport = ReadValue(@"DeleteOriginalFileAfterImport", true, data);
+            DiscordRichPresence = ReadValue(@"DiscordRichPresence", true, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);

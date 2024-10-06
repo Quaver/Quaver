@@ -429,7 +429,7 @@ namespace Quaver.Shared.Online
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.Presence.PartySize = 0;
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             // Send client status update packet.
             var game = (QuaverGame)GameBase.Game;
@@ -600,7 +600,7 @@ namespace Quaver.Shared.Online
             {
                 DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
                 DiscordHelper.Presence.EndTimestamp = 0;
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+                DiscordHelper.UpdatePresence();
             }
             catch (Exception ex)
             {
