@@ -6,6 +6,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ScrollVelocityEditor,
         BpmCalculator,
         BpmDetector,
-        GoToObjects
+        GoToObjects,
+        TimingGroupEditor
     }
 }
