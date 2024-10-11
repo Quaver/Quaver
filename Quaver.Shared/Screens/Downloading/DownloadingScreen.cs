@@ -603,72 +603,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        private List<DownloadableMapset> SortMapsets(List<DownloadableMapset> mapsets)
-        {
-            if (mapsets == null || mapsets.Count <= 1)
-                return mapsets;
-
-            switch (SortBy.Value)
-            {
-                case DownloadSortBy.Newest:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderBy(x => x.DateLastUpdated).ToList();
-
-                    return mapsets;
-                case DownloadSortBy.Artist:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.Artist).ToList();
-
-                    return mapsets.OrderBy(x => x.Artist).ToList();
-                case DownloadSortBy.Title:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.Title).ToList();
-
-                    return mapsets.OrderBy(x => x.Title).ToList();
-                case DownloadSortBy.Creator:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.CreatorUsername).ToList();
-
-                    return mapsets.OrderBy(x => x.CreatorUsername).ToList();
-                case DownloadSortBy.Bpm:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.Bpms.Max()).ToList();
-
-                    return mapsets.OrderBy(x => x.Bpms.Max()).ToList();
-                case DownloadSortBy.Length:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxLengthSeconds).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxLengthSeconds).ToList();
-                case DownloadSortBy.MinDifficulty:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.DifficultyRange.Min()).ToList();
-
-                    return mapsets.OrderBy(x => x.DifficultyRange.Min()).ToList();
-                case DownloadSortBy.MaxDifficulty:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.DifficultyRange.Max()).ToList();
-
-                    return mapsets.OrderBy(x => x.DifficultyRange.Max()).ToList();
-                case DownloadSortBy.LNs:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxLongNotePercent).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxLongNotePercent).ToList();
-                case DownloadSortBy.PlayCount:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxPlayCount).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxPlayCount).ToList();
-                case DownloadSortBy.MaxCombo:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxCombo).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxCombo).ToList();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        private List<DownloadableMapset> SortMapsets(List<DownloadableMapset> mapsets) => mapsets;
 
         /// <summary>
         /// </summary>

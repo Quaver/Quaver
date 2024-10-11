@@ -196,12 +196,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             TableItems = new List<DownloadFilterTableItem>()
             {
                 new DownloadFilterTableItemCheckbox(tableWidth, "Display Owned Mapsets", DisplayOwnedMapsets),
-                new DownloadFilterTableItemCheckbox(tableWidth, "Reverse Sort", ReverseSort),
                 new DownloadFilterTableItemDifficulty(tableWidth, MinDifficulty, MaxDifficulty),
                 new DownloadFilterTableItemBpm(tableWidth, MinBpm, MaxBpm),
                 new DownloadFilterTableLength(tableWidth, MinLength, MaxLength),
                 new DownloadFilterTableItemLongNotePercent(tableWidth, MinLongNotePercent, MaxLongNotePercent),
-                new DownloadFilterTableItemPlayCount(tableWidth, MinPlayCount, MaxPlayCount),
                 new DownloadFilterTableItemMaxCombo(tableWidth, MinCombo, MaxCombo),
                 new DownloadFilterTableItemDate(tableWidth, "Upload Date", MinUploadDate, MaxUploadDate),
                 new DownloadFilterTableItemDate(tableWidth, "Last Update Date", MinLastUpdateDate, MaxLastUpdateDate),

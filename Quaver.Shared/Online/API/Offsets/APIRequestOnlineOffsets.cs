@@ -10,7 +10,7 @@ namespace Quaver.Shared.Online.API.Offsets
     {
         public override OnlineOffsetResponse ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}maps/offset", Method.GET);
+            var request = new RestRequest($"{OnlineClient.API_ENDPOINT}/v2/mapset/offsets", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
             var response = client.Execute(request);

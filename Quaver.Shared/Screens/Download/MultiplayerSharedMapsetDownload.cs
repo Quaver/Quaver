@@ -37,7 +37,9 @@ namespace Quaver.Shared.Screens.Download
 
             try
             {
-                OnlineManager.Client?.DownloadSharedMultiplayerMap(path, (o, e) => Progress.Value = e, (o, e) =>
+                var gameId = OnlineManager.CurrentGame?.GameId ?? -1;
+                
+                OnlineManager.Client?.DownloadSharedMultiplayerMap(path, gameId, (o, e) => Progress.Value = e, (o, e) =>
                 {
                     Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
                     MapsetImporter.Queue.Add(path);

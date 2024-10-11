@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Quaver.API.Helpers;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
@@ -15,9 +16,15 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
             {
                 try
                 {
+                    var gameId = OnlineManager.CurrentGame?.GameId ?? -1;
+                    
+                    
                     var path = MapManager.Selected.Value.Mapset.ExportToZip(false);
 
-                    var success = OnlineManager.Client.UploadSharedMultiplayerMapset(path);
+                    var packageMd5 = CryptoHelper.FileToMd5(path);
+                    var mapMd5 = MapManager.Selected.Value.Md5Checksum;
+                    
+                    var success = OnlineManager.Client.UploadSharedMultiplayerMapset(path, gameId, mapMd5, packageMd5);
 
                     if (!success)
                         throw new Exception("Failure sharing multiplayer mapset");

@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         {
             SelectedMapset = selectedMapset;
 
-            Value.Text = SelectedMapset.Value?.DifficultyRange.Count.ToString() ?? "1";
+            Value.Text = SelectedMapset.Value?.Maps.Count.ToString() ?? "1";
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
         }
 
@@ -36,7 +36,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         private void SetText() => ScheduleUpdate(() =>
         {
-            Value.Text = SelectedMapset.Value.DifficultyRange.Count.ToString();
+            Value.Text = SelectedMapset.Value.Maps.Count.ToString();
         });
     }
 }

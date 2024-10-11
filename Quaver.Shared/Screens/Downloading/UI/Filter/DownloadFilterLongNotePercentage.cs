@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.API.MapsetSearch;
@@ -35,11 +36,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         private void SetText() => ScheduleUpdate(() =>
         {
+            var minPercent = SelectedMapset.Value.Maps.Min(x => x.LongNotePercentage);
+            var maxPercent = SelectedMapset.Value.Maps.Max(x => x.LongNotePercentage);
+
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (SelectedMapset.Value.MinLongNotePercent == SelectedMapset.Value.MaxLongNotePercent)
-                Value.Text = $"{(int) SelectedMapset.Value.MinLongNotePercent}%";
+            if (minPercent == maxPercent)
+                Value.Text = $"{(int) minPercent}%";
             else
-                Value.Text = $"{(int) SelectedMapset.Value.MinLongNotePercent}-{(int) SelectedMapset.Value.MaxLongNotePercent}%";
+                Value.Text = $"{(int) minPercent}-{(int) maxPercent}%";
         });
     }
 }

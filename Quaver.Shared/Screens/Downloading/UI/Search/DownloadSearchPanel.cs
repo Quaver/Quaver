@@ -90,7 +90,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             Tint = ColorHelper.HexToColor("#242424");
 
             CreateBanner();
-            CreateSortBy();
             //CreateDifficulty();
             CreateRankedStatus();
             CreateMode();
