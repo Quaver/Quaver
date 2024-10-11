@@ -832,7 +832,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 DiscordHelper.Presence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time";
                 DiscordHelper.Presence.EndTimestamp = 0;
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+                DiscordHelper.UpdatePresence();
 
                 OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
 
@@ -1219,7 +1219,7 @@ namespace Quaver.Shared.Screens.Gameplay
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(Ruleset.Mode).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(Ruleset.Mode);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             SteamManager.SetRichPresence("State", DiscordHelper.Presence.State);
             SteamManager.SetRichPresence("Details", Map.ToString());
