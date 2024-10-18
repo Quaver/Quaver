@@ -149,7 +149,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <param name="manager"></param>
         /// <param name="gameplayHitObject"></param>
         /// <param name="objectIndex"></param>
-        private void HandleKeyPress(HitObjectManagerKeys manager, GameplayHitObjectKeysInfo info)
+        private void HandleKeyPress(HitObjectManagerKeys manager, NoteControllerKeys info)
         {
             // Play the HitSounds of closest hit object.
             var game = GameBase.Game as QuaverGame;
@@ -255,7 +255,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     Handles an individual key release during gameplay.
         /// </summary>
-        private void HandleKeyRelease(HitObjectManagerKeys manager, GameplayHitObjectKeysInfo info)
+        private void HandleKeyRelease(HitObjectManagerKeys manager, NoteControllerKeys info)
         {
             // Get judgement and references
             var lane = info.Lane - 1;

@@ -5,7 +5,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Remove
 {
     public class EditorScrollVelocityRemovedEventArgs : EditorScrollVelocityAddedEventArgs
     {
-        public EditorScrollVelocityRemovedEventArgs(SliderVelocityInfo sv) : base(sv)
+        public EditorScrollVelocityRemovedEventArgs(SliderVelocityInfo sv, TimingGroup timingGroup) : base(sv, timingGroup)
         {
         }
     }

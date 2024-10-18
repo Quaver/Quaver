@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -50,6 +51,11 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Colors;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Scripting;
 
@@ -165,6 +171,31 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a layer has been renamed
         /// </summary>
         public event EventHandler<EditorLayerRenamedEventArgs> LayerRenamed;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been created
+        /// </summary>
+        public event EventHandler<EditorTimingGroupCreatedEventArgs> TimingGroupCreated;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been deleted
+        /// </summary>
+        public event EventHandler<EditorTimingGroupRemovedEventArgs> TimingGroupDeleted;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been renamed
+        /// </summary>
+        public event EventHandler<EditorTimingGroupRenamedEventArgs> TimingGroupRenamed;
+
+        /// <summary>
+        ///     Event invoked when a timing group's color has been changed
+        /// </summary>
+        public event EventHandler<EditorTimingGroupColorChangedEventArgs> TimingGroupColorChanged;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been renamed
+        /// </summary>
+        public event EventHandler<EditorMoveObjectsToTimingGroupEventArgs> HitObjectsMovedToTimingGroup;
 
         /// <summary>
         ///     Event invoked when a layer's color has been changed
@@ -410,19 +441,25 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Places an sv down in the map
         /// </summary>
         /// <param name="sv"></param>
-        public void PlaceScrollVelocity(SliderVelocityInfo sv, bool fromLua = false) => Perform(new EditorActionAddScrollVelocity(this, WorkingMap, sv), fromLua);
+        /// <param name="scrollGroup"></param>
+        /// <param name="fromLua"></param>
+        public void PlaceScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollVelocity(this, WorkingMap, sv, scrollGroup), fromLua);
 
         /// <summary>
         ///     Places a batch of scroll velocities into the map
         /// </summary>
         /// <param name="svs"></param>
-        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs, bool fromLua = false) => Perform(new EditorActionAddScrollVelocityBatch(this, WorkingMap, svs), fromLua);
+        /// <param name="scrollGroup"></param>
+        /// <param name="fromLua"></param>
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollVelocityBatch(this, WorkingMap, svs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Removes a batch of scroll velocities from the map
         /// </summary>
         /// <param name="svs"></param>
-        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, bool fromLua = false) => Perform(new EditorActionRemoveScrollVelocityBatch(this, WorkingMap, svs), fromLua);
+        /// <param name="scrollGroup"></param>
+        /// <param name="fromLua"></param>
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionRemoveScrollVelocityBatch(this, WorkingMap, svs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Changes the offset of a batch of scroll velocities
@@ -568,6 +605,60 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="layer"></param>
         public void ToggleLayerVisibility(EditorLayerInfo layer) => new EditorActionToggleLayerVisibility(this, WorkingMap, layer).Perform();
+
+        /// <summary>
+        ///     Adds an editor layer to the map
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="timingGroup"></param>
+        /// <param name="fromLua"></param>
+        public void CreateTimingGroup(string id, TimingGroup timingGroup, bool fromLua = false) => Perform(new EditorActionCreateTimingGroup(this, WorkingMap, id, timingGroup, EditScreen.SelectedHitObjects.Value), fromLua);
+
+        /// <summary>
+        ///     Removes a non-default editor layer from the map
+        /// </summary>
+        public void RemoveTimingGroup(string id, bool fromLua = false)
+        {
+            if (id != Qua.GlobalScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
+                Perform(new EditorActionRemoveTimingGroup(this, WorkingMap, id, timingGroup, null), fromLua);
+        }
+
+        /// <summary>
+        ///     Changes the name of a non-default editor layer
+        /// </summary>
+        /// <param name="oldId"></param>
+        /// <param name="newId"></param>
+        /// <param name="fromLua"></param>
+        public bool RenameTimingGroup(string oldId, string newId, bool fromLua = false)
+        {
+            if (oldId == Qua.GlobalScrollGroupId
+                || newId == Qua.GlobalScrollGroupId
+                || !WorkingMap.TimingGroups.ContainsKey(oldId)
+                || WorkingMap.TimingGroups.ContainsKey(newId)
+                || !Regex.IsMatch(newId, "^[a-zA-Z0-9_]+$"))
+                return false;
+
+            Perform(new EditorActionRenameTimingGroup(this, WorkingMap, oldId, newId, null), fromLua);
+            return true;
+
+        }
+
+        /// <summary>
+        ///     Changes the editor layer of existing hitobjects
+        /// </summary>
+        /// <param name="timingGroupId"></param>
+        /// <param name="hitObjects"></param>
+        public void MoveHitObjectsToTimingGroup(string timingGroupId, List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionMoveObjectsToTimingGroup(this, WorkingMap, hitObjects, timingGroupId), fromLua);
+
+        /// <summary>
+        ///     Changes the color of a timing group
+        /// </summary>
+        /// <param name="timingGroup"></param>
+        /// <param name="color"></param>
+        public void ChangeTimingGroupColor(TimingGroup timingGroup, Color color, bool fromLua = false)
+        {
+            Perform(new EditorActionChangeTimingGroupColor(this, WorkingMap, timingGroup, color), fromLua);
+        }
 
         /// <summary>
         /// </summary>
@@ -788,6 +879,21 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.ChangeBookmarkOffsetBatch:
                     BookmarkBatchOffsetChanged?.Invoke(this, (EditorActionChangeBookmarkOffsetBatchEventArgs)args);
+                    break;
+                case EditorActionType.CreateTimingGroup:
+                    TimingGroupCreated?.Invoke(this, (EditorTimingGroupCreatedEventArgs)args);
+                    break;
+                case EditorActionType.RemoveTimingGroup:
+                    TimingGroupDeleted?.Invoke(this, (EditorTimingGroupRemovedEventArgs)args);
+                    break;
+                case EditorActionType.RenameTimingGroup:
+                    TimingGroupRenamed?.Invoke(this, (EditorTimingGroupRenamedEventArgs)args);
+                    break;
+                case EditorActionType.ColorTimingGroup:
+                    TimingGroupColorChanged?.Invoke(this, (EditorTimingGroupColorChangedEventArgs)args);
+                    break;
+                case EditorActionType.MoveObjectsToTimingGroup:
+                    HitObjectsMovedToTimingGroup?.Invoke(this, (EditorMoveObjectsToTimingGroupEventArgs)args);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

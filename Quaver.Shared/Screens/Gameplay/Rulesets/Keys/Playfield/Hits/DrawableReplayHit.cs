@@ -74,6 +74,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             }
         }
 
+        private NoteControllerKeys NoteController { get; set; }
+
         /// <summary>
         ///     Computes the hit position and the perfect hit position.
         /// </summary>
@@ -84,25 +86,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             
             var hitStat = HitStat.Value;
             var info = hitStat.HitObject;
+            NoteController = Manager.GlobalGroupController.CreateNoteController(info, false);
             
             if (hitStat.KeyPressType == KeyPressType.Release || 
                 hitStat.KeyPressType == KeyPressType.None && hitStat.Judgement == Judgement.Okay)
             {
-                PerfectPosition = Manager.GetPositionFromTime(info.EndTime);
+                PerfectPosition = Manager.GlobalGroupController.GetPositionFromTime(info.EndTime);
 
                 if (hitStat.KeyPressType == KeyPressType.None)
                     Position = PerfectPosition;
                 else
-                    Position = Manager.GetPositionFromTime(info.EndTime - hitStat.HitDifference);
+                    Position = Manager.GlobalGroupController.GetPositionFromTime(info.EndTime - hitStat.HitDifference);
             }
             else
             {
-                PerfectPosition = Manager.GetPositionFromTime(info.StartTime);
+                PerfectPosition = Manager.GlobalGroupController.GetPositionFromTime(info.StartTime);
 
                 if (hitStat.KeyPressType == KeyPressType.None)
                     Position = PerfectPosition;
                 else
-                    Position = Manager.GetPositionFromTime(info.StartTime - hitStat.HitDifference);
+                    Position = Manager.GlobalGroupController.GetPositionFromTime(info.StartTime - hitStat.HitDifference);
             }
         }
 
@@ -167,40 +170,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
         }
 
         /// <summary>
-        ///     Calculates the screen position offset from the initial track position and current track offset.
-        /// </summary>
-        /// <param name="initial"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
-        private float GetPosition(long initial, long offset) =>
-            (initial - offset) *
-            (ScrollDirection.Equals(ScrollDirection.Down)
-                ? -HitObjectManagerKeys.ScrollSpeed
-                : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding;
-
-        /// <summary>
         ///     Calculates the position of the indicator with a position offset.
         /// </summary>
         /// <returns></returns>
-        private float GetIndicatorPosition(long offset) => LineHitPosition + GetPosition(Position, offset);
+        private float GetIndicatorPosition() => NoteController.GetSpritePosition(LineHitPosition, Position);
 
         /// <summary>
         ///     Calculates the position of the perfect hit with a position offset.
         /// </summary>
         /// <returns></returns>
-        private float GetPerfectPosition(long offset) => LineHitPosition + GetPosition(PerfectPosition, offset);
+        private float GetPerfectPosition() => NoteController.GetSpritePosition(LineHitPosition, PerfectPosition);
 
         /// <summary>
         ///     Updates the sprite positions.
         /// </summary>
-        /// <param name="offset"></param>
-        public void UpdateSpritePositions(long offset)
+        public void UpdateSpritePositions()
         {
             if (HitStat == null)
                 return;
 
-            var indicatorPosition = GetIndicatorPosition(offset);
-            var perfectPosition = GetPerfectPosition(offset);
+            var indicatorPosition = GetIndicatorPosition();
+            var perfectPosition = GetPerfectPosition();
             
             Indicator.Y = indicatorPosition;
             LineToPerfect.Height = Math.Abs(perfectPosition - indicatorPosition);
