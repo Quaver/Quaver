@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -74,14 +75,27 @@ public abstract class NoteControllerKeys : NoteController
     public bool LegacyLNRendering => Manager.LegacyLNRendering;
 
     /// <summary>
+    ///     The structure describing the current positions of the note, via track positions and held positions
+    /// </summary>
+    public NoteState NoteState { get; protected set; }
+
+    /// <summary>
     ///     Y-offset from the origin
     /// </summary>
-    public long InitialTrackPosition { get; protected set; }
+    public long InitialTrackPosition
+    {
+        get => NoteState.InitialTrackPosition;
+        protected set => NoteState = NoteState with { InitialTrackPosition = value };
+    }
 
     /// <summary>
     ///     Position of the LN end sprite.
     /// </summary>
-    public long EndTrackPosition { get; protected set; }
+    public long EndTrackPosition
+    {
+        get => NoteState.EndTrackPosition;
+        protected set => NoteState = NoteState with { EndTrackPosition = value };
+    }
 
     /// <summary>
     ///     Latest position of this object.
@@ -101,13 +115,21 @@ public abstract class NoteControllerKeys : NoteController
     ///     Earliest position of this object, can change while the long note is held.
     ///     Note that this is different from <see cref="Info"/>'s EarliestTrackPosition.
     /// </summary>
-    public long EarliestHeldPosition { get; protected set; }
+    public long EarliestHeldPosition
+    {
+        get => NoteState.EarliestHeldPosition;
+        protected set => NoteState = NoteState with { EarliestHeldPosition = value };
+    }
 
     /// <summary>
     ///     Latest position of this object, can change while the long note is held.
     ///     Note that this is different from <see cref="Info"/>'s LatestTrackPosition.
     /// </summary>
-    public long LatestHeldPosition { get; protected set; }
+    public long LatestHeldPosition
+    {
+        get => NoteState.LatestHeldPosition;
+        protected set => NoteState = NoteState with { LatestHeldPosition = value };
+    }
 
     /// <summary>
     ///     If the long note end should be flipped up-side down
@@ -117,7 +139,10 @@ public abstract class NoteControllerKeys : NoteController
     /// <summary>
     ///     Returns the long note body size
     /// </summary>
-    public abstract float CurrentLongNoteBodySize { get; }
+    public virtual float CurrentLongNoteBodySize => (LatestHeldPosition - EarliestHeldPosition) *
+        TimingGroupController.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
+
+    public abstract void UpdatePositions(double curTime);
 
     public abstract void UpdateLongNoteSize(double curTime);
 

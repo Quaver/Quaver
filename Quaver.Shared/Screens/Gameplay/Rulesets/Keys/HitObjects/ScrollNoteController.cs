@@ -16,9 +16,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private ScrollGroupControllerKeys ScrollGroupController => (ScrollGroupControllerKeys)TimingGroupController;
 
-        public override float CurrentLongNoteBodySize => (LatestHeldPosition - EarliestHeldPosition) *
-            ScrollGroupController.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
-
         public override bool ShouldFlipLongNoteEnd =>
             ScrollGroupController.IsSVNegative(HitObjectInfo.EndTime);
 
@@ -76,9 +73,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
         }
 
+        /// <summary>
+        ///     Initializes <see cref="NoteControllerKeys.EarliestHeldPosition"/> and <see cref="NoteControllerKeys.LatestHeldPosition"/>.
+        ///     Note that we cannot use <see cref="UpdateLongNoteSize"/> as it depends on curTime,
+        ///     and we haven't reached there yet. 
+        /// </summary>
         public override void InitializeLongNoteSize()
         {
             UpdateLongNoteSize(InitialTrackPosition, StartTime);
+        }
+
+        public override void UpdatePositions(double curTime)
+        {
         }
 
         public override void UpdateLongNoteSize(double curTime)
@@ -93,12 +99,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // If we're past the LN start, start from the current position.
             var startPosition = curTime >= StartTime ? offset : InitialTrackPosition;
+            var realTime = Math.Max(curTime, StartTime);
 
             var earliestPosition = Math.Min(startPosition, EndTrackPosition);
             var latestPosition = Math.Max(startPosition, EndTrackPosition);
 
             if (!LegacyLNRendering)
-                SetEarliestAndLatestLongNotes(curTime, ref earliestPosition, ref latestPosition);
+                SetEarliestAndLatestLongNotes(realTime, ref earliestPosition, ref latestPosition);
+
 
             EarliestHeldPosition = earliestPosition;
             LatestHeldPosition = latestPosition;
@@ -117,6 +125,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         private void SetEarliestAndLatestLongNotes(double curTime, ref long earliestPosition, ref long latestPosition)
         {
+            if (SVDirectionChanges == null)
+                return;
             foreach (var change in SVDirectionChanges)
             {
                 if (curTime >= change.StartTime)

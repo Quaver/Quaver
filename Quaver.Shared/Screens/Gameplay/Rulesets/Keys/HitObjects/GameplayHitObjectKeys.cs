@@ -367,16 +367,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void UpdateSpritePositions(double curTime)
         {
+            Info.UpdatePositions(curTime);
             // Update Sprite position with regards to LN's state
             //
             // If the LN end is not drawn, don't move the LN start up with time since it ends up sliding above the LN in
             // the end.
             float spritePosition;
 
+            UpdateLongNoteSize(curTime);
             if (Info.State == HitObjectState.Held && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
-                UpdateLongNoteSize(curTime);
-
                 if (curTime > Info.StartTime)
                     spritePosition = HitPosition;
                 else

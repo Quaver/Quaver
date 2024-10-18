@@ -206,7 +206,7 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     ///     Update Current position of the hit objects
     /// </summary>
     /// <param name="audioTime"></param>
-    public override void UpdateCurrentTrackPosition()
+    public override sealed void UpdateCurrentTrackPosition()
     {
         // Update SV index if necessary. Afterwards update Position.
         var scrollVelocities = ScrollGroup.ScrollVelocities;
