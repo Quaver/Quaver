@@ -187,7 +187,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 {
                     foreach (var scrollVelocity in scrollGroup.ScrollVelocities)
                     {
-                        Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, scrollVelocity));
+                        Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, scrollVelocity, timingGroup));
                     }
                 }
             }
@@ -260,7 +260,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="e"></param>
         private void OnScrollVelocityAdded(object sender, EditorScrollVelocityAddedEventArgs e)
         {
-            Lines.InsertSorted(new DrawableEditorLineScrollVelocity(Playfield, e.ScrollVelocity));
+            Lines.InsertSorted(new DrawableEditorLineScrollVelocity(Playfield, e.ScrollVelocity, e.TimingGroup));
             InitializeLinePool();
         }
 
@@ -270,7 +270,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="e"></param>
         private void OnScrollVelocityBatchAdded(object sender, EditorScrollVelocityBatchAddedEventArgs e)
         {
-            Lines.InsertSorted(e.ScrollVelocities.Select(sv => new DrawableEditorLineScrollVelocity(Playfield, sv)));
+            Lines.InsertSorted(e.ScrollVelocities.Select(sv => new DrawableEditorLineScrollVelocity(Playfield, sv, e.ScrollGroup)));
             InitializeLinePool();
         }
 
@@ -462,7 +462,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 return;
 
             Lines.InsertSorted(scrollGroup.ScrollVelocities.Select(sv =>
-                new DrawableEditorLineScrollVelocity(Playfield, sv)));
+                new DrawableEditorLineScrollVelocity(Playfield, sv, scrollGroup)));
             InitializeLinePool();
         }
     }
