@@ -40,31 +40,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public static float TrackRounding { get; } = 100;
 
         /// <summary>
-        ///     The speed at which objects travel across the screen.
-        /// </summary>
-        public static float ScrollSpeed
-        {
-            get
-            {
-                var speed = ConfigManager.ScrollSpeed4K;
-
-                if (MapManager.Selected.Value.Qua != null)
-                    speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
-
-                var scalingFactor = QuaverGame.SkinScalingFactor;
-
-                var game = GameBase.Game as QuaverGame;
-
-                if (game?.CurrentScreen is IHasLeftPanel)
-                    scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH) / 1366f;
-
-                var scrollSpeed = (speed.Value / 10f) / (20f * AudioEngine.Track.Rate) * scalingFactor * WindowManager.BaseToVirtualRatio;
-
-                return scrollSpeed;
-            }
-        }
-
-        /// <summary>
         ///     Reference to the ruleset this HitObject manager is for.
         /// </summary>
         public GameplayRulesetKeys Ruleset { get; }
@@ -90,73 +65,42 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public bool LegacyLNRendering => Map.LegacyLNRendering;
 
         /// <summary>
-        ///     Used for constructing <see cref="HitObjectQueueLanes"/>
-        /// </summary>
-        public List<GameplayHitObjectKeysInfo> HitObjectInfos { get; private set; }
-
-        /// <summary>
-        ///     Hitobject info queues used for input and scoring.
-        ///     One queue for each lane.
-        /// </summary>
-        public List<Queue<GameplayHitObjectKeysInfo>> HitObjectQueueLanes { get; set; }
-
-        /// <summary>
-        ///     Queues for held long notes used for input and scoring.
-        ///     One queue for each lane.
-        /// </summary>
-        public List<Queue<GameplayHitObjectKeysInfo>> HeldLongNoteLanes { get; private set; }
-
-        /// <summary>
         ///     Pools of reusable GameplayHitObjectKeys's for drawing hitobjects on screen.
         ///     One pool for each lane.
         /// </summary>
         public List<ConcurrentBag<GameplayHitObjectKeys>> HitObjectPools { get; private set; }
 
         /// <summary>
+        ///     Used for constructing <see cref="HitObjectQueueLanes"/>
+        /// </summary>
+        public List<NoteControllerKeys> HitObjectInfos { get; private set; }
+
+        /// <summary>
+        ///     Hitobject info queues used for input and scoring.
+        ///     One queue for each lane.
+        /// </summary>
+        public List<Queue<NoteControllerKeys>> HitObjectQueueLanes { get; set; }
+
+        /// <summary>
+        ///     Queues for held long notes used for input and scoring.
+        ///     One queue for each lane.
+        /// </summary>
+        public List<Queue<NoteControllerKeys>> HeldLongNoteLanes { get; private set; }
+
+        /// <summary>
         ///      All hitobjects that are currently rendered on screen.
         /// </summary>
-        public HashSet<GameplayHitObjectKeysInfo> RenderedHitObjectInfos { get; private set; }
-
-        /// <summary>
-        ///     Allows for quickly finding hitobjects close to some position.
-        /// </summary>
-        public SpatialHashMap<GameplayHitObjectKeysInfo> SpatialHashMap { get; private set; }
-
-        /// <summary>
-        ///     Really long LNs that would take up all the memory in the universe if they were added to the spatial hash map.
-        /// </summary>
-        public HashSet<GameplayHitObjectKeysInfo> LongLNs { get; private set; }
+        public HashSet<NoteControllerKeys> RenderedHitObjectInfos { get; private set; }
 
         /// <summary>
         ///     Used by <see cref="UpdateHitObjects"/> to avoid instantiating a new hash set every update
         /// </summary>
-        public HashSet<GameplayHitObjectKeysInfo> InRangeHitObjectInfos { get; private set; }
-
-        /// <summary>
-        ///     List of added hit object positions calculated from SV. Used for optimization
-        /// </summary>
-        public List<long> VelocityPositionMarkers { get; set; } = new List<long>();
+        public HashSet<NoteControllerKeys> InRangeHitObjectInfos { get; private set; }
 
         /// <summary>
         ///     Loose upper bound of the number of hitobjects on screen at one time.
         /// </summary>
         public int MaxHitObjectCount { get; private set; }
-
-        /// <summary>
-        ///     Only objects within this distance of the <see cref="CurrentTrackPosition"/> are rendered.
-        /// </summary>
-        public long RenderThreshold => (long)(WindowManager.Height * TrackRounding / ScrollSpeed);
-
-        /// <summary>
-        ///     Current position of the receptors
-        /// </summary>
-        public long CurrentTrackPosition { get; private set; }
-
-        /// <summary>
-        ///     Current SV index used for optimization when using UpdateCurrentPosition()
-        ///     Default value is 0. "0" means that Current time has not passed first SV point yet.
-        /// </summary>
-        private int CurrentSvIndex { get; set; } = 0;
 
         /// <summary>
         ///     Current audio position relative to start of audio, with song and user offset values applied.
@@ -309,6 +253,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
         }
 
+        public Dictionary<string, TimingGroupControllerKeys> TimingGroupControllers { get; set; } = new();
+
+        public TimingGroupControllerKeys GlobalGroupController => TimingGroupControllers[Qua.GlobalScrollGroupId];
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -322,8 +270,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             KeyCount = Map.GetKeyCount(Map.HasScratchKey);
 
             // Initialize SV
-            InitializePositionMarkers();
-            UpdateCurrentTrackPosition();
+
+            foreach (var (id, timingGroup) in Map.TimingGroups)
+            {
+                if (TimingGroupControllers.TryGetValue(id, out TimingGroupControllerKeys timingGroupController))
+                    continue;
+                if (timingGroup is ScrollGroup)
+                    timingGroupController = new ScrollGroupControllerKeys(timingGroup, Map, this);
+                else
+                    throw new InvalidOperationException();
+
+                timingGroupController.Initialize();
+                TimingGroupControllers.Add(id, timingGroupController);
+            }
 
             InitializeHitStats();
 
@@ -379,49 +338,48 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="map"></param>
         private void InitializeHitObjectInfo(Qua map)
         {
-            HitObjectInfos = map.HitObjects.Select(info => new GameplayHitObjectKeysInfo(info, this)).ToList();
+            HitObjectInfos = map.HitObjects
+                .Select(info =>
+                {
+                    var groupController = TimingGroupControllers.GetValueOrDefault(info.TimingGroup, GlobalGroupController);
+                    return groupController.CreateNoteController(info);
+                }).ToList();
 
-            // Using cell size equal to render area guarantees a consistent two cells accessed per update
-            SpatialHashMap = new SpatialHashMap<GameplayHitObjectKeysInfo>(2 * RenderThreshold);
-            LongLNs = new HashSet<GameplayHitObjectKeysInfo>();
-
-            foreach (var info in HitObjectInfos)
+            // Create note controllers for fake hitobjects
+            // They won't count as an actual note, but will be rendered as one
+            foreach ((_, TimingGroupControllerKeys timingGroupController) in TimingGroupControllers)
             {
-                if (!info.IsLongNote)
+                foreach (var fakeHitObject in timingGroupController.TimingGroup.FakeHitObjects)
                 {
-                    SpatialHashMap.Add(info.InitialTrackPosition, info);
-                }
-                else
-                {
-                    // Long LNs need to be added to multiple cells.
-                    // If they're _really_ long, they need to be added a _really_ large number of times to the spatial hash map,
-                    // which would require an insane amount of memory, so don't do that.
-                    // Negative length LNs (such as those in Cheat Code) cause the same problem.
-                    long length = info.LatestTrackPosition - info.EarliestTrackPosition;
-                    if (length > SpatialHashMap.CellSize * 10 || length < 0)
-                    {
-                        LongLNs.Add(info);
-                    }
-                    else
-                    {
-                        SpatialHashMap.Add(info.EarliestTrackPosition, info.LatestTrackPosition, info);
-                    }
+                    timingGroupController.CreateNoteController(fakeHitObject);
                 }
             }
 
+            TimingGroupControllers.ForEach(pair => pair.Value.GenerateFromNoteControllers());
+
             // find an upper bound for number of hitobjects on screen at one time
             // each frame will always use the contents of two cells, so multiply the max by two for an approximate upper bound
-            MaxHitObjectCount = HitObjectInfos.Count > 0 ? SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max() * 2 : 0;
+            MaxHitObjectCount = 0;
+            foreach (var (id, timingGroupController) in TimingGroupControllers)
+            {
+                if (timingGroupController.SpatialHashMap.Dictionary.Dictionary.Count == 0)
+                    continue;
 
-            HitObjectQueueLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
-            HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeysInfo>>(KeyCount);
-            RenderedHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>(MaxHitObjectCount);
-            InRangeHitObjectInfos = new HashSet<GameplayHitObjectKeysInfo>(MaxHitObjectCount);
+                MaxHitObjectCount = Math.Max(MaxHitObjectCount,
+                    timingGroupController.SpatialHashMap.Dictionary.Dictionary.Select(pair => pair.Value.Count).Max());
+            }
+
+            MaxHitObjectCount *= 2;
+
+            HitObjectQueueLanes = new List<Queue<NoteControllerKeys>>(KeyCount);
+            HeldLongNoteLanes = new List<Queue<NoteControllerKeys>>(KeyCount);
+            RenderedHitObjectInfos = new HashSet<NoteControllerKeys>(MaxHitObjectCount);
+            InRangeHitObjectInfos = new HashSet<NoteControllerKeys>(MaxHitObjectCount);
 
             for (int i = 0; i < KeyCount; i++)
             {
-                HitObjectQueueLanes.Add(new Queue<GameplayHitObjectKeysInfo>(HitObjectInfos.Count));
-                HeldLongNoteLanes.Add(new Queue<GameplayHitObjectKeysInfo>(1));
+                HitObjectQueueLanes.Add(new Queue<NoteControllerKeys>(HitObjectInfos.Count));
+                HeldLongNoteLanes.Add(new Queue<NoteControllerKeys>(1));
             }
         }
 
@@ -460,7 +418,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Unlink GameplayHitObjectKeys from GameplayHitObjectKeysInfo and return it to the pool
         /// </summary>
-        private void UnlinkInfo(GameplayHitObjectKeysInfo info)
+        private void UnlinkInfo(NoteControllerKeys info)
         {
             if (info.HitObject is null)
             {
@@ -513,14 +471,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="laneIndex"></param>
         /// <returns></returns>
-        public GameplayHitObjectKeysInfo GetClosestTap(int lane) => HitObjectQueueLanes[lane].Count > 0 ? HitObjectQueueLanes[lane].Peek() : null;
+        public NoteControllerKeys GetClosestTap(int lane) => HitObjectQueueLanes[lane].Count > 0 ? HitObjectQueueLanes[lane].Peek() : null;
 
         /// <summary>
         ///     Returns the earliest active Long Note
         /// </summary>
         /// <param name="laneIndex"></param>
         /// <returns></returns>
-        public GameplayHitObjectKeysInfo GetClosestRelease(int lane) => HeldLongNoteLanes[lane].Count > 0 ? HeldLongNoteLanes[lane].Peek() : null;
+        public NoteControllerKeys GetClosestRelease(int lane) => HeldLongNoteLanes[lane].Count > 0 ? HeldLongNoteLanes[lane].Peek() : null;
 
         /// <summary>
         ///     Determine which hitobjects to render and update rendered hitobjects' sprite positions.
@@ -528,9 +486,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void UpdateHitObjects()
         {
             // stop rendering hitobjects outside range
-            bool removeIfNotVisible(GameplayHitObjectKeysInfo info)
+            bool removeIfNotVisible(NoteControllerKeys info)
             {
-                if (info.State == HitObjectState.Removed || !HitObjectInRange(info))
+                if (info.State == HitObjectState.Removed || !info.InRange())
                 {
                     // remove dead objects when they become out of range
                     if (info.State == HitObjectState.Dead)
@@ -548,18 +506,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // start rendering new hitobjects in range
             InRangeHitObjectInfos.Clear();
 
-            // find hitobjects in all visible cells
-            for (long position = CurrentTrackPosition - RenderThreshold; position < CurrentTrackPosition + RenderThreshold; position += SpatialHashMap.CellSize)
+            foreach (var (_, controllerKeys) in TimingGroupControllers)
             {
-                InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(position));
+                controllerKeys.UnionInRangeHitObjectInfos(InRangeHitObjectInfos);
             }
-            InRangeHitObjectInfos.UnionWith(SpatialHashMap.GetValues(CurrentTrackPosition + RenderThreshold));
-
-            // really long LNs aren't added to the spatial hash map to avoid using all the memory in the universe
-            InRangeHitObjectInfos.UnionWith(LongLNs);
 
             // filter out hitobjects that aren't visible
-            InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !HitObjectInRange(info));
+            InRangeHitObjectInfos.RemoveWhere(info => info.HitObject != null || info.State == HitObjectState.Removed || !info.InRange());
 
             foreach (var info in InRangeHitObjectInfos)
             {
@@ -574,36 +527,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // update sprite positions
             foreach (var info in RenderedHitObjectInfos)
             {
-                info.HitObject.UpdateSpritePositions(CurrentTrackPosition, CurrentVisualAudioOffset);
-            }
-        }
-
-        /// <summary>
-        ///     Determine if the hitobject is inside rendering range.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns>true if the hitobject should be rendered, otherwise false.</returns>
-        private bool HitObjectInRange(GameplayHitObjectKeysInfo info)
-        {
-            if (!info.IsLongNote)
-            {
-                return Math.Abs(info.InitialTrackPosition - CurrentTrackPosition) <= RenderThreshold;
-            }
-            else
-            {
-                if (Math.Abs(info.EarliestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
-                    return true;
-
-                if (Math.Abs(info.LatestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
-                    return true;
-
-                if (info.EarliestTrackPosition <= CurrentTrackPosition - RenderThreshold && CurrentTrackPosition - RenderThreshold <= info.LatestTrackPosition)
-                    return true;
-
-                if (info.EarliestTrackPosition <= CurrentTrackPosition + RenderThreshold && CurrentTrackPosition + RenderThreshold <= info.LatestTrackPosition)
-                    return true;
-
-                return false;
+                info.HitObject.UpdateSpritePositions(CurrentVisualAudioOffset);
             }
         }
 
@@ -733,14 +657,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             foreach (var info in RenderedHitObjectInfos)
             {
-                info.HitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualAudioOffset);
+                info.HitObject.ForceUpdateLongnote(CurrentVisualAudioOffset);
             }
 
             foreach (var lane in HeldLongNoteLanes)
             {
                 foreach (var info in lane)
                 {
-                    info.HitObject.ForceUpdateLongnote(CurrentTrackPosition, CurrentVisualAudioOffset);
+                    info.HitObject.ForceUpdateLongnote(CurrentVisualAudioOffset);
                 }
             }
         }
@@ -749,125 +673,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Changes a pool object to a long note that is held at the receptors.
         /// </summary>
         /// <param name="index"></param>
-        public void ChangeHitObjectToHeld(GameplayHitObjectKeysInfo info)
+        public void ChangeHitObjectToHeld(NoteControllerKeys info)
         {
             // Add to the held long notes.
             info.State = HitObjectState.Held;
             HeldLongNoteLanes[info.Lane - 1].Enqueue(info);
-        }
-
-        /// <summary>
-        ///     Create SV-position points for computation optimization
-        /// </summary>
-        private void InitializePositionMarkers()
-        {
-            if (Map.SliderVelocities.Count == 0)
-                return;
-
-            // Compute for Change Points
-            var position = (long)(Map.SliderVelocities[0].StartTime * Map.InitialScrollVelocity * TrackRounding);
-            VelocityPositionMarkers.Add(position);
-
-            for (var i = 1; i < Map.SliderVelocities.Count; i++)
-            {
-                position += (long)((Map.SliderVelocities[i].StartTime - Map.SliderVelocities[i - 1].StartTime)
-                                   * Map.SliderVelocities[i - 1].Multiplier * TrackRounding);
-                VelocityPositionMarkers.Add(position);
-            }
-        }
-
-        /// <summary>
-        ///     Get Hit Object (End/Start) position from audio time (Unoptimized.)
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public long GetPositionFromTime(double time)
-        {
-            int i;
-            for (i = 0; i < Map.SliderVelocities.Count; i++)
-            {
-                if (time < Map.SliderVelocities[i].StartTime)
-                    break;
-            }
-
-            return GetPositionFromTime(time, i);
-        }
-
-        /// <summary>
-        ///     Get Hit Object (End/Start) position from audio time and SV Index.
-        ///     Index used for optimization
-        /// </summary>
-        /// <param name="time"></param>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public long GetPositionFromTime(double time, int index)
-        {
-            // NoSV Modifier is toggled on
-            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
-                return (long)(time * TrackRounding);
-
-            if (index == 0)
-            {
-                // Time starts before the first SV point
-                return (long) (time * Map.InitialScrollVelocity * TrackRounding);
-            }
-
-            index--;
-
-            var curPos = VelocityPositionMarkers[index];
-            curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
-            return curPos;
-        }
-
-        /// <summary>
-        ///     Get SV direction changes between startTime and endTime.
-        /// </summary>
-        /// <param name="startTime"></param>
-        /// <param name="endTime"></param>
-        /// <returns></returns>
-        public List<SVDirectionChange> GetSVDirectionChanges(double startTime, double endTime)
-        {
-            var changes = new List<SVDirectionChange>();
-
-            if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
-                return changes;
-
-            // Find the first SV index.
-            int i;
-            for (i = 0; i < Map.SliderVelocities.Count; i++)
-            {
-                if (startTime < Map.SliderVelocities[i].StartTime)
-                    break;
-            }
-
-            bool forward;
-            if (i == 0)
-                forward = Map.InitialScrollVelocity >= 0;
-            else
-                forward = Map.SliderVelocities[i - 1].Multiplier >= 0;
-
-            // Loop over SV changes between startTime and endTime.
-            for (; i < Map.SliderVelocities.Count && endTime >= Map.SliderVelocities[i].StartTime; i++)
-            {
-                var multiplier = Map.SliderVelocities[i].Multiplier;
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                if (multiplier == 0)
-                    // Zero speed means we're staying in the same spot.
-                    continue;
-
-                if (forward == (multiplier > 0))
-                    // The direction hasn't changed.
-                    continue;
-
-                forward = multiplier > 0;
-                changes.Add(new SVDirectionChange
-                {
-                    StartTime = Map.SliderVelocities[i].StartTime,
-                    Position = VelocityPositionMarkers[i]
-                });
-            }
-
-            return changes;
         }
 
         /// <summary>
@@ -914,13 +724,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                                    - MapManager.Selected.Value.LocalOffset - MapManager.Selected.Value.OnlineOffset;
 
             CurrentVisualAudioOffset = CurrentAudioOffset + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate;
-
-            // Update SV index if necessary. Afterwards update Position.
-            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentVisualAudioOffset >= Map.SliderVelocities[CurrentSvIndex].StartTime)
+            foreach (var (key, controllerKeys) in TimingGroupControllers)
             {
-                CurrentSvIndex++;
+                controllerKeys.UpdateCurrentTrackPosition();
             }
-            CurrentTrackPosition = GetPositionFromTime(CurrentVisualAudioOffset, CurrentSvIndex);
         }
 
         /// <summary>
@@ -928,7 +735,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
-            CurrentSvIndex = 0;
+            foreach ((_, TimingGroupControllerKeys controller) in TimingGroupControllers)
+            {
+                controller.HandleSkip();
+            }
+
             UpdateCurrentTrackPosition();
 
             ResetHitObjectInfo();
