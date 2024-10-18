@@ -296,6 +296,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 case LeaderboardType.All:
                     scores = new ScoreFetcherAll().Fetch(map);
                     break;
+                case LeaderboardType.Clan:
+                    scores = new ScoreFetcherClan().Fetch(map);
+                    break;
                 default:
                     scores = new FetchedScoreStore();
                     break;
