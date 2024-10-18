@@ -1,14 +1,8 @@
 using System;
-using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
-using Quaver.API.Maps;
-using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Edit.Actions;
-using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
-using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -27,6 +21,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         protected Sprite RandomButton { get; set; }
 
         private Random RNG { get; } = new Random();
+
+        private Color NewColor { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -48,7 +44,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// </summary>
         private void CreateTextbox()
         {
-            var color = new Color(255, 255, 255);
+            var color = NewColor;
             var val = $"{color.R},{color.G},{color.B}";
 
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.86f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
@@ -66,8 +62,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             Textbox.OnStoppedTyping += s =>
             {
                 var col = ParseColor(s);
-
-                UpdateColor(col);
+                if (col.HasValue)
+                    UpdateColor(col.Value);
             };
 
             Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
@@ -81,7 +77,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 Alignment = Alignment.BotRight,
                 Y = Textbox.Y,
                 X = -Textbox.X,
-                Tint = new Color(255, 255, 255),
+                Tint = NewColor,
                 Size = new ScalableVector2(Textbox.Height, Textbox.Height)
             };
 
@@ -106,6 +102,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
         public void UpdateColor(Color c)
         {
+            NewColor = c;
             ColorBox.Tint = c;
 
             Textbox.RawText = $"{c.R},{c.G},{c.B}";
@@ -123,7 +120,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             base.Close();
         }
 
-        private Color ParseColor(string c)
+        private Color? ParseColor(string c)
         {
             var split = c.Split(',');
 
@@ -133,11 +130,18 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             }
             catch (Exception)
             {
-                return new Color(255, 255, 255);
+                return null;
             }
         }
 
-        private void OnSubmit(string s) => OnColorChange(ParseColor(s));
+        private void OnSubmit(string s)
+        {
+            var color = ParseColor(s);
+            if (!color.HasValue)
+                return;
+
+            OnColorChange(color.Value);
+        }
 
         protected abstract void OnColorChange(Color newColor);
     }
