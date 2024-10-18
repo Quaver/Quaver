@@ -32,12 +32,15 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Edit.UI;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay;
@@ -294,6 +297,20 @@ namespace Quaver.Shared.Screens.Edit
         private HitObjectInfo[] heldLivemapHitObjectInfos;
 
         /// <summary>
+        ///     The scroll group id to place SVs to if the scroll group provided to <see cref="ActionManager"/> is null
+        /// </summary>
+        public string SelectedScrollGroupId { get; set; } = Qua.GlobalScrollGroupId;
+
+        /// <summary>
+        ///     The scroll group corresponding to <see cref="SelectedScrollGroupId"/>
+        /// </summary>
+        public ScrollGroup SelectedScrollGroup =>
+            WorkingMap.TimingGroups.TryGetValue(SelectedScrollGroupId, out var timingGroup) &&
+            timingGroup is ScrollGroup scrollGroup
+                ? scrollGroup
+                : WorkingMap.GlobalScrollGroup;
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -333,12 +350,38 @@ namespace Quaver.Shared.Screens.Edit
 
             SkinManager.SkinLoaded += OnSkinLoaded;
             GameBase.Game.Window.FileDropped += OnFileDropped;
+            ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
+            ActionManager.TimingGroupDeleted += ActionManagerOnTimingGroupDeleted;
 
             InitializeDiscordRichPresence();
             AddFileWatcher();
 
             View = new EditScreenView(this);
             InputManager = new EditorInputManager(this);
+        }
+
+        private void ActionManagerOnTimingGroupDeleted(object sender, EditorTimingGroupRemovedEventArgs e)
+        {
+            foreach (var hitObjectInfo in Clipboard)
+            {
+                if (hitObjectInfo.TimingGroup == e.Id)
+                    hitObjectInfo.TimingGroup = Qua.GlobalScrollGroupId;
+            }
+
+            if (e.Id == SelectedScrollGroupId)
+                SelectedScrollGroupId = Qua.GlobalScrollGroupId;
+        }
+
+        private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
+        {
+            foreach (var hitObjectInfo in Clipboard)
+            {
+                if (hitObjectInfo.TimingGroup == e.OldId)
+                    hitObjectInfo.TimingGroup = e.NewId;
+            }
+
+            if (e.OldId == SelectedScrollGroupId)
+                SelectedScrollGroupId = e.NewId;
         }
 
         /// <inheritdoc />
@@ -385,6 +428,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             Track.Seeked -= OnTrackSeeked;
             GameBase.Game.Window.FileDropped -= OnFileDropped;
+            ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
+            ActionManager.TimingGroupDeleted -= ActionManagerOnTimingGroupDeleted;
+
             BackupScheduler?.Dispose();
             Track?.Dispose();
             Skin?.Value?.Dispose();
@@ -1227,7 +1273,10 @@ namespace Quaver.Shared.Screens.Edit
                     StartTime = h.StartTime + difference,
                     EditorLayer = h.EditorLayer,
                     HitSound = h.HitSound,
-                    Lane = h.Lane
+                    Lane = h.Lane,
+                    TimingGroup = WorkingMap.TimingGroups.ContainsKey(h.TimingGroup)
+                        ? h.TimingGroup
+                        : Qua.GlobalScrollGroupId
                 };
 
                 if (h.IsLongNote)
@@ -1791,7 +1840,7 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     StartTime = (float)Track.Time,
                     Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
-                });
+                }, null);
             }
             else
             {

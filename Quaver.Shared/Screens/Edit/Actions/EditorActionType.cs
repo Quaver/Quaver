@@ -47,6 +47,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         EditBookmark,
         RemoveBookmark,
         RemoveBookmarkBatch,
-        ChangeBookmarkOffsetBatch
+        ChangeBookmarkOffsetBatch,
+        CreateTimingGroup,
+        RemoveTimingGroup,
+        RenameTimingGroup,
+        MoveObjectsToTimingGroup,
+        ColorTimingGroup,
+        AddTimingGroupBatch,
+        RemoveTimingGroupBatch
     }
 }
