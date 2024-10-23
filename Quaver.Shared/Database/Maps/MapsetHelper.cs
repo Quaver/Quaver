@@ -733,7 +733,12 @@ namespace Quaver.Shared.Database.Maps
 
                     return CompareValues(nps, valNps, operatorKind, false);
                 case SearchFilterOption.Length:
-                    var valLength = (TimeSpan)searchQuery.Value.Value!;
+                    var valLength = searchQuery.Value.Value switch
+                    {
+                        TimeSpan timeSpan => timeSpan,
+                        int seconds => TimeSpan.FromSeconds(seconds),
+                        _ => throw new InvalidOperationException()
+                    };
                     return CompareValues(map.SongLength / 1000f, valLength.TotalSeconds, operatorKind, false);
                 case SearchFilterOption.TimesPlayed:
                     var valTimesPlayed = (int)searchQuery.Value.Value!;
