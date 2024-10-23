@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;

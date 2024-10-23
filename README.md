@@ -1,6 +1,6 @@
 # Quaver
 
-[![Build Status](https://travis-ci.com/Quaver/Quaver.svg?branch=develop)](https://travis-ci.com/Quaver/Quaver) [![CodeFactor](https://www.codefactor.io/repository/github/quaver/quaver/badge)](https://www.codefactor.io/repository/github/quaver/quaver) [![license](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-blue)](https://github.com/Quaver/Quaver/blob/ui-redesign/LICENSE)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Quaver/Quaver/dotnet.yml)](https://github.com/Quaver/Quaver/actions/workflows/dotnet.yml) [![CodeFactor](https://www.codefactor.io/repository/github/quaver/quaver/badge)](https://www.codefactor.io/repository/github/quaver/quaver) [![license](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-blue)](https://github.com/Quaver/Quaver/blob/ui-redesign/LICENSE)
 
 **Quaver** is a community-driven and open-source competitive vertical scrolling rhythm game with two game modes and online leaderboards. It also features an in-game editor and a flexible multiplayer mode.
 
@@ -11,7 +11,7 @@ It is also available on [Steam](https://store.steampowered.com/app/980610/Quaver
 Getting started with **Quaver** development is extremely easy.
 
 * Install the [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-* Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Quaver/Quaver`
+* Clone the Quaver repository and its submodules `git -c submodule."Quaver.Server.Client".update=none clone https://github.com/Quaver/Quaver --recurse-submodules`
 * **Have Steam open and running**
 * Build & run Quaver with `dotnet run --project Quaver`
 

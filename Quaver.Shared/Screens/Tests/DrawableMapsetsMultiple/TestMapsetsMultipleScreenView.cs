@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple
         public TestMapsetsMultipleScreenView(TestMapsetsMultipleScreen screen) : base(screen)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new SelectJukebox {Parent = Container};
+            new SelectJukebox { Parent = Container };
 
             Rng = new Random();
 

@@ -11,7 +11,7 @@ using System.IO;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Replays;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -146,7 +146,7 @@ namespace Quaver.Shared.Screens.Loading
                 // If loading gameplay.
                 else
                 {
-                    var randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
+                    var randomizeModifier = (ModRandomize)ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
                     randomizeModifier.GenerateSeed();
                     seed = randomizeModifier.Seed;
                 }

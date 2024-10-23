@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
             base.Destroy();
         }
 
-        public void Refresh() => CreateBars();
+        public void Refresh() => ScheduleCreateBars();
 
         private void OnHitObjectPlaced(object sender, EditorHitObjectPlacedEventArgs e) => Refresh();
 

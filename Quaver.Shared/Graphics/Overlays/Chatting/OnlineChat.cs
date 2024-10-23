@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -125,7 +122,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         public void Close()
         {
             ClearAnimations();
-            MoveToY((int) Height + 10, Easing.OutQuint, 500);
+            MoveToY((int)Height + 10, Easing.OutQuint, 500);
             IsOpen = false;
         }
 
@@ -172,7 +169,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// <summary>
         /// </summary>
         private void CreateChatChannelList()
-            => ChannelList = new ChatChannelList(ActiveChannel, new ScalableVector2(250, Height)) {Parent = this};
+            => ChannelList = new ChatChannelList(ActiveChannel, new ScalableVector2(250, Height)) { Parent = this };
 
         /// <summary>
         /// </summary>
@@ -314,7 +311,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
 
             foreach (var message in channel.Messages)
             {
-                var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) message.Time);
+                var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)message.Time);
                 var time = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";
 
                 messageStr.AppendLine($"[{time}] {message.SenderName}: {message.Message}");

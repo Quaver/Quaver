@@ -8,26 +8,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
 using Microsoft.Xna.Framework;
-using Quaver.API.Enums;
-using Quaver.API.Helpers;
-using Quaver.API.Maps.Processors.Rating;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Config;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Wobble;
-using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.Animations;
-using Wobble.Graphics.Sprites;
-using Wobble.Logging;
 using Wobble.Window;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
 

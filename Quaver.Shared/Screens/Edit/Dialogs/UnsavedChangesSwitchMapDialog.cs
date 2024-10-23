@@ -42,7 +42,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             YesButton.X -= 80;
             NoButton.X = -YesButton.X;
         }
-        
+
         public override void Close()
         {
             YellowNoButton.IsClickable = false;

@@ -1,5 +1,5 @@
 using System;
-using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Server.Client.Objects.Twitch;
 
 namespace Quaver.Shared.Database.Maps
 {

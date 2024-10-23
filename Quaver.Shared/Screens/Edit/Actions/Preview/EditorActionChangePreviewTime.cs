@@ -1,10 +1,12 @@
 using System;
+using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using TagLib.Matroska;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Preview
 {
+    [MoonSharpUserData]
     public class EditorActionChangePreviewTime : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangePreviewTime;

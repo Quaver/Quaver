@@ -31,29 +31,30 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
 
         /// <summary>
         /// </summary>
-        private List<int> Snaps { get; }
+        public List<int> Snaps { get; }
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjectsToResnap { get; }
+        public List<HitObjectInfo> HitObjectsToResnap { get; }
 
         /// <summary>
         ///     The original and new time(s) for each note
         /// </summary>
-        private readonly Dictionary<HitObjectInfo, NoteAdjustment> noteTimeAdjustments =
+        public Dictionary<HitObjectInfo, NoteAdjustment> NoteTimeAdjustments { get; } =
             new Dictionary<HitObjectInfo, NoteAdjustment>();
 
         /// <summary>
         /// </summary>
         public bool ShowNotif { get; }
 
-        private struct NoteAdjustment
+        [MoonSharpUserData]
+        public readonly struct NoteAdjustment
         {
-            public int OriginalStartTime;
-            public int OriginalEndTime;
-            public int NewStartTime;
-            public int NewEndTime;
-            public bool IsLongNote;
+            public readonly int OriginalStartTime;
+            public readonly int OriginalEndTime;
+            public readonly int NewStartTime;
+            public readonly int NewEndTime;
+            public readonly bool IsLongNote;
 
             public NoteAdjustment(int originalStartTime, int originalEndTime, HitObjectInfo note)
             {
@@ -118,7 +119,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
                 var adjustment = new NoteAdjustment(originalStartTime, originalEndTime, note);
                 if (adjustment.NoteWasMoved)
                 {
-                    noteTimeAdjustments.Add(note, adjustment);
+                    NoteTimeAdjustments.Add(note, adjustment);
                     resnapCount++;
                 }
             }
@@ -200,7 +201,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
         [MoonSharpVisible(false)]
         public void Undo()
         {
-            foreach (var change in noteTimeAdjustments)
+            foreach (var change in NoteTimeAdjustments)
             {
                 var note = change.Key;
                 var adjustment = change.Value;
@@ -213,12 +214,12 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
 
             if (ShowNotif)
             {
-                var offsnapCount = noteTimeAdjustments.Values.Count(x => x.StartTimeWasChanged || x.EndTimeWasChanged);
+                var offsnapCount = NoteTimeAdjustments.Values.Count(x => x.StartTimeWasChanged || x.EndTimeWasChanged);
                 var notifMessage = $"Unsnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
                 NotificationManager.Show(NotificationLevel.Info, notifMessage);
             }
 
-            noteTimeAdjustments.Clear();
+            NoteTimeAdjustments.Clear();
         }
     }
 }

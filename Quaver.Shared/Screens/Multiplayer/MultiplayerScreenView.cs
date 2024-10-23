@@ -3,8 +3,8 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             CreateHeader();
             CreateFooter();
 
-            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
+            Visualizer = new MenuAudioVisualizer((int)WindowManager.Width, 400, 150, 5)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
@@ -182,7 +182,8 @@ namespace Quaver.Shared.Screens.Multiplayer
         private void CreateHeader()
         {
             Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "MULTIPLAYER", "GAME",
-                "play a match in real-time with others", Colors.MainAccent) { Parent = Container };
+                "play a match in real-time with others", Colors.MainAccent)
+            { Parent = Container };
 
             Header.Y = -Header.Height;
             Header.MoveToY(0, Easing.OutQuint, 600);
@@ -220,7 +221,7 @@ namespace Quaver.Shared.Screens.Multiplayer
 
         /// <summary>
         /// </summary>
-        private void CreateMap() => Map = new MultiplayerMap((MultiplayerScreen) Screen, MultiplayerScreen.Game)
+        private void CreateMap() => Map = new MultiplayerMap((MultiplayerScreen)Screen, MultiplayerScreen.Game)
         {
             Parent = Container,
             Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 11)
@@ -247,7 +248,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             Position = new ScalableVector2(Map.X, Map.Y + Map.Height + 20)
         };
 
-         /// <summary>
+        /// <summary>
         ///     Called when a user has joined the multiplayer game
         /// </summary>
         /// <param name="sender"></param>
@@ -259,7 +260,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             // Add the player to the player list.
             PlayerList.AddOrUpdatePlayer(user.OnlineUser);
 
-            var log = $"{( user.HasUserInfo ? user.OnlineUser.Username : $"User#{e.UserId}" )} has joined the game.";
+            var log = $"{(user.HasUserInfo ? user.OnlineUser.Username : $"User#{e.UserId}")} has joined the game.";
             Logger.Important(log, LogType.Network);
 
             Feed.AddItem(Color.Cyan, log);
@@ -311,7 +312,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             }
 
             Feed.AddItem(color, $"{prefix} {e.Message.SenderName}: " +
-                         $"{string.Concat(e.Message.Message.Take(40))}{(e.Message.Message.Length >= 40 ? "..." : "")}" );
+                         $"{string.Concat(e.Message.Message.Take(40))}{(e.Message.Message.Length >= 40 ? "..." : "")}");
         }
 
         /// <summary>

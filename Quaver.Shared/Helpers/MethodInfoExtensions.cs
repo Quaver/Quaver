@@ -34,10 +34,10 @@ namespace Quaver.Shared.Helpers
             sigBuilder.Append(method.Name);
 
             // Add method generics
-            if(method.IsGenericMethod)
+            if (method.IsGenericMethod)
             {
                 sigBuilder.Append("<");
-                foreach(var g in method.GetGenericArguments())
+                foreach (var g in method.GetGenericArguments())
                 {
                     if (firstParam)
                         firstParam = false;

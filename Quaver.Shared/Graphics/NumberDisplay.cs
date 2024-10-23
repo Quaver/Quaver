@@ -121,16 +121,16 @@ namespace Quaver.Shared.Graphics
                 switch (Type)
                 {
                     case NumberDisplayType.Score:
-                        CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
-                            (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
+                        CurrentValue = MathHelper.Lerp((float)CurrentValue, (float)TargetValue,
+                            (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
                         break;
                     case NumberDisplayType.Combo:
                     case NumberDisplayType.Rating:
                         CurrentValue = TargetValue;
                         break;
                     case NumberDisplayType.Accuracy:
-                        CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
-                            (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
+                        CurrentValue = MathHelper.Lerp((float)CurrentValue, (float)TargetValue,
+                            (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / animTime, 1));
                         break;
                     case NumberDisplayType.SongTime:
                         break;
@@ -141,13 +141,13 @@ namespace Quaver.Shared.Graphics
                 switch (Type)
                 {
                     case NumberDisplayType.Score:
-                        Value = StringHelper.ScoreToString((int) Math.Ceiling(CurrentValue));
+                        Value = StringHelper.ScoreToString((int)Math.Ceiling(CurrentValue));
                         break;
                     case NumberDisplayType.Combo:
-                        Value = ((int) Math.Ceiling(CurrentValue)).ToString();
+                        Value = ((int)Math.Ceiling(CurrentValue)).ToString();
                         break;
                     case NumberDisplayType.Accuracy:
-                        Value = StringHelper.AccuracyToString((float) CurrentValue);
+                        Value = StringHelper.AccuracyToString((float)CurrentValue);
                         break;
                     case NumberDisplayType.Rating:
                         Value = StringHelper.RatingToString(CurrentValue);

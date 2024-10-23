@@ -285,17 +285,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                             for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
                                 playfield.Stage.JudgementHitBursts[i].OriginalPosY *= previewMultiplier;
 
-                        if (playfield.Stage.OriginalComboDisplayY < 0)
-                            playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
+                        if (playfield.Stage.ComboDisplay.OriginalPosY < 0)
+                            playfield.Stage.ComboDisplay.OriginalPosY *= previewMultiplier;
 
-                        playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
+                        playfield.Stage.ComboDisplay.Y = playfield.Stage.ComboDisplay.OriginalPosY;
                         break;
                     case ScrollDirection.Up:
                         playfield.Container.Alignment = Alignment.TopLeft;
                         playfield.Stage.HitError.Y -= filterPanelHeight + MenuBorder.HEIGHT;
                         for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
                             playfield.Stage.JudgementHitBursts[i].OriginalPosY -= filterPanelHeight + MenuBorder.HEIGHT;
-                        playfield.Stage.OriginalComboDisplayY -= filterPanelHeight + MenuBorder.HEIGHT;
+                        playfield.Stage.ComboDisplay.OriginalPosY -= filterPanelHeight + MenuBorder.HEIGHT;
 
                         if (playfield.Stage.HitError.Y < 0)
                             playfield.Stage.HitError.Y *= previewMultiplier;
@@ -304,10 +304,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                             for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
                                 playfield.Stage.JudgementHitBursts[i].OriginalPosY *= previewMultiplier;
 
-                        if (playfield.Stage.OriginalComboDisplayY < 0)
-                            playfield.Stage.OriginalComboDisplayY *= previewMultiplier;
+                        if (playfield.Stage.ComboDisplay.OriginalPosY < 0)
+                            playfield.Stage.ComboDisplay.OriginalPosY *= previewMultiplier;
 
-                        playfield.Stage.ComboDisplay.Y = playfield.Stage.OriginalComboDisplayY;
+                        playfield.Stage.ComboDisplay.Y = playfield.Stage.ComboDisplay.OriginalPosY;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

@@ -5,8 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -20,16 +20,11 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Edit;
-using Quaver.Shared.Screens.Editor;
-using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multi;
-using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
@@ -41,7 +36,6 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -105,12 +99,6 @@ namespace Quaver.Shared.Screens.Selection
         public Bindable<bool> IsPlayTestingInPreview { get; private set; }
 
         /// <summary>
-        ///     A capture of the last speed rate so that the user can go back
-        ///     to singleplayer without having to change their speed rate again.
-        /// </summary>
-        private static float LastSpeedRate { get; set; } = 1.0f;
-
-        /// <summary>
         /// </summary>
         public SelectionScreen()
         {
@@ -127,10 +115,7 @@ namespace Quaver.Shared.Screens.Selection
             if (IsMultiplayer)
                 OnlineManager.Client?.SetGameCurrentlySelectingMap(true);
             else
-            {
-                ModManager.AddSpeedMods(LastSpeedRate);
                 SetRichPresence();
-            }
 
             InitializeSearchQueryBindable();
             InitializeAvailableMapsetsBindable();
@@ -699,7 +684,7 @@ namespace Quaver.Shared.Screens.Selection
                     OnlineManager.Client?.SetGameCurrentlySelectingMap(false);
                     return new MultiplayerGameScreen();
                 }
-                LastSpeedRate = ModHelper.GetRateFromMods(ModManager.Mods);
+
                 return new MainMenuScreen();
             });
         }

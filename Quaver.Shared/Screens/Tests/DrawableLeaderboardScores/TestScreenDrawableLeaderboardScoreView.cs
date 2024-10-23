@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Tests.DrawableLeaderboardScores
                 CountGood = 97,
                 CountOkay = 96,
                 CountMiss = 95,
-                Mods = (long) (ModIdentifier.Speed12X | ModIdentifier.Paused),
+                Mods = (long)(ModIdentifier.Speed12X | ModIdentifier.Paused),
                 PerformanceRating = 42.69f,
                 IsOnline = true,
                 SteamId = -1,

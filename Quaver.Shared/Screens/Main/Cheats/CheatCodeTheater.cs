@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Main.Cheats
             Keys.R,
             Keys.OemTilde
         };
-        
+
         protected override void OnActivated()
         {
             var game = (QuaverGame)GameBase.Game;

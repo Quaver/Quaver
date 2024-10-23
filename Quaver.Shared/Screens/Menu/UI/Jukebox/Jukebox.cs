@@ -600,7 +600,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
 
             DiscordHelper.Presence.Details = $"Idle";
             DiscordHelper.Presence.State = "In the Menus";
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
         }
     }
 }
