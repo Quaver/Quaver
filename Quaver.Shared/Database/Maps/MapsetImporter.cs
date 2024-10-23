@@ -311,6 +311,7 @@ namespace Quaver.Shared.Database.Maps
 
             var done = -1;
 
+            MapsetInfoRetriever.InfoUpdateEnabled = false;
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
@@ -374,6 +375,7 @@ namespace Quaver.Shared.Database.Maps
 
             MapDatabaseCache.OrderAndSetMapsets(true);
             Queue.Clear();
+            MapsetInfoRetriever.InfoUpdateEnabled = true;
 
             if (MapManager.Mapsets.Count == 0)
                 return;
@@ -467,18 +469,10 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
-
-                    var info = OnlineManager.Client?.RetrieveMapInfo(map.MapId);
-
-                    if (info != null)
-                    {
-                        map.RankedStatus = info.Map.RankedStatus;
-                        map.OnlineOffset = info.Map.OnlineOffset;
-                        // map.DateLastUpdated = info.DateLastUpdated; (v1-only)
-                    }
-
+                    
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map);
+                    MapsetInfoRetriever.Enqueue(map);
                     lastImported = map;
                 }
             }
