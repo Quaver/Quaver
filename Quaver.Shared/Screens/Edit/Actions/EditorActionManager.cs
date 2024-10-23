@@ -655,9 +655,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="timingGroup"></param>
         /// <param name="color"></param>
-        public void ChangeTimingGroupColor(TimingGroup timingGroup, Color color, bool fromLua = false)
+        public void ChangeTimingGroupColor(string id, Color color, bool fromLua = false)
         {
-            Perform(new EditorActionChangeTimingGroupColor(this, WorkingMap, timingGroup, color), fromLua);
+            if (id != Qua.GlobalScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
+                Perform(new EditorActionChangeTimingGroupColor(this, WorkingMap, timingGroup, color), fromLua);
         }
 
         /// <summary>

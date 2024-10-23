@@ -286,14 +286,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.EndDisabled();
         }
 
-        private void DrawColorEdit(TimingGroup timingGroup, ImGuiColorEditFlags colorOptions, string prefix)
+        private void DrawColorEdit(string id, TimingGroup timingGroup, ImGuiColorEditFlags colorOptions, string prefix)
         {
             var color = timingGroup.GetColor();
             var colorVec3 = new Vector4(color.R, color.G, color.B, 255) / 256;
 
             if (ImGui.ColorButton($"##{prefix}", colorVec3, colorOptions))
             {
-                DialogManager.Show(new EditorChangeTimingGroupColorDialog(timingGroup, Screen.ActionManager));
+                DialogManager.Show(new EditorChangeTimingGroupColorDialog(id, timingGroup, Screen.ActionManager));
             }
         }
 
@@ -398,7 +398,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
                 const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoPicker;
                 ImGui.BeginDisabled(id == Qua.GlobalScrollGroupId);
-                DrawColorEdit(timingGroup, colorOptions, $"Column_{id}");
+                DrawColorEdit(id, timingGroup, colorOptions, $"Column_{id}");
                 ImGui.EndDisabled();
                 ImGui.NextColumn();
 
