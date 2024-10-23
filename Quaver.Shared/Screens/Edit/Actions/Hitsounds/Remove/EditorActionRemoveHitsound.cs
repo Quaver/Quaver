@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove
 {
+    [MoonSharpUserData]
     public class EditorActionRemoveHitsound : IEditorAction
     {
         /// <inheritdoc />
@@ -18,11 +20,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         /// </summary>
-        private HitSounds Sound { get; }
+        public HitSounds Sound { get; }
 
         /// <summary>
         /// </summary>

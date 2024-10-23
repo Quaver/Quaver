@@ -141,7 +141,7 @@ namespace Quaver.Shared.Database.Maps
         private static void AddMapImportToQueue(string path)
         {
             // Only one .mc file under the same directory should be imported
-            // since .mc import 
+            // since .mc import
             if (Path.GetExtension(path) == ".mc")
             {
                 foreach (var scheduledPath in Queue)
@@ -469,7 +469,7 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
-
+                    
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map);
                     MapsetInfoRetriever.Enqueue(map);

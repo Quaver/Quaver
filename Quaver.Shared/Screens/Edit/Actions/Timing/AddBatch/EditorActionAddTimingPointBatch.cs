@@ -4,6 +4,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Helpers;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch
 {
@@ -16,7 +17,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch
 
         private Qua WorkingMap { get; }
 
-        private List<TimingPointInfo> TimingPoints { get; }
+        public List<TimingPointInfo> TimingPoints { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddTimingPointBatch(EditorActionManager manager, Qua workingMap, List<TimingPointInfo> tps)
@@ -29,9 +30,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            TimingPoints.ForEach(x => WorkingMap.TimingPoints.Add(x));
-            WorkingMap.Sort();
-
+            WorkingMap.TimingPoints.InsertSorted(TimingPoints);
             ActionManager.TriggerEvent(Type, new EditorTimingPointBatchAddedEventArgs(TimingPoints));
         }
 

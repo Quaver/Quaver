@@ -14,11 +14,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit
 
         private Qua WorkingMap { get; }
 
-        private BookmarkInfo Bookmark { get; }
+        public BookmarkInfo Bookmark { get; }
 
-        private string NewNote { get; }
+        public string NewNote { get; }
 
-        private string OldNote { get; }
+        public string OldNote { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionEditBookmark(EditorActionManager manager, Qua workingMap, BookmarkInfo bookmark, string newNote)
@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit
             NewNote = newNote;
             OldNote = Bookmark.Note;
         }
-        
+
         [MoonSharpVisible(false)]
         public void Perform()
         {

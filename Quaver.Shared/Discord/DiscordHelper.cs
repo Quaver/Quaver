@@ -5,6 +5,8 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Quaver.Shared.Config;
+using Wobble.Bindables;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Discord
@@ -30,6 +32,8 @@ namespace Quaver.Shared.Discord
             _handlers.DisconnectedCallback += DisconnectedCallback;
             _handlers.ErrorCallback += ErrorCallback;
 
+            ConfigManager.DiscordRichPresence.ValueChanged += OnRpcToggled;
+
             DiscordRpc.Initialize(clientId, ref _handlers, true, null);
         }
 
@@ -43,6 +47,15 @@ namespace Quaver.Shared.Discord
         }
 
         /// <summary>
+        /// Updates the rich presence data.
+        /// </summary>
+        public static void UpdatePresence()
+        {
+            if (ConfigManager.DiscordRichPresence.Value)
+                DiscordRpc.UpdatePresence(ref Presence);
+        }
+        
+        /// <summary>
         /// Stop RPC.
         /// </summary>
         public static void Shutdown()
@@ -51,6 +64,17 @@ namespace Quaver.Shared.Discord
             Logger.Important($"Discord RPC has shutdown", LogType.Runtime);
         }
 
+        /// <summary>
+        /// Called when the user toggles the Discord Rich Presence option.
+        /// </summary>
+        private static void OnRpcToggled(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (e.Value)
+                UpdatePresence();
+            else
+                DiscordRpc.ClearPresence();
+        }
+        
         /// <summary>
         /// Called after RunCallbacks() when ready.
         /// </summary>

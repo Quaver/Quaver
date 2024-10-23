@@ -378,7 +378,7 @@ namespace Quaver.Shared.Screens.Music.Components
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             SteamManager.SetRichPresence("State", DiscordHelper.Presence.State);
             SteamManager.SetRichPresence("Details", DiscordHelper.Presence.Details);

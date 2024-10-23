@@ -40,7 +40,7 @@ namespace Quaver.Shared.Helpers
             SteamManager.SetRichPresence("Details", Truncate(details, Constants.k_cchMaxRichPresenceValueLength));
             DiscordHelper.Presence.Details = Truncate(details, DiscordRpc.RichPresence.MaxDetailsLength);
 
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
         }
     }
 }

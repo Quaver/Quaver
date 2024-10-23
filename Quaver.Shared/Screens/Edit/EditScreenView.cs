@@ -5,10 +5,12 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.UI.AutoMods;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
@@ -131,6 +133,12 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             Footer.Parent = Container;
+            
+            ThreadScheduler.Run(() =>
+            {
+                if (MapManager.GetBackgroundPath(BackgroundHelper.Map) != MapManager.GetBackgroundPath(EditScreen.Map)) 
+                    BackgroundHelper.Load(EditScreen.Map);
+            });
         }
 
         /// <inheritdoc />
@@ -159,7 +167,7 @@ namespace Quaver.Shared.Screens.Edit
                     DrawPlugins(gameTime);
 
                 MenuBar?.Draw(gameTime);
-                GameBase.Game.SpriteBatch.End();
+                GameBase.Game.TryEndBatch();
 
                 if (ImGui.IsAnyItemHovered())
                     IsImGuiHovered = true;

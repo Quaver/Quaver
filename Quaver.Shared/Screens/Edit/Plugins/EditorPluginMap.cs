@@ -4,11 +4,11 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
+
+#pragma warning disable CA1822
 
 namespace Quaver.Shared.Screens.Edit.Plugins
 {
@@ -16,68 +16,61 @@ namespace Quaver.Shared.Screens.Edit.Plugins
     public class EditorPluginMap
     {
         [MoonSharpVisible(false)]
-        public Qua Map;
+        public Qua Map => EditorPluginUtils.EditScreen.WorkingMap;
 
         [MoonSharpVisible(false)]
-        public IAudioTrack Track;
+        public IAudioTrack Track => EditorPluginUtils.EditScreen.Track;
 
         /// <summary>
         ///     The game mode of the map
         /// </summary>
-        public GameMode Mode { get; [MoonSharpVisible(false)] set; }
+        public GameMode Mode => Map.Mode;
 
         /// <summary>
         ///     If the scroll velocities are in normalized format (BPM does not affect scroll velocity).
         /// </summary>
-        public bool Normalized { get; [MoonSharpVisible(false)] set; }
+        public bool Normalized => Map.BPMDoesNotAffectScrollVelocity;
 
         /// <summary>
         ///     The slider velocities present in the map
         /// </summary>
-        public List<SliderVelocityInfo> ScrollVelocities { get; [MoonSharpVisible(false)] set; }
+        public List<SliderVelocityInfo> ScrollVelocities => Map.SliderVelocities;
 
         /// <summary>
         ///     The HitObjects that are currently in the map
         /// </summary>
-        public List<HitObjectInfo> HitObjects { get; [MoonSharpVisible(false)] set; }
+        public List<HitObjectInfo> HitObjects => Map.HitObjects;
 
         /// <summary>
         ///     The timing points that are currently in the map
         /// </summary>
-        public List<TimingPointInfo> TimingPoints { get; [MoonSharpVisible(false)] set; }
+        public List<TimingPointInfo> TimingPoints => Map.TimingPoints;
 
         /// <summary>
         ///     The non-default editor layers that are currently in the map
         /// </summary>
-        public List<EditorLayerInfo> EditorLayers { get; [MoonSharpVisible(false)] set; }
+        public List<EditorLayerInfo> EditorLayers => Map.EditorLayers;
 
         /// <summary>
         ///     The bookmarks that are currently in the map
         /// </summary>
-        public List<BookmarkInfo> Bookmarks { get; [MoonSharpVisible(false)] set; }
+        public List<BookmarkInfo> Bookmarks => Map.Bookmarks;
 
         /// <summary>
         ///     The default editor layer
         /// </summary>
-        public EditorLayerInfo DefaultLayer { get; [MoonSharpVisible(false)] set; }
+        public EditorLayerInfo DefaultLayer => EditorPluginUtils.EditScreen.DefaultLayer;
 
         /// <summary>
         ///     Total mp3 length
         /// </summary>
-        public double TrackLength { get; [MoonSharpVisible(false)] set; }
+        public double TrackLength => Track.Length;
 
-        [MoonSharpVisible(false)]
-        public void SetFrameState()
-        {
-            Mode = Map.Mode;
-            TimingPoints = Map.TimingPoints;
-            ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
-            HitObjects = Map.HitObjects;
-            EditorLayers = Map.EditorLayers;
-            Bookmarks = Map.Bookmarks;
-            TrackLength = Track.Length;
-            Normalized = Map.BPMDoesNotAffectScrollVelocity;
-        }
+        /// <inheritdoc cref="Qua.LegacyLNRendering"/>
+        public bool LegacyLNRendering => Map.LegacyLNRendering;
+
+        /// <inheritdoc cref="Qua.InitialScrollVelocity"/>
+        public float InitialScrollVelocity => Map.InitialScrollVelocity;
 
         public override string ToString() => Map.ToString();
 

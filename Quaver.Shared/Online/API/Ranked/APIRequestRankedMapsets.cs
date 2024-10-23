@@ -10,7 +10,7 @@ namespace Quaver.Shared.Online.API.Ranked
     {
         public override RankedMapsetsResponse ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}mapsets/ranked", Method.GET);
+            var request = new RestRequest($"{OnlineClient.API_ENDPOINT}/v2/mapset/ranked", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
             var response = client.Execute(request);
