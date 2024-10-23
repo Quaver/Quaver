@@ -47,6 +47,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         EditBookmark,
         RemoveBookmark,
         RemoveBookmarkBatch,
-        ChangeBookmarkOffsetBatch
+        ChangeBookmarkOffsetBatch,
+        AddScrollSpeedFactor,
+        AddScrollSpeedFactorBatch,
+        ChangeScrollSpeedFactorMultiplierBatch,
+        ChangeScrollSpeedFactorLaneMaskBatch,
+        ChangeScrollSpeedFactorOffsetBatch,
+        RemoveScrollSpeedFactor,
+        RemoveScrollSpeedFactorBatch
     }
 }

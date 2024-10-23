@@ -37,6 +37,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<SliderVelocityInfo> ScrollVelocities => Map.SliderVelocities;
 
         /// <summary>
+        ///     The scroll speed factors present in the map
+        /// </summary>
+        public List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     The HitObjects that are currently in the map
         /// </summary>
         public List<HitObjectInfo> HitObjects => Map.HitObjects;
