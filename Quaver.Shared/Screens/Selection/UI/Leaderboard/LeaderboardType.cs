@@ -15,6 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         Country,
         Rate,
         Friends,
-        All
+        All,
+        Clan,
     }
 }
