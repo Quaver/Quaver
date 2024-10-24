@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;

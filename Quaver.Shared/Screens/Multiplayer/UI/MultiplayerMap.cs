@@ -8,6 +8,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Events.Download;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
