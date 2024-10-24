@@ -246,6 +246,12 @@ namespace Quaver.Shared.Scripting
                 stride
             );
 
+        public static void PushAllowKeyboardFocus() => PushTabStop();
+
+        public static void PushButtonRepeat() => ImGui.PushItemFlag(ImGuiItemFlags.ButtonRepeat, true);
+
+        public static void PushTabStop() => ImGui.PushItemFlag(ImGuiItemFlags.NoTabStop, true);
+
         public static void SaveIniSettingsToDisk(string ini_filename) =>
             throw new NotSupportedException("Please use the 'write' global instead.");
 
@@ -753,7 +759,14 @@ namespace Quaver.Shared.Scripting
         public static float GetContentRegionAvailWidth() => ImGui.GetContentRegionAvail().X;
 
         public static float GetWindowRegionAvailWidth() =>
-            ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X;
+            GetWindowContentRegionMax().X - GetWindowContentRegionMin().X;
+
+        public static Vector2 GetContentRegionMax() =>
+            ImGui.GetContentRegionAvail() + ImGui.GetCursorScreenPos() - ImGui.GetWindowPos();
+
+        public static Vector2 GetWindowContentRegionMax() => ImGui.GetContentRegionAvail() + ImGui.GetCursorPos();
+
+        public static Vector2 GetWindowContentRegionMin() => ImGui.GetCursorPos();
 
         /// <summary>
         ///     Replaces the matched patterns with the result of the evaluator.
