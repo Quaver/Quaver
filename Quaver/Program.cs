@@ -89,6 +89,7 @@ namespace Quaver
             Environment.CurrentDirectory = WorkingDirectory;
 
             ConfigManager.Initialize();
+            StructuredConfigManager.Initialize();
             StartIpcServer();
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;

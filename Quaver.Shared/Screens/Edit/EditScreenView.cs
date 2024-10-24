@@ -5,6 +5,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
@@ -60,15 +61,15 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private EditorPanelDetails Details { get; set; }
+        internal EditorPanelDetails Details { get; set; }
 
         /// <summary>
         /// </summary>
-        private EditorPanelCompositionTools CompositionTools { get; set; }
+        internal EditorPanelCompositionTools CompositionTools { get; set; }
 
         /// <summary>
         /// </summary>
-        private EditorPanelHitsounds Hitsounds { get; set; }
+        internal EditorPanelHitsounds Hitsounds { get; set; }
 
         /// <summary>
         /// </summary>
@@ -93,6 +94,11 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public bool IsImGuiHovered { get; private set; }
+
+        /// <summary>
+        ///     Saves the layout of current windows when the screen is exited
+        /// </summary>
+        public bool SaveWindowLayoutOnExit { get; set; } = true;
 
         /// <summary>
         ///     Maximum allowed custom FPS in editor
@@ -139,6 +145,7 @@ namespace Quaver.Shared.Screens.Edit
                 if (MapManager.GetBackgroundPath(BackgroundHelper.Map) != MapManager.GetBackgroundPath(EditScreen.Map)) 
                     BackgroundHelper.Load(EditScreen.Map);
             });
+            StructuredConfigManager.WindowStates.Value.ApplyState(this);
         }
 
         /// <inheritdoc />
@@ -181,6 +188,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override void Destroy()
         {
+            if (SaveWindowLayoutOnExit)
+                SaveWindowStates();
+
             if (ConfigManager.FpsLimiterType.Value == FpsLimitType.Custom)
                 ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, ConfigManager.CustomFpsLimit.Value);
 
@@ -192,6 +202,12 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.DisplayGameplayPreview.ValueChanged -= OnDisplayGameplayPreviewChanged;
 
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
+        }
+
+        private void SaveWindowStates()
+        {
+            StructuredConfigManager.WindowStates.Value.RetrieveState(this);
+            StructuredConfigManager.WindowStates.TriggerChange();
         }
 
         /// <summary>
