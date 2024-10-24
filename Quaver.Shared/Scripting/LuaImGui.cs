@@ -74,6 +74,7 @@ namespace Quaver.Shared.Scripting
                 ("Multiline", ImGuiInputTextFlags.None)
             ),
             [typeof(ImGuiTreeNodeFlags)] = DefineEnum(("AllowItemOverlap", ImGuiTreeNodeFlags.AllowOverlap)),
+            [typeof(ImGuiSelectableFlags)] = DefineEnum(("DontClosePopups", ImGuiSelectableFlags.NoAutoClosePopups)),
         };
 
         private static readonly Regex s_capitals = new(@"\p{Lu}", RegexOptions.Compiled);
@@ -169,8 +170,10 @@ namespace Quaver.Shared.Scripting
                     EndChildFrame = nameof(ImGui.EndChild),
                     ListBoxHeader = nameof(ImGui.BeginListBox),
                     ListBoxFooter = nameof(ImGui.EndListBox),
-                    PopAllowKeyboardFocus = nameof(ImGui.PopTabStop),
-                    PushAllowKeyboardFocus = nameof(ImGui.PushTabStop),
+                    PopButtonRepeat = nameof(ImGui.PopItemFlag),
+                    PopTabStop = nameof(ImGui.PopItemFlag),
+                    PopAllowKeyboardFocus = nameof(ImGui.PopItemFlag),
+                    GetWindowContentRegionMin = nameof(ImGui.GetCursorPos),
                     SetNextTreeNodeOpen = nameof(ImGui.SetNextItemOpen),
                 }
             );

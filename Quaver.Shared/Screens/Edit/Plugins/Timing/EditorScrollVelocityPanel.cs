@@ -376,7 +376,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             const int ElementBaseHeight = 12;
             const int NumberOfColumns = 2;
             var elementHeight = Screen.ImGuiScale * ElementBaseHeight;
-            var y = ImGui.GetWindowContentRegionMax().Y - ImGui.GetWindowContentRegionMin().Y;
+            var y = ImGui.GetContentRegionAvail().Y;
 
             var start = Math.Min(
                 (int)(_progress * Screen.WorkingMap.SliderVelocities.Count - 1),
