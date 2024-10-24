@@ -15,9 +15,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch
 
         private Qua WorkingMap { get; }
 
-        private List<TimingPointInfo> TimingPoints { get; }
+        public List<TimingPointInfo> TimingPoints { get; }
 
-        private float Offset { get; }
+        public float Offset { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointOffsetBatch(EditorActionManager manager, Qua workingMap, List<TimingPointInfo> tps,
@@ -35,7 +35,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch
             foreach (var tp in TimingPoints)
                 tp.StartTime += Offset;
 
-            WorkingMap.Sort();
             ActionManager.TriggerEvent(Type, new EditorChangedTimingPointOffsetBatchEventArgs(TimingPoints, Offset));
         }
 

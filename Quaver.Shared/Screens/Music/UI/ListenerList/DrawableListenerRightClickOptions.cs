@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Helpers;

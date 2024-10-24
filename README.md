@@ -11,7 +11,7 @@ It is also available on [Steam](https://store.steampowered.com/app/980610/Quaver
 Getting started with **Quaver** development is extremely easy.
 
 * Install the [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-* Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Quaver/Quaver`
+* Clone the Quaver repository and its submodules `git -c submodule."Quaver.Server.Client".update=none clone https://github.com/Quaver/Quaver --recurse-submodules`
 * **Have Steam open and running**
 * Build & run Quaver with `dotnet run --project Quaver`
 

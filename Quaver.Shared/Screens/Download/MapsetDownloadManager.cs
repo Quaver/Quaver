@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Download
                 return null;
             }
 
-            if (CurrentDownloads.Any(x => x.MapsetId == (int) mapset["id"]))
+            if (CurrentDownloads.Any(x => x.MapsetId == (int)mapset["id"]))
                 return null;
 
             var download = new MapsetDownload(mapset, mapset["artist"].ToString(), mapset["title"].ToString(),
@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Download
         /// </summary>
         public static void OpenOnlineHub()
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
 

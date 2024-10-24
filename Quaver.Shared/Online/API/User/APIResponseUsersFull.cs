@@ -37,7 +37,7 @@ namespace Quaver.Shared.Online.API.User
         [JsonProperty("stats")]
         public APIRequestUsersFullStats Stats { get; set; }
     }
-    
+
     // ReSharper disable once InconsistentNaming
     public class APIRequestUsersFullStats
     {
@@ -55,7 +55,7 @@ namespace Quaver.Shared.Online.API.User
 
         [JsonProperty("overall_performance_rating")]
         public double OverallPerformanceRating { get; set; }
-        
+
         [JsonProperty("play_count")]
         public int PlayCount { get; set; }
 
@@ -67,19 +67,19 @@ namespace Quaver.Shared.Online.API.User
 
         [JsonProperty("total_marv")]
         public int TotalMarv { get; set; }
-        
+
         [JsonProperty("total_perf")]
         public int TotalPerf { get; set; }
-        
+
         [JsonProperty("total_great")]
         public int TotalGreat { get; set; }
-        
+
         [JsonProperty("total_good")]
         public int TotalGood { get; set; }
-        
+
         [JsonProperty("total_okay")]
         public int TotalOkay { get; set; }
-        
+
         [JsonProperty("total_miss")]
         public int TotalMiss { get; set; }
     }

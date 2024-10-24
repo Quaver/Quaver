@@ -5,10 +5,13 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.UI.AutoMods;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
@@ -38,7 +41,7 @@ namespace Quaver.Shared.Screens.Edit
     {
         /// <summary>
         /// </summary>
-        private EditScreen EditScreen => (EditScreen) Screen;
+        private EditScreen EditScreen => (EditScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -97,12 +100,25 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public bool SaveWindowLayoutOnExit { get; set; } = true;
 
+        /// <summary>
+        ///     Maximum allowed custom FPS in editor
+        /// </summary>
+        private const int MaximumCustomFps = 500;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public EditScreenView(Screen screen) : base(screen)
         {
+            if (ConfigManager.FpsLimiterType.Value == FpsLimitType.Custom &&
+                ConfigManager.CustomFpsLimit.Value > MaximumCustomFps)
+            {
+                Container.ScheduleUpdate(() =>
+                    ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Unlimited, MaximumCustomFps)
+                );
+            }
+
             CreateBackground();
             CreatePlayfield();
             CreateFooter();
@@ -123,6 +139,12 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             Footer.Parent = Container;
+            
+            ThreadScheduler.Run(() =>
+            {
+                if (MapManager.GetBackgroundPath(BackgroundHelper.Map) != MapManager.GetBackgroundPath(EditScreen.Map)) 
+                    BackgroundHelper.Load(EditScreen.Map);
+            });
             StructuredConfigManager.WindowStates.Value.ApplyState(this);
         }
 
@@ -152,7 +174,7 @@ namespace Quaver.Shared.Screens.Edit
                     DrawPlugins(gameTime);
 
                 MenuBar?.Draw(gameTime);
-                GameBase.Game.SpriteBatch.End();
+                GameBase.Game.TryEndBatch();
 
                 if (ImGui.IsAnyItemHovered())
                     IsImGuiHovered = true;
@@ -168,6 +190,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (SaveWindowLayoutOnExit)
                 SaveWindowStates();
+
+            if (ConfigManager.FpsLimiterType.Value == FpsLimitType.Custom)
+                ((QuaverGame)GameBase.Game).SetFps(FpsLimitType.Custom, ConfigManager.CustomFpsLimit.Value);
 
             Container?.Destroy();
 
@@ -204,7 +229,8 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
             EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer,
-            EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform, EditScreen.ShowSpectrogram, EditScreen.AudioDirection, EditScreen.WaveformFilter, EditScreen.SpectrogramFftSize) { Parent = Container};
+            EditScreen.PlaceObjectsOnNearestTick, EditScreen.ShowWaveform, EditScreen.ShowSpectrogram, EditScreen.AudioDirection, EditScreen.WaveformFilter, EditScreen.SpectrogramFftSize)
+        { Parent = Container };
 
         /// <summary>
         /// </summary>
@@ -298,7 +324,7 @@ namespace Quaver.Shared.Screens.Edit
 
             Playfield.ResetObjectPositions();
             UnEditablePlayfield.ResetObjectPositions();
-            
+
             // Makes it so that the playfield bookmark tooltips appear above reference difficulty
             Playfield.Parent = Container;
         }
@@ -395,7 +421,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             MapPreview = new EditorMapPreview(EditScreen.ActionManager, new Bindable<bool>(false), EditScreen.ActiveLeftPanel,
-                (int) WindowManager.Height - MenuBorder.HEIGHT - 34, EditScreen.Track, EditScreen.WorkingMap)
+                (int)WindowManager.Height - MenuBorder.HEIGHT - 34, EditScreen.Track, EditScreen.WorkingMap)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -406,10 +432,10 @@ namespace Quaver.Shared.Screens.Edit
 
             Playfield.X = -Playfield.Width / 2 - spacing;
             MapPreview.X = Playfield.Width / 2 + spacing;
-            
+
             // Makes it so that the playfield bookmark tooltips appear above preview.
             Playfield.Parent = Container;
-            
+
             // Makes it so the selector goes above editor after enabling preview.
             Selector.Parent = Container;
 

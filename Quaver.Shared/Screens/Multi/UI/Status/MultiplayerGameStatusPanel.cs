@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
@@ -7,7 +7,6 @@ using Quaver.Shared.Screens.Multi.UI.Status.Name;
 using Quaver.Shared.Screens.Multi.UI.Status.Password;
 using Quaver.Shared.Screens.Multi.UI.Status.Selection;
 using Quaver.Shared.Screens.Multi.UI.Status.Sharing;
-using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Wobble.Bindables;
 using Wobble.Graphics;

@@ -1,5 +1,5 @@
 using System;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Wobble.Bindables;
 using Wobble.Graphics;
 

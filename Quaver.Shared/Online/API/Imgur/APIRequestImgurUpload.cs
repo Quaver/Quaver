@@ -11,7 +11,7 @@ namespace Quaver.Shared.Online.API.Imgur
     {
         /// <summary>
         /// </summary>
-        public const string ClientId  = "27ebbe781c4ce59";
+        public const string ClientId = "27ebbe781c4ce59";
 
         /// <summary>
         /// </summary>
@@ -39,7 +39,7 @@ namespace Quaver.Shared.Online.API.Imgur
                 var response = client.Execute(request);
                 var json = JObject.Parse(response.Content);
 
-                if (!(bool) json["success"])
+                if (!(bool)json["success"])
                     return null;
 
                 return json["data"]["link"].ToString();

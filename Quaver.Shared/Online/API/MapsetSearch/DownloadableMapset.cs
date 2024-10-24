@@ -32,62 +32,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("ranked_status")]
-        public RankedStatus RankedStatus { get; set; }
-
-        [JsonProperty("date_submitted")]
-        public DateTime DateSubmitted { get; set; }
-
-        [JsonProperty("date_last_updated")]
-        public DateTime DateLastUpdated { get; set; }
-
-        [JsonProperty("bpms")]
-        public List<int> Bpms { get; set; }
-
-        [JsonProperty("game_modes")]
-        public List<GameMode> GameModes { get; set; }
-
-        [JsonProperty("difficulty_names")]
-        public List<string> DifficultyNames { get; set; }
-
-        [JsonProperty("difficulty_range")]
-        public List<double> DifficultyRange { get; set; }
-
-        [JsonProperty("min_length_seconds")]
-        public float MinSongLength { get; set; }
-
-        [JsonProperty("max_length_seconds")]
-        public float MaxLengthSeconds { get; set; }
-
-        [JsonProperty("min_ln_percent")]
-        public float MinLongNotePercent { get; set; }
-
-        [JsonProperty("max_ln_percent")]
-        public float MaxLongNotePercent { get; set; }
-
-        [JsonProperty("min_play_count")]
-        public int MinPlayCount { get; set; }
-
-        [JsonProperty("max_play_count")]
-        public int MaxPlayCount { get; set; }
-
-        [JsonProperty("min_date_submitted")]
-        public DateTime MinDateSubmitted { get; set; }
-
-        [JsonProperty("max_date_submitted")]
-        public DateTime MaxDateSubmitted { get; set; }
-
-        [JsonProperty("min_date_last_updated")]
-        public DateTime MinDateLastUpdated { get; set; }
-
-        [JsonProperty("max_date_last_updated")]
-        public DateTime MaxDateLastUpdated { get; set; }
-
-        [JsonProperty("min_combo")]
-        public int MinCombo { get; set; }
-
-        [JsonProperty("max_combo")]
-        public int MaxCombo { get; set; }
+        [JsonProperty("maps")]
+        public List<DownloadableMap> Maps { get; set; }
 
         /// <summary>
         ///     Whether or not we already have the set downloaded
@@ -103,8 +49,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             {
                 var diffs = new Dictionary<string, double>();
 
-                for (var i = 0; i < DifficultyNames.Count; i++)
-                    diffs.Add(DifficultyNames[i], DifficultyRange[i]);
+                for (var i = 0; i < Maps.Count; i++)
+                    diffs.Add(Maps[i].DifficultyName, Maps[i].DifficultyRating);
 
                 return diffs.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             }

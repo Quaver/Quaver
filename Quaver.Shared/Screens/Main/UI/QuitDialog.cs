@@ -16,11 +16,11 @@ namespace Quaver.Shared.Screens.Main.UI
         public QuitDialog()
             : base("EXIT QUAVER", $"Are you sure you would like to quit the game?", () =>
             {
-                var game = (QuaverGame) GameBase.Game;
+                var game = (QuaverGame)GameBase.Game;
                 game.Exit();
             })
         {
-            Cheat = new CheatCodeQuit(this) {Parent = this};
+            Cheat = new CheatCodeQuit(this) { Parent = this };
         }
     }
 }

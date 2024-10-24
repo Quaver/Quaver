@@ -1,11 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Wobble.Bindables;
-using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 

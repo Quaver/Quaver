@@ -1,24 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Multi.UI.Dialogs;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
@@ -113,7 +112,7 @@ namespace Quaver.Shared.Screens.Multi
             }
             MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
             OnlineManager.SendGameDifficultyRatings(OnlineManager.CurrentGame.MapMd5, OnlineManager.CurrentGame.AlternativeMd5);
-            
+
             base.OnFirstUpdate();
         }
 
@@ -157,7 +156,7 @@ namespace Quaver.Shared.Screens.Multi
         private void CreateGameBindable()
         {
             var game = OnlineManager.CurrentGame ?? GetTestGame();
-            Game = new Bindable<MultiplayerGame>(game) {Value = game};
+            Game = new Bindable<MultiplayerGame>(game) { Value = game };
         }
 
         /// <summary>
@@ -176,7 +175,7 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         private void InitializeTestPlayingBindable()
-            => IsPlayTestingInPreview = new Bindable<bool>(false) {Value = false};
+            => IsPlayTestingInPreview = new Bindable<bool>(false) { Value = false };
 
         /// <summary>
         ///     Finds and selects the multiplayer map
@@ -250,7 +249,7 @@ namespace Quaver.Shared.Screens.Multi
                     ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
                 else
                 {
-                    Exit(() => new MultiplayerLobbyScreen());
+                    DialogManager.Show(new ConfirmExitToLobby(this));
                     return;
                 }
             }
@@ -399,7 +398,7 @@ namespace Quaver.Shared.Screens.Multi
                 Name = "Example Game",
                 Type = MultiplayerGameType.Friendly,
                 Ruleset = MultiplayerGameRuleset.Battle_Royale,
-                GameMode = (byte) GameMode.Keys4,
+                GameMode = (byte)GameMode.Keys4,
                 PlayerIds = new List<int>(),
                 MaxPlayers = 16,
                 MapMd5 = "None",
@@ -411,7 +410,7 @@ namespace Quaver.Shared.Screens.Multi
                 HostId = 1,
                 PlayersReady = new List<int>() { 3, 6, 13, 7 },
                 RedTeamPlayers = new List<int> { 0, 1, 2, 3, 4, 5, 6 },
-                BlueTeamPlayers = new List<int> { 7, 8, 9, 10, 11, 12, 13, 14},
+                BlueTeamPlayers = new List<int> { 7, 8, 9, 10, 11, 12, 13, 14 },
                 PlayersWithoutMap = new List<int>()
                 {
                     8, 9, 7, 2

@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove
 
         /// <summary>
         /// </summary>
-        private HitObjectInfo HitObject { get; }
+        public HitObjectInfo HitObject { get; }
 
         /// <summary>
         /// </summary>
@@ -46,10 +46,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove
         public void Perform()
         {
             WorkingMap.HitObjects.Remove(HitObject);
-            WorkingMap.Sort();
-
             ActionManager.EditScreen.SelectedHitObjects.Remove(HitObject);
-
             ActionManager.TriggerEvent(EditorActionType.RemoveHitObject, new EditorHitObjectRemovedEventArgs(HitObject));
         }
 
