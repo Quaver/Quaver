@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Quaver.Server.Common.Helpers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Bindables;

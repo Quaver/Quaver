@@ -10,27 +10,13 @@ public class PluginWindowState
 {
     public bool Enabled { get; set; }
 
-    public Dictionary<string, EditorPluginStorageValue> Storage { get; set; } = new();
-
     public void ApplyState(IEditorPlugin plugin)
     {
         plugin.IsActive = Enabled;
-        plugin.Storage.Clear();
-        foreach (var (key, value) in Storage)
-        {
-            plugin.Storage.Add(key, value);
-        }
-        plugin.OnStorageLoaded();
     }
 
     public void RetrieveState(IEditorPlugin plugin)
     {
         Enabled = plugin.IsActive;
-        plugin.OnStorageSave();
-        Storage.Clear();
-        foreach (var (key, value) in plugin.Storage)
-        {
-            Storage.Add(key, value);
-        }
     }
 }
