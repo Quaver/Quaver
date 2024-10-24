@@ -973,7 +973,7 @@ namespace Quaver.Shared.Screens.Edit
                             ActionManager.RemoveHitObject(note);
                     }
                     else
-                        heldLivemapHitObjectInfos[i] = ActionManager.PlaceHitObject(lane, time, 0, layer);
+                        heldLivemapHitObjectInfos[i] = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: SelectedScrollGroupId);
                 }
                 else if (heldLivemapHitObjectInfos[i] != null && ConfigManager.EditorLiveMapLongNote.Value)
                 {

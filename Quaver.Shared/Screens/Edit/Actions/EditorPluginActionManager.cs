@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Components;
 
@@ -48,14 +49,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="endTime"></param>
         /// <param name="layer"></param>
         /// <param name="hitsounds"></param>
+        /// <param name="timingGroupId"></param>
         public HitObjectInfo PlaceHitObject(
             int lane,
             int startTime,
             int endTime = 0,
             int layer = 0,
-            HitSounds hitsounds = 0
+            HitSounds hitsounds = 0,
+            string timingGroupId = Qua.GlobalScrollGroupId
         ) =>
-            ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds, true);
+            ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds, timingGroupId, true);
 
         /// <summary>
         /// </summary>

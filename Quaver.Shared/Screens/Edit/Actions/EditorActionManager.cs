@@ -395,7 +395,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="endTime"></param>
         /// <param name="layer"></param>
         /// <param name="hitsounds"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0, bool fromLua = false)
+        /// <param name="timingGroupId"></param>
+        /// <param name="fromLua"></param>
+        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0, string timingGroupId = Qua.GlobalScrollGroupId, bool fromLua = false)
         {
             var hitObject = new HitObjectInfo
             {
@@ -403,7 +405,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 StartTime = startTime,
                 EndTime = endTime,
                 EditorLayer = layer,
-                HitSound = hitsounds
+                HitSound = hitsounds,
+                TimingGroup = timingGroupId
             };
 
             Perform(new EditorActionPlaceHitObject(this, WorkingMap, hitObject), fromLua);
