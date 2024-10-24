@@ -237,7 +237,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 EditorActionType.AddScrollVelocity => new EditorActionAddScrollVelocity(
                     EditScreen.ActionManager,
                     EditScreen.WorkingMap,
-                    args[0].ToObject<SliderVelocityInfo>()
+                    args[0].ToObject<SliderVelocityInfo>(),
+                    args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
                 ),
                 EditorActionType.RemoveScrollVelocity => new EditorActionRemoveScrollVelocity(
                     EditScreen.ActionManager,
@@ -247,12 +248,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 EditorActionType.AddScrollVelocityBatch => new EditorActionAddScrollVelocityBatch(
                     EditScreen.ActionManager,
                     EditScreen.WorkingMap,
-                    args[0].ToObject<List<SliderVelocityInfo>>()
+                    args[0].ToObject<List<SliderVelocityInfo>>(),
+                    args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
                 ),
                 EditorActionType.RemoveScrollVelocityBatch => new EditorActionRemoveScrollVelocityBatch(
                     EditScreen.ActionManager,
                     EditScreen.WorkingMap,
-                    args[0].ToObject<List<SliderVelocityInfo>>()
+                    args[0].ToObject<List<SliderVelocityInfo>>(),
+                    args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
                 ),
                 EditorActionType.AddTimingPoint => new EditorActionAddTimingPoint(
                     EditScreen.ActionManager,

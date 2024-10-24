@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
         public override string GetValue() => "";
 
-        public override int GetTime() => Bookmark.StartTime;
+        public override float StartTime => Bookmark.StartTime;
         
         public override void SetSize()
         {

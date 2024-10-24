@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
         public override string GetValue() => "";
 
-        public override int GetTime() => Time;
+        public override float StartTime => Time;
 
         public override void SetSize()
         {
