@@ -198,7 +198,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Status.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadStatusChanged;
             }
 
             base.Destroy();
@@ -441,12 +441,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Status.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadStatusChanged;
             }
 
             CurrentDownload = MapsetDownloadManager.Download(Game.MapsetId, Game.Map, "");
             CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
-            CurrentDownload.Status.ValueChanged += OnDownloadCompleted;
+            CurrentDownload.Status.ValueChanged += OnDownloadStatusChanged;
         }
 
         /// <summary>
@@ -459,7 +459,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Creator.Text = $"Downloading Map: {e.Value.ProgressPercentage}%";
         }
 
-        private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
+        private void OnDownloadStatusChanged(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
         {
             if (e.Value.Status != FileDownloaderStatus.Complete)
                 return;
