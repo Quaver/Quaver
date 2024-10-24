@@ -23,7 +23,7 @@ namespace Quaver.Shared.Converters.Osu
         /// </summary>
         public static void ConvertOsz(string file, string extractDirectory)
         {
-            var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+            var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
             var tempFolder = $@"{ConfigManager.TempDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}";
 
             if (Directory.Exists(tempFolder))

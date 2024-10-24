@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Force.DeepCloner;
 using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Helpers;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Helpers;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -48,26 +48,33 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Wobble.Discord.RPC.Logging;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
-using YamlDotNet.Serialization.NodeTypeResolvers;
 
 namespace Quaver.Shared.Screens.Edit
 {
     public sealed class EditScreen : QuaverScreen, IHasLeftPanel
     {
+        static readonly TimeSpan _backupInterval = TimeSpan.FromMinutes(5);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override QuaverScreenType Type { get; } = QuaverScreenType.Editor;
 
+        public Timer BackupScheduler { get; }
+
         /// <summary>
         /// </summary>
         public Map Map { get; }
+
+        /// <summary>
+        ///     The most recent backup of the map, used for comparing changes.
+        /// </summary>
+        public Qua BackupQua { get; private set; }
 
         /// <summary>
         ///     A copy of the original and unedited map
@@ -115,6 +122,11 @@ namespace Quaver.Shared.Screens.Edit
         public static List<int> AvailableBeatSnaps { get; set; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 };
 
         /// <summary>
+        ///     In Menu -> Edit -> Resnap All/Selected Notes, the divisions to choose
+        /// </summary>
+        public static HashSet<int> CustomSnapDivisions { get; } = new HashSet<int> { 12, 16 };
+
+        /// <summary>
         /// </summary>
         private int BeatSnapIndex => AvailableBeatSnaps.FindIndex(x => x == BeatSnap.Value);
 
@@ -153,7 +165,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public Bindable<bool> ShowWaveform { get; } = ConfigManager.EditorShowWaveform ?? new Bindable<bool>(true) { Value = true };
-        
+
         /// <summary>
         /// </summary>
         public Bindable<bool> ShowSpectrogram { get; } = ConfigManager.EditorShowSpectrogram ?? new Bindable<bool>(true) { Value = true };
@@ -168,7 +180,7 @@ namespace Quaver.Shared.Screens.Edit
 
         public BindableInt SpectrogramFftSize { get; } =
             ConfigManager.EditorSpectrogramFftSize ?? new BindableInt(256, 256, 16384);
-        
+
         /// <summary>
         /// </summary>
         public Bindable<EditorPlayfieldWaveformAudioDirection> AudioDirection { get; } = ConfigManager.EditorAudioDirection ?? new Bindable<EditorPlayfieldWaveformAudioDirection>(EditorPlayfieldWaveformAudioDirection.Both);
@@ -276,6 +288,12 @@ namespace Quaver.Shared.Screens.Edit
         private double TimeSinceLastPlayfieldZoom { get; set; }
 
         /// <summary>
+        ///     Hit objects that are just placed by livemapping and wasn't let go yet.
+        ///     This is used so as long as livemapping keybinds are held, the note will get resized.
+        /// </summary>
+        private HitObjectInfo[] heldLivemapHitObjectInfos;
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -286,6 +304,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 OriginalQua = map.LoadQua();
                 WorkingMap = OriginalQua.DeepClone();
+                heldLivemapHitObjectInfos = new HitObjectInfo[WorkingMap.GetKeyCount()];
             }
             catch (Exception e)
             {
@@ -295,6 +314,9 @@ namespace Quaver.Shared.Screens.Edit
                 NotificationManager.Show(NotificationLevel.Error, "There was an issue while loading this map in the editor.");
                 return;
             }
+
+            if (map.Game is MapGame.Quaver)
+                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
 
             SetAudioTrack(track);
 
@@ -363,6 +385,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             Track.Seeked -= OnTrackSeeked;
             GameBase.Game.Window.FileDropped -= OnFileDropped;
+            BackupScheduler?.Dispose();
             Track?.Dispose();
             Skin?.Value?.Dispose();
             Skin?.Dispose();
@@ -871,7 +894,13 @@ namespace Quaver.Shared.Screens.Edit
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
-                if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                var key = Keys.D1 + i;
+                if (KeyboardManager.IsUniqueKeyRelease(key))
+                {
+                    heldLivemapHitObjectInfos[i] = null;
+                }
+
+                if (!KeyboardManager.CurrentState.IsKeyDown(key))
                     continue;
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
@@ -886,16 +915,25 @@ namespace Quaver.Shared.Screens.Edit
 
                 var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
 
-                // Can be multiple if overlap
-                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
-
-                if (hitObjectsAtTime.Count > 0)
+                if (KeyboardManager.IsUniqueKeyPress(key))
                 {
-                    foreach (var note in hitObjectsAtTime)
-                        ActionManager.RemoveHitObject(note);
+                    // Can be multiple if overlap
+                    var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time)
+                        .ToList();
+
+                    if (hitObjectsAtTime.Count > 0)
+                    {
+                        foreach (var note in hitObjectsAtTime)
+                            ActionManager.RemoveHitObject(note);
+                    }
+                    else
+                        heldLivemapHitObjectInfos[i] = ActionManager.PlaceHitObject(lane, time, 0, layer);
                 }
-                else
-                    ActionManager.PlaceHitObject(lane, time, 0, layer);
+                else if (heldLivemapHitObjectInfos[i] != null && ConfigManager.EditorLiveMapLongNote.Value)
+                {
+                    if (time - heldLivemapHitObjectInfos[i].StartTime > ConfigManager.EditorLiveMapLongNoteThreshold.Value)
+                        ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[i], heldLivemapHitObjectInfos[i].EndTime, time);
+                }
             }
         }
 
@@ -922,7 +960,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void SetHitSoundObjectIndex()
         {
-            HitsoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= Track.Time);
+            HitsoundObjectIndex = WorkingMap.HitObjects.IndexAtTime((float)Track.Time);
             HitsoundObjectIndex++;
         }
 
@@ -1114,13 +1152,13 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (!File.Exists(pluginPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
+                    Logger.Debug($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
                     continue;
                 }
 
                 if (!File.Exists(settingsPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
+                    Logger.Debug($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
                     continue;
                 }
 
@@ -1596,7 +1634,7 @@ namespace Quaver.Shared.Screens.Edit
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset.");
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset:\n" + e.Message);
             }
         }
 
@@ -1727,6 +1765,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void ExportToZip()
         {
+            if (ActionManager.HasUnsavedChanges)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Your map has unsaved changes. Please save before exporting.");
+                return;
+            }
+
             NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
 
             ThreadScheduler.Run(() =>
@@ -1876,6 +1920,23 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             DialogManager.Show(new EditorChangeBackgroundDialog(this, e));
+        }
+
+        void MakeScheduledMapBackup(object _)
+        {
+            // We likely need to clone this because we are in a different thread,
+            // which could cause mutation during enumeration, and an exception thrown.
+            var newBackup = WorkingMap.DeepClone();
+
+            if (BackupQua?.EqualByValue(newBackup) ?? false)
+                return;
+
+            var mapDirectory = Path.Join(ConfigManager.MapBackupDirectory, Path.GetFileNameWithoutExtension(Map.Path));
+            Directory.CreateDirectory(mapDirectory);
+            var filePath = Path.Join(mapDirectory, $"{DateTime.Now.ToString("s").Replace(':', '_')}.qua");
+
+            BackupQua = newBackup;
+            BackupQua.Save(filePath);
         }
     }
 }

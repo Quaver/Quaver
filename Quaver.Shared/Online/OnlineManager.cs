@@ -13,7 +13,6 @@ using System.Net.WebSockets;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
-using Quaver.API.Replays;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -21,11 +20,11 @@ using Quaver.Server.Client.Events.Login;
 using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
-using Quaver.Server.Common.Objects.Listening;
-using Quaver.Server.Common.Objects.Multiplayer;
-using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
+using Quaver.Server.Client.Objects.Listening;
+using Quaver.Server.Client.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.BlockedUsers;
@@ -38,7 +37,6 @@ using Quaver.Shared.Graphics.Dialogs.Online;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Main;
@@ -317,7 +315,7 @@ namespace Quaver.Shared.Online
 
             ClearOnlineData();
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             switch (game.CurrentScreen?.Type)
             {
@@ -352,25 +350,11 @@ namespace Quaver.Shared.Online
 
             switch (e.Status)
             {
-                // Success
                 case 200:
                     NotificationManager.Show(NotificationLevel.Success, "Account successfully created. You are now being logged in!");
                     break;
-                // Unauthorized
-                case 401:
-                    NotificationManager.Show(NotificationLevel.Error, e.Message);
-                    break;
-                // Username already taken.
-                case 409:
-                    NotificationManager.Show(NotificationLevel.Error, "The username you have selected is already taken.");
-                    break;
-                // Invalid username choice.
-                case 422:
-                    NotificationManager.Show(NotificationLevel.Error, "The username you have chosen is invalid.");
-                    break;
-                // No server response.
                 default:
-                    NotificationManager.Show(NotificationLevel.Error, "No response from the server.");
+                    NotificationManager.Show(NotificationLevel.Error, e.Message);
                     break;
             }
         }
@@ -431,10 +415,10 @@ namespace Quaver.Shared.Online
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.Presence.PartySize = 0;
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             // Send client status update packet.
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen != null)
                 Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
@@ -543,13 +527,13 @@ namespace Quaver.Shared.Online
                         break;
                 }
 
-                if ((int) e.Response.Code == -1)
+                if ((int)e.Response.Code == -1)
                     map.RankedStatus = map.MapId == -1 ? RankedStatus.NotSubmitted : RankedStatus.Unranked;
 
                 // Update online grade
                 if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Rate && e.Response.PersonalBest != null)
                 {
-                    var onlineGrade = GradeHelper.GetGradeFromAccuracy((float) e.Response.PersonalBest.Accuracy);
+                    var onlineGrade = GradeHelper.GetGradeFromAccuracy((float)e.Response.PersonalBest.Accuracy);
 
                     if (GradeHelper.GetGradeImportanceIndex(onlineGrade) > GradeHelper.GetGradeImportanceIndex(map.OnlineGrade))
                         map.OnlineGrade = onlineGrade;
@@ -602,7 +586,7 @@ namespace Quaver.Shared.Online
             {
                 DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
                 DiscordHelper.Presence.EndTimestamp = 0;
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+                DiscordHelper.UpdatePresence();
             }
             catch (Exception ex)
             {
@@ -713,7 +697,7 @@ namespace Quaver.Shared.Online
             if (OnlineUsers.ContainsKey(e.Game.HostId))
                 e.Game.Host = OnlineUsers[e.Game.HostId].OnlineUser;
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen.Type != QuaverScreenType.Lobby || game.CurrentScreen.Exiting)
                 return;
@@ -744,14 +728,16 @@ namespace Quaver.Shared.Online
             if (!CurrentGame.PlayerIds.Contains(Self.OnlineUser.Id))
                 CurrentGame.PlayerIds.Add(Self.OnlineUser.Id);
             if (!CurrentGame.PlayerMods.Any(x => x.UserId == Self.OnlineUser.Id))
-                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = Self.OnlineUser.Id, Modifiers = "0"});
+                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = Self.OnlineUser.Id, Modifiers = "0" });
 
             // Get the current screen
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             game.CurrentScreen.Exit(() =>
             {
-                Logger.Important($"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
+                if (CurrentGame is not null)
+                    Logger.Important($"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
+
                 return new MultiplayerGameScreen();
             });
         }
@@ -772,7 +758,7 @@ namespace Quaver.Shared.Online
             CurrentGame = MultiplayerGames[e.GameId];
             CurrentGame.IsSpectating = true;
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             game.CurrentScreen.Exit(() =>
             {
@@ -927,7 +913,7 @@ namespace Quaver.Shared.Online
             var playerMods = CurrentGame.PlayerMods.Find(x => x.UserId == e.UserId);
 
             if (playerMods == null)
-                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = e.Modifiers.ToString()});
+                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = e.Modifiers.ToString() });
             else
             {
                 playerMods.Modifiers = e.Modifiers.ToString();
@@ -947,7 +933,7 @@ namespace Quaver.Shared.Online
             LeaveGame(true);
             NotificationManager.Show(NotificationLevel.Error, "You have been kicked from the game!");
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
             game.GlobalUserInterface.Cursor.Alpha = 1;
             game.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
         }
@@ -1055,22 +1041,22 @@ namespace Quaver.Shared.Online
                 return;
 
             lock (CurrentGame.RedTeamPlayers)
-            lock (CurrentGame.BlueTeamPlayers)
-            {
-                switch (e.Team)
+                lock (CurrentGame.BlueTeamPlayers)
                 {
-                    case MultiplayerTeam.Red:
-                        CurrentGame.BlueTeamPlayers.Remove(e.UserId);
-                        CurrentGame.RedTeamPlayers.Add(e.UserId);
-                        break;
-                    case MultiplayerTeam.Blue:
-                        CurrentGame.RedTeamPlayers.Remove(e.UserId);
-                        CurrentGame.BlueTeamPlayers.Add(e.UserId);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    switch (e.Team)
+                    {
+                        case MultiplayerTeam.Red:
+                            CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+                            CurrentGame.RedTeamPlayers.Add(e.UserId);
+                            break;
+                        case MultiplayerTeam.Blue:
+                            CurrentGame.RedTeamPlayers.Remove(e.UserId);
+                            CurrentGame.BlueTeamPlayers.Add(e.UserId);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
-            }
         }
 
         /// <summary>
@@ -1147,7 +1133,7 @@ namespace Quaver.Shared.Online
                 return;
             }
 
-            CurrentGame.PlayerWins.Add(new MultiplayerPlayerWins() { UserId = e.UserId, Wins = e.Wins});
+            CurrentGame.PlayerWins.Add(new MultiplayerPlayerWins() { UserId = e.UserId, Wins = e.Wins });
         }
 
         /// <summary>
@@ -1159,7 +1145,7 @@ namespace Quaver.Shared.Online
             foreach (var user in e.Stats)
             {
                 foreach (var stats in user.Value)
-                    OnlineUsers[user.Key].Stats[(GameMode) stats.Key] = stats.Value;
+                    OnlineUsers[user.Key].Stats[(GameMode)stats.Key] = stats.Value;
             }
         }
 
@@ -1172,14 +1158,14 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 return;
 
-            if (CurrentGame.Players.Any(x => x.Id != e.UserId))
+            if (CurrentGame.Players.All(x => x.Id != e.UserId))
                 CurrentGame.Players.Add(OnlineUsers[e.UserId].OnlineUser);
 
             if (!CurrentGame.PlayerIds.Contains(e.UserId))
                 CurrentGame.PlayerIds.Add(e.UserId);
 
             if (CurrentGame.PlayerMods.All(x => x.UserId != e.UserId))
-                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = "0"});
+                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = "0" });
         }
 
         /// <summary>
@@ -1199,7 +1185,7 @@ namespace Quaver.Shared.Online
             CurrentGame.BlueTeamPlayers.Remove(e.UserId);
             CurrentGame.Players.Remove(OnlineUsers[e.UserId].OnlineUser);
 
-            var currentScreen = ((QuaverGame) GameBase.Game).CurrentScreen;
+            var currentScreen = ((QuaverGame)GameBase.Game).CurrentScreen;
             if (CurrentGame.PlayerIds.Count == 0)
             {
                 if (currentScreen.Type == QuaverScreenType.Multiplayer)
@@ -1249,7 +1235,7 @@ namespace Quaver.Shared.Online
                 return;
             }
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen is MultiplayerGameScreen screen)
                 screen.DontLeaveGameUponScreenSwitch = true;
@@ -1408,7 +1394,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame == null)
                 NotificationManager.Show(NotificationLevel.Info, $"You are no longer spectating anymore!");
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen.Type == QuaverScreenType.Gameplay && SpectatorClients.Count == 0)
             {
@@ -1492,7 +1478,7 @@ namespace Quaver.Shared.Online
             Logger.Important($"Successfully joined {ListeningParty.HostId}'s listening party.", LogType.Runtime);
 
             // Go to the music player screen if not already in it
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen.Type == QuaverScreenType.Music)
                 return;
@@ -1511,7 +1497,7 @@ namespace Quaver.Shared.Online
             Logger.Important($"Server informed us that we've left the current listening party.", LogType.Runtime);
 
             // The user is still currently on the screen, so kick them out and head over to the main menu
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen.Type != QuaverScreenType.Music)
                 return;
@@ -1684,7 +1670,7 @@ namespace Quaver.Shared.Online
             if (!ConfigManager.DisplaySongRequestNotifications.Value)
                 return;
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.OnlineHub.IsOpen)
             {
@@ -1845,7 +1831,7 @@ namespace Quaver.Shared.Online
             if (game == null)
                 return 0;
 
-            var currMods = (ModIdentifier) long.Parse(game.Modifiers ?? "0");
+            var currMods = (ModIdentifier)long.Parse(game.Modifiers ?? "0");
 
             if (currMods < 0)
                 currMods = 0;
@@ -1854,7 +1840,7 @@ namespace Quaver.Shared.Online
 
             if (playerMods != null)
             {
-                var pm =  (ModIdentifier) long.Parse(playerMods.Modifiers ?? "0");
+                var pm = (ModIdentifier)long.Parse(playerMods.Modifiers ?? "0");
 
                 if (pm < 0)
                     pm = 0;
@@ -1879,13 +1865,13 @@ namespace Quaver.Shared.Online
         {
             game = game ?? CurrentGame;
 
-            if (game == null || game .Ruleset != MultiplayerGameRuleset.Team)
+            if (game == null || game.Ruleset != MultiplayerGameRuleset.Team)
                 return MultiplayerTeam.Red;
 
-            if (game .RedTeamPlayers.Contains(userId))
+            if (game.RedTeamPlayers.Contains(userId))
                 return MultiplayerTeam.Red;
 
-            if (game .BlueTeamPlayers.Contains(userId))
+            if (game.BlueTeamPlayers.Contains(userId))
                 return MultiplayerTeam.Blue;
 
             return MultiplayerTeam.Red;
@@ -1924,7 +1910,7 @@ namespace Quaver.Shared.Online
                 FriendsListUserChanged?.Invoke(typeof(OnlineManager),
                     new FriendsListUserChangedEventArgs(FriendsListAction.Add, user.OnlineUser.Id));
 
-                Logger.Important($"{user.OnlineUser.Id} has been added to our friends list.",LogType.Runtime);
+                Logger.Important($"{user.OnlineUser.Id} has been added to our friends list.", LogType.Runtime);
                 NotificationManager.Show(NotificationLevel.Success, $"{user.OnlineUser.Username} has been added to your friends list!");
             }
         }
@@ -1958,13 +1944,13 @@ namespace Quaver.Shared.Online
         /// <returns></returns>
         private static List<Score> GetScoresFromMultiplayerUsers()
         {
-            var users = OnlineUsers.ToList();
 
-            var playingUsers = users.FindAll(x =>
-                CurrentGame.PlayerIds.Contains(x.Value.OnlineUser.Id) &&
-                !CurrentGame.PlayersWithoutMap.Contains(x.Value.OnlineUser.Id) &&
-                CurrentGame.RefereeUserId != x.Value.OnlineUser.Id &&
-                x.Value != Self);
+            var playingUsers = CurrentGame.Players.FindAll(x =>
+                x.Id != CurrentGame.RefereeUserId &&
+                !CurrentGame.PlayersWithoutMap.Contains(x.Id) &&
+                CurrentGame.PlayerIds.Contains(x.Id) &&
+                x.Id != Self.OnlineUser.Id
+            );
 
             var scores = new List<Score>();
 
@@ -1972,10 +1958,10 @@ namespace Quaver.Shared.Online
             {
                 scores.Add(new Score
                 {
-                    PlayerId = x.Key,
-                    SteamId = x.Value.OnlineUser.SteamId,
-                    Name = x.Value.OnlineUser.Username,
-                    Mods = (long) GetUserActivatedMods(x.Value.OnlineUser.Id),
+                    PlayerId = x.Id,
+                    SteamId = x.SteamId,
+                    Name = x.Username,
+                    Mods = (long)GetUserActivatedMods(x.Id),
                     IsMultiplayer = true,
                     IsOnline = true
                 });

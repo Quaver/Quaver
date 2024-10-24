@@ -64,7 +64,7 @@ namespace Quaver.Shared.Online
 
             if (!File.Exists(PreviewFilePath))
             {
-                NotificationManager.Show(NotificationLevel.Error,"You must place a steam_workshop_preview.png in the folder " +
+                NotificationManager.Show(NotificationLevel.Error, "You must place a steam_workshop_preview.png in the folder " +
                                                                  "in order to upload it.");
 
                 HasUploaded = true;
@@ -93,7 +93,7 @@ namespace Quaver.Shared.Online
                 return;
             }
 
-            var resp = SteamUGC.CreateItem((AppId_t) SteamManager.ApplicationId, EWorkshopFileType.k_EWorkshopFileTypeCommunity);
+            var resp = SteamUGC.CreateItem((AppId_t)SteamManager.ApplicationId, EWorkshopFileType.k_EWorkshopFileTypeCommunity);
 
             SteamManager.OnCreateItemResponse.Set(resp);
         }
@@ -105,7 +105,7 @@ namespace Quaver.Shared.Online
         public int GetUploadProgressPercentage()
         {
             SteamUGC.GetItemUpdateProgress(Handle, out var bytesProcessed, out var bytesTotal);
-            return (int) (bytesProcessed / bytesTotal * 100);
+            return (int)(bytesProcessed / bytesTotal * 100);
         }
     }
 }

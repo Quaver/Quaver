@@ -1,10 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;

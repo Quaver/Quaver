@@ -1,13 +1,10 @@
-using System;
-using Microsoft.Xna.Framework.Graphics;
-using Quaver.Server.Common.Objects.Listening;
+using Quaver.Server.Client.Objects.Listening;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Music.Components;
-using Wobble.Assets;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Main.UI.Jukebox

@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         private LabelledCheckbox LegacyLNRendering { get; set; }
 
         private Tooltip LegacyLNRenderingTooltip { get; } = new(
-            "When set to ON, forces the use of the old LN renderer. If your chart has no Scroll\nVelocity changes, you can safely ignore this option. The current LN renderer places\nthe head and tail to the earliest and latest positions reached, respectively. The old LN\nrenderer instead places them both wherever the playfield happens to be at the time.",
+            "When set to ON, forces the use of the old LN renderer. If your map has no Scroll\nVelocity changes, you can safely ignore this option. The current LN renderer places\nthe head and tail to the earliest and latest positions reached, respectively. The old LN\nrenderer instead places them both wherever the playfield happens to be at the time.",
             Color.White
         );
 

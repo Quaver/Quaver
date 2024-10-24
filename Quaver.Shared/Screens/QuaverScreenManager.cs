@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens
         {
             Logger.Important($"Scheduled Screen Change", LogType.Runtime);
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen != null)
                 LastScreen = game.CurrentScreen.Type;
@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens
         /// <param name="screen"></param>
         private static void OnCompleted(object sender, TaskCompleteEventArgs<Func<QuaverScreen>, QuaverScreen> e)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             // Wait for the transitioner to fully fade to black.
             while (Transitioner.Blackness?.Animations.Count != 0)
@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens
 
         private static void ChangeScreen(QuaverScreen screen, bool switchImmediately)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             ScreenManager.ChangeScreen(screen, switchImmediately);
             game.CurrentScreen = screen;

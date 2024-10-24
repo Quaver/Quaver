@@ -60,7 +60,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             var alpha = IsHovered ? 0.30f : 0;
-            Alpha = MathHelper.Lerp(Alpha, alpha, (float) Math.Min(dt / 20f, 1));
+            Alpha = MathHelper.Lerp(Alpha, alpha, (float)Math.Min(dt / 20f, 1));
 
             base.Update(gameTime);
         }

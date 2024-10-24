@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
-using Quaver.Server.Common.Objects;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.User;

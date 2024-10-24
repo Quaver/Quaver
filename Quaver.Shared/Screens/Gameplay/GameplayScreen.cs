@@ -19,9 +19,9 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Judgements;
@@ -335,7 +335,7 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If true, the gameplay screen is solely for song select preview usage
         /// </summary>
         public bool IsSongSelectPreview { get; }
-        
+
         /// <summary>
         ///     If true, the gameplay screen won't seek to the start when loaded.
         ///     This is used for skin hot-reloading.
@@ -487,7 +487,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public override void OnFirstUpdate()
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
             game.InitializeFpsLimiting();
 
             if (IsMultiplayerGame && !IsSongSelectPreview)
@@ -532,7 +532,7 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 HandleSpectatorSkipping();
 
-                var inputManager = (KeysInputManager) Ruleset.InputManager;
+                var inputManager = (KeysInputManager)Ruleset.InputManager;
                 inputManager.ReplayInputManager?.HandleSpectating();
             }
 
@@ -699,11 +699,11 @@ namespace Quaver.Shared.Screens.Gameplay
                     return;
 
                 // Remove the pause fade.
-                var screenView = (GameplayScreenView) View;
+                var screenView = (GameplayScreenView)View;
                 if (!screenView.FadingOnRestartKeyPress)
                 {
                     screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 0,
-                        (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 120, 1));
+                        (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 120, 1));
                 }
 
                 return;
@@ -777,7 +777,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 TimePauseKeyHeld += gameTime.ElapsedGameTime.TotalMilliseconds;
 
                 screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 1,
-                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / TimeToHoldPause, 1));
+                    (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / TimeToHoldPause, 1));
 
                 // Make the user hold the pause key down before pausing if tap to pause is disabled.
                 if (!ConfigManager.TapToPause.Value && TimePauseKeyHeld < TimeToHoldPause)
@@ -811,7 +811,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (!ModManager.IsActivated(ModIdentifier.Paused) && Ruleset.ScoreProcessor.TotalJudgementCount > 0)
                 {
                     if (ConfigManager.DisplayPauseWarning.Value)
-                        NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " + 
+                        NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing " +
                                                                             "during gameplay!", null, true);
 
                     ModManager.AddMod(ModIdentifier.Paused);
@@ -832,7 +832,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 DiscordHelper.Presence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time";
                 DiscordHelper.Presence.EndTimestamp = 0;
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+                DiscordHelper.UpdatePresence();
 
                 OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
 
@@ -923,7 +923,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     ForceFail = true;
                     HasQuit = true;
 
-                    var view = (GameplayScreenView) View;
+                    var view = (GameplayScreenView)View;
                     view.Transitioner.Animations.Clear();
                     break;
             }
@@ -1219,7 +1219,7 @@ namespace Quaver.Shared.Screens.Gameplay
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(Ruleset.Mode).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(Ruleset.Mode);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             SteamManager.SetRichPresence("State", DiscordHelper.Presence.State);
             SteamManager.SetRichPresence("Details", Map.ToString());
@@ -1261,7 +1261,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 content = Map.ToString();
             }
 
-            return new UserClientStatus(status, Map.MapId, MapHash, (byte) Ruleset.Mode, content, (long) ModManager.Mods);
+            return new UserClientStatus(status, Map.MapId, MapHash, (byte)Ruleset.Mode, content, (long)ModManager.Mods);
         }
 
         /// <summary>
@@ -1276,11 +1276,11 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
             }
 
-            var samples = new List<double>(stats.Select(x => (double) x.HitDifference).ToList());
+            var samples = new List<double>(stats.Select(x => (double)x.HitDifference).ToList());
             var stdDev = samples.StandardDeviation();
 
             if (stdDev < 25 && !Exiting)
-                DialogManager.Show(new OffsetConfirmDialog(this, (int) samples.Average() + ConfigManager.GlobalAudioOffset.Value));
+                DialogManager.Show(new OffsetConfirmDialog(this, (int)samples.Average() + ConfigManager.GlobalAudioOffset.Value));
             else
                 ExitOffsetCalibrationOnFailure();
         }
@@ -1329,7 +1329,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
-        public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen) 
+        public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen)
             ? tournamentScreen.GameplayScreens.Min(s =>
             {
                 // We are guaranteed to find a minimum because of the return condition above.
@@ -1370,7 +1370,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 var inputManager = (KeysInputManager)Ruleset.InputManager;
                 inputManager.ReplayInputManager.HandleSkip();
 
-                var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
+                var hitobjectManager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
                 hitobjectManager.HandleSkip();
 
                 // Stop all playing sound effects and move NextSoundEffectIndex ahead.
@@ -1438,7 +1438,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="e"></param>
         private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
         {
-            var view = (GameplayScreenView) View;
+            var view = (GameplayScreenView)View;
             view.ScoreboardLeft?.Users.Find(x => x.LocalScore?.PlayerId == e.UserId)?.QuitGame();
             SetRichPresence();
         }
@@ -1513,11 +1513,11 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!InReplayMode)
                 return;
 
-            var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
+            var hitobjectManager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
 
             if (time != -1)
             {
-                time = MathHelper.Clamp((float) time, 0, (float) AudioEngine.Track.Length);
+                time = MathHelper.Clamp((float)time, 0, (float)AudioEngine.Track.Length);
                 AudioEngine.Track.Seek(time);
             }
 
@@ -1571,7 +1571,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // Handle play test autoplay input.
             if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
             {
-                var inputManager = (KeysInputManager) Ruleset.InputManager;
+                var inputManager = (KeysInputManager)Ruleset.InputManager;
 
                 if (inputManager.ReplayInputManager != null)
                     CachedReplayInputManager = inputManager.ReplayInputManager;
@@ -1603,14 +1603,14 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (!InReplayMode)
                 {
                     inputManager.ReplayInputManager = null;
-                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
+                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
 
                     for (var i = 0; i < Map.GetKeyCount(); i++)
                     {
                         inputManager.BindingStore[i].Pressed = false;
                         inputManager.HandleInput(0);
 
-                        var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+                        var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
                         playfield.Stage.HitLightingObjects[i].StopHolding();
                         playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
                     }

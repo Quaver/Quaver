@@ -15,11 +15,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch
 
         private Qua WorkingMap { get; }
 
-        private List<SliderVelocityInfo> ScrollVelocities { get; }
+        public List<SliderVelocityInfo> ScrollVelocities { get; }
 
-        private List<float> OriginalMultipliers { get; } = new List<float>();
+        public List<float> OriginalMultipliers { get; } = new List<float>();
 
-        private float Multiplier { get; }
+        public float Multiplier { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeScrollVelocityMultiplierBatch(EditorActionManager manager, Qua workingMap, List<SliderVelocityInfo> svs,

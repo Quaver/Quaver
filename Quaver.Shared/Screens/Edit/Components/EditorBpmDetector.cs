@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.Edit.Components
 
             ThreadScheduler.Run(() =>
             {
-                var track = (AudioTrack) Track;
+                var track = (AudioTrack)Track;
                 var stream = 0;
 
                 try
@@ -129,9 +129,9 @@ namespace Quaver.Shared.Screens.Edit.Components
             {
                 var bpm = BassFx.BPMDecodeGet(stream, 0, (i + 1) * timePerInterval, 0,
                     BassFlags.FxBpmBackground | BassFlags.FXBpmMult2,
-                    (channel, percent, user) => {});
+                    (channel, percent, user) => { });
 
-                var bpmRounded = (int) Math.Round(bpm, MidpointRounding.AwayFromZero);
+                var bpmRounded = (int)Math.Round(bpm, MidpointRounding.AwayFromZero);
 
                 if (Bpms.ContainsKey(bpmRounded))
                     Bpms[bpmRounded]++;
@@ -146,11 +146,11 @@ namespace Quaver.Shared.Screens.Edit.Components
             foreach (var item in Bpms)
             {
                 Logger.Important($"BPM: {item.Key} | Occurrences: {item.Value} " +
-                                 $"| Confidence: {item.Value / (float) totalIntervals * 100f}%", LogType.Runtime);
+                                 $"| Confidence: {item.Value / (float)totalIntervals * 100f}%", LogType.Runtime);
             }
 
             HighestConfidenceBpm = Bpms.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
-            HighestConfidenceBpmPercentage = (int) Math.Round(Bpms[HighestConfidenceBpm] / (float) totalIntervals * 100f, MidpointRounding.AwayFromZero);
+            HighestConfidenceBpmPercentage = (int)Math.Round(Bpms[HighestConfidenceBpm] / (float)totalIntervals * 100f, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Quaver.Shared.Screens.Edit.Components
                         offset = position;
                 });
 
-            SuggestedOffset = (int) Math.Round(offset * 100, MidpointRounding.AwayFromZero);
+            SuggestedOffset = (int)Math.Round(offset * 100, MidpointRounding.AwayFromZero);
             Logger.Important($"Suggested offset: {SuggestedOffset}", LogType.Runtime);
         }
     }

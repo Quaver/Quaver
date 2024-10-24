@@ -6,7 +6,7 @@
 */
 
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Enums;
+using Quaver.Server.Client.Enums;
 using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Graphics

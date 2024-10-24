@@ -64,7 +64,14 @@ namespace Quaver.Shared.Helpers
                 ms.Position = 0;
                 using (var zip = new GZipStream(ms, CompressionMode.Decompress))
                 {
-                    zip.Read(buffer, 0, buffer.Length);
+                    var offset = 0;
+                    while (true)
+                    {
+                        var bytesRead = zip.Read(buffer, offset, buffer.Length - offset);
+                        if (bytesRead <= 0)
+                            break;
+                        offset += bytesRead;
+                    }
                 }
 
                 return Encoding.UTF8.GetString(buffer);

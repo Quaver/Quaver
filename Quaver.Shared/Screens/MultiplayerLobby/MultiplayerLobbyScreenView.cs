@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
     {
         /// <summary>
         /// </summary>
-        private MultiplayerLobbyScreen Lobby => (MultiplayerLobbyScreen) Screen;
+        private MultiplayerLobbyScreen Lobby => (MultiplayerLobbyScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -95,11 +95,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// <summary>
         /// </summary>
         private void CreateBackground()
-            => Background = new BackgroundImage(UserInterface.Triangles, 0, false) {Parent = Container};
+            => Background = new BackgroundImage(UserInterface.Triangles, 0, false) { Parent = Container };
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new MenuHeaderMain {Parent = Container};
+        private void CreateHeader() => Header = new MenuHeaderMain { Parent = Container };
 
         /// <summary>
         /// </summary>

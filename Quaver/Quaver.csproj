@@ -36,16 +36,17 @@
     <EmbeddedResource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Quaver.Shared\Quaver.Shared.csproj" />
-    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
-    <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
+    <ProjectReference Include="../Quaver.Shared/Quaver.Shared.csproj" />
+    <ProjectReference Include="../Wobble/MonoGame/MonoGame.Framework/MonoGame.Framework.DesktopGL.csproj" />
+    <ProjectReference Include="../Wobble/Wobble/Wobble.csproj" />
+
+	<ProjectReference
+      Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj"
+      Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"
+    />
+	<Reference Include="../Quaver.Shared/Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ZetaIpc" Version="1.0.0.9" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Quaver.Server.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\Quaver.Shared\Quaver.Server.Client.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

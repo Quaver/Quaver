@@ -1,10 +1,4 @@
-using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Multiplayer;
-using Quaver.Shared.Assets;
-using Wobble.Bindables;
-using Wobble.Graphics;
-using Wobble.Graphics.Sprites.Text;
-using Wobble.Managers;
+using Quaver.Server.Client.Objects.Multiplayer;
 
 namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 {

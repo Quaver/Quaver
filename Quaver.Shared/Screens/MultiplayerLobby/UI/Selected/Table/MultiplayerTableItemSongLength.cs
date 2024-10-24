@@ -1,6 +1,6 @@
 using System;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Online;
 using Wobble.Bindables;
 

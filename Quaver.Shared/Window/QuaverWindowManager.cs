@@ -22,7 +22,7 @@ namespace Quaver.Shared.Window
             {
                 var graphics = GameBase.Game.Graphics;
 
-                var ratio = (float) graphics.PreferredBackBufferWidth / graphics.PreferredBackBufferHeight;
+                var ratio = (float)graphics.PreferredBackBufferWidth / graphics.PreferredBackBufferHeight;
 
                 var widescreen = Math.Abs(ratio - 16 / 9f);
                 var ultrawide = Math.Abs(ratio - 21 / 9f);

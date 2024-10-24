@@ -17,7 +17,7 @@ using IniFileParser.Exceptions;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
-using Quaver.Server.Common.Helpers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
@@ -72,6 +72,16 @@ namespace Quaver.Shared.Config
         /// </summary>
         private static string _dataDirectory;
         internal static Bindable<string> DataDirectory { get; private set; }
+
+        /// <summary>
+        ///     The temp directory
+        /// </summary>
+        internal static string BackupDirectory => Path.Join(DataDirectory.Value, "Backups");
+
+        /// <summary>
+        ///     The temp directory
+        /// </summary>
+        internal static string MapBackupDirectory => Path.Join(BackupDirectory, "Maps");
 
         /// <summary>
         ///     The temp directory
@@ -230,6 +240,16 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> AutoLoadOsuBeatmaps { get; private set; }
 
         /// <summary>
+        ///     Delete the original mapset file after importing
+        /// </summary>
+        internal static Bindable<bool> DeleteOriginalFileAfterImport { get; private set; }
+        
+        /// <summary>
+        ///     Enable the Discord Rich Presence
+        /// </summary>
+        internal static Bindable<bool> DiscordRichPresence { get; private set; }
+
+        /// <summary>
         ///     If the scoreboard is currently visible.
         /// </summary>
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
@@ -288,7 +308,7 @@ namespace Quaver.Shared.Config
         ///     If true, hitsounds in gameplay will be played.
         /// </summary>
         internal static Bindable<bool> EnableHitsounds { get; private set; }
-        
+
         /// <summary>
         ///     If true, a hitsound will be played when releasing a long note
         /// </summary>
@@ -340,6 +360,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> UIElementsOverLaneCover { get; private set; }
 
         /// <summary>
+        ///     If enabled, the receptors will be displayed over the lane cover.
+        /// </summary>
+        internal static Bindable<bool> ReceptorsOverLaneCover { get; private set; }
+
+        /// <summary>
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
@@ -352,7 +377,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
-        
+
         /// <summary>
         ///     Scaling of ImGui windows and texts
         /// </summary>
@@ -362,10 +387,26 @@ namespace Quaver.Shared.Config
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
-        
+
+        /// <summary>
+        ///     Whether to snap notes when livemapping
+        /// </summary>
         internal static Bindable<bool> EditorLiveMapSnap { get; private set; }
-        
+
+        /// <summary>
+        ///     The offset applied to every hit objects placed by livemapping
+        /// </summary>
         internal static BindableInt EditorLiveMapOffset { get; private set; }
+
+        /// <summary>
+        ///     Whether long notes can be placed when live mapping
+        /// </summary>
+        internal static Bindable<bool> EditorLiveMapLongNote { get; private set; }
+
+        /// <summary>
+        ///     Minimum time needed to press the key to place a long note when live mapping
+        /// </summary>
+        internal static BindableInt EditorLiveMapLongNoteThreshold { get; private set; }
 
         /// <summary>
         ///     Whether or not to play hitsounds in the editor.
@@ -554,19 +595,19 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
-        
+
         internal static Bindable<int> EditorSpectrogramMaximumFrequency { get; private set; }
-        
+
         internal static Bindable<int> EditorSpectrogramMinimumFrequency { get; private set; }
-        
+
         internal static Bindable<float> EditorSpectrogramCutoffFactor { get; private set; }
-        
+
         internal static Bindable<float> EditorSpectrogramIntensityFactor { get; private set; }
-        
+
         internal static Bindable<EditorPlayfieldSpectrogramFrequencyScale> EditorSpectrogramFrequencyScale { get; private set; }
-        
+
         internal static BindableInt EditorSpectrogramFftSize { get; private set; }
-        
+
         /// <summary>
         ///     The number of times the song's fft will be taken. Linearly increases the time to load
         /// </summary>
@@ -812,7 +853,7 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyIncreaseMapOffset { get; private set; }
         internal static Bindable<Keys> KeyDecreaseMapOffset { get; private set; }
-        
+
         /// <summary>
         ///     The keys to toggle autoplay during playtesting
         /// </summary>
@@ -964,7 +1005,7 @@ namespace Quaver.Shared.Config
                 Logger.Important("Creating a new config file...", LogType.Runtime);
             }
 
-            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(configFilePath)["Config"];
+            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(configFilePath, Encoding.UTF8)["Config"];
 
             // Read / Set Config Values
             // NOTE: MAKE SURE TO SET THE VALUE TO AUTO-SAVE WHEN CHANGING! THIS ISN'T DONE AUTOMATICALLY.
@@ -980,7 +1021,7 @@ namespace Quaver.Shared.Config
             SteamWorkshopDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SteamWorkshopDirectory", _steamWorkshopDirectory, data);
             SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
             Username = ReadValue(@"Username", "Player", data);
-            VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
+            VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
             DevicePeriod = ReadInt(@"DevicePeriod", 2, 1, 100, data);
@@ -1011,6 +1052,8 @@ namespace Quaver.Shared.Config
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
+            DeleteOriginalFileAfterImport = ReadValue(@"DeleteOriginalFileAfterImport", true, data);
+            DiscordRichPresence = ReadValue(@"DiscordRichPresence", true, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
@@ -1090,6 +1133,8 @@ namespace Quaver.Shared.Config
             InvertEditorScrolling = ReadValue(@"InvertEditorScrolling", true, data);
             EditorLiveMapSnap = ReadValue(@"EditorLiveMapSnap", false, data);
             EditorLiveMapOffset = ReadInt(@"EditorLiveMapOffset", 0, -200, 200, data);
+            EditorLiveMapLongNote = ReadValue(@"EditorLiveMapLongNote", true, data);
+            EditorLiveMapLongNoteThreshold = ReadInt(@"EditorLiveMapLongNoteThreshold", 100, 0, 1000, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
@@ -1109,6 +1154,7 @@ namespace Quaver.Shared.Config
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
+            ReceptorsOverLaneCover = ReadValue(@"ReceptorsOverLaneCover", false, data);
             EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
@@ -1184,7 +1230,7 @@ namespace Quaver.Shared.Config
 
             // Bind global inverted scrolling so ScrollContainers get InvertScrolling setting too
             ScrollContainer.GlobalInvertedScrolling = InvertScrolling;
-            
+
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";

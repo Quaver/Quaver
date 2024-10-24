@@ -52,7 +52,7 @@ namespace Quaver.Shared.Database.Maps.Etterna
 
                 // Etterna handles additional song folders by replacing "AdditionalSongs/" by a custom set song folder.
                 // That is replicated here by using a regex.
-                string[] additionalSongFolders = {};
+                string[] additionalSongFolders = { };
 
                 if (!File.Exists(preferencesFilePath))
                 {
@@ -115,8 +115,8 @@ namespace Quaver.Shared.Database.Maps.Etterna
                         BackgroundPath = directory + "/" + Path.GetFileName(song.BackgroundPath),
                         BannerPath = directory + "/" + Path.GetFileName(song.BannerPath),
                         AudioPath = directory + "/" + Path.GetFileName(song.MusicPath),
-                        AudioPreviewTime = (int) (song.SampleStart * 1000),
-                        SongLength = (int) (song.MusicLength * 1000)
+                        AudioPreviewTime = (int)(song.SampleStart * 1000),
+                        SongLength = (int)(song.MusicLength * 1000)
                     };
 
                     // Try and fetch the creator name from the directory name

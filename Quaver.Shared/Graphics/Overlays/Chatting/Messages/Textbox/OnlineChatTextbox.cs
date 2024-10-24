@@ -1,19 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.Sprites.Text;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox

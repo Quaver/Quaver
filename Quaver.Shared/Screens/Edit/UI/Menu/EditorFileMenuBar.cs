@@ -335,6 +335,36 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.WorkingMap.HitObjects);
                 if (ImGui.MenuItem("Resnap to 1/16 and 1/12 snaps"))
                     Screen.ActionManager.ResnapNotes(new List<int> { 16, 12 }, Screen.WorkingMap.HitObjects);
+                if (ImGui.BeginMenu("Resnap to custom divisions"))
+                {
+                    if (ImGui.MenuItem("Resnap"))
+                    {
+                        if (EditScreen.CustomSnapDivisions.Count == 0)
+                            NotificationManager.Show(NotificationLevel.Warning,
+                                "You have not selected any divisions to snap!");
+                        else
+                            Screen.ActionManager.ResnapNotes(EditScreen.CustomSnapDivisions.ToList(),
+                                Screen.WorkingMap.HitObjects);
+                    }
+
+                    ImGui.Separator();
+                    foreach (var availableBeatSnap in EditScreen.AvailableBeatSnaps)
+                    {
+                        var color = ColorHelper.BeatSnapToColor(availableBeatSnap);
+                        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
+
+                        if (ImGui.MenuItem($"1/{StringHelper.AddOrdinal(availableBeatSnap)}", "",
+                                EditScreen.CustomSnapDivisions.Contains(availableBeatSnap)))
+                        {
+                            if (!EditScreen.CustomSnapDivisions.Add(availableBeatSnap))
+                                EditScreen.CustomSnapDivisions.Remove(availableBeatSnap);
+                        }
+
+                        ImGui.PopStyleColor();
+                    }
+
+                    ImGui.EndMenu();
+                }
                 ImGui.EndMenu();
             }
 
@@ -344,6 +374,36 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value }, Screen.SelectedHitObjects.Value);
                 if (ImGui.MenuItem("Resnap to 1/16 and 1/12 snaps"))
                     Screen.ActionManager.ResnapNotes(new List<int> { 16, 12 }, Screen.SelectedHitObjects.Value);
+                if (ImGui.BeginMenu("Resnap to custom divisions"))
+                {
+                    if (ImGui.MenuItem("Resnap"))
+                    {
+                        if (EditScreen.CustomSnapDivisions.Count == 0)
+                            NotificationManager.Show(NotificationLevel.Warning,
+                                "You have not selected any divisions to snap!");
+                        else
+                            Screen.ActionManager.ResnapNotes(EditScreen.CustomSnapDivisions.ToList(),
+                                Screen.SelectedHitObjects.Value);
+                    }
+
+                    ImGui.Separator();
+                    foreach (var availableBeatSnap in EditScreen.AvailableBeatSnaps)
+                    {
+                        var color = ColorHelper.BeatSnapToColor(availableBeatSnap);
+                        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
+
+                        if (ImGui.MenuItem($"1/{StringHelper.AddOrdinal(availableBeatSnap)}", "",
+                                EditScreen.CustomSnapDivisions.Contains(availableBeatSnap)))
+                        {
+                            if (!EditScreen.CustomSnapDivisions.Add(availableBeatSnap))
+                                EditScreen.CustomSnapDivisions.Remove(availableBeatSnap);
+                        }
+
+                        ImGui.PopStyleColor();
+                    }
+
+                    ImGui.EndMenu();
+                }
                 ImGui.EndMenu();
             }
 
@@ -466,6 +526,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             
             if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
+
+            if (ImGui.MenuItem("Place Long Notes When Live Mapping", "", ConfigManager.EditorLiveMapLongNote.Value))
+                ConfigManager.EditorLiveMapLongNote.Value = !ConfigManager.EditorLiveMapLongNote.Value;
+
+            if (ImGui.MenuItem("Set Minimum Length Of Long Notes Placed During Live Mapping"))
+                DialogManager.Show(new EditorSetLiveMapLongNoteThresholdDialog(Screen));
 
             if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
                 Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;

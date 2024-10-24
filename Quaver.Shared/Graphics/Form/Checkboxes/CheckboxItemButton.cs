@@ -12,7 +12,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
         /// </summary>
         private Drawable ClickableArea { get; }
 
-        public CheckboxItemButton(Texture2D image, Drawable clickableArea) : base(image)  => ClickableArea = clickableArea;
+        public CheckboxItemButton(Texture2D image, Drawable clickableArea) : base(image) => ClickableArea = clickableArea;
 
         /// <inheritdoc />
         /// <summary>

@@ -13,10 +13,8 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
@@ -38,7 +36,6 @@ using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection;
-using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using Steamworks;
@@ -336,7 +333,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (SpectatorDialog != null)
             {
                 SpectatorDialog.Alpha = MathHelper.Lerp(SpectatorDialog.Alpha, Screen.IsPaused ? 1 : 0,
-                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 100, 1));
+                    (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 100, 1));
             }
         }
 
@@ -512,7 +509,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 Alignment = Alignment.MidLeft
             };
 
-            var users = new List<ScoreboardUser> {SelfScoreboard};
+            var users = new List<ScoreboardUser> { SelfScoreboard };
 
             if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
             {
@@ -533,7 +530,8 @@ namespace Quaver.Shared.Screens.Gameplay
             // Red team/normal leaderboard
             ScoreboardLeft = new Scoreboard(scoreboardType,
                 OnlineManager.CurrentGame == null || OnlineManager.GetTeam(OnlineManager.Self.OnlineUser.Id) == MultiplayerTeam.Red ?
-                    users : new List<ScoreboardUser>()) { Parent = Container };
+                    users : new List<ScoreboardUser>())
+            { Parent = Container };
 
             ScoreboardLeft?.Users.ForEach(x => x.SetImage());
             ScoreboardRight?.Users.ForEach(x => x.SetImage());
@@ -588,7 +586,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         judgements = new List<Judgement>();
 
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
-                        judgements, UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
+                        judgements, UserInterface.UnknownAvatar, (ModIdentifier)mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
@@ -608,12 +606,12 @@ namespace Quaver.Shared.Screens.Gameplay
                     user.SetImage();
 
                     var processor = user.Processor as ScoreProcessorKeys;
-                    processor.Accuracy = (float) mapScores[i].Accuracy;
+                    processor.Accuracy = (float)mapScores[i].Accuracy;
                     processor.MaxCombo = mapScores[i].MaxCombo;
                     processor.Score = mapScores[i].TotalScore;
                     processor.PlayerName = mapScores[i].Name;
                     processor.UserId = mapScores[i].PlayerId;
-                    processor.SteamId = (ulong) mapScores[i].SteamId;
+                    processor.SteamId = (ulong)mapScores[i].SteamId;
 
                     if (judgements.Count == 0)
                     {
@@ -634,7 +632,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         judgements.Add((Judgement)int.Parse(hit.ToString()));
 
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
-                        judgements, UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
+                        judgements, UserInterface.UnknownAvatar, (ModIdentifier)mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
@@ -874,7 +872,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="e"></param>
         private void OnGameEnded(object sender, GameEndedEventArgs e)
         {
-            var manager = (HitObjectManagerKeys) Screen.Ruleset.HitObjectManager;
+            var manager = (HitObjectManagerKeys)Screen.Ruleset.HitObjectManager;
 
             Screen.MultiplayerMatchEndedPrematurely = !Screen.IsPlayComplete && manager.NextHitObject != null
                                                       && (Screen.Timing.Time >= Screen.Map.Length || AudioEngine.Track.Time >= AudioEngine.Track.Length);

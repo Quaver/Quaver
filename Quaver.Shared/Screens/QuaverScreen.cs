@@ -8,7 +8,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens
 
             HandleTooltipAnimation();
 
-            if (DialogManager.Dialogs.Count == 0 &&  MouseManager.IsUniqueClick(MouseButton.Left)
+            if (DialogManager.Dialogs.Count == 0 && MouseManager.IsUniqueClick(MouseButton.Left)
                 && ActiveCheckboxContainer != null && ActiveCheckboxContainer.IsOpen && !ActiveCheckboxContainer.IsHovered())
             {
                 ActiveCheckboxContainer.Close();
@@ -221,8 +221,8 @@ namespace Quaver.Shared.Screens
             if (ActiveTooltip == null)
                 return;
 
-            ActiveTooltip.X = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width, 5, WindowManager.Width - 5);
-            ActiveTooltip.Y = MathHelper.Clamp(MouseManager.CurrentState.Y - ActiveTooltip.Height - 2, 5, WindowManager.Height - 5);
+            ActiveTooltip.X = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width / 2.0f, 5, WindowManager.Width - ActiveTooltip.Width - 5);
+            ActiveTooltip.Y = MathHelper.Clamp(MouseManager.CurrentState.Y - ActiveTooltip.Height - 2, 5, WindowManager.Height - ActiveTooltip.Height - 5);
         }
 
         /// <summary>
