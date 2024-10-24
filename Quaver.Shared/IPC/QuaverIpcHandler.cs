@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
@@ -261,9 +262,9 @@ namespace Quaver.Shared.IPC
             MapsetDownloadManager.OpenOnlineHub();
 
             // Automatically import if the user is still in song select after completion.
-            dl.Completed.ValueChanged += (o, e) =>
+            dl.Status.ValueChanged += (o, e) =>
             {
-                if (!IsSelectionAllowedOnScreen())
+                if (!IsSelectionAllowedOnScreen() || e.Value.Status != FileDownloaderStatus.Complete)
                     return;
 
                 var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;

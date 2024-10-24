@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.Server.Client.Events.Download;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
@@ -196,7 +198,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadStatusChanged;
             }
 
             base.Destroy();
@@ -439,26 +441,29 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadStatusChanged;
             }
 
             CurrentDownload = MapsetDownloadManager.Download(Game.MapsetId, Game.Map, "");
             CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
-            CurrentDownload.Completed.ValueChanged += OnDownloadCompleted;
+            CurrentDownload.Status.ValueChanged += OnDownloadStatusChanged;
         }
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressChangedEventArgs> e)
+        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
         {
             if (CurrentDownload.MapsetId == Game.MapsetId)
                 Creator.Text = $"Downloading Map: {e.Value.ProgressPercentage}%";
         }
 
-        private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<AsyncCompletedEventArgs> e)
+        private void OnDownloadStatusChanged(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
         {
+            if (e.Value.Status != FileDownloaderStatus.Complete)
+                return;
+
             CurrentDownload.Dispose();
 
             if (e.Value.Error != null)
