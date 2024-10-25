@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Download
 
         protected override void CreateFileDownloader(string path)
         {
-            FileDownloader.Value = OnlineManager.Client?.DownloadSharedMultiplayerMap(path);
+            FileDownloader.Value = OnlineManager.Client?.DownloadSharedMultiplayerMap(path, OnlineManager.CurrentGame?.GameId ?? -1);
         }
     }
 }
