@@ -68,6 +68,7 @@ namespace Quaver.Shared.Screens.Download
         private TimeSpan _slidingWindowDuration = TimeSpan.Zero;
         private const int SlidingWindowWidth = 20;
         private DateTime _lastEtaUpdateTime = DateTime.Now;
+        private string _path = "";
 
         /// <summary>
         ///     Determines how fast <see cref="Eta"/> updates
@@ -129,63 +130,20 @@ namespace Quaver.Shared.Screens.Download
             Logger.Important($"Downloading mapset {MapsetId}...", LogType.Network);
 
             var dir = $"{ConfigManager.DataDirectory.Value}/Downloads";
-            var path = $"{dir}/{MapsetId}.qp";
+            _path = $"{dir}/{MapsetId}.qp";
             Directory.CreateDirectory(dir);
 
             try
             {
-                CreateFileDownloader(path);
+                CreateFileDownloader(_path);
                 if (FileDownloader.Value == null)
                 {
                     RemoveDownload();
                     return;
                 }
 
-                FileDownloader.Value.DownloadProgressChanged += (o, e) =>
-                {
-                    // Update ETA
-                    AddToSlidingWindow(e);
-                    var now = DateTime.Now;
-                    if (now - _lastEtaUpdateTime > EtaUpdateInterval)
-                    {
-                        var bytesPerSecond = _slidingWindowDuration == TimeSpan.Zero
-                            ? 0
-                            : _slidingWindowBytesRead / _slidingWindowDuration.TotalSeconds;
-                        var bytesLeft = e.ContentLength - e.TotalBytesReceived;
-                        Eta = bytesPerSecond == 0
-                            ? TimeSpan.MaxValue
-                            : TimeSpan.FromSeconds(bytesLeft / bytesPerSecond);
-                        _lastEtaUpdateTime = now;
-                    }
-
-                    Progress.Value = e;
-                };
-                FileDownloader.Value.StatusUpdated += (o, e) =>
-                {
-                    Status.Value = e;
-                    if (e.CancelledOrComplete)
-                    {
-                        Logger.Important(
-                            $"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}",
-                            LogType.Network);
-
-                        MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
-                        if (e.Status == FileDownloaderStatus.Complete)
-                        {
-                            MapsetImporter.Queue.Add(path);
-                            RemoveDownload();
-                        }
-                    }
-                    else if (e.Status == FileDownloaderStatus.Connecting)
-                    {
-                        MapsetDownloadManager.CurrentActiveDownloads.Add(this);
-                    }
-                    else if (e.Status == FileDownloaderStatus.Downloading)
-                    {
-                        // Record the current time so the player can retry download a certain amount of time after this.
-                        _lastRetryTime = DateTime.Now;
-                    }
-                };
+                FileDownloader.Value.DownloadProgressChanged += OnDownloadProgressChanged;
+                FileDownloader.Value.StatusUpdated += OnStatusUpdated;
 
                 // Start the downloader right away
                 FileDownloader.Value.Start();
@@ -196,6 +154,51 @@ namespace Quaver.Shared.Screens.Download
                 NotificationManager.Show(NotificationLevel.Error,
                     $"There was an error downloading mapset: {Artist} - {Title} ({MapsetId})");
             }
+        }
+
+        private void OnStatusUpdated(object o, DownloadStatusChangedEventArgs e)
+        {
+            Status.Value = e;
+            if (e.CancelledOrComplete)
+            {
+                Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
+
+                MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
+                if (e.Status == FileDownloaderStatus.Complete)
+                {
+                    MapsetImporter.Queue.Add(_path);
+                    RemoveDownload();
+                }
+            }
+            else if (e.Status == FileDownloaderStatus.Connecting)
+            {
+                MapsetDownloadManager.CurrentActiveDownloads.Add(this);
+            }
+            else if (e.Status == FileDownloaderStatus.Downloading)
+            {
+                // Record the current time so the player can retry download a certain amount of time after this.
+                _lastRetryTime = DateTime.Now;
+            }
+        }
+
+        private void OnDownloadProgressChanged(object o, DownloadProgressEventArgs e)
+        {
+            // Update ETA
+            AddToSlidingWindow(e);
+            var now = DateTime.Now;
+            if (now - _lastEtaUpdateTime > EtaUpdateInterval)
+            {
+                var bytesPerSecond = _slidingWindowDuration == TimeSpan.Zero
+                    ? 0
+                    : _slidingWindowBytesRead / _slidingWindowDuration.TotalSeconds;
+                var bytesLeft = e.ContentLength - e.TotalBytesReceived;
+                Eta = bytesPerSecond == 0
+                    ? TimeSpan.MaxValue
+                    : TimeSpan.FromSeconds(bytesLeft / bytesPerSecond);
+                _lastEtaUpdateTime = now;
+            }
+
+            Progress.Value = e;
         }
 
         protected virtual void CreateFileDownloader(string path)
