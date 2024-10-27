@@ -189,6 +189,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> SmoothAudioTimingGameplay { get; private set; }
 
         /// <summary>
+        ///     When an audio starts to play, its <see cref="Quaver.Shared.Audio.AudioEngine.Track.Time"/>
+        ///     will stay 0 for some time. This causes the gameplay to freeze for a while.
+        ///     By turning this on, audio starts a bit early (amount determined at start). We then slowly
+        ///     Let the gameplay timing reach the actual audio time.
+        /// </summary>
+        internal static Bindable<bool> SmoothAudioStart { get; private set; }
+
+        /// <summary>
         ///     Determines if we should show the song time progress display in the
         ///     gameplay screen.
         /// </summary>
@@ -1037,6 +1045,7 @@ namespace Quaver.Shared.Config
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, 5000, data);
             SmoothAudioTimingGameplay = ReadValue(@"SmoothAudioTimingGameplay", false, data);
+            SmoothAudioStart = ReadValue(@"SmoothAudioStart", false, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
