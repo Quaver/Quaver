@@ -40,6 +40,9 @@ namespace Quaver.Shared.Audio
         /// </summary>
         private static CancellationTokenSource Source { get; set; } = new CancellationTokenSource();
 
+        /// <summary>
+        ///     The length of time when the audio time is 0 after we first play the audio
+        /// </summary>
         public static double MeasuredAudioStartDelay { get; private set; }
 
         /// <summary>
