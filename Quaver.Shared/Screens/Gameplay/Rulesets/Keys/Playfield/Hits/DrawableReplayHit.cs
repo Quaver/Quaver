@@ -86,26 +86,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
             
             var hitStat = HitStat.Value;
             var info = hitStat.HitObject;
-            NoteController = Manager.GlobalGroupController.CreateNoteController(info, false);
+            NoteController = Manager.DefaultGroupController.CreateNoteController(info, false);
             
             if (hitStat.KeyPressType == KeyPressType.Release || 
                 hitStat.KeyPressType == KeyPressType.None && hitStat.Judgement == Judgement.Okay)
             {
-                PerfectPosition = Manager.GlobalGroupController.GetPositionFromTime(info.EndTime);
+                PerfectPosition = Manager.DefaultGroupController.GetPositionFromTime(info.EndTime);
 
                 if (hitStat.KeyPressType == KeyPressType.None)
                     Position = PerfectPosition;
                 else
-                    Position = Manager.GlobalGroupController.GetPositionFromTime(info.EndTime - hitStat.HitDifference);
+                    Position = Manager.DefaultGroupController.GetPositionFromTime(info.EndTime - hitStat.HitDifference);
             }
             else
             {
-                PerfectPosition = Manager.GlobalGroupController.GetPositionFromTime(info.StartTime);
+                PerfectPosition = Manager.DefaultGroupController.GetPositionFromTime(info.StartTime);
 
                 if (hitStat.KeyPressType == KeyPressType.None)
                     Position = PerfectPosition;
                 else
-                    Position = Manager.GlobalGroupController.GetPositionFromTime(info.StartTime - hitStat.HitDifference);
+                    Position = Manager.DefaultGroupController.GetPositionFromTime(info.StartTime - hitStat.HitDifference);
             }
         }
 

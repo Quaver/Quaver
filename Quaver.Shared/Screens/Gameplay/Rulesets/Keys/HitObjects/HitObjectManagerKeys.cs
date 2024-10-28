@@ -255,7 +255,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         public Dictionary<string, TimingGroupControllerKeys> TimingGroupControllers { get; set; } = new();
 
-        public TimingGroupControllerKeys GlobalGroupController => TimingGroupControllers[Qua.GlobalScrollGroupId];
+        public TimingGroupControllerKeys DefaultGroupController => TimingGroupControllers[Qua.DefaultScrollGroupId];
 
         /// <inheritdoc />
         /// <summary>
@@ -341,7 +341,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectInfos = map.HitObjects
                 .Select(info =>
                 {
-                    var groupController = TimingGroupControllers.GetValueOrDefault(info.TimingGroup, GlobalGroupController);
+                    var groupController = TimingGroupControllers.GetValueOrDefault(info.TimingGroup, DefaultGroupController);
                     return groupController.CreateNoteController(info);
                 }).ToList();
 

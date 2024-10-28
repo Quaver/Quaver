@@ -106,7 +106,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="offset"></param>
         public void UpdateSpritePosition(long offset)
         {
-            var globalGroupController = ((HitObjectManagerKeys)Ruleset.HitObjectManager).GlobalGroupController;
+            var globalGroupController = ((HitObjectManagerKeys)Ruleset.HitObjectManager).DefaultGroupController;
             CurrentTrackPosition = offset - Info.TrackOffset;
             Y = TrackOffset + (CurrentTrackPosition * (ScrollDirection.Equals(ScrollDirection.Down) ? globalGroupController.ScrollSpeed : -globalGroupController.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
         }
