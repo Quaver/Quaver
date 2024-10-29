@@ -224,7 +224,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawRemoveButton()
         {
             ImGui.BeginDisabled(SelectedTimingGroups.Count == 0 ||
-                                SelectedTimingGroups.Contains(Qua.DefaultScrollGroupId));
+                                SelectedTimingGroups.Contains(Qua.DefaultScrollGroupId) ||
+                                SelectedTimingGroups.Contains(Qua.GlobalScrollGroupId));
             if (ImGui.Button("Remove"))
             {
                 Screen.ActionManager.PerformBatch(SelectedTimingGroups.Select(
@@ -270,13 +271,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var hint = "Alphanumeric characters or underscore are allowed";
             var inputTextFlags = ImGuiInputTextFlags.EnterReturnsTrue;
 
-            if (id == Qua.DefaultScrollGroupId)
+            if (id is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId)
             {
                 inputTextFlags |= ImGuiInputTextFlags.ReadOnly;
-                hint = "You cannot rename the default timing group!";
+                hint = "This timing group cannot be renamed!";
             }
 
-            ImGui.BeginDisabled(id == Qua.DefaultScrollGroupId);
+            ImGui.BeginDisabled(id is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId);
             if (ImGui.InputTextWithHint("##Name", hint, ref newId, 256,
                     inputTextFlags))
             {

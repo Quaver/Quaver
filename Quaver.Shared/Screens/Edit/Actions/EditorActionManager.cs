@@ -622,8 +622,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         public void RemoveTimingGroup(string id, bool fromLua = false)
         {
-            if (id != Qua.DefaultScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
-                Perform(new EditorActionRemoveTimingGroup(this, WorkingMap, id, timingGroup, null), fromLua);
+            if (id is Qua.GlobalScrollGroupId or Qua.DefaultScrollGroupId
+                || !WorkingMap.TimingGroups.TryGetValue(id, out var timingGroup)) return;
+            Perform(new EditorActionRemoveTimingGroup(this, WorkingMap, id, timingGroup, null), fromLua);
         }
 
         /// <summary>
@@ -634,8 +635,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="fromLua"></param>
         public bool RenameTimingGroup(string oldId, string newId, bool fromLua = false)
         {
-            if (oldId == Qua.DefaultScrollGroupId
-                || newId == Qua.DefaultScrollGroupId
+            if (oldId is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId
+                || newId is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId
                 || !WorkingMap.TimingGroups.ContainsKey(oldId)
                 || WorkingMap.TimingGroups.ContainsKey(newId)
                 || !Regex.IsMatch(newId, "^[a-zA-Z0-9_]+$"))
