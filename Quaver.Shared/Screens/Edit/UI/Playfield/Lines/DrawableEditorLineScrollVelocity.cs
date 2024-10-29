@@ -32,7 +32,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Tint = GetColor();
 
             var selectedScrollGroup = Playfield.ActionManager.EditScreen.SelectedScrollGroup;
-            if (selectedScrollGroup != TimingGroup)
+            if (selectedScrollGroup != TimingGroup 
+                // Global scroll group is always visible
+                && TimingGroup != Playfield.ActionManager.EditScreen.WorkingMap.GlobalScrollGroup)
             {
                 Width = 0;
                 return;
