@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             SelectedTimingGroups.Clear();
 
-            SelectedTimingGroups.Add(Qua.GlobalScrollGroupId);
+            SelectedTimingGroups.Add(Qua.DefaultScrollGroupId);
         }
 
         /// <inheritdoc />
@@ -224,7 +224,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawRemoveButton()
         {
             ImGui.BeginDisabled(SelectedTimingGroups.Count == 0 ||
-                                SelectedTimingGroups.Contains(Qua.GlobalScrollGroupId));
+                                SelectedTimingGroups.Contains(Qua.DefaultScrollGroupId));
             if (ImGui.Button("Remove"))
             {
                 Screen.ActionManager.PerformBatch(SelectedTimingGroups.Select(
@@ -270,13 +270,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var hint = "Alphanumeric characters or underscore are allowed";
             var inputTextFlags = ImGuiInputTextFlags.EnterReturnsTrue;
 
-            if (id == Qua.GlobalScrollGroupId)
+            if (id == Qua.DefaultScrollGroupId)
             {
                 inputTextFlags |= ImGuiInputTextFlags.ReadOnly;
                 hint = "You cannot rename the default timing group!";
             }
 
-            ImGui.BeginDisabled(id == Qua.GlobalScrollGroupId);
+            ImGui.BeginDisabled(id == Qua.DefaultScrollGroupId);
             if (ImGui.InputTextWithHint("##Name", hint, ref newId, 256,
                     inputTextFlags))
             {
@@ -366,7 +366,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (!isSelected)
                     ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
 
-                if (ImGui.Button(id == Qua.GlobalScrollGroupId ? "$Default" : id))
+                if (ImGui.Button(id == Qua.DefaultScrollGroupId ? "$Default" : id))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
                     if (KeyboardManager.IsCtrlDown())
@@ -397,7 +397,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.TextWrapped($"{timingGroup.GetType().Name}");
                 ImGui.NextColumn();
                 const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoPicker;
-                ImGui.BeginDisabled(id == Qua.GlobalScrollGroupId);
+                ImGui.BeginDisabled(id == Qua.DefaultScrollGroupId);
                 DrawColorEdit(id, timingGroup, colorOptions, $"Column_{id}");
                 ImGui.EndDisabled();
                 ImGui.NextColumn();

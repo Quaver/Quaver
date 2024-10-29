@@ -288,14 +288,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 if (ImGui.MenuItem("Default Timing Group", ""))
                 {
                     Screen.ActionManager.Perform(new EditorActionMoveObjectsToTimingGroup(Screen.ActionManager, Screen.WorkingMap,
-                        new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), Qua.GlobalScrollGroupId));
+                        new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), Qua.DefaultScrollGroupId));
                 }
 
                 ImGui.Separator();
 
                 foreach ((string id, TimingGroup timingGroup) in Screen.WorkingMap.TimingGroups)
                 {
-                    if (id == Qua.GlobalScrollGroupId)
+                    if (id == Qua.DefaultScrollGroupId)
                         continue;
 
                     var color = timingGroup.GetColor();

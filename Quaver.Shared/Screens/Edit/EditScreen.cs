@@ -299,7 +299,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     The scroll group id to place SVs to if the scroll group provided to <see cref="ActionManager"/> is null
         /// </summary>
-        public string SelectedScrollGroupId { get; set; } = Qua.GlobalScrollGroupId;
+        public string SelectedScrollGroupId { get; set; } = Qua.DefaultScrollGroupId;
 
         /// <summary>
         ///     The scroll group corresponding to <see cref="SelectedScrollGroupId"/>
@@ -308,7 +308,7 @@ namespace Quaver.Shared.Screens.Edit
             WorkingMap.TimingGroups.TryGetValue(SelectedScrollGroupId, out var timingGroup) &&
             timingGroup is ScrollGroup scrollGroup
                 ? scrollGroup
-                : WorkingMap.GlobalScrollGroup;
+                : WorkingMap.DefaultScrollGroup;
 
         /// <summary>
         /// </summary>
@@ -365,11 +365,11 @@ namespace Quaver.Shared.Screens.Edit
             foreach (var hitObjectInfo in Clipboard)
             {
                 if (hitObjectInfo.TimingGroup == e.Id)
-                    hitObjectInfo.TimingGroup = Qua.GlobalScrollGroupId;
+                    hitObjectInfo.TimingGroup = Qua.DefaultScrollGroupId;
             }
 
             if (e.Id == SelectedScrollGroupId)
-                SelectedScrollGroupId = Qua.GlobalScrollGroupId;
+                SelectedScrollGroupId = Qua.DefaultScrollGroupId;
         }
 
         private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
@@ -1277,7 +1277,7 @@ namespace Quaver.Shared.Screens.Edit
                     Lane = h.Lane,
                     TimingGroup = WorkingMap.TimingGroups.ContainsKey(h.TimingGroup)
                         ? h.TimingGroup
-                        : Qua.GlobalScrollGroupId
+                        : Qua.DefaultScrollGroupId
                 };
 
                 if (h.IsLongNote)

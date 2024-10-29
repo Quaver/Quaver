@@ -54,9 +54,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename
                 }
             }
 
+            new EditorActionMoveObjectsToTimingGroup(ActionManager, WorkingMap, ChildHitObjects, NewId).Perform();
             ActionManager.TriggerEvent(Type, new EditorTimingGroupRenamedEventArgs(OldId, NewId, ChildHitObjects));
-            new EditorActionMoveObjectsToTimingGroup(ActionManager, WorkingMap, ChildHitObjects, NewId)
-                .Perform();
         }
 
         [MoonSharpVisible(false)]

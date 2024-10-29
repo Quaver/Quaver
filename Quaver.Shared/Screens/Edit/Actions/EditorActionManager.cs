@@ -397,7 +397,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="hitsounds"></param>
         /// <param name="timingGroupId"></param>
         /// <param name="fromLua"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0, string timingGroupId = Qua.GlobalScrollGroupId, bool fromLua = false)
+        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0, string timingGroupId = Qua.DefaultScrollGroupId, bool fromLua = false)
         {
             var hitObject = new HitObjectInfo
             {
@@ -622,7 +622,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         public void RemoveTimingGroup(string id, bool fromLua = false)
         {
-            if (id != Qua.GlobalScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
+            if (id != Qua.DefaultScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
                 Perform(new EditorActionRemoveTimingGroup(this, WorkingMap, id, timingGroup, null), fromLua);
         }
 
@@ -634,8 +634,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="fromLua"></param>
         public bool RenameTimingGroup(string oldId, string newId, bool fromLua = false)
         {
-            if (oldId == Qua.GlobalScrollGroupId
-                || newId == Qua.GlobalScrollGroupId
+            if (oldId == Qua.DefaultScrollGroupId
+                || newId == Qua.DefaultScrollGroupId
                 || !WorkingMap.TimingGroups.ContainsKey(oldId)
                 || WorkingMap.TimingGroups.ContainsKey(newId)
                 || !Regex.IsMatch(newId, "^[a-zA-Z0-9_]+$"))
@@ -660,7 +660,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="color"></param>
         public void ChangeTimingGroupColor(string id, Color color, bool fromLua = false)
         {
-            if (id != Qua.GlobalScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
+            if (id != Qua.DefaultScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
                 Perform(new EditorActionChangeTimingGroupColor(this, WorkingMap, timingGroup, color), fromLua);
         }
 

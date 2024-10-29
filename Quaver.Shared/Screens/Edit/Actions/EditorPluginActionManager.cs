@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             int endTime = 0,
             int layer = 0,
             HitSounds hitsounds = 0,
-            string timingGroupId = Qua.GlobalScrollGroupId
+            string timingGroupId = Qua.DefaultScrollGroupId
         ) =>
             ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds, timingGroupId, true);
 

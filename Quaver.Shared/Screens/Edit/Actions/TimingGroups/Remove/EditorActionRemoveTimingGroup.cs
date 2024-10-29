@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove
             }
 
             ActionManager.TriggerEvent(Type, new EditorTimingGroupRemovedEventArgs(Id, TimingGroup, ChildHitObjects));
-            new EditorActionMoveObjectsToTimingGroup(ActionManager, WorkingMap, ChildHitObjects, Qua.GlobalScrollGroupId)
+            new EditorActionMoveObjectsToTimingGroup(ActionManager, WorkingMap, ChildHitObjects, Qua.DefaultScrollGroupId)
                 .Perform();
         }
 
