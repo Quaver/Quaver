@@ -399,6 +399,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     }
                 }
 
+                if (ImGui.BeginItemTooltip())
+                {
+                    RenderSpecialTimingGroupTooltip(id);
+                    ImGui.EndTooltip();
+                }
+
                 if (!isSelected)
                     ImGui.PopStyleColor();
 
@@ -427,6 +433,19 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             HandleInput();
             ImGui.Columns();
             ImGui.EndChild();
+        }
+
+        private void RenderSpecialTimingGroupTooltip(string id)
+        {
+            switch (id)
+            {
+                case Qua.DefaultScrollGroupId:
+                    ImGui.Text("Applied to all notes that are not in a timing group.");
+                    break;
+                case Qua.GlobalScrollGroupId:
+                    ImGui.Text("The SVs in this group are interlaced to every other scroll groups.");
+                    break;
+            }
         }
 
         private void HandleInput()
