@@ -44,6 +44,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         public bool IsWorkshop { get; set; }
 
+        public Dictionary<string, EditorPluginStorageValue> Storage { get; set; } = new();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -96,6 +98,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (point != Screen.WorkingMap.SliderVelocities.First())
                     NeedsToScrollToFirstSelectedSv = true;
             }
+        }
+
+        public void OnStorageLoaded()
+        {
+        }
+
+        public void OnStorageSave()
+        {
         }
 
         /// <inheritdoc />
