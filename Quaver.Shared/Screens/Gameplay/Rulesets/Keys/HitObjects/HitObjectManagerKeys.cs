@@ -345,16 +345,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     return groupController.CreateNoteController(info);
                 }).ToList();
 
-            // Create note controllers for fake hitobjects
-            // They won't count as an actual note, but will be rendered as one
-            foreach ((_, TimingGroupControllerKeys timingGroupController) in TimingGroupControllers)
-            {
-                foreach (var fakeHitObject in timingGroupController.TimingGroup.FakeHitObjects)
-                {
-                    timingGroupController.CreateNoteController(fakeHitObject);
-                }
-            }
-
             TimingGroupControllers.ForEach(pair => pair.Value.GenerateFromNoteControllers());
 
             // find an upper bound for number of hitobjects on screen at one time
