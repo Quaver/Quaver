@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Force.DeepCloner;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
@@ -18,9 +17,7 @@ using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
-using Wobble.Logging;
 using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
 
 namespace Quaver.Shared.Screens.Edit.Plugins.Timing
@@ -302,7 +299,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     var col = new Color(rng.Next(255), rng.Next(255), rng.Next(255));
                     Screen.ActionManager.ChangeTimingGroupColor(id, col);
                 }
-                    
             }
         }
 
@@ -389,7 +385,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     {
                         if (isSelected)
                         {
-                            var hitObjectInfo = Screen.WorkingMap.GetTimingGroupChildren(id).FirstOrDefault();
+                            var hitObjectInfo = Screen.WorkingMap.GetTimingGroupObjects(id).FirstOrDefault();
                             if (hitObjectInfo != null)
                                 Screen.Track.Seek(hitObjectInfo.StartTime);
                         }
@@ -411,7 +407,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
                 ImGui.TextWrapped($"{timingGroup.GetType().Name}");
                 ImGui.NextColumn();
-                const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoPicker;
+                const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs |
+                                                         ImGuiColorEditFlags.NoPicker;
                 DrawColorEdit(id, timingGroup, colorOptions, $"Column_{id}");
                 ImGui.NextColumn();
 
@@ -502,29 +499,63 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void PasteClipboard()
         {
-            var clonedObjects = new Dictionary<string, TimingGroup>();
+            if (Clipboard.Count == 0)
+                return;
 
-            foreach (var id in Clipboard)
+            Screen.ActionManager.PerformBatch(
+                GeneratePasteActions(true, KeyboardManager.IsShiftDown()).ToList());
+        }
+
+        private IEnumerable<IEditorAction> GeneratePasteActions(bool offset, bool cloneObjects)
+        {
+            var objectMap = cloneObjects
+                ? Screen.WorkingMap.GetTimingGroupObjects(Clipboard.ToHashSet())
+                : new Dictionary<string, List<HitObjectInfo>>();
+            var minTime = objectMap.SelectMany(kv => kv.Value.Select(o => o.StartTime)).Append(int.MaxValue).Min();
+            var difference = (int)Math.Round(Screen.Track.Time - minTime, MidpointRounding.AwayFromZero);
+
+            foreach (var originalTimingGroupId in Clipboard)
             {
-                if (!Screen.WorkingMap.TimingGroups.TryGetValue(id, out var point))
+                if (!Screen.WorkingMap.TimingGroups.TryGetValue(originalTimingGroupId, out var point))
                     continue;
 
-                var clone = point.DeepClone();
-                var newIdIndex = 2;
+                var clonedGroup = point.DeepClone();
+                var newId = EditorPluginUtils.GenerateTimingGroupId(originalTimingGroupId + "_");
 
-                string newId;
-                while (Screen.WorkingMap.TimingGroups.ContainsKey(newId = $"{id}_{newIdIndex}"))
-                    newIdIndex++;
+                var childHitObjects = objectMap.GetValueOrDefault(originalTimingGroupId, new List<HitObjectInfo>())
+                    .DeepClone();
+                foreach (var childHitObject in childHitObjects)
+                {
+                    childHitObject.TimingGroup = newId;
+                    if (offset)
+                    {
+                        if (childHitObject.IsLongNote)
+                            childHitObject.EndTime += difference;
+                        childHitObject.StartTime += difference;
+                    }
+                }
 
-                clonedObjects.Add(newId, clone);
+                if (offset)
+                    childHitObjects.RemoveAll(h =>
+                        h.StartTime > Screen.Track.Length || h.EndTime > Screen.Track.Length);
+
+                if (offset && clonedGroup is ScrollGroup scrollGroup)
+                {
+                    foreach (var sv in scrollGroup.ScrollVelocities)
+                    {
+                        sv.StartTime += difference;
+                    }
+
+                    scrollGroup.ScrollVelocities.RemoveAll(sv => sv.StartTime > Screen.Track.Length);
+                }
+
+                yield return new EditorActionPlaceHitObjectBatch(Screen.ActionManager, Screen.WorkingMap,
+                    childHitObjects);
+
+                yield return new EditorActionCreateTimingGroup(Screen.ActionManager, Screen.WorkingMap, newId,
+                    clonedGroup,
+                    childHitObjects);
             }
-
-
-            Screen.ActionManager.PerformBatch(clonedObjects.Select(
-                    IEditorAction (pair) =>
-                        new EditorActionCreateTimingGroup(Screen.ActionManager, Screen.WorkingMap, pair.Key,
-                            pair.Value, null))
-                .ToList());
         }
 
         /// <summary>

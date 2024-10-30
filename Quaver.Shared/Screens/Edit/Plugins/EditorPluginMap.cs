@@ -135,12 +135,21 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<string> GetTimingGroupIds() => Map.TimingGroups.Keys.ToList();
 
         /// <summary>
+        ///     O(n)
         ///     Returns the list of hit objects that are in the specified group
         /// </summary>
         /// <param name="timingGroupId"></param>
         /// <returns></returns>
-        public List<HitObjectInfo> GetTimingGroupObjects(string timingGroupId) => 
-            HitObjects.FindAll(h => h.TimingGroup == timingGroupId);
+        public List<HitObjectInfo> GetTimingGroupObjects(string timingGroupId) =>
+            Map.GetTimingGroupObjects(timingGroupId).ToList();
+
+        /// <summary>
+        ///     O(n log m) Given a list of timing group IDs, return a dictionary of (ID, [HitObject])
+        /// </summary>
+        /// <param name="timingGroupIds"></param>
+        /// <returns></returns>
+        public Dictionary<string, List<HitObjectInfo>> GetTimingGroupObjects(HashSet<string> timingGroupIds) =>
+            Map.GetTimingGroupObjects(timingGroupIds);
 
         /// <summary>
         ///     Gets the bookmark at a particular time in the current map
