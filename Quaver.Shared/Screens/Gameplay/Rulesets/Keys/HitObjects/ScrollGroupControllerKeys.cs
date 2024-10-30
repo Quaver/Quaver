@@ -80,7 +80,8 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     private void PopulateScrollVelocities()
     {
         ScrollVelocityInfos = new List<SliderVelocityInfo>(ScrollGroup.ScrollVelocities);
-        ScrollVelocityInfos.InsertSorted(Manager.Ruleset.Map.GlobalScrollGroup.ScrollVelocities);
+        if (ScrollGroup != Manager.Ruleset.Map.GlobalScrollGroup)
+            ScrollVelocityInfos.InsertSorted(Manager.Ruleset.Map.GlobalScrollGroup.ScrollVelocities);
     }
 
     /// <summary>
