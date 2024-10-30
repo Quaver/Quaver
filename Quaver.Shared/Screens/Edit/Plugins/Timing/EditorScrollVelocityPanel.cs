@@ -119,7 +119,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(356, float.MaxValue));
+            ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(600, float.MaxValue));
             ImGui.PushFont(Options.Fonts.First().Context);
             ImGui.Begin(Name);
 
@@ -164,7 +164,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (Screen.WorkingMap.TimingGroups.Count == 1)
                 return;
 
-            if (ImGui.BeginTabBar("Groups"))
+            if (ImGui.BeginTabBar("Groups", ImGuiTabBarFlags.FittingPolicyScroll))
             {
                 foreach (var (id, timingGroup) in Screen.WorkingMap.TimingGroups)
                 {
@@ -176,6 +176,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     var flags = PendingSelectScrollGroupId == id
                         ? ImGuiTabItemFlags.SetSelected
                         : ImGuiTabItemFlags.None;
+
+                    if (id is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId)
+                        flags |= ImGuiTabItemFlags.Leading;
+
                     if (ImGuiFix.BeginTabItem($"{prettyId}##TabItem", ref Unsafe.NullRef<bool>(), flags))
                     {
                         if (SelectedScrollGroupId != id)
