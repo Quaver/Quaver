@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 }
             }
 
-            ImGui.SetTooltip("Selects all notes in the selected timing group(s).");
+            ImGui.SetItemTooltip("Selects all notes in the selected timing group(s).");
 
             ImGui.SameLine();
 
@@ -186,7 +186,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 Screen.SelectedHitObjects.Clear();
                 Screen.SelectedHitObjects.AddRange(filtered);
             }
-            ImGui.SetTooltip("Deselect any note that is not in any of the selected timing group(s).");
+
+            ImGui.SetItemTooltip("Deselect any note that is not in any of the selected timing group(s).");
         }
 
         /// <summary>
@@ -408,12 +409,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         SelectedTimingGroups.Add(id);
                     }
                 }
-
-                if (ImGui.BeginItemTooltip())
-                {
-                    RenderSpecialTimingGroupTooltip(id);
-                    ImGui.EndTooltip();
-                }
+                RenderSpecialTimingGroupTooltip(id);
 
                 if (!isSelected)
                     ImGui.PopStyleColor();
@@ -451,10 +447,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             switch (id)
             {
                 case Qua.DefaultScrollGroupId:
-                    ImGui.Text("Applied to all notes that are not in a timing group.");
+                    ImGui.SetItemTooltip("Applied to all notes that are not in a timing group.");
                     break;
                 case Qua.GlobalScrollGroupId:
-                    ImGui.Text("The SVs in this group are interlaced to every other scroll groups.");
+                    ImGui.SetItemTooltip("The SVs in this group are interlaced to every other scroll groups.");
                     break;
             }
         }
