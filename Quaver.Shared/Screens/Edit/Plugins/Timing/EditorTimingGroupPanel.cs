@@ -173,6 +173,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         .Where(note => SelectedTimingGroups.Contains(note.TimingGroup)).ToList());
                 }
             }
+
+            ImGui.SetTooltip("Selects all notes in the selected timing group(s).");
+
+            ImGui.SameLine();
+
+            if (ImGui.Button($"Filter Selection"))
+            {
+                var filtered = Screen.SelectedHitObjects.Value
+                    .Where(h => SelectedTimingGroups.Contains(h.TimingGroup))
+                    .ToList();
+                Screen.SelectedHitObjects.Clear();
+                Screen.SelectedHitObjects.AddRange(filtered);
+            }
+            ImGui.SetTooltip("Deselect any note that is not in any of the selected timing group(s).");
         }
 
         /// <summary>
