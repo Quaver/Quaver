@@ -614,8 +614,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="id"></param>
         /// <param name="timingGroup"></param>
+        /// <param name="hitObjectInfos"></param>
         /// <param name="fromLua"></param>
-        public void CreateTimingGroup(string id, TimingGroup timingGroup, bool fromLua = false) => Perform(new EditorActionCreateTimingGroup(this, WorkingMap, id, timingGroup, EditScreen.SelectedHitObjects.Value), fromLua);
+        public void CreateTimingGroup(string id, TimingGroup timingGroup, List<HitObjectInfo> hitObjectInfos,
+            bool fromLua = false) => Perform(new EditorActionCreateTimingGroup(this, WorkingMap, id, timingGroup, hitObjectInfos), fromLua);
 
         /// <summary>
         ///     Removes a non-default editor layer from the map

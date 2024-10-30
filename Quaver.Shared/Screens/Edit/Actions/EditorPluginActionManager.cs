@@ -241,7 +241,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) =>
             ActionManager.ChangeBookmarkBatchOffset(bookmarks, offset, true);
 
-        public void PlaceTimingGroup(string id, TimingGroup timingGroup) => ActionManager.CreateTimingGroup(id, timingGroup, true);
+        public void PlaceTimingGroup(string id, TimingGroup timingGroup, List<HitObjectInfo> hitObjectInfos) => ActionManager.CreateTimingGroup(id, timingGroup, hitObjectInfos, true);
 
         public void RemoveTimingGroup(string id) => ActionManager.RemoveTimingGroup(id, true);
 

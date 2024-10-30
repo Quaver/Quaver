@@ -207,7 +207,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
                 };
 
-                Screen.ActionManager.CreateTimingGroup(newGroupId, timingGroup);
+                Screen.ActionManager.CreateTimingGroup(newGroupId, timingGroup, Screen.SelectedHitObjects.Value);
                 SelectedTimingGroups.Clear();
                 SelectedTimingGroups.Add(newGroupId);
 
