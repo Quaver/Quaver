@@ -45,6 +45,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             new ReadOnlyDictionary<string, TimingGroup>(Map.TimingGroups);
 
         /// <summary>
+        ///     The default scroll group for hitobjects not bound to any groups
+        /// </summary>
+        public ScrollGroup DefaultScrollGroup => Map.DefaultScrollGroup;
+
+        /// <summary>
+        ///     The scroll group that applies its SVs to all other scroll groups
+        /// </summary>
+        public ScrollGroup GlobalScrollGroup => Map.GlobalScrollGroup;
+
+        /// <summary>
         ///     The HitObjects that are currently in the map
         /// </summary>
         public List<HitObjectInfo> HitObjects => Map.HitObjects;

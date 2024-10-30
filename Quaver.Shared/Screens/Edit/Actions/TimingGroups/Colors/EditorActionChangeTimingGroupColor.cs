@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
@@ -34,8 +35,17 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Colors
         }
 
         [MoonSharpVisible(false)]
+        public EditorActionChangeTimingGroupColor(EditorActionManager manager, Qua workingMap, string timingGroupId,
+            Color color) : this(manager, workingMap, workingMap.TimingGroups.GetValueOrDefault(timingGroupId), color)
+        {
+        }
+
+
+        [MoonSharpVisible(false)]
         public void Perform()
         {
+            if (TimingGroup == null)
+                return;
             TimingGroup.ColorRgb = $"{NewColor.R},{NewColor.G},{NewColor.B}";
             ActionManager.TriggerEvent(Type, new EditorTimingGroupColorChangedEventArgs(TimingGroup, OriginalColor, NewColor));
         }

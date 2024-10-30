@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
@@ -51,6 +52,11 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Colors;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -152,6 +158,22 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             };
 
             return layer;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="svs"></param>
+        /// <param name="initialSv"></param>
+        /// <param name="colorRgb"></param>
+        /// <returns></returns>
+        public static ScrollGroup CreateScrollGroup(List<SliderVelocityInfo> svs, float initialSv = 1.0f, string colorRgb = default)
+        {
+            return new ScrollGroup
+            {
+                ColorRgb = colorRgb,
+                InitialScrollVelocity = initialSv,
+                ScrollVelocities = svs
+            };
         }
 
         /// <summary>
@@ -414,6 +436,39 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     EditScreen.ActionManager,
                     EditScreen.WorkingMap,
                     args[0].ToObject<List<HitObjectInfo>>()
+                ),
+                EditorActionType.CreateTimingGroup => new EditorActionCreateTimingGroup(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<string>(),
+                    args[1].ToObject<TimingGroup>(),
+                    args[2].ToObject<List<HitObjectInfo>>()
+                ),
+                EditorActionType.RemoveTimingGroup => new EditorActionRemoveTimingGroup(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<string>(),
+                    args[1].ToObject<TimingGroup>(),
+                    null
+                ),
+                EditorActionType.RenameTimingGroup => new EditorActionRenameTimingGroup(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<string>(),
+                    args[1].ToObject<string>(),
+                    null
+                ),
+                EditorActionType.MoveObjectsToTimingGroup => new EditorActionMoveObjectsToTimingGroup(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<List<HitObjectInfo>>(),
+                    args[1].ToObject<string>()
+                ),
+                EditorActionType.ColorTimingGroup => new EditorActionChangeTimingGroupColor(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<string>(),
+                    new Color(args[1].ToObject<int>(), args[2].ToObject<int>(), args[3].ToObject<int>())
                 ),
                 EditorActionType.None => null,
                 _ => null,
