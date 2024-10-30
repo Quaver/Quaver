@@ -16,17 +16,6 @@ namespace Quaver.Shared.Scripting
     [MoonSharpUserData]
     public static class ImGuiRedirect
     {
-        // These vector functions aren't part of ImGui but are needed to maintain compatibility
-        // with plugins, even if its functionality is practically useless.
-
-        private static readonly DynValue s_pack = DynValue.NewCallback(TableModule.pack);
-
-        public static DynValue CreateVector2 => s_pack;
-
-        public static DynValue CreateVector3 => s_pack;
-
-        public static DynValue CreateVector4 => s_pack;
-
         public static void BeginPopupContextWindow() => ImGui.BeginPopupContextWindow();
 
         public static void BeginPopupContextWindow(string str_id) => ImGui.BeginPopupContextWindow(str_id);
@@ -245,6 +234,12 @@ namespace Quaver.Shared.Scripting
                 graph_size,
                 stride
             );
+
+        public static void PushAllowKeyboardFocus() => PushTabStop();
+
+        public static void PushButtonRepeat() => ImGui.PushItemFlag(ImGuiItemFlags.ButtonRepeat, true);
+
+        public static void PushTabStop() => ImGui.PushItemFlag(ImGuiItemFlags.NoTabStop, true);
 
         public static void SaveIniSettingsToDisk(string ini_filename) =>
             throw new NotSupportedException("Please use the 'write' global instead.");
@@ -753,7 +748,25 @@ namespace Quaver.Shared.Scripting
         public static float GetContentRegionAvailWidth() => ImGui.GetContentRegionAvail().X;
 
         public static float GetWindowRegionAvailWidth() =>
-            ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X;
+            GetWindowContentRegionMax().X - GetWindowContentRegionMin().X;
+
+        // These vector functions aren't part of ImGui but are needed to maintain compatibility
+        // with plugins, even if its functionality is practically useless.
+        public static DynValue CreateVector2(ScriptExecutionContext executionContext, CallbackArguments args) =>
+            TableModule.pack(executionContext, args);
+
+        public static DynValue CreateVector3(ScriptExecutionContext executionContext, CallbackArguments args) =>
+            TableModule.pack(executionContext, args);
+
+        public static DynValue CreateVector4(ScriptExecutionContext executionContext, CallbackArguments args) =>
+            TableModule.pack(executionContext, args);
+
+        public static Vector2 GetContentRegionMax() =>
+            ImGui.GetContentRegionAvail() + ImGui.GetCursorScreenPos() - ImGui.GetWindowPos();
+
+        public static Vector2 GetWindowContentRegionMax() => ImGui.GetContentRegionAvail() + ImGui.GetCursorPos();
+
+        public static Vector2 GetWindowContentRegionMin() => ImGui.GetCursorPos();
 
         /// <summary>
         ///     Replaces the matched patterns with the result of the evaluator.
