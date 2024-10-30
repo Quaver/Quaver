@@ -186,11 +186,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 if (ImGui.TabItemButton("+##CreateGroup", ImGuiTabItemFlags.Trailing))
                 {
-                    const string newGroupPrefix = "SG_";
-                    var newGroupNumber = 0;
-                    string newGroupId;
-                    while (Screen.WorkingMap.TimingGroups.ContainsKey(newGroupId = $"{newGroupPrefix}{newGroupNumber}"))
-                        newGroupNumber++;
+                    var newGroupId = EditorPluginUtils.GenerateTimingGroupId();
 
                     var rgb = new byte[3];
                     Random.Shared.NextBytes(rgb);

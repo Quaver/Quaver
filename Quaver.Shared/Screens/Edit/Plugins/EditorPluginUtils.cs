@@ -177,6 +177,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         }
 
         /// <summary>
+        ///     Generates a unique ID for a new timing group
+        /// </summary>
+        /// <returns></returns>
+        public static string GenerateTimingGroupId()
+        {
+            const string newGroupPrefix = "SG_";
+            var newGroupNumber = 0;
+            string newGroupId;
+            while (EditScreen.WorkingMap.TimingGroups.ContainsKey(newGroupId = $"{newGroupPrefix}{newGroupNumber}"))
+                newGroupNumber++;
+            return newGroupId;
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="type"></param>
         /// <param name="args"></param>
