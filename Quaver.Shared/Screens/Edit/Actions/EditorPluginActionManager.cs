@@ -250,7 +250,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void ChangeTimingGroupColor(string id, int r, int g, int b) =>
             ActionManager.ChangeTimingGroupColor(id, new Color(r, g, b), true);
 
-        public void MoveHitObjectsToTimingGroup(string timingGroupId, List<HitObjectInfo> hitObjects) =>
-            ActionManager.MoveHitObjectsToTimingGroup(timingGroupId, hitObjects, true);
+        public void MoveObjectsToTimingGroup(List<HitObjectInfo> hitObjects, string timingGroupId) =>
+            ActionManager.MoveObjectsToTimingGroup(hitObjects, timingGroupId, true);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
@@ -180,14 +181,29 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     Generates a unique ID for a new timing group
         /// </summary>
         /// <returns></returns>
-        public static string GenerateTimingGroupId()
+        public static string GenerateTimingGroupId(string prefix = "SG_") =>
+            GenerateTimingGroupIds(1, prefix).First();
+
+        /// <summary>
+        ///     Generates a sequence of available IDs for new timing groups
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
+        public static List<string> GenerateTimingGroupIds(int count, string prefix = "SG_")
         {
-            const string newGroupPrefix = "SG_";
+            var result = new List<string>();
             var newGroupNumber = 0;
-            string newGroupId;
-            while (EditScreen.WorkingMap.TimingGroups.ContainsKey(newGroupId = $"{newGroupPrefix}{newGroupNumber}"))
+            for (var i = 0; i < count; i++)
+            {
+                string newGroupId;
+                while (EditScreen.WorkingMap.TimingGroups.ContainsKey(newGroupId = $"{prefix}{newGroupNumber}"))
+                    newGroupNumber++;
+                result.Add(newGroupId);
                 newGroupNumber++;
-            return newGroupId;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -462,7 +478,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     EditScreen.ActionManager,
                     EditScreen.WorkingMap,
                     args[0].ToObject<string>(),
-                    args[1].ToObject<TimingGroup>(),
+                    null,
                     null
                 ),
                 EditorActionType.RenameTimingGroup => new EditorActionRenameTimingGroup(

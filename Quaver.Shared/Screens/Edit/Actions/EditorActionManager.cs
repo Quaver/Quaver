@@ -652,9 +652,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         ///     Changes the editor layer of existing hitobjects
         /// </summary>
-        /// <param name="timingGroupId"></param>
         /// <param name="hitObjects"></param>
-        public void MoveHitObjectsToTimingGroup(string timingGroupId, List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionMoveObjectsToTimingGroup(this, WorkingMap, hitObjects, timingGroupId), fromLua);
+        /// <param name="timingGroupId"></param>
+        /// <param name="fromLua"></param>
+        public void MoveObjectsToTimingGroup(List<HitObjectInfo> hitObjects, string timingGroupId, bool fromLua = false) => Perform(new EditorActionMoveObjectsToTimingGroup(this, WorkingMap, hitObjects, timingGroupId), fromLua);
 
         /// <summary>
         ///     Changes the color of a timing group

@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            WorkingMap.TimingGroups.Add(Id, TimingGroup);
+            WorkingMap.TimingGroups.TryAdd(Id, TimingGroup);
             ActionManager.TriggerEvent(Type, new EditorTimingGroupCreatedEventArgs(Id, TimingGroup, ChildHitObjects));
             MoveObjectsToTimingGroup.Perform();
         }

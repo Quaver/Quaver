@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove
         {
             ActionManager = manager;
             WorkingMap = workingMap;
-            TimingGroup = timingGroup;
+            TimingGroup = timingGroup ?? WorkingMap.TimingGroups[id];
             ChildHitObjects = childHitObjects;
             Id = id;
         }
