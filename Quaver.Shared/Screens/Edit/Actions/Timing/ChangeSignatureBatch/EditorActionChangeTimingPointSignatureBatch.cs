@@ -16,11 +16,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch
 
         private Qua WorkingMap { get; }
 
-        private List<TimingPointInfo> TimingPoints { get; }
+        public List<TimingPointInfo> TimingPoints { get; }
 
-        private List<int> OriginalSignatures { get; } = new List<int>();
+        public List<int> OriginalSignatures { get; } = new List<int>();
 
-        private int NewSignature { get; }
+        public int NewSignature { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionChangeTimingPointSignatureBatch(EditorActionManager manager, Qua workingMap, List<TimingPointInfo> tps,

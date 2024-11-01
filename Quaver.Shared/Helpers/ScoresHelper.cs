@@ -24,11 +24,11 @@ namespace Quaver.Shared.Helpers
 
             foreach (var score in scores)
             {
-                var id = (ModIdentifier) score.Mods;
+                var id = (ModIdentifier)score.Mods;
                 var mods = ModManager.IdentifierToModifier(id);
 
                 if (mods != null && mods.Any(x => x.ChangesMapObjects))
-                    score.RatingProcessor  = new RatingProcessorKeys(freshQua.SolveDifficulty(id, true).OverallDifficulty);
+                    score.RatingProcessor = new RatingProcessorKeys(freshQua.SolveDifficulty(id, true).OverallDifficulty);
             }
         }
     }

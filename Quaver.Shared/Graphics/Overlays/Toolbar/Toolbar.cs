@@ -14,7 +14,7 @@ namespace Quaver.Shared.Graphics.Overlays.Toolbar
 {
     public class Toolbar : Sprite
     {
-                /// <summary>
+        /// <summary>
         ///     The line at the bottom of the toolbar.
         /// </summary>
         internal Sprite BottomLine { get; }

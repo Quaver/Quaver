@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
 using Quaver.Server.Client;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -12,20 +12,16 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
-using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main.Cheats;
 using Quaver.Shared.Screens.Main.UI;
-using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Quaver.Shared.Skinning;
 using Wobble;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -70,7 +66,10 @@ namespace Quaver.Shared.Screens.Main
             OriginalAutoLoadOsuBeatmapsValue = ConfigManager.AutoLoadOsuBeatmaps.Value;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             TheaterCheat = new CheatCodeTheater();
-            
+
+            if (AudioEngine.MeasuredAudioStartDelay == 0)
+                AudioEngine.MeasureAudioStartDelay();
+
             View = new MainMenuScreenView(this);
         }
 
@@ -277,8 +276,8 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus()
-            => new UserClientStatus(ClientStatus.InMenus, -1, "", (byte) ConfigManager.SelectedGameMode.Value,
-                "", (long) ModManager.Mods);
+            => new UserClientStatus(ClientStatus.InMenus, -1, "", (byte)ConfigManager.SelectedGameMode.Value,
+                "", (long)ModManager.Mods);
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>

@@ -16,12 +16,10 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.Reset
 
         private Qua WorkingMap { get; }
 
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
-        [MoonSharpVisible(false)]
         public float OriginalBpm { get; }
 
-        [MoonSharpVisible(false)]
         public float OriginalOffset { get; }
 
         [MoonSharpVisible(false)]

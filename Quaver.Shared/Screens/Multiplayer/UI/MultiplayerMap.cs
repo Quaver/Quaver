@@ -6,8 +6,10 @@ using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.Server.Client.Events.Download;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Helpers;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -98,7 +100,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Size = new ScalableVector2(Height * 1.70f, Height - 4),
                 Alignment = Alignment.MidLeft,
                 X = 2,
-                Image = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? BackgroundHelper.RawTexture: UserInterface.MenuBackground,
+                Image = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? BackgroundHelper.RawTexture : UserInterface.MenuBackground,
                 Alpha = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? 1 : 0
             };
 
@@ -116,7 +118,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             AddContainedDrawable(ArtistTitle);
 
-            Mode = new SpriteTextBitmap(FontsBitmap.GothamRegular, "["  + ModeHelper.ToShortHand((GameMode) game.GameMode) + "]")
+            Mode = new SpriteTextBitmap(FontsBitmap.GothamRegular, "[" + ModeHelper.ToShortHand((GameMode)game.GameMode) + "]")
             {
                 Parent = this,
                 X = ArtistTitle.X,
@@ -132,7 +134,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 X = Mode.X + Mode.Width + 8,
                 Y = Mode.Y,
                 FontSize = 14,
-                Tint = ColorHelper.DifficultyToColor((float) game.DifficultyRating)
+                Tint = ColorHelper.DifficultyToColor((float)game.DifficultyRating)
             };
 
             AddContainedDrawable(DifficultyRating);
@@ -175,7 +177,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (!HasMap || OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
             {
                 DownloadButton.Alpha = MathHelper.Lerp(DownloadButton.Alpha, DownloadButton.IsHovered ? 0.3f : 0f,
-                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+                    (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
             }
 
             base.Update(gameTime);
@@ -196,7 +198,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadStatusChanged;
             }
 
             base.Destroy();
@@ -368,7 +370,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Game.AllDifficultyRatings = e.AllDifficultyRatings;
             Game.GameMode = e.GameMode;
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (game.CurrentScreen.Type == QuaverScreenType.Gameplay || game.CurrentScreen.Type == QuaverScreenType.Results)
                 return;
@@ -420,7 +422,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             // Go to song select if host
             if (OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
             {
-                var game = (QuaverGame) GameBase.Game;
+                var game = (QuaverGame)GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
                 screen?.Exit(() => new SelectionScreen(), 0, QuaverScreenChangeType.AddToStack);
                 return;
@@ -439,26 +441,29 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 // ReSharper disable twice DelegateSubtraction
                 CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
-                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+                CurrentDownload.Status.ValueChanged -= OnDownloadStatusChanged;
             }
 
             CurrentDownload = MapsetDownloadManager.Download(Game.MapsetId, Game.Map, "");
             CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
-            CurrentDownload.Completed.ValueChanged += OnDownloadCompleted;
+            CurrentDownload.Status.ValueChanged += OnDownloadStatusChanged;
         }
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressChangedEventArgs> e)
+        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
         {
             if (CurrentDownload.MapsetId == Game.MapsetId)
                 Creator.Text = $"Downloading Map: {e.Value.ProgressPercentage}%";
         }
 
-        private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<AsyncCompletedEventArgs> e)
+        private void OnDownloadStatusChanged(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
         {
+            if (e.Value.Status != FileDownloaderStatus.Complete)
+                return;
+
             CurrentDownload.Dispose();
 
             if (e.Value.Error != null)

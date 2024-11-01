@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Objects;
 
 namespace Quaver.Shared.Screens.Download
 {

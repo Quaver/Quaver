@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Music
     {
         /// <summary>
         /// </summary>
-        public MusicPlayerScreen PlayerScreen => (MusicPlayerScreen) Screen;
+        public MusicPlayerScreen PlayerScreen => (MusicPlayerScreen)Screen;
 
         /// <summary>
         ///     The main menu background.
@@ -72,12 +72,12 @@ namespace Quaver.Shared.Screens.Music
         /// <param name="screen"></param>
         public MusicPlayerScreenView(Screen screen) : base(screen)
         {
-            Jukebox = new MusicPlayerJukebox(PlayerScreen.AvailableSongs) {Parent = Container};
+            Jukebox = new MusicPlayerJukebox(PlayerScreen.AvailableSongs) { Parent = Container };
 
             CreateBackground();
             CreateMenuHeader();
             CreateMenuFooter();
-            
+
             ContentContainer = new Container
             {
                 Parent = Container,
@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
-        private void CreateMenuHeader() => Header = new MenuHeaderMain {Parent = Container};
+        private void CreateMenuHeader() => Header = new MenuHeaderMain { Parent = Container };
 
         /// <summary>
         /// </summary>
@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Music
             Parent = Container,
             Alignment = Alignment.BotLeft
         };
-        
+
         /// <summary>
         /// </summary>
         private void CreateMusicControllerContainer() => ControllerContainer = new MusicControllerContainer(Jukebox)

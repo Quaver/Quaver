@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
-        private Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") {Value = ""};
+        private Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") { Value = "" };
 
         /// <summary>
         /// </summary>
@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Options
         /// <summary>
         ///     Whether or not an option is currently focused
         /// </summary>
-        public Bindable<bool> IsOptionFocused { get; } = new Bindable<bool>(false) {Value = false};
+        public Bindable<bool> IsOptionFocused { get; } = new Bindable<bool>(false) { Value = false };
 
         /// <summary>
         /// </summary>
@@ -225,7 +225,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsSlider(containerRect, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
                         new OptionsItemCheckbox(containerRect, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                         new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
-                        new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                        new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover),
+                        new OptionsItemCheckbox(containerRect, "Display Receptors Over Lane Covers", ConfigManager.ReceptorsOverLaneCover)
                     })
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
@@ -413,7 +414,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay),
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio Start Timing During Gameplay", ConfigManager.SmoothAudioStart)
                     }),
                     new OptionsSubcategory("Gameplay", new List<OptionsItem>()
                     {
@@ -447,11 +449,13 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Warning For Failing", ConfigManager.DisplayFailWarning),
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
+                        new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport),
+                        new OptionsItemCheckbox(containerRect, "Discord Rich Presence", ConfigManager.DiscordRichPresence)
                     }),
                 }),
             };
 
-            SelectedSection = new Bindable<OptionsSection>(Sections.First()) {Value = Sections.First()};
+            SelectedSection = new Bindable<OptionsSection>(Sections.First()) { Value = Sections.First() };
         }
 
         /// <summary>
@@ -543,7 +547,7 @@ namespace Quaver.Shared.Screens.Options
                     categoryName += "s";
 
                 var newSection = new OptionsSection(string.Empty, FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
-                    new List<OptionsSubcategory> {new OptionsSubcategory(categoryName, items)});
+                    new List<OptionsSubcategory> { new OptionsSubcategory(categoryName, items) });
 
                 ContentContainers.Add(newSection, new OptionsContentContainer(newSection, Content.Size));
                 SelectedSection.Value = newSection;

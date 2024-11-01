@@ -169,7 +169,7 @@ namespace Quaver.Shared.Graphics.Containers
                 return;
 
             // Compute the index of the object currently in the middle of the container.
-            var middleObjectIndex = (int) ((-ContentContainer.Y + Height / 2 - PaddingTop) / DrawableHeight);
+            var middleObjectIndex = (int)((-ContentContainer.Y + Height / 2 - PaddingTop) / DrawableHeight);
 
             // Compute the corresponding PoolStartingIndex.
             var desiredPoolStartingIndex = DesiredPoolStartingIndex(middleObjectIndex);
@@ -249,20 +249,20 @@ namespace Quaver.Shared.Graphics.Containers
         protected void AddObjectAtIndex(int index, T obj, bool scrollTo, bool usePoolCount = false)
         {
             lock (AvailableItems)
-            lock (Pool)
-            {
-                if (!AvailableItems.Contains(obj))
-                    AvailableItems.Insert(index, obj);
+                lock (Pool)
+                {
+                    if (!AvailableItems.Contains(obj))
+                        AvailableItems.Insert(index, obj);
 
-                // Need another drawable to use
-                if (Pool.Count < PoolSize)
-                    AddContainedDrawable(AddObject(index));
+                    // Need another drawable to use
+                    if (Pool.Count < PoolSize)
+                        AddContainedDrawable(AddObject(index));
 
-                RecalculateContainerHeight(usePoolCount);
+                    RecalculateContainerHeight(usePoolCount);
 
-                if (scrollTo)
-                    ScrollTo(-index * DrawableHeight, 1000);
-            }
+                    if (scrollTo)
+                        ScrollTo(-index * DrawableHeight, 1000);
+                }
         }
 
         /// <summary>
@@ -273,20 +273,20 @@ namespace Quaver.Shared.Graphics.Containers
         protected void AddObjectToBottom(T obj, bool scrollTo, bool usePoolCount = false)
         {
             lock (AvailableItems)
-            lock (Pool)
-            {
-                if (!AvailableItems.Contains(obj))
-                    AvailableItems.Add(obj);
+                lock (Pool)
+                {
+                    if (!AvailableItems.Contains(obj))
+                        AvailableItems.Add(obj);
 
-                // Need another drawable to use
-                if (Pool.Count < PoolSize)
-                    AddContainedDrawable(AddObject(AvailableItems.Count - 1));
+                    // Need another drawable to use
+                    if (Pool.Count < PoolSize)
+                        AddContainedDrawable(AddObject(AvailableItems.Count - 1));
 
-                RecalculateContainerHeight(usePoolCount);
+                    RecalculateContainerHeight(usePoolCount);
 
-                if (scrollTo)
-                    ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
-            }
+                    if (scrollTo)
+                        ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
+                }
         }
 
         /// <summary>

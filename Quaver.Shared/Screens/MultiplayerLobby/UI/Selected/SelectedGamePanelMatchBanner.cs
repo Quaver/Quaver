@@ -2,7 +2,8 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Helpers;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -21,7 +22,6 @@ using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
-using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Management.Maps;
 using Wobble;
@@ -325,7 +325,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             {
                 if (!IsMultiplayer)
                     return;
-                
+
                 // Download the map if they don't already have it.
                 if (MapManager.Selected.Value == null || MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.MapMd5
                     && MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.AlternativeMd5)
@@ -360,9 +360,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 if (MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.MapMd5 &&
                     MapManager.Selected.Value.Md5Checksum != SelectedGame.Value.AlternativeMd5)
                     return;
-                
+
                 var game = (QuaverGame) GameBase.Game;
-                
+
                 if (PlaylistManager.Playlists.FindAll(x => x.PlaylistGame == MapGame.Quaver).Count == 0)
                 {
                     DialogManager.Show(new CreatePlaylistDialog());
@@ -543,7 +543,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 var multi = (MultiplayerGameScreen) game.CurrentScreen;
                 multi.DontLeaveGameUponScreenSwitch = true;
 
-                download.Completed.ValueChanged += (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
+                download.Status.ValueChanged += (sender2, args2) =>
+                {
+                    if (args2.Value.Status != FileDownloaderStatus.Complete)
+                        return;
+
+                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                };
 
                 MapsetDownloadManager.OpenOnlineHub();
                 game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
@@ -577,7 +583,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 var multi = (MultiplayerGameScreen) game.CurrentScreen;
                 multi.DontLeaveGameUponScreenSwitch = true;
 
-                download.Completed.ValueChanged += (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
+                download.Status.ValueChanged += (sender2, args2) =>
+                {
+                    if (args2.Value.Status != FileDownloaderStatus.Complete)
+                        return;
+
+                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                };
 
                 MapsetDownloadManager.OpenOnlineHub();
                 game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);

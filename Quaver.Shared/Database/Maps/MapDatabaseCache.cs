@@ -310,7 +310,7 @@ namespace Quaver.Shared.Database.Maps
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
             MapManager.RecentlyPlayed = new List<Map>();
 
-            if(!skipPlaylistLoad)
+            if (!skipPlaylistLoad)
                 PlaylistManager.Load();
 
             // Schedule maps that don't have difficulty ratings to recalculate.

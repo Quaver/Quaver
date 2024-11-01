@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Objects.Listening;
+using Quaver.Server.Client.Objects.Listening;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Music.Components
         /// </summary>
         public void SelectNextTrack(Direction direction)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (AvailableSongs.Value.Count == 0 || game.CurrentScreen != null && game.CurrentScreen.Exiting)
                 return;
@@ -378,7 +378,7 @@ namespace Quaver.Shared.Screens.Music.Components
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             SteamManager.SetRichPresence("State", DiscordHelper.Presence.State);
             SteamManager.SetRichPresence("Details", DiscordHelper.Presence.Details);

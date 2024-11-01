@@ -6,8 +6,8 @@
 */
 
 using System.Linq;
-using Quaver.Server.Common.Objects;
-using Quaver.Server.Common.Objects.Listening;
+using Quaver.Server.Client.Objects;
+using Quaver.Server.Client.Objects.Listening;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;

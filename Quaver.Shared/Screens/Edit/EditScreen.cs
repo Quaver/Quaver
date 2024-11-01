@@ -12,9 +12,9 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Helpers;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Helpers;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -288,19 +288,23 @@ namespace Quaver.Shared.Screens.Edit
         private double TimeSinceLastPlayfieldZoom { get; set; }
 
         /// <summary>
+        ///     Hit objects that are just placed by livemapping and wasn't let go yet.
+        ///     This is used so as long as livemapping keybinds are held, the note will get resized.
+        /// </summary>
+        private HitObjectInfo[] heldLivemapHitObjectInfos;
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             Map = map;
             BackgroundStore = visualTestBackground;
 
-            if (map.Game is MapGame.Quaver)
-                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
-
             try
             {
                 OriginalQua = map.LoadQua();
                 WorkingMap = OriginalQua.DeepClone();
+                heldLivemapHitObjectInfos = new HitObjectInfo[WorkingMap.GetKeyCount()];
             }
             catch (Exception e)
             {
@@ -310,6 +314,9 @@ namespace Quaver.Shared.Screens.Edit
                 NotificationManager.Show(NotificationLevel.Error, "There was an issue while loading this map in the editor.");
                 return;
             }
+
+            if (map.Game is MapGame.Quaver)
+                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
 
             SetAudioTrack(track);
 
@@ -887,7 +894,13 @@ namespace Quaver.Shared.Screens.Edit
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
-                if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                var key = Keys.D1 + i;
+                if (KeyboardManager.IsUniqueKeyRelease(key))
+                {
+                    heldLivemapHitObjectInfos[i] = null;
+                }
+
+                if (!KeyboardManager.CurrentState.IsKeyDown(key))
                     continue;
 
                 var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
@@ -902,16 +915,25 @@ namespace Quaver.Shared.Screens.Edit
 
                 var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
 
-                // Can be multiple if overlap
-                var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time).ToList();
-
-                if (hitObjectsAtTime.Count > 0)
+                if (KeyboardManager.IsUniqueKeyPress(key))
                 {
-                    foreach (var note in hitObjectsAtTime)
-                        ActionManager.RemoveHitObject(note);
+                    // Can be multiple if overlap
+                    var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time)
+                        .ToList();
+
+                    if (hitObjectsAtTime.Count > 0)
+                    {
+                        foreach (var note in hitObjectsAtTime)
+                            ActionManager.RemoveHitObject(note);
+                    }
+                    else
+                        heldLivemapHitObjectInfos[i] = ActionManager.PlaceHitObject(lane, time, 0, layer);
                 }
-                else
-                    ActionManager.PlaceHitObject(lane, time, 0, layer);
+                else if (heldLivemapHitObjectInfos[i] != null && ConfigManager.EditorLiveMapLongNote.Value)
+                {
+                    if (time - heldLivemapHitObjectInfos[i].StartTime > ConfigManager.EditorLiveMapLongNoteThreshold.Value)
+                        ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[i], heldLivemapHitObjectInfos[i].EndTime, time);
+                }
             }
         }
 
@@ -938,7 +960,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void SetHitSoundObjectIndex()
         {
-            HitsoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= Track.Time);
+            HitsoundObjectIndex = WorkingMap.HitObjects.IndexAtTime((float)Track.Time);
             HitsoundObjectIndex++;
         }
 
@@ -1130,13 +1152,13 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (!File.Exists(pluginPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
+                    Logger.Debug($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
                     continue;
                 }
 
                 if (!File.Exists(settingsPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
+                    Logger.Debug($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
                     continue;
                 }
 
@@ -1612,7 +1634,7 @@ namespace Quaver.Shared.Screens.Edit
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset.");
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset:\n" + e.Message);
             }
         }
 
@@ -1743,6 +1765,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void ExportToZip()
         {
+            if (ActionManager.HasUnsavedChanges)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Your map has unsaved changes. Please save before exporting.");
+                return;
+            }
+
             NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
 
             ThreadScheduler.Run(() =>

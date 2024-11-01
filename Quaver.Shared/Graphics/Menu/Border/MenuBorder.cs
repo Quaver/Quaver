@@ -52,7 +52,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
             RightAlignedItems = rightAligned;
 
             Size = new ScalableVector2(WindowManager.Width, HEIGHT);
-            
+
             if (type == MenuBorderType.Footer)
             {
                 Image = SkinManager.Skin?.MenuBorder?.BackgroundFooter ?? SkinManager.Skin?.MenuBorder?.Background ?? UserInterface.MenuBorderBackground;

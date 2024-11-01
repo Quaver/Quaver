@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;

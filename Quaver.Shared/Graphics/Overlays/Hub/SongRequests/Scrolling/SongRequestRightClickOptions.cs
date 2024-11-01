@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Server.Client.Helpers;
+using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
@@ -139,8 +140,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
                         game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
 
                         // Auto import
-                        download.Completed.ValueChanged += (sender, args) =>
+                        download.Status.ValueChanged += (sender, args) =>
                         {
+                            if (args.Value.Status != FileDownloaderStatus.Complete)
+                                return;
                             if (game.CurrentScreen.Type == QuaverScreenType.Select)
                             {
                                 var selectScreen = (SelectionScreen) game.CurrentScreen;

@@ -173,28 +173,28 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             try
             {
                 //var endpoint = "http://localhost:8082/v1/";
-                var endpoint = "https://api.quavergame.com/v1/";
+                var endpoint = "https://api.quavergame.com/v2/";
 
-                var request = new RestRequest($"{endpoint}mapsets/maps/search", Method.GET);
+                var request = new RestRequest($"{endpoint}mapset/search", Method.GET);
                 var client = new RestClient(endpoint) { UserAgent = "Quaver" };
 
                 request.AddQueryParameter("search", Query);
                 SetModeQueryParams(request);
                 SetStatusQueryParams(request);
-                request.AddQueryParameter("mindiff", MinDiffifculty.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxdiff", MaxDifficulty.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("minbpm", MinBpm.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxbpm", MaxBpm.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("minlength", MinLength.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxlength", MaxLength.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("minlns", MinLongNotePercent.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxlns", MaxLongNotePercent.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("mindate", UploadStartDate.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxdate", UploadEndDate.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("mindatelastupdated",LastUpdatedStartDate.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxdatelastupdated",LastUpdatedEndDate.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("mincombo", MinCombo.ToString(CultureInfo.InvariantCulture));
-                request.AddQueryParameter("maxcombo", MaxCombo.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("min_difficulty_rating", MinDiffifculty.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("max_difficulty_rating", MaxDifficulty.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("min_bpm", MinBpm.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("max_bpm", MaxBpm.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("min_length", MinLength.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("max_length", MaxLength.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("min_long_note_percent", MinLongNotePercent.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("max_long_note_percent", MaxLongNotePercent.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("min_date_submitted", UploadStartDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("max_date_submitted", UploadEndDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("min_last_updated",LastUpdatedStartDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("max_last_updated",LastUpdatedEndDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("min_combo", MinCombo.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("max_combo", MaxCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("page", Page.ToString());
 
                 var response = client.Execute(request);
@@ -208,7 +208,6 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
                 return new APIResponseMapsetSearch
                 {
-                    Status = -1,
                     Mapsets = new List<DownloadableMapset>()
                 };
             }
@@ -246,12 +245,12 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                     if (status == DownloadFilterRankedStatus.All)
                         continue;
 
-                    request.AddQueryParameter("status", ((int) status).ToString());
+                    request.AddQueryParameter("ranked_status", ((int) status).ToString());
                 }
             }
             else
             {
-                request.AddQueryParameter("status", ((int) Status).ToString());
+                request.AddQueryParameter("ranked_status", ((int) Status).ToString());
             }
         }
 

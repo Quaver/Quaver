@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Objects;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -27,7 +27,6 @@ using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Theater;
-using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
@@ -64,7 +63,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// <summary>
         ///     The user's current search query
         /// </summary>
-        public Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") {Value = ""};
+        public Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") { Value = "" };
 
         /// <summary>
         ///     The currently filtered game mode
@@ -84,75 +83,75 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        public BindableFloat MinDifficulty { get; } = new BindableFloat(0, 0, 9999) {Value = 0};
+        public BindableFloat MinDifficulty { get; } = new BindableFloat(0, 0, 9999) { Value = 0 };
 
         /// <summary>
         /// </summary>
-        public BindableFloat MaxDifficulty { get; } = new BindableFloat(0, 0, float.MaxValue) {Value = 9999};
+        public BindableFloat MaxDifficulty { get; } = new BindableFloat(0, 0, float.MaxValue) { Value = 9999 };
 
         /// <summary>
         /// </summary>
-        public BindableFloat MinBpm { get; } = new BindableFloat(0, 0, float.MaxValue) {Value = 0};
+        public BindableFloat MinBpm { get; } = new BindableFloat(0, 0, float.MaxValue) { Value = 0 };
 
         /// <summary>
         /// </summary>
-        public BindableFloat MaxBpm { get; } = new BindableFloat(0, 0, float.MaxValue) {Value = 9999};
+        public BindableFloat MaxBpm { get; } = new BindableFloat(0, 0, float.MaxValue) { Value = 9999 };
 
         /// <summary>
         /// </summary>
-        public BindableInt MinLength { get; } = new BindableInt(0, 0, int.MaxValue) {Value = 0};
+        public BindableInt MinLength { get; } = new BindableInt(0, 0, int.MaxValue) { Value = 0 };
 
         /// <summary>
         /// </summary>
-        public BindableInt MaxLength { get; } = new BindableInt(0, 0, int.MaxValue) {Value = int.MaxValue};
+        public BindableInt MaxLength { get; } = new BindableInt(0, 0, int.MaxValue) { Value = int.MaxValue };
 
         /// <summary>
         /// </summary>
-        public BindableInt MinLongNotePercent { get; } = new BindableInt(0, 0, 100) {Value = 0};
+        public BindableInt MinLongNotePercent { get; } = new BindableInt(0, 0, 100) { Value = 0 };
 
         /// <summary>
         /// </summary>
-        public BindableInt MaxLongNotePercent { get; } = new BindableInt(0, 0, 100) {Value = 100};
+        public BindableInt MaxLongNotePercent { get; } = new BindableInt(0, 0, 100) { Value = 100 };
 
         /// <summary>
         /// </summary>
-        public BindableInt MinPlayCount { get; } = new BindableInt(0, 0, int.MaxValue) {Value = 0};
+        public BindableInt MinPlayCount { get; } = new BindableInt(0, 0, int.MaxValue) { Value = 0 };
 
         /// <summary>
         /// </summary>
-        public BindableInt MaxPlayCount { get; } = new BindableInt(0, 0, int.MaxValue) {Value = int.MaxValue};
+        public BindableInt MaxPlayCount { get; } = new BindableInt(0, 0, int.MaxValue) { Value = int.MaxValue };
 
         /// <summary>
         /// </summary>
-        public Bindable<string> MinUploadDate { get; } = new Bindable<string>("") { Value = "01-01-1970"};
+        public Bindable<string> MinUploadDate { get; } = new Bindable<string>("") { Value = "01-01-1970" };
 
         /// <summary>
         /// </summary>
-        public Bindable<string> MaxUploadDate { get; } = new Bindable<string>("")  { Value = "12-31-9999"};
+        public Bindable<string> MaxUploadDate { get; } = new Bindable<string>("") { Value = "12-31-9999" };
 
         /// <summary>
         /// </summary>
-        public Bindable<string> MinLastUpdateDate { get; } = new Bindable<string>("") { Value = "01-01-1970"};
+        public Bindable<string> MinLastUpdateDate { get; } = new Bindable<string>("") { Value = "01-01-1970" };
 
         /// <summary>
         /// </summary>
-        public Bindable<string> MaxLastUpdateDate { get; } = new Bindable<string>("") { Value = "12-31-9999"};
+        public Bindable<string> MaxLastUpdateDate { get; } = new Bindable<string>("") { Value = "12-31-9999" };
 
         /// <summary>
         /// </summary>
-        public BindableInt MinCombo { get; } = new BindableInt(0, 0, int.MaxValue) { Value = 0};
+        public BindableInt MinCombo { get; } = new BindableInt(0, 0, int.MaxValue) { Value = 0 };
 
         /// <summary>
         /// </summary>
-        public BindableInt MaxCombo { get; } = new BindableInt(int.MaxValue, 0, int.MaxValue) { Value = int.MaxValue};
+        public BindableInt MaxCombo { get; } = new BindableInt(int.MaxValue, 0, int.MaxValue) { Value = int.MaxValue };
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> DisplayOwnedMapsets => ConfigManager.DownloadDisplayOwnedMapsets ?? new Bindable<bool>(true) {Value = true};
+        public Bindable<bool> DisplayOwnedMapsets => ConfigManager.DownloadDisplayOwnedMapsets ?? new Bindable<bool>(true) { Value = true };
 
         /// <summary>
         /// </summary>
-        public Bindable<int> Page { get; } = new Bindable<int>(0) { Value = 0};
+        public Bindable<int> Page { get; } = new Bindable<int>(0) { Value = 0 };
 
         /// <summary>
         ///     Determines if the user has reached the end of the mapset list
@@ -168,7 +167,7 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ReverseSort => ConfigManager.DownloadReverseSort ?? new Bindable<bool>(false) {Value = false};
+        public Bindable<bool> ReverseSort => ConfigManager.DownloadReverseSort ?? new Bindable<bool>(false) { Value = false };
 
         /// <summary>
         /// </summary>
@@ -255,7 +254,7 @@ namespace Quaver.Shared.Screens.Downloading
             SearchTask = new TaskHandler<int, int>(SearchMapsets);
 
 #if !VISUAL_TESTS
-           // SetRichPresence();
+            // SetRichPresence();
 #endif
             View = new DownloadingScreenView(this);
 
@@ -604,72 +603,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        private List<DownloadableMapset> SortMapsets(List<DownloadableMapset> mapsets)
-        {
-            if (mapsets == null || mapsets.Count <= 1)
-                return mapsets;
-
-            switch (SortBy.Value)
-            {
-                case DownloadSortBy.Newest:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderBy(x => x.DateLastUpdated).ToList();
-
-                    return mapsets;
-                case DownloadSortBy.Artist:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.Artist).ToList();
-
-                    return mapsets.OrderBy(x => x.Artist).ToList();
-                case DownloadSortBy.Title:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.Title).ToList();
-
-                    return mapsets.OrderBy(x => x.Title).ToList();
-                case DownloadSortBy.Creator:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.CreatorUsername).ToList();
-
-                    return mapsets.OrderBy(x => x.CreatorUsername).ToList();
-                case DownloadSortBy.Bpm:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.Bpms.Max()).ToList();
-
-                    return mapsets.OrderBy(x => x.Bpms.Max()).ToList();
-                case DownloadSortBy.Length:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxLengthSeconds).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxLengthSeconds).ToList();
-                case DownloadSortBy.MinDifficulty:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.DifficultyRange.Min()).ToList();
-
-                    return mapsets.OrderBy(x => x.DifficultyRange.Min()).ToList();
-                case DownloadSortBy.MaxDifficulty:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.DifficultyRange.Max()).ToList();
-
-                    return mapsets.OrderBy(x => x.DifficultyRange.Max()).ToList();
-                case DownloadSortBy.LNs:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxLongNotePercent).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxLongNotePercent).ToList();
-                case DownloadSortBy.PlayCount:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxPlayCount).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxPlayCount).ToList();
-                case DownloadSortBy.MaxCombo:
-                    if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.MaxCombo).ToList();
-
-                    return mapsets.OrderBy(x => x.MaxCombo).ToList();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        private List<DownloadableMapset> SortMapsets(List<DownloadableMapset> mapsets) => mapsets;
 
         /// <summary>
         /// </summary>
@@ -834,35 +768,35 @@ namespace Quaver.Shared.Screens.Downloading
                 }
 
                 lock (CurrentPreview)
-                lock (AudioPreviews)
-                {
-                    try
+                    lock (AudioPreviews)
                     {
-                        if (CurrentPreview != null && CurrentPreview.IsPlaying)
-                            CurrentPreview?.Stop();
-
-                        if (AudioPreviews.ContainsKey(mapset.Id))
+                        try
                         {
-                            CurrentPreview = AudioPreviews[mapset.Id];
-                            CurrentPreview.Seek(0);
+                            if (CurrentPreview != null && CurrentPreview.IsPlaying)
+                                CurrentPreview?.Stop();
+
+                            if (AudioPreviews.ContainsKey(mapset.Id))
+                            {
+                                CurrentPreview = AudioPreviews[mapset.Id];
+                                CurrentPreview.Seek(0);
+
+                                if (ShouldPreviewPlay)
+                                    CurrentPreview.Play();
+                                return;
+                            }
+
+                            var uri = new Uri($"https://cdn.quavergame.com/audio-previews/{mapset.Id}.mp3");
+                            CurrentPreview = new AudioTrack(uri, false, false);
+                            AudioPreviews.Add(mapset.Id, CurrentPreview);
 
                             if (ShouldPreviewPlay)
                                 CurrentPreview.Play();
-                            return;
                         }
-
-                        var uri = new Uri($"https://cdn.quavergame.com/audio-previews/{mapset.Id}.mp3");
-                        CurrentPreview = new AudioTrack(uri, false, false);
-                        AudioPreviews.Add(mapset.Id, CurrentPreview);
-
-                        if (ShouldPreviewPlay)
-                            CurrentPreview.Play();
+                        catch (Exception e)
+                        {
+                            Logger.Error(e, LogType.Network);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e, LogType.Network);
-                    }
-                }
             });
         }
 

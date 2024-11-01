@@ -4,22 +4,19 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
-using SQLite;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
-using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Multi.UI.Players

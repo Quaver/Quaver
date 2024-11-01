@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using System.Net;
-using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Server.Client.Helpers;
+using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
@@ -101,13 +102,13 @@ namespace Quaver.Shared.IPC
                 // Find mapset id & song name.
                 var response = new APIRequestMapInformation(id).ExecuteRequest();
 
-                if (response.Status == (int) HttpStatusCode.NotFound)
+                if (response.Status == (int)HttpStatusCode.NotFound)
                 {
                     NotificationManager.Show(NotificationLevel.Error, $"That map does not exist on the server.");
                     return;
                 }
 
-                if (response.Status != (int) HttpStatusCode.OK)
+                if (response.Status != (int)HttpStatusCode.OK)
                     throw new Exception($"Failed map information `{id}` fetch with response: {response.Status}");
 
                 DownloadMapAndImport(response.Map.MapsetId, response.Map.Artist, response.Map.Title, true);
@@ -146,13 +147,13 @@ namespace Quaver.Shared.IPC
                 // Find mapset id & song name.
                 var response = new APIRequestMapsetInformation(id).ExecuteRequest();
 
-                if (response.Status == (int) HttpStatusCode.NotFound)
+                if (response.Status == (int)HttpStatusCode.NotFound)
                 {
                     NotificationManager.Show(NotificationLevel.Error, $"That mapset does not exist on the server.");
                     return;
                 }
 
-                if (response.Status != (int) HttpStatusCode.OK)
+                if (response.Status != (int)HttpStatusCode.OK)
                     throw new Exception($"Failed mapset information `{id}` fetch with response: {response.Status}");
 
                 DownloadMapAndImport(id, response.Mapset.Artist, response.Mapset.Title, false);
@@ -202,7 +203,7 @@ namespace Quaver.Shared.IPC
         /// <returns></returns>
         private static bool IsSelectionAllowedOnScreen()
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             switch (game.CurrentScreen.Type)
             {
@@ -227,7 +228,7 @@ namespace Quaver.Shared.IPC
             if (map == null)
                 return false;
 
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             if (!IsSelectionAllowedOnScreen())
             {
@@ -255,15 +256,15 @@ namespace Quaver.Shared.IPC
         /// <param name="isMap"></param>
         private static void DownloadMapAndImport(int id, string artist, string title, bool isMap)
         {
-            var game = (QuaverGame) GameBase.Game;
+            var game = (QuaverGame)GameBase.Game;
 
             var dl = MapsetDownloadManager.Download(id, artist, title);
             MapsetDownloadManager.OpenOnlineHub();
 
             // Automatically import if the user is still in song select after completion.
-            dl.Completed.ValueChanged += (o, e) =>
+            dl.Status.ValueChanged += (o, e) =>
             {
-                if (!IsSelectionAllowedOnScreen())
+                if (!IsSelectionAllowedOnScreen() || e.Value.Status != FileDownloaderStatus.Complete)
                     return;
 
                 var dialog = DialogManager.Dialogs.Find(x => x is OnlineHubDialog) as OnlineHubDialog;

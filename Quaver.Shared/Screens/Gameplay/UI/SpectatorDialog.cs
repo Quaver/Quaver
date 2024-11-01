@@ -1,7 +1,6 @@
-using System;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
-using Quaver.Server.Common.Enums;
+using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
 using Wobble.Graphics;

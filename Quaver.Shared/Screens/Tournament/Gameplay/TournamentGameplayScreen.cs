@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Tournament.Gameplay
         /// <param name="map"></param>
         /// <param name="md5"></param>
         /// <param name="options"></param>
-        public TournamentGameplayScreen(Qua map, string md5, TournamentPlayerOptions options) : base(map, md5, new List<Score>(), 
+        public TournamentGameplayScreen(Qua map, string md5, TournamentPlayerOptions options) : base(map, md5, new List<Score>(),
             null, false, 0, false, null, options)
         {
             Type = TournamentScreenType.Coop;

@@ -53,7 +53,7 @@ namespace Quaver.Shared.Skinning
         ///     The skin for player 2 in the tournament screen
         /// </summary>
         public static SkinStore TournamentPlayer2Skin { get; set; }
-        
+
         /// <summary>
         ///     Watches for current skin changes
         /// </summary>
@@ -147,7 +147,7 @@ namespace Quaver.Shared.Skinning
                 SkinLoaded?.Invoke(typeof(SkinManager), new SkinReloadedEventArgs());
                 var showLoadedNotification = true;
 
-                var game = (QuaverGame) GameBase.Game;
+                var game = (QuaverGame)GameBase.Game;
 
                 switch (game.CurrentScreen.Type)
                 {
@@ -157,7 +157,7 @@ namespace Quaver.Shared.Skinning
                     case QuaverScreenType.Select:
                         game.CurrentScreen.Exit(() => new SelectionScreen());
                         break;
-                    case QuaverScreenType.Gameplay when 
+                    case QuaverScreenType.Gameplay when
                         game.CurrentScreen is GameplayScreen gameplayScreen and not TournamentGameplayScreen
                         && gameplayScreen.InReplayMode:
                         showLoadedNotification = ConfigManager.DisplayNotificationsInGameplay.Value;

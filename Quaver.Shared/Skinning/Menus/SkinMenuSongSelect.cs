@@ -66,9 +66,9 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D MapsetHovered { get; private set; }
 
-#endregion
+        #endregion
 
-#region GAME_MODE
+        #region GAME_MODE
 
         public Texture2D GameMode4K { get; private set; }
 
@@ -76,9 +76,9 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D GameMode4K7K { get; private set; }
 
-#endregion
+        #endregion
 
-#region  RANKED_STATUS
+        #region  RANKED_STATUS
 
         public Texture2D StatusNotSubmitted { get; private set; }
 
@@ -92,15 +92,15 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D StatusVarious { get; private set; }
 
- #endregion
+        #endregion
 
-#region LEADERBOARD
+        #region LEADERBOARD
 
         public Texture2D LeaderboardPanel { get; private set; }
 
         public Texture2D PersonalBestPanel { get; private set; }
 
-#endregion
+        #endregion
 
         public SkinMenuSongSelect(SkinStore store, IniData config) : base(store, config)
         {

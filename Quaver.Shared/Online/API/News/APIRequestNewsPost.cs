@@ -17,7 +17,7 @@ namespace Quaver.Shared.Online.API.News
     public class APIRequestNewsFeed : APIRequest<APIResponseNewsFeed>
     {
         private const string URL = "https://blog.quavergame.com/feed.json";
-        
+
         public override APIResponseNewsFeed ExecuteRequest()
         {
             var request = new RestRequest(URL, Method.GET);
@@ -30,7 +30,7 @@ namespace Quaver.Shared.Online.API.News
             var responseParsed = JsonConvert.DeserializeObject<APIResponseNewsFeed>(json.ToString());
 
             LoadBanner(responseParsed);
-            
+
             return responseParsed;
         }
 
@@ -49,7 +49,7 @@ namespace Quaver.Shared.Online.API.News
 
             if (string.IsNullOrEmpty(latestPost.IngameThumbnail))
                 return;
-            
+
             try
             {
                 using (var webClient = new WebClient())
