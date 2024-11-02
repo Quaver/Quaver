@@ -67,6 +67,9 @@ namespace Quaver.Shared.Screens.Main
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             TheaterCheat = new CheatCodeTheater();
 
+            if (AudioEngine.MeasuredAudioStartDelay == 0)
+                AudioEngine.MeasureAudioStartDelay();
+
             View = new MainMenuScreenView(this);
         }
 

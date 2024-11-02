@@ -16,12 +16,27 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Modifiers;
+using WilliamQiufeng.SearchParser.AST;
+using WilliamQiufeng.SearchParser.Parsing;
+using WilliamQiufeng.SearchParser.Tokenizing;
 using Wobble.Bindables;
 
 namespace Quaver.Shared.Database.Maps
 {
     public static class MapsetHelper
     {
+        /// <summary>
+        ///     A trie containing all possible keywords (keys like lns, mode, and enum values like unranked, quaver)
+        /// </summary>
+        private static Trie _searchKeywordTrie = new();
+
+        /// <summary>
+        ///     Stores which <see cref="SearchFilterOption"/> an enum value belongs to.
+        ///     For example, pair (<see cref="MapGame.Quaver"/>, <see cref="SearchFilterOption.Game"/>) exists in the
+        ///     dictionary.
+        /// </summary>
+        private static readonly Dictionary<object, SearchFilterOption> SearchEnumKeyDictionary = new();
+
         /// <summary>
         ///     Gets the Md5 Checksum of a file, more specifically a .qua file.
         /// </summary>
@@ -481,6 +496,76 @@ namespace Quaver.Shared.Database.Maps
             return mapsets;
         }
 
+        static MapsetHelper()
+        {
+            InitializeSearchKeywordTrie();
+        }
+
+        internal static void InitializeSearchKeywordTrie()
+        {
+            _searchKeywordTrie = new Trie();
+            var keys = new Dictionary<string, SearchFilterOption>
+            {
+                 ["artists"] = SearchFilterOption.Artist,
+                 ["bpm"] = SearchFilterOption.BPM,
+                 ["creators"] = SearchFilterOption.Creator,
+                 ["difficulty"] = SearchFilterOption.Difficulty,
+                 ["description"] = SearchFilterOption.Description,
+                 ["difficultyname"] = SearchFilterOption.DifficultyName,
+                 ["diffname"] = SearchFilterOption.DifficultyName,
+                 ["game"] = SearchFilterOption.Game,
+                 ["genre"] = SearchFilterOption.Genre,
+                 ["keys"] = SearchFilterOption.Keys,
+                 ["length"] = SearchFilterOption.Length,
+                 ["lns"] = SearchFilterOption.LNs,
+                 ["nps"] = SearchFilterOption.NPS,
+                 ["title"] = SearchFilterOption.Title,
+                 ["tags"] = SearchFilterOption.Tags,
+                 ["timesplayed"] = SearchFilterOption.TimesPlayed,
+                 ["status"] = SearchFilterOption.Status,
+                 ["sources"] = SearchFilterOption.Source
+            };
+
+            var gameTypes = new Dictionary<string, MapGame>
+            {
+                ["quaver"] = MapGame.Quaver,
+                ["osu"] = MapGame.Osu,
+                ["etterna"] = MapGame.Etterna
+            };
+
+            var rankedStatuses = new Dictionary<string, RankedStatus>
+            {
+                ["ranked"] = RankedStatus.Ranked,
+                ["unranked"] = RankedStatus.Unranked,
+                ["notsubmitted"] = RankedStatus.NotSubmitted,
+                ["unsubmitted"] = RankedStatus.NotSubmitted,
+                ["dan"] = RankedStatus.DanCourse,
+                ["dancourse"] = RankedStatus.DanCourse
+            };
+
+            SearchEnumKeyDictionary.Clear();
+
+
+            foreach (var (key, option) in keys)
+            {
+                _searchKeywordTrie.Add(key, TokenKind.Key, option);
+            }
+
+            foreach (var (name, mapGame) in gameTypes)
+            {
+                _searchKeywordTrie.Add(name, TokenKind.Enum, mapGame);
+                // TryAdd since we have multiple possible enum strings that point to the same value
+                SearchEnumKeyDictionary.TryAdd(mapGame, SearchFilterOption.Game);
+            }
+
+            foreach (var (name, rankedStatus) in rankedStatuses)
+            {
+                _searchKeywordTrie.Add(name, TokenKind.Enum, rankedStatus);
+                // TryAdd since we have multiple possible enum strings that point to the same value
+                SearchEnumKeyDictionary.TryAdd(rankedStatus, SearchFilterOption.Status);
+            }
+        }
+
         /// <summary>
         /// Searches and returns mapsets given a query
         /// </summary>
@@ -493,76 +578,64 @@ namespace Quaver.Shared.Database.Maps
 
             query = query.ToLower();
 
-            // All the possible relational operators for the search query
-            var operators = new List<string>
+            var tokenizer = new Tokenizer(query);
+            tokenizer.KeywordTrie = _searchKeywordTrie;
+
+            var parser = new Parser(tokenizer);
+            parser.SearchCriterionConstraint = criterion =>
             {
-                ">=",
-                "<=",
-                "==",
-                "!=",
-                "<",
-                ">",
-                "="
-            };
+                // This is redundant check, but just in case...
+                if (criterion.Values.Count == 0)
+                    return false;
 
-            // The shortest and longest matching sequences for every option. For example, "d" and "difficulty" means you
-            // can search for "d>5", "di>5", "dif>5" and so on up to "difficulty>5".
-            //
-            // When adding new options with overlapping first characters, specify the shortest unambiguous sequence as
-            // the new key. So, for example, "duration" should be added as "du", "duration". This way "d" still searches
-            // for "difficulty" (backwards-compatibility) and "du" searches for duration.
-            var options = new Dictionary<SearchFilterOption, (string Shortest, string Longest)>
-            {
-                { SearchFilterOption.BPM,        ("b", "bpm") },
-                { SearchFilterOption.Difficulty, ("d", "difficulty") },
-                { SearchFilterOption.Length,     ("l", "length") },
-                { SearchFilterOption.Keys,       ("k", "keys") },
-                { SearchFilterOption.Status,     ("s", "status") },
-                { SearchFilterOption.LNs,        ("ln", "lns") },
-                { SearchFilterOption.NPS,        ("n", "nps") },
-                { SearchFilterOption.Game,       ("g", "game") },
-                { SearchFilterOption.TimesPlayed, ("t", "timesplayed") }
-            };
+                var option = (SearchFilterOption)criterion.Key.Value!;
+                var valueKind = criterion.Values.FirstOrDefault()?.Token.Kind;
 
-            // Stores a dictionary of the found pairs in the search query
-            // <option, value, operator>
-            var foundSearchFilters = new List<SearchFilter>();
+                if (valueKind is TokenKind.Enum)
+                    return criterion.Values.All(v =>
+                        SearchEnumKeyDictionary.TryGetValue(v.Value!, out var key) && key.Equals(criterion.Key.Value));
 
-            var terms = query.Split(null).ToList();
-
-            // Get a list of all the matching search filters.
-            // All matched filters are removed from the list of terms.
-            for (var i = terms.Count - 1; i >= 0; i--)
-            {
-                var term = terms[i];
-
-                foreach (var op in operators)
+                return option switch
                 {
-                    var match = Regex.Match(term, $@"(.+)\b{op}\b(.+)");
-                    if (!match.Success)
-                        continue;
+                    SearchFilterOption.BPM or SearchFilterOption.Difficulty when criterion.Values.Count == 1 =>
+                        valueKind is TokenKind.Integer or TokenKind.Real,
+                    SearchFilterOption.Length when criterion.Values.Count == 1 =>
+                        valueKind is TokenKind.Integer or TokenKind.TimeSpan,
+                    SearchFilterOption.Status or SearchFilterOption.Game =>
+                        valueKind is TokenKind.Enum,
+                    SearchFilterOption.Keys when criterion.Values.Count == 1 =>
+                        valueKind is TokenKind.Integer,
+                    SearchFilterOption.LNs when criterion.Values.Count == 1 =>
+                        valueKind is TokenKind.Integer or TokenKind.Percentage,
+                    SearchFilterOption.NPS or SearchFilterOption.TimesPlayed when criterion.Values.Count == 1 =>
+                        valueKind is TokenKind.Integer,
+                    SearchFilterOption.Title or SearchFilterOption.Tags or
+                        SearchFilterOption.Source or SearchFilterOption.Artist or
+                        SearchFilterOption.Creator or SearchFilterOption.Description or
+                        SearchFilterOption.DifficultyName or SearchFilterOption.Genre =>
+                        valueKind is TokenKind.String or TokenKind.PlainText,
+                    _ => false
+                };
+            };
 
-                    var searchOption = match.Groups[1].Value;
-                    var val = match.Groups[2].Value;
+            parser.SingletonEnumProcessor = listValue =>
+            {
+                // List must not be empty
+                if (listValue.Count == 0) return Array.Empty<SearchCriterion>();
+                // First value must have valid key correspondence
+                if (!SearchEnumKeyDictionary.TryGetValue(listValue[0].Value!, out var firstValueKey))
+                    return Array.Empty<SearchCriterion>();
+                // Coherent types for all values
+                if (listValue.Any(v =>
+                        !SearchEnumKeyDictionary.TryGetValue(v.Value!, out var filterOption) ||
+                        filterOption != firstValueKey))
+                    return Array.Empty<SearchCriterion>();
+                return new[] { new SearchCriterion(firstValueKey, TokenKind.Equal, listValue, false) };
+            };
 
-                    foreach (var (option, (shortest, longest)) in options)
-                    {
-                        if (longest.StartsWith(searchOption) && searchOption.StartsWith(shortest))
-                        {
-                            foundSearchFilters.Add(new SearchFilter
-                            {
-                                Option = option,
-                                Value = val,
-                                Operator = op
-                            });
+            parser.Parse();
 
-                            // Remove it from the search terms.
-                            terms.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
-            }
+            var ast = parser.GetAst();
 
             var newMapsetLookup = new Dictionary<string, Mapset>();
 
@@ -571,166 +644,7 @@ namespace Quaver.Shared.Database.Maps
             {
                 foreach (var map in mapset.Maps)
                 {
-                    var exitLoop = false;
-
-                    foreach (var searchQuery in foundSearchFilters)
-                    {
-                        switch (searchQuery.Option)
-                        {
-                            case SearchFilterOption.BPM:
-                                if (!float.TryParse(searchQuery.Value, out var valBpm))
-                                    exitLoop = true;
-
-                                if (!CompareValues(map.Bpm, valBpm, searchQuery.Operator))
-                                    exitLoop = true;
-                                break;
-                            case SearchFilterOption.Difficulty:
-                                if (!float.TryParse(searchQuery.Value, out var valDiff))
-                                    exitLoop = true;
-
-                                if (!CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, searchQuery.Operator))
-                                    exitLoop = true;
-                                break;
-                            case SearchFilterOption.NPS:
-                                if (!float.TryParse(searchQuery.Value, out var valNps))
-                                    exitLoop = true;
-
-                                var objectCount = map.LongNoteCount + map.RegularNoteCount;
-                                var nps = (objectCount / (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
-
-                                if (!CompareValues(nps, valNps, searchQuery.Operator))
-                                    exitLoop = true;
-                                break;
-                            case SearchFilterOption.Length:
-                                if (!float.TryParse(searchQuery.Value, out var valLength))
-                                    exitLoop = true;
-
-                                if (!CompareValues(map.SongLength / 1000f, valLength, searchQuery.Operator))
-                                    exitLoop = true;
-                                break;
-                            case SearchFilterOption.TimesPlayed:
-                                if (!float.TryParse(searchQuery.Value, out var valTimesPlayed))
-                                    exitLoop = true;
-
-                                if (!CompareValues(map.TimesPlayed, valTimesPlayed, searchQuery.Operator))
-                                    exitLoop = true;
-                                break;
-                            case SearchFilterOption.Keys:
-                                switch (map.Mode)
-                                {
-                                    case GameMode.Keys4:
-                                        if (!float.TryParse(searchQuery.Value, out var val4k))
-                                            exitLoop = true;
-
-                                        var keyCount = map.HasScratchKey ? 5 : 4;
-
-                                        if (!CompareValues(keyCount, val4k, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    case GameMode.Keys7:
-                                        if (!float.TryParse(searchQuery.Value, out var val7k))
-                                            exitLoop = true;
-
-                                        var keyCount7k = map.HasScratchKey ? 8 : 7;
-
-                                        if (!CompareValues(keyCount7k, val7k, searchQuery.Operator))
-                                            exitLoop = true;
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
-                                break;
-                            case SearchFilterOption.Status:
-                                if (!(searchQuery.Operator.Equals(operators[2]) ||
-                                      searchQuery.Operator.Equals(operators[3]) ||
-                                      searchQuery.Operator.Equals(operators[6])))
-                                    exitLoop = true;
-
-                                var gate = searchQuery.Operator.Equals(operators[3]) ? "and" : "or";
-
-                                var statusKeywords = new Dictionary<RankedStatus, string[]>{
-                                    {RankedStatus.DanCourse, new string[] {"dan", "d"}},
-                                    {RankedStatus.NotSubmitted, new string[] { "notsubmitted", "n" }},
-                                    {RankedStatus.Ranked, new string[] { "ranked", "r" }},
-                                    {RankedStatus.Unranked, new string[] { "unranked", "u" }},
-                                };
-
-                                if (!CompareToMultipleValues(searchQuery.Value, statusKeywords[map.RankedStatus], searchQuery.Operator, gate))
-                                    exitLoop = true;
-                                break;
-                            case SearchFilterOption.Game:
-                                if (!(searchQuery.Operator.Equals(operators[2]) ||
-                                      searchQuery.Operator.Equals(operators[3]) ||
-                                      searchQuery.Operator.Equals(operators[6])))
-                                    exitLoop = true;
-
-                                gate = searchQuery.Operator.Equals(operators[3]) ? "and" : "or";
-                                var gameKeywords = new Dictionary<MapGame, string[]>
-                                {
-                                    {MapGame.Quaver, new string[] { "quaver", "q" }},
-                                    {MapGame.Osu, new string[] { "osu", "o" }},
-                                    {MapGame.Etterna, new string[] { "etterna", "sm", "stepmania", "e", "s" }}
-                                };
-                                if (!CompareToMultipleValues(searchQuery.Value, gameKeywords[map.Game], searchQuery.Operator, gate))
-                                    exitLoop = true;
-                                break;
-                            case SearchFilterOption.LNs:
-                                var valueToCompareTo = 0;
-                                var stringToParse = "";
-
-                                if (searchQuery.Value.Last() == '%')
-                                {
-                                    stringToParse = searchQuery.Value.Substring(0, searchQuery.Value.Length - 1);
-                                    valueToCompareTo = (int)map.LNPercentage;
-                                }
-                                else
-                                {
-                                    stringToParse = searchQuery.Value;
-                                    valueToCompareTo = map.LongNoteCount;
-                                }
-
-                                if (!int.TryParse(stringToParse, out var value))
-                                {
-                                    exitLoop = true;
-                                    break;
-                                }
-
-                                if (!CompareValues(valueToCompareTo, value, searchQuery.Operator))
-                                    exitLoop = true;
-
-                                break;
-                        }
-
-                        if (exitLoop)
-                            break;
-                    }
-
-                    if (exitLoop)
-                        continue;
-
-                    // Check if the terms exist in any of the following properties.
-                    foreach (var term in terms)
-                    {
-                        try
-                        {
-                            if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
-                                !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
-                                !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
-                                !map.DifficultyName.ToLower().Contains(term) && !map.Genre.ToLower().Contains(term))
-                            {
-                                exitLoop = true;
-                                break;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Some values can be null and they break the game.
-                            exitLoop = true;
-                            break;
-                        }
-                    }
-
-                    if (exitLoop)
+                    if (!ast.Evaluate(map, EvaluateMapAgainstQuery))
                         continue;
 
                     // Create a new mapset if it doesn't exist
@@ -739,8 +653,9 @@ namespace Quaver.Shared.Database.Maps
                         var set = new Mapset()
                         {
                             Directory = map.Directory,
-                            Maps = new List<Map>() { map }
+                            Maps = new List<Map>()
                         };
+                        set.Maps.Add(map);
 
                         sets.Add(set);
                         newMapsetLookup.Add(map.Directory, set);
@@ -755,38 +670,195 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Checks if the map matches the given query.
+        /// </summary>
+        /// <param name="searchQuery"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private static bool EvaluateMapAgainstQuery(AtomCriterionAst searchQuery, Map map)
+        {
+            var operatorKind = searchQuery.Operator.Kind;
+            var valString = "";
+            if (searchQuery.Key.Kind is TokenKind.PlainText)
+            {
+                var termContent = (string)searchQuery.Value.Value!;
+                try
+                {
+                    var containsText = !map.Artist.ToLower().Contains(termContent) &&
+                                       !map.Title.ToLower().Contains(termContent) &&
+                                       !map.Creator.ToLower().Contains(termContent) &&
+                                       !map.Source.ToLower().Contains(termContent) &&
+                                       !map.Description.ToLower().Contains(termContent) &&
+                                       !map.Tags.ToLower().Contains(termContent) &&
+                                       !map.DifficultyName.ToLower().Contains(termContent) &&
+                                       !map.Genre.ToLower().Contains(termContent);
+                    if (containsText)
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception)
+                {
+                    // Some values can be null and they break the game.
+                    return false;
+                }
+
+                return true;
+            }
+            switch ((SearchFilterOption)searchQuery.Key.Value!)
+            {
+                case SearchFilterOption.BPM:
+                    var valBpm = searchQuery.Value.Value switch
+                    {
+                        int i => i,
+                        double d => d,
+                        _ => 0
+                    };
+                    return CompareValues(map.Bpm, valBpm, operatorKind, false);
+                case SearchFilterOption.Difficulty:
+                    var valDiff = searchQuery.Value.Value switch
+                    {
+                        int i => i,
+                        double d => d,
+                        _ => 0
+                    };
+
+                    return CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, operatorKind, false);
+                case SearchFilterOption.NPS:
+                    var valNps = (double)searchQuery.Value.Value!;
+                    var objectCount = map.LongNoteCount + map.RegularNoteCount;
+                    var nps = (objectCount /
+                               (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
+
+                    return CompareValues(nps, valNps, operatorKind, false);
+                case SearchFilterOption.Length:
+                    var valLength = searchQuery.Value.Value switch
+                    {
+                        TimeSpan timeSpan => timeSpan,
+                        int seconds => TimeSpan.FromSeconds(seconds),
+                        _ => throw new InvalidOperationException()
+                    };
+                    return CompareValues(map.SongLength / 1000f, valLength.TotalSeconds, operatorKind, false);
+                case SearchFilterOption.TimesPlayed:
+                    var valTimesPlayed = (int)searchQuery.Value.Value!;
+                    return CompareValues(map.TimesPlayed, valTimesPlayed, operatorKind, false);
+                case SearchFilterOption.Keys:
+                    var valKeys = (int)searchQuery.Value.Value!;
+                    switch (map.Mode)
+                    {
+                        case GameMode.Keys4:
+                            var keyCount = map.HasScratchKey ? 5 : 4;
+                            return CompareValues(keyCount, valKeys, operatorKind, false);
+                        case GameMode.Keys7:
+                            var keyCount7k = map.HasScratchKey ? 8 : 7;
+                            return CompareValues(keyCount7k, valKeys, operatorKind, false);
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                case SearchFilterOption.Status:
+                    return CompareEquality(map.RankedStatus,
+                        searchQuery.Value.Value,
+                        searchQuery.Operator.Kind, false);
+                case SearchFilterOption.Game:
+                    return CompareEquality(map.Game,
+                            searchQuery.Value.Value,
+                            searchQuery.Operator.Kind, false);
+                case SearchFilterOption.LNs:
+                    var valueToCompareTo = searchQuery.Value.Token.Kind is TokenKind.Percentage
+                        ? (int)map.LNPercentage
+                        : map.LongNoteCount;
+                    var valLns = (int)searchQuery.Value.Value!;
+                    return CompareValues(valueToCompareTo, valLns, operatorKind, false);
+                case SearchFilterOption.Title:
+                    valString = map.Title;
+                    break;
+                case SearchFilterOption.Tags:
+                    valString = map.Tags;
+                    break;
+                case SearchFilterOption.Source:
+                    valString = map.Source;
+                    break;
+                case SearchFilterOption.Artist:
+                    valString = map.Artist;
+                    break;
+                case SearchFilterOption.Creator:
+                    valString = map.Creator;
+                    break;
+                case SearchFilterOption.Description:
+                    valString = map.Description;
+                    break;
+                case SearchFilterOption.DifficultyName:
+                    valString = map.DifficultyName;
+                    break;
+                case SearchFilterOption.Genre:
+                    valString = map.Genre;
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(valString))
+                return false;
+
+            return CompareValues(valString.ToLower(),
+                searchQuery.Value.Value?.ToString()?.ToLower(),
+                operatorKind, false);
+
+        }
+
+        /// <summary>
         ///     Compares two values and determines
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="val1"></param>
         /// <param name="val2"></param>
         /// <param name="operation"></param>
+        /// <param name="invert"></param>
         /// <returns></returns>
-        private static bool CompareValues<T>(T val1, T val2, string operation) where T : IComparable<T>
+        private static bool CompareValues<T>(T val1, T val2, TokenKind operation, bool invert) where T : IComparable<T>
         {
             if (val1 == null || val2 == null)
                 return false;
 
             var compared = val1.CompareTo(val2);
 
-            switch (operation)
+            var result = operation switch
             {
-                case "<":
-                    return compared < 0;
-                case ">":
-                    return compared > 0;
-                case "=":
-                case "==":
-                    return compared == 0;
-                case "<=":
-                    return compared <= 0;
-                case ">=":
-                    return compared >= 0;
-                case "!=":
-                    return compared != 0;
-                default:
-                    return false;
-            }
+                TokenKind.LessThan => compared < 0,
+                TokenKind.MoreThan => compared > 0,
+                TokenKind.Equal => compared == 0,
+                TokenKind.LessThanOrEqual => compared <= 0,
+                TokenKind.MoreThanOrEqual => compared >= 0,
+                TokenKind.NotEqual => compared != 0,
+                TokenKind.Contains when val1 is string s1 && val2 is string s2 => s1.Contains(s2),
+                _ => false
+            };
+            return result ^ invert;
+        }
+
+        /// <summary>
+        ///     Compares two values and determines
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="val1"></param>
+        /// <param name="val2"></param>
+        /// <param name="operation"></param>
+        /// <param name="invert"></param>
+        /// <returns></returns>
+        private static bool CompareEquality<T>(T val1, T val2, TokenKind operation, bool invert)
+        {
+            if (val1 == null || val2 == null)
+                return false;
+
+            var result = operation switch
+            {
+                TokenKind.Contains when val1 is string s1 && val2 is string s2 => s1.Contains(s2),
+                TokenKind.Equal when val1 is string s1 && val2 is string s2 => s1.Contains(s2),
+                TokenKind.NotEqual when val1 is string s1 && val2 is string s2 => !s1.Contains(s2),
+                TokenKind.Equal => Equals(val1, val2),
+                TokenKind.NotEqual => !Equals(val1, val2),
+                _ => false
+            };
+            return result ^ invert;
         }
 
         /// <summary>
@@ -796,17 +868,19 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="values">The values to compare to</param>
         /// <param name="operation">The operation used to compare</param>
         /// <param name="mode">Logic gate used to return, either "and" or "or</param>
-        private static bool CompareToMultipleValues<T>(T val1, T[] values, string operation, string mode) where T : IComparable<T>
+        /// <param name="invert"></param>
+        private static bool CompareToMultipleValues<T>(T val1, T[] values, TokenKind operation,
+            ListCombinationKind mode, bool invert)
         {
-            switch (mode.ToLower())
+            var result = mode switch
             {
-                case "and":
-                    return values.All(valToCompare => CompareValues(val1, valToCompare, operation));
-                case "or":
-                    return values.Any(valToCompare => CompareValues(val1, valToCompare, operation));
-                default:
-                    return false;
-            }
+                ListCombinationKind.And =>
+                    values.All(valToCompare => CompareEquality(val1, valToCompare, operation, false)),
+                ListCombinationKind.Or or ListCombinationKind.None =>
+                    values.Any(valToCompare => CompareEquality(val1, valToCompare, operation, false)),
+                _ => false
+            };
+            return result ^ invert;
         }
     }
 
@@ -879,6 +953,46 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The amount of times the user has played the map
         /// </summary>
-        TimesPlayed
+        TimesPlayed,
+
+        /// <summary>
+        ///     The title of the map
+        /// </summary>
+        Title,
+
+        /// <summary>
+        ///     The tags of the map
+        /// </summary>
+        Tags,
+
+        /// <summary>
+        ///     The source of the map
+        /// </summary>
+        Source,
+
+        /// <summary>
+        ///     The artist of the map
+        /// </summary>
+        Artist,
+
+        /// <summary>
+        ///     The creator of the map
+        /// </summary>
+        Creator,
+
+        /// <summary>
+        ///     The description of the map
+        /// </summary>
+        Description,
+
+        /// <summary>
+        ///     The difficulty name of the map
+        /// </summary>
+        DifficultyName,
+
+        /// <summary>
+        ///     The genre of the map
+        /// </summary>
+        Genre
     }
 }

@@ -46,6 +46,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         public bool IsWorkshop { get; set; }
 
+        public Dictionary<string, EditorPluginStorageValue> Storage { get; set; } = new();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -112,6 +114,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (point != SelectedScrollGroup.ScrollVelocities.First())
                     NeedsToScrollToFirstSelectedSv = true;
             }
+        }
+
+        public void OnStorageLoaded()
+        {
+        }
+
+        public void OnStorageSave()
+        {
         }
 
         /// <inheritdoc />
@@ -466,7 +476,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             const int ElementBaseHeight = 12;
             const int NumberOfColumns = 2;
             var elementHeight = Screen.ImGuiScale * ElementBaseHeight;
-            var y = ImGui.GetWindowContentRegionMax().Y - ImGui.GetWindowContentRegionMin().Y;
+            var y = ImGui.GetContentRegionAvail().Y;
 
             var start = Math.Min(
                 (int)(_progress * SelectedScrollGroup.ScrollVelocities.Count - 1),

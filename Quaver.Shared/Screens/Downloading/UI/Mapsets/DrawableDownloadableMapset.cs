@@ -186,7 +186,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 RankedStatusIcon.Image = GetRankedStatusTexture(Item);
                 GameModeIcon.Image = GetModeIcon(Item);
 
-                DifficultyRange.ChangeValue(Item.DifficultyRange.Min(), Item.DifficultyRange.Max());
+                DifficultyRange.ChangeValue(Item.Maps.Min(x => x.DifficultyRating),
+                    Item.Maps.Max(x => x.DifficultyRating));
                 DifficultyRange.UpdateSize();
                 Creator.X = ByText.X + ByText.Width + 4;
 
@@ -355,7 +356,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static Texture2D GetRankedStatusTexture(DownloadableMapset item)
         {
-            switch (item.RankedStatus)
+            switch (item.Maps.First().RankedStatus)
             {
                 case RankedStatus.NotSubmitted:
                     return UserInterface.StatusNotSubmitted;
@@ -375,13 +376,16 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <returns></returns>
         public static Texture2D GetModeIcon(DownloadableMapset item)
         {
-            if (item.GameModes.Contains(GameMode.Keys4) && item.GameModes.Contains(GameMode.Keys7))
+            var has4K = item.Maps.Any(x => x.GameMode == GameMode.Keys4);
+            var has7K = item.Maps.Any(x => x.GameMode == GameMode.Keys7);
+            
+            if (has4K && has7K)
                 return UserInterface.Mode4K7KSmall;
 
-            if (item.GameModes.Contains(GameMode.Keys4))
+            if (has4K)
                 return UserInterface.Mode4KSmall;
 
-            if (item.GameModes.Contains(GameMode.Keys7))
+            if (has7K)
                 return UserInterface.Mode7KSmall;
 
             throw new ArgumentException();

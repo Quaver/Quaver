@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using ImGuiNET;
@@ -775,6 +776,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (plugin.Value.IsActive)
                         plugin.Value.Initialize();
                 }
+            }
+            
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Reset Window Layout"))
+            {
+                StructuredConfigManager.WindowStates.Value = new WindowStates();
+                ((EditScreenView)Screen.View).SaveWindowLayoutOnExit = false;
+                File.Delete("imgui.ini");
+                NotificationManager.Show(NotificationLevel.Info, "The window layout will be reset the next time you open the editor!");
             }
 
             ImGui.EndMenu();
