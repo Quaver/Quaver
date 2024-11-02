@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
         public override string GetValue() => "";
 
-        public override int GetTime() => (int) Math.Round(TimingPoint.StartTime, MidpointRounding.AwayFromZero);
+        public override float StartTime => TimingPoint.StartTime;
 
         public override void SetSize()
         {

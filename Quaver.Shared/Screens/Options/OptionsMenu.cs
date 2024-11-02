@@ -414,7 +414,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay),
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio Start Timing During Gameplay", ConfigManager.SmoothAudioStart)
                     }),
                     new OptionsSubcategory("Gameplay", new List<OptionsItem>()
                     {
@@ -448,7 +449,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Warning For Failing", ConfigManager.DisplayFailWarning),
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
-                        new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport)
+                        new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport),
+                        new OptionsItemCheckbox(containerRect, "Discord Rich Presence", ConfigManager.DiscordRichPresence)
                     }),
                 }),
             };

@@ -78,6 +78,9 @@ namespace Quaver.Shared.Scheduling
                     case CommonTask.WriteConfig:
                         taskList.Add(new Task(async () => await ConfigManager.WriteConfigFileAsync()));
                         break;
+                    case CommonTask.WriteStructuredConfig:
+                        taskList.Add(new Task(async () => await StructuredConfigManager.WriteConfigFileAsync()));
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -94,6 +97,7 @@ namespace Quaver.Shared.Scheduling
     /// </summary>
     internal enum CommonTask
     {
-        WriteConfig
+        WriteConfig,
+        WriteStructuredConfig
     }
 }

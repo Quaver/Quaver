@@ -5,6 +5,8 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 
@@ -34,7 +36,23 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The slider velocities present in the map
         /// </summary>
-        public List<SliderVelocityInfo> ScrollVelocities => Map.SliderVelocities;
+        public List<SliderVelocityInfo> ScrollVelocities => EditorPluginUtils.EditScreen.SelectedScrollGroup.ScrollVelocities;
+
+        /// <summary>
+        ///     The timing groups present in the map
+        /// </summary>
+        public IReadOnlyDictionary<string, TimingGroup> TimingGroups =>
+            new ReadOnlyDictionary<string, TimingGroup>(Map.TimingGroups);
+
+        /// <summary>
+        ///     The default scroll group for hitobjects not bound to any groups
+        /// </summary>
+        public ScrollGroup DefaultScrollGroup => Map.DefaultScrollGroup;
+
+        /// <summary>
+        ///     The scroll group that applies its SVs to all other scroll groups
+        /// </summary>
+        public ScrollGroup GlobalScrollGroup => Map.GlobalScrollGroup;
 
         /// <summary>
         ///     The HitObjects that are currently in the map
@@ -70,7 +88,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public bool LegacyLNRendering => Map.LegacyLNRendering;
 
         /// <inheritdoc cref="Qua.InitialScrollVelocity"/>
-        public float InitialScrollVelocity => Map.InitialScrollVelocity;
+        public float InitialScrollVelocity => EditorPluginUtils.EditScreen.SelectedScrollGroup.InitialScrollVelocity;
 
         public override string ToString() => Map.ToString();
 
@@ -98,8 +116,40 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     Gets the scroll velocity at a particular time in the current map
         /// </summary>
         /// <param name="time"></param>
+        /// <param name="timingGroupId"></param>
         /// <returns></returns>
-        public SliderVelocityInfo GetScrollVelocityAt(double time) => Map.GetScrollVelocityAt(time);
+        public SliderVelocityInfo GetScrollVelocityAt(double time, string timingGroupId = null) =>
+            Map.GetScrollVelocityAt(time, timingGroupId ?? EditorPluginUtils.EditScreen.SelectedScrollGroupId);
+
+        /// <summary>
+        ///     Gets the timing group with an id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public TimingGroup GetTimingGroup(string id) => Map.TimingGroups.GetValueOrDefault(id);
+
+        /// <summary>
+        ///     Gets the list of IDs of all timing groups in the map
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetTimingGroupIds() => Map.TimingGroups.Keys.ToList();
+
+        /// <summary>
+        ///     O(n)
+        ///     Returns the list of hit objects that are in the specified group
+        /// </summary>
+        /// <param name="timingGroupId"></param>
+        /// <returns></returns>
+        public List<HitObjectInfo> GetTimingGroupObjects(string timingGroupId) =>
+            Map.GetTimingGroupObjects(timingGroupId).ToList();
+
+        /// <summary>
+        ///     O(n log m) Given a list of timing group IDs, return a dictionary of (ID, [HitObject])
+        /// </summary>
+        /// <param name="timingGroupIds"></param>
+        /// <returns></returns>
+        public Dictionary<string, List<HitObjectInfo>> GetTimingGroupObjects(HashSet<string> timingGroupIds) =>
+            Map.GetTimingGroupObjects(timingGroupIds);
 
         /// <summary>
         ///     Gets the bookmark at a particular time in the current map

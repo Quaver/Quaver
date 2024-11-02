@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
@@ -44,6 +46,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         public bool IsWorkshop { get; set; }
 
+        public Dictionary<string, EditorPluginStorageValue> Storage { get; set; } = new();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -70,6 +74,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private List<SliderVelocityInfo> Clipboard { get; } = new List<SliderVelocityInfo>();
 
+        public string SelectedScrollGroupId
+        {
+            get => Screen.SelectedScrollGroupId;
+            set => Screen.SelectedScrollGroupId = value;
+        }
+
+        /// <summary>
+        ///     When not null, <see cref="SelectedScrollGroupId"/> will be set to this value next
+        /// </summary>
+        /// <seealso cref="SelectTimingGroup"/>
+        private string PendingSelectScrollGroupId { get; set; }
+
+        public ScrollGroup SelectedScrollGroup => Screen.SelectedScrollGroup;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -93,9 +111,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 SelectedScrollVelocities.Add(point);
 
-                if (point != Screen.WorkingMap.SliderVelocities.First())
+                if (point != SelectedScrollGroup.ScrollVelocities.First())
                     NeedsToScrollToFirstSelectedSv = true;
             }
+        }
+
+        public void OnStorageLoaded()
+        {
+        }
+
+        public void OnStorageSave()
+        {
         }
 
         /// <inheritdoc />
@@ -103,12 +129,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(356, float.MaxValue));
+            ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(600, float.MaxValue));
             ImGui.PushFont(Options.Fonts.First().Context);
             ImGui.Begin(Name);
 
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
+
+            DrawTabBar();
 
             DrawSelectCurrentSVButton();
             ImGui.Dummy(new Vector2(0, 10));
@@ -140,13 +168,79 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.End();
         }
 
+
+        private void DrawTabBar()
+        {
+            if (Screen.WorkingMap.TimingGroups == null)
+                return;
+
+            if (ImGui.BeginTabBar("Groups", ImGuiTabBarFlags.FittingPolicyScroll))
+            {
+                foreach (var (id, timingGroup) in Screen.WorkingMap.TimingGroups)
+                {
+                    if (timingGroup is not ScrollGroup)
+                        continue;
+
+                    var prettyId = id == Qua.DefaultScrollGroupId ? "$Default" : id;
+
+                    var flags = PendingSelectScrollGroupId == id
+                        ? ImGuiTabItemFlags.SetSelected
+                        : ImGuiTabItemFlags.None;
+
+                    if (id is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId)
+                        flags |= ImGuiTabItemFlags.Leading;
+
+                    if (ImGuiFix.BeginTabItem($"{prettyId}##TabItem", ref Unsafe.NullRef<bool>(), flags))
+                    {
+                        if (SelectedScrollGroupId != id)
+                            SelectTimingGroup(id);
+                        ImGui.EndTabItem();
+                    }
+                }
+
+                if (ImGui.TabItemButton("+##CreateGroup", ImGuiTabItemFlags.Trailing))
+                {
+                    var newGroupId = EditorPluginUtils.GenerateTimingGroupId();
+
+                    var rgb = new byte[3];
+                    Random.Shared.NextBytes(rgb);
+
+                    Screen.ActionManager.CreateTimingGroup(newGroupId,
+                        new ScrollGroup
+                        {
+                            ScrollVelocities =
+                                new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } },
+                            ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
+                        },
+                        Screen.SelectedHitObjects.Value);
+                    ImGui.EndTabItem();
+                }
+
+                ImGui.EndTabBar();
+            }
+
+            if (PendingSelectScrollGroupId != null)
+            {
+                SelectedScrollGroupId = PendingSelectScrollGroupId;
+                PendingSelectScrollGroupId = null;
+            }
+        }
+
+        public void SelectTimingGroup(string id)
+        {
+            PendingSelectScrollGroupId = id;
+            SelectedScrollVelocities.Clear();
+        }
+
         /// <summary>
         /// </summary>
         private void DrawHeaderText()
         {
-            ImGui.TextWrapped("Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.");
+            ImGui.TextWrapped(
+                "Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.");
             ImGui.Dummy(new Vector2(0, 10));
-            ImGui.TextWrapped("You can click on an individual SV point to edit it and double-click to go to its position in time.");
+            ImGui.TextWrapped(
+                "You can click on an individual SV point to edit it and double-click to go to its position in time.");
         }
 
         /// <summary>
@@ -155,18 +249,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             if (ImGui.Button("Add"))
             {
-                var currentPoint = Screen.WorkingMap.GetScrollVelocityAt(Screen.Track.Time);
+                var currentPoint = SelectedScrollGroup.GetScrollVelocityAt(Screen.Track.Time);
                 var multiplier = currentPoint?.Multiplier ?? 1;
 
                 SelectedScrollVelocities.Clear();
 
-                var sv = new SliderVelocityInfo()
-                {
-                    StartTime = (float)Screen.Track.Time,
-                    Multiplier = multiplier
-                };
+                var sv = new SliderVelocityInfo() { StartTime = (float)Screen.Track.Time, Multiplier = multiplier };
 
-                Screen.ActionManager.PlaceScrollVelocity(sv);
+                Screen.ActionManager.PlaceScrollVelocity(sv, SelectedScrollGroup);
                 SelectedScrollVelocities.Add(sv);
                 NeedsToScrollToFirstSelectedSv = true;
                 ImGui.SetKeyboardFocusHere(3); // Focus third input after the button, which is the multiplier
@@ -184,9 +274,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 var lastPoint = SelectedScrollVelocities.Last();
 
-                Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities));
+                Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities),
+                    SelectedScrollGroup);
 
-                var newPoint = Screen.WorkingMap.SliderVelocities.FindLast(x => x.StartTime <= lastPoint.StartTime);
+                var newPoint = SelectedScrollGroup.ScrollVelocities.FindLast(x => x.StartTime <= lastPoint.StartTime);
 
                 SelectedScrollVelocities.Clear();
 
@@ -195,9 +286,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     if (!SelectedScrollVelocities.Contains(newPoint))
                         SelectedScrollVelocities.Add(newPoint);
                 }
-                else if (Screen.WorkingMap.SliderVelocities.Count > 0)
+                else if (SelectedScrollGroup.ScrollVelocities.Count > 0)
                 {
-                    var point = Screen.WorkingMap.SliderVelocities.First();
+                    var point = SelectedScrollGroup.ScrollVelocities.First();
 
                     if (!SelectedScrollVelocities.Contains(point))
                         SelectedScrollVelocities.Add(point);
@@ -230,13 +321,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         var max = sorted.Last().StartTime;
                         if (currentPoint.StartTime < min)
                         {
-                            var svsInRange = Screen.WorkingMap.SliderVelocities
+                            var svsInRange = SelectedScrollGroup.ScrollVelocities
                                 .Where(v => v.StartTime >= currentPoint.StartTime && v.StartTime <= min);
                             newSelection.AddRange(svsInRange);
                         }
                         else if (currentPoint.StartTime > max)
                         {
-                            var svsInRange = Screen.WorkingMap.SliderVelocities
+                            var svsInRange = SelectedScrollGroup.ScrollVelocities
                                 .Where(v => v.StartTime >= max && v.StartTime <= currentPoint.StartTime);
                             newSelection.AddRange(svsInRange);
                         }
@@ -251,7 +342,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25);
-                ImGui.Text("This will select the SV at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SVs up to that range, if one is selected already.");
+                ImGui.Text(
+                    "This will select the SV at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SVs up to that range, if one is selected already.");
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
@@ -274,7 +366,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped("Time");
 
-            if (ImGui.InputFloat("", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
+            if (ImGui.InputFloat("", ref time, 1, 0.1f, format,
+                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
                 if (SelectedScrollVelocities.Count == 1)
                 {
@@ -296,7 +389,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.TextWrapped("Move Times By");
 
             if (ImGui.InputFloat("   ", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
-                Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities), time);
+                Screen.ActionManager.ChangeScrollVelocityOffsetBatch(
+                    new List<SliderVelocityInfo>(SelectedScrollVelocities), time);
         }
 
         /// <summary>
@@ -314,7 +408,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 format = $"{multiplier:0.00}";
             }
             // All points are the same bpm
-            else if (SelectedScrollVelocities.Count > 1 && SelectedScrollVelocities.All(x => x.Multiplier == SelectedScrollVelocities.First().Multiplier))
+            else if (SelectedScrollVelocities.Count > 1 &&
+                     SelectedScrollVelocities.All(x => x.Multiplier == SelectedScrollVelocities.First().Multiplier))
             {
                 multiplier = SelectedScrollVelocities.First().Multiplier;
                 format = $"{multiplier:0.00}";
@@ -322,8 +417,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped("Multiplier");
 
-            if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
-                Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities), multiplier);
+            if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format,
+                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
+                Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(
+                    new List<SliderVelocityInfo>(SelectedScrollVelocities), multiplier);
         }
 
         /// <summary>
@@ -373,14 +470,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 160);
 
+            // Emik's great optimization to the panel brought column misalignment
+            // He took 6+h and didn't figure out.
+            // So don't try fixing this unless you're bored. Optimization is better than view anyway.
             const int ElementBaseHeight = 12;
             const int NumberOfColumns = 2;
             var elementHeight = Screen.ImGuiScale * ElementBaseHeight;
-            var y = ImGui.GetWindowContentRegionMax().Y - ImGui.GetWindowContentRegionMin().Y;
+            var y = ImGui.GetContentRegionAvail().Y;
 
             var start = Math.Min(
-                (int)(_progress * Screen.WorkingMap.SliderVelocities.Count - 1),
-                Screen.WorkingMap.SliderVelocities.Count - (int)(y / elementHeight)
+                (int)(_progress * SelectedScrollGroup.ScrollVelocities.Count - 1),
+                SelectedScrollGroup.ScrollVelocities.Count - (int)(y / elementHeight)
             );
 
             for (var j = 0; j < NumberOfColumns; j++)
@@ -389,7 +489,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
             }
 
-            var end = Math.Min((int)(y / elementHeight) + start + 1, Screen.WorkingMap.SliderVelocities.Count);
+            var end = Math.Min((int)(y / elementHeight) + start + 1, SelectedScrollGroup.ScrollVelocities.Count);
 
             for (var i = Math.Max(start, 0); i < end; i++)
             {
@@ -397,7 +497,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 // allows all SVs with same truncated time to be selected, instead of just the first in list
                 ImGui.PushID(i);
 
-                var sv = Screen.WorkingMap.SliderVelocities[i];
+                var sv = SelectedScrollGroup.ScrollVelocities[i];
 
                 var isSelected = SelectedScrollVelocities.Contains(sv);
 
@@ -433,22 +533,22 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     }
                     // User holds down shift, so range select if the clicked element is outside of the bounds of the currently selected points
                     else if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) ||
-                        KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+                             KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                     {
                         var min = SelectedScrollVelocities.Min().StartTime;
                         var max = SelectedScrollVelocities.Max().StartTime;
 
                         if (sv.StartTime < min)
                         {
-                            var svsInRange = Screen.WorkingMap.SliderVelocities
-                               .Where(v => v.StartTime >= sv.StartTime && v.StartTime < min);
+                            var svsInRange = SelectedScrollGroup.ScrollVelocities
+                                .Where(v => v.StartTime >= sv.StartTime && v.StartTime < min);
 
                             SelectedScrollVelocities.AddRange(svsInRange);
                         }
                         else if (sv.StartTime > max)
                         {
-                            var svsInRange = Screen.WorkingMap.SliderVelocities
-                               .Where(v => v.StartTime > max && v.StartTime <= sv.StartTime);
+                            var svsInRange = SelectedScrollGroup.ScrollVelocities
+                                .Where(v => v.StartTime > max && v.StartTime <= sv.StartTime);
 
                             SelectedScrollVelocities.AddRange(svsInRange);
                         }
@@ -475,7 +575,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             for (var j = 0; j < NumberOfColumns; j++)
             {
-                ImGui.Dummy(new(0, (Screen.WorkingMap.SliderVelocities.Count - end) * elementHeight));
+                ImGui.Dummy(new(0, (SelectedScrollGroup.ScrollVelocities.Count - end) * elementHeight));
                 ImGui.NextColumn();
             }
 
@@ -500,7 +600,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (KeyboardManager.IsUniqueKeyPress(Keys.A))
                 {
                     SelectedScrollVelocities.Clear();
-                    SelectedScrollVelocities.AddRange(Screen.WorkingMap.SliderVelocities);
+                    SelectedScrollVelocities.AddRange(SelectedScrollGroup.ScrollVelocities);
                 }
                 // Deselect
                 else if (KeyboardManager.IsUniqueKeyPress(Keys.D))
@@ -513,7 +613,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 if (SelectedScrollVelocities.Count != 0)
                 {
-                    Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities));
+                    Screen.ActionManager.RemoveScrollVelocityBatch(
+                        new List<SliderVelocityInfo>(SelectedScrollVelocities), SelectedScrollGroup);
                     SelectedScrollVelocities.Clear();
                 }
             }
@@ -526,7 +627,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.V))
                 PasteClipboard();
-
         }
 
         /// <summary>
@@ -535,7 +635,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             Clipboard.Clear();
             Clipboard.AddRange(SelectedScrollVelocities);
-            Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities));
+            Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities),
+                SelectedScrollGroup);
             SelectedScrollVelocities.Clear();
         }
 
@@ -562,8 +663,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 var point = new SliderVelocityInfo()
                 {
-                    StartTime = obj.StartTime + difference,
-                    Multiplier = obj.Multiplier
+                    StartTime = obj.StartTime + difference, Multiplier = obj.Multiplier
                 };
 
                 clonedObjects.Add(point);
@@ -571,7 +671,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             clonedObjects = clonedObjects.OrderBy(x => x.StartTime).ToList();
 
-            Screen.ActionManager.PlaceScrollVelocityBatch(clonedObjects);
+            Screen.ActionManager.PlaceScrollVelocityBatch(clonedObjects, SelectedScrollGroup);
             SelectedScrollVelocities.Clear();
             SelectedScrollVelocities.AddRange(clonedObjects);
             NeedsToScrollToFirstSelectedSv = true;
@@ -580,9 +680,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
-        {
-            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14),
-        }, false);
+        public static ImGuiOptions GetOptions() => new ImGuiOptions(
+            new List<ImGuiFont> { new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14), }, false);
     }
 }

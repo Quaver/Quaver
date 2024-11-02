@@ -53,14 +53,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="skin"></param>
         /// <param name="track"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
-        /// <param name="viewLayers"></param>
+        /// <param name="coloring"></param>
         /// <param name="longNoteOpacity"></param>
         /// <param name="selectedHitObjects"></param>
         /// <param name="defaultLayer"></param>
         public EditorHitObjectKeys(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
-            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity,
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<HitObjectColoring> coloring, BindableInt longNoteOpacity,
             BindableList<HitObjectInfo> selectedHitObjects, EditorLayerInfo defaultLayer) : base(map, playfield, info,
-            skin, track, anchorHitObjectsAtMidpoint, viewLayers, longNoteOpacity, selectedHitObjects, defaultLayer)
+            skin, track, anchorHitObjectsAtMidpoint, coloring, longNoteOpacity, selectedHitObjects, defaultLayer)
         {
             TextureBody = GetBodyTexture();
             TextureTail = GetTailTexture();
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             Refresh();
 
-            ViewLayers.ValueChanged += OnViewLayersChanged;
+            Coloring.ValueChanged += OnViewLayersChanged;
             SelectedHitObjects.ItemAdded += OnSelectedHitObject;
             SelectedHitObjects.ItemRemoved += OnDeselectedHitObject;
             SelectedHitObjects.ListCleared += OnAllObjectsDeselected;
@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Tail?.Destroy();
 
             // ReSharper disable twice DelegateSubtraction
-            ViewLayers.ValueChanged -= OnViewLayersChanged;
+            Coloring.ValueChanged -= OnViewLayersChanged;
 
             SelectedHitObjects.ItemAdded -= OnSelectedHitObject;
             SelectedHitObjects.ItemRemoved -= OnDeselectedHitObject;
@@ -236,7 +236,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetBodyTexture()
         {
-            return ViewLayers.Value ? SkinMode.EditorLayerNoteHoldBodies[Info.Lane - 1] : SkinMode.NoteHoldBodies[Info.Lane - 1].First();
+            return Coloring.Value != HitObjectColoring.None ? SkinMode.EditorLayerNoteHoldBodies[Info.Lane - 1] : SkinMode.NoteHoldBodies[Info.Lane - 1].First();
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetTailTexture()
         {
-            return ViewLayers.Value ? SkinMode.EditorLayerNoteHoldEnds[Info.Lane - 1] : SkinMode.NoteHoldEnds[Info.Lane - 1];
+            return Coloring.Value != HitObjectColoring.None ? SkinMode.EditorLayerNoteHoldEnds[Info.Lane - 1] : SkinMode.NoteHoldEnds[Info.Lane - 1];
         }
 
         /// <inheritdoc />
@@ -293,7 +293,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Body.Image = TextureBody;
             Tail.Image = TextureTail;
 
-            if (SkinMode.RotateHitObjectsByColumn && !ViewLayers.Value)
+            if (SkinMode.RotateHitObjectsByColumn && Coloring.Value == HitObjectColoring.None)
                 Rotation = GameplayHitObjectKeys.GetObjectRotation(Map.Mode, Info.Lane - 1);
             else
                 Rotation = 0;
@@ -314,7 +314,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<HitObjectColoring> e)
         {
             UpdateTextures();
             SetSize();

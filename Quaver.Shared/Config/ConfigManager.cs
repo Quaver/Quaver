@@ -22,6 +22,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
@@ -189,6 +190,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> SmoothAudioTimingGameplay { get; private set; }
 
         /// <summary>
+        ///     When an audio starts to play, its <see cref="Quaver.Shared.Audio.AudioEngine.Track.Time"/>
+        ///     will stay 0 for some time. This causes the gameplay to freeze for a while.
+        ///     By turning this on, audio starts a bit early (amount determined at start). We then slowly
+        ///     Let the gameplay timing reach the actual audio time.
+        /// </summary>
+        internal static Bindable<bool> SmoothAudioStart { get; private set; }
+
+        /// <summary>
         ///     Determines if we should show the song time progress display in the
         ///     gameplay screen.
         /// </summary>
@@ -243,6 +252,11 @@ namespace Quaver.Shared.Config
         ///     Delete the original mapset file after importing
         /// </summary>
         internal static Bindable<bool> DeleteOriginalFileAfterImport { get; private set; }
+        
+        /// <summary>
+        ///     Enable the Discord Rich Presence
+        /// </summary>
+        internal static Bindable<bool> DiscordRichPresence { get; private set; }
 
         /// <summary>
         ///     If the scoreboard is currently visible.
@@ -471,7 +485,12 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     If true, it'll use hitobjects specifically for viewing layers in the editor.
         /// </summary>
-        internal static Bindable<bool> EditorViewLayers { get; private set; }
+        internal static Bindable<HitObjectColoring> EditorObjectColoring { get; private set; }
+
+        /// <summary>
+        ///     If true, SV editor lines will be colored by their timing group
+        /// </summary>
+        internal static Bindable<bool> EditorColorSvLineByTimingGroup { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1032,6 +1051,7 @@ namespace Quaver.Shared.Config
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, 5000, data);
             SmoothAudioTimingGameplay = ReadValue(@"SmoothAudioTimingGameplay", false, data);
+            SmoothAudioStart = ReadValue(@"SmoothAudioStart", false, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
@@ -1048,6 +1068,7 @@ namespace Quaver.Shared.Config
             EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             DeleteOriginalFileAfterImport = ReadValue(@"DeleteOriginalFileAfterImport", true, data);
+            DiscordRichPresence = ReadValue(@"DiscordRichPresence", true, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
@@ -1149,7 +1170,8 @@ namespace Quaver.Shared.Config
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
             ReceptorsOverLaneCover = ReadValue(@"ReceptorsOverLaneCover", false, data);
-            EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
+            EditorObjectColoring = ReadValue(@"EditorObjectColoring", HitObjectColoring.None, data);
+            EditorColorSvLineByTimingGroup = ReadValue(@"EditorColorSVLineByTimingGroup", true, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
             LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);

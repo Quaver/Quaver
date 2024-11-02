@@ -335,10 +335,13 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             Creator.Text = e.Value.CreatorUsername;
             Creator.TruncateWithEllipsis(450);
 
-            DifficultyRange.ChangeValue(e.Value.DifficultyRange.Min(), e.Value.DifficultyRange.Max());
+            var minDiff = e.Value.Maps.Min(x => x.DifficultyRating);
+            var maxDiff = e.Value.Maps.Max(x => x.DifficultyRating);
+
+            DifficultyRange.ChangeValue(minDiff, maxDiff);
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (e.Value.DifficultyRange.Min() == e.Value.DifficultyRange.Max())
+            if (minDiff == maxDiff)
             {
                 DifficultyRange.Dash.Visible = false;
                 DifficultyRange.MaxDifficulty.Visible = false;
@@ -352,8 +355,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             // Temporary map to use for the "BPM" and "Length" values
             var tempMap = new Map()
             {
-                SongLength = (int) e.Value.MaxLengthSeconds * 1000,
-                Bpm = e.Value.Bpms.Max()
+                SongLength = (int) e.Value.Maps.Max(x => x.Length),
+                Bpm = e.Value.Maps.Max(x => x.Bpm)
             };
 
             Bpm.Map.Value = tempMap;

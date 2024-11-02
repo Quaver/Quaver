@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private Bindable<bool> ViewLayers { get; }
+        private Bindable<HitObjectColoring> Coloring { get; }
 
         /// <summary>
         /// </summary>
@@ -318,7 +318,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="scaleScrollSpeedWithRate"></param>
         /// <param name="beatSnapColor"></param>
-        /// <param name="viewLayers"></param>
+        /// <param name="coloring"></param>
         /// <param name="tool"></param>
         /// <param name="longNoteOpacity"></param>
         /// <param name="selectedHitObjects"></param>
@@ -334,7 +334,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track,
             BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
-            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers,
+            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<HitObjectColoring> coloring,
             Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects,
             Bindable<EditorLayerInfo> selectedLayer,
@@ -355,7 +355,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
             ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithRate;
             BeatSnapColor = beatSnapColor;
-            ViewLayers = viewLayers;
+            Coloring = coloring;
             Tool = tool;
             LongNoteOpacity = longNoteOpacity;
             SelectedHitObjects = selectedHitObjects;
@@ -725,7 +725,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="insertAtIndex"></param>
         private void CreateHitObject(HitObjectInfo info, bool insertAtIndex = false)
         {
-            var ho = new EditorHitObjectKeys(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers,
+            var ho = new EditorHitObjectKeys(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, Coloring,
                 LongNoteOpacity, SelectedHitObjects, DefaultLayer);
 
             ho.SetSize();
@@ -1415,10 +1415,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             switch (Tool.Value)
             {
                 case EditorCompositionTool.Note:
-                    ActionManager.PlaceHitObject(lane, time, 0, layer);
+                    ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
                     break;
                 case EditorCompositionTool.LongNote:
-                    hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer);
+                    hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
 
                     var ln = HitObjects.Find(y => y.Info == hitObject);
                     LongNoteInDrag = ln;

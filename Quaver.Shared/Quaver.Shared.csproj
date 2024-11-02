@@ -76,5 +76,6 @@
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
     <PackageReference Include="Steamworks.NET" Version="20.2.0" IncludeAssets="all" />
+    <PackageReference Include="WilliamQiufeng.SearchParser" Version="0.2.6-beta.1" />
   </ItemGroup>
 </Project>

@@ -26,6 +26,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<HitObjectInfo> SelectedHitObjects => EditorPluginUtils.EditScreen.SelectedHitObjects.Value;
 
         /// <summary>
+        ///     Current scroll group id we're working on
+        /// </summary>
+        public string SelectedScrollGroupId => EditorPluginUtils.EditScreen.SelectedScrollGroupId;
+
+        /// <summary>
+        ///     Current scroll group we're working on
+        /// </summary>
+        public ScrollGroup SelectedScrollGroup => EditorPluginUtils.EditScreen.SelectedScrollGroup;
+        
+        /// <summary>
         ///     The current scroll velocity in the map
         /// </summary>
         public BookmarkInfo CurrentBookmark => EditorPluginUtils.EditScreen.WorkingMap.GetBookmarkAt((int)SongTime);

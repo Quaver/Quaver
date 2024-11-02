@@ -72,6 +72,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (OnlineManager.Client != null)
                 OnlineManager.Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
 
+            MapsetInfoRetriever.MapsetInfoRetrieved += OnMapsetInfoRetrieved;
+
             ModManager.ModsChanged += OnModsChanged;
 
             UsePreviousSpriteBatchOptions = true;
@@ -87,6 +89,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             if (OnlineManager.Client != null)
                 OnlineManager.Client.OnRetrievedOnlineScores -= OnRetrievedOnlineScores;
+
+            MapsetInfoRetriever.MapsetInfoRetrieved -= OnMapsetInfoRetrieved;
 
             ModManager.ModsChanged -= OnModsChanged;
 
@@ -153,6 +157,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             else if (!IsSelected)
                 Select();
         }
+
+        private void OnMapsetInfoRetrieved(object sender, EventArgs args) => UpdateContent(Item, Index);
 
         /// <summary>
         /// </summary>
