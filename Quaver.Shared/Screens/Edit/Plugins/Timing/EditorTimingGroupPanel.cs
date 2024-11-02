@@ -7,12 +7,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Dialogs;
@@ -132,6 +134,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
 
+            DrawObjectColoringToggle();
+
             DrawAddButton();
             ImGui.SameLine();
             DrawRemoveButton();
@@ -159,6 +163,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = IsWindowHovered || isHovered;
 
             ImGui.End();
+        }
+
+        private static void DrawObjectColoringToggle()
+        {
+            var colorByTimingGroup = ConfigManager.EditorObjectColoring.Value == HitObjectColoring.TimingGroup;
+            if (ImGui.Checkbox("Color Objects By Timing Group", ref colorByTimingGroup))
+            {
+                ConfigManager.EditorObjectColoring.Value = colorByTimingGroup
+                    ? HitObjectColoring.TimingGroup
+                    : HitObjectColoring.None;
+            }
         }
 
         private void DrawMoveObjectsButton()
