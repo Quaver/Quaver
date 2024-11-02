@@ -45,6 +45,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             new ReadOnlyDictionary<string, TimingGroup>(Map.TimingGroups);
 
         /// <summary>
+        ///     The scroll speed factors present in the map
+        /// </summary>
+        public List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     The default scroll group for hitobjects not bound to any groups
         /// </summary>
         public ScrollGroup DefaultScrollGroup => Map.DefaultScrollGroup;
@@ -120,6 +125,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <returns></returns>
         public SliderVelocityInfo GetScrollVelocityAt(double time, string timingGroupId = null) =>
             Map.GetScrollVelocityAt(time, timingGroupId ?? EditorPluginUtils.EditScreen.SelectedScrollGroupId);
+
+        /// <summary>
+        ///     Gets the scroll velocity at a particular time in the current map
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="timingGroupId"></param>
+        /// <returns></returns>
+        public ScrollSpeedFactorInfo GetScrollSpeedFactorAt(double time, string timingGroupId = null) =>
+            Map.GetScrollSpeedFactorAt(time, timingGroupId ?? EditorPluginUtils.EditScreen.SelectedScrollGroupId);
 
         /// <summary>
         ///     Gets the timing group with an id

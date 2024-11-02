@@ -35,6 +35,10 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
 using Quaver.Shared.Screens.Edit.Actions.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.Add;
+using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -309,6 +313,30 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     args[0].ToObject<List<SliderVelocityInfo>>(),
                     args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
                 ),
+                 EditorActionType.AddScrollSpeedFactor => new EditorActionAddScrollSpeedFactor(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<ScrollSpeedFactorInfo>(),
+                    args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
+                    ),
+                 EditorActionType.RemoveScrollSpeedFactor => new EditorActionRemoveScrollSpeedFactor(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<ScrollSpeedFactorInfo>(),
+                    args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
+                    ),
+                 EditorActionType.AddScrollSpeedFactorBatch => new EditorActionAddScrollSpeedFactorBatch(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<List<ScrollSpeedFactorInfo>>(),
+                    args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
+                    ),
+                 EditorActionType.RemoveScrollSpeedFactorBatch => new EditorActionRemoveScrollSpeedFactorBatch(
+                    EditScreen.ActionManager,
+                    EditScreen.WorkingMap,
+                    args[0].ToObject<List<ScrollSpeedFactorInfo>>(),
+                    args.Length > 1 ? args[1].ToObject<ScrollGroup>() : null
+                    ),
                 EditorActionType.AddTimingPoint => new EditorActionAddTimingPoint(
                     EditScreen.ActionManager,
                     EditScreen.WorkingMap,
