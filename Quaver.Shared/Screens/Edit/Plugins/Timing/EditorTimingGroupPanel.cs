@@ -132,7 +132,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Begin(Name);
 
             DrawHeaderText();
-            ImGui.Dummy(new Vector2(0, 10));
 
             DrawObjectColoringToggle();
 
@@ -147,14 +146,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     Screen.WorkingMap.TimingGroups.TryGetValue(x, out var v) && v is ScrollGroup))
                 DrawScrollGroupOptions();
 
-
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawNameInput();
 
             var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
-            ImGui.Dummy(new Vector2(0, 10));
             DrawSelectedCountLabel();
 
             ImGui.Dummy(new Vector2(0, 10));
@@ -224,11 +221,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawHeaderText()
         {
-            ImGui.TextWrapped(
-                "Timing Groups group together a set of notes. Each group has their own visual behavior applied to the notes.");
-            ImGui.Dummy(new Vector2(0, 10));
-            ImGui.TextWrapped(
-                "You can click on an individual timing group to edit it and double-click to go to the first note in the group.");
+            ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1f), "(What is this?)");
+            if (ImGui.BeginItemTooltip())
+            {
+                ImGui.PushTextWrapPos(300);
+                ImGui.TextWrapped(
+                    "Timing Groups allows you to change the visuals of a group of notes.");
+                ImGui.TextWrapped(
+                    "You can click on an individual timing group to edit it and double-click to go to the first note in the group.");
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
         }
 
         /// <summary>
@@ -351,6 +354,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawSelectedCountLabel()
         {
+            ImGui.Dummy(new Vector2(0, 10));
             var count = SelectedTimingGroups.Count;
             var labelText = count > 1 ? $"{count} timing groups selected" : "";
             ImGui.Text(labelText);
