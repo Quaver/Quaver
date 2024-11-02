@@ -137,10 +137,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             DrawRemoveButton();
             ImGui.SameLine();
             DrawSelectNotesButton();
+            DrawMoveObjectsButton();
 
             if (SelectedTimingGroups.All(x =>
                     Screen.WorkingMap.TimingGroups.TryGetValue(x, out var v) && v is ScrollGroup))
                 DrawScrollGroupOptions();
+
 
             ImGui.Dummy(new Vector2(0, 10));
 
@@ -157,6 +159,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = IsWindowHovered || isHovered;
 
             ImGui.End();
+        }
+
+        private void DrawMoveObjectsButton()
+        {
+            ImGui.BeginDisabled(Screen.SelectedHitObjects.Value.Count == 0 || SelectedTimingGroups.Count != 1);
+            if (ImGui.Button("Move Selected Objects To Group"))
+            {
+                Screen.ActionManager.MoveObjectsToTimingGroup(Screen.SelectedHitObjects.Value, SelectedTimingGroups.First());
+            }
+            ImGui.EndDisabled();
         }
 
         private void DrawSelectNotesButton()
