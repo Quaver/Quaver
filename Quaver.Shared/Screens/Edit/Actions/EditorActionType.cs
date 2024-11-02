@@ -54,6 +54,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         MoveObjectsToTimingGroup,
         ColorTimingGroup,
         AddTimingGroupBatch,
-        RemoveTimingGroupBatch
+        RemoveTimingGroupBatch,
+        AddScrollSpeedFactor,
+        AddScrollSpeedFactorBatch,
+        ChangeScrollSpeedFactorMultiplierBatch,
+        ChangeScrollSpeedFactorLaneMaskBatch,
+        ChangeScrollSpeedFactorOffsetBatch,
+        RemoveScrollSpeedFactor,
+        RemoveScrollSpeedFactorBatch
     }
 }
