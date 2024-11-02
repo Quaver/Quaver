@@ -122,6 +122,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         protected override void RenderImguiLayout()
         {
+            if (Screen.WorkingMap.TimingGroups == null)
+                return;
+
             ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(600, float.MaxValue));
             ImGui.PushFont(Options.Fonts.First().Context);
             ImGui.Begin(Name);

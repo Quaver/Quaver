@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <seealso cref="SelectTimingGroup"/>
         private string PendingSelectScrollGroupId { get; set; }
 
-        public ScrollGroup SelectedScrollGroup => (ScrollGroup)Screen.WorkingMap.TimingGroups[SelectedScrollGroupId];
+        public ScrollGroup SelectedScrollGroup => Screen.SelectedScrollGroup;
 
         /// <inheritdoc />
         /// <summary>
@@ -161,7 +161,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         private void DrawTabBar()
         {
-            if (Screen.WorkingMap.TimingGroups.Count == 1)
+            if (Screen.WorkingMap.TimingGroups == null)
                 return;
 
             if (ImGui.BeginTabBar("Groups", ImGuiTabBarFlags.FittingPolicyScroll))

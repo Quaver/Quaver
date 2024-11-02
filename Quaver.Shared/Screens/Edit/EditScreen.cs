@@ -305,7 +305,7 @@ namespace Quaver.Shared.Screens.Edit
         ///     The scroll group corresponding to <see cref="SelectedScrollGroupId"/>
         /// </summary>
         public ScrollGroup SelectedScrollGroup =>
-            WorkingMap.TimingGroups.TryGetValue(SelectedScrollGroupId, out var timingGroup) &&
+            (WorkingMap.TimingGroups?.TryGetValue(SelectedScrollGroupId, out var timingGroup) ?? false) &&
             timingGroup is ScrollGroup scrollGroup
                 ? scrollGroup
                 : WorkingMap.DefaultScrollGroup;
