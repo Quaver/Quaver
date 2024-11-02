@@ -259,7 +259,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 {
                     var svPanel =
                         (EditorScrollVelocityPanel)Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
-                    svPanel.SelectTimingGroup(SelectedTimingGroups.First());
+                    Screen.SelectedScrollGroupId = SelectedTimingGroups.First();
                     svPanel.IsActive = true;
                 }
             }
@@ -389,7 +389,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (!isSelected)
                     ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
 
-                if (ImGui.Button(id == Qua.DefaultScrollGroupId ? "$Default" : id))
+                if (ImGui.Button(id))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
                     if (KeyboardManager.IsCtrlDown())
@@ -410,6 +410,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                         SelectedTimingGroups.Clear();
                         SelectedTimingGroups.Add(id);
+
+                        if (timingGroup is ScrollGroup)
+                            Screen.SelectedScrollGroupId = id;
                     }
                 }
                 RenderSpecialTimingGroupTooltip(id);
