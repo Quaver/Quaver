@@ -7,12 +7,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Dialogs;
@@ -130,13 +132,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Begin(Name);
 
             DrawHeaderText();
-            ImGui.Dummy(new Vector2(0, 10));
+
+            DrawObjectColoringToggle();
 
             DrawAddButton();
             ImGui.SameLine();
             DrawRemoveButton();
             ImGui.SameLine();
             DrawSelectNotesButton();
+            DrawMoveObjectsButton();
 
             if (SelectedTimingGroups.All(x =>
                     Screen.WorkingMap.TimingGroups.TryGetValue(x, out var v) && v is ScrollGroup))
@@ -148,7 +152,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
-            ImGui.Dummy(new Vector2(0, 10));
             DrawSelectedCountLabel();
 
             ImGui.Dummy(new Vector2(0, 10));
@@ -157,6 +160,27 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = IsWindowHovered || isHovered;
 
             ImGui.End();
+        }
+
+        private static void DrawObjectColoringToggle()
+        {
+            var colorByTimingGroup = ConfigManager.EditorObjectColoring.Value == HitObjectColoring.TimingGroup;
+            if (ImGui.Checkbox("Color Objects By Timing Group", ref colorByTimingGroup))
+            {
+                ConfigManager.EditorObjectColoring.Value = colorByTimingGroup
+                    ? HitObjectColoring.TimingGroup
+                    : HitObjectColoring.None;
+            }
+        }
+
+        private void DrawMoveObjectsButton()
+        {
+            ImGui.BeginDisabled(Screen.SelectedHitObjects.Value.Count == 0 || SelectedTimingGroups.Count != 1);
+            if (ImGui.Button("Move Selected Objects To Group"))
+            {
+                Screen.ActionManager.MoveObjectsToTimingGroup(Screen.SelectedHitObjects.Value, SelectedTimingGroups.First());
+            }
+            ImGui.EndDisabled();
         }
 
         private void DrawSelectNotesButton()
@@ -197,11 +221,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawHeaderText()
         {
-            ImGui.TextWrapped(
-                "Timing Groups group together a set of notes. Each group has their own visual behavior applied to the notes.");
-            ImGui.Dummy(new Vector2(0, 10));
-            ImGui.TextWrapped(
-                "You can click on an individual timing group to edit it and double-click to go to the first note in the group.");
+            ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1f), "(What is this?)");
+            if (ImGui.BeginItemTooltip())
+            {
+                ImGui.PushTextWrapPos(300);
+                ImGui.TextWrapped(
+                    "Timing Groups allows you to change the visuals of a group of notes.");
+                ImGui.TextWrapped(
+                    "You can click on an individual timing group to edit it and double-click to go to the first note in the group.");
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
         }
 
         /// <summary>
@@ -259,7 +289,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 {
                     var svPanel =
                         (EditorScrollVelocityPanel)Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
-                    svPanel.SelectTimingGroup(SelectedTimingGroups.First());
+                    Screen.SelectedScrollGroupId = SelectedTimingGroups.First();
                     svPanel.IsActive = true;
                 }
             }
@@ -324,6 +354,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawSelectedCountLabel()
         {
+            ImGui.Dummy(new Vector2(0, 10));
             var count = SelectedTimingGroups.Count;
             var labelText = count > 1 ? $"{count} timing groups selected" : "";
             ImGui.Text(labelText);
@@ -389,7 +420,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (!isSelected)
                     ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
 
-                if (ImGui.Button(id == Qua.DefaultScrollGroupId ? "$Default" : id))
+                if (ImGui.Button(id))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
                     if (KeyboardManager.IsCtrlDown())
@@ -410,6 +441,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                         SelectedTimingGroups.Clear();
                         SelectedTimingGroups.Add(id);
+
+                        if (timingGroup is ScrollGroup)
+                            Screen.SelectedScrollGroupId = id;
                     }
                 }
                 RenderSpecialTimingGroupTooltip(id);

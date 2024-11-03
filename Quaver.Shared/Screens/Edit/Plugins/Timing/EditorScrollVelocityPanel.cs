@@ -86,6 +86,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <seealso cref="SelectTimingGroup"/>
         private string PendingSelectScrollGroupId { get; set; }
 
+        /// <summary>
+        ///     ImGui saves the last tab selection, so we add this to prevent selection cycling.
+        /// </summary>
+        private bool SelectionCooldown { get; set; }
+
+        /// <summary>
+        ///     Keep track of the last selected id since draw.
+        ///     This is used to detect if the selected group has been changed
+        ///     in EditScreen
+        /// </summary>
+        private string LastSelectedScrollGroupId { get; set; } = Qua.DefaultScrollGroupId;
+
         public ScrollGroup SelectedScrollGroup => Screen.SelectedScrollGroup;
 
         /// <inheritdoc />
@@ -174,25 +186,29 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (Screen.WorkingMap.TimingGroups == null)
                 return;
 
+            if (LastSelectedScrollGroupId != SelectedScrollGroupId)
+                SelectionCooldown = true;
+
             if (ImGui.BeginTabBar("Groups", ImGuiTabBarFlags.FittingPolicyScroll))
             {
+                PendingSelectScrollGroupId = SelectedScrollGroupId;
                 foreach (var (id, timingGroup) in Screen.WorkingMap.TimingGroups)
                 {
                     if (timingGroup is not ScrollGroup)
                         continue;
 
-                    var prettyId = id == Qua.DefaultScrollGroupId ? "$Default" : id;
-
-                    var flags = PendingSelectScrollGroupId == id
+                    var flags = SelectedScrollGroupId == id
                         ? ImGuiTabItemFlags.SetSelected
                         : ImGuiTabItemFlags.None;
 
                     if (id is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId)
                         flags |= ImGuiTabItemFlags.Leading;
 
-                    if (ImGuiFix.BeginTabItem($"{prettyId}##TabItem", ref Unsafe.NullRef<bool>(), flags))
+                    if (ImGuiFix.BeginTabItem($"{id}##TabItem", ref Unsafe.NullRef<bool>(), flags))
                     {
-                        if (SelectedScrollGroupId != id)
+                        if (PendingSelectScrollGroupId != id
+                            && SelectedScrollGroupId != id
+                            && !SelectionCooldown)
                             SelectTimingGroup(id);
                         ImGui.EndTabItem();
                     }
@@ -213,21 +229,29 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                             ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
                         },
                         Screen.SelectedHitObjects.Value);
+                    SelectTimingGroup(newGroupId);
                     ImGui.EndTabItem();
                 }
 
                 ImGui.EndTabBar();
             }
 
-            if (PendingSelectScrollGroupId != null)
+            if (SelectionCooldown)
+                SelectionCooldown = false;
+
+            if (PendingSelectScrollGroupId != null && PendingSelectScrollGroupId != SelectedScrollGroupId)
             {
                 SelectedScrollGroupId = PendingSelectScrollGroupId;
                 PendingSelectScrollGroupId = null;
+                SelectionCooldown = true;
             }
+
+            LastSelectedScrollGroupId = SelectedScrollGroupId;
         }
 
         public void SelectTimingGroup(string id)
         {
+            SelectionCooldown = true;
             PendingSelectScrollGroupId = id;
             SelectedScrollVelocities.Clear();
         }
