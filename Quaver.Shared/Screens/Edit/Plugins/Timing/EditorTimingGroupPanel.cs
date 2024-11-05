@@ -226,7 +226,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 ImGui.PushTextWrapPos(300);
                 ImGui.TextWrapped(
-                    "Timing Groups allows you to change the visuals of a group of notes.");
+                    "Timing Groups allow you to change the visuals of a group of notes.");
                 ImGui.TextWrapped(
                     "You can click on an individual timing group to edit it and double-click to go to the first note in the group.");
                 ImGui.PopTextWrapPos();
