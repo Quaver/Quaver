@@ -14,6 +14,11 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.Add;
+using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
@@ -81,6 +86,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityBatchAdded += OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
             ActionManager.ScrollVelocityOffsetBatchChanged += OnScrollVelocityBatchOffsetChanged;
+            ActionManager.ScrollSpeedFactorAdded += OnScrollSpeedFactorAdded;
+            ActionManager.ScrollSpeedFactorRemoved += OnScrollSpeedFactorRemoved;
+            ActionManager.ScrollSpeedFactorBatchAdded += OnScrollSpeedFactorBatchAdded;
+            ActionManager.ScrollSpeedFactorBatchRemoved += OnScrollSpeedFactorBatchRemoved;
+            ActionManager.ScrollSpeedFactorOffsetBatchChanged += OnScrollSpeedFactorBatchOffsetChanged;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
@@ -188,6 +198,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                     foreach (var scrollVelocity in scrollGroup.ScrollVelocities)
                     {
                         Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, scrollVelocity, timingGroup));
+                    }
+                    foreach (var scrollSpeedFactorInfo in scrollGroup.ScrollSpeedFactors)
+                    {
+                        Lines.Add(new DrawableEditorLineScrollSpeedFactor(Playfield, scrollSpeedFactorInfo, timingGroup));
                     }
                 }
             }
@@ -315,6 +329,62 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void OnScrollSpeedFactorAdded(object sender, EditorScrollSpeedFactorAddedEventArgs e)
+        {
+            Lines.InsertSorted(new DrawableEditorLineScrollSpeedFactor(Playfield, e.ScrollSpeedFactor, e.ScrollGroup));
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorBatchAdded(object sender, EditorScrollSpeedFactorBatchAddedEventArgs e)
+        {
+            Lines.InsertSorted(e.ScrollSpeedFactors.Select(sv => new DrawableEditorLineScrollSpeedFactor(Playfield, sv, e.ScrollGroup)));
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorRemoved(object sender, EditorScrollSpeedFactorRemovedEventArgs e)
+        {
+            Lines.RemoveAll(x =>
+            {
+                var found = x is DrawableEditorLineScrollSpeedFactor line && line.ScrollSpeedFactor == e.ScrollSpeedFactor;
+                
+                if (found)
+                    x.Destroy();
+
+                return found;
+            });
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorBatchRemoved(object sender, EditorScrollSpeedFactorBatchRemovedEventArgs e)
+        {
+            Lines.RemoveAll(x =>
+            {
+                var found = x is DrawableEditorLineScrollSpeedFactor line && e.ScrollSpeedFactors.Contains(line.ScrollSpeedFactor);
+
+                if (found)
+                    x.Destroy();
+
+                return found;
+            });
+            
+            InitializeLinePool();
+        }
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnTimingPointAdded(object sender, EditorTimingPointAddedEventArgs e)
         {
             Lines.InsertSorted(new DrawableEditorLineTimingPoint(Playfield, e.TimingPoint));
@@ -346,6 +416,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnScrollVelocityBatchOffsetChanged(object sender, EditorChangedScrollVelocityOffsetBatchEventArgs e)
+        {
+            Lines.HybridSort();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedFactorBatchOffsetChanged(object sender, EditorChangedScrollSpeedFactorOffsetBatchEventArgs e)
         {
             Lines.HybridSort();
             InitializeLinePool();

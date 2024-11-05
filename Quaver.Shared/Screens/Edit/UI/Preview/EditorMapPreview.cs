@@ -10,6 +10,12 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
+using Quaver.Shared.Screens.Edit.Actions.SF.Add;
+using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeMultiplierBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -75,6 +81,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
             ActionManager.ScrollVelocityOffsetBatchChanged += OnScrollVelocityOffsetBatchChanged;
             ActionManager.ScrollVelocityMultiplierBatchChanged += OnScrollVelocityMultiplierBatchChanged;
+            ActionManager.ScrollSpeedFactorAdded += OnScrollSpeedFactorAdded;
+            ActionManager.ScrollSpeedFactorRemoved += OnScrollSpeedFactorRemoved;
+            ActionManager.ScrollSpeedFactorBatchAdded += OnScrollSpeedFactorBatchAdded;
+            ActionManager.ScrollSpeedFactorBatchRemoved += OnScrollSpeedFactorBatchRemoved;
+            ActionManager.ScrollSpeedFactorOffsetBatchChanged += OnScrollSpeedFactorOffsetBatchChanged;
+            ActionManager.ScrollSpeedFactorMultiplierBatchChanged += OnScrollSpeedFactorMultiplierBatchChanged;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
@@ -170,6 +182,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
 
         private void OnScrollVelocityAdded(object sender, EditorScrollVelocityAddedEventArgs e) => Refresh();
 
+        private void OnScrollSpeedFactorBatchRemoved(object sender, EditorScrollSpeedFactorBatchRemovedEventArgs e) => Refresh();
+
+        private void OnScrollSpeedFactorBatchAdded(object sender, EditorScrollSpeedFactorBatchAddedEventArgs e) => Refresh();
+
+        private void OnScrollSpeedFactorRemoved(object sender, EditorScrollSpeedFactorRemovedEventArgs e) => Refresh();
+
+        private void OnScrollSpeedFactorAdded(object sender, EditorScrollSpeedFactorAddedEventArgs e) => Refresh();
+
         private void OnTimingPointBatchRemoved(object sender, EditorTimingPointBatchRemovedEventArgs e) => Refresh();
 
         private void OnTimingPointBatchAdded(object sender, EditorTimingPointBatchAddedEventArgs e) => Refresh();
@@ -203,5 +223,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e) => Refresh();
 
         private void OnHitObjectsMovedToTimingGroup(object sender, EditorMoveObjectsToTimingGroupEventArgs e) => Refresh();
+   
+        private void OnScrollSpeedFactorOffsetBatchChanged(object sender, EditorChangedScrollSpeedFactorOffsetBatchEventArgs e) => Refresh();
+
+        private void OnScrollSpeedFactorMultiplierBatchChanged(object sender, EditorChangedScrollSpeedFactorMultiplierBatchEventArgs e) => Refresh();
     }
 }

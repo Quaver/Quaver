@@ -47,6 +47,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             EditorPluginUtils.EditScreen.WorkingMap.GetScrollVelocityAt(SongTime);
 
         /// <summary>
+        ///     The current scroll speed factor in the map
+        /// </summary>
+        public ScrollSpeedFactorInfo CurrentScrollSpeedFactor =>
+            EditorPluginUtils.EditScreen.WorkingMap.GetScrollSpeedFactorAt(SongTime);
+
+        /// <summary>
         ///     The current timing point in the map
         /// </summary>
         public TimingPointInfo CurrentTimingPoint => EditorPluginUtils.EditScreen.WorkingMap.GetTimingPointAt(SongTime);

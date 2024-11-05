@@ -7,6 +7,7 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
@@ -39,8 +40,18 @@ namespace Quaver.Shared.Screens.Edit.Actions.Offset
             new EditorActionChangeTimingPointOffsetBatch(ActionManager, WorkingMap,
                 new List<TimingPointInfo>(WorkingMap.TimingPoints), Offset).Perform();
 
-            new EditorActionChangeScrollVelocityOffsetBatch(ActionManager, WorkingMap, new List<SliderVelocityInfo>(WorkingMap.SliderVelocities),
-                Offset).Perform();
+            foreach (var (id, timingGroup) in WorkingMap.TimingGroups)
+            {
+                if (timingGroup is not ScrollGroup scrollGroup)
+                    continue;
+
+                new EditorActionChangeScrollVelocityOffsetBatch(ActionManager, WorkingMap,
+                    new List<SliderVelocityInfo>(scrollGroup.ScrollVelocities),
+                    Offset).Perform();
+
+                new EditorActionChangeScrollSpeedFactorOffsetBatch(ActionManager, WorkingMap,
+                    new List<ScrollSpeedFactorInfo>(scrollGroup.ScrollSpeedFactors), Offset).Perform();
+            }
 
             new EditorActionChangePreviewTime(ActionManager, WorkingMap, WorkingMap.SongPreviewTime + Offset).Perform();
 

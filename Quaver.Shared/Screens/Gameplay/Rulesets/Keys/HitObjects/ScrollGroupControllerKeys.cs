@@ -5,6 +5,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Wobble.Graphics.Animations;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -21,10 +22,12 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     {
         Debug.Assert(timingGroup is ScrollGroup);
         // Initialize SV
-        PopulateScrollVelocities();
+        Populate();
         InitializePositionMarkers();
         UpdateCurrentTrackPosition();
     }
+
+    public override float ScrollSpeed => base.ScrollSpeed * CurrentScrollSpeedFactor;
 
     public ScrollGroup ScrollGroup => (ScrollGroup)TimingGroup;
 
@@ -34,7 +37,13 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     /// </summary>
     private int CurrentSvIndex { get; set; } = 0;
 
+    private int CurrentSfIndex { get; set; } = -1;
+
     private List<SliderVelocityInfo> ScrollVelocityInfos { get; set; } = new();
+
+    private List<ScrollSpeedFactorInfo> ScrollSpeedFactorInfos { get; set; } = new();
+
+    public float CurrentScrollSpeedFactor { get; set; } = 1;
 
     /// <summary>
     ///     List of added hit object positions calculated from SV. Used for optimization
@@ -77,11 +86,15 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     ///     Generates the actual list of scroll velocities used.
     ///     This combines the SVs in its own group + the SVs from the global SV group.
     /// </summary>
-    private void PopulateScrollVelocities()
+    private void Populate()
     {
         ScrollVelocityInfos = new List<SliderVelocityInfo>(ScrollGroup.ScrollVelocities);
-        if (ScrollGroup != Manager.Ruleset.Map.GlobalScrollGroup)
+        ScrollSpeedFactorInfos = new List<ScrollSpeedFactorInfo>(ScrollGroup.ScrollSpeedFactors);
+        if (!ReferenceEquals(ScrollGroup, Manager.Ruleset.Map.GlobalScrollGroup))
+        {
             ScrollVelocityInfos.InsertSorted(Manager.Ruleset.Map.GlobalScrollGroup.ScrollVelocities);
+            ScrollSpeedFactorInfos.InsertSorted(Manager.Ruleset.Map.GlobalScrollGroup.ScrollSpeedFactors);
+        }
     }
 
     /// <summary>
@@ -121,6 +134,26 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
                          ScrollVelocityInfos[index].Multiplier *
                          HitObjectManagerKeys.TrackRounding);
         return curPos;
+    }
+
+    /// <summary>
+    ///     Returns the scroll speed factor at that time on <see cref="sfIndex"/>.
+    ///     The factor is lerped with the next factor, unless it is already the last.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="sfIndex"></param>
+    /// <returns></returns>
+    private float GetScrollSpeedFactorFromTime(double time, int sfIndex)
+    {
+        sfIndex = Math.Min(sfIndex, ScrollSpeedFactorInfos.Count - 1);
+        if (sfIndex < 0 || Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
+            return 1;
+        var sf = ScrollSpeedFactorInfos[sfIndex];
+        if (sfIndex == ScrollSpeedFactorInfos.Count - 1)
+            return sf.Multiplier;
+        var nextSf = ScrollSpeedFactorInfos[sfIndex + 1];
+        return EasingFunctions.Linear(sf.Multiplier, nextSf.Multiplier,
+            ((float)time - sf.StartTime) / (nextSf.StartTime - sf.StartTime));
     }
 
     /// <summary>
@@ -210,6 +243,7 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     public override void HandleSkip()
     {
         CurrentSvIndex = 0;
+        CurrentSfIndex = -1;
     }
 
     /// <summary>
@@ -224,6 +258,14 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
         {
             CurrentSvIndex++;
         }
+        
+        while (CurrentSfIndex < ScrollSpeedFactorInfos.Count - 1 && Manager.CurrentVisualAudioOffset >= ScrollSpeedFactorInfos[CurrentSfIndex + 1].StartTime)
+        {
+            CurrentSfIndex++;
+        }
+
+        CurrentScrollSpeedFactor = GetScrollSpeedFactorFromTime(Manager.CurrentVisualAudioOffset, CurrentSfIndex);
+
 
         CurrentTrackPosition = GetPositionFromTime(Manager.CurrentVisualAudioOffset, CurrentSvIndex);
     }

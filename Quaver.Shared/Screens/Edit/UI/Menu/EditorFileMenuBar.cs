@@ -337,6 +337,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     scrollVelocityPlugin.Initialize();
             }
 
+            var scrollSpeedFactorPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollSpeedFactorEditor];
+
+            if (ImGui.MenuItem("Edit Scroll Speed Factors", "F7", scrollSpeedFactorPlugin.IsActive))
+            {
+                scrollSpeedFactorPlugin.IsActive = !scrollSpeedFactorPlugin.IsActive;
+
+                if (scrollSpeedFactorPlugin.IsActive)
+                    scrollSpeedFactorPlugin.Initialize();
+            }
+
             ImGui.Separator();
 
             if (ImGui.MenuItem("Add Background Image"))
