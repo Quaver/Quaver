@@ -26,6 +26,10 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignature;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Preview;
 using Wobble.Audio.Tracks;
@@ -82,6 +86,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointSignatureBatchChanged += OnTimingPointSignatureBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointHiddenChanged += OnTimingPointHiddenChanged;
+            ActionManager.TimingGroupDeleted += OnTimingGroupDeleted;
+            ActionManager.TimingGroupCreated += OnTimingGroupCreated;
+            ActionManager.TimingGroupRenamed += OnTimingGroupRenamed;
+            ActionManager.HitObjectsMovedToTimingGroup += OnHitObjectsMovedToTimingGroup;
         }
 
         /// <inheritdoc />
@@ -115,6 +123,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.TimingPointSignatureBatchChanged -= OnTimingPointSignatureBatchChanged;
             ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             ActionManager.TimingPointHiddenChanged -= OnTimingPointHiddenChanged;
+            ActionManager.TimingGroupDeleted -= OnTimingGroupDeleted;
+            ActionManager.TimingGroupCreated -= OnTimingGroupCreated;
+            ActionManager.TimingGroupRenamed -= OnTimingGroupRenamed;
+            ActionManager.HitObjectsMovedToTimingGroup -= OnHitObjectsMovedToTimingGroup;
 
             base.Destroy();
         }
@@ -183,5 +195,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnScrollVelocityOffsetBatchChanged(object sender, EditorChangedScrollVelocityOffsetBatchEventArgs e) => Refresh();
 
         private void OnScrollVelocityMultiplierBatchChanged(object sender, EditorChangedScrollVelocityMultiplierBatchEventArgs e) => Refresh();
+
+        private void OnTimingGroupDeleted(object sender, EditorTimingGroupRemovedEventArgs e) => Refresh();
+
+        private void OnTimingGroupCreated(object sender, EditorTimingGroupCreatedEventArgs e) => Refresh();
+
+        private void OnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e) => Refresh();
+
+        private void OnHitObjectsMovedToTimingGroup(object sender, EditorMoveObjectsToTimingGroupEventArgs e) => Refresh();
     }
 }

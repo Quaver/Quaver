@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Components;
 
@@ -47,14 +49,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="endTime"></param>
         /// <param name="layer"></param>
         /// <param name="hitsounds"></param>
+        /// <param name="timingGroupId"></param>
         public HitObjectInfo PlaceHitObject(
             int lane,
             int startTime,
             int endTime = 0,
             int layer = 0,
-            HitSounds hitsounds = 0
+            HitSounds hitsounds = 0,
+            string timingGroupId = Qua.DefaultScrollGroupId
         ) =>
-            ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds, true);
+            ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds, timingGroupId, true);
 
         /// <summary>
         /// </summary>
@@ -82,22 +86,29 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="sv"></param>
-        public void PlaceScrollVelocity(SliderVelocityInfo sv) => ActionManager.PlaceScrollVelocity(sv, true);
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup) => ActionManager.PlaceScrollVelocity(sv, scrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="svs"></param>
-        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.PlaceScrollVelocityBatch(svs, true);
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup) =>
+            ActionManager.PlaceScrollVelocityBatch(svs, scrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="sv"></param>
-        public void RemoveScrollVelocity(SliderVelocityInfo sv) => ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv }, true);
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv }, scrollGroup, true);
 
         /// <summary>
         /// </summary>
         /// <param name="svs"></param>
-        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.RemoveScrollVelocityBatch(svs, true);
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollVelocityBatch(svs, scrollGroup, true);
 
         /// <summary>
         /// </summary>
@@ -229,5 +240,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) =>
             ActionManager.ChangeBookmarkBatchOffset(bookmarks, offset, true);
+
+        public void PlaceTimingGroup(string id, TimingGroup timingGroup, List<HitObjectInfo> hitObjectInfos) => ActionManager.CreateTimingGroup(id, timingGroup, hitObjectInfos, true);
+
+        public void RemoveTimingGroup(string id) => ActionManager.RemoveTimingGroup(id, true);
+
+        public void RenameTimingGroup(string id, string newId) => ActionManager.RenameTimingGroup(id, newId, true);
+
+        public void ChangeTimingGroupColor(string id, int r, int g, int b) =>
+            ActionManager.ChangeTimingGroupColor(id, new Color(r, g, b), true);
+
+        public void MoveObjectsToTimingGroup(List<HitObjectInfo> hitObjects, string timingGroupId) =>
+            ActionManager.MoveObjectsToTimingGroup(hitObjects, timingGroupId, true);
     }
 }
