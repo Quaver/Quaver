@@ -230,7 +230,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         },
                         Screen.SelectedHitObjects.Value);
                     SelectTimingGroup(newGroupId);
-                    ImGui.EndTabItem();
                 }
 
                 ImGui.EndTabBar();
