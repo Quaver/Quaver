@@ -91,6 +91,23 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         /// <summary>
         /// </summary>
+        /// <param name="time"></param>
+        /// <param name="multiplier"></param>
+        /// <returns></returns>
+        public static ScrollSpeedFactorInfo CreateScrollSpeedFactor(float time, float multiplier)
+        {
+            var sv = new ScrollSpeedFactorInfo
+            {
+                StartTime = time,
+                Multiplier = multiplier,
+                IsEditableInLuaScript = true
+            };
+
+            return sv;
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="startTime"></param>
         /// <param name="lane"></param>
         /// <param name="endTime"></param>
