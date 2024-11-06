@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using ImGuiNET;
@@ -18,6 +19,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
@@ -34,6 +36,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Window;
+using Color = System.Drawing.Color;
 using Utils = Wobble.Platform.Utils;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
@@ -283,6 +286,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+            if (ImGui.BeginMenu($"Move Objects To Timing Group", Screen.SelectedHitObjects.Value.Count > 0))
+            {
+                if (ImGui.MenuItem("Default Timing Group", ""))
+                {
+                    Screen.ActionManager.Perform(new EditorActionMoveObjectsToTimingGroup(Screen.ActionManager, Screen.WorkingMap,
+                        new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), Qua.DefaultScrollGroupId));
+                }
+
+                ImGui.Separator();
+
+                foreach ((string id, TimingGroup timingGroup) in Screen.WorkingMap.TimingGroups)
+                {
+                    if (id == Qua.DefaultScrollGroupId)
+                        continue;
+
+                    var color = timingGroup.GetColor();
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1f));
+                    if (ImGui.MenuItem(id))
+                    {
+                        Screen.ActionManager.Perform(new EditorActionMoveObjectsToTimingGroup(Screen.ActionManager, Screen.WorkingMap,
+                            new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), id));
+                    }
+                    ImGui.PopStyleColor();
+                }
+
+                ImGui.EndMenu();
+            }
+
             ImGui.Separator();
 
             if (ImGui.MenuItem("Edit Metadata", "F1"))
@@ -306,6 +337,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 if (scrollVelocityPlugin.IsActive)
                     scrollVelocityPlugin.Initialize();
+            }
+
+            var scrollSpeedFactorPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollSpeedFactorEditor];
+
+            if (ImGui.MenuItem("Edit Scroll Speed Factors", "F7", scrollSpeedFactorPlugin.IsActive))
+            {
+                scrollSpeedFactorPlugin.IsActive = !scrollSpeedFactorPlugin.IsActive;
+
+                if (scrollSpeedFactorPlugin.IsActive)
+                    scrollSpeedFactorPlugin.Initialize();
             }
 
             ImGui.Separator();
@@ -705,8 +746,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Center Objects", "", Screen.AnchorHitObjectsAtMidpoint.Value))
                 Screen.AnchorHitObjectsAtMidpoint.Value = !Screen.AnchorHitObjectsAtMidpoint.Value;
 
-            if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
-                Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
+            if (ImGui.MenuItem($"View Layers", "", Screen.ObjectColoring.Value == HitObjectColoring.Layer))
+                Screen.ObjectColoring.Value = Screen.ObjectColoring.Value == HitObjectColoring.Layer
+                    ? HitObjectColoring.None
+                    : HitObjectColoring.Layer;
+
+            if (ImGui.MenuItem($"View Timing Groups", "", Screen.ObjectColoring.Value == HitObjectColoring.TimingGroup))
+                Screen.ObjectColoring.Value = Screen.ObjectColoring.Value == HitObjectColoring.TimingGroup
+                    ? HitObjectColoring.None
+                    : HitObjectColoring.TimingGroup;
+
+            if (ImGui.MenuItem($"Color SV Lines By Timing Group", "", ConfigManager.EditorColorSvLineByTimingGroup.Value))
+                ConfigManager.EditorColorSvLineByTimingGroup.Value = !ConfigManager.EditorColorSvLineByTimingGroup.Value;
 
             ImGui.Separator();
 
@@ -734,6 +785,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (plugin.Value.IsActive)
                         plugin.Value.Initialize();
                 }
+            }
+            
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Reset Window Layout"))
+            {
+                StructuredConfigManager.WindowStates.Value = new WindowStates();
+                ((EditScreenView)Screen.View).SaveWindowLayoutOnExit = false;
+                File.Delete("imgui.ini");
+                NotificationManager.Show(NotificationLevel.Info, "The window layout will be reset the next time you open the editor!");
             }
 
             ImGui.EndMenu();

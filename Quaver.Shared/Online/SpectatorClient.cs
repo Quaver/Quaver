@@ -4,6 +4,7 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Client.Enums;
 using Quaver.Shared.Config;
@@ -220,8 +221,10 @@ namespace Quaver.Shared.Online
                     var game = (QuaverGame)GameBase.Game;
 
                     // Automatically start importing
-                    download.Completed.ValueChanged += (sender, args) =>
+                    download.Status.ValueChanged += (sender, args) =>
                     {
+                        if (args.Value.Status != FileDownloaderStatus.Complete)
+                            return;
                         if (OnlineManager.IsSpectatingSomeone && !game.CurrentScreen.Exiting)
                         {
                             switch (game.CurrentScreen.Type)

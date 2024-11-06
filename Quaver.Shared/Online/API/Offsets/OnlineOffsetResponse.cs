@@ -5,10 +5,11 @@ namespace Quaver.Shared.Online.API.Offsets
 {
     public class OnlineOffsetResponse
     {
+        // v1-only
         [JsonProperty("status")]
         public int Status { get; set; }
 
-        [JsonProperty("maps")]
+        [JsonProperty("online_offsets")]
         public List<OnlineOffsetMap> Maps { get; set; }
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -32,6 +33,12 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.Add;
+using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeMultiplierBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
@@ -50,7 +57,13 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeSignatureBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Colors;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -166,6 +179,31 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorLayerRenamedEventArgs> LayerRenamed;
 
         /// <summary>
+        ///     Event invoked when a timing group has been created
+        /// </summary>
+        public event EventHandler<EditorTimingGroupCreatedEventArgs> TimingGroupCreated;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been deleted
+        /// </summary>
+        public event EventHandler<EditorTimingGroupRemovedEventArgs> TimingGroupDeleted;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been renamed
+        /// </summary>
+        public event EventHandler<EditorTimingGroupRenamedEventArgs> TimingGroupRenamed;
+
+        /// <summary>
+        ///     Event invoked when a timing group's color has been changed
+        /// </summary>
+        public event EventHandler<EditorTimingGroupColorChangedEventArgs> TimingGroupColorChanged;
+
+        /// <summary>
+        ///     Event invoked when a timing group has been renamed
+        /// </summary>
+        public event EventHandler<EditorMoveObjectsToTimingGroupEventArgs> HitObjectsMovedToTimingGroup;
+
+        /// <summary>
         ///     Event invoked when a layer's color has been changed
         /// </summary>
         public event EventHandler<EditorLayerColorChangedEventArgs> LayerColorChanged;
@@ -189,6 +227,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of scroll velocities has been removed from the map
         /// </summary>
         public event EventHandler<EditorScrollVelocityBatchRemovedEventArgs> ScrollVelocityBatchRemoved;
+
+        /// <summary>
+        ///     Event invoked when a scroll velocity has been added to the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorAddedEventArgs> ScrollSpeedFactorAdded;
+
+        /// <summary>
+        ///     Event invoked when a scroll velocity has been removed from the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorRemovedEventArgs> ScrollSpeedFactorRemoved;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities has been added to the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorBatchAddedEventArgs> ScrollSpeedFactorBatchAdded;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities has been removed from the map
+        /// </summary>
+        public event EventHandler<EditorScrollSpeedFactorBatchRemovedEventArgs> ScrollSpeedFactorBatchRemoved;
 
         /// <summary>
         ///     Event invoked when a timing point has been added to the map
@@ -261,6 +319,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorChangedScrollVelocityMultiplierBatchEventArgs> ScrollVelocityMultiplierBatchChanged;
 
         /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their offset changed
+        /// </summary>
+        public event EventHandler<EditorChangedScrollSpeedFactorOffsetBatchEventArgs> ScrollSpeedFactorOffsetBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their multipliers changed
+        /// </summary>
+        public event EventHandler<EditorChangedScrollSpeedFactorMultiplierBatchEventArgs> ScrollSpeedFactorMultiplierBatchChanged;
+
+        /// <summary>
         ///     Event invoked when a bookmark has been added.
         /// </summary>
         public event EventHandler<EditorActionBookmarkAddedEventArgs> BookmarkAdded;
@@ -305,23 +373,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Performs a given action for the editor to take.
         /// </summary>
         /// <param name="action"></param>
-        public void Perform(IEditorAction action)
+        /// <param name="fromLua"></param>
+        public void Perform(IEditorAction action, bool fromLua = false)
         {
             action.Perform();
             UndoStack.Push(action);
             RedoStack.Clear();
+            LuaImGui.Inform(action, HistoryType.New, fromLua);
         }
 
         /// <summary>
         ///     Performs a list of actions as a single action.
         /// </summary>
         /// <param name="actions"></param>
-        public void PerformBatch(List<IEditorAction> actions) => Perform(new EditorActionBatch(this, actions));
+        public void PerformBatch(List<IEditorAction> actions, bool fromLua = false) =>
+            Perform(new EditorActionBatch(this, actions), fromLua);
 
         /// <summary>
-        ///     Undos the first action in the stack
+        ///     Undoes the first action in the stack
         /// </summary>
-        public void Undo()
+        public void Undo(bool fromLua = false)
         {
             if (UndoStack.Count == 0)
                 return;
@@ -330,12 +401,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Undo();
 
             RedoStack.Push(action);
+            LuaImGui.Inform(action, HistoryType.Undo, fromLua);
         }
 
         /// <summary>
-        ///     Redos the first action in the stack
+        ///     Redoes the first action in the stack
         /// </summary>
-        public void Redo()
+        public void Redo(bool fromLua = false)
         {
             if (RedoStack.Count == 0)
                 return;
@@ -344,12 +416,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
             action.Perform();
 
             UndoStack.Push(action);
+            LuaImGui.Inform(action, HistoryType.Redo, fromLua);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="h"></param>
-        public void PlaceHitObject(HitObjectInfo h) => Perform(new EditorActionPlaceHitObject(this, WorkingMap, h));
+        public void PlaceHitObject(HitObjectInfo h, bool fromLua = false) => Perform(new EditorActionPlaceHitObject(this, WorkingMap, h), fromLua);
 
         /// <summary>
         /// </summary>
@@ -358,7 +431,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="endTime"></param>
         /// <param name="layer"></param>
         /// <param name="hitsounds"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0)
+        /// <param name="timingGroupId"></param>
+        /// <param name="fromLua"></param>
+        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0, string timingGroupId = Qua.DefaultScrollGroupId, bool fromLua = false)
         {
             var hitObject = new HitObjectInfo
             {
@@ -366,10 +441,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 StartTime = startTime,
                 EndTime = endTime,
                 EditorLayer = layer,
-                HitSound = hitsounds
+                HitSound = hitsounds,
+                TimingGroup = timingGroupId
             };
 
-            Perform(new EditorActionPlaceHitObject(this, WorkingMap, hitObject));
+            Perform(new EditorActionPlaceHitObject(this, WorkingMap, hitObject), fromLua);
 
             return hitObject;
         }
@@ -377,154 +453,192 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="hitObjects"></param>
-        public void PlaceHitObjectBatch(List<HitObjectInfo> hitObjects) => Perform(new EditorActionPlaceHitObjectBatch(this, WorkingMap, hitObjects));
+        public void PlaceHitObjectBatch(List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionPlaceHitObjectBatch(this, WorkingMap, hitObjects), fromLua);
 
         /// <summary>
         ///     Removes a HitObject from the map
         /// </summary>
         /// <param name="h"></param>
-        public void RemoveHitObject(HitObjectInfo h) => Perform(new EditorActionRemoveHitObject(this, WorkingMap, h));
+        public void RemoveHitObject(HitObjectInfo h, bool fromLua = false) => Perform(new EditorActionRemoveHitObject(this, WorkingMap, h), fromLua);
 
         /// <summary>
         ///     Removes a list of objects from the map
         /// </summary>
         /// <param name="objects"></param>
-        public void RemoveHitObjectBatch(List<HitObjectInfo> objects) =>
-            Perform(new EditorActionRemoveHitObjectBatch(this, WorkingMap, objects));
+        public void RemoveHitObjectBatch(List<HitObjectInfo> objects, bool fromLua = false) =>
+            Perform(new EditorActionRemoveHitObjectBatch(this, WorkingMap, objects), fromLua);
 
         /// <summary>
         ///     Resizes a hitobject/long note to a given time
         /// </summary>
         /// <param name="h"></param>
         /// <param name="time"></param>
-        public void ResizeLongNote(HitObjectInfo h, int originalTime, int time)
-            => Perform(new EditorActionResizeLongNote(this, WorkingMap, h, originalTime, time));
+        public void ResizeLongNote(HitObjectInfo h, int originalTime, int time, bool fromLua = false)
+            => Perform(new EditorActionResizeLongNote(this, WorkingMap, h, originalTime, time), fromLua);
 
         /// <summary>
         ///     Places an sv down in the map
         /// </summary>
         /// <param name="sv"></param>
-        public void PlaceScrollVelocity(SliderVelocityInfo sv) => Perform(new EditorActionAddScrollVelocity(this, WorkingMap, sv));
+        /// <param name="scrollGroup"></param>
+        /// <param name="fromLua"></param>
+        public void PlaceScrollVelocity(SliderVelocityInfo sv, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollVelocity(this, WorkingMap, sv, scrollGroup), fromLua);
 
         /// <summary>
         ///     Places a batch of scroll velocities into the map
         /// </summary>
         /// <param name="svs"></param>
-        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => Perform(new EditorActionAddScrollVelocityBatch(this, WorkingMap, svs));
+        /// <param name="scrollGroup"></param>
+        /// <param name="fromLua"></param>
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollVelocityBatch(this, WorkingMap, svs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Removes a batch of scroll velocities from the map
         /// </summary>
         /// <param name="svs"></param>
-        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs) => Perform(new EditorActionRemoveScrollVelocityBatch(this, WorkingMap, svs));
+        /// <param name="scrollGroup"></param>
+        /// <param name="fromLua"></param>
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionRemoveScrollVelocityBatch(this, WorkingMap, svs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Changes the offset of a batch of scroll velocities
         /// </summary>
         /// <param name="svs"></param>
         /// <param name="offset"></param>
-        public void ChangeScrollVelocityOffsetBatch(List<SliderVelocityInfo> svs, float offset) => Perform(new EditorActionChangeScrollVelocityOffsetBatch(this, WorkingMap, svs, offset));
+        public void ChangeScrollVelocityOffsetBatch(List<SliderVelocityInfo> svs, float offset, bool fromLua = false) => Perform(new EditorActionChangeScrollVelocityOffsetBatch(this, WorkingMap, svs, offset), fromLua);
 
         /// <summary>
         ///     Changes the multiplier of a batch of scroll velocities
         /// </summary>
         /// <param name="svs"></param>
         /// <param name="multiplier"></param>
-        public void ChangeScrollVelocityMultiplierBatch(List<SliderVelocityInfo> svs, float multiplier) => Perform(new EditorActionChangeScrollVelocityMultiplierBatch(this, WorkingMap, svs, multiplier));
+        public void ChangeScrollVelocityMultiplierBatch(List<SliderVelocityInfo> svs, float multiplier, bool fromLua = false) => Perform(new EditorActionChangeScrollVelocityMultiplierBatch(this, WorkingMap, svs, multiplier), fromLua);
+
+        /// <summary>
+        ///     Places an sf down in the map
+        /// </summary>
+        /// <param name="sf"></param>
+        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf, scrollGroup));
+
+        /// <summary>
+        ///     Places a batch of scroll speed factors into the map
+        /// </summary>
+        /// <param name="sfs"></param>
+        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+
+        /// <summary>
+        ///     Removes a batch of scroll speed factors from the map
+        /// </summary>
+        /// <param name="sfs"></param>
+        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+
+        /// <summary>
+        ///     Changes the offset of a batch of scroll speed factors
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="offset"></param>
+        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset));
+
+        /// <summary>
+        ///     Changes the multiplier of a batch of scroll speed factors
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="multiplier"></param>
+        public void ChangeScrollSpeedFactorMultiplierBatch(List<ScrollSpeedFactorInfo> sfs, float multiplier) => Perform(new EditorActionChangeScrollSpeedFactorMultiplierBatch(this, WorkingMap, sfs, multiplier));
 
         /// <summary>
         ///     Adds a timing point to the map
         /// </summary>
         /// <param name="tp"></param>
-        public void PlaceTimingPoint(TimingPointInfo tp) => Perform(new EditorActionAddTimingPoint(this, WorkingMap, tp));
+        public void PlaceTimingPoint(TimingPointInfo tp, bool fromLua = false) => Perform(new EditorActionAddTimingPoint(this, WorkingMap, tp), fromLua);
 
         /// <summary>
         ///     Removes a timing point from the map
         /// </summary>
         /// <param name="tp"></param>
-        public void RemoveTimingPoint(TimingPointInfo tp) => Perform(new EditorActionRemoveTimingPoint(this, WorkingMap, tp));
+        public void RemoveTimingPoint(TimingPointInfo tp, bool fromLua = false) => Perform(new EditorActionRemoveTimingPoint(this, WorkingMap, tp), fromLua);
 
         /// <summary>
         ///     Places a batch of timing points to the map
         /// </summary>
         /// <param name="tps"></param>
-        public void PlaceTimingPointBatch(List<TimingPointInfo> tps) => Perform(new EditorActionAddTimingPointBatch(this, WorkingMap, tps));
+        public void PlaceTimingPointBatch(List<TimingPointInfo> tps, bool fromLua = false) => Perform(new EditorActionAddTimingPointBatch(this, WorkingMap, tps), fromLua);
 
         /// <summary>
         ///     Removes a batch of timing points from the map
         /// </summary>
         /// <param name="tps"></param>
-        public void RemoveTimingPointBatch(List<TimingPointInfo> tps) => Perform(new EditorActionRemoveTimingPointBatch(this, WorkingMap, tps));
+        public void RemoveTimingPointBatch(List<TimingPointInfo> tps, bool fromLua = false) => Perform(new EditorActionRemoveTimingPointBatch(this, WorkingMap, tps), fromLua);
 
         /// <summary>
         ///     Changes the offset of a timing point
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="offset"></param>
-        public void ChangeTimingPointOffset(TimingPointInfo tp, float offset) => Perform(new EditorActionChangeTimingPointOffset(this, WorkingMap, tp, offset));
+        public void ChangeTimingPointOffset(TimingPointInfo tp, float offset, bool fromLua = false) => Perform(new EditorActionChangeTimingPointOffset(this, WorkingMap, tp, offset), fromLua);
 
         /// <summary>
         ///     Changes the BPM of an existing timing point
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="bpm"></param>
-        public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => Perform(new EditorActionChangeTimingPointBpm(this, WorkingMap, tp, bpm));
+        public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm, bool fromLua = false) => Perform(new EditorActionChangeTimingPointBpm(this, WorkingMap, tp, bpm), fromLua);
 
         /// <summary>
         ///     Changes the Signature of an existing timing point
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="timeSig"></param>
-        public void ChangeTimingPointSignature(TimingPointInfo tp, int timeSig) => Perform(new EditorActionChangeTimingPointSignature(this, WorkingMap, tp, timeSig));
+        public void ChangeTimingPointSignature(TimingPointInfo tp, int timeSig, bool fromLua = false) => Perform(new EditorActionChangeTimingPointSignature(this, WorkingMap, tp, timeSig), fromLua);
 
         /// <summary>
         ///     Changes whether an existing timing point's lines are hidden or not
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="hidden"></param>
-        public void ChangeTimingPointHidden(TimingPointInfo tp, bool hidden) => Perform(new EditorActionChangeTimingPointHidden(this, WorkingMap, tp, hidden));
+        public void ChangeTimingPointHidden(TimingPointInfo tp, bool hidden, bool fromLua = false) => Perform(new EditorActionChangeTimingPointHidden(this, WorkingMap, tp, hidden), fromLua);
 
         /// <summary>
         ///     Changes a batch of timing points to a new BPM
         /// </summary>
         /// <param name="tps"></param>
         /// <param name="bpm"></param>
-        public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm) => Perform(new EditorActionChangeTimingPointBpmBatch(this, WorkingMap, tps, bpm));
+        public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm, bool fromLua = false) => Perform(new EditorActionChangeTimingPointBpmBatch(this, WorkingMap, tps, bpm), fromLua);
 
         /// <summary>
         ///     Changes a batch of timing points to a new signature
         /// </summary>
         /// <param name="tps"></param>
         /// <param name="sig"></param>
-        public void ChangeTimingPointSignatureBatch(List<TimingPointInfo> tps, int sig) => Perform(new EditorActionChangeTimingPointSignatureBatch(this, WorkingMap, tps, sig));
+        public void ChangeTimingPointSignatureBatch(List<TimingPointInfo> tps, int sig, bool fromLua = false) => Perform(new EditorActionChangeTimingPointSignatureBatch(this, WorkingMap, tps, sig), fromLua);
 
         /// <summary>
         ///     Moves a batch of timing points' offsets by a given value
         /// </summary>
         /// <param name="tps"></param>
         /// <param name="offset"></param>
-        public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset) => Perform(new EditorActionChangeTimingPointOffsetBatch(this, WorkingMap, tps, offset));
+        public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset, bool fromLua = false) => Perform(new EditorActionChangeTimingPointOffsetBatch(this, WorkingMap, tps, offset), fromLua);
 
         /// <summary>
         ///     Resets a timing point back to zero
         /// </summary>
         /// <param name="tp"></param>
-        public void ResetTimingPoint(TimingPointInfo tp) => Perform(new EditorActionResetTimingPoint(this, WorkingMap, tp));
+        public void ResetTimingPoint(TimingPointInfo tp, bool fromLua = false) => Perform(new EditorActionResetTimingPoint(this, WorkingMap, tp), fromLua);
 
         /// <summary>
         ///     Adds an editor layer to the map
         /// </summary>
         /// <param name="layer"></param>
-        public void CreateLayer(EditorLayerInfo layer, int index = -1) => Perform(new EditorActionCreateLayer(WorkingMap, this, EditScreen.SelectedHitObjects, layer, index));
+        public void CreateLayer(EditorLayerInfo layer, int index = -1, bool fromLua = false) => Perform(new EditorActionCreateLayer(WorkingMap, this, EditScreen.SelectedHitObjects, layer, index), fromLua);
 
         /// <summary>
         ///     Removes a non-default editor layer from the map
         /// </summary>
         /// <param name="layer"></param>
-        public void RemoveLayer(EditorLayerInfo layer)
+        public void RemoveLayer(EditorLayerInfo layer, bool fromLua = false)
         {
             if (layer != EditScreen.DefaultLayer)
-                Perform(new EditorActionRemoveLayer(this, WorkingMap, EditScreen.SelectedHitObjects, layer));
+                Perform(new EditorActionRemoveLayer(this, WorkingMap, EditScreen.SelectedHitObjects, layer), fromLua);
         }
 
         /// <summary>
@@ -532,10 +646,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="name"></param>
-        public void RenameLayer(EditorLayerInfo layer, string name)
+        public void RenameLayer(EditorLayerInfo layer, string name, bool fromLua = false)
         {
             if (layer != EditScreen.DefaultLayer)
-                Perform(new EditorActionRenameLayer(this, WorkingMap, layer, name));
+                Perform(new EditorActionRenameLayer(this, WorkingMap, layer, name), fromLua);
         }
 
         /// <summary>
@@ -543,17 +657,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="hitObjects"></param>
-        public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects));
+        public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects), fromLua);
 
         /// <summary>
         ///     Changes the color of a non-default editor layer
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="color"></param>
-        public void ChangeLayerColor(EditorLayerInfo layer, Color color)
+        public void ChangeLayerColor(EditorLayerInfo layer, Color color, bool fromLua = false)
         {
             if (layer != EditScreen.DefaultLayer)
-                Perform(new EditorActionChangeLayerColor(this, WorkingMap, layer, color));
+                Perform(new EditorActionChangeLayerColor(this, WorkingMap, layer, color), fromLua);
         }
 
         /// <summary>
@@ -564,9 +678,68 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void ToggleLayerVisibility(EditorLayerInfo layer) => new EditorActionToggleLayerVisibility(this, WorkingMap, layer).Perform();
 
         /// <summary>
+        ///     Adds an editor layer to the map
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="timingGroup"></param>
+        /// <param name="hitObjectInfos"></param>
+        /// <param name="fromLua"></param>
+        public void CreateTimingGroup(string id, TimingGroup timingGroup, List<HitObjectInfo> hitObjectInfos,
+            bool fromLua = false) => Perform(new EditorActionCreateTimingGroup(this, WorkingMap, id, timingGroup, hitObjectInfos), fromLua);
+
+        /// <summary>
+        ///     Removes a non-default editor layer from the map
+        /// </summary>
+        public void RemoveTimingGroup(string id, bool fromLua = false)
+        {
+            if (id is Qua.GlobalScrollGroupId or Qua.DefaultScrollGroupId
+                || !WorkingMap.TimingGroups.TryGetValue(id, out var timingGroup)) return;
+            Perform(new EditorActionRemoveTimingGroup(this, WorkingMap, id, timingGroup, null), fromLua);
+        }
+
+        /// <summary>
+        ///     Changes the name of a non-default editor layer
+        /// </summary>
+        /// <param name="oldId"></param>
+        /// <param name="newId"></param>
+        /// <param name="fromLua"></param>
+        public bool RenameTimingGroup(string oldId, string newId, bool fromLua = false)
+        {
+            if (oldId is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId
+                || newId is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId
+                || !WorkingMap.TimingGroups.ContainsKey(oldId)
+                || WorkingMap.TimingGroups.ContainsKey(newId)
+                || !Regex.IsMatch(newId, "^[a-zA-Z0-9_]+$"))
+                return false;
+
+            Perform(new EditorActionRenameTimingGroup(this, WorkingMap, oldId, newId, null), fromLua);
+            return true;
+
+        }
+
+        /// <summary>
+        ///     Changes the editor layer of existing hitobjects
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <param name="timingGroupId"></param>
+        /// <param name="fromLua"></param>
+        public void MoveObjectsToTimingGroup(List<HitObjectInfo> hitObjects, string timingGroupId, bool fromLua = false) => Perform(new EditorActionMoveObjectsToTimingGroup(this, WorkingMap, hitObjects, timingGroupId), fromLua);
+
+        /// <summary>
+        ///     Changes the color of a timing group
+        /// </summary>
+        /// <param name="timingGroup"></param>
+        /// <param name="color"></param>
+        public void ChangeTimingGroupColor(string id, Color color, bool fromLua = false)
+        {
+            if (id != Qua.DefaultScrollGroupId && WorkingMap.TimingGroups.TryGetValue(id, out TimingGroup timingGroup))
+                Perform(new EditorActionChangeTimingGroupColor(this, WorkingMap, timingGroup, color), fromLua);
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="input"></param>
-        public void GoToObjects(string input) => EditScreen.GoToObjects(input);
+        public void GoToObjects(string input, bool fromLua = false) => EditScreen.GoToObjects(input);
 
         /// <summary>
         /// </summary>
@@ -576,11 +749,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
             EditScreen.SelectedHitObjects.Clear();
 
             // Only select objects that exist in the map
-            var existingHitObjects = EditScreen.WorkingMap.HitObjects.Where(
+            var existingHitObjects = EditScreen.WorkingMap.HitObjects.FindAll(
                 a => hitObjects.Any(
                     b => a.StartTime == b.StartTime && a.Lane == b.Lane
                 )
-            ).ToList();
+            );
 
             if (existingHitObjects.Count == 0)
                 return;
@@ -599,7 +772,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </remarks>
         /// <param name="snaps">List of snaps to snap to</param>
         /// <param name="hitObjectsToResnap">List of hitobjects to resnap</param>
-        public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps, hitObjectsToResnap, true));
+        public void ResnapNotes(List<int> snaps, List<HitObjectInfo> hitObjectsToResnap, bool fromLua = false) => Perform(new EditorActionResnapHitObjects(this, WorkingMap, snaps, hitObjectsToResnap, true), fromLua);
 
         /// <summary>
         ///     Detects the BPM of the map and returns the object instance
@@ -610,49 +783,49 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="time"></param>
-        public void SetPreviewTime(int time) => Perform(new EditorActionChangePreviewTime(this, WorkingMap, time));
+        public void SetPreviewTime(int time, bool fromLua = false) => Perform(new EditorActionChangePreviewTime(this, WorkingMap, time), fromLua);
 
         /// <summary>
         ///     Adds a bookmark to the map
         /// </summary>
-        public void AddBookmark(BookmarkInfo bookmarkInfo) => Perform(new EditorActionAddBookmark(this, WorkingMap, bookmarkInfo));
+        public void AddBookmark(BookmarkInfo bookmarkInfo, bool fromLua = false) => Perform(new EditorActionAddBookmark(this, WorkingMap, bookmarkInfo), fromLua);
 
-        public void AddBookmark(int time, string note) => AddBookmark(new BookmarkInfo
+        public void AddBookmark(int time, string note, bool fromLua = false) => AddBookmark(new BookmarkInfo
         {
             StartTime = time,
             Note = note
-        });
+        }, fromLua);
 
         /// <summary>
         ///     Adds a batch of bookmarks to the map
         /// </summary>
         /// <param name="bookmarks"></param>
-        public void AddBookmarkBatch(List<BookmarkInfo> bookmarks) => Perform(new EditorActionAddBookmarkBatch(this, WorkingMap, bookmarks));
+        public void AddBookmarkBatch(List<BookmarkInfo> bookmarks, bool fromLua = false) => Perform(new EditorActionAddBookmarkBatch(this, WorkingMap, bookmarks), fromLua);
         /// <summary>
         ///     Removes a bookmark from the map.
         /// </summary>
         /// <param name="bookmark"></param>
-        public void RemoveBookmark(BookmarkInfo bookmark) => Perform(new EditorActionRemoveBookmark(this, WorkingMap, bookmark));
+        public void RemoveBookmark(BookmarkInfo bookmark, bool fromLua = false) => Perform(new EditorActionRemoveBookmark(this, WorkingMap, bookmark), fromLua);
 
         /// <summary>
         ///     Removes a batch of bookmarks from the map.
         /// </summary>
         /// <param name="bookmark"></param>
-        public void RemoveBookmarkBatch(List<BookmarkInfo> bookmark) => Perform(new EditorActionRemoveBookmarkBatch(this, WorkingMap, bookmark));
+        public void RemoveBookmarkBatch(List<BookmarkInfo> bookmark, bool fromLua = false) => Perform(new EditorActionRemoveBookmarkBatch(this, WorkingMap, bookmark), fromLua);
 
         /// <summary>
         ///     Edits the note of an existing bookmark
         /// </summary>
         /// <param name="bookmark"></param>
         /// <param name="note"></param>
-        public void EditBookmark(BookmarkInfo bookmark, string note) => Perform(new EditorActionEditBookmark(this, WorkingMap, bookmark, note));
+        public void EditBookmark(BookmarkInfo bookmark, string note, bool fromLua = false) => Perform(new EditorActionEditBookmark(this, WorkingMap, bookmark, note), fromLua);
 
         /// <summary>
         ///     Adjusts the offset of a batch of bookmarks
         /// </summary>
         /// <param name="bookmarks"></param>
         /// <param name="offset"></param>
-        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset));
+        public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset, bool fromLua = false) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset), fromLua);
 
         /// <summary>
         ///     Triggers an event of a specific action type
@@ -717,6 +890,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveScrollVelocityBatch:
                     ScrollVelocityBatchRemoved?.Invoke(this, (EditorScrollVelocityBatchRemovedEventArgs)args);
                     break;
+                case EditorActionType.AddScrollSpeedFactor:
+                    ScrollSpeedFactorAdded?.Invoke(this, (EditorScrollSpeedFactorAddedEventArgs)args);
+                    break;
+                case EditorActionType.RemoveScrollSpeedFactor:
+                    ScrollSpeedFactorRemoved?.Invoke(this, (EditorScrollSpeedFactorRemovedEventArgs)args);
+                    break;
+                case EditorActionType.AddScrollSpeedFactorBatch:
+                    ScrollSpeedFactorBatchAdded?.Invoke(this, (EditorScrollSpeedFactorBatchAddedEventArgs)args);
+                    break;
+                case EditorActionType.RemoveScrollSpeedFactorBatch:
+                    ScrollSpeedFactorBatchRemoved?.Invoke(this, (EditorScrollSpeedFactorBatchRemovedEventArgs)args);
+                    break;
                 case EditorActionType.AddTimingPoint:
                     TimingPointAdded?.Invoke(this, (EditorTimingPointAddedEventArgs)args);
                     break;
@@ -759,6 +944,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ChangeScrollVelocityMultiplierBatch:
                     ScrollVelocityMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollVelocityMultiplierBatchEventArgs)args);
                     break;
+                case EditorActionType.ChangeScrollSpeedFactorOffsetBatch:
+                    ScrollSpeedFactorOffsetBatchChanged?.Invoke(this, (EditorChangedScrollSpeedFactorOffsetBatchEventArgs)args);
+                    break;
+                case EditorActionType.ChangeScrollSpeedFactorMultiplierBatch:
+                    ScrollSpeedFactorMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollSpeedFactorMultiplierBatchEventArgs)args);
+                    break;
                 case EditorActionType.ResnapHitObjects:
                     HitObjectsResnapped?.Invoke(this, (EditorActionHitObjectsResnappedEventArgs)args);
                     break;
@@ -782,6 +973,21 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.ChangeBookmarkOffsetBatch:
                     BookmarkBatchOffsetChanged?.Invoke(this, (EditorActionChangeBookmarkOffsetBatchEventArgs)args);
+                    break;
+                case EditorActionType.CreateTimingGroup:
+                    TimingGroupCreated?.Invoke(this, (EditorTimingGroupCreatedEventArgs)args);
+                    break;
+                case EditorActionType.RemoveTimingGroup:
+                    TimingGroupDeleted?.Invoke(this, (EditorTimingGroupRemovedEventArgs)args);
+                    break;
+                case EditorActionType.RenameTimingGroup:
+                    TimingGroupRenamed?.Invoke(this, (EditorTimingGroupRenamedEventArgs)args);
+                    break;
+                case EditorActionType.ColorTimingGroup:
+                    TimingGroupColorChanged?.Invoke(this, (EditorTimingGroupColorChangedEventArgs)args);
+                    break;
+                case EditorActionType.MoveObjectsToTimingGroup:
+                    HitObjectsMovedToTimingGroup?.Invoke(this, (EditorMoveObjectsToTimingGroupEventArgs)args);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -811,6 +1017,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
             ScrollVelocityRemoved = null;
             ScrollVelocityBatchAdded = null;
             ScrollVelocityBatchRemoved = null;
+            ScrollSpeedFactorAdded = null;
+            ScrollSpeedFactorRemoved = null;
+            ScrollSpeedFactorBatchAdded = null;
+            ScrollSpeedFactorBatchRemoved = null;
             TimingPointAdded = null;
             TimingPointRemoved = null;
             TimingPointBatchAdded = null;
@@ -825,6 +1035,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             TimingPointOffsetBatchChanged = null;
             ScrollVelocityOffsetBatchChanged = null;
             ScrollVelocityMultiplierBatchChanged = null;
+            ScrollSpeedFactorOffsetBatchChanged = null;
+            ScrollSpeedFactorMultiplierBatchChanged = null;
             HitObjectsResnapped = null;
             HitObjectsReversed = null;
             BookmarkAdded = null;

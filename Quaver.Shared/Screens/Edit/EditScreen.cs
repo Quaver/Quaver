@@ -34,6 +34,8 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
@@ -41,6 +43,7 @@ using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Edit.UI;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay;
@@ -228,7 +231,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ViewLayers { get; } = ConfigManager.EditorViewLayers ?? new Bindable<bool>(false);
+        public Bindable<HitObjectColoring> ObjectColoring { get; } = ConfigManager.EditorObjectColoring ?? new Bindable<HitObjectColoring>(HitObjectColoring.None);
 
         /// <summary>
         /// </summary>
@@ -301,7 +304,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public EditorLayerInfo DefaultLayer { get; } = new EditorLayerInfo
         {
-            Name = "Default Layer", Hidden = false, ColorRgb = "255,255,255"
+            Name = "Default Layer",
+            Hidden = false,
+            ColorRgb = "255,255,255"
         };
 
 
@@ -335,14 +340,25 @@ namespace Quaver.Shared.Screens.Edit
         private readonly HitObjectInfo[] heldLivemapHitObjectInfos;
 
         /// <summary>
+        ///     The scroll group id to place SVs to if the scroll group provided to <see cref="ActionManager"/> is null
+        /// </summary>
+        public string SelectedScrollGroupId { get; set; } = Qua.DefaultScrollGroupId;
+
+        /// <summary>
+        ///     The scroll group corresponding to <see cref="SelectedScrollGroupId"/>
+        /// </summary>
+        public ScrollGroup SelectedScrollGroup =>
+            (WorkingMap.TimingGroups?.TryGetValue(SelectedScrollGroupId, out var timingGroup) ?? false) &&
+            timingGroup is ScrollGroup scrollGroup
+                ? scrollGroup
+                : WorkingMap.DefaultScrollGroup;
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             Map = map;
             BackgroundStore = visualTestBackground;
-
-            if (map.Game is MapGame.Quaver)
-                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
 
             try
             {
@@ -360,6 +376,9 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
+            if (map.Game is MapGame.Quaver)
+                BackupScheduler = new(MakeScheduledMapBackup, null, _backupInterval, _backupInterval);
+
             SetAudioTrack(track);
 
             ActionManager = new EditorActionManager(this, WorkingMap);
@@ -376,6 +395,8 @@ namespace Quaver.Shared.Screens.Edit
 
             SkinManager.SkinLoaded += OnSkinLoaded;
             GameBase.Game.Window.FileDropped += OnFileDropped;
+            ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
+            ActionManager.TimingGroupDeleted += ActionManagerOnTimingGroupDeleted;
 
             ReferenceDifficultyIndex = new BindableInt(0, 0, Map.Mapset.Maps.Count - 1);
             ReferenceDifficultyIndex.ValueChanged += LoadReferenceDifficulty;
@@ -385,6 +406,30 @@ namespace Quaver.Shared.Screens.Edit
 
             View = new EditScreenView(this);
             InputManager = new EditorInputManager(this);
+        }
+
+        private void ActionManagerOnTimingGroupDeleted(object sender, EditorTimingGroupRemovedEventArgs e)
+        {
+            foreach (var hitObjectInfo in Clipboard)
+            {
+                if (hitObjectInfo.TimingGroup == e.Id)
+                    hitObjectInfo.TimingGroup = Qua.DefaultScrollGroupId;
+            }
+
+            if (e.Id == SelectedScrollGroupId)
+                SelectedScrollGroupId = Qua.DefaultScrollGroupId;
+        }
+
+        private void ActionManagerOnTimingGroupRenamed(object sender, EditorTimingGroupRenamedEventArgs e)
+        {
+            foreach (var hitObjectInfo in Clipboard)
+            {
+                if (hitObjectInfo.TimingGroup == e.OldId)
+                    hitObjectInfo.TimingGroup = e.NewId;
+            }
+
+            if (e.OldId == SelectedScrollGroupId)
+                SelectedScrollGroupId = e.NewId;
         }
 
         /// <inheritdoc />
@@ -431,6 +476,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             Track.Seeked -= OnTrackSeeked;
             GameBase.Game.Window.FileDropped -= OnFileDropped;
+            ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
+            ActionManager.TimingGroupDeleted -= ActionManagerOnTimingGroupDeleted;
+
             BackupScheduler?.Dispose();
             Track?.Dispose();
             Skin?.Value?.Dispose();
@@ -473,8 +521,8 @@ namespace Quaver.Shared.Screens.Edit
             if (BeatSnapColor != ConfigManager.EditorBeatSnapColorType)
                 BeatSnapColor.Dispose();
 
-            if (ViewLayers != ConfigManager.EditorViewLayers)
-                ViewLayers.Dispose();
+            if (ObjectColoring != ConfigManager.EditorObjectColoring)
+                ObjectColoring.Dispose();
 
             if (LongNoteOpacity != ConfigManager.EditorLongNoteOpacity)
                 LongNoteOpacity.Dispose();
@@ -568,7 +616,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void SetHitSoundObjectIndex()
         {
-            HitsoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= Track.Time);
+            HitsoundObjectIndex = WorkingMap.HitObjects.IndexAtTime((float)Track.Time);
             HitsoundObjectIndex++;
         }
 
@@ -822,20 +870,16 @@ namespace Quaver.Shared.Screens.Edit
 
             BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, IEditorPlugin>()
             {
-                { EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this) },
-                { EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this) },
-                {
-                    EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
-                        $"{dir}/BpmCalculator/plugin.lua", true)
-                },
-                {
-                    EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
-                        $"{dir}/BpmDetector/plugin.lua", true)
-                },
-                {
-                    EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
-                        $"{dir}/GoToObjects/plugin.lua", true)
-                }
+                {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
+                {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
+                {EditorBuiltInPlugin.ScrollSpeedFactorEditor, new EditorScrollSpeedFactorPanel(this)},
+                {EditorBuiltInPlugin.TimingGroupEditor, new EditorTimingGroupPanel(this)},
+                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
+                    $"{dir}/BpmCalculator/plugin.lua", true)},
+                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
+                    $"{dir}/BpmDetector/plugin.lua", true)},
+                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
+                    $"{dir}/GoToObjects/plugin.lua", true)}
             };
 
             foreach (var plugin in BuiltInPlugins)
@@ -855,15 +899,13 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (!File.Exists(pluginPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file",
-                        LogType.Runtime);
+                    Logger.Debug($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
                     continue;
                 }
 
                 if (!File.Exists(settingsPath))
                 {
-                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file",
-                        LogType.Runtime);
+                    Logger.Debug($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
                     continue;
                 }
 
@@ -949,7 +991,10 @@ namespace Quaver.Shared.Screens.Edit
                     StartTime = h.StartTime + difference,
                     EditorLayer = h.EditorLayer,
                     HitSound = h.HitSound,
-                    Lane = h.Lane
+                    Lane = h.Lane,
+                    TimingGroup = WorkingMap.TimingGroups.ContainsKey(h.TimingGroup)
+                        ? h.TimingGroup
+                        : Qua.DefaultScrollGroupId
                 };
 
                 if (h.IsLongNote)

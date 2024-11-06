@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
+using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -37,6 +39,11 @@ namespace Quaver.Shared.Audio
         ///     Cancellation token to prevent multiple audio tracks playing at once
         /// </summary>
         private static CancellationTokenSource Source { get; set; } = new CancellationTokenSource();
+
+        /// <summary>
+        ///     The length of time when the audio time is 0 after we first play the audio
+        /// </summary>
+        public static double MeasuredAudioStartDelay { get; private set; }
 
         /// <summary>
         ///     Loads the track for the currently selected map.
@@ -196,6 +203,31 @@ namespace Quaver.Shared.Audio
             }
 
             return track;
+        }
+
+        /// <summary>
+        ///     Loads up a dummy audio. Plays it and see how long it takes for its Time
+        ///     to get from 0 to other values.
+        /// </summary>
+        /// <remarks>
+        ///     We need to make this single threaded here. It seems like bass doesn't like Tasks.
+        /// </remarks>
+        public static void MeasureAudioStartDelay()
+        {
+            var prevTrack = Track;
+            Track =
+                new AudioTrack(GameBase.Game.Resources.Get($"Quaver.Resources/Maps/Offset/offset.mp3"));
+            Track.Volume = 0;
+            var stopwatch = Stopwatch.StartNew();
+            Track.Play();
+            while (Track.Time == 0)
+            {
+            }
+            stopwatch.Stop();
+            Track.Stop();
+            Track.Dispose();
+            MeasuredAudioStartDelay = stopwatch.ElapsedMilliseconds;
+            Track = prevTrack;
         }
     }
 }

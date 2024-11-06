@@ -220,6 +220,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
                 AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float) score.Item.Accuracy)}";
 
+                if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                    AccuracyMaxCombo.Text = $"{StringHelper.AccuracyToString((float)score.Item.Accuracy)}";
+                
                 var grade = score.Item.Grade == API.Enums.Grade.F
                     ? API.Enums.Grade.F
                     : GradeHelper.GetGradeFromAccuracy((float) score.Item.Accuracy);
@@ -265,6 +268,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             Button.Clicked += (sender, args) =>
             {
+                if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                    return;
+                
                 var game = (QuaverGame) GameBase.Game;
 
                 if (OnlineManager.CurrentGame != null)
@@ -275,6 +281,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             Button.RightClicked += (sender, args) =>
             {
+                if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                    return;
+                
                 var game = (QuaverGame) GameBase.Game;
                 game?.CurrentScreen?.ActivateRightClickOptions(new LeaderboardScoreRightClickOptions(Score.Item));
             };
@@ -313,6 +322,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Image = BlankImage,
                 Alpha = 0
             };
+            
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                Avatar.Size = new ScalableVector2(0, 0);
         }
 
         /// <summary>
@@ -344,6 +356,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Size = new ScalableVector2(24, 24),
                 Image = Flags.Get("XX")
             };
+
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                Flag.Size = new ScalableVector2(0, 0);
         }
 
         /// <summary>
@@ -358,6 +373,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Position = new ScalableVector2(Flag.X + Flag.Width +PaddingLeft / 4f, UsernameY + 4),
                 UsePreviousSpriteBatchOptions = true
             };
+            
         }
 
         /// <summary>
@@ -440,6 +456,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 var game = (QuaverGame) GameBase.Game;
                 game.CurrentScreen.DeactivateTooltip();
             };
+
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                CantBeatAlert.Size = new ScalableVector2(0, 0);
         }
 
         /// <summary>
@@ -465,6 +484,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 var game = (QuaverGame) GameBase.Game;
                 game.CurrentScreen.DeactivateTooltip();
             };
+            
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                RequiredAccuracyAlert.Size = new ScalableVector2(0, 0);
         }
 
         /// <summary>

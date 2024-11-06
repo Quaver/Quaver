@@ -350,25 +350,11 @@ namespace Quaver.Shared.Online
 
             switch (e.Status)
             {
-                // Success
                 case 200:
                     NotificationManager.Show(NotificationLevel.Success, "Account successfully created. You are now being logged in!");
                     break;
-                // Unauthorized
-                case 401:
-                    NotificationManager.Show(NotificationLevel.Error, e.Message);
-                    break;
-                // Username already taken.
-                case 409:
-                    NotificationManager.Show(NotificationLevel.Error, "The username you have selected is already taken.");
-                    break;
-                // Invalid username choice.
-                case 422:
-                    NotificationManager.Show(NotificationLevel.Error, "The username you have chosen is invalid.");
-                    break;
-                // No server response.
                 default:
-                    NotificationManager.Show(NotificationLevel.Error, "No response from the server.");
+                    NotificationManager.Show(NotificationLevel.Error, e.Message);
                     break;
             }
         }
@@ -429,7 +415,7 @@ namespace Quaver.Shared.Online
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.Presence.PartySize = 0;
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             // Send client status update packet.
             var game = (QuaverGame)GameBase.Game;
@@ -600,7 +586,7 @@ namespace Quaver.Shared.Online
             {
                 DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
                 DiscordHelper.Presence.EndTimestamp = 0;
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+                DiscordHelper.UpdatePresence();
             }
             catch (Exception ex)
             {

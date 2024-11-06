@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
+ */
 
 using System;
 using Microsoft.Xna.Framework;
@@ -43,6 +43,20 @@ namespace Quaver.Shared.Screens.Gameplay
         private double PreviousTime { get; set; }
 
         /// <summary>
+        ///     The appropriate time to start playing the audio.
+        ///     If SmoothAudioStart is enabled, this will be earlier than 0 due to audio start lag.
+        /// </summary>
+        private double TimeToPlayAudio { get; } = ConfigManager.SmoothAudioStart.Value
+            ? -AudioEngine.MeasuredAudioStartDelay * AudioEngine.Track.Rate
+            : 0;
+
+        /// <summary>
+        ///     Determines if we set Time to <see cref="AudioEngine.Track.Time"/>, or accumulate
+        ///     using our game timer
+        /// </summary>
+        private bool UseAudioTime { get; set; } = !ConfigManager.SmoothAudioStart.Value;
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -56,7 +70,8 @@ namespace Quaver.Shared.Screens.Gameplay
             try
             {
                 if (Screen.IsCalibratingOffset)
-                    AudioEngine.Track = new AudioTrack(GameBase.Game.Resources.Get($"Quaver.Resources/Maps/Offset/offset.mp3"));
+                    AudioEngine.Track =
+                        new AudioTrack(GameBase.Game.Resources.Get($"Quaver.Resources/Maps/Offset/offset.mp3"));
                 else
                 {
                     AudioEngine.LoadCurrentTrack();
@@ -74,7 +89,8 @@ namespace Quaver.Shared.Screens.Gameplay
                         return;
                     }
 
-                    AudioEngine.Track.Seek(MathHelper.Clamp((int)Screen.PlayTestAudioTime - delay, 0, (int)AudioEngine.Track.Length));
+                    AudioEngine.Track.Seek(MathHelper.Clamp((int)Screen.PlayTestAudioTime - delay, 0,
+                        (int)AudioEngine.Track.Length));
                     Time = AudioEngine.Track.Time;
                     return;
                 }
@@ -105,7 +121,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // If the audio hasn't begun yet, start counting down until the beginning of the map.
             // This is to give a delay before the audio starts.
-            if (Time < 0)
+            if (Time < TimeToPlayAudio)
             {
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
                 return;
@@ -151,12 +167,26 @@ namespace Quaver.Shared.Screens.Gameplay
             }
             else
             {
-                // If the audio track is playing, use that time.
-                if (AudioEngine.Track.IsPlaying)
-                    Time = AudioEngine.Track.Time;
-                // Otherwise use deltatime to calculate the proposed time.
+                if (UseAudioTime)
+                {
+                    // If the audio track is playing, use that time.
+                    if (AudioEngine.Track.IsPlaying)
+                        Time = AudioEngine.Track.Time;
+                    // Otherwise use deltatime to calculate the proposed time.
+                    else
+                        Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
+                }
                 else
+                {
                     Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
+                    var avgTime = Time + (AudioEngine.Track.Time - Time) / 10;
+                    if (AudioEngine.Track.IsPlaying && AudioEngine.Track.Time != 0)
+                    {
+                        Time = avgTime;
+                        if (Math.Abs(Time - AudioEngine.Track.Time) < 3)
+                            UseAudioTime = true;
+                    }
+                }
             }
         }
     }

@@ -459,7 +459,7 @@ namespace Quaver.Shared
                 DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(args.Value);
                 DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
                 DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+                DiscordHelper.UpdatePresence();
             };
 
             ConfigManager.EnableHighProcessPriority.ValueChanged += (sender, args) => SetProcessPriority();
@@ -477,7 +477,7 @@ namespace Quaver.Shared
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
             DiscordHelper.Presence.State = "Visual Testing";
 #endif
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            DiscordHelper.UpdatePresence();
 
             MapManager.Selected.ValueChanged += (sender, args) =>
             {

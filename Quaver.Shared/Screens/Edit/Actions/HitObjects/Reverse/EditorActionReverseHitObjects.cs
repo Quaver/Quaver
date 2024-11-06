@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse
 {
+    [MoonSharpUserData]
     public class EditorActionReverseHitObjects : IEditorAction
     {
         /// <inheritdoc />
@@ -23,7 +25,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
         /// <summary>
         /// </summary>
@@ -42,11 +44,10 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse
         /// </summary>
         public void Perform()
         {
-            var start = HitObjects.Min(h => h.StartTime);
-            var end = HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime));
+            var start = HitObjects[0].StartTime;
+            var end = Math.Max(HitObjects[^1].StartTime, HitObjects.Max(h => h.EndTime));
 
             foreach (var h in HitObjects)
-            {
                 if (h.IsLongNote)
                 {
                     var lnStart = h.StartTime;
@@ -54,12 +55,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse
                     h.EndTime = end - (lnStart - start);
                 }
                 else
-                {
                     h.StartTime = end - (h.StartTime - start);
-                }
-            }
 
-            WorkingMap.Sort();
+            WorkingMap.SortHitObjects();
             ActionManager.TriggerEvent(EditorActionType.ReverseHitObjects, new EditorHitObjectsReversedEventArgs(HitObjects));
         }
 
