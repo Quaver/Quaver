@@ -33,6 +33,10 @@ public class HitBubbles : Container
     {
         _hitBubblesType = hitBubblesType;
         _hitBubblesScale = hitBubblesScale;
+
+        if (SkinKeys.HitBubblesScale == 0)
+            return;
+
         _hitBubblePadding = SkinKeys.HitBubblePadding * hitBubblesScale;
         _borderPadding = SkinKeys.HitBubbleBorderPadding * hitBubblesScale;
 
@@ -49,6 +53,10 @@ public class HitBubbles : Container
     protected override void OnRectangleRecalculated()
     {
         base.OnRectangleRecalculated();
+
+        if (SkinKeys.HitBubblesScale == 0)
+            return;
+
         var texture = GetTexture();
         var size = GetTextureSize(texture);
         _maxBubbleCount = _hitBubblesType switch
@@ -69,6 +77,9 @@ public class HitBubbles : Container
 
     public void AddJudgement(Judgement judgement)
     {
+        if (SkinKeys.HitBubblesScale == 0)
+            return;
+
         if (judgement == Judgement.Ghost)
             return;
 
