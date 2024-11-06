@@ -73,14 +73,14 @@ public class HitBubbles : Container
             return;
 
         var texture = GetTexture();
-        while (_bubbles.Count > _maxBubbleCount)
+        while (_bubbles.Count > _maxBubbleCount + 1)
         {
             _bubbles.RemoveFromFront();
         }
 
         HitBubble sprite;
         var moveOffset = 0f;
-        var full = _bubbles.Count >= _maxBubbleCount;
+        var full = _bubbles.Count > _maxBubbleCount;
         if (full)
         {
             _bubbles.RemoveFromFront(out sprite);
