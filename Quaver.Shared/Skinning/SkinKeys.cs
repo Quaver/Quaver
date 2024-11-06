@@ -115,22 +115,21 @@ namespace Quaver.Shared.Skinning
 
         internal int HitLightingScale { get; private set; } = 100;
 
-        internal float HitBubbleScale { get; private set; } = 1.25f;
+        [FixedScale]
+        internal float HitBubbleScale { get; private set; } = 1f;
 
-        internal float HitBubblesScale { get; private set; } = 1.25f;
+        [FixedScale]
+        internal float HitBubblesScale { get; private set; } = 1f;
 
         internal HitBubblesAlignment HitBubblesAlignment { get; private set; } = HitBubblesAlignment.LeftStage;
 
-        [FixedScale]
-        internal float HitBubblesPosX { get; private set; }
+        [FixedScale] internal float HitBubblesPosX { get; private set; } = -10f;
 
-        [FixedScale] internal float HitBubblesPosY { get; private set; } = 185f;
+        [FixedScale] internal float HitBubblesPosY { get; private set; } = 170f;
 
-        [FixedScale]
-        internal float HitBubbleBorderPadding { get; private set; } = 14f;
+        internal float HitBubbleBorderPadding { get; private set; } = 7f;
 
-        [FixedScale]
-        internal float HitBubblePadding { get; private set; } = 2f;
+        internal float HitBubblePadding { get; private set; } = 3f;
 
         internal HitBubblesType HitBubblesType { get; private set; } = HitBubblesType.FallDown;
 
