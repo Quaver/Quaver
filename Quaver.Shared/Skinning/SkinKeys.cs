@@ -133,6 +133,9 @@ namespace Quaver.Shared.Skinning
 
         internal HitBubblesType HitBubblesType { get; private set; } = HitBubblesType.FallDown;
 
+        internal HitBubbleRecordedJudgement HitBubblesRecordedJudgements { get; private set; } =
+            HitBubbleRecordedJudgement.Default;
+
         internal int HoldLightingScale { get; private set; } = 100;
 
         internal bool HitLightingColumnRotation { get; private set; }
@@ -511,6 +514,7 @@ namespace Quaver.Shared.Skinning
             HitBubbleBorderPadding = ConfigHelper.ReadFloat(HitBubbleBorderPadding, ini["HitBubbleBorderPadding"]);
             HitBubblePadding = ConfigHelper.ReadFloat(HitBubblePadding, ini["HitBubblePadding"]);
             HitBubblesType = ConfigHelper.ReadEnum(HitBubblesType, ini["HitBubblesType"]);
+            HitBubblesRecordedJudgements = ConfigHelper.ReadEnum(HitBubblesRecordedJudgements, ini["HitBubblesRecordedJudgements"]);
             HitLightingColumnRotation = ConfigHelper.ReadBool(HitLightingColumnRotation, ini["HitLightingColumnRotation"]);
             HoldLightingColumnRotation = ConfigHelper.ReadBool(HoldLightingColumnRotation, ini["HoldLightingColumnRotation"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32((int)ScoreDisplayPosX, ini["ScoreDisplayPosX"]);

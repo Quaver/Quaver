@@ -69,6 +69,13 @@ public class HitBubbles : Container
 
     public void AddJudgement(Judgement judgement)
     {
+        if (judgement == Judgement.Ghost)
+            return;
+
+        var judgementFlag = (HitBubbleRecordedJudgement)(1 << (int)judgement);
+        if (!SkinKeys.HitBubblesRecordedJudgements.HasFlag(judgementFlag))
+            return;
+        
         if (_maxBubbleCount <= 0)
             return;
 
