@@ -71,6 +71,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         ToggleAutoMod,
         ToggleGotoPanel,
         ToggleLayerViewMode,
+        ToggleTimingGroupViewMode,
         ToggleGameplayPreview,
         ToggleHitsounds,
         ToggleMetronome,

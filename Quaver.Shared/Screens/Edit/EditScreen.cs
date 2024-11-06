@@ -771,7 +771,8 @@ namespace Quaver.Shared.Screens.Edit
 
         #region LAYERS
 
-        public void ToggleViewLayers() => ToggleBindableBool(ViewLayers, "view layer mode");
+        public void ToggleViewLayers() => ToggleObjectColoring(ObjectColoring, HitObjectColoring.Layer);
+        public void ToggleViewTimingGroups() => ToggleObjectColoring(ObjectColoring, HitObjectColoring.TimingGroup);
 
         private EditorLayerInfo GetNextLayerInDirection(Direction direction, EditorLayerInfo layer)
         {
@@ -1114,7 +1115,7 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     StartTime = (float)Track.Time,
                     Multiplier = WorkingMap.GetScrollVelocityAt(Track.Time)?.Multiplier ?? 1.0f
-                });
+                }, null);
             }
             else
             {
@@ -1828,6 +1829,14 @@ namespace Quaver.Shared.Screens.Edit
         {
             boolean.Value = !boolean.Value;
             NotificationManager.Show(NotificationLevel.Info, (boolean.Value ? "Enabled" : "Disabled") + " " + name);
+        }
+
+        private void ToggleObjectColoring(Bindable<HitObjectColoring> coloring, HitObjectColoring mask)
+        {
+            coloring.Value = coloring.Value == mask ? HitObjectColoring.None : mask;
+
+            NotificationManager.Show(NotificationLevel.Info,
+                (mask == coloring.Value ? "Enabled" : "Disabled") + " " + mask + " coloring");
         }
 
         /// <summary>

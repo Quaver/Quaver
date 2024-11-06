@@ -498,6 +498,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ToggleLayerViewMode:
                     Screen.ToggleViewLayers();
                     break;
+                case KeybindActions.ToggleTimingGroupViewMode:
+                    Screen.ToggleViewTimingGroups();
+                    break;
                 case KeybindActions.ChangeSelectedLayerUp:
                     Screen.ChangeSelectedLayer(Direction.Backward);
                     break;

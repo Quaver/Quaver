@@ -284,6 +284,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {PreviousReferenceDifficulty, new KeybindList(KeyModifiers.Shift, Keys.OemMinus)},
             {ToggleGameplayPreview, new KeybindList(new [] {new Keybind(Keys.P), new Keybind(KeyModifiers.Ctrl, Keys.P)})},
             {ToggleLayerViewMode, new KeybindList(KeyModifiers.Shift, Keys.D)},
+            {ToggleTimingGroupViewMode, new KeybindList(KeyModifiers.Alt, Keys.D)},
             {ChangeSelectedLayerUp, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.Q)})},
             {ChangeSelectedLayerDown, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.W)})},
             {ToggleCurrentLayerVisibility, new KeybindList(KeyModifiers.Shift, Keys.H)},
