@@ -131,7 +131,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Grade Textures.
         /// </summary>
-        internal Dictionary<Judgement, Texture2D> HitBubbles { get; } = new Dictionary<Judgement, Texture2D>();
+        internal Texture2D HitBubbles { get; private set; }
 
         /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
@@ -503,13 +503,7 @@ namespace Quaver.Shared.Skinning
         private void LoadHitBubbleElements()
         {
             // Load Grades
-            foreach (Judgement judgement in Enum.GetValues(typeof(Judgement)))
-            {
-                if (judgement == Judgement.Ghost)
-                    continue;
-
-                HitBubbles[judgement] = LoadSingleTexture($"{Dir}/HitBubbles/bubble-{judgement.ToString().ToLower()}", $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubble-{judgement.ToString().ToLower()}.png");
-            }
+            HitBubbles = LoadSingleTexture($"{Dir}/HitBubbles/bubble", $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubble.png");
             
             var hitBubblesFolder = $"/HitBubbles/";
 

@@ -567,6 +567,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     HitBubbles.Parent = StageRight;
                     HitBubbles.Alignment = Alignment.MidLeft;
                     break;
+                case HitBubblesAlignment.LeftStage:
+                    HitBubbles.Parent = StageLeft;
+                    HitBubbles.Alignment = Alignment.MidRight;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

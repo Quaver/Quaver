@@ -115,12 +115,11 @@ namespace Quaver.Shared.Skinning
 
         internal int HitLightingScale { get; private set; } = 100;
 
-        internal int HitBubbleScale { get; private set; } = 20;
+        internal float HitBubbleScale { get; private set; } = 1f;
 
-        [FixedScale]
-        internal float HitBubblesScale { get; private set; } = 0.25f;
+        internal float HitBubblesScale { get; private set; } = 1f;
 
-        internal HitBubblesAlignment HitBubblesAlignment { get; private set; } = HitBubblesAlignment.RightStage;
+        internal HitBubblesAlignment HitBubblesAlignment { get; private set; } = HitBubblesAlignment.LeftStage;
 
         [FixedScale]
         internal float HitBubblesPosX { get; private set; }
@@ -128,7 +127,13 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float HitBubblesPosY { get; private set; }
 
-        internal HitBubblesType HitBubblesType { get; private set; } = HitBubblesType.FallDown;
+        [FixedScale]
+        internal float HitBubbleBorderPadding { get; private set; } = 16f;
+
+        [FixedScale]
+        internal float HitBubblePadding { get; private set; } = 0f;
+
+        internal HitBubblesType HitBubblesType { get; private set; } = HitBubblesType.FallUp;
 
         internal int HoldLightingScale { get; private set; } = 100;
 
@@ -500,11 +505,13 @@ namespace Quaver.Shared.Skinning
             HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
             HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
             HoldLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HoldLightingScale"]);
-            HitBubbleScale = ConfigHelper.ReadInt32(HitBubbleScale, ini["HitBubbleScale"]);
+            HitBubbleScale = ConfigHelper.ReadFloat(HitBubbleScale, ini["HitBubbleScale"]);
             HitBubblesAlignment = ConfigHelper.ReadEnum(HitBubblesAlignment, ini["HitBubblesAlignment"]);
             HitBubblesPosX = ConfigHelper.ReadInt32((int) HitBubblesPosX, ini["HitBubblesPosX"]);
             HitBubblesPosY = ConfigHelper.ReadInt32((int) HitBubblesPosY, ini["HitBubblesPosY"]);
             HitBubblesScale = ConfigHelper.ReadFloat(HitBubblesScale, ini["HitBubblesScale"]);
+            HitBubbleBorderPadding = ConfigHelper.ReadFloat(HitBubbleBorderPadding, ini["HitBubbleBorderPadding"]);
+            HitBubblePadding = ConfigHelper.ReadFloat(HitBubblePadding, ini["HitBubblePadding"]);
             HitBubblesType = ConfigHelper.ReadEnum(HitBubblesType, ini["HitBubblesType"]);
             HitLightingColumnRotation = ConfigHelper.ReadBool(HitLightingColumnRotation, ini["HitLightingColumnRotation"]);
             HoldLightingColumnRotation = ConfigHelper.ReadBool(HoldLightingColumnRotation, ini["HoldLightingColumnRotation"]);

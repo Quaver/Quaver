@@ -15,23 +15,30 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Bubble;
 
 public class HitBubbles : Container
 {
-    private readonly Deque<Sprite> _bubbles = new();
+    private readonly Deque<HitBubble> _bubbles = new();
     private int _maxBubbleCount;
     private readonly HitBubblesType _hitBubblesType;
     private AnimatableSprite _background;
+    private readonly float _hitBubblesScale;
+    private readonly float _hitBubblePadding;
+    private readonly float _borderPadding;
+    private static SkinKeys SkinKeys => SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
 
-    private Texture2D GetTexture(Judgement judgement)
+    private Texture2D GetTexture()
     {
-        return SkinManager.Skin.HitBubbles[judgement];
+        return SkinManager.Skin.HitBubbles;
     }
 
     public HitBubbles(float hitBubblesScale, HitBubblesType hitBubblesType)
     {
         _hitBubblesType = hitBubblesType;
+        _hitBubblesScale = hitBubblesScale;
+        _hitBubblePadding = SkinKeys.HitBubblePadding * hitBubblesScale;
+        _borderPadding = SkinKeys.HitBubbleBorderPadding * hitBubblesScale;
 
         _background = new AnimatableSprite(SkinManager.Skin.HitBubblesBackground);
-        Size = new ScalableVector2(_background.Frames.First().Width * hitBubblesScale,
-            _background.Frames.First().Height * hitBubblesScale);
+        Size = new ScalableVector2(_background.Frames.First().Width * _hitBubblesScale,
+            _background.Frames.First().Height * _hitBubblesScale);
         _background.Size = Size;
         _background.Parent = this;
 
@@ -42,19 +49,21 @@ public class HitBubbles : Container
     protected override void OnRectangleRecalculated()
     {
         base.OnRectangleRecalculated();
-        var texture = GetTexture(Judgement.Marv);
+        var texture = GetTexture();
         var size = GetTextureSize(texture);
         _maxBubbleCount = _hitBubblesType switch
         {
-            HitBubblesType.FallLeft or HitBubblesType.FallRight => (int)(Size.X.Value / size.X),
-            HitBubblesType.FallUp or HitBubblesType.FallDown => (int)(Size.Y.Value / size.Y),
+            HitBubblesType.FallLeft or HitBubblesType.FallRight =>
+                (int)((Size.X.Value - 2 * _borderPadding) / (size.X + _hitBubblePadding)),
+            HitBubblesType.FallUp or HitBubblesType.FallDown =>
+                (int)((Size.Y.Value - 2 * _borderPadding) / (size.Y + _hitBubblePadding)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
     private Vector2 GetTextureSize(Texture2D texture)
     {
-        var scale = (float)SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitBubbleScale / texture.Height;
+        var scale = SkinKeys.HitBubbleScale;
         return new Vector2(texture.Width, texture.Height) * scale;
     }
 
@@ -63,20 +72,24 @@ public class HitBubbles : Container
         if (_maxBubbleCount <= 0)
             return;
 
-        var texture = GetTexture(judgement);
+        var texture = GetTexture();
         while (_bubbles.Count > _maxBubbleCount)
         {
             _bubbles.RemoveFromFront();
         }
 
-        Sprite sprite;
-        if (_bubbles.Count == _maxBubbleCount)
+        HitBubble sprite;
+        var moveOffset = 0f;
+        var full = _bubbles.Count >= _maxBubbleCount;
+        if (full)
         {
             _bubbles.RemoveFromFront(out sprite);
+            if (_bubbles.GetFront(out var nextHead))
+                moveOffset = sprite.TargetPosition - nextHead.TargetPosition;
         }
         else
         {
-            sprite = new Sprite()
+            sprite = new HitBubble(_hitBubblesType)
             {
                 Parent = this,
                 Alignment = _hitBubblesType switch
@@ -93,47 +106,40 @@ public class HitBubbles : Container
         var size = GetTextureSize(texture);
         sprite.Size = new ScalableVector2(size.X, size.Y);
         sprite.Image = texture;
+        sprite.Tint = SkinKeys.JudgeColors[judgement];
 
-        sprite.Position = _bubbles.GetBack(out var back)
-            ? _hitBubblesType switch
+        sprite.SetTargetPosition(_bubbles.GetBack(out var back)
+            ? GetNextTargetPosition(back)
+            : _hitBubblesType switch
             {
-                HitBubblesType.FallLeft => new ScalableVector2(back.RelativeRectangle.Right, 0),
-                HitBubblesType.FallRight => new ScalableVector2(back.RelativeRectangle.Left - back.Width, 0),
-                HitBubblesType.FallUp => new ScalableVector2(0, back.RelativeRectangle.Bottom),
-                HitBubblesType.FallDown => new ScalableVector2(0, back.RelativeRectangle.Top - back.Height),
+                HitBubblesType.FallLeft => _borderPadding,
+                HitBubblesType.FallRight => -_borderPadding,
+                HitBubblesType.FallUp => _borderPadding,
+                HitBubblesType.FallDown => -_borderPadding,
                 _ => throw new ArgumentOutOfRangeException()
-            }
-            : new ScalableVector2(0, 0);
+            }, full);
 
         _bubbles.AddToBack(sprite);
 
-        if (!_bubbles.GetFront(out var front))
+        if (_bubbles.Count < _maxBubbleCount - 1)
             return;
 
-        switch (_hitBubblesType)
+        foreach (var bubble in _bubbles)
         {
-            case HitBubblesType.FallLeft:
-            case HitBubblesType.FallRight:
-                var moveOffsetX = -front.X;
-
-                foreach (var bubble in _bubbles)
-                {
-                    bubble.MoveToX(bubble.X + moveOffsetX, Easing.InCirc, 50);
-                }
-
-                break;
-            case HitBubblesType.FallUp:
-            case HitBubblesType.FallDown:
-                var moveOffsetY = -front.Y;
-
-                foreach (var bubble in _bubbles)
-                {
-                    bubble.MoveToY((int)(bubble.Y + moveOffsetY), Easing.InCirc, 50);
-                }
-
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            bubble.TargetPosition += moveOffset;
         }
+    }
+
+    private float GetNextTargetPosition(HitBubble back)
+    {
+        back.FinishAnimation();
+        return _hitBubblesType switch
+        {
+            HitBubblesType.FallLeft => back.RelativeRectangle.Right + _hitBubblePadding,
+            HitBubblesType.FallRight => back.RelativeRectangle.Left - back.Width - _hitBubblePadding,
+            HitBubblesType.FallUp => back.RelativeRectangle.Bottom + _hitBubblePadding,
+            HitBubblesType.FallDown => back.RelativeRectangle.Top - back.Height - _hitBubblePadding,
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }
