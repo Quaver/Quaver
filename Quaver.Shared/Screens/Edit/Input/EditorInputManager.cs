@@ -72,6 +72,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         public EditorInputManager(EditScreen screen)
         {
             InputConfig = EditorInputConfig.LoadFromConfig();
+            InputConfig.FillMissingKeys(true);
             keybindDictionary = InputConfig.ReverseDictionary(InvertScrollingActions);
             previousKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
             Screen = screen;
