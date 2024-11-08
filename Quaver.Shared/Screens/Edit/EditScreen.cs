@@ -833,6 +833,52 @@ namespace Quaver.Shared.Screens.Edit
         public void RecolorLayer() =>
             DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
 
+        #region TIMING_GROUPS
+
+        public void MoveSelectedNotesToCurrentTimingGroup() => 
+            ActionManager.MoveObjectsToTimingGroup(SelectedHitObjects.Value, SelectedScrollGroupId);
+
+        
+        public string AddNewTimingGroup()
+        {
+            var newGroupId = EditorPluginUtils.GenerateTimingGroupId();
+
+            var rgb = new byte[3];
+            Random.Shared.NextBytes(rgb);
+
+            var timingGroup = new ScrollGroup
+            {
+                ScrollVelocities =
+                    new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } },
+                ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
+            };
+
+            ActionManager.CreateTimingGroup(newGroupId, timingGroup, SelectedHitObjects.Value);                
+            SelectedScrollGroupId = newGroupId;
+
+            return newGroupId;
+        }
+
+        public void DeleteTimingGroup()
+        {
+            if (SelectedScrollGroupId is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default timing groups!");
+                return;
+            }
+
+            var timingGroupId = SelectedScrollGroupId;
+
+            ActionManager.RemoveTimingGroup(timingGroupId);
+            NotificationManager.Show(NotificationLevel.Success, $"Deleted layer '{timingGroupId}'");
+        }
+
+        public void RecolorTimingGroup() =>
+            DialogManager.Show(new EditorChangeTimingGroupColorDialog(SelectedScrollGroupId, SelectedScrollGroup, ActionManager));
+
+        
+        #endregion
+
         #endregion
 
         #region DIALOGS

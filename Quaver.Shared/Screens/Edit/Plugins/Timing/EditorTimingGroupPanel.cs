@@ -240,19 +240,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             if (ImGui.Button("Add"))
             {
-                var newGroupId = EditorPluginUtils.GenerateTimingGroupId();
-
-                var rgb = new byte[3];
-                Random.Shared.NextBytes(rgb);
-
-                var timingGroup = new ScrollGroup
-                {
-                    ScrollVelocities =
-                        new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } },
-                    ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
-                };
-
-                Screen.ActionManager.CreateTimingGroup(newGroupId, timingGroup, Screen.SelectedHitObjects.Value);
+                var newGroupId = Screen.AddNewTimingGroup();
                 SelectedTimingGroups.Clear();
                 SelectedTimingGroups.Add(newGroupId);
 

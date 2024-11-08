@@ -528,6 +528,18 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.RecolorCurrentLayer:
                     Screen.RecolorLayer();
                     break;
+                case KeybindActions.MoveSelectedNotesToCurrentTimingGroup:
+                    Screen.MoveSelectedNotesToCurrentTimingGroup();
+                    break;
+                case KeybindActions.CreateNewTimingGroup:
+                    Screen.AddNewTimingGroup();
+                    break;
+                case KeybindActions.DeleteCurrentTimingGroup:
+                    Screen.DeleteTimingGroup();
+                    break;
+                case KeybindActions.RecolorCurrentTimingGroup:
+                    Screen.RecolorTimingGroup();
+                    break;
                 case KeybindActions.Undo:
                     Screen.ActionManager.Undo();
                     break;
