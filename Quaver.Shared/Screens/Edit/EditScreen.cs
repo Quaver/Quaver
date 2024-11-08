@@ -1093,6 +1093,16 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Selects all objects in the currently selected scroll group
+        /// </summary>
+        public void SelectAllObjectsInTimingGroup()
+        {
+            SelectedHitObjects.Clear();
+            SelectedHitObjects.AddRange(WorkingMap.HitObjects
+                .Where(note => note.TimingGroup == SelectedScrollGroupId).ToList());
+        }
+
+        /// <summary>
         ///     Flips all objects that are currently selected
         /// </summary>
         public void FlipSelectedObjects()

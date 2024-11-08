@@ -102,6 +102,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         SelectNotesAtCurrentTime,
         SelectAllNotes,
         SelectAllNotesInLayer,
+        SelectAllNotesInTimingGroup,
         MirrorNotesLeftRight,
         Deselect,
         Save,

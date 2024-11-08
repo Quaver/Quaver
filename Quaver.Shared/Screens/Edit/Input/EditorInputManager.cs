@@ -549,6 +549,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.SelectAllNotesInLayer:
                     Screen.SelectAllObjectsInLayer();
                     break;
+                case KeybindActions.SelectAllNotesInTimingGroup:
+                    Screen.SelectAllObjectsInTimingGroup();
+                    break;
                 case KeybindActions.MirrorNotesLeftRight:
                     Screen.FlipSelectedObjects();
                     break;

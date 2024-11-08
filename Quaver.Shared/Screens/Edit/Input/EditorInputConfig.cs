@@ -303,6 +303,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {SelectNotesAtCurrentTime, new KeybindList(KeyModifiers.Shift, Keys.C)},
             {SelectAllNotes, new KeybindList(new[] {new Keybind(Keys.A), new Keybind(KeyModifiers.Ctrl, Keys.A)})},
             {SelectAllNotesInLayer, new KeybindList(new[] {new Keybind(KeyModifiers.Shift, Keys.A)})},
+            {SelectAllNotesInTimingGroup, new KeybindList(new[] {new Keybind(KeyModifiers.Alt, Keys.A)})},
             {MirrorNotesLeftRight, new KeybindList(new []{new Keybind(Keys.H), new Keybind(KeyModifiers.Ctrl, Keys.H)})},
             {Save, new KeybindList(new[] {new Keybind(Keys.S), new Keybind(KeyModifiers.Ctrl, Keys.S)})},
             {Deselect, new KeybindList(new[] {new Keybind(Keys.D), new Keybind(KeyModifiers.Ctrl, Keys.D)})},
