@@ -308,6 +308,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayTimingLines { get; private set; }
 
         /// <summary>
+        ///     If true, hit bubbles will be displayed during gameplay
+        /// </summary>
+        internal static Bindable<bool> DisplayHitBubbles { get; private set; }
+
+        /// <summary>
         ///     If true, the audio visualizer in the menus will be displayed.
         /// </summary>
         internal static Bindable<bool> DisplayMenuAudioVisualizer { get; private set; }
@@ -1065,6 +1070,7 @@ namespace Quaver.Shared.Config
             DiscordRichPresence = ReadValue(@"DiscordRichPresence", true, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
+            DisplayHitBubbles = ReadValue(@"DisplayHitBubbles", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
             EnableLongNoteReleaseHitsounds = ReadValue(@"EnableLongNoteReleaseHitsounds", false, data);

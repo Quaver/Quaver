@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Collections;
 using Quaver.API.Enums;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
@@ -22,6 +23,7 @@ public class HitBubbles : Container
     private readonly float _hitBubblesScale;
     private readonly float _hitBubblePadding;
     private readonly float _borderPadding;
+    private bool ShowHitBubbles => SkinKeys.HitBubblesScale == 0 || !ConfigManager.DisplayHitBubbles.Value;
     private static SkinKeys SkinKeys => SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
 
     private Texture2D GetTexture()
@@ -34,7 +36,7 @@ public class HitBubbles : Container
         _hitBubblesType = hitBubblesType;
         _hitBubblesScale = hitBubblesScale;
 
-        if (SkinKeys.HitBubblesScale == 0)
+        if (ShowHitBubbles)
             return;
 
         _hitBubblePadding = SkinKeys.HitBubblePadding * hitBubblesScale;
@@ -53,8 +55,7 @@ public class HitBubbles : Container
     protected override void OnRectangleRecalculated()
     {
         base.OnRectangleRecalculated();
-
-        if (SkinKeys.HitBubblesScale == 0)
+        if (ShowHitBubbles)
             return;
 
         var texture = GetTexture();
@@ -77,7 +78,7 @@ public class HitBubbles : Container
 
     public void AddJudgement(Judgement judgement)
     {
-        if (SkinKeys.HitBubblesScale == 0)
+        if (ShowHitBubbles)
             return;
 
         if (judgement == Judgement.Ghost)
