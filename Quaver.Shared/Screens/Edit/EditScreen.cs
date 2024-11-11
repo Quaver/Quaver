@@ -1214,8 +1214,9 @@ namespace Quaver.Shared.Screens.Edit
                         var heldLivemapHitObjectStartTime = heldLivemapHitObjectInfos[lane].StartTime;
 
                         // Remove the notes covered by this LN
-                        var lnsAtTime = WorkingMap.HitObjects.Where(h => 
-                                h.Lane == lane 
+                        var lnsAtTime = WorkingMap.HitObjects.Where(h =>
+                                h != heldLivemapHitObjectInfos[lane]
+                                && h.Lane == lane 
                                 && heldLivemapHitObjectStartTime <= h.StartTime
                                 && h.StartTime <= time)
                             .ToList();
