@@ -20,6 +20,7 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
+using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
 
@@ -113,6 +114,27 @@ namespace Quaver.Shared.Skinning
         internal int HoldLightingFps { get; private set; }
 
         internal int HitLightingScale { get; private set; } = 100;
+
+        [FixedScale]
+        internal float HitBubbleScale { get; private set; } = 1f;
+
+        [FixedScale]
+        internal float HitBubblesScale { get; private set; } = 1f;
+
+        internal HitBubblesAlignment HitBubblesAlignment { get; private set; } = HitBubblesAlignment.LeftStage;
+
+        [FixedScale] internal float HitBubblesPosX { get; private set; } = -10f;
+
+        [FixedScale] internal float HitBubblesPosY { get; private set; } = 170f;
+
+        internal float HitBubbleBorderPadding { get; private set; } = 7f;
+
+        internal float HitBubblePadding { get; private set; } = 3f;
+
+        internal HitBubblesType HitBubblesType { get; private set; } = HitBubblesType.FallDown;
+
+        internal HitBubbleRecordedJudgement HitBubblesRecordedJudgements { get; private set; } =
+            HitBubbleRecordedJudgement.Default;
 
         internal int HoldLightingScale { get; private set; } = 100;
 
@@ -484,6 +506,15 @@ namespace Quaver.Shared.Skinning
             HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
             HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
             HoldLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HoldLightingScale"]);
+            HitBubbleScale = ConfigHelper.ReadFloat(HitBubbleScale, ini["HitBubbleScale"]);
+            HitBubblesAlignment = ConfigHelper.ReadEnum(HitBubblesAlignment, ini["HitBubblesAlignment"]);
+            HitBubblesPosX = ConfigHelper.ReadInt32((int) HitBubblesPosX, ini["HitBubblesPosX"]);
+            HitBubblesPosY = ConfigHelper.ReadInt32((int) HitBubblesPosY, ini["HitBubblesPosY"]);
+            HitBubblesScale = ConfigHelper.ReadFloat(HitBubblesScale, ini["HitBubblesScale"]);
+            HitBubbleBorderPadding = ConfigHelper.ReadFloat(HitBubbleBorderPadding, ini["HitBubbleBorderPadding"]);
+            HitBubblePadding = ConfigHelper.ReadFloat(HitBubblePadding, ini["HitBubblePadding"]);
+            HitBubblesType = ConfigHelper.ReadEnum(HitBubblesType, ini["HitBubblesType"]);
+            HitBubblesRecordedJudgements = ConfigHelper.ReadEnum(HitBubblesRecordedJudgements, ini["HitBubblesRecordedJudgements"]);
             HitLightingColumnRotation = ConfigHelper.ReadBool(HitLightingColumnRotation, ini["HitLightingColumnRotation"]);
             HoldLightingColumnRotation = ConfigHelper.ReadBool(HoldLightingColumnRotation, ini["HoldLightingColumnRotation"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32((int)ScoreDisplayPosX, ini["ScoreDisplayPosX"]);

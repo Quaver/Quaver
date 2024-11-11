@@ -144,6 +144,11 @@ namespace Quaver.Shared.Screens.Tournament
                     healthBar.X = -healthBar.Width;
                     healthBar.SpriteEffect = SpriteEffects.FlipHorizontally;
                     healthBar.ForegroundBar.SpriteEffect = SpriteEffects.FlipHorizontally;
+
+                    var hitBubbles = playfield.Stage.HitBubbles;
+                    hitBubbles.Parent = playfield.Stage.StageRight;
+                    hitBubbles.Alignment = Alignment.MidRight;
+                    hitBubbles.X = -hitBubbles.X + hitBubbles.Width / 2;
                 }
                 else
                 {
