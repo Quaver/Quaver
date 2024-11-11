@@ -1210,8 +1210,22 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     if (time - heldLivemapHitObjectInfos[lane].StartTime >
                         ConfigManager.EditorLiveMapLongNoteThreshold.Value)
+                    {
+                        var heldLivemapHitObjectStartTime = heldLivemapHitObjectInfos[lane].StartTime;
+
+                        // Remove the notes covered by this LN
+                        var lnsAtTime = WorkingMap.HitObjects.Where(h => 
+                                h.Lane == lane 
+                                && heldLivemapHitObjectStartTime <= h.StartTime
+                                && h.StartTime <= time)
+                            .ToList();
+
+                        if (lnsAtTime.Count > 0)
+                            ActionManager.RemoveHitObjectBatch(lnsAtTime);
+
                         ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[lane],
                             heldLivemapHitObjectInfos[lane].EndTime, time);
+                    }
                 }
                 heldLivemapHitObjectInfos[lane] = null;
                 return;
@@ -1224,6 +1238,8 @@ namespace Quaver.Shared.Screens.Edit
                 // Can be multiple if overlap
                 var hitObjectsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.StartTime == time)
                     .ToList();
+                var lnsAtTime = WorkingMap.HitObjects.Where(h => h.Lane == lane && h.IsLongNote && h.StartTime <= time && time <= h.EndTime)
+                    .ToList();
 
                 if (hitObjectsAtTime.Count > 0)
                 {
@@ -1231,7 +1247,11 @@ namespace Quaver.Shared.Screens.Edit
                         ActionManager.RemoveHitObject(note);
                 }
                 else
+                {
+                    // Remove any long notes that this note would reside in before placing
+                    ActionManager.RemoveHitObjectBatch(lnsAtTime);
                     heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer);
+                }
             }
         }
 
