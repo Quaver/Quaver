@@ -1195,12 +1195,6 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="isRelease"></param>
         public void HandleHitObjectPlacement(int lane, bool isUniquePress, bool isRelease)
         {
-            if (isRelease)
-            {
-                heldLivemapHitObjectInfos[lane] = null;
-                return;
-            }
-
             var time = (int)Math.Round(Track.Time, MidpointRounding.AwayFromZero);
 
             // Only snaps the time if the audio is playing
@@ -1208,6 +1202,19 @@ namespace Quaver.Shared.Screens.Edit
             {
                 time = ((EditScreenView)View).Playfield.GetNearestTickFromTime(
                     time + ConfigManager.EditorLiveMapOffset.Value, BeatSnap.Value);
+            }
+
+            if (isRelease)
+            {
+                if (heldLivemapHitObjectInfos[lane] != null && ConfigManager.EditorLiveMapLongNote.Value)
+                {
+                    if (time - heldLivemapHitObjectInfos[lane].StartTime >
+                        ConfigManager.EditorLiveMapLongNoteThreshold.Value)
+                        ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[lane],
+                            heldLivemapHitObjectInfos[lane].EndTime, time);
+                }
+                heldLivemapHitObjectInfos[lane] = null;
+                return;
             }
 
             var layer = WorkingMap.EditorLayers.FindIndex(l => l == SelectedLayer.Value) + 1;
@@ -1225,13 +1232,6 @@ namespace Quaver.Shared.Screens.Edit
                 }
                 else
                     heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer);
-            }
-            else if (heldLivemapHitObjectInfos[lane] != null && ConfigManager.EditorLiveMapLongNote.Value)
-            {
-                if (time - heldLivemapHitObjectInfos[lane].StartTime >
-                    ConfigManager.EditorLiveMapLongNoteThreshold.Value)
-                    ActionManager.ResizeLongNote(heldLivemapHitObjectInfos[lane],
-                        heldLivemapHitObjectInfos[lane].EndTime, time);
             }
         }
 
