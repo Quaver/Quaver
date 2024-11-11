@@ -6,6 +6,7 @@ using MonoGame.Extended.Collections;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -30,7 +31,7 @@ public class HitBubbles : Container
         || !ConfigManager.DisplayHitBubbles.Value;
 
     private HitBubbleRecordedJudgement RecordedJudgements =>
-        Screen.InReplayMode
+        ModManager.IsActivated(ModIdentifier.Autoplay) || (Screen.IsPlayTesting && Screen.InReplayMode)
             ? HitBubbleRecordedJudgement.All
             : SkinKeys.HitBubblesRecordedJudgements;
 
