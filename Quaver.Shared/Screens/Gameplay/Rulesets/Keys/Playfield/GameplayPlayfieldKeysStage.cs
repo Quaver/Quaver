@@ -552,7 +552,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void CreateHitBubbles()
         {
-            HitBubbles = new HitBubbles(Skin.HitBubblesScale, Skin.HitBubblesType)
+            HitBubbles = new HitBubbles(Skin.HitBubblesScale, Skin.HitBubblesType, Screen)
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,

@@ -20,10 +20,20 @@ public class HitBubbles : Container
     private int _maxBubbleCount;
     private readonly HitBubblesType _hitBubblesType;
     private AnimatableSprite _background;
-    private readonly float _hitBubblesScale;
     private readonly float _hitBubblePadding;
     private readonly float _borderPadding;
-    private bool ShowHitBubbles => SkinKeys.HitBubblesScale == 0 || !ConfigManager.DisplayHitBubbles.Value;
+    private GameplayScreen Screen { get; }
+
+    private bool HideHitBubbles =>
+        (Screen?.IsCalibratingOffset ?? false)
+        || SkinKeys.HitBubblesScale == 0
+        || !ConfigManager.DisplayHitBubbles.Value;
+
+    private HitBubbleRecordedJudgement RecordedJudgements =>
+        Screen.InReplayMode
+            ? HitBubbleRecordedJudgement.All
+            : SkinKeys.HitBubblesRecordedJudgements;
+
     private static SkinKeys SkinKeys => SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
 
     private Texture2D GetTexture()
@@ -31,20 +41,20 @@ public class HitBubbles : Container
         return SkinManager.Skin.HitBubbles;
     }
 
-    public HitBubbles(float hitBubblesScale, HitBubblesType hitBubblesType)
+    public HitBubbles(float hitBubblesScale, HitBubblesType hitBubblesType, GameplayScreen screen)
     {
         _hitBubblesType = hitBubblesType;
-        _hitBubblesScale = hitBubblesScale;
+        Screen = screen;
 
-        if (ShowHitBubbles)
+        if (HideHitBubbles)
             return;
 
         _hitBubblePadding = SkinKeys.HitBubblePadding * hitBubblesScale;
         _borderPadding = SkinKeys.HitBubbleBorderPadding * hitBubblesScale;
 
         _background = new AnimatableSprite(SkinManager.Skin.HitBubblesBackground);
-        Size = new ScalableVector2(_background.Frames.First().Width * _hitBubblesScale,
-            _background.Frames.First().Height * _hitBubblesScale);
+        Size = new ScalableVector2(_background.Frames.First().Width * hitBubblesScale,
+            _background.Frames.First().Height * hitBubblesScale);
         _background.Size = Size;
         _background.Parent = this;
 
@@ -55,7 +65,7 @@ public class HitBubbles : Container
     protected override void OnRectangleRecalculated()
     {
         base.OnRectangleRecalculated();
-        if (ShowHitBubbles)
+        if (HideHitBubbles)
             return;
 
         var texture = GetTexture();
@@ -78,16 +88,16 @@ public class HitBubbles : Container
 
     public void AddJudgement(Judgement judgement)
     {
-        if (ShowHitBubbles)
+        if (HideHitBubbles)
             return;
 
         if (judgement == Judgement.Ghost)
             return;
 
         var judgementFlag = (HitBubbleRecordedJudgement)(1 << (int)judgement);
-        if (!SkinKeys.HitBubblesRecordedJudgements.HasFlag(judgementFlag))
+        if (!RecordedJudgements.HasFlag(judgementFlag))
             return;
-        
+
         if (_maxBubbleCount <= 0)
             return;
 
