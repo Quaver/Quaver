@@ -149,7 +149,7 @@ namespace Quaver.Shared.Audio
         /// <exception cref="AudioEngineException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static double GetNearestSnapTimeFromTime(Qua map, Direction direction, int snap, double time)
+        public static double GetNearestSnapTimeFromTime(Qua map, Direction direction, float snap, double time)
         {
             if (map == null)
                 throw new ArgumentNullException(nameof(map));

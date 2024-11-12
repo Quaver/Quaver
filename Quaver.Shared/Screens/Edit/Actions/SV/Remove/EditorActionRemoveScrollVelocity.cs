@@ -31,6 +31,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.Remove
         [MoonSharpVisible(false)]
         public void Perform()
         {
+            ScrollGroup.ScrollVelocities.Remove(ScrollVelocity);
             ActionManager.TriggerEvent(Type, new EditorScrollVelocityRemovedEventArgs(ScrollVelocity, ScrollGroup));
         }
 

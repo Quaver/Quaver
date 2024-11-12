@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <summary>
         ///     Sets the position of the line
         /// </summary>
-        public void SetPosition()
+        public virtual void SetPosition()
         {
             var x = Playfield.AbsolutePosition.X + Playfield.Width + 2;
             var y = Playfield.HitPositionY - StartTime * Playfield.TrackSpeed - Height;

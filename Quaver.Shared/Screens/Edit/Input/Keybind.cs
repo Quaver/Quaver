@@ -43,6 +43,23 @@ namespace Quaver.Shared.Screens.Edit.Input
             Modifiers.Add(mod);
         }
 
+        public Keybind(MouseButton mouseButton) => Key = new GenericKey { MouseButton = mouseButton };
+
+        public Keybind(KeyModifiers mod, MouseButton mouseButton)
+        {
+            Key = new GenericKey { MouseButton = mouseButton };
+            Modifiers.Add(mod);
+        }
+
+        public Keybind(MouseScrollDirection scrollDirection) =>
+            Key = new GenericKey { ScrollDirection = scrollDirection };
+
+        public Keybind(KeyModifiers mod, MouseScrollDirection scrollDirection)
+        {
+            Key = new GenericKey { ScrollDirection = scrollDirection };
+            Modifiers.Add(mod);
+        }
+
         public Keybind(ICollection<KeyModifiers> mods, Keys key)
         {
             Key = new GenericKey() { KeyboardKey = key };
@@ -55,18 +72,28 @@ namespace Quaver.Shared.Screens.Edit.Input
             Modifiers = new HashSet<KeyModifiers>(mods);
         }
 
-        public HashSet<Keybind> MatchingKeybinds()
+        public HashSet<Keybind> MatchingKeybinds(bool invertScrolling)
         {
             var set = new HashSet<Keybind>();
+            var key = Key.Clone();
+            if (key.ScrollDirection != null)
+                key.ScrollDirection = invertScrolling 
+                    ? key.ScrollDirection == MouseScrollDirection.Up 
+                        ? MouseScrollDirection.Down : MouseScrollDirection.Up 
+                    : key.ScrollDirection;
 
             if (!Modifiers.Contains(KeyModifiers.Free))
-                set.Add(this);
+                set.Add(new Keybind(Modifiers, key));
             else
             {
                 var allModifiers = Enum.GetValues(typeof(KeyModifiers)).Cast<KeyModifiers>();
                 var freeModifiers = allModifiers.Except(Modifiers).ToList();
                 foreach (var modifiers in PowerSetOfModifiers(freeModifiers))
-                    set.Add(new Keybind(modifiers, Key));
+                {
+                    modifiers.UnionWith(Modifiers);
+                    modifiers.Remove(KeyModifiers.Free);
+                    set.Add(new Keybind(modifiers, key));
+                }
             }
 
             return set;
