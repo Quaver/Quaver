@@ -599,6 +599,8 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.PlaceNoteAtLane8:
                 case KeybindActions.PlaceNoteAtLane9:
                 case KeybindActions.PlaceNoteAtLane10:
+                    if (!ConfigManager.EditorLiveMapping.Value)
+                        break;
                     var lane = (int)(action ^ KeybindActions.PlaceNoteAtLane);
                     if (lane <= Screen.WorkingMap.GetKeyCount())
                         Screen.HandleHitObjectPlacement(lane, isKeyPress, isRelease);
