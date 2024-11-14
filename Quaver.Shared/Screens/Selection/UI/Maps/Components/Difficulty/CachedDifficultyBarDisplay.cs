@@ -114,6 +114,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
                     if (RenderTarget.IsDisposed)
                         return;
 
+                    GameBase.Game.TryEndBatch();
                     GameBase.Game.GraphicsDevice.SetRenderTarget(RenderTarget);
                     GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
