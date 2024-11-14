@@ -9,12 +9,26 @@ public class WindowStates
     public Dictionary<EditorPanelType, EditorPanelState> EditorPanelStates { get; set; } = new();
     public Dictionary<string, PluginWindowState> PluginWindowStates { get; set; } = new();
 
+    /// <summary>
+    ///     Order needs to be preserved so panels will consistently be over another
+    /// </summary>
+    private static readonly EditorPanelType[] EditorPanelLoadOrder =
+    {
+        EditorPanelType.Details,
+        EditorPanelType.CompositionTools,
+        EditorPanelType.Hitsounds,
+        EditorPanelType.Layers
+    };
+
     public void ApplyState(EditScreenView editScreenView)
     {
         var editScreen = (EditScreen)editScreenView.Screen;
 
-        foreach (var (editorPanelType, editorPanelState) in EditorPanelStates)
+        foreach (var editorPanelType in EditorPanelLoadOrder)
         {
+            if (!EditorPanelStates.TryGetValue(editorPanelType, out var editorPanelState))
+                continue;
+
             editorPanelState.ApplyState(editorPanelType, editScreenView);
         }
 
@@ -30,8 +44,7 @@ public class WindowStates
     public void RetrieveState(EditScreenView editScreenView)
     {
         var editScreen = (EditScreen)editScreenView.Screen;
-
-        foreach (EditorPanelType editorPanelType in Enum.GetValues(typeof(EditorPanelType)))
+        foreach (var editorPanelType in EditorPanelLoadOrder)
         {
             EditorPanelStates[editorPanelType] = new EditorPanelState();
             EditorPanelStates[editorPanelType].RetrieveState(editorPanelType, editScreenView);
