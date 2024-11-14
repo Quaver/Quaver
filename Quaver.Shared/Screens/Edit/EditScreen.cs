@@ -599,14 +599,6 @@ namespace Quaver.Shared.Screens.Edit
             if (Exiting)
                 return;
 
-            if (DialogManager.Dialogs.Count != 0)
-                return;
-
-            var view = (EditScreenView)View;
-
-            if (view.IsImGuiHovered)
-                return;
-
             InputManager.HandleInput();
         }
 
