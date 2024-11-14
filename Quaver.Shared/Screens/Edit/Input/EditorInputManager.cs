@@ -71,6 +71,12 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private static Dictionary<KeybindActions, Bindable<bool>> InvertScrollingActions = new();
 
+        /// <summary>
+        ///     When we regain focus, we won't take inputs until all keybinds are released
+        ///     This is to prevent e.g. exiting from options menu triggering ExitEditor
+        /// </summary>
+        private bool WaitForKeybindClear { get; set; }
+
         public EditorInputManager(EditScreen screen)
         {
             InputConfig = EditorInputConfig.LoadFromConfig();
@@ -107,8 +113,21 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public void HandleInput()
         {
-            if (DialogManager.Dialogs.Count != 0) return;
-            if (View.IsImGuiHovered) return;
+            var currentFrameNotInFocus = DialogManager.Dialogs.Count != 0 || View.IsImGuiHovered;
+            if (currentFrameNotInFocus)
+            {
+                WaitForKeybindClear = true;
+                return;
+            }
+
+            if (WaitForKeybindClear)
+            {
+                var keyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
+                var keybinds = keyState.PressedKeybinds();
+
+                WaitForKeybindClear = keybinds.Count != 0;
+                return;
+            }
 
             HandleKeyPresses();
             HandleKeyReleasesAfterHoldAction();
