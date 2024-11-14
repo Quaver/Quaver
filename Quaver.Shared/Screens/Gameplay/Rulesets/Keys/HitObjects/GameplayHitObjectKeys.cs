@@ -410,11 +410,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Stop drawing LN body + end if the ln reaches half the height of the hitobject
             // (prevents body + end extending below this point)
-            if (CurrentLongNoteBodySize + LongNoteSizeDifference <= HitObjectSprite.Height / 2f || CurrentLongNoteBodySize <= 0 || curTime >= Info.EndTime && Info.State == HitObjectState.Held)
-            {
-                LongNoteEndSprite.Visible = false;
-                LongNoteBodySprite.Visible = false;
-            }
+            var longNoteOverlap = CurrentLongNoteBodySize + LongNoteSizeDifference <= HitObjectSprite.Height / 2f ||
+                                  CurrentLongNoteBodySize <= 0 ||
+                                  curTime >= Info.EndTime && Info.State is HitObjectState.Held or HitObjectState.Dead;
+            LongNoteEndSprite.Visible = !longNoteOverlap;
+            LongNoteBodySprite.Visible = !longNoteOverlap;
         }
 
         /// <summary>
