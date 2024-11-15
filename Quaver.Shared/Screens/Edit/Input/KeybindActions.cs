@@ -113,6 +113,9 @@ namespace Quaver.Shared.Screens.Edit.Input
         Save,
         ApplyOffsetToMap,
         ResnapToCurrentBeatSnap,
+        AddBookmark,
+        SeekToLastBookmark,
+        SeekToNextBookmark,
         // This can save us from repetitive work
         PlaceNoteAtLane = 1 << 16,
         PlaceNoteAtLane1,

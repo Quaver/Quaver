@@ -1533,44 +1533,6 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
-        ///     Seeks to the nearest bookmark in a given direction
-        /// </summary>
-        /// <param name="direction"></param>
-        public void SeekToNearestBookmark(Direction direction)
-        {
-            if (WorkingMap.Bookmarks.Count == 0)
-                return;
-
-            BookmarkInfo nextBookmark = null;
-
-            var closest = WorkingMap.Bookmarks.OrderBy(x => Math.Abs(x.StartTime - Track.Time)).First();
-            var index = WorkingMap.Bookmarks.IndexOf(closest);
-
-            switch (direction)
-            {
-                case Direction.Forward:
-                    if (closest.StartTime > Track.Time && Math.Abs(closest.StartTime - Track.Time) > 0.1)
-                        nextBookmark = closest;
-                    else if (index + 1 < WorkingMap.Bookmarks.Count)
-                        nextBookmark = WorkingMap.Bookmarks[index + 1];
-                    break;
-                case Direction.Backward:
-                    if (closest.StartTime < Track.Time && Math.Abs(closest.StartTime - Track.Time) > 0.1)
-                        nextBookmark = closest;
-                    else if (index - 1 >= 0)
-                        nextBookmark = WorkingMap.Bookmarks[index - 1];
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
-
-            if (nextBookmark == null)
-                return;
-
-            Track.Seek(Math.Clamp(nextBookmark.StartTime, 0, Track.Length));
-        }
-
-        /// <summary>
         ///     Creates a new mapset from an audio file
         /// </summary>
         /// <param name="audioFile"></param>
@@ -1785,6 +1747,48 @@ namespace Quaver.Shared.Screens.Edit
                 MapManager.Selected.Value.Mapset.ExportToZip();
                 NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
             });
+        }
+
+        #endregion
+
+        #region BOOKMARKS
+
+        /// <summary>
+        ///     Seeks to the nearest bookmark in a given direction
+        /// </summary>
+        /// <param name="direction"></param>
+        public void SeekToNearestBookmark(Direction direction)
+        {
+            if (WorkingMap.Bookmarks.Count == 0)
+                return;
+
+            BookmarkInfo nextBookmark = null;
+
+            var closest = WorkingMap.Bookmarks.OrderBy(x => Math.Abs(x.StartTime - Track.Time)).First();
+            var index = WorkingMap.Bookmarks.IndexOf(closest);
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    if (closest.StartTime > Track.Time && Math.Abs(closest.StartTime - Track.Time) > 0.1)
+                        nextBookmark = closest;
+                    else if (index + 1 < WorkingMap.Bookmarks.Count)
+                        nextBookmark = WorkingMap.Bookmarks[index + 1];
+                    break;
+                case Direction.Backward:
+                    if (closest.StartTime < Track.Time && Math.Abs(closest.StartTime - Track.Time) > 0.1)
+                        nextBookmark = closest;
+                    else if (index - 1 >= 0)
+                        nextBookmark = WorkingMap.Bookmarks[index - 1];
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            if (nextBookmark == null)
+                return;
+
+            Track.Seek(Math.Clamp(nextBookmark.StartTime, 0, Track.Length));
         }
 
         #endregion

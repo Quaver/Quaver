@@ -611,6 +611,15 @@ namespace Quaver.Shared.Screens.Edit.Input
                     Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value },
                         Screen.SelectedHitObjects.Value);
                     break;
+                case KeybindActions.AddBookmark:
+                    DialogManager.Show(new EditorBookmarkDialog(Screen.ActionManager, Screen.Track, null));
+                    break;
+                case KeybindActions.SeekToLastBookmark:
+                    Screen.SeekToNearestBookmark(Direction.Backward);
+                    break;
+                case KeybindActions.SeekToNextBookmark:
+                    Screen.SeekToNearestBookmark(Direction.Forward);
+                    break;
                 case KeybindActions.PlaceNoteAtLane1:
                 case KeybindActions.PlaceNoteAtLane2:
                 case KeybindActions.PlaceNoteAtLane3:
