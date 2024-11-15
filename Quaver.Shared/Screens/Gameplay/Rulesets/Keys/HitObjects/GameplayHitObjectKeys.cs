@@ -344,6 +344,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void UpdateLongNoteSize(double curTime)
         {
+            if (Info.State != HitObjectState.Held || !SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
+                return;
+
             Info.UpdateLongNoteSize(curTime);
             CurrentLongNoteBodySize = Info.CurrentLongNoteBodySize - LongNoteSizeDifference;
         }
