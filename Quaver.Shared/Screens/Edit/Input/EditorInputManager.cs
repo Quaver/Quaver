@@ -574,6 +574,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.Paste:
                     Screen.PasteCopiedObjects(false);
                     break;
+                case KeybindActions.PasteResnap:
+                    Screen.PasteCopiedObjects(true);
+                    break;
                 case KeybindActions.SelectNotesAtCurrentTime:
                     Screen.SelectObjectsAtCurrentTime();
                     break;
@@ -607,6 +610,15 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ResnapToCurrentBeatSnap:
                     Screen.ActionManager.ResnapNotes(new List<int> { Screen.BeatSnap.Value },
                         Screen.SelectedHitObjects.Value);
+                    break;
+                case KeybindActions.AddBookmark:
+                    DialogManager.Show(new EditorBookmarkDialog(Screen.ActionManager, Screen.Track, null));
+                    break;
+                case KeybindActions.SeekToLastBookmark:
+                    Screen.SeekToNearestBookmark(Direction.Backward);
+                    break;
+                case KeybindActions.SeekToNextBookmark:
+                    Screen.SeekToNearestBookmark(Direction.Forward);
                     break;
                 case KeybindActions.PlaceNoteAtLane1:
                 case KeybindActions.PlaceNoteAtLane2:
