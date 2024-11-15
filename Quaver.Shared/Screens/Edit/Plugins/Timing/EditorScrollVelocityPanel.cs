@@ -554,8 +554,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         else if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) ||
                                  KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                         {
-                            var min = SelectedScrollVelocities.Min().StartTime;
-                            var max = SelectedScrollVelocities.Max().StartTime;
+                            var min = SelectedScrollVelocities.MinBy(s => s.StartTime).StartTime;
+                            var max = SelectedScrollVelocities.MaxBy(s => s.StartTime).StartTime;
 
                             if (sv.StartTime < min)
                             {
@@ -667,6 +667,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void PasteClipboard()
         {
+            if (Clipboard.Count == 0)
+                return;
+
             var clonedObjects = new List<SliderVelocityInfo>();
 
             var pasteTime = Clipboard.Select(x => x.StartTime).Min();
