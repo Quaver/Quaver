@@ -574,6 +574,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.Paste:
                     Screen.PasteCopiedObjects(false);
                     break;
+                case KeybindActions.PasteResnap:
+                    Screen.PasteCopiedObjects(true);
+                    break;
                 case KeybindActions.SelectNotesAtCurrentTime:
                     Screen.SelectObjectsAtCurrentTime();
                     break;

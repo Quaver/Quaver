@@ -103,6 +103,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         DeleteSelection,
         Copy,
         Paste,
+        PasteResnap,
         SelectNotesAtCurrentTime,
         SelectAllNotes,
         SelectAllNotesInLayer,
