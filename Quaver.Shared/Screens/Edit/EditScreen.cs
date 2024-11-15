@@ -1440,7 +1440,8 @@ namespace Quaver.Shared.Screens.Edit
             if (Map.Game == MapGame.Quaver)
                 FileWatcher.EnableRaisingEvents = false;
 
-            WorkingMap.Save($"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}");
+            var map = WorkingMap.DeepClone();
+            map.Save($"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}");
 
             if (Map.Game == MapGame.Quaver)
                 FileWatcher.EnableRaisingEvents = true;
