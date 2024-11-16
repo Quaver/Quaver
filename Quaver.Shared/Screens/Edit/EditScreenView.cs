@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private EditorMapPreview MapPreview { get; set; }
+        internal EditorMapPreview MapPreview { get; set; }
 
         /// <summary>
         /// </summary>
