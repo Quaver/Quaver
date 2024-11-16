@@ -17,7 +17,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         public long Position { get; set; }
 
+        /// <summary>
+        ///     The maximum position from this direction change onwards
+        /// </summary>
         public long BackPrefixMaxPosition { get; set; }
+
+        /// <summary>
+        ///     The minimum position from this direction change onwards
+        /// </summary>
         public long BackPrefixMinPosition { get; set; }
     }
 }
