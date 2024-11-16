@@ -59,7 +59,7 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
     ///     Only objects within this distance of the <see cref="CurrentTrackPosition"/> are rendered.
     /// </summary>
     public override long RenderThreshold =>
-        (long)(WindowManager.Height * HitObjectManagerKeys.TrackRounding / ScrollSpeed);
+        (long)Math.Abs(WindowManager.Height * HitObjectManagerKeys.TrackRounding / ScrollSpeed);
 
     /// <summary>
     ///     Create SV-position points for computation optimization
