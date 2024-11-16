@@ -26,7 +26,7 @@ public class HitBubble : Sprite
     public void SetTargetPosition(float value, bool animation = true)
     {
         _targetPosition = value;
-        ClearAnimations();
+        Animations.RemoveAll(a => a.Properties is AnimationProperty.X or AnimationProperty.Y);
         switch (HitBubblesType)
         {
             case HitBubblesType.FallLeft:
@@ -52,6 +52,6 @@ public class HitBubble : Sprite
     {
         X = Animations.Find(a => a.Properties == AnimationProperty.X)?.End ?? X;
         Y = Animations.Find(a => a.Properties == AnimationProperty.Y)?.End ?? Y;
-        ClearAnimations();
+        Animations.RemoveAll(a => a.Properties is AnimationProperty.X or AnimationProperty.Y);
     }
 }
