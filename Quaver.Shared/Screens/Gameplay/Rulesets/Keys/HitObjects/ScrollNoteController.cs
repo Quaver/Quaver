@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 
@@ -62,10 +63,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var earliestPosition = Math.Min(InitialTrackPosition, EndTrackPosition);
                 var latestPosition = Math.Max(InitialTrackPosition, EndTrackPosition);
 
-                foreach (var change in SVDirectionChanges)
+                if (SVDirectionChanges.Count > 0)
                 {
-                    earliestPosition = Math.Min(earliestPosition, change.Position);
-                    latestPosition = Math.Max(latestPosition, change.Position);
+                    var change = SVDirectionChanges[0];
+                    earliestPosition = Math.Min(earliestPosition, change.BackPrefixMinPosition);
+                    latestPosition = Math.Max(latestPosition, change.BackPrefixMaxPosition);
                 }
 
                 EarliestTrackPosition = earliestPosition;
@@ -127,14 +129,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             if (SVDirectionChanges == null)
                 return;
-            foreach (var change in SVDirectionChanges)
-            {
-                if (curTime >= change.StartTime)
-                    continue; // We're past this change already.
 
-                earliestPosition = Math.Min(earliestPosition, change.Position);
-                latestPosition = Math.Max(latestPosition, change.Position);
-            }
+            var lastChange = SVDirectionChanges.AtTime((float)curTime);
+            if (lastChange == default)
+                return;
+            earliestPosition = Math.Min(earliestPosition, lastChange.BackPrefixMinPosition);
+            latestPosition = Math.Max(latestPosition, lastChange.BackPrefixMaxPosition);
         }
     }
 }
