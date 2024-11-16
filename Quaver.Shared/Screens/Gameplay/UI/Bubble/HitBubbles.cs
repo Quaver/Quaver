@@ -138,7 +138,7 @@ public class HitBubbles : Container
         sprite.Image = texture;
         sprite.Tint = SkinKeys.JudgeColors[judgement];
 
-        sprite.SetTargetPosition(_bubbles.GetBack(out var back)
+        sprite.SetTargetPosition(moveOffset + (_bubbles.GetBack(out var back)
             ? GetNextTargetPosition(back)
             : _hitBubblesType switch
             {
@@ -147,15 +147,27 @@ public class HitBubbles : Container
                 HitBubblesType.FallUp => _borderPadding,
                 HitBubblesType.FallDown => -_borderPadding,
                 _ => throw new ArgumentOutOfRangeException()
-            }, full);
+            }), false);
 
         _bubbles.AddToBack(sprite);
+
+        const float opacityGradientMin = 0.5f;
+        for (var i = 0; i < _bubbles.Count; i++)
+        {
+            var bubble = _bubbles[i];
+            bubble.Alpha = _bubbles.Count == 1
+                ? 1
+                : opacityGradientMin + (1f - opacityGradientMin) *
+                    ((float)(_maxBubbleCount - _bubbles.Count + i) / (_bubbles.Count - 1));
+        }
 
         if (_bubbles.Count < _maxBubbleCount - 1)
             return;
 
         foreach (var bubble in _bubbles)
         {
+            if (bubble == sprite)
+                continue;
             bubble.TargetPosition += moveOffset;
         }
     }
