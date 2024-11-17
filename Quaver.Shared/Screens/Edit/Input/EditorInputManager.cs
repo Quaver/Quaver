@@ -89,6 +89,9 @@ namespace Quaver.Shared.Screens.Edit.Input
             ConstructInvertScrollingActions();
             Screen.InvertBeatSnapScroll.ValueChanged += InvertScrollingValueChanged;
             ConfigManager.InvertEditorScrolling.ValueChanged += InvertScrollingValueChanged;
+
+            ConfigManager.InvertEditorScrolling.TriggerChange();
+            Screen.InvertBeatSnapScroll.TriggerChange();
         }
 
         private void ConstructInvertScrollingActions()
