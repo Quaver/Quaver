@@ -114,8 +114,6 @@ public class HitBubbles : Container
         if (full)
         {
             _bubbles.RemoveFromFront(out sprite);
-            if (_bubbles.GetFront(out var nextHead))
-                moveOffset = sprite.TargetPosition - nextHead.TargetPosition;
         }
         else
         {
@@ -126,49 +124,58 @@ public class HitBubbles : Container
                 {
                     HitBubblesType.FallLeft => Alignment.MidLeft,
                     HitBubblesType.FallRight => Alignment.MidRight,
-                    HitBubblesType.FallUp => Alignment.TopCenter,
-                    HitBubblesType.FallDown => Alignment.BotCenter,
+                    HitBubblesType.FallUp => Alignment.BotCenter,
+                    HitBubblesType.FallDown => Alignment.TopCenter,
                     _ => throw new ArgumentOutOfRangeException()
                 }
             };
         }
+
+        moveOffset = GetSeparation();
 
         var size = GetTextureSize(texture);
         sprite.Size = new ScalableVector2(size.X, size.Y);
         sprite.Image = texture;
         sprite.Tint = SkinKeys.JudgeColors[judgement];
 
-        sprite.SetTargetPosition(_bubbles.GetBack(out var back)
-            ? GetNextTargetPosition(back)
-            : _hitBubblesType switch
-            {
-                HitBubblesType.FallLeft => _borderPadding,
-                HitBubblesType.FallRight => -_borderPadding,
-                HitBubblesType.FallUp => _borderPadding,
-                HitBubblesType.FallDown => -_borderPadding,
-                _ => throw new ArgumentOutOfRangeException()
-            }, full);
+        sprite.SetTargetPosition(_hitBubblesType switch
+        {
+            HitBubblesType.FallLeft => _borderPadding,
+            HitBubblesType.FallRight => -_borderPadding,
+            HitBubblesType.FallUp => -_borderPadding,
+            HitBubblesType.FallDown => _borderPadding,
+            _ => throw new ArgumentOutOfRangeException()
+        }, false);
 
         _bubbles.AddToBack(sprite);
 
-        if (_bubbles.Count < _maxBubbleCount - 1)
-            return;
+        const float opacityGradientMin = 0.35f;
+        for (var i = 0; i < _bubbles.Count; i++)
+        {
+            var bubble = _bubbles[i];
+            bubble.Alpha = _bubbles.Count == 1
+                ? 1
+                : EasingFunctions.EaseOutQuad(opacityGradientMin, 1,
+                ((float)(_maxBubbleCount - _bubbles.Count + i) / (_maxBubbleCount - 1)));
+        }
 
         foreach (var bubble in _bubbles)
         {
+            if (bubble == sprite)
+                continue;
             bubble.TargetPosition += moveOffset;
         }
     }
 
-    private float GetNextTargetPosition(HitBubble back)
+    private float GetSeparation()
     {
-        back.FinishAnimation();
+        var tex = GetTextureSize(GetTexture());
         return _hitBubblesType switch
         {
-            HitBubblesType.FallLeft => back.RelativeRectangle.Right + _hitBubblePadding,
-            HitBubblesType.FallRight => back.RelativeRectangle.Left - back.Width - _hitBubblePadding,
-            HitBubblesType.FallUp => back.RelativeRectangle.Bottom + _hitBubblePadding,
-            HitBubblesType.FallDown => back.RelativeRectangle.Top - back.Height - _hitBubblePadding,
+            HitBubblesType.FallLeft => -_hitBubblePadding - tex.X,
+            HitBubblesType.FallRight => _hitBubblePadding + tex.X,
+            HitBubblesType.FallUp => -_hitBubblePadding - tex.Y,
+            HitBubblesType.FallDown => _hitBubblePadding + tex.Y,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
