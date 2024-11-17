@@ -312,7 +312,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public EditorInputManager InputManager { get; }
+        public EditorInputManager InputManager { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -405,6 +405,11 @@ namespace Quaver.Shared.Screens.Edit
             AddFileWatcher();
 
             View = new EditScreenView(this);
+            InputManager = new EditorInputManager(this);
+        }
+
+        public void ResetInputManager()
+        {
             InputManager = new EditorInputManager(this);
         }
 

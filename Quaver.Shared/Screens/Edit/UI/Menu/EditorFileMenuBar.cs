@@ -1029,6 +1029,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Fill Missing Actions"))
             {
                 var filledCount = Screen.InputManager.InputConfig.FillMissingKeys(true);
+                Screen.InputManager.InputConfig.SaveToConfig();
+                Screen.ResetInputManager();
                 NotificationManager.Show(NotificationLevel.Info, $"Filled {filledCount} missing actions!");
             }
 
@@ -1038,6 +1040,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     () =>
                     {
                         Screen.InputManager.InputConfig.ResetConfigFile();
+                        Screen.ResetInputManager();
                         NotificationManager.Show(NotificationLevel.Info, $"All keybinds have been reset!");
                     }));
             }
