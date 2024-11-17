@@ -35,6 +35,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch
             foreach (var tp in ScrollVelocities)
                 tp.StartTime += Offset;
 
+            WorkingMap.Sort();
             ActionManager.TriggerEvent(Type, new EditorChangedScrollVelocityOffsetBatchEventArgs(ScrollVelocities, Offset));
         }
 
