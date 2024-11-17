@@ -193,6 +193,23 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                             FlushConfig();
                         }
 
+                        ImGui.SameLine();
+                        var free = keybind.Modifiers.Contains(KeyModifiers.Free);
+                        if (ImGui.Checkbox($"Free##{SelectedAction.Value}_{keybind}", ref free))
+                        {
+                            var newKeybind = new Keybind(keybind.Modifiers, keybind.Key);
+                            if (!newKeybind.Modifiers.Add(KeyModifiers.Free))
+                                newKeybind.Modifiers.Remove(KeyModifiers.Free);
+
+                            keybindDictionary[SelectedAction.Value].Remove(newKeybind);
+                            keybindDictionary[SelectedAction.Value].Remove(keybind);
+                            keybindDictionary[SelectedAction.Value].Add(newKeybind);
+                            FlushConfig();
+                        }
+
+                        ImGui.SetItemTooltip(
+                            "Turning on Free means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.");
+
                         ImGui.EndDisabled();
                     }
                 }
@@ -229,6 +246,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
             ShownInputConfigKeybinds = null;
             return;
         }
+
         ShownInputConfigKeybinds = Screen.InputManager.InputConfig.Keybinds.Where(
             entry =>
                 entry.Key.ToString().ToLower().Contains(_searchQuery.ToLower())
