@@ -674,9 +674,6 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void TogglePlayPause()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Space))
-                return;
-
             if (Track == null || Track.IsDisposed)
                 return;
 
