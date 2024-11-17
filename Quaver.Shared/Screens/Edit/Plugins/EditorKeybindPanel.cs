@@ -54,7 +54,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         DrawDescription();
 
         ImGui.Dummy(new Vector2(10, 10));
-        
+
         DrawEdit();
 
         DrawTable();
@@ -67,7 +67,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     private void DrawDescription()
     {
         ImGui.TextWrapped("To change the keybind of an action, first click on the action.");
-        ImGui.TextWrapped("You can then left click on a key to change the keybind, or right click to remove it.");
+        ImGui.TextWrapped("You can then choose to change or remove any keys from the action.");
         ImGui.TextWrapped("You can also add a key by clicking on the '+' button.");
     }
 
@@ -101,7 +101,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
             FlushConfig();
         }
 
-        if (ImGui.BeginTable("Keys", 1, ImGuiTableFlags.None))
+        if (ImGui.BeginTable("Keys", 2, ImGuiTableFlags.None))
         {
             if (selected)
             {
@@ -118,40 +118,41 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                     if (isKeybindRebinding)
                     {
                         ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
-                        ImGui.BulletText("Please enter a new keybind...");
+                        ImGui.TextWrapped("Please enter a new keybind...");
                         ImGui.PopStyleColor();
                     }
                     else
                     {
-                        ImGui.BulletText(keybind.ToString());
-                        if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+                        ImGui.TextWrapped(keybind.ToString());
+
+                        ImGui.TableNextColumn();
+                        if (ImGui.Button("Change"))
                         {
                             RebindingKeybind = keybind;
                             PreviousKeyState = new GenericKeyState(new GenericKey[]
                                 { new() { MouseButton = MouseButton.Left } });
                         }
 
-                        if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                        ImGui.SameLine();
+                        if (ImGui.Button("Remove"))
                         {
                             keybindDictionary[SelectedAction.Value].Remove(keybind);
                             FlushConfig();
                         }
                     }
                 }
-
-                if (!Equals(RebindingKeybind, _emptyKeybind))
-                {
-                    ImGui.TableNextRow();
-                    ImGui.TableNextColumn();
-                    if (ImGui.Button("+"))
-                    {
-                        RebindingKeybind = _emptyKeybind;
-                    }
-                }
             }
 
             IsWindowHovered = IsWindowHovered || ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
             ImGui.EndTable();
+        }
+
+        if (!Equals(RebindingKeybind, _emptyKeybind))
+        {
+            if (ImGui.Button("+"))
+            {
+                RebindingKeybind = _emptyKeybind;
+            }
         }
 
 
