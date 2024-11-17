@@ -41,7 +41,7 @@ public class EditorPanelState
     public void ApplyState(EditorPanelType editorPanelType, EditScreenView editScreenView)
     {
         var targetDrawable = GetPanelDrawable(editorPanelType, editScreenView);
-        targetDrawable.Parent = editScreenView.Container;
+        targetDrawable.Parent = editScreenView.PanelContainer;
         targetDrawable.Position = new ScalableVector2(Position.X, Position.Y);
         targetDrawable.Visible = Enabled;
         targetDrawable.Alignment = Alignment;

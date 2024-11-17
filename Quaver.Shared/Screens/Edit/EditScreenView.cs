@@ -93,6 +93,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Container PanelContainer { get; private set; }
+
+        /// <summary>
+        /// </summary>
         public bool IsImGuiHovered { get; private set; }
 
         /// <summary>
@@ -123,6 +127,7 @@ namespace Quaver.Shared.Screens.Edit
             CreatePlayfield();
             CreateFooter();
             CreateSelector();
+            PanelContainer = new Container {Parent = Container};
             CreateDetailsPanel();
             CreateCompositionTools();
             CreateHitsoundsPanel();
@@ -237,7 +242,7 @@ namespace Quaver.Shared.Screens.Edit
         private void CreateDetailsPanel() => Details = new EditorPanelDetails(EditScreen.WorkingMap, EditScreen.BeatSnap,
             EditScreen.Track, EditScreen.ActionManager)
         {
-            Parent = Container,
+            Parent = PanelContainer,
             Alignment = Alignment.MidLeft,
             Y = -200
         };
@@ -246,7 +251,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void CreateCompositionTools() => CompositionTools = new EditorPanelCompositionTools(EditScreen.CompositionTool)
         {
-            Parent = Container,
+            Parent = PanelContainer,
             Alignment = Alignment.MidLeft,
             Y = 200
         };
@@ -255,7 +260,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void CreateHitsoundsPanel() => Hitsounds = new EditorPanelHitsounds(EditScreen.SelectedHitObjects, EditScreen.ActionManager)
         {
-            Parent = Container,
+            Parent = PanelContainer,
             Alignment = Alignment.MidRight,
             Y = 200
         };
@@ -263,7 +268,7 @@ namespace Quaver.Shared.Screens.Edit
         private void CreateLayersPanel() => Layers = new EditorPanelLayers(EditScreen.ActionManager, EditScreen.WorkingMap,
             EditScreen.SelectedLayer, EditScreen.DefaultLayer, EditScreen.SelectedHitObjects, EditScreen.ObjectColoring)
         {
-            Parent = Container,
+            Parent = PanelContainer,
             Alignment = Alignment.MidRight,
             Y = -200
         };
@@ -475,10 +480,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void ResetPanelParents()
         {
-            Layers.Parent = Container;
-            Details.Parent = Container;
-            CompositionTools.Parent = Container;
-            Hitsounds.Parent = Container;
+            PanelContainer.Parent = Container;
             AutoMod.Parent = Container;
             Footer.Parent = Container;
         }
