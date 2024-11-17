@@ -55,6 +55,21 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     /// </summary>
     private Keybind SearchKeybind { get; set; }
 
+    /// <summary>
+    /// </summary>
+    private HashSet<Keybind> ConflictingKeybinds { get; set; } = new();
+
+    /// <summary>
+    ///     The entries to show in the table
+    ///     If null, use Screen.InputManager.InputConfig.Keybinds
+    ///     Otherwise use this
+    /// </summary>
+    private List<KeyValuePair<KeybindActions, KeybindList>> ShownInputConfigKeybinds { get; set; }
+
+    /// <summary>
+    ///     When the input system get reset, we need to know this.
+    /// </summary>
+    private Dictionary<KeybindActions, KeybindList> LastInputConfigReference { get; set; }
 
     public void Initialize()
     {
@@ -71,6 +86,13 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
         ImGui.Dummy(new Vector2(10, 10));
 
+        if (!ReferenceEquals(LastInputConfigReference, Screen.InputManager.InputConfig.Keybinds))
+        {
+            SearchKeybind = null;
+            _searchQuery = "";
+            FindConflictingKeybinds();
+        }
+
         DrawEdit();
 
         DrawTable();
@@ -78,6 +100,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         HandleInput();
 
         ImGui.End();
+        LastInputConfigReference = Screen.InputManager.InputConfig.Keybinds;
     }
 
     private void DrawDescription()
@@ -191,25 +214,38 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         ImGui.EndDisabled();
     }
 
-    private List<KeyValuePair<KeybindActions, KeybindList>> ShownInputConfigKeybinds { get; set; }
-
     private void FlushConfig()
     {
         Screen.InputManager.InputConfig.SaveToConfig();
         Screen.ResetInputManager();
         ApplyFilter();
+        FindConflictingKeybinds();
     }
 
     private void ApplyFilter()
     {
-        if (string.IsNullOrWhiteSpace(_searchQuery))
+        if (string.IsNullOrWhiteSpace(_searchQuery) && SearchKeybind == null)
+        {
             ShownInputConfigKeybinds = null;
+            return;
+        }
         ShownInputConfigKeybinds = Screen.InputManager.InputConfig.Keybinds.Where(
             entry =>
                 entry.Key.ToString().ToLower().Contains(_searchQuery.ToLower())
                 && (SearchKeybind == null || Equals(SearchKeybind, _emptyKeybind) ||
                     entry.Value.Contains(SearchKeybind))
         ).ToList();
+    }
+
+    private void FindConflictingKeybinds()
+    {
+        ConflictingKeybinds.Clear();
+        var existingKeybinds = new HashSet<Keybind>();
+        foreach (var (_, keybinds) in Screen.InputManager.InputConfig.Keybinds)
+        {
+            ConflictingKeybinds.UnionWith(existingKeybinds.Intersect(keybinds));
+            existingKeybinds.UnionWith(keybinds);
+        }
     }
 
     private unsafe void DrawTable()
@@ -250,7 +286,13 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                 if (!selected)
                     ImGui.PopStyleColor();
                 ImGui.TableNextColumn();
+
+                var conflicting = ConflictingKeybinds.Overlaps(keybindList);
+                if (conflicting)
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
                 ImGui.TextWrapped(string.Join(", ", keybindList));
+                if (conflicting)
+                    ImGui.PopStyleColor();
             }
         }
 
