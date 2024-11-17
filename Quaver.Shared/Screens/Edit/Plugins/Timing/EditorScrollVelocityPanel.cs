@@ -224,6 +224,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     Screen.ActionManager.CreateTimingGroup(newGroupId,
                         new ScrollGroup
                         {
+                            InitialScrollVelocity = 1,
                             ScrollVelocities =
                                 new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } },
                             ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
