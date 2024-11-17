@@ -36,9 +36,25 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
     private KeybindActions? SelectedAction { get; set; }
 
+    /// <summary>
+    ///     If null, nothing happens.
+    ///     Otherwise if <see cref="SelectedAction"/> is not null, we will record the next keybind.
+    ///     The current value of <see cref="RebindingKeybind"/> will be changed to the next keybind
+    ///     for the <see cref="SelectedAction"/>.
+    /// </summary>
     private Keybind RebindingKeybind { get; set; }
 
     private readonly Keybind _emptyKeybind = new(Keys.None);
+
+    private string _searchQuery = "";
+
+    /// <summary>
+    ///     If <see cref="_emptyKeybind"/>, we will record the next key input to be filtered.
+    ///     If null, don't apply this filter.
+    ///     Otherwise only actions with this keybind will be shown.
+    /// </summary>
+    private Keybind SearchKeybind { get; set; }
+
 
     public void Initialize()
     {
@@ -76,6 +92,17 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         var currentKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
         var keys = currentKeyState.UniqueKeyPresses(PreviousKeyState ?? new GenericKeyState(Array.Empty<GenericKey>()));
         PreviousKeyState = currentKeyState;
+
+        if (Equals(SearchKeybind, _emptyKeybind))
+        {
+            if (keys.Count > 0)
+            {
+                SearchKeybind = keys.First();
+                ApplyFilter();
+                return;
+            }
+        }
+
         if (RebindingKeybind == null || SelectedAction == null)
             return;
         if (keys.Count > 0)
@@ -126,7 +153,10 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                         ImGui.TextWrapped(keybind.ToString());
 
                         ImGui.TableNextColumn();
-                        if (ImGui.Button("Change"))
+
+                        // Don't allow input when search keybind is being recorded
+                        ImGui.BeginDisabled(Equals(SearchKeybind, _emptyKeybind));
+                        if (ImGui.Button($"Change##{SelectedAction.Value}_{keybind}"))
                         {
                             RebindingKeybind = keybind;
                             PreviousKeyState = new GenericKeyState(new GenericKey[]
@@ -134,11 +164,13 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                         }
 
                         ImGui.SameLine();
-                        if (ImGui.Button("Remove"))
+                        if (ImGui.Button($"Remove##{SelectedAction.Value}_{keybind}"))
                         {
                             keybindDictionary[SelectedAction.Value].Remove(keybind);
                             FlushConfig();
                         }
+
+                        ImGui.EndDisabled();
                     }
                 }
             }
@@ -159,14 +191,36 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         ImGui.EndDisabled();
     }
 
+    private List<KeyValuePair<KeybindActions, KeybindList>> ShownInputConfigKeybinds { get; set; }
+
     private void FlushConfig()
     {
         Screen.InputManager.InputConfig.SaveToConfig();
         Screen.ResetInputManager();
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        if (string.IsNullOrWhiteSpace(_searchQuery))
+            ShownInputConfigKeybinds = null;
+        ShownInputConfigKeybinds = Screen.InputManager.InputConfig.Keybinds.Where(
+            entry =>
+                entry.Key.ToString().ToLower().Contains(_searchQuery.ToLower())
+                && (SearchKeybind == null || Equals(SearchKeybind, _emptyKeybind) ||
+                    entry.Value.Contains(SearchKeybind))
+        ).ToList();
     }
 
     private unsafe void DrawTable()
     {
+        if (ImGui.InputTextWithHint("##Search", "Search Actions", ref _searchQuery, 100))
+        {
+            ApplyFilter();
+        }
+
+        DrawKeybindSearch();
+
         if (!ImGui.BeginTable("Keybinds", 2, ImGuiTableFlags.ScrollY | ImGuiTableFlags.BordersH)) return;
         ImGui.TableSetupScrollFreeze(0, 1);
         ImGui.TableSetupColumn("Name");
@@ -174,7 +228,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         ImGui.TableHeadersRow();
         var clipperRaw = new ImGuiListClipper();
         var clipper = new ImGuiListClipperPtr(&clipperRaw);
-        var inputConfigKeybinds = Screen.InputManager.InputConfig.Keybinds.ToList();
+
+        var inputConfigKeybinds = ShownInputConfigKeybinds ?? Screen.InputManager.InputConfig.Keybinds.ToList();
         clipper.Begin(inputConfigKeybinds.Count);
         while (clipper.Step())
         {
@@ -202,6 +257,52 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         IsWindowHovered = IsWindowHovered || ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
         ImGui.EndTable();
+    }
+
+    private void DrawKeybindSearch()
+    {
+        var waitingForInput = Equals(SearchKeybind, _emptyKeybind);
+        ImGui.BeginDisabled(waitingForInput);
+
+        var str = SearchKeybind?.ToString() ?? "";
+        var flags = ImGuiInputTextFlags.EnterReturnsTrue;
+        if (waitingForInput)
+        {
+            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
+            flags |= ImGuiInputTextFlags.ReadOnly;
+            str = "Input a keybind to search...";
+        }
+
+        if (ImGui.InputTextWithHint("##SearchKeybind", "Search Keybind", ref str, 20, flags))
+        {
+            SearchKeybind = string.IsNullOrWhiteSpace(str) || !Keybind.TryParse(str, out var newSearchKeybind)
+                ? null
+                : newSearchKeybind;
+            ApplyFilter();
+        }
+
+        ImGui.PopStyleColor();
+        ImGui.SameLine();
+
+        // Don't allow input when a keybind is being rebound
+        ImGui.BeginDisabled(RebindingKeybind != null);
+        if (ImGui.Button("Input"))
+        {
+            SearchKeybind = _emptyKeybind;
+            PreviousKeyState = new GenericKeyState(new GenericKey[]
+                { new() { MouseButton = MouseButton.Left } });
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Clear"))
+        {
+            SearchKeybind = null;
+            ApplyFilter();
+        }
+
+        ImGui.EndDisabled();
+
+        ImGui.EndDisabled();
     }
 
     /// <summary>
