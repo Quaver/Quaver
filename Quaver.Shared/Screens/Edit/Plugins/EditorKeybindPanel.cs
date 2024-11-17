@@ -178,7 +178,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                         ImGui.TableNextColumn();
 
                         // Don't allow input when search keybind is being recorded
-                        ImGui.BeginDisabled(Equals(SearchKeybind, _emptyKeybind));
+                        ImGui.BeginDisabled(Equals(SearchKeybind, _emptyKeybind) || RebindingKeybind != null);
                         if (ImGui.Button($"Change##{SelectedAction.Value}_{keybind}"))
                         {
                             RebindingKeybind = keybind;
