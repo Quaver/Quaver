@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
@@ -94,6 +95,38 @@ namespace Quaver.Shared.Screens.Edit.Input
             Screen.InvertBeatSnapScroll.TriggerChange();
         }
 
+        private HashSet<GenericKey> GetTestPlayKeys()
+        {
+            return new HashSet<GenericKey>
+            {
+                ConfigManager.KeyMania4K1.Value,
+                ConfigManager.KeyMania4K2.Value,
+                ConfigManager.KeyMania4K3.Value,
+                ConfigManager.KeyMania4K4.Value,
+                ConfigManager.KeyMania7K1.Value,
+                ConfigManager.KeyMania7K2.Value,
+                ConfigManager.KeyMania7K3.Value,
+                ConfigManager.KeyMania7K4.Value,
+                ConfigManager.KeyMania7K5.Value,
+                ConfigManager.KeyMania7K6.Value,
+                ConfigManager.KeyMania7K7.Value,
+                ConfigManager.KeyLayout4KScratch1.Value,
+                ConfigManager.KeyLayout4KScratch2.Value,
+                ConfigManager.KeyLayout4KScratch3.Value,
+                ConfigManager.KeyLayout4KScratch4.Value,
+                ConfigManager.KeyLayout4KScratch5.Value,
+                ConfigManager.KeyLayout7KScratch1.Value,
+                ConfigManager.KeyLayout7KScratch2.Value,
+                ConfigManager.KeyLayout7KScratch3.Value,
+                ConfigManager.KeyLayout7KScratch4.Value,
+                ConfigManager.KeyLayout7KScratch5.Value,
+                ConfigManager.KeyLayout7KScratch6.Value,
+                ConfigManager.KeyLayout7KScratch7.Value,
+                ConfigManager.KeyLayout7KScratch8.Value,
+                ConfigManager.KeyLayout7KScratch9.Value,
+            };
+        }
+
         private void ConstructInvertScrollingActions()
         {
             InvertScrollingActions = new Dictionary<KeybindActions, Bindable<bool>>
@@ -141,8 +174,17 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private void HandleKeyPresses()
         {
-            var keyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
+            var pressedKeys = GenericKeyManager.GetPressedKeys().ToHashSet();
+
+            // If play testing, don't make any conflict with it.
+            if (View.MapPreview?.IsPlayTesting.Value ?? false)
+            {
+                pressedKeys.ExceptWith(GetTestPlayKeys());
+            }
+
+            var keyState = new GenericKeyState(pressedKeys);
             var uniqueKeyPresses = keyState.UniqueKeyPresses(previousKeyState);
+            
             var allMatchedActions = new Dictionary<Keybind, HashSet<KeybindActions>>();
             foreach (var pressedKeybind in keyState.PressedKeybinds())
             {
@@ -222,10 +264,13 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private void HandleKeyReleasesAfterHoldAction()
         {
+            var testPlayKeys = GetTestPlayKeys();
+            // If play testing, don't make any conflict with it.
+            var playTesting = View.MapPreview?.IsPlayTesting.Value ?? false;
             foreach (var action in HoldAndReleaseActions)
             {
                 var binds = InputConfig.GetOrDefault(action);
-                if (binds.IsNotBound()) continue;
+                if (binds.IsNotBound() || playTesting && binds.Any(x => testPlayKeys.Contains(x.Key))) continue;
 
                 if (binds.IsUniqueRelease())
                     HandleAction(action, false, true);

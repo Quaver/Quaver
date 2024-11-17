@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
     {
         /// <summary>
         /// </summary>
-        private Bindable<bool> IsPlayTesting { get; }
+        internal Bindable<bool> IsPlayTesting { get; }
 
         /// <summary>
         /// </summary>
