@@ -478,7 +478,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private unsafe void DrawTable()
         {
             if (!ImGui.BeginTable("##SSFTable", 2, ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchSame))
+            {
+                IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
                 return;
+            }
+
             ImGui.TableSetupScrollFreeze(0, 1);
             ImGui.TableSetupColumn("Time");
             ImGui.TableSetupColumn("Multiplier");
