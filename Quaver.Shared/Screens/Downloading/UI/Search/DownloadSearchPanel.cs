@@ -190,7 +190,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
                 item.Alignment = Alignment.MidRight;
 
                 const int padding = 20;
-                var spacing = 20;
+                // Spacing between sort by and sort order should decrease (sort by is i == 1)
+                var spacing = i == 1 ? 5 : 20;
 
                 if (i == 0)
                     item.X = -padding;
