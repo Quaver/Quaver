@@ -7,12 +7,12 @@ using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Downloading.UI.Search
 {
-    public class DownloadSortOrderDropdown : LabelledDropdown
+    public class DownloadSortOrderDropdown : Dropdown
     {
-        public DownloadSortOrderDropdown(Bindable<bool> sortBy) : base("ORDER: ", 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(150, 38), 22, ColorHelper.HexToColor($"#ffe76b"), sortBy.Value ? 1 : 0))
+        public DownloadSortOrderDropdown(Bindable<bool> sortBy) : base(GetDropdownItems(),
+            new ScalableVector2(150, 38), 22, ColorHelper.HexToColor($"#ffe76b"), sortBy.Value ? 1 : 0)
         {
-            Dropdown.ItemSelected += (sender, args) => sortBy.Value = args.Index > 0;
+            ItemSelected += (sender, args) => sortBy.Value = args.Index > 0;
         }
 
         private static List<string> GetDropdownItems() => new List<string>()

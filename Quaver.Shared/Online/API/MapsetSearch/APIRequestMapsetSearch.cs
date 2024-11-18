@@ -152,7 +152,6 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             ReverseSort = reverseSort;
             SortBy = sortBy;
             Page = page;
-            Console.WriteLine(ReverseSort);
 
             // Upload Date
             if (string.IsNullOrEmpty(startUploadDate))
