@@ -21,10 +21,4 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             "Descending"
         };
     }
-
-    public enum DownloadSortOrder
-    {
-        Ascending,
-        Descending
-    }
 }
