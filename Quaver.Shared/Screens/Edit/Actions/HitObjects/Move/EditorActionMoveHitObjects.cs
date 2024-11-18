@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MoonSharp.Interpreter;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
@@ -81,6 +82,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
                 }
             }
 
+            WorkingMap.HitObjects.HybridSort();
             ActionManager.TriggerEvent(EditorActionType.MoveHitObjects, new EditorHitObjectsMovedEventArgs(HitObjects));
         }
 
