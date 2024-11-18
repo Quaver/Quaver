@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         [YamlIgnore] public static Keybind None = new Keybind(Keys.None);
 
         public HashSet<KeyModifiers> Modifiers { get; } = new HashSet<KeyModifiers>();
-        public GenericKey Key { get; } = new GenericKey() { KeyboardKey = Keys.None };
+        public GenericKey Key { get; private set; } = new GenericKey() { KeyboardKey = Keys.None };
 
         public Keybind(string notation)
         {
@@ -33,6 +33,30 @@ namespace Quaver.Shared.Screens.Edit.Input
                         Logger.Error($"Encountered unknown key name {keyString} during keybind parsing", LogType.Runtime);
                 }
             }
+        }
+
+        private Keybind() {}
+
+        public static bool TryParse(string notation, out Keybind keybind)
+        {
+            keybind = new Keybind();
+            var keys = notation.Trim().Split("+").Select(s => s.Trim());
+            foreach (var keyString in keys)
+            {
+                KeyModifiers mod;
+                if (Enum.TryParse(keyString, out mod))
+                    keybind.Modifiers.Add(mod);
+                else if (keybind.Key.KeyboardKey == Keys.None)
+                {
+                    GenericKey parsed;
+                    if (GenericKey.TryParse(keyString, out parsed))
+                        keybind.Key = parsed;
+                    else
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         public Keybind(Keys key) => Key = new GenericKey() { KeyboardKey = key };

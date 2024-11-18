@@ -312,7 +312,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public EditorInputManager InputManager { get; }
+        public EditorInputManager InputManager { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -405,6 +405,11 @@ namespace Quaver.Shared.Screens.Edit
             AddFileWatcher();
 
             View = new EditScreenView(this);
+            InputManager = new EditorInputManager(this);
+        }
+
+        public void ResetInputManager()
+        {
             InputManager = new EditorInputManager(this);
         }
 
@@ -669,9 +674,6 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void TogglePlayPause()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Space))
-                return;
-
             if (Track == null || Track.IsDisposed)
                 return;
 
@@ -914,6 +916,7 @@ namespace Quaver.Shared.Screens.Edit
                 {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
                 {EditorBuiltInPlugin.ScrollSpeedFactorEditor, new EditorScrollSpeedFactorPanel(this)},
                 {EditorBuiltInPlugin.TimingGroupEditor, new EditorTimingGroupPanel(this)},
+                {EditorBuiltInPlugin.KeybindEditor, new EditorKeybindPanel(this)},
                 {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
                     $"{dir}/BpmCalculator/plugin.lua", true)},
                 {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",

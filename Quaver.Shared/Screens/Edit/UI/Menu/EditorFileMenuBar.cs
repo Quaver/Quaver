@@ -778,6 +778,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             foreach (var plugin in Screen.BuiltInPlugins)
             {
+                if (plugin.Key is EditorBuiltInPlugin.KeybindEditor)
+                    continue;
                 if (ImGui.MenuItem(plugin.Value.Name, "", plugin.Value.IsActive))
                 {
                     plugin.Value.IsActive = !plugin.Value.IsActive;
@@ -1018,6 +1020,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Keybinds"))
                 return;
 
+            var keybindEditor = Screen.BuiltInPlugins[EditorBuiltInPlugin.KeybindEditor];
+            if (ImGui.MenuItem(keybindEditor.Name, "", keybindEditor.IsActive))
+            {
+                keybindEditor.IsActive = !keybindEditor.IsActive;
+
+                if (keybindEditor.IsActive)
+                    keybindEditor.Initialize();
+            }
+
+            ImGui.Separator();
+
             if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
                 Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
 
@@ -1029,6 +1042,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Fill Missing Actions"))
             {
                 var filledCount = Screen.InputManager.InputConfig.FillMissingKeys(true);
+                Screen.InputManager.InputConfig.SaveToConfig();
+                Screen.ResetInputManager();
                 NotificationManager.Show(NotificationLevel.Info, $"Filled {filledCount} missing actions!");
             }
 
@@ -1038,6 +1053,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     () =>
                     {
                         Screen.InputManager.InputConfig.ResetConfigFile();
+                        Screen.ResetInputManager();
                         NotificationManager.Show(NotificationLevel.Info, $"All keybinds have been reset!");
                     }));
             }
