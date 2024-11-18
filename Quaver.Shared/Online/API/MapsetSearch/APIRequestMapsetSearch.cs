@@ -152,6 +152,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             ReverseSort = reverseSort;
             SortBy = sortBy;
             Page = page;
+            Console.WriteLine(ReverseSort);
 
             // Upload Date
             if (string.IsNullOrEmpty(startUploadDate))
@@ -211,7 +212,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("min_combo", MinCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("max_combo", MaxCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("page", Page.ToString());
-                request.AddQueryParameter("sort_order", ReverseSort ? "desc" : "asc");
+                var invertSort = SortBy is DownloadSortBy.DateSubmitted or DownloadSortBy.DateLastUpdated;
+                request.AddQueryParameter("sort_order", ReverseSort ^ invertSort ? "desc" : "asc");
                 request.AddQueryParameter("sort_by", SortBy switch
                 {
                     DownloadSortBy.DateLastUpdated => "date_last_updated",
