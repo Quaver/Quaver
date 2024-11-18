@@ -92,6 +92,14 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         /// <summary>
         /// </summary>
+        public bool ReverseSort { get; }
+
+        /// <summary>
+        /// </summary>
+        public DownloadSortBy SortBy { get; }
+
+        /// <summary>
+        /// </summary>
         private int Page { get; }
 
         /// <summary>
@@ -115,11 +123,16 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// <param name="endUpdateDate"></param>
         /// <param name="minCombo"></param>
         /// <param name="maxCombo"></param>
+        /// <param name="reverseSort"></param>
+        /// <param name="sortBy"></param>
         /// <param name="page"></param>
-        public APIRequestMapsetSearch(string query, DownloadFilterMode mode, DownloadFilterRankedStatus status, float minDiff,
-            float maxDiff, float minBpm, float maxBpm, int minLength, int maxLength, int minln, int maxln, int minPlayCount,
-            int maxPlayCount, string startUploadDate, string endUploadDate, string startUpdateDate, string endUpdateDate,
-            int minCombo, int maxCombo, int page)
+        public APIRequestMapsetSearch(string query, DownloadFilterMode mode, DownloadFilterRankedStatus status,
+            float minDiff,
+            float maxDiff, float minBpm, float maxBpm, int minLength, int maxLength, int minln, int maxln,
+            int minPlayCount,
+            int maxPlayCount, string startUploadDate, string endUploadDate, string startUpdateDate,
+            string endUpdateDate,
+            int minCombo, int maxCombo, bool reverseSort, DownloadSortBy sortBy, int page)
         {
             Query = query;
             Mode = mode;
@@ -136,6 +149,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             MaxPlayCount = maxPlayCount;
             MinCombo = minCombo;
             MaxCombo = maxCombo;
+            ReverseSort = reverseSort;
+            SortBy = sortBy;
             Page = page;
 
             // Upload Date
@@ -196,6 +211,20 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("min_combo", MinCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("max_combo", MaxCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("page", Page.ToString());
+                var invertSort = SortBy is DownloadSortBy.DateSubmitted or DownloadSortBy.DateLastUpdated;
+                request.AddQueryParameter("sort_order", ReverseSort ^ invertSort ? "desc" : "asc");
+                request.AddQueryParameter("sort_by", SortBy switch
+                {
+                    DownloadSortBy.DateLastUpdated => "date_last_updated",
+                    DownloadSortBy.DateSubmitted => "date_submitted",
+                    DownloadSortBy.Length => "length",
+                    DownloadSortBy.DifficultyRating => "difficulty_rating",
+                    DownloadSortBy.MaxCombo => "max_combo",
+                    DownloadSortBy.Bpm => "bpm",
+                    DownloadSortBy.LongNotePercentage => "long_note_percentage",
+                    DownloadSortBy.PlayCount => "play_count",
+                    _ => throw new ArgumentOutOfRangeException()
+                });
 
                 var response = client.Execute(request);
                 var json = JObject.Parse(response.Content);

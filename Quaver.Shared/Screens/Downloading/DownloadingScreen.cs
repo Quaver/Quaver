@@ -160,9 +160,9 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        public Bindable<DownloadSortBy> SortBy { get; } = new Bindable<DownloadSortBy>(DownloadSortBy.Newest)
+        public Bindable<DownloadSortBy> SortBy { get; } = new Bindable<DownloadSortBy>(DownloadSortBy.DateLastUpdated)
         {
-            Value = DownloadSortBy.Newest
+            Value = DownloadSortBy.DateLastUpdated
         };
 
         /// <summary>
@@ -597,7 +597,7 @@ namespace Quaver.Shared.Screens.Downloading
                 FilterRankedStatus.Value, MinDifficulty.Value, MaxDifficulty.Value, MinBpm.Value,
                 MaxBpm.Value, MinLength.Value, MaxLength.Value, MinLongNotePercent.Value, MaxLongNotePercent.Value,
                 MinPlayCount.Value, MaxPlayCount.Value, MinUploadDate.Value, MaxUploadDate.Value,
-                MinLastUpdateDate.Value, MaxLastUpdateDate.Value, MinCombo.Value, MaxCombo.Value, page);
+                MinLastUpdateDate.Value, MaxLastUpdateDate.Value, MinCombo.Value, MaxCombo.Value, ReverseSort.Value, SortBy.Value, page);
         }
         /// <summary>
         /// </summary>
