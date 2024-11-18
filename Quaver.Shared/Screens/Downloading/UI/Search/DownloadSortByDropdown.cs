@@ -18,16 +18,13 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         private static List<string> GetDropdownItems() => new List<string>()
         {
             "Newest",
-            "Artist",
-            "Title",
-            "Creator",
-            "BPM",
+            "Date Submitted",
             "Length",
-            "Min Difficulty",
-            "Max Difficulty",
-            "Long Note %",
+            "Difficulty",
+            "Max Combo",
+            "BPM",
+            "LN %",
             "Play Count",
-            "Max Combo"
         };
 
         private static int GetSelectedIndex() => 0;
@@ -35,16 +32,13 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
 
     public enum DownloadSortBy
     {
-        Newest,
-        Artist,
-        Title,
-        Creator,
-        Bpm,
+        DateLastUpdated,
+        DateSubmitted,
         Length,
-        MinDifficulty,
-        MaxDifficulty,
-        LNs,
+        DifficultyRating,
+        MaxCombo,
+        Bpm,
+        LongNotePercentage,
         PlayCount,
-        MaxCombo
     }
 }

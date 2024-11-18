@@ -91,6 +91,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
 
             CreateBanner();
             //CreateDifficulty();
+            CreateSortBy();
             CreateRankedStatus();
             CreateMode();
             CreateSearchBar();
