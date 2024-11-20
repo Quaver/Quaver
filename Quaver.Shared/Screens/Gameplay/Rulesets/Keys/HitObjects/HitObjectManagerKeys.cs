@@ -283,6 +283,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 timingGroupController.Initialize();
                 TimingGroupControllers.Add(id, timingGroupController);
             }
+            UpdateCurrentTrackPosition();
 
             InitializeHitStats();
 

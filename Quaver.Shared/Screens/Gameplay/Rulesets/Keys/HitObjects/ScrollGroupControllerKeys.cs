@@ -24,7 +24,6 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
         // Initialize SV
         Populate();
         InitializePositionMarkers();
-        UpdateCurrentTrackPosition();
     }
 
     public override float ScrollSpeed => base.ScrollSpeed * CurrentScrollSpeedFactor;
