@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                         SelectedMapset.Value = Mapset;
                         break;
                     case Download:
-                        if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == Mapset.Id))
+                        if (MapsetDownloadManager.IsMapsetInQueue(Mapset.Id))
                         {
                             NotificationManager.Show(NotificationLevel.Warning, $"This mapset is already downloading!");
                             return;

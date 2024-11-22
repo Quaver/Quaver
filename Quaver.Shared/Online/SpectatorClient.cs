@@ -209,7 +209,7 @@ namespace Quaver.Shared.Online
                     var response = new APIRequestMapInformation(Player.CurrentStatus.MapId).ExecuteRequest();
 
                     // If we're already downloading it, don't restart
-                    if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == response.Map.MapsetId))
+                    if (MapsetDownloadManager.IsMapsetInQueue(response.Map.MapsetId))
                         return;
 
                     // The mapset is currently being imported

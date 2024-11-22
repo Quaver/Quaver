@@ -485,11 +485,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         private void DownloadMapset() => ThreadScheduler.Run(() =>
         {
             // Map is already downloading
-            if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedGame.Value.MapsetId))
+            if (MapsetDownloadManager.IsMapsetInQueue(SelectedGame.Value.MapsetId))
                 return;
 
             // Prevent multiple downloads of the map
-            if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == -SelectedGame.Value.GameId))
+            if (MapsetDownloadManager.IsMapsetInQueue(-SelectedGame.Value.GameId))
                 return;
 
             if (SelectedGame.Value.IsMapsetShared && SelectedGame.Value.MapId == -1)
@@ -530,7 +530,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 var response = new APIRequestMapInformation(SelectedGame.Value.MapId).ExecuteRequest();
 
                 // If we're already downloading it, don't restart
-                if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == response.Map.MapsetId))
+                if (MapsetDownloadManager.IsMapsetInQueue(response.Map.MapsetId))
                     return;
 
                 // The mapset is currently being imported
@@ -569,7 +569,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             try
             {
                 // If we're already downloading it, don't restart
-                if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedGame.Value.GameId))
+                if (MapsetDownloadManager.IsMapsetInQueue(-SelectedGame.Value.GameId))
                     return;
 
                 // The mapset is currently being imported

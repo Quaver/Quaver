@@ -216,7 +216,7 @@ namespace Quaver.Shared.Screens.Download
         {
             FileDownloader.Value?.Cancel();
             Removed?.Invoke(this, EventArgs.Empty);
-            MapsetDownloadManager.CurrentDownloads.Remove(this);
+            MapsetDownloadManager.ManipulateCurrentDownloads(c => c.Remove(this));
             MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
             Dispose();
         }
@@ -240,6 +240,7 @@ namespace Quaver.Shared.Screens.Download
         public bool EligibleForRetry()
         {
             if (DateTime.Now - _lastRetryTime < MinimumRetryInterval) return false;
+            if (Status.Value == null) return false;
             if (Status.Value.Status == FileDownloaderStatus.Downloading && Eta < MinimumEtaForRetry) return false;
             if (Status.Value.Status == FileDownloaderStatus.Complete) return false;
             return true;
