@@ -216,7 +216,7 @@ namespace Quaver.Shared.Screens.Download
         {
             FileDownloader.Value?.Cancel();
             Removed?.Invoke(this, EventArgs.Empty);
-            MapsetDownloadManager.CurrentDownloads.Remove(this);
+            MapsetDownloadManager.ManipulateCurrentDownloads(c => c.Remove(this));
             MapsetDownloadManager.CurrentActiveDownloads.Remove(this);
             Dispose();
         }

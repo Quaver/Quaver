@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Online;
@@ -20,11 +19,16 @@ namespace Quaver.Shared.Screens.Download
     public static class MapsetDownloadManager
     {
         /// <summary>
-        ///     All opf the currently downloading mapsets.
+        /// Lock of <see cref="CurrentDownloads"/>
         /// </summary>
-        public static List<MapsetDownload> CurrentDownloads { get; } = new List<MapsetDownload>();
+        private static object Lock { get; } = new();
 
-        public static HashSet<MapsetDownload> CurrentActiveDownloads { get; } = new HashSet<MapsetDownload>();
+        /// <summary>
+        ///     All of the currently downloading mapsets.
+        /// </summary>
+        internal static List<MapsetDownload> CurrentDownloads { get; } = new();
+
+        public static HashSet<MapsetDownload> CurrentActiveDownloads { get; } = new();
 
         /// <summary>
         ///    The amount of mapsets able to be downloaded at once.
@@ -36,33 +40,6 @@ namespace Quaver.Shared.Screens.Download
         /// </summary>
         public static event EventHandler<MapsetDownloadAddedEventArgs> DownloadAdded;
 
-        /// <summary>
-        ///     Downloads an individual mapset.
-        /// </summary>
-        /// <param name="mapset"></param>
-        public static MapsetDownload Download(JToken mapset)
-        {
-            // Require login in order to download.
-            if (!OnlineManager.Connected)
-            {
-                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download mapsets!");
-                return null;
-            }
-
-            if (CurrentDownloads.Any(x => x.MapsetId == (int)mapset["id"]))
-                return null;
-
-            var download = new MapsetDownload(mapset, mapset["artist"].ToString(), mapset["title"].ToString(),
-                CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
-
-            CurrentDownloads.Insert(0, download);
-
-            DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
-            OpenOnlineHub();
-
-            return download;
-        }
-
         public static MapsetDownload Download(int id, string artist, string title)
         {
             // Require login in order to download.
@@ -72,15 +49,37 @@ namespace Quaver.Shared.Screens.Download
                 return null;
             }
 
-            if (CurrentDownloads.Any(x => x.MapsetId == id))
-                return null;
+            var download = ManipulateCurrentDownloads(currentDownloads =>
+            {
+                if (currentDownloads.Any(x => x.MapsetId == id))
+                    return null;
 
-            var download =
-                new MapsetDownload(id, artist, title, CurrentActiveDownloads.Count < MAX_CONCURRENT_DOWNLOADS);
+                var download =
+                    new MapsetDownload(id, artist, title, CurrentActiveDownloads.Count < MAX_CONCURRENT_DOWNLOADS);
+
+                currentDownloads.Insert(0, download);
+                return download;
+            });
+
+            if (download == null)
+                return null;
 
             DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
 
             return download;
+        }
+
+        public static T ManipulateCurrentDownloads<T>(Func<List<MapsetDownload>, T> f)
+        {
+            lock (Lock)
+            {
+                return f(CurrentDownloads);
+            }
+        }
+
+        public static bool IsMapsetInQueue(int mapsetId)
+        {
+            return ManipulateCurrentDownloads(c => c.Any(x => x.MapsetId == mapsetId));
         }
 
         /// <summary>
@@ -98,8 +97,21 @@ namespace Quaver.Shared.Screens.Download
             if (OnlineManager.CurrentGame == null)
                 return null;
 
-            var download = new MultiplayerSharedMapsetDownload(OnlineManager.CurrentGame.GameId, artist, title,
-                CurrentActiveDownloads.Count < MAX_CONCURRENT_DOWNLOADS);
+            var download = ManipulateCurrentDownloads(currentDownloads =>
+            {
+                if (currentDownloads.Any(x => x.MapsetId == -OnlineManager.CurrentGame.GameId))
+                    return null;
+
+                var download = new MultiplayerSharedMapsetDownload(-OnlineManager.CurrentGame.GameId, artist, title,
+                    CurrentActiveDownloads.Count < MAX_CONCURRENT_DOWNLOADS);
+
+                currentDownloads.Insert(0, download);
+
+                return download;
+            });
+
+            if (download == null)
+                return null;
 
             DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
 

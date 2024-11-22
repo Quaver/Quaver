@@ -380,7 +380,7 @@ namespace Quaver.Shared.Screens.Downloading
             if (SelectedMapset.Value == null)
                 return;
 
-            if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedMapset.Value.Id))
+            if (MapsetDownloadManager.IsMapsetInQueue(SelectedMapset.Value.Id))
             {
                 NotificationManager.Show(NotificationLevel.Warning, $"This mapset is already downloading!");
                 return;
