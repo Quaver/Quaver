@@ -187,7 +187,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                             return HiddenLayerColor;
                         return ColorHelper.ToXnaColor(layer.GetColor());
                     case HitObjectColoring.TimingGroup:
-                        return ColorHelper.ToXnaColor(Map.TimingGroups[Info.TimingGroup].GetColor());
+                        var timimgGroup = Map.TimingGroups[
+                            string.IsNullOrEmpty(Info.TimingGroup) ? Qua.DefaultScrollGroupId : Info.TimingGroup];
+                        if (timimgGroup.Hidden && !Playfield.IsUneditable)
+                            return HiddenLayerColor;
+                        return ColorHelper.ToXnaColor(timimgGroup.GetColor());
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
