@@ -360,13 +360,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawTableHeader()
         {
-            ImGui.Columns(3);
+            ImGui.Columns(4);
             ImGui.SetColumnWidth(0, 160);
             ImGui.TextWrapped("ID");
             ImGui.NextColumn();
             ImGui.TextWrapped("Type");
             ImGui.NextColumn();
             ImGui.TextWrapped("Color");
+            ImGui.NextColumn();
+            ImGui.TextWrapped("Visible");
             ImGui.Separator();
             ImGui.Columns();
         }
@@ -376,11 +378,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawTableColumns()
         {
             ImGui.BeginChild("Timing Group Area");
-            ImGui.Columns(3);
+            ImGui.Columns(4);
             ImGui.SetColumnWidth(0, 160);
 
             const int elementBaseHeight = 12;
-            const int numberOfColumns = 3;
+            const int numberOfColumns = 4;
             var elementHeight = Screen.ImGuiScale * elementBaseHeight;
             var y = ImGui.GetContentRegionAvail().Y;
 
@@ -445,6 +447,33 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs |
                                                          ImGuiColorEditFlags.NoPicker;
                 DrawColorEdit(id, timingGroup, colorOptions, $"Column_{id}");
+                ImGui.NextColumn();
+
+                var visible = !timingGroup.Hidden;
+                if (ImGui.Checkbox("##Visible", ref visible))
+                {
+                    if (KeyboardManager.IsShiftDown())
+                    {
+                        if (visible)
+                        {
+                            foreach (var (_, tg) in Screen.WorkingMap.TimingGroups)
+                                tg.Hidden = true;
+                        }
+                        else
+                        {
+                            // We are shift unticking a group. If this is the only ticked group,
+                            // Make all other groups visible. Otherwise, make them all invisible.
+                            // In this action the ticked group will still be visible
+                            var b = Screen.WorkingMap.TimingGroups.Values.Count(tg => !tg.Hidden) != 1;
+                            foreach (var (_, tg) in Screen.WorkingMap.TimingGroups)
+                                tg.Hidden = b;
+                        }
+
+                        timingGroup.Hidden = false;
+                    }
+                    else 
+                        timingGroup.Hidden = !visible;
+                }
                 ImGui.NextColumn();
 
                 ImGui.PopID();
