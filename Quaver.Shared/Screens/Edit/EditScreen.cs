@@ -821,11 +821,25 @@ namespace Quaver.Shared.Screens.Edit
             NotificationManager.Show(NotificationLevel.Success, $"Deleted layer '{SelectedLayer.Value.Name}'");
         }
 
-        public void RenameLayer() =>
+        public void RenameLayer()
+        {
+            if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot rename the default layer!");
+                return;
+            }
             DialogManager.Show(new DialogRenameLayer(SelectedLayer.Value, ActionManager, WorkingMap));
+        }
 
-        public void RecolorLayer() =>
+        public void RecolorLayer()
+        {
+            if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot recolor the default layer!");
+                return;
+            }     
             DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
+        }
 
         #region TIMING_GROUPS
 
