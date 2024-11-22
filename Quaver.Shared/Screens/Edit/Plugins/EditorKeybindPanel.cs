@@ -4,10 +4,13 @@ using System.Linq;
 using System.Numerics;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Input;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
+using Wobble.Logging;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Edit.Plugins;
 
@@ -83,6 +86,18 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
         DrawDescription();
+
+        if (ImGui.Button("Show Keybind File"))
+        {
+            try
+            {
+                Utils.NativeUtils.HighlightInFileManager($"{ConfigManager.GameDirectory.Value}/editor_keys.yaml");
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
 
         ImGui.Dummy(new Vector2(10, 10));
 
