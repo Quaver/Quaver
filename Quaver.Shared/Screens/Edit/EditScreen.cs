@@ -20,6 +20,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -1847,6 +1848,25 @@ namespace Quaver.Shared.Screens.Edit
         private void OnFileDropped(object sender, string e)
         {
             var file = e.ToLower();
+
+            if (file.EndsWith(".yaml"))
+            {
+                if (Path.GetFullPath(file).Equals(Path.GetFullPath(EditorInputConfig.ConfigPath),
+                        StringComparison.CurrentCultureIgnoreCase))
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You cannot import the keymap you are already using!");
+                    return;
+                }
+                DialogManager.Show(new YesNoDialog("APPLY KEYMAP", 
+                    "Are you sure you want to overwrite your keymap?\nYou might want to back up your keymap first.",
+                    () =>
+                    {
+                        File.Copy(file, EditorInputConfig.ConfigPath, true);
+                        ResetInputManager();
+                        NotificationManager.Show(NotificationLevel.Success, "The keymap has been applied!");
+                    }));
+                return;
+            }
 
             if (!file.EndsWith(".jpg") && !file.EndsWith(".jpeg") && !file.EndsWith(".png"))
                 return;
