@@ -97,33 +97,46 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private HashSet<GenericKey> GetTestPlayKeys()
         {
-            return new HashSet<GenericKey>
+            return Screen.WorkingMap.GetKeyCount() switch
             {
-                ConfigManager.KeyMania4K1.Value,
-                ConfigManager.KeyMania4K2.Value,
-                ConfigManager.KeyMania4K3.Value,
-                ConfigManager.KeyMania4K4.Value,
-                ConfigManager.KeyMania7K1.Value,
-                ConfigManager.KeyMania7K2.Value,
-                ConfigManager.KeyMania7K3.Value,
-                ConfigManager.KeyMania7K4.Value,
-                ConfigManager.KeyMania7K5.Value,
-                ConfigManager.KeyMania7K6.Value,
-                ConfigManager.KeyMania7K7.Value,
-                ConfigManager.KeyLayout4KScratch1.Value,
-                ConfigManager.KeyLayout4KScratch2.Value,
-                ConfigManager.KeyLayout4KScratch3.Value,
-                ConfigManager.KeyLayout4KScratch4.Value,
-                ConfigManager.KeyLayout4KScratch5.Value,
-                ConfigManager.KeyLayout7KScratch1.Value,
-                ConfigManager.KeyLayout7KScratch2.Value,
-                ConfigManager.KeyLayout7KScratch3.Value,
-                ConfigManager.KeyLayout7KScratch4.Value,
-                ConfigManager.KeyLayout7KScratch5.Value,
-                ConfigManager.KeyLayout7KScratch6.Value,
-                ConfigManager.KeyLayout7KScratch7.Value,
-                ConfigManager.KeyLayout7KScratch8.Value,
-                ConfigManager.KeyLayout7KScratch9.Value,
+                4 => new HashSet<GenericKey>
+                {
+                    ConfigManager.KeyMania4K1.Value,
+                    ConfigManager.KeyMania4K2.Value,
+                    ConfigManager.KeyMania4K3.Value,
+                    ConfigManager.KeyMania4K4.Value
+                },
+                5 => new HashSet<GenericKey>()
+                {
+                    ConfigManager.KeyLayout4KScratch1.Value,
+                    ConfigManager.KeyLayout4KScratch2.Value,
+                    ConfigManager.KeyLayout4KScratch3.Value,
+                    ConfigManager.KeyLayout4KScratch4.Value,
+                    ConfigManager.KeyLayout4KScratch5.Value
+                },
+                7 => new HashSet<GenericKey>()
+                {
+                    ConfigManager.KeyMania7K1.Value,
+                    ConfigManager.KeyMania7K2.Value,
+                    ConfigManager.KeyMania7K3.Value,
+                    ConfigManager.KeyMania7K4.Value,
+                    ConfigManager.KeyMania7K5.Value,
+                    ConfigManager.KeyMania7K6.Value,
+                    ConfigManager.KeyMania7K7.Value
+                },
+                8 => new HashSet<GenericKey>()
+                {
+                    ConfigManager.KeyLayout7KScratch1.Value,
+                    ConfigManager.KeyLayout7KScratch2.Value,
+                    ConfigManager.KeyLayout7KScratch3.Value,
+                    ConfigManager.KeyLayout7KScratch4.Value,
+                    ConfigManager.KeyLayout7KScratch5.Value,
+                    ConfigManager.KeyLayout7KScratch6.Value,
+                    ConfigManager.KeyLayout7KScratch7.Value,
+                    ConfigManager.KeyLayout7KScratch8.Value,
+                    ConfigManager.KeyLayout7KScratch9.Value
+                },
+                _ => new HashSet<GenericKey>()
             };
         }
 
