@@ -240,6 +240,7 @@ namespace Quaver.Shared.Screens.Download
         public bool EligibleForRetry()
         {
             if (DateTime.Now - _lastRetryTime < MinimumRetryInterval) return false;
+            if (Status.Value == null) return false;
             if (Status.Value.Status == FileDownloaderStatus.Downloading && Eta < MinimumEtaForRetry) return false;
             if (Status.Value.Status == FileDownloaderStatus.Complete) return false;
             return true;
