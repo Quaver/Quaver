@@ -43,11 +43,16 @@ namespace Quaver.Shared.Screens.Gameplay
         private double PreviousTime { get; set; }
 
         /// <summary>
+        ///     We won't pre-start the audio further than this number of milliseconds.
+        /// </summary>
+        private const double AudioPrestartThresholdMs = 40;
+
+        /// <summary>
         ///     The appropriate time to start playing the audio.
         ///     If SmoothAudioStart is enabled, this will be earlier than 0 due to audio start lag.
         /// </summary>
         private double TimeToPlayAudio { get; } = ConfigManager.SmoothAudioStart.Value
-            ? -Math.Clamp(AudioEngine.MeasuredAudioStartDelay, 0, 40) * AudioEngine.Track.Rate
+            ? -Math.Clamp(AudioEngine.MeasuredAudioStartDelay, 0, AudioPrestartThresholdMs) * AudioEngine.Track.Rate
             : 0;
 
         /// <summary>
@@ -185,10 +190,11 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
                 else
                 {
-                    Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
+                    var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
+                    var newTime = Time + elapsedTime;
 
                     // We will have incremented MeasuredAudioStutter to Time within correctionDurationMs
-                    var avgTime = Time + (MeasuredAudioStutter ?? 0) *
+                    var correctedTime = newTime + (MeasuredAudioStutter ?? 0) *
                         gameTime.ElapsedGameTime.TotalMilliseconds / correctionDurationMs;
                     if (AudioEngine.Track.IsPlaying && AudioEngine.Track.Time != 0)
                     {
@@ -198,11 +204,28 @@ namespace Quaver.Shared.Screens.Gameplay
                             // This is the delay we have left
                             // We will use this as a correction to AudioEngine.MeasuredAudioStartDelay, so it will be
                             // better next time (hopefully)
-                            MeasuredAudioStutter = AudioEngine.Track.Time - Time;
-                            AudioEngine.MeasuredAudioStartDelay -= MeasuredAudioStutter.Value * correctionFactor;
-                            // Console.WriteLine($"Measured audio stutter = {MeasuredAudioStutter}, Correcting delay to {AudioEngine.MeasuredAudioStartDelay}");
+                            MeasuredAudioStutter = AudioEngine.Track.Time - newTime;
+                            var correctedDelay =
+                                AudioEngine.MeasuredAudioStartDelay - MeasuredAudioStutter.Value * correctionFactor;
+
+                            // We will correct it if we don't go out of threshold (this happens on 60fps)
+                            // Or if the corrected delay is less (so if the original delay is higher than threshold,
+                            //      it gets reduced)
+                            if (correctedDelay <= AudioPrestartThresholdMs ||
+                                correctedDelay < AudioEngine.MeasuredAudioStartDelay)
+                            {
+                                AudioEngine.MeasuredAudioStartDelay = Math.Clamp(correctedDelay, 0, AudioPrestartThresholdMs);
+                                // Console.WriteLine($"Corrected delay to {AudioEngine.MeasuredAudioStartDelay}");
+                            }
+
+                            // Console.WriteLine($"Measured audio stutter = {MeasuredAudioStutter}");
                         }
-                        Time = avgTime;
+
+                        // Correct timing. Don't go back in time.
+                        if (correctedTime > Time)
+                            newTime = correctedTime;
+
+                        Time = newTime;
 
                         // The following 3 conditions will make us switch to audio time:
                         // 1. Audio Time and Time is already very close. It is unnoticeable to switch directly. 
@@ -210,9 +233,16 @@ namespace Quaver.Shared.Screens.Gameplay
                         //    This could happen if we somehow managed to skip the first check.
                         // 3. We are past the correction period. We shouldn't interfere with it anyhow.
                         if (Math.Abs(Time - AudioEngine.Track.Time) < 3
-                            || Math.Abs(Time - AudioEngine.Track.Time) < Math.Abs(avgTime - AudioEngine.Track.Time)
+                            || Math.Abs(Time - AudioEngine.Track.Time) < Math.Abs(correctedTime - AudioEngine.Track.Time)
                             || Time >= correctionDurationMs)
+                        {
                             UseAudioTime = true;
+                            // Console.WriteLine($"Compensation complete at time={Time} audioTime={AudioEngine.Track.Time}");
+                        }
+                    }
+                    else
+                    {
+                        Time = newTime;
                     }
                     // Console.WriteLine($"Time: {Time}\t\t Audio Time: {AudioEngine.Track.Time}\t\t Diff: {AudioEngine.Track.Time - Time}");
                 }
