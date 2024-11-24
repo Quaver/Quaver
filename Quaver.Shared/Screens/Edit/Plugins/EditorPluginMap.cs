@@ -47,7 +47,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The scroll speed factors present in the map
         /// </summary>
-        public List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; [MoonSharpVisible(false)] set; }
+        public List<ScrollSpeedFactorInfo> ScrollSpeedFactors =>
+            EditorPluginUtils.EditScreen.SelectedScrollGroup.ScrollSpeedFactors;
 
         /// <summary>
         ///     The default scroll group for hitobjects not bound to any groups
