@@ -15,11 +15,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Move
 
         private Qua WorkingMap { get; }
 
-        private EditorLayerInfo Layer { get; }
+        public EditorLayerInfo Layer { get; }
 
-        private List<HitObjectInfo> HitObjects { get; }
+        public List<HitObjectInfo> HitObjects { get; }
 
-        private List<int> OriginalLayers { get; set; }
+        public List<int> OriginalLayers { get; private set; }
 
         /// <summary>
         /// </summary>

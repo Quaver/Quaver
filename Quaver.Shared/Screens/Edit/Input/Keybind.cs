@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         [YamlIgnore] public static Keybind None = new Keybind(Keys.None);
 
         public HashSet<KeyModifiers> Modifiers { get; } = new HashSet<KeyModifiers>();
-        public GenericKey Key { get; } = new GenericKey() {KeyboardKey = Keys.None};
+        public GenericKey Key { get; private set; } = new GenericKey() { KeyboardKey = Keys.None };
 
         public Keybind(string notation)
         {
@@ -35,17 +35,58 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
         }
 
-        public Keybind(Keys key) => Key = new GenericKey() {KeyboardKey = key};
+        private Keybind() {}
+
+        public static bool TryParse(string notation, out Keybind keybind)
+        {
+            keybind = new Keybind();
+            var keys = notation.Trim().Split("+").Select(s => s.Trim());
+            foreach (var keyString in keys)
+            {
+                KeyModifiers mod;
+                if (Enum.TryParse(keyString, out mod))
+                    keybind.Modifiers.Add(mod);
+                else if (keybind.Key.KeyboardKey == Keys.None)
+                {
+                    GenericKey parsed;
+                    if (GenericKey.TryParse(keyString, out parsed))
+                        keybind.Key = parsed;
+                    else
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        public Keybind(Keys key) => Key = new GenericKey() { KeyboardKey = key };
 
         public Keybind(KeyModifiers mod, Keys key)
         {
-            Key = new GenericKey() {KeyboardKey = key};
+            Key = new GenericKey() { KeyboardKey = key };
+            Modifiers.Add(mod);
+        }
+
+        public Keybind(MouseButton mouseButton) => Key = new GenericKey { MouseButton = mouseButton };
+
+        public Keybind(KeyModifiers mod, MouseButton mouseButton)
+        {
+            Key = new GenericKey { MouseButton = mouseButton };
+            Modifiers.Add(mod);
+        }
+
+        public Keybind(MouseScrollDirection scrollDirection) =>
+            Key = new GenericKey { ScrollDirection = scrollDirection };
+
+        public Keybind(KeyModifiers mod, MouseScrollDirection scrollDirection)
+        {
+            Key = new GenericKey { ScrollDirection = scrollDirection };
             Modifiers.Add(mod);
         }
 
         public Keybind(ICollection<KeyModifiers> mods, Keys key)
         {
-            Key = new GenericKey() {KeyboardKey = key};
+            Key = new GenericKey() { KeyboardKey = key };
             Modifiers = new HashSet<KeyModifiers>(mods);
         }
 
@@ -55,18 +96,28 @@ namespace Quaver.Shared.Screens.Edit.Input
             Modifiers = new HashSet<KeyModifiers>(mods);
         }
 
-        public HashSet<Keybind> MatchingKeybinds()
+        public HashSet<Keybind> MatchingKeybinds(bool invertScrolling)
         {
             var set = new HashSet<Keybind>();
+            var key = Key.Clone();
+            if (key.ScrollDirection != null)
+                key.ScrollDirection = invertScrolling 
+                    ? key.ScrollDirection == MouseScrollDirection.Up 
+                        ? MouseScrollDirection.Down : MouseScrollDirection.Up 
+                    : key.ScrollDirection;
 
             if (!Modifiers.Contains(KeyModifiers.Free))
-                set.Add(this);
+                set.Add(new Keybind(Modifiers, key));
             else
             {
                 var allModifiers = Enum.GetValues(typeof(KeyModifiers)).Cast<KeyModifiers>();
                 var freeModifiers = allModifiers.Except(Modifiers).ToList();
                 foreach (var modifiers in PowerSetOfModifiers(freeModifiers))
-                    set.Add(new Keybind(modifiers, Key));
+                {
+                    modifiers.UnionWith(Modifiers);
+                    modifiers.Remove(KeyModifiers.Free);
+                    set.Add(new Keybind(modifiers, key));
+                }
             }
 
             return set;

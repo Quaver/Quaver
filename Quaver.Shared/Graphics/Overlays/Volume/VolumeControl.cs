@@ -106,7 +106,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
                 }
 
                 var previous = Sliders[i - 1];
-                slider.Y = previous.Y + previous.Height  - 14;
+                slider.Y = previous.Y + previous.Height - 14;
             }
         }
 
@@ -122,7 +122,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
                 return;
 
             // Activate the volume control box.
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Up)|| KeyboardManager.IsUniqueKeyPress(Keys.Down) ||
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Up) || KeyboardManager.IsUniqueKeyPress(Keys.Down) ||
                 KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Right)
                 || MouseManager.IsScrolling)
             {

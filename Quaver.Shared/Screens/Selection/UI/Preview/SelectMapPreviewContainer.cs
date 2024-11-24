@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
     {
         /// <summary>
         /// </summary>
-        private Bindable<bool> IsPlayTesting { get; }
+        internal Bindable<bool> IsPlayTesting { get; }
 
         /// <summary>
         /// </summary>
@@ -281,6 +281,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                         if (playfield.Stage.HitError.Y < 0)
                             playfield.Stage.HitError.Y *= previewMultiplier;
 
+                        if (playfield.Stage.HitBubbles.Y < 0)
+                            playfield.Stage.HitBubbles.Y *= previewMultiplier;
+
                         if (playfield.Stage.JudgementHitBursts[0].OriginalPosY < 0)
                             for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
                                 playfield.Stage.JudgementHitBursts[i].OriginalPosY *= previewMultiplier;
@@ -306,6 +309,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                         if (playfield.Stage.ComboDisplay.OriginalPosY < 0)
                             playfield.Stage.ComboDisplay.OriginalPosY *= previewMultiplier;
+
+                        playfield.Stage.HitBubbles.Y -= filterPanelHeight + MenuBorder.HEIGHT;
+                        if (playfield.Stage.HitBubbles.Y < 0)
+                            playfield.Stage.HitBubbles.Y *= previewMultiplier;
 
                         playfield.Stage.ComboDisplay.Y = playfield.Stage.ComboDisplay.OriginalPosY;
                         break;

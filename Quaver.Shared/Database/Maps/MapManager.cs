@@ -413,16 +413,16 @@ namespace Quaver.Shared.Database.Maps
                 if (!Rubbish.Move(directory) && Directory.Exists(directory))
                 {
                     ShowFallbackMapDeletionDialog(
-                    	"mapset",
-                    	() =>
-	                    {
+                        "mapset",
+                        () =>
+                        {
                             try
                             {
-                                 Directory.Delete(directory, true);
+                                Directory.Delete(directory, true);
                             }
                             catch (Exception e)
                             {
-                                 Logger.Error(e, LogType.Runtime);
+                                Logger.Error(e, LogType.Runtime);
                             }
 
                             if (Directory.Exists(directory))

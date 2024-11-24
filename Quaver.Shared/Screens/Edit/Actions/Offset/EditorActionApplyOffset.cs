@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
+using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Offset
 {
+    [MoonSharpUserData]
     public class EditorActionApplyOffset : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ApplyOffset;
@@ -20,7 +23,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.Offset
 
         private Qua WorkingMap { get; }
 
-        private int Offset { get; }
+        public int Offset { get; }
 
         public EditorActionApplyOffset(EditorActionManager actiomManager, Qua workingMap, int offset)
         {
@@ -37,11 +40,21 @@ namespace Quaver.Shared.Screens.Edit.Actions.Offset
             new EditorActionChangeTimingPointOffsetBatch(ActionManager, WorkingMap,
                 new List<TimingPointInfo>(WorkingMap.TimingPoints), Offset).Perform();
 
-            new EditorActionChangeScrollVelocityOffsetBatch(ActionManager, WorkingMap, new List<SliderVelocityInfo>(WorkingMap.SliderVelocities),
-                Offset).Perform();
+            foreach (var (id, timingGroup) in WorkingMap.TimingGroups)
+            {
+                if (timingGroup is not ScrollGroup scrollGroup)
+                    continue;
+
+                new EditorActionChangeScrollVelocityOffsetBatch(ActionManager, WorkingMap,
+                    new List<SliderVelocityInfo>(scrollGroup.ScrollVelocities),
+                    Offset).Perform();
+
+                new EditorActionChangeScrollSpeedFactorOffsetBatch(ActionManager, WorkingMap,
+                    new List<ScrollSpeedFactorInfo>(scrollGroup.ScrollSpeedFactors), Offset).Perform();
+            }
 
             new EditorActionChangePreviewTime(ActionManager, WorkingMap, WorkingMap.SongPreviewTime + Offset).Perform();
-            
+
             new EditorActionChangeBookmarkOffsetBatch(ActionManager, WorkingMap, WorkingMap.Bookmarks, Offset).Perform();
         }
 

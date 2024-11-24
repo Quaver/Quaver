@@ -129,6 +129,16 @@ namespace Quaver.Shared.Skinning
         internal Dictionary<Grade, Texture2D> GradesLarge { get; } = new Dictionary<Grade, Texture2D>();
 
         /// <summary>
+        ///     Grade Textures.
+        /// </summary>
+        internal Texture2D HitBubbles { get; private set; }
+
+        /// <summary>
+        ///     The health bar displayed in the background. (Non-Moving one.)
+        /// </summary>
+        internal List<Texture2D> HitBubblesBackground { get; private set; }
+
+        /// <summary>
         ///     Judgement animation elements
         /// </summary>
         internal Dictionary<Judgement, List<Texture2D>> Judgements { get; } = new Dictionary<Judgement, List<Texture2D>>();
@@ -352,6 +362,7 @@ namespace Quaver.Shared.Skinning
             Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", $"Quaver.Resources/Textures/Skins/Shared/Cursor/{cursor}.png");
 
             LoadGradeElements();
+            LoadHitBubbleElements();
             LoadJudgements();
             LoadNumberDisplays();
             LoadPause();
@@ -397,7 +408,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal  List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
+        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
             string extension = ".png")
         {
             try
@@ -433,7 +444,7 @@ namespace Quaver.Shared.Skinning
                 // If we end up getting down here, that means we need to load the spritesheet from our resources.
                 // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
                 if (rows == 0 && columns == 0)
-                    return new List<Texture2D> { LoadSingleTexture( $"{dir}/{element}", resource + ".png")};
+                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png") };
 
                 return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
                     GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
@@ -487,6 +498,21 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     Loads all grade texture elements
+        /// </summary>
+        private void LoadHitBubbleElements()
+        {
+            // Load Grades
+            HitBubbles = LoadSingleTexture($"{Dir}/HitBubbles/bubble", $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubble.png");
+            
+            var hitBubblesFolder = $"/HitBubbles/";
+
+            const string bubblesBackground = "bubbles-background";
+            HitBubblesBackground = LoadSpritesheet(hitBubblesFolder, bubblesBackground,
+                $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubbles-background", 0, 0);
+        }
+
+        /// <summary>
         ///     Loads judgement texture elements.
         /// </summary>
         private void LoadJudgements()
@@ -527,17 +553,17 @@ namespace Quaver.Shared.Skinning
             {
                 // Score
                 var scoreElement = $"score-{i}";
-                ScoreDisplayNumbers[i] = LoadSingleTexture( $"{numberDisplayFolder}/{scoreElement}",
+                ScoreDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{scoreElement}",
                     $"Quaver.Resources/Textures/Skins/Shared/Numbers/{scoreElement}.png");
 
                 // Combo
                 var comboElement = $"combo-{i}";
-                ComboDisplayNumbers[i] = LoadSingleTexture( $"{numberDisplayFolder}/{comboElement}",
+                ComboDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{comboElement}",
                     $"Quaver.Resources/Textures/Skins/Shared/Numbers/{comboElement}.png");
 
                 // Song Time
                 var songTimeElement = $"song-time-{i}";
-                SongTimeDisplayNumbers[i] = LoadSingleTexture( $"{numberDisplayFolder}/{songTimeElement}",
+                SongTimeDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{songTimeElement}",
                     $"Quaver.Resources/Textures/Skins/Shared/Numbers/{songTimeElement}.png");
             }
 
@@ -651,11 +677,11 @@ namespace Quaver.Shared.Skinning
             const string battleRoyaleEliminated = "eliminated";
 
             BattleRoyaleEliminated = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleEliminated}"
-                ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleEliminated}.png");
+                , $"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleEliminated}.png");
 
             const string battleRoyaleWarning = "warning";
             BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
-                ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
+                , $"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
         }
 
         private void LoadBackgrounds()
@@ -749,31 +775,31 @@ namespace Quaver.Shared.Skinning
             {
                 if (p.PropertyType == typeof(Texture2D))
                 {
-                    var tex = (Texture2D) p.GetValue(this);
+                    var tex = (Texture2D)p.GetValue(this);
 
                     if (!tex.IsDisposed)
                         tex.Dispose();
                 }
                 else if (p.PropertyType == typeof(AudioSample))
                 {
-                    var sample = (AudioSample) p.GetValue(this);
+                    var sample = (AudioSample)p.GetValue(this);
 
                     if (!sample.IsDisposed)
                         sample.Dispose();
                 }
                 else if (p.PropertyType == typeof(Texture2D[]))
                 {
-                    var textureList = (Texture2D[]) p.GetValue(this);
+                    var textureList = (Texture2D[])p.GetValue(this);
                     textureList.ForEach(x => x.Dispose());
                 }
                 else if (p.PropertyType == typeof(List<Texture2D>))
                 {
-                    var textureList = (List<Texture2D>) p.GetValue(this);
+                    var textureList = (List<Texture2D>)p.GetValue(this);
                     textureList.ForEach(x => x.Dispose());
                 }
                 else if (p.PropertyType == typeof(List<AudioSample>))
                 {
-                    var textureList = (List<AudioSample>) p.GetValue(this);
+                    var textureList = (List<AudioSample>)p.GetValue(this);
                     textureList.ForEach(x => x.Dispose());
                 }
             }
@@ -785,7 +811,7 @@ namespace Quaver.Shared.Skinning
                     if (p.PropertyType != typeof(Texture2D))
                         continue;
 
-                    var tex = (Texture2D) p.GetValue(mode);
+                    var tex = (Texture2D)p.GetValue(mode);
 
                     if (!tex.IsDisposed)
                         tex.Dispose();

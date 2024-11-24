@@ -58,7 +58,7 @@ namespace Quaver.Shared.Audio
                 // If the path is missing an extension or the file doesn't exist, we need to try some other extensions
                 // for compatibility with osu!.
                 var pathWithoutExt = info.Path;
-                var extensions = new List<string> {"wav", "ogg", "mp3"};
+                var extensions = new List<string> { "wav", "ogg", "mp3" };
 
                 var dotIndex = info.Path.LastIndexOf('.');
                 if (dotIndex > 0)
@@ -143,7 +143,7 @@ namespace Quaver.Shared.Audio
         /// </summary>
         public static void StopAll()
         {
-            Channels.ForEach(x =>x.Stop());
+            Channels.ForEach(x => x.Stop());
             Channels.Clear();
         }
 

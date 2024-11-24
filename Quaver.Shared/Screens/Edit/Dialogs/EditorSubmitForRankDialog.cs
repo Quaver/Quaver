@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 if (response == null)
                     throw new ArgumentNullException($"No response received from the server.");
 
-                var responseParsed = (JToken) JsonConvert.DeserializeObject(response.Content);
+                var responseParsed = (JToken)JsonConvert.DeserializeObject(response.Content);
 
 
                 switch (response.StatusCode)

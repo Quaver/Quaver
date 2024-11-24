@@ -141,7 +141,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     return;
                 }
 
-                var game = (QuaverGame) GameBase.Game;
+                var game = (QuaverGame)GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
                 screen?.Exit(() => new SelectionScreen(), 0);
             })
@@ -259,8 +259,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             if (e.Ruleset == MultiplayerGameRuleset.Team)
             {
-                if (!RightAligned.Contains(ChangeTeam));
-                    RightAligned.Add(ChangeTeam);
+                if (!RightAligned.Contains(ChangeTeam)) ;
+                RightAligned.Add(ChangeTeam);
             }
             else
             {
@@ -337,13 +337,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 }
 
                 lock (OnlineManager.CurrentGame.BlueTeamPlayers)
-                lock (OnlineManager.CurrentGame.RedTeamPlayers)
-                {
-                    if (OnlineManager.CurrentGame.BlueTeamPlayers.Contains(OnlineManager.Self.OnlineUser.Id))
-                        OnlineManager.Client?.ChangeGameTeam(MultiplayerTeam.Red);
-                    else if (OnlineManager.CurrentGame.RedTeamPlayers.Contains(OnlineManager.Self.OnlineUser.Id))
-                        OnlineManager.Client?.ChangeGameTeam(MultiplayerTeam.Blue);
-                }
+                    lock (OnlineManager.CurrentGame.RedTeamPlayers)
+                    {
+                        if (OnlineManager.CurrentGame.BlueTeamPlayers.Contains(OnlineManager.Self.OnlineUser.Id))
+                            OnlineManager.Client?.ChangeGameTeam(MultiplayerTeam.Red);
+                        else if (OnlineManager.CurrentGame.RedTeamPlayers.Contains(OnlineManager.Self.OnlineUser.Id))
+                            OnlineManager.Client?.ChangeGameTeam(MultiplayerTeam.Blue);
+                    }
             })
             {
                 DestroyIfParentIsNull = false

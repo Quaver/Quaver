@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using ImGuiNET;
@@ -9,6 +10,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
@@ -17,6 +19,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
@@ -33,6 +36,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Window;
+using Color = System.Drawing.Color;
 using Utils = Wobble.Platform.Utils;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
@@ -85,6 +89,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             CreateWebSection();
             CreateToolsSection();
             CreatePluginsSection();
+            CreateKeybindsSection();
             CreateHelpSection();
 
             ImGui.EndMenuBar();
@@ -243,7 +248,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 for (var i = 1; i <= Screen.WorkingMap.GetKeyCount(); i++)
                 {
                     if (ImGui.BeginMenu($"Lane {i}"))
-                    { 
+                    {
                         for (var j = 1; j <= Screen.WorkingMap.GetKeyCount(); j++)
                         {
                             if (i == j) continue;
@@ -281,6 +286,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+            if (ImGui.BeginMenu($"Move Objects To Timing Group", Screen.SelectedHitObjects.Value.Count > 0))
+            {
+                if (ImGui.MenuItem("Default Timing Group", ""))
+                {
+                    Screen.ActionManager.Perform(new EditorActionMoveObjectsToTimingGroup(Screen.ActionManager, Screen.WorkingMap,
+                        new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), Qua.DefaultScrollGroupId));
+                }
+
+                ImGui.Separator();
+
+                foreach ((string id, TimingGroup timingGroup) in Screen.WorkingMap.TimingGroups)
+                {
+                    if (id == Qua.DefaultScrollGroupId)
+                        continue;
+
+                    var color = timingGroup.GetColor();
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1f));
+                    if (ImGui.MenuItem(id))
+                    {
+                        Screen.ActionManager.Perform(new EditorActionMoveObjectsToTimingGroup(Screen.ActionManager, Screen.WorkingMap,
+                            new List<HitObjectInfo>(Screen.SelectedHitObjects.Value), id));
+                    }
+                    ImGui.PopStyleColor();
+                }
+
+                ImGui.EndMenu();
+            }
+
             ImGui.Separator();
 
             if (ImGui.MenuItem("Edit Metadata", "F1"))
@@ -304,6 +337,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 if (scrollVelocityPlugin.IsActive)
                     scrollVelocityPlugin.Initialize();
+            }
+
+            var scrollSpeedFactorPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollSpeedFactorEditor];
+
+            if (ImGui.MenuItem("Edit Scroll Speed Factors", "F7", scrollSpeedFactorPlugin.IsActive))
+            {
+                scrollSpeedFactorPlugin.IsActive = !scrollSpeedFactorPlugin.IsActive;
+
+                if (scrollSpeedFactorPlugin.IsActive)
+                    scrollSpeedFactorPlugin.Initialize();
             }
 
             ImGui.Separator();
@@ -523,7 +566,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Snap Notes When Live Mapping", "", ConfigManager.EditorLiveMapSnap.Value))
                 ConfigManager.EditorLiveMapSnap.Value = !ConfigManager.EditorLiveMapSnap.Value;
-            
+
             if (ImGui.MenuItem("Set Offset For Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapOffsetDialog(Screen));
 
@@ -532,9 +575,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Set Minimum Length Of Long Notes Placed During Live Mapping"))
                 DialogManager.Show(new EditorSetLiveMapLongNoteThresholdDialog(Screen));
-
-            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
-                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
 
             ImGui.Separator();
 
@@ -586,7 +626,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 ImGui.EndMenu();
             }
-            
+
             if (ImGui.BeginMenu("Spectrogram"))
             {
                 if (ImGui.MenuItem("Visible", "", Screen.ShowSpectrogram.Value))
@@ -607,7 +647,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Precision"))
                 {
                     for (var interleaveCount = 1; interleaveCount <= 16; interleaveCount *= 2)
@@ -630,7 +670,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Frequency Scale"))
                 {
                     foreach (var scale in Enum.GetValues<EditorPlayfieldSpectrogramFrequencyScale>())
@@ -651,7 +691,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Intensity Factor"))
                 {
                     for (var i = 0; i < 10; i++)
@@ -662,13 +702,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 if (ImGui.BeginMenu("Minimum Frequency"))
                 {
                     for (var f = 0; f <= 1500; f += 125)
                     {
                         if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMinimumFrequency.Value == f,
-                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f)) 
+                                ConfigManager.EditorSpectrogramMaximumFrequency.Value > f))
                             ConfigManager.EditorSpectrogramMinimumFrequency.Value = f;
                     }
                     ImGui.EndMenu();
@@ -679,12 +719,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     for (var f = 5000; f <= 10000; f += 1000)
                     {
                         if (ImGui.MenuItem($"{f}", "", ConfigManager.EditorSpectrogramMaximumFrequency.Value == f,
-                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f)) 
+                                ConfigManager.EditorSpectrogramMinimumFrequency.Value < f))
                             ConfigManager.EditorSpectrogramMaximumFrequency.Value = f;
                     }
                     ImGui.EndMenu();
                 }
-                
+
                 ImGui.EndMenu();
             }
 
@@ -706,8 +746,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Center Objects", "", Screen.AnchorHitObjectsAtMidpoint.Value))
                 Screen.AnchorHitObjectsAtMidpoint.Value = !Screen.AnchorHitObjectsAtMidpoint.Value;
 
-            if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
-                Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
+            if (ImGui.MenuItem($"View Layers", "", Screen.ObjectColoring.Value == HitObjectColoring.Layer))
+                Screen.ObjectColoring.Value = Screen.ObjectColoring.Value == HitObjectColoring.Layer
+                    ? HitObjectColoring.None
+                    : HitObjectColoring.Layer;
+
+            if (ImGui.MenuItem($"View Timing Groups", "", Screen.ObjectColoring.Value == HitObjectColoring.TimingGroup))
+                Screen.ObjectColoring.Value = Screen.ObjectColoring.Value == HitObjectColoring.TimingGroup
+                    ? HitObjectColoring.None
+                    : HitObjectColoring.TimingGroup;
+
+            if (ImGui.MenuItem($"Color SV Lines By Timing Group", "", ConfigManager.EditorColorSvLineByTimingGroup.Value))
+                ConfigManager.EditorColorSvLineByTimingGroup.Value = !ConfigManager.EditorColorSvLineByTimingGroup.Value;
 
             ImGui.Separator();
 
@@ -728,6 +778,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             foreach (var plugin in Screen.BuiltInPlugins)
             {
+                if (plugin.Key is EditorBuiltInPlugin.KeybindEditor)
+                    continue;
                 if (ImGui.MenuItem(plugin.Value.Name, "", plugin.Value.IsActive))
                 {
                     plugin.Value.IsActive = !plugin.Value.IsActive;
@@ -735,6 +787,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (plugin.Value.IsActive)
                         plugin.Value.Initialize();
                 }
+            }
+            
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Reset Window Layout"))
+            {
+                StructuredConfigManager.WindowStates.Value = new WindowStates();
+                ((EditScreenView)Screen.View).SaveWindowLayoutOnExit = false;
+                File.Delete("imgui.ini");
+                NotificationManager.Show(NotificationLevel.Info, "The window layout will be reset the next time you open the editor!");
             }
 
             ImGui.EndMenu();
@@ -944,6 +1006,56 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     Screen.MetronomePlayHalfBeats.Value = !Screen.MetronomePlayHalfBeats.Value;
 
                 ImGui.EndMenu();
+            }
+
+            ImGui.EndMenu();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateKeybindsSection()
+        {
+            ImGui.PushFont(Options.Fonts.First().Context);
+
+            if (!ImGui.BeginMenu("Keybinds"))
+                return;
+
+            var keybindEditor = Screen.BuiltInPlugins[EditorBuiltInPlugin.KeybindEditor];
+            if (ImGui.MenuItem(keybindEditor.Name, "", keybindEditor.IsActive))
+            {
+                keybindEditor.IsActive = !keybindEditor.IsActive;
+
+                if (keybindEditor.IsActive)
+                    keybindEditor.Initialize();
+            }
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Invert Beat Snap Scroll", "", Screen.InvertBeatSnapScroll.Value))
+                Screen.InvertBeatSnapScroll.Value = !Screen.InvertBeatSnapScroll.Value;
+
+            if (ImGui.MenuItem("Invert Scrolling", "", ConfigManager.InvertEditorScrolling.Value))
+                ConfigManager.InvertEditorScrolling.Value = !ConfigManager.InvertEditorScrolling.Value;
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Fill Missing Actions"))
+            {
+                var filledCount = Screen.InputManager.InputConfig.FillMissingKeys(true);
+                Screen.InputManager.InputConfig.SaveToConfig();
+                Screen.ResetInputManager();
+                NotificationManager.Show(NotificationLevel.Info, $"Filled {filledCount} missing actions!");
+            }
+
+            if (ImGui.MenuItem("Reset All Keybinds"))
+            {
+                DialogManager.Show(new YesNoDialog($"RESET ALL KEYBINDS", $"Are you sure you want to reset all keybinds?",
+                    () =>
+                    {
+                        Screen.InputManager.InputConfig.ResetConfigFile();
+                        Screen.ResetInputManager();
+                        NotificationManager.Show(NotificationLevel.Info, $"All keybinds have been reset!");
+                    }));
             }
 
             ImGui.EndMenu();

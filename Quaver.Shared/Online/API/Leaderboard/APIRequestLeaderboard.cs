@@ -15,7 +15,7 @@ namespace Quaver.Shared.Online.API.Leaderboard
 
         public override LeaderboardResponse ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}leaderboard?mode={(int) Mode}", Method.GET);
+            var request = new RestRequest($"{APIEndpoint}leaderboard?mode={(int)Mode}", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
             var response = client.Execute(request);

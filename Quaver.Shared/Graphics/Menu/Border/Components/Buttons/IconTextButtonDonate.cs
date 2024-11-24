@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -15,7 +16,9 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public IconTextButtonDonate() : base(FontAwesome.Get(FontAwesomeIcon.fa_heart_shape_silhouette),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Donate", (sender, args) =>
             {
-                BrowserHelper.OpenURL($"https://quavergame.com/donate");
+                NotificationManager.Show(NotificationLevel.Info, 
+                    "Donating is currently unavailable from in-game and can only be done on the website.\n\n" +
+                    "We are working on adding this back soon.");
             })
         {
         }

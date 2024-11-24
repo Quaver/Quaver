@@ -108,11 +108,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Gradually fade out the line.
             foreach (var line in LineObjectPool)
-                line.Alpha = MathHelper.Lerp(line.Alpha, 0, (float) Math.Min(dt / ConfigManager.HitErrorFadeTime.Value, 1));
+                line.Alpha = MathHelper.Lerp(line.Alpha, 0, (float)Math.Min(dt / ConfigManager.HitErrorFadeTime.Value, 1));
 
             // Tween the chevron to the last hit
             if (CurrentLinePoolIndex != -1)
-                LastHitCheveron.X = MathHelper.Lerp(LastHitCheveron.X, LineObjectPool[CurrentLinePoolIndex].X, (float) Math.Min(dt / 360, 1));
+                LastHitCheveron.X = MathHelper.Lerp(LastHitCheveron.X, LineObjectPool[CurrentLinePoolIndex].X, (float)Math.Min(dt / 360, 1));
 
             base.Update(gameTime);
         }

@@ -149,7 +149,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <param name="manager"></param>
         /// <param name="gameplayHitObject"></param>
         /// <param name="objectIndex"></param>
-        private void HandleKeyPress(HitObjectManagerKeys manager, GameplayHitObjectKeysInfo info)
+        private void HandleKeyPress(HitObjectManagerKeys manager, NoteControllerKeys info)
         {
             // Play the HitSounds of closest hit object.
             var game = GameBase.Game as QuaverGame;
@@ -203,6 +203,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             {
                 playfield.Stage.ComboDisplay.MakeVisible();
                 playfield.Stage.HitError.AddJudgement(judgement, info.StartTime - time);
+                playfield.Stage.HitBubbles.AddJudgement(judgement);
                 playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(judgement);
             }
 
@@ -229,6 +230,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
                         view.UpdateScoreboardUsers();
                         view.UpdateScoreAndAccuracyDisplays();
+                        playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
                         playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
                     }
 
@@ -255,7 +257,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     Handles an individual key release during gameplay.
         /// </summary>
-        private void HandleKeyRelease(HitObjectManagerKeys manager, GameplayHitObjectKeysInfo info)
+        private void HandleKeyRelease(HitObjectManagerKeys manager, NoteControllerKeys info)
         {
             // Get judgement and references
             var lane = info.Lane - 1;
@@ -310,6 +312,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 {
                     playfield.Stage.ComboDisplay.MakeVisible();
                     playfield.Stage.HitError.AddJudgement(judgement, info.EndTime - time);
+                    playfield.Stage.HitBubbles.AddJudgement(judgement);
                     playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(judgement);
                 }
 
@@ -351,7 +354,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Perform hit burst animation
             if (ReplayInputManager == null)
+            {
+                playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
                 playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+            }
 
             // Update Object Pool
             info.State = HitObjectState.Dead;

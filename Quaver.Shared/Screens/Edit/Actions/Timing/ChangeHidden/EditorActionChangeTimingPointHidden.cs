@@ -1,8 +1,10 @@
+using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden
 {
+    [MoonSharpUserData]
     public class EditorActionChangeTimingPointHidden : IEditorAction
     {
         public EditorActionType Type { get; } = EditorActionType.ChangeTimingPointHidden;
@@ -11,11 +13,11 @@ namespace Quaver.Shared.Screens.Edit.Actions.Timing.ChangeHidden
 
         private Qua WorkingMap { get; }
 
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
-        private bool OriginalHidden { get; }
+        public bool OriginalHidden { get; }
 
-        private bool NewHidden { get; }
+        public bool NewHidden { get; }
 
         public EditorActionChangeTimingPointHidden(EditorActionManager manager, Qua workingMap, TimingPointInfo tp, bool newHidden)
         {

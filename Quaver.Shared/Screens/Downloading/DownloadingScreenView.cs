@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Downloading
     {
         /// <summary>
         /// </summary>
-        public DownloadingScreen DownloadingScreen => (DownloadingScreen) Screen;
+        public DownloadingScreen DownloadingScreen => (DownloadingScreen)Screen;
 
         /// <summary>
         /// </summary>
@@ -91,11 +91,11 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        private void CreateTriangles() => Triangles = new BackgroundImage(UserInterface.Triangles, 0, false) {Parent = Container};
+        private void CreateTriangles() => Triangles = new BackgroundImage(UserInterface.Triangles, 0, false) { Parent = Container };
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new MenuHeaderMain {Parent = Container};
+        private void CreateHeader() => Header = new MenuHeaderMain { Parent = Container };
 
         /// <summary>
         /// </summary>
@@ -109,7 +109,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         private void CreateSearchPanel() => SearchPanel = new DownloadSearchPanel(DownloadingScreen.CurrentSearchQuery,
             DownloadingScreen.FilterGameMode, DownloadingScreen.FilterRankedStatus, DownloadingScreen.Mapsets,
-            DownloadingScreen.SelectedMapset, DownloadingScreen.SortBy)
+            DownloadingScreen.SelectedMapset, DownloadingScreen.SortBy, DownloadingScreen.ReverseSort)
         {
             Parent = Container,
             Y = Header.Y + Header.Height
@@ -123,8 +123,8 @@ namespace Quaver.Shared.Screens.Downloading
                 DownloadingScreen.MinBpm, DownloadingScreen.MaxBpm, DownloadingScreen.MinLength, DownloadingScreen.MaxLength,
                 DownloadingScreen.MinLongNotePercent, DownloadingScreen.MaxLongNotePercent,
                 DownloadingScreen.MinPlayCount, DownloadingScreen.MaxPlayCount, DownloadingScreen.MinUploadDate,
-                DownloadingScreen.MaxUploadDate, DownloadingScreen.SelectedMapset, DownloadingScreen.DisplayOwnedMapsets,
-                DownloadingScreen.ReverseSort, DownloadingScreen.MinLastUpdateDate, DownloadingScreen.MaxLastUpdateDate,
+                DownloadingScreen.MaxUploadDate, DownloadingScreen.SelectedMapset, DownloadingScreen.DisplayOwnedMapsets, 
+                DownloadingScreen.MinLastUpdateDate, DownloadingScreen.MaxLastUpdateDate,
                 DownloadingScreen.MinCombo, DownloadingScreen.MaxCombo)
             {
                 Parent = Container,

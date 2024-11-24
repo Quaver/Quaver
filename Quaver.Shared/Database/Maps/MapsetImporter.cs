@@ -91,38 +91,38 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         private static void PostMapQueue()
         {
-             var game = GameBase.Game as QuaverGame;
-             var screen = game.CurrentScreen;
+            var game = GameBase.Game as QuaverGame;
+            var screen = game.CurrentScreen;
 
-             if (screen.Exiting)
-                 return;
+            if (screen.Exiting)
+                return;
 
-             if (screen.Type == QuaverScreenType.Select)
-             {
-                 if (OnlineManager.CurrentGame != null)
-                 {
-                     var select = game.CurrentScreen as SelectionScreen;
-                     screen.Exit(() => new ImportingScreen(null, true));
-                     return;
-                 }
+            if (screen.Type == QuaverScreenType.Select)
+            {
+                if (OnlineManager.CurrentGame != null)
+                {
+                    var select = game.CurrentScreen as SelectionScreen;
+                    screen.Exit(() => new ImportingScreen(null, true));
+                    return;
+                }
 
-                 screen.Exit(() => new ImportingScreen());
-                 return;
-             }
+                screen.Exit(() => new ImportingScreen());
+                return;
+            }
 
-             if (screen.Type == QuaverScreenType.Music)
-             {
-                 screen.Exit(() => new ImportingScreen());
-                 return;
-             }
+            if (screen.Type == QuaverScreenType.Music)
+            {
+                screen.Exit(() => new ImportingScreen());
+                return;
+            }
 
-             if (screen.Type == QuaverScreenType.Multiplayer)
-             {
-                 var multi = (MultiplayerGameScreen)screen;
-                 multi.DontLeaveGameUponScreenSwitch = true;
+            if (screen.Type == QuaverScreenType.Multiplayer)
+            {
+                var multi = (MultiplayerGameScreen)screen;
+                multi.DontLeaveGameUponScreenSwitch = true;
 
-                 screen.Exit(() => new ImportingScreen());
-             }
+                screen.Exit(() => new ImportingScreen());
+            }
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Quaver.Shared.Database.Maps
         private static void AddMapImportToQueue(string path)
         {
             // Only one .mc file under the same directory should be imported
-            // since .mc import 
+            // since .mc import
             if (Path.GetExtension(path) == ".mc")
             {
                 foreach (var scheduledPath in Queue)
@@ -220,7 +220,7 @@ namespace Quaver.Shared.Database.Maps
                     Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
-            // Skins
+                // Skins
             }
             else if (path.EndsWith(".qs"))
             {
@@ -311,6 +311,7 @@ namespace Quaver.Shared.Database.Maps
 
             var done = -1;
 
+            MapsetInfoRetriever.InfoUpdateEnabled = false;
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
@@ -374,6 +375,7 @@ namespace Quaver.Shared.Database.Maps
 
             MapDatabaseCache.OrderAndSetMapsets(true);
             Queue.Clear();
+            MapsetInfoRetriever.InfoUpdateEnabled = true;
 
             if (MapManager.Mapsets.Count == 0)
                 return;
@@ -408,7 +410,7 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="extractPath"></param>
         private static void ExtractQuaverMapset(string fileName, string extractPath)
         {
-            var options = new ExtractionOptions {ExtractFullPath = true, Overwrite = true};
+            var options = new ExtractionOptions { ExtractFullPath = true, Overwrite = true };
 
             using (var archive = ArchiveFactory.Open(fileName))
             {
@@ -467,18 +469,10 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
-
-                    var info = OnlineManager.Client?.RetrieveMapInfo(map.MapId);
-
-                    if (info != null)
-                    {
-                        map.RankedStatus = info.Map.RankedStatus;
-                        map.DateLastUpdated = info.Map.DateLastUpdated;
-                        map.OnlineOffset = info.Map.OnlineOffset;
-                    }
-
+                    
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map);
+                    MapsetInfoRetriever.Enqueue(map);
                     lastImported = map;
                 }
             }

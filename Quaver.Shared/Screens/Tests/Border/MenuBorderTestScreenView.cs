@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Tests.Border
         public MenuBorderTestScreenView(Screen screen) : base(screen)
         {
             // ReSharper disable twice ObjectCreationAsStatement
-            new TestMenuBorderHeader {Parent = Container};
+            new TestMenuBorderHeader { Parent = Container };
             new TestMenuBorderFooter
             {
                 Parent = Container,
@@ -41,9 +41,9 @@ namespace Quaver.Shared.Screens.Tests.Border
                 UserGroups = UserGroups.Normal,
                 Username = "TestUser27"
             })
-                {
-                    CurrentStatus = new UserClientStatus(ClientStatus.Paused, -1, "", 1, "", 0)
-                })
+            {
+                CurrentStatus = new UserClientStatus(ClientStatus.Paused, -1, "", 1, "", 0)
+            })
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,

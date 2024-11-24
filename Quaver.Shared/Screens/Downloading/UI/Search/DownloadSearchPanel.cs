@@ -34,6 +34,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// </summary>
         private Bindable<DownloadSortBy> SortBy { get; }
 
+        public Bindable<bool> ReverseSort { get; }
+
         /// <summary>
         ///     Items that are aligned from right to left
         /// </summary>
@@ -46,6 +48,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <summary>
         /// </summary>
         private DownloadSortByDropdown SortByDropdown { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private DownloadSortOrderDropdown SortOrderDropdown { get; set; }
 
         /// <summary>
         /// </summary>
@@ -75,9 +81,11 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <param name="availableMapsets"></param>
         /// <param name="selectedMapset"></param>
         /// <param name="sortBy"></param>
+        /// <param name="reverseSort"></param>
         public DownloadSearchPanel(Bindable<string> searchQuery, Bindable<DownloadFilterMode> mode,
             Bindable<DownloadFilterRankedStatus> status, BindableList<DownloadableMapset> availableMapsets,
-            Bindable<DownloadableMapset> selectedMapset, Bindable<DownloadSortBy> sortBy)
+            Bindable<DownloadableMapset> selectedMapset, Bindable<DownloadSortBy> sortBy,
+            Bindable<bool> reverseSort)
         {
             SearchQuery = searchQuery;
             Mode = mode;
@@ -85,13 +93,15 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             AvailableMapsets = availableMapsets;
             SelectedMapset = selectedMapset;
             SortBy = sortBy;
+            ReverseSort = reverseSort;
 
             Size = new ScalableVector2(WindowManager.Width, 88);
             Tint = ColorHelper.HexToColor("#242424");
 
             CreateBanner();
-            CreateSortBy();
             //CreateDifficulty();
+            CreateSortOrder();
+            CreateSortBy();
             CreateRankedStatus();
             CreateMode();
             CreateSearchBar();
@@ -106,6 +116,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         {
             SortByDropdown = new DownloadSortByDropdown(SortBy);
             RightItems.Add(SortByDropdown);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateSortOrder()
+        {
+            SortOrderDropdown = new DownloadSortOrderDropdown(ReverseSort);
+            RightItems.Add(SortOrderDropdown);
         }
 
         /// <summary>
@@ -172,7 +190,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
                 item.Alignment = Alignment.MidRight;
 
                 const int padding = 20;
-                var spacing = 36;
+                // Spacing between sort by and sort order should decrease (sort by is i == 1)
+                var spacing = i == 1 ? 5 : 20;
 
                 if (i == 0)
                     item.X = -padding;

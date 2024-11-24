@@ -100,7 +100,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         /// </summary>
         private int MaxHeight { get; }
-        
+
         /// <summary>
         ///     The height of the dropdown when opened
         /// </summary>
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         {
             get
             {
-                var height = (int) Height * Options.Count;
+                var height = (int)Height * Options.Count;
 
                 if (MaxHeight != 0 && height >= MaxHeight)
                     height = MaxHeight;
@@ -303,7 +303,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             HoverSprite.Image = UserInterface.DropdownClosed;
 
             DividerLine.ClearAnimations();
-            DividerLine.FadeTo(0, Easing.OutQuint, (int) (time * 2.5f));
+            DividerLine.FadeTo(0, Easing.OutQuint, (int)(time * 2.5f));
 
             Chevron.ClearAnimations();
             Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, MathHelper.ToDegrees(Chevron.Rotation), 0, time));
@@ -376,7 +376,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             if (ItemContainer.ScreenRectangle.Contains(mousePoint) || ScreenRectangle.Contains(mousePoint))
                 return;
 
-            if(Opened)
+            if (Opened)
                 Close();
         }
     }
