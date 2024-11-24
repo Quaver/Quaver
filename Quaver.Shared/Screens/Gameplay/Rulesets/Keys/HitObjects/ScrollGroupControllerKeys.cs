@@ -75,8 +75,11 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
 
         for (var i = 1; i < ScrollVelocityInfos.Count; i++)
         {
+            var multiplier = ScrollVelocityInfos[i - 1].Multiplier;
+            if (float.IsNaN(multiplier))
+                multiplier = 0;
             position += (long)((ScrollVelocityInfos[i].StartTime - ScrollVelocityInfos[i - 1].StartTime)
-                               * ScrollVelocityInfos[i - 1].Multiplier * HitObjectManagerKeys.TrackRounding);
+                               * multiplier * HitObjectManagerKeys.TrackRounding);
             VelocityPositionMarkers.Add(position);
         }
     }
@@ -129,8 +132,11 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
         index--;
 
         var curPos = VelocityPositionMarkers[index];
+        var multiplier = ScrollVelocityInfos[index].Multiplier;
+        if (float.IsNaN(multiplier))
+            multiplier = 0;
         curPos += (long)((time - ScrollVelocityInfos[index].StartTime) *
-                         ScrollVelocityInfos[index].Multiplier *
+                         multiplier *
                          HitObjectManagerKeys.TrackRounding);
         return curPos;
     }
@@ -267,6 +273,11 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
 
 
         CurrentTrackPosition = GetPositionFromTime(Manager.CurrentVisualAudioOffset, CurrentSvIndex);
+        if (CurrentTrackPosition < -9223372036852000000)
+        {
+            ;
+            GetPositionFromTime(Manager.CurrentVisualAudioOffset, CurrentSvIndex);
+        }
     }
 
     /// <summary>
