@@ -739,14 +739,17 @@ namespace Quaver.Shared.Screens.Edit
 
         public void SeekToStart(bool enableSelection = false)
         {
-            if (WorkingMap.HitObjects.Count == 0) SeekTo(0, enableSelection: enableSelection);
-            SeekTo(WorkingMap.HitObjects.Min(h => h.StartTime), enableSelection: enableSelection);
+            SeekTo(WorkingMap.HitObjects.Count == 0 ? 0 : WorkingMap.HitObjects.Min(h => h.StartTime),
+                enableSelection: enableSelection);
         }
 
         public void SeekToEnd(bool enableSelection = false)
         {
-            if (WorkingMap.HitObjects.Count == 0) SeekTo(Track.Length, enableSelection: enableSelection);
-            SeekTo(WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)), enableSelection: enableSelection);
+            SeekTo(
+                WorkingMap.HitObjects.Count == 0
+                    ? Track.Length
+                    : WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)),
+                enableSelection: enableSelection);
         }
 
         public void SeekToStartOfSelection(bool enableSelection = false)
