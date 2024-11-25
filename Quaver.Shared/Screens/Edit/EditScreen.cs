@@ -355,6 +355,11 @@ namespace Quaver.Shared.Screens.Edit
                 : WorkingMap.DefaultScrollGroup;
 
         /// <summary>
+        ///     Color Generator for colored things
+        /// </summary>
+        private PaulToulColorGenerator ColorGenerator { get; } = new();
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -852,15 +857,17 @@ namespace Quaver.Shared.Screens.Edit
         {
             var newGroupId = EditorPluginUtils.GenerateTimingGroupId();
 
-            var rgb = new byte[3];
-            Random.Shared.NextBytes(rgb);
+            var rgb = ColorGenerator.NextColor(
+                WorkingMap.TimingGroups.Select(t => 
+                    ColorHelper.ToXnaColor(t.Value.GetColor())
+                    ).ToHashSet());
 
             var timingGroup = new ScrollGroup
             {
                 InitialScrollVelocity = 1,
                 ScrollVelocities =
                     new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } },
-                ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
+                ColorRgb = $"{rgb.R},{rgb.G},{rgb.B}"
             };
 
             ActionManager.CreateTimingGroup(newGroupId, timingGroup, SelectedHitObjects.Value);                

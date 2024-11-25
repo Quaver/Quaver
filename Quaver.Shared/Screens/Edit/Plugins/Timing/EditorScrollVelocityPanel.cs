@@ -1,21 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 {
-    public class EditorScrollVelocityPanel : SpriteImGui, IEditorPlugin
+    public class EditorScrollVelocityPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitle
     {
         private float _progress;
 
@@ -101,6 +104,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         public ScrollGroup SelectedScrollGroup => Screen.SelectedScrollGroup;
 
+        public Color TitleColor => PaulToulColorGenerator.ColorScheme[13];
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -146,6 +151,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(600, float.MaxValue));
             ImGui.PushFont(Options.Fonts.First().Context);
+            ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
             ImGui.Begin(Name);
 
             DrawHeaderText();
@@ -180,6 +186,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = IsWindowHovered || isHovered;
 
             ImGui.End();
+            ((IColoredImGuiTitle)this).ImGuiPopTitleColors();
         }
 
 

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
@@ -24,7 +25,7 @@ using Vector4 = System.Numerics.Vector4;
 
 namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 {
-    public class EditorTimingGroupPanel : SpriteImGui, IEditorPlugin
+    public class EditorTimingGroupPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitle
     {
         private float _progress;
 
@@ -75,6 +76,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private HashSet<string> Clipboard { get; } = new();
 
         private bool _lastNameEditError;
+
+        public Color TitleColor => PaulToulColorGenerator.ColorScheme[9];
 
         /// <inheritdoc />
         /// <summary>
@@ -129,6 +132,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(600, float.MaxValue));
             ImGui.PushFont(Options.Fonts.First().Context);
+            ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
             ImGui.Begin(Name);
 
             DrawHeaderText();
@@ -160,6 +164,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = IsWindowHovered || isHovered;
 
             ImGui.End();
+            ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
         }
 
         private static void DrawObjectColoringToggle()
