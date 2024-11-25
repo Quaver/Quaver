@@ -350,7 +350,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 CurrentLongNoteBodySize = Info.CurrentLongNoteBodySize - LongNoteSizeDifference;
             }
 
-            if (Info.State != HitObjectState.Held || !SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
+            if (Info.State != HitObjectState.Held)
                 return;
 
             Info.UpdateLongNoteSize(curTime);
@@ -362,10 +362,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void ForceUpdateLongnote(double curTime)
         {
-            // When LN end is not drawn, the LNs don't change their size as they are held.
-            // So we only need to update if DrawLongNoteEnd is true.
             // The IsLongNote check is because UpdateLongNoteSize uses a property that is only initialized for LNs.
-            if (Info.IsLongNote && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
+            if (Info.IsLongNote)
                 UpdateLongNoteSize(curTime);
 
             UpdateSpritePositions(curTime);
@@ -378,13 +376,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Info.UpdatePositions(curTime);
             // Update Sprite position with regards to LN's state
-            //
-            // If the LN end is not drawn, don't move the LN start up with time since it ends up sliding above the LN in
-            // the end.
             float spritePosition;
 
             UpdateLongNoteSize(curTime);
-            if (Info.State == HitObjectState.Held && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
+            if (Info.State == HitObjectState.Held)
             {
                 if (curTime > Info.StartTime)
                     spritePosition = HitPosition;
