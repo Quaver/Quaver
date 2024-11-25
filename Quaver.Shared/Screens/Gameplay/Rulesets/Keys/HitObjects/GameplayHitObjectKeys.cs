@@ -422,7 +422,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var longNoteOverlap = CurrentLongNoteBodySize + LongNoteSizeDifference <= HitObjectSprite.Height / 2f ||
                                   CurrentLongNoteBodySize <= 0 ||
                                   curTime >= Info.EndTime && Info.State is HitObjectState.Held or HitObjectState.Dead;
-            LongNoteEndSprite.Visible = !longNoteOverlap;
+            LongNoteEndSprite.Visible = !longNoteOverlap && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
             LongNoteBodySprite.Visible = !longNoteOverlap;
         }
 
