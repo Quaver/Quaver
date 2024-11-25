@@ -122,8 +122,8 @@ public class HitBubbles : Container
                 Parent = this,
                 Alignment = _hitBubblesType switch
                 {
-                    HitBubblesType.FallLeft => Alignment.MidLeft,
-                    HitBubblesType.FallRight => Alignment.MidRight,
+                    HitBubblesType.FallLeft => Alignment.MidRight,
+                    HitBubblesType.FallRight => Alignment.MidLeft,
                     HitBubblesType.FallUp => Alignment.BotCenter,
                     HitBubblesType.FallDown => Alignment.TopCenter,
                     _ => throw new ArgumentOutOfRangeException()
@@ -140,8 +140,8 @@ public class HitBubbles : Container
 
         sprite.SetTargetPosition(_hitBubblesType switch
         {
-            HitBubblesType.FallLeft => _borderPadding,
-            HitBubblesType.FallRight => -_borderPadding,
+            HitBubblesType.FallLeft => -_borderPadding,
+            HitBubblesType.FallRight => _borderPadding,
             HitBubblesType.FallUp => -_borderPadding,
             HitBubblesType.FallDown => _borderPadding,
             _ => throw new ArgumentOutOfRangeException()
