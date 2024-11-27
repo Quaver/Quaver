@@ -179,9 +179,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (LastSelectedScrollGroupId != SelectedScrollGroupId)
                 SelectionCooldown = true;
 
+            PendingSelectScrollGroupId = SelectedScrollGroupId;
             if (ImGui.BeginTabBar("Groups", ImGuiTabBarFlags.FittingPolicyScroll))
             {
-                PendingSelectScrollGroupId = SelectedScrollGroupId;
                 foreach (var (id, timingGroup) in Screen.WorkingMap.TimingGroups)
                 {
                     if (timingGroup is not ScrollGroup)
