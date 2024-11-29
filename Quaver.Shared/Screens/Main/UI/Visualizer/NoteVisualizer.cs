@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Main.UI.Visualizer
             var firstSprite = Sprites.First();
 
             if (firstSprite.Y >= 0 && Sprites.Count == 1)
-                CreateSprites((int) -firstSprite.Height + 100);
+                CreateSprites((int) -firstSprite.Height);
 
             if (!RectangleF.Intersects(firstSprite.ScreenRectangle, new RectangleF(0, 0, WindowManager.Width, WindowManager.Height))
                 && firstSprite.Y > 0)
