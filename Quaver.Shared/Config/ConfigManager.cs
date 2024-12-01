@@ -581,6 +581,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> DownloadDisplayExplicitMapsets { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<bool> DownloadReverseSort { get; private set; }
 
         /// <summary>
@@ -1200,6 +1204,7 @@ namespace Quaver.Shared.Config
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
+            DownloadDisplayExplicitMapsets = ReadValue(@"DownloadDisplayExplicitMapsets", false, data);
             DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
             DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomToTop", false, data);
             SelectedProfileId = ReadInt(@"SelectedProfileId", -1, -1, int.MaxValue, data);
