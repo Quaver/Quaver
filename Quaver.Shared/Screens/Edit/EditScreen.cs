@@ -411,6 +411,7 @@ namespace Quaver.Shared.Screens.Edit
 
         public void ResetInputManager()
         {
+            InputManager?.Destroy();
             InputManager = new EditorInputManager(this);
         }
 
@@ -551,6 +552,8 @@ namespace Quaver.Shared.Screens.Edit
             SkinManager.SkinLoaded -= OnSkinLoaded;
 
             Plugins.ForEach(x => x.Destroy());
+            
+            InputManager?.Destroy();
 
             base.Destroy();
         }
