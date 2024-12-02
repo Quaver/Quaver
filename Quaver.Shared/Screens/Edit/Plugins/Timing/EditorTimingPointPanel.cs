@@ -1,22 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using TagLib.Matroska;
 using TagLib.Riff;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 {
-    public class EditorTimingPointPanel : SpriteImGui, IEditorPlugin
+    public class EditorTimingPointPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitle
     {
         private float _progress;
 
@@ -75,6 +78,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private bool NeedsToScrollToLastSelectedPoint { get; set; }
 
+        public Color TitleColor => PaulToulColorGenerator.ColorScheme[16];
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -117,6 +122,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(450, float.MaxValue));
             ImGui.PushFont(Options.Fonts.First().Context);
+            ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
             ImGui.Begin(Name);
 
             DrawHeaderText();
@@ -152,6 +158,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             IsWindowHovered = IsWindowHovered || isHovered;
             ImGui.End();
+            ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
         }
 
         /// <summary>
