@@ -1262,7 +1262,7 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     // Remove any long notes that this note would reside in before placing
                     ActionManager.RemoveHitObjectBatch(lnsAtTime);
-                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer);
+                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: SelectedScrollGroupId);
                 }
             }
         }
