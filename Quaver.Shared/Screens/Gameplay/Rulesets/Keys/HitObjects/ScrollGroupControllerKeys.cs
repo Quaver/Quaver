@@ -202,6 +202,16 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
             });
         }
 
+        if (changes.Count > 0)
+        {
+            changes[^1].BackPrefixMaxPosition = changes[^1].BackPrefixMinPosition = changes[^1].Position;
+            for (var j = changes.Count - 2; j >= 0; j--)
+            {
+                changes[j].BackPrefixMaxPosition = Math.Max(changes[j + 1].BackPrefixMaxPosition, changes[j].Position);
+                changes[j].BackPrefixMinPosition = Math.Min(changes[j + 1].BackPrefixMinPosition, changes[j].Position);
+            }
+        }
+
         return changes;
     }
 
