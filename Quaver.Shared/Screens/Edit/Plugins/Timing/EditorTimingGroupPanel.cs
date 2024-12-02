@@ -360,11 +360,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawTableHeader()
         {
-            ImGui.Columns(4);
+            ImGui.Columns(3);
             ImGui.SetColumnWidth(0, 160);
             ImGui.TextWrapped("ID");
-            ImGui.NextColumn();
-            ImGui.TextWrapped("Type");
             ImGui.NextColumn();
             ImGui.TextWrapped("Color");
             ImGui.NextColumn();
@@ -378,11 +376,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawTableColumns()
         {
             ImGui.BeginChild("Timing Group Area");
-            ImGui.Columns(4);
+            ImGui.Columns(3);
             ImGui.SetColumnWidth(0, 160);
 
             const int elementBaseHeight = 12;
-            const int numberOfColumns = 4;
+            const int numberOfColumns = 3;
             var elementHeight = Screen.ImGuiScale * elementBaseHeight;
             var y = ImGui.GetContentRegionAvail().Y;
 
@@ -441,8 +439,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 if (!isSelected)
                     ImGui.PopStyleColor();
 
-                ImGui.NextColumn();
-                ImGui.TextWrapped($"{timingGroup.GetType().Name}");
                 ImGui.NextColumn();
                 const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs |
                                                          ImGuiColorEditFlags.NoPicker;
