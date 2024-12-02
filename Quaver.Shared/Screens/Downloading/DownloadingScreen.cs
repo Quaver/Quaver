@@ -151,6 +151,10 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> DisplayExplicitMapsets => ConfigManager.DownloadDisplayExplicitMapsets ?? new Bindable<bool>(true) { Value = true };
+
+        /// <summary>
+        /// </summary>
         public Bindable<int> Page { get; } = new Bindable<int>(0) { Value = 0 };
 
         /// <summary>
@@ -242,6 +246,7 @@ namespace Quaver.Shared.Screens.Downloading
             MinLastUpdateDate.ValueChanged += OnMinLastUpdateDateChanged;
             MaxLastUpdateDate.ValueChanged += OnMaxLastUpdateDateChanged;
             DisplayOwnedMapsets.ValueChanged += OnDisplayOwnedMapsetsChanged;
+            DisplayExplicitMapsets.ValueChanged += OnDisplayExplicitMapsetsChanged;
             ReverseSort.ValueChanged += OnReverseSortChanged;
             MinCombo.ValueChanged += OnMinComboChanged;
             MaxCombo.ValueChanged += OnMaxComboChanged;
@@ -489,10 +494,14 @@ namespace Quaver.Shared.Screens.Downloading
 
             // ReSharper disable twice DelegateSubtraction
             DisplayOwnedMapsets.ValueChanged -= OnDisplayOwnedMapsetsChanged;
+            DisplayExplicitMapsets.ValueChanged -= OnDisplayExplicitMapsetsChanged;
             ReverseSort.ValueChanged -= OnReverseSortChanged;
 
             if (DisplayOwnedMapsets != ConfigManager.DownloadDisplayOwnedMapsets)
                 DisplayOwnedMapsets?.Dispose();
+
+            if (DisplayExplicitMapsets != ConfigManager.DownloadDisplayExplicitMapsets)
+                DisplayExplicitMapsets?.Dispose();
 
             if (ReverseSort != ConfigManager.DownloadReverseSort)
                 ReverseSort?.Dispose();
@@ -597,7 +606,8 @@ namespace Quaver.Shared.Screens.Downloading
                 FilterRankedStatus.Value, MinDifficulty.Value, MaxDifficulty.Value, MinBpm.Value,
                 MaxBpm.Value, MinLength.Value, MaxLength.Value, MinLongNotePercent.Value, MaxLongNotePercent.Value,
                 MinPlayCount.Value, MaxPlayCount.Value, MinUploadDate.Value, MaxUploadDate.Value,
-                MinLastUpdateDate.Value, MaxLastUpdateDate.Value, MinCombo.Value, MaxCombo.Value, ReverseSort.Value, SortBy.Value, page);
+                MinLastUpdateDate.Value, MaxLastUpdateDate.Value, MinCombo.Value, MaxCombo.Value, ReverseSort.Value, SortBy.Value, page,
+                DisplayExplicitMapsets.Value);
         }
         /// <summary>
         /// </summary>
@@ -693,6 +703,12 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisplayOwnedMapsetsChanged(object sender, BindableValueChangedEventArgs<bool> e) => Page.Value = 0;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplayExplicitMapsetsChanged(object sender, BindableValueChangedEventArgs<bool> e) => Page.Value = 0;
 
         /// <summary>
         /// </summary>

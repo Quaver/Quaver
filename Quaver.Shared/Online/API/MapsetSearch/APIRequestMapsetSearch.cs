@@ -104,6 +104,10 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         /// <summary>
         /// </summary>
+        public bool ShowExplicit { get; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="query"></param>
         /// <param name="mode"></param>
         /// <param name="status"></param>
@@ -126,13 +130,14 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// <param name="reverseSort"></param>
         /// <param name="sortBy"></param>
         /// <param name="page"></param>
+        /// <param name="showExplicit"></param>
         public APIRequestMapsetSearch(string query, DownloadFilterMode mode, DownloadFilterRankedStatus status,
             float minDiff,
             float maxDiff, float minBpm, float maxBpm, int minLength, int maxLength, int minln, int maxln,
             int minPlayCount,
             int maxPlayCount, string startUploadDate, string endUploadDate, string startUpdateDate,
             string endUpdateDate,
-            int minCombo, int maxCombo, bool reverseSort, DownloadSortBy sortBy, int page)
+            int minCombo, int maxCombo, bool reverseSort, DownloadSortBy sortBy, int page, bool showExplicit)
         {
             Query = query;
             Mode = mode;
@@ -152,6 +157,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             ReverseSort = reverseSort;
             SortBy = sortBy;
             Page = page;
+            ShowExplicit = showExplicit;
 
             // Upload Date
             if (string.IsNullOrEmpty(startUploadDate))
@@ -225,6 +231,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                     DownloadSortBy.PlayCount => "play_count",
                     _ => throw new ArgumentOutOfRangeException()
                 });
+                request.AddQueryParameter("show_explicit", ShowExplicit ? "true" : "false");
 
                 var response = client.Execute(request);
                 var json = JObject.Parse(response.Content);
