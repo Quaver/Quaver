@@ -539,8 +539,6 @@ namespace Quaver.Shared.Database.Maps
                 ["unranked"] = RankedStatus.Unranked,
                 ["notsubmitted"] = RankedStatus.NotSubmitted,
                 ["unsubmitted"] = RankedStatus.NotSubmitted,
-                ["dan"] = RankedStatus.DanCourse,
-                ["dancourse"] = RankedStatus.DanCourse
             };
 
             SearchEnumKeyDictionary.Clear();
