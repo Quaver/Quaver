@@ -19,8 +19,8 @@ namespace Quaver.Shared.Screens.Edit.Input
     public class EditorInputManager
     {
         public EditorInputConfig InputConfig { get; }
-        public EditScreen Screen { get; }
-        private EditScreenView View { get; }
+        private EditScreen Screen { get; set; }
+        private EditScreenView View { get; set; }
 
         private Dictionary<Keybind, HashSet<KeybindActions>> keybindDictionary;
         private GenericKeyState previousKeyState;
@@ -716,8 +716,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             lastActionTime[action] = GameBase.Game.TimeRunning;
         }
 
-        ~EditorInputManager()
+        public void Destroy()
         {
+            Screen = null;
+            View = null;
             ConfigManager.InvertEditorScrolling.ValueChanged -= InvertScrollingValueChanged;
             if (Screen?.InvertBeatSnapScroll != null)
                 Screen.InvertBeatSnapScroll.ValueChanged -= InvertScrollingValueChanged;
