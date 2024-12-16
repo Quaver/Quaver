@@ -26,7 +26,8 @@ public class HitBubbles : Container
     private GameplayScreen Screen { get; }
 
     private bool HideHitBubbles =>
-        (Screen?.IsCalibratingOffset ?? false)
+        SkinKeys == null
+        || (Screen?.IsCalibratingOffset ?? false)
         || SkinKeys.HitBubblesScale == 0
         || !ConfigManager.DisplayHitBubbles.Value;
 
@@ -35,7 +36,14 @@ public class HitBubbles : Container
             ? HitBubbleRecordedJudgement.All
             : SkinKeys.HitBubblesRecordedJudgements;
 
-    private static SkinKeys SkinKeys => SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
+    /// <summary>
+    ///     Skin keys retrieval.
+    ///     Doing excessive null check here because there happens to be a case where this could be null
+    /// </summary>
+    /// <remarks>
+    ///     will crash in <see cref="OnRectangleRecalculated"/> if we skip null check
+    /// </remarks>
+    private static SkinKeys SkinKeys => SkinManager.Skin?.Keys?.GetValueOrDefault(MapManager.Selected?.Value?.Mode ?? GameMode.Keys4);
 
     private Texture2D GetTexture()
     {
