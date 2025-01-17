@@ -1521,8 +1521,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 AudioEngine.Track.Seek(time);
             }
 
-            Timing.Time = AudioEngine.Track.Time;
-            Timing.Update(new GameTime());
             HasStarted = true;
 
             hitobjectManager.HandleSkip();

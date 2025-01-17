@@ -737,6 +737,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
+            Ruleset.Screen.Timing.Time = AudioEngine.Track.Time;
+            Ruleset.Screen.Timing.Update(new GameTime());
+
             foreach ((_, TimingGroupControllerKeys controller) in TimingGroupControllers)
             {
                 controller.HandleSkip();
