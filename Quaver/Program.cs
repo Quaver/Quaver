@@ -15,7 +15,6 @@ using System.Net.Mime;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
-using Microsoft.VisualBasic.CompilerServices;
 using Quaver.Shared;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
@@ -122,7 +121,7 @@ namespace Quaver
         }
 
         [SupportedOSPlatform("windows")]
-        private static void LogWineVersion()
+        private static unsafe void LogWineVersion()
         {
             var dll = Kernel32.GetModuleHandle("ntdll.dll");
             var getVersion = (delegate* unmanaged[Cdecl]<nint>)Kernel32.GetProcAddress(dll, "wine_get_version");
