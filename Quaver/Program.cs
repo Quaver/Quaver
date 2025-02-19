@@ -12,7 +12,10 @@ using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
 using System.Net.Mime;
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
+using Microsoft.VisualBasic.CompilerServices;
 using Quaver.Shared;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
@@ -83,6 +86,9 @@ namespace Quaver
                 OnlineManager.Client?.Disconnect();
             };
 
+            if (OperatingSystem.IsWindows())
+                LogWineVersion();
+
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
@@ -113,6 +119,16 @@ namespace Quaver
             using (var game = new QuaverGame())
 #endif
                 game.Run();
+        }
+
+        [SupportedOSPlatform("windows")]
+        private static void LogWineVersion()
+        {
+            var dll = Kernel32.GetModuleHandle("ntdll.dll");
+            var getVersion = (delegate* unmanaged[Cdecl]<nint>)Kernel32.GetProcAddress(dll, "wine_get_version");
+
+            if (getVersion is not null)
+                Logger.Important($"Using wine version: {getVersion()}", LogType.Runtime);
         }
 
         /// <summary>
@@ -175,6 +191,18 @@ namespace Quaver
             var network = File.ReadAllText(Logger.GetLogPath(LogType.Network));
 
             OnlineManager.Client?.SendCrashLog(runtime, network, e.ToString(), game.Version);
+        }
+
+        static class Kernel32
+        {
+            [DllImport("kernel32.dll", BestFitMapping = false, CharSet = CharSet.Ansi, SetLastError = true)]
+            internal static extern nint GetModuleHandle(string moduleName);
+
+            [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
+            internal static extern nint GetProcAddress(
+                nint hModule,
+                [MarshalAs(UnmanagedType.LPStr)] string procedureName
+            );
         }
     }
 }
