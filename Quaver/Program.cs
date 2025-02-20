@@ -121,13 +121,16 @@ namespace Quaver
         }
 
         [SupportedOSPlatform("windows")]
-        private static unsafe void LogWineVersion()
+        private static void LogWineVersion()
         {
             var dll = Kernel32.GetModuleHandle("ntdll.dll");
-            var getVersion = (delegate* unmanaged[Cdecl]<nint>)Kernel32.GetProcAddress(dll, "wine_get_version");
+            var getVersion = Kernel32.GetProcAddress(dll, "wine_get_version");
 
-            if (getVersion is not null)
-                Logger.Important($"Using wine version: {getVersion()}", LogType.Runtime);
+            if (getVersion is not 0)
+                Logger.Warning(
+                    "Detected wine runtime. Using wine over the native version is discouraged as it may lead to stability or compatibility issues. If possible, please use the native version of the game.",
+                    LogType.Runtime
+                );
         }
 
         /// <summary>
