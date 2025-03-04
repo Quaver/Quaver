@@ -343,7 +343,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     {
                         Parent = Playfield.ForegroundContainer,
                         Image = Skin.StageHitPositionOverlay,
-                        Rotation = 180,
+                        Rotation = MathF.PI,
                         Size = new ScalableVector2(width, sizeY),
                         X = width,
                         Y = Playfield.ReceptorPositionY.Last() + offsetY - Skin.HitPosOffsetY
@@ -357,7 +357,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Parent = Playfield.ForegroundContainer,
                 Image = Skin.StageHitPositionOverlay,
-                Rotation = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Up) ? 180 : 0,
+                Rotation = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Up) ? MathF.PI : 0,
                 Size = new ScalableVector2(width, sizeY),
                 Y = y
             };

@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         {
             ScrollSpeedFactor = sv;
             TimingGroup = timingGroup;
-            Rotation = 180;
+            Rotation = MathF.PI;
         }
 
         public override Color GetColor() =>
