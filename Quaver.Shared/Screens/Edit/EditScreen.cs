@@ -16,6 +16,7 @@ using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Bindables;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -282,7 +283,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public BindableList<HitObjectInfo> SelectedHitObjects { get; set; } =
-            new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
+            new BindableSortedList<HitObjectInfo>(new List<HitObjectInfo>());
 
         /// <summary>
         /// </summary>
