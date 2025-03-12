@@ -129,6 +129,7 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 var screen = TournamentScreen.GameplayScreens[i];
                 var playfield = (GameplayPlayfieldKeys)screen.Ruleset.Playfield;
+                playfield.PlayfieldMask.Visible = false;
 
                 playfield.Container.Width = playfield.Width + playfield.Stage.HealthBar.Width;
 

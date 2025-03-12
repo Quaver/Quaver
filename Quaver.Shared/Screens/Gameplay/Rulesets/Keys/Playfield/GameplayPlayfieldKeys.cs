@@ -13,10 +13,13 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using System;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Window;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
@@ -47,6 +50,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The foreground of the playfield.
         /// </summary>
         public Container ForegroundContainer { get; private set; }
+
+        /// <summary>
+        ///     The mask of the playfield. Used to hide notes outside of the playfield.
+        /// </summary>
+        public Sprite PlayfieldMask { get; private set; }
 
         /// <summary>
         ///     The stage of the playfield.
@@ -186,10 +194,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Screen = screen;
             Ruleset = ruleset;
-            Container = new Container();
+            Container = new Container
+            {
+                Pivot = new Vector2(0.5f, 0.5f)
+            };
             SetLaneScrollDirections();
             SetReferencePositions();
-            CreateElementContainers();
+            CreateElementContainers(); 
+            Container.Scale = Vector2.One * (ConfigManager.PlayfieldScale.Value / 100f);
         }
 
 
@@ -214,6 +226,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Size = new ScalableVector2(Width, WindowManager.Height),
                 Alignment = Alignment.TopCenter,
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
+            };
+
+            PlayfieldMask = new Sprite
+            {
+                Parent = Container,
+                Image = UserInterface.PlayfieldMask,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(WindowManager.Width * 4, WindowManager.Height * 4),
+                Visible = ConfigManager.PlayfieldScale.Value < 100 && !Screen.IsSongSelectPreview,
+                SpriteBatchOptions = new SpriteBatchOptions
+                {
+                    SamplerState = new SamplerState
+                    {
+                        Filter = TextureFilter.Point
+                    }
+                }
             };
 
             Stage = new GameplayPlayfieldKeysStage(Screen, this);
