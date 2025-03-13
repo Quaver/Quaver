@@ -222,12 +222,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
 
-                UpdateAccuracyMaxCombo(score);
-
-                var grade = score.Item.Grade == API.Enums.Grade.F
-                    ? API.Enums.Grade.F
-                    : GradeHelper.GetGradeFromAccuracy((float)score.Item.Accuracy);
-                Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
+                UpdateAccuracyMode(score);
 
                 UpdateTime();
                 UpdateModifiers();
@@ -765,20 +760,28 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnAccuracyDisplayChanged(object sender, BindableValueChangedEventArgs<bool> e) =>
-            AddScheduledUpdate(() => UpdateAccuracyMaxCombo(Score));
+            AddScheduledUpdate(() => UpdateAccuracyMode(Score));
 
         /// <summary>
-        /// Called when <see cref="AccuracyMaxCombo"/> might need to be updated
+        /// Called when <see cref="AccuracyMaxCombo"/> and <see cref="Grade"> might need to be updated
         /// </summary>
         /// <param name="score"></param>
-        private void UpdateAccuracyMaxCombo(DrawableLeaderboardScore score)
+        private void UpdateAccuracyMode(DrawableLeaderboardScore score)
         {
+            var acc = (float)(ConfigManager.LeaderboardSection.Value == LeaderboardType.Local &&
+                ConfigManager.LeaderboardRankedAccuracy.Value
+                    ? score.Item.RankedAccuracy
+                    : score.Item.Accuracy);
+
             if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
-                AccuracyMaxCombo.Text = $"{StringHelper.AccuracyToString((float)score.Item.Accuracy)}";
-            else if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Local && ConfigManager.LeaderboardRankedAccuracy.Value)
-                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float)score.Item.RankedAccuracy)}";
+                AccuracyMaxCombo.Text = $"{StringHelper.AccuracyToString(acc)}";
             else
-                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float)score.Item.Accuracy)}";
+                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString(acc)}";
+
+            var grade = score.Item.Grade == API.Enums.Grade.F
+                ? API.Enums.Grade.F
+                : GradeHelper.GetGradeFromAccuracy(acc);
+            Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
         }
 
         /// <summary>
