@@ -249,7 +249,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
                 var alternativeMd5 = MapManager.Selected.Value.GetAlternativeMd5();
 
                 var game = MultiplayerGame.CreateCustom(MultiplayerGameType.Friendly, name, password, maxPlayers, map,
-                    mapId, mapsetId, ruleset, false, mode, difficultyRating, md5, difficultyRatings,
+                    mapId, mapsetId, ruleset, false, true, mode, difficultyRating, md5, difficultyRatings,
                     judgementCount, alternativeMd5);
 
                 OnlineManager.Client?.CreateMultiplayerGame(game);
