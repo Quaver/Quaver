@@ -28,7 +28,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
                     }
                     else
                     {
-                        if (OnlineManager.CurrentGame is { EnablePreview: false })
+                        if (OnlineManager.CurrentGame is { EnablePreview: false, HostId: var host } &&
+                            host != OnlineManager.Self.OnlineUser.Id)
                             NotificationManager.Show(NotificationLevel.Warning, "Preview is disabled in this game!");
                         else
                             activeLeftPanel.Value = SelectContainerPanel.MapPreview;
