@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -9,7 +8,6 @@ using Quaver.API.Maps.Processors.Rating;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -207,7 +205,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     return;
 
                 Tint = Button.IsHovered || CantBeatAlert.IsHovered || RequiredAccuracyAlert.IsHovered
-                    ? ColorHelper.HexToColor("#575757") : BackgroundColor;
+                    ? ColorHelper.HexToColor("#575757"): BackgroundColor;
 
                 // Ranks don't show on PB scores.
                 if (!Score.IsPersonalBest)
@@ -221,7 +219,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6");
 
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
-
+                
                 UpdateAccuracyMode(score);
 
                 UpdateTime();
@@ -267,8 +265,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
                     return;
-
-                var game = (QuaverGame)GameBase.Game;
+                
+                var game = (QuaverGame) GameBase.Game;
 
                 if (OnlineManager.CurrentGame != null)
                     return;
@@ -280,8 +278,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
                     return;
-
-                var game = (QuaverGame)GameBase.Game;
+                
+                var game = (QuaverGame) GameBase.Game;
                 game?.CurrentScreen?.ActivateRightClickOptions(new LeaderboardScoreRightClickOptions(Score.Item));
             };
         }
@@ -319,7 +317,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Image = BlankImage,
                 Alpha = 0
             };
-
+            
             if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
                 Avatar.Size = new ScalableVector2(0, 0);
         }
@@ -367,10 +365,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Flag.X + Flag.Width + PaddingLeft / 4f, UsernameY + 4),
+                Position = new ScalableVector2(Flag.X + Flag.Width +PaddingLeft / 4f, UsernameY + 4),
                 UsePreviousSpriteBatchOptions = true
             };
-
+            
         }
 
         /// <summary>
@@ -444,13 +442,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             CantBeatAlert.Hovered += (sender, args) =>
             {
-                var game = (QuaverGame)GameBase.Game;
+                var game = (QuaverGame) GameBase.Game;
                 game.CurrentScreen.ActivateTooltip(UnbeatableTooltip);
             };
 
             CantBeatAlert.LeftHover += (sender, args) =>
             {
-                var game = (QuaverGame)GameBase.Game;
+                var game = (QuaverGame) GameBase.Game;
                 game.CurrentScreen.DeactivateTooltip();
             };
 
@@ -478,10 +476,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             RequiredAccuracyAlert.LeftHover += (sender, args) =>
             {
-                var game = (QuaverGame)GameBase.Game;
+                var game = (QuaverGame) GameBase.Game;
                 game.CurrentScreen.DeactivateTooltip();
             };
-
+            
             if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
                 RequiredAccuracyAlert.Size = new ScalableVector2(0, 0);
         }
@@ -528,27 +526,27 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             Time.X = Clock.Width + 2;
 
             // Years
-            if ((int)timeDifference.TotalDays > 365)
-                Time.Text = $"{(int)(timeDifference.TotalDays / 365)}y";
+            if ((int) timeDifference.TotalDays > 365)
+                Time.Text = $"{(int) (timeDifference.TotalDays / 365)}y";
             // Months
-            else if ((int)timeDifference.TotalDays > 30)
-                Time.Text = $"{(int)(timeDifference.TotalDays / 30)}mo";
+            else if ((int) timeDifference.TotalDays > 30)
+                Time.Text = $"{(int) (timeDifference.TotalDays / 30)}mo";
             // Weeks
-            else if ((int)timeDifference.TotalDays > 7)
-                Time.Text = $"{(int)(timeDifference.TotalDays / 7)}w";
+            else if ((int) timeDifference.TotalDays > 7)
+                Time.Text = $"{(int) (timeDifference.TotalDays / 7)}w";
             // Days
-            else if ((int)timeDifference.TotalDays > 0)
-                Time.Text = $"{(int)timeDifference.TotalDays}d";
+            else if ((int) timeDifference.TotalDays > 0)
+                Time.Text = $"{(int) timeDifference.TotalDays}d";
             // Hours
-            else if ((int)timeDifference.TotalHours > 0)
-                Time.Text = $"{(int)timeDifference.TotalHours}h";
+            else if ((int) timeDifference.TotalHours > 0)
+                Time.Text = $"{(int) timeDifference.TotalHours}h";
             // Minutes
-            else if ((int)timeDifference.TotalMinutes > 0)
-                Time.Text = $"{(int)timeDifference.TotalMinutes}m";
+            else if ((int) timeDifference.TotalMinutes > 0)
+                Time.Text = $"{(int) timeDifference.TotalMinutes}m";
             // Seconds
             else
             {
-                var seconds = (int)timeDifference.TotalSeconds;
+                var seconds = (int) timeDifference.TotalSeconds;
 
                 if (seconds <= 0)
                     Time.Text = "now";
@@ -570,7 +568,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (Button == null)
                 return;
 
-            var color = Button.IsHovered || CantBeatAlert.IsHovered ? ColorHelper.HexToColor("#575757") : BackgroundColor;
+            var color = Button.IsHovered || CantBeatAlert.IsHovered ? ColorHelper.HexToColor("#575757"): BackgroundColor;
             FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
         }
 
@@ -584,7 +582,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             Modifiers = new List<DrawableModifier>();
 
-            var modsList = ModManager.GetModsList((ModIdentifier)Score.Item.Mods);
+            var modsList = ModManager.GetModsList((ModIdentifier) Score.Item.Mods);
 
             if (modsList.Count == 0)
                 modsList.Add(ModIdentifier.None);
@@ -625,38 +623,38 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void UpdateAvatar()
         {
-            var steamId = (ulong)Score.Item.SteamId;
+            var steamId = (ulong) Score.Item.SteamId;
 
             if (ConfigManager.LeaderboardSection?.Value == LeaderboardType.Local)
                 steamId = SteamUser.GetSteamID().m_SteamID;
 
             lock (Avatar)
-                lock (Avatar.Image)
+            lock (Avatar.Image)
+            {
+                if (Score.IsPersonalBest && !Score.Item.IsOnline)
                 {
-                    if (Score.IsPersonalBest && !Score.Item.IsOnline)
-                    {
-                        Avatar.Image = SteamManager.GetAvatarOrUnknown(steamId);
-                        Avatar.Alpha = 1;
-                        return;
-                    }
-
-                    if (SteamManager.UserAvatars.ContainsKey(steamId))
-                    {
-                        if (Avatar.Image == SteamManager.UserAvatars[steamId])
-                            return;
-
-                        Avatar.Alpha = 0;
-                        Avatar.ClearAnimations();
-                        Avatar.FadeTo(1, Easing.Linear, 400);
-
-                        Avatar.Image = SteamManager.UserAvatars[steamId];
-                        return;
-                    }
-
-                    Avatar.Image = UserInterface.UnknownAvatar;
-                    Avatar.ClearAnimations();
-                    Avatar.Alpha = 0;
+                    Avatar.Image = SteamManager.GetAvatarOrUnknown(steamId);
+                    Avatar.Alpha = 1;
+                    return;
                 }
+
+                if (SteamManager.UserAvatars.ContainsKey(steamId))
+                {
+                    if (Avatar.Image == SteamManager.UserAvatars[steamId])
+                        return;
+
+                    Avatar.Alpha = 0;
+                    Avatar.ClearAnimations();
+                    Avatar.FadeTo(1, Easing.Linear, 400);
+
+                    Avatar.Image = SteamManager.UserAvatars[steamId];
+                    return;
+                }
+
+                Avatar.Image = UserInterface.UnknownAvatar;
+                Avatar.ClearAnimations();
+                Avatar.Alpha = 0;
+            }
 
             SteamManager.SendAvatarRetrievalRequest(steamId);
         }
@@ -685,7 +683,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             if (CantBeatAlert.Visible ||
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                ModHelper.GetRateFromMods(ModManager.Mods) == ModHelper.GetRateFromMods((ModIdentifier)Score.Item.Mods))
+                ModHelper.GetRateFromMods(ModManager.Mods) == ModHelper.GetRateFromMods((ModIdentifier) Score.Item.Mods))
             {
                 RequiredAccuracyAlert.Visible = false;
                 return;
@@ -724,17 +722,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="e"></param>
         private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
         {
-            if (e.SteamId != (ulong)Score.Item.SteamId)
+            if (e.SteamId != (ulong) Score.Item.SteamId)
                 return;
 
             lock (Avatar)
-                lock (Avatar.Image)
-                {
-                    Avatar.Alpha = 0;
-                    Avatar.ClearAnimations();
-                    Avatar.FadeTo(1, Easing.Linear, 400);
-                    Avatar.Image = e.Texture;
-                }
+            lock (Avatar.Image)
+            {
+                Avatar.Alpha = 0;
+                Avatar.ClearAnimations();
+                Avatar.FadeTo(1, Easing.Linear, 400);
+                Avatar.Image = e.Texture;
+            }
         }
 
         /// <summary>
@@ -788,14 +786,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void ActivateRequiredAccuracyTooltip()
         {
-            var game = (QuaverGame)GameBase.Game;
+            var game = (QuaverGame) GameBase.Game;
 
             var processor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods));
 
             var requiredAcc = processor.GetAccuracyFromRating(Score.Item.PerformanceRating);
 
             var tooltip = new Tooltip("In order to beat this score with your current modifiers,\n" +
-                                      $"you must achieve higher than {StringHelper.AccuracyToString((float)requiredAcc)} accuracy.",
+                                      $"you must achieve higher than {StringHelper.AccuracyToString((float) requiredAcc)} accuracy.",
                 ColorHelper.HexToColor("#5dc7f9"));
 
             game.CurrentScreen.ActivateTooltip(tooltip);
