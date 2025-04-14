@@ -283,7 +283,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 if (timingGroup is ScrollGroup scrollGroup)
                 {
-                    if (scrollGroup.ScrollVelocities.Any(x => x.Multiplier > 1.01 || x.Multiplier < 0.99))
+                    if (scrollGroup.ScrollVelocities.Any(x => x.Multiplier > 1.01 || x.Multiplier < 0.99) && !Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoSliderVelocity))
                         HasSignificantSVs = true;
 
                     timingGroupController = new ScrollGroupControllerKeys(timingGroup, Map, this);
