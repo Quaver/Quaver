@@ -452,7 +452,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
                         new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport),
-                        new OptionsItemCheckbox(containerRect, "Discord Rich Presence", ConfigManager.DiscordRichPresence)
+                        new OptionsItemCheckbox(containerRect, "Discord Rich Presence", ConfigManager.DiscordRichPresence),
+                        new OptionsItemCheckbox(containerRect, "Display Ranked Accuracy For Local Leaderboards", ConfigManager.LeaderboardRankedAccuracy)
                     }),
                 }),
             };

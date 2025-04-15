@@ -274,6 +274,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayRankedAccuracy { get; private set; }
 
         /// <summary>
+        ///     Display the ranked accuracy for local leaderboards instead of the custom judgement windows accuracy
+        /// </summary>
+        internal static Bindable<bool> LeaderboardRankedAccuracy { get; private set; }
+
+        /// <summary>
         ///     If true, the hitlighting will be tinted to the judgement color in the skin
         /// </summary>
         internal static Bindable<bool> TintHitLightingBasedOnJudgementColor { get; private set; }
@@ -1077,6 +1082,7 @@ namespace Quaver.Shared.Config
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
+            LeaderboardRankedAccuracy = ReadValue(@"LeaderboardRankedAccuracy", false, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
