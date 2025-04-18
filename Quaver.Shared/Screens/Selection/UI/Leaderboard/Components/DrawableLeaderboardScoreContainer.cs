@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -19,6 +18,7 @@ using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -174,6 +174,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
             ModManager.ModsChanged += OnModsChanged;
+            ConfigManager.LeaderboardRankedAccuracy.ValueChanged += OnAccuracyDisplayChanged;
         }
 
         /// <inheritdoc />
@@ -218,15 +219,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6");
 
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
-                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float) score.Item.Accuracy)}";
-
-                if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
-                    AccuracyMaxCombo.Text = $"{StringHelper.AccuracyToString((float)score.Item.Accuracy)}";
                 
-                var grade = score.Item.Grade == API.Enums.Grade.F
-                    ? API.Enums.Grade.F
-                    : GradeHelper.GetGradeFromAccuracy((float) score.Item.Accuracy);
-                Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
+                UpdateAccuracyMode(score);
 
                 UpdateTime();
                 UpdateModifiers();
@@ -248,6 +242,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             // ReSharper disable once DelegateSubtraction
             SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
             ModManager.ModsChanged -= OnModsChanged;
+            ConfigManager.LeaderboardRankedAccuracy.ValueChanged -= OnAccuracyDisplayChanged;
 
             base.Destroy();
         }
@@ -756,6 +751,35 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             game?.CurrentScreen?.DeactivateTooltip();
             ActivateRequiredAccuracyTooltip();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAccuracyDisplayChanged(object sender, BindableValueChangedEventArgs<bool> e) =>
+            AddScheduledUpdate(() => UpdateAccuracyMode(Score));
+
+        /// <summary>
+        /// Called when <see cref="AccuracyMaxCombo"/> and <see cref="Grade"> might need to be updated
+        /// </summary>
+        /// <param name="score"></param>
+        private void UpdateAccuracyMode(DrawableLeaderboardScore score)
+        {
+            var acc = (float)(ConfigManager.LeaderboardSection.Value == LeaderboardType.Local &&
+                ConfigManager.LeaderboardRankedAccuracy.Value
+                    ? score.Item.RankedAccuracy
+                    : score.Item.Accuracy);
+
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                AccuracyMaxCombo.Text = $"{StringHelper.AccuracyToString(acc)}";
+            else
+                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString(acc)}";
+
+            var grade = score.Item.Grade == API.Enums.Grade.F
+                ? API.Enums.Grade.F
+                : GradeHelper.GetGradeFromAccuracy(acc);
+            Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
         }
 
         /// <summary>
