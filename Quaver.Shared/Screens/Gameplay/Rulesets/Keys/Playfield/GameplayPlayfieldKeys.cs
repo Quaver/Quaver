@@ -200,8 +200,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             };
             SetLaneScrollDirections();
             SetReferencePositions();
-            CreateElementContainers(); 
-            Container.Scale = Vector2.One * (ConfigManager.PlayfieldScale.Value / 100f);
+            CreateElementContainers();
+            if (!Screen.IsSongSelectPreview)
+                Container.Scale = Vector2.One * (ConfigManager.PlayfieldScale.Value / 100f);
         }
 
 
