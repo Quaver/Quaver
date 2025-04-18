@@ -58,6 +58,13 @@ namespace Quaver.Shared.Screens.Tournament
                 OnlineManager.LeaveGame();
                 TournamentScreen.Exit(() => new MultiplayerLobbyScreen());
             }
+
+            foreach (var gameplayScreen in TournamentScreen.GameplayScreens)
+            {
+                var playfield = (GameplayPlayfieldKeys)gameplayScreen.Ruleset.Playfield;
+                playfield.PlayfieldMask.Visible = false;
+            }
+
             CreateBackground();
             SetPlayfieldPositions();
             PositionPlayfieldItems();

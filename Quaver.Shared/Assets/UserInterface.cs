@@ -13,6 +13,7 @@ namespace Quaver.Shared.Assets
     public static class UserInterface
     {
         public static Texture2D BlankBox => TextureManager.Load($"Quaver.Resources/Textures/UI/blank-box.png");
+        public static Texture2D PlayfieldMask => TextureManager.Load($"Quaver.Resources/Textures/UI/playfield-mask.png");
         public static Texture2D UnknownAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/unknown-avatar.png");
         public static Texture2D YouAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/you-avatar.png");
         public static Texture2D MenuBackground => TextureManager.Load($"Quaver.Resources/Textures/UI/Menu/menu-background.jpg");

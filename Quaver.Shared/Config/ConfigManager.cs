@@ -167,6 +167,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static BindableInt PlayfieldScale { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<bool> PreferWayland { get; private set; }
 
         /// <summary>
@@ -1063,6 +1067,7 @@ namespace Quaver.Shared.Config
             WindowHeight = ReadInt(@"WindowHeight", 768, 360, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 640, short.MaxValue, data);
             WindowBorderless = ReadValue(@"WindowBorderless", false, data);
+            PlayfieldScale = ReadInt(@"PlayfieldScale", 100, 25, 100, data);
             PreferWayland = ReadValue(@"PreferWayland", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
