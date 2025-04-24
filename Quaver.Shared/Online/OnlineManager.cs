@@ -258,6 +258,7 @@ namespace Quaver.Shared.Online
             Client.OnGameHealthTypeChanged += OnGameHealthTypeChanged;
             Client.OnGameLivesChanged += OnGameLivesChanged;
             Client.OnGameHostRotationChanged += OnGameHostRotationChanged;
+            Client.OnGameEnablePreviewChanged += OnGameEnablePreviewChanged;
             Client.OnGamePlayerTeamChanged += OnGamePlayerTeamChanged;
             Client.OnGameRulesetChanged += OnGameRulesetChanged;
             Client.OnGameLongNotePercentageChanged += OnGameLongNotePercentageChanged;
@@ -1029,6 +1030,18 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.HostRotation = e.HostRotation;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameEnablePreviewChanged(object sender, EnablePreviewChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.EnablePreview = e.EnablePreview;
         }
 
         /// <summary>
