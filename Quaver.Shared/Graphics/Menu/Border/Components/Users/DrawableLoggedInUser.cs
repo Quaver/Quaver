@@ -241,7 +241,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// </summary>
         public void AnimateCaret()
         {
-            var rotation = IsOpen ? 180 : 0;
+            var rotation = IsOpen ? MathF.PI : 0;
 
             Caret.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear,
                 Caret.Rotation, rotation, 200));
