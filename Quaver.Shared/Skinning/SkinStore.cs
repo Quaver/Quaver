@@ -284,6 +284,7 @@ namespace Quaver.Shared.Skinning
         internal AudioSample SoundApplause { get; private set; }
         internal AudioSample SoundScreenshot { get; private set; }
         internal AudioSample SoundClick { get; private set; }
+        internal AudioSample SoundSelect { get; private set; }
         internal AudioSample SoundBack { get; private set; }
         internal AudioSample SoundHover { get; private set; }
         internal AudioSample SoundFailure { get; private set; }
@@ -746,6 +747,9 @@ namespace Quaver.Shared.Skinning
 
             const string soundClick = "sound-click";
             SoundClick = LoadSoundEffect($"{sfxFolder}/{soundClick}", soundClick, "Menu");
+
+            const string soundSelect = "sound-select";
+            SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
 
             const string soundBack = "sound-back";
             SoundBack = LoadSoundEffect($"{sfxFolder}/{soundBack}", soundBack, "Menu");
