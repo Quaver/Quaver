@@ -376,7 +376,7 @@ namespace Quaver.Shared.Screens.Selection
                         ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
                     break;
                 case SelectScrollContainerType.Maps:
-                    ExitToGameplay();
+                        ExitToGameplay();
                     break;
                 case SelectScrollContainerType.Playlists:
                     ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
@@ -665,10 +665,11 @@ namespace Quaver.Shared.Screens.Selection
 
             if (ModManager.IsActivated(ModIdentifier.Coop))
             {
+                SkinManager.Skin.SoundSelect.CreateChannel().Play();
                 Exit(() => new TournamentScreen(2));
                 return;
             }
-
+            SkinManager.Skin.SoundSelect.CreateChannel().Play();
             Exit(() => new MapLoadingScreen(new List<Score>()));
         }
 
