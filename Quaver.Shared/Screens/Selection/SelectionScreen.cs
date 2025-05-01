@@ -665,10 +665,12 @@ namespace Quaver.Shared.Screens.Selection
 
             if (ModManager.IsActivated(ModIdentifier.Coop))
             {
+                AudioEngine.Track.Pause();
                 SkinManager.Skin.SoundSelect.CreateChannel().Play();
                 Exit(() => new TournamentScreen(2));
                 return;
             }
+            AudioEngine.Track.Pause();
             SkinManager.Skin.SoundSelect.CreateChannel().Play();
             Exit(() => new MapLoadingScreen(new List<Score>()));
         }
