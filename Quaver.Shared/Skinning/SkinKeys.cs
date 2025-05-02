@@ -743,10 +743,9 @@ namespace Quaver.Shared.Skinning
 
                     var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
                     var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1);
-                    if (holdobjects.Count == 1) // if the hold objects sheet does not exist then it is set to only hold one item with a value of null for some reason??
-                    {
+
+                    if (holdobjects.Count == 1)
                         holdobjects=objects;
-                    }
 
                     NoteHitObjects.Add(objects);
                     NoteHoldHitObjects.Add(holdobjects);
