@@ -755,7 +755,7 @@ namespace Quaver.Shared.Skinning
             SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover, "Menu");
 
             const string soundSelect = "sound-select";
-            if (File.Exists($"{sfxFolder}/sound-select.wav"))
+            if (File.Exists($"{sfxFolder}/{soundSelect}.wav"))
                 SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
             
             const string soundComboAlert = "sound-combo-alert";
