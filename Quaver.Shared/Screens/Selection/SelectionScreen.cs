@@ -660,8 +660,11 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
-            AudioEngine.Track.Pause();
-            SkinManager.Skin.SoundSelect.CreateChannel().Play();
+            if (SkinManager.Skin.SoundSelect != null)
+            {
+                AudioEngine.Track.Pause();
+                SkinManager.Skin.SoundSelect.CreateChannel().Play();
+            }
 
             if (OnlineManager.IsSpectatingSomeone)
                 OnlineManager.Client?.StopSpectating();

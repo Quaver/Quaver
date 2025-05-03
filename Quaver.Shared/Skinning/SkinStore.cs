@@ -748,15 +748,16 @@ namespace Quaver.Shared.Skinning
             const string soundClick = "sound-click";
             SoundClick = LoadSoundEffect($"{sfxFolder}/{soundClick}", soundClick, "Menu");
 
-            const string soundSelect = "sound-select";
-            SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
-
             const string soundBack = "sound-back";
             SoundBack = LoadSoundEffect($"{sfxFolder}/{soundBack}", soundBack, "Menu");
 
             const string soundHover = "sound-hover";
             SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover, "Menu");
 
+            const string soundSelect = "sound-select";
+            if (File.Exists($"{sfxFolder}/sound-select.wav"))
+                SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
+            
             const string soundComboAlert = "sound-combo-alert";
             SoundComboAlerts = new List<AudioSample>();
 
