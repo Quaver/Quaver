@@ -745,7 +745,7 @@ namespace Quaver.Shared.Skinning
                     var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1);
 
                     if (holdobjects.Count == 1)
-                        holdobjects=objects;
+                        holdobjects = objects;
 
                     NoteHitObjects.Add(objects);
                     NoteHoldHitObjects.Add(holdobjects);
