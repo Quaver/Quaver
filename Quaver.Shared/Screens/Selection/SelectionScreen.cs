@@ -660,18 +660,17 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
+            AudioEngine.Track.Pause();
+            SkinManager.Skin.SoundSelect.CreateChannel().Play();
+
             if (OnlineManager.IsSpectatingSomeone)
                 OnlineManager.Client?.StopSpectating();
 
             if (ModManager.IsActivated(ModIdentifier.Coop))
             {
-                AudioEngine.Track.Pause();
-                SkinManager.Skin.SoundSelect.CreateChannel().Play();
                 Exit(() => new TournamentScreen(2));
                 return;
             }
-            AudioEngine.Track.Pause();
-            SkinManager.Skin.SoundSelect.CreateChannel().Play();
             Exit(() => new MapLoadingScreen(new List<Score>()));
         }
 
