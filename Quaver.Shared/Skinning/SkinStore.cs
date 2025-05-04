@@ -284,6 +284,7 @@ namespace Quaver.Shared.Skinning
         internal AudioSample SoundApplause { get; private set; }
         internal AudioSample SoundScreenshot { get; private set; }
         internal AudioSample SoundClick { get; private set; }
+        internal AudioSample SoundSelect { get; private set; }
         internal AudioSample SoundBack { get; private set; }
         internal AudioSample SoundHover { get; private set; }
         internal AudioSample SoundFailure { get; private set; }
@@ -753,6 +754,10 @@ namespace Quaver.Shared.Skinning
             const string soundHover = "sound-hover";
             SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover, "Menu");
 
+            const string soundSelect = "sound-select";
+            if (File.Exists($"{sfxFolder}/{soundSelect}.wav"))
+                SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
+            
             const string soundComboAlert = "sound-combo-alert";
             SoundComboAlerts = new List<AudioSample>();
 

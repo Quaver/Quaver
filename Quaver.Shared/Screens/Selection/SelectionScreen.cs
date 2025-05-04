@@ -660,6 +660,12 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
+            if (SkinManager.Skin.SoundSelect != null)
+            {
+                AudioEngine.Track.Pause();
+                SkinManager.Skin.SoundSelect.CreateChannel().Play();
+            }
+
             if (OnlineManager.IsSpectatingSomeone)
                 OnlineManager.Client?.StopSpectating();
 
@@ -668,7 +674,6 @@ namespace Quaver.Shared.Screens.Selection
                 Exit(() => new TournamentScreen(2));
                 return;
             }
-
             Exit(() => new MapLoadingScreen(new List<Score>()));
         }
 
