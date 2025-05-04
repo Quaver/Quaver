@@ -376,7 +376,7 @@ namespace Quaver.Shared.Screens.Selection
                         ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
                     break;
                 case SelectScrollContainerType.Maps:
-                        ExitToGameplay();
+                    ExitToGameplay();
                     break;
                 case SelectScrollContainerType.Playlists:
                     ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
