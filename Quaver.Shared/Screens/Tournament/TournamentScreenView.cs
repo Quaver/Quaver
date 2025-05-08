@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Objects;
@@ -166,30 +168,69 @@ namespace Quaver.Shared.Screens.Tournament
         }
 
         /// <summary>
+        ///     Tiles screens to fit the given rectangle
+        /// </summary>
+        /// <param name="screens"></param>
+        /// <param name="rectangle"></param>
+        private static void TileScreens(List<TournamentGameplayScreen> screens, RectangleF rectangle)
+        {
+            if (screens.Count <= 0)
+                return;
+
+            if (screens.Count == 1)
+            {
+                var screen = (GameplayPlayfieldKeys)screens[0].Ruleset.Playfield;
+                var supposedScale = rectangle.Size / screen.Container.AbsoluteSize;
+                var minScale = Math.Min(supposedScale.X, supposedScale.Y);
+                var scale = new Vector2(minScale);
+                // Console.WriteLine($"Screen size {screen.Container.AbsoluteSize}");
+                var pos = rectangle.Position + (supposedScale - scale) / 2 * screen.Container.AbsoluteSize;
+                screen.Container.Scale = scale;
+                screen.Container.X = pos.X;
+                screen.Container.Y = pos.Y;
+                // Console.WriteLine($"Screen placed at {pos} with scale {scale} (supposed scale {supposedScale}) to fit {rectangle}");
+                return;
+            }
+            // Tile it vertically or horizontally depending on rectangle width and height
+            if (rectangle.Width > rectangle.Height)
+            {
+                // Tile it horizontally
+                var size = new Size2(rectangle.Width / 2, rectangle.Height);
+                TileScreens(screens.Take(screens.Count / 2).ToList(),
+                    new RectangleF(rectangle.Position, size));
+                TileScreens(screens.Skip(screens.Count / 2).ToList(),
+                    new RectangleF(rectangle.Position + new Size2(size.Width, 0), size));
+            }
+            else
+            {
+                // Tile vertically
+                var size = new Size2(rectangle.Width, rectangle.Height / 2);
+                TileScreens(screens.Take(screens.Count / 2).ToList(),
+                    new RectangleF(rectangle.Position, size));
+                TileScreens(screens.Skip(screens.Count / 2).ToList(),
+                    new RectangleF(rectangle.Position + new Size2(0, size.Height), size));
+            }
+        }
+
+        /// <summary>
         ///     Sets the playfield positions for a FFA match
         /// </summary>
         private void SetFreeForAllPlayfieldPositions()
         {
-            var widthSum = TournamentScreen.GameplayScreens.Sum(x =>
-            {
-                var playfield = (GameplayPlayfieldKeys)x.Ruleset.Playfield;
-                return playfield.Width + playfield.Stage.HealthBar.Width;
-            });
-
-            var widthPer = (WindowManager.Width - widthSum) / (TournamentScreen.GameplayScreens.Count + 1);
-
-            for (var i = 0; i < TournamentScreen.GameplayScreens.Count; i++)
+            var screensCount = TournamentScreen.GameplayScreens.Count;
+            for (var i = 0; i < screensCount; i++)
             {
                 var playfield = (GameplayPlayfieldKeys)TournamentScreen.GameplayScreens[i].Ruleset.Playfield;
                 playfield.Container.Width = playfield.Width + playfield.Stage.HealthBar.Width;
-                playfield.Container.X = widthPer;
-
-                if (i != 0)
-                {
-                    var last = TournamentScreen.GameplayScreens[i - 1].Ruleset.Playfield;
-                    playfield.Container.X = last.Container.X + last.Container.Width + widthPer;
-                }
+                playfield.Container.Pivot = Vector2.Zero;
+                
+                playfield.Container.AddBorder(Color.Red, 3);
             }
+
+            TileScreens(TournamentScreen.GameplayScreens.Take((screensCount + 1) / 2).ToList(), 
+                    new RectangleF(0, 0, WindowManager.Width / 2, WindowManager.Height));
+            TileScreens(TournamentScreen.GameplayScreens.Skip((screensCount + 1) / 2).ToList(),
+                    new RectangleF(WindowManager.Width / 2, 0, WindowManager.Width / 2, WindowManager.Height));
         }
 
         /// <summary>
