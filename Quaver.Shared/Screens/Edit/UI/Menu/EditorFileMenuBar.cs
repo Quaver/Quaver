@@ -529,6 +529,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+            if (ImGui.BeginMenu("Playfield Opacity"))
+            {
+                for (var i = 0; i <= 10; i++)
+                {
+                    var value = i * 10;
+
+                    if (ImGui.MenuItem($"{value}%", "", ConfigManager.EditorPlayfieldAlpha.Value == value))
+                    {
+                        ConfigManager.EditorPlayfieldAlpha.Value = value;
+                    }
+                }
+                
+                ImGui.EndMenu();
+            }
+
             ImGui.Separator();
 
             if (ImGui.BeginMenu("Beat Snap Divisor"))

@@ -409,6 +409,11 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Scaling of ImGui windows and texts
         /// </summary>
+        internal static BindableInt EditorPlayfieldAlpha { get; private set; }
+
+        /// <summary>
+        ///     Scaling of ImGui windows and texts
+        /// </summary>
         internal static BindableInt EditorImGuiScalePercentage { get; private set; }
 
         /// <summary>
@@ -1168,6 +1173,7 @@ namespace Quaver.Shared.Config
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
             EditorImGuiScalePercentage = ReadInt(@"EditorImGuiScalePercentage", 100, 25, 300, data);
+            EditorPlayfieldAlpha = ReadInt(@"EditorPlayfieldAlpha", 100, 0, 100, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);

@@ -371,6 +371,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Alignment = Alignment.TopCenter;
             Tint = new Color(24,24,24);
             Size = new ScalableVector2(ColumnSize * Map.GetKeyCount(), WindowManager.Height);
+            Alpha = ConfigManager.EditorPlayfieldAlpha.Value / 100f;
 
             CreateBorders();
             CreateDividerLines();
@@ -415,6 +416,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged += OnSpectrogramIntensityFactorChanged;
             ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged += OnSpectrogramFrequencyScaleChanged;
             ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged += OnSpectrogramInterleaveCountChanged;
+            ConfigManager.EditorPlayfieldAlpha.ValueChanged += OnPlayfieldAlphaChanged;
         }
 
         /// <inheritdoc />
@@ -572,6 +574,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged -= OnSpectrogramIntensityFactorChanged;
             ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged -= OnSpectrogramFrequencyScaleChanged;
             ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged -= OnSpectrogramInterleaveCountChanged;
+            ConfigManager.EditorPlayfieldAlpha.ValueChanged -= OnPlayfieldAlphaChanged;
 
             base.Destroy();
         }
@@ -1679,6 +1682,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         
         private void OnSpectrogramInterleaveCountChanged(object sender, BindableValueChangedEventArgs<int> e)
             => ReloadSpectrogram();
+
+        private void OnPlayfieldAlphaChanged(object sender, BindableValueChangedEventArgs<int> e)
+        {
+            Alpha = e.Value / 100f;
+        }
 
         private void ReloadWaveform()
         {
