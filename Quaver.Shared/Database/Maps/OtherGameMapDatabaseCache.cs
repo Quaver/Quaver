@@ -573,7 +573,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                using (var key = Registry.ClassesRoot.OpenSubKey("osu"))
+                using (var key = Registry.ClassesRoot.OpenSubKey("osustable.Uri.osu"))
                 {
                     var value = key?.OpenSubKey(@"shell\open\command")?.GetValue(string.Empty).ToString();
                     var installPath = value?.Split('"')[1]?.Replace("osu!.exe", "");
