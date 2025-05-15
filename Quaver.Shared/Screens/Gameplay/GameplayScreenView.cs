@@ -221,7 +221,10 @@ namespace Quaver.Shared.Screens.Gameplay
                 CreateScoreboards();
 
             CreateProgressBar();
-            CreateMiniProgressBar();
+
+            if (ConfigManager.DisplayMiniSongBar.Value)
+                CreateMiniProgressBar();
+                
             CreateScoreDisplay();
             CreateRatingDisplay();
             CreateAccuracyDisplay();
@@ -413,8 +416,8 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
-                X = 100,
-                Y = 0,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayPosX,
+                Y = SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayPosY,
                 DestroyIfParentIsNull = false
             };
         }

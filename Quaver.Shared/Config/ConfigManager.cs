@@ -324,6 +324,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayHitBubbles { get; private set; }
 
         /// <summary>
+        ///     If true, a miniature verson of the song bar will be displayed during gameplay
+        /// </summary>
+        internal static Bindable<bool> DisplayMiniSongBar { get; private set; }
+
+        /// <summary>
         ///     If true, the audio visualizer in the menus will be displayed.
         /// </summary>
         internal static Bindable<bool> DisplayMenuAudioVisualizer { get; private set; }
@@ -1093,6 +1098,7 @@ namespace Quaver.Shared.Config
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayHitBubbles = ReadValue(@"DisplayHitBubbles", true, data);
+            DisplayMiniSongBar = ReadValue(@"DisplayMiniSongBar", false, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
             EnableLongNoteReleaseHitsounds = ReadValue(@"EnableLongNoteReleaseHitsounds", false, data);

@@ -230,6 +230,12 @@ namespace Quaver.Shared.Skinning
 
         internal bool SongTimeProgressPositionAtTop { get; private set; }
 
+        [FixedScale]
+        internal float MiniSongBarDisplayPosX { get; private set; } = 100;
+
+        [FixedScale]
+        internal float MiniSongBarDisplayPosY { get; private set; }
+
         internal float JudgementCounterAlpha { get; private set; }
 
         internal Color JudgementCounterFontColor { get; private set; }
@@ -541,6 +547,8 @@ namespace Quaver.Shared.Skinning
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
+            MiniSongBarDisplayPosX = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosX, ini["MiniSongBarDisplayPosX"]);
+            MiniSongBarDisplayPosY = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosY, ini["MiniSongBarDisplayPosY"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
             UseJudgementColorForNumbers = ConfigHelper.ReadBool(UseJudgementColorForNumbers, ini["UseJudgementColorForNumbers"]);
