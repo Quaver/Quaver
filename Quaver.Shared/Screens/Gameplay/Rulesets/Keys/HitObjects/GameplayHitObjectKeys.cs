@@ -441,7 +441,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
 
-            if (skin.ColorObjectsBySnapDistance)
+            if (skin.ColorObjectsBySnapDistance && Info.HitObjectInfo.Type is not HitObjectType.Mine)
             {
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
 
@@ -454,7 +454,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 return objects.First();
             }
 
-            return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
+            return Info.HitObjectInfo.Type is HitObjectType.Mine ? skin.NoteMines[lane].First() :
+                Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }
 
         /// <summary>

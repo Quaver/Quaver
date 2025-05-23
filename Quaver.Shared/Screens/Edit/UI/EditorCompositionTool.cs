@@ -11,6 +11,7 @@ namespace Quaver.Shared.Screens.Edit.UI
     {
         Select,
         Note,
-        LongNote
+        LongNote,
+        Mine
     }
 }

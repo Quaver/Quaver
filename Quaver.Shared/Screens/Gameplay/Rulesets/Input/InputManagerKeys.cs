@@ -117,6 +117,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     needsUpdating = true;
                 }
 
+                // Handle Key Pressing/Releasing for this specific frame
+                var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
+
+                if (BindingStore[lane].Pressed && !Ruleset.Screen.InReplayMode 
+                    || Ruleset.Screen.InReplayMode && ReplayInputManager.Presses[lane])
+                {
+                    HandleMinePresses(manager, inputLane);
+                }
+
                 // Don't bother updating the game any further if this event isn't important.
                 if (!needsUpdating)
                     continue;
@@ -124,8 +133,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // Update Playfield
                 ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage.SetReceptorAndLightingActivity(inputLane, BindingStore[lane].Pressed || BindingStore[inputLane].Pressed);
 
-                // Handle Key Pressing/Releasing for this specific frame
-                var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
                 if (BindingStore[lane].Pressed)
                 {
                     var hitObject = manager.GetClosestTap(inputLane);
@@ -140,6 +147,67 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     if (hitObject != null)
                         HandleKeyRelease(manager, hitObject);
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Handles the following mines during press of a lane
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="inputLane"></param>
+        private void HandleMinePresses(HitObjectManagerKeys manager, int inputLane)
+        {
+            foreach (var info in manager.MineLanes[inputLane])
+            {
+                if (info.State is HitObjectState.Dead or HitObjectState.Removed)
+                    continue;
+
+                // Get Judgement and references
+                var time = (int)manager.CurrentAudioOffset;
+                var endTime = info.IsLongNote ? info.EndTime : info.StartTime;
+
+                if (time < info.StartTime - Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv])
+                    break;
+                if (time > endTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv])
+                    continue;
+
+                var hitDifference = info.StartTime - time;
+                ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss);
+                var lane = info.Lane - 1;
+
+                // Play the HitSounds of closest hit object.
+                var game = GameBase.Game as QuaverGame;
+
+                if (game?.CurrentScreen?.Type != QuaverScreenType.Editor)
+                {
+                    if (ConfigManager.EnableHitsounds.Value) HitObjectManager.PlayObjectHitSounds(info.HitObjectInfo);
+                    if (ConfigManager.EnableKeysounds.Value) HitObjectManager.PlayObjectKeySounds(info.HitObjectInfo);
+                }
+
+                // Update stats
+                Ruleset.ScoreProcessor.Stats.Add(new HitStat(HitStatType.Miss, KeyPressType.Press, info.HitObjectInfo, time, Judgement.Miss, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health));
+
+                // Update Scoreboard
+                var view = (GameplayScreenView)Ruleset.Screen.View;
+                view.UpdateScoreboardUsers();
+                view.UpdateScoreAndAccuracyDisplays();
+
+                // Update Playfield
+                var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+
+                // Get hit burst lane
+                var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
+
+                if (ReplayInputManager == null)
+                {
+                    playfield.Stage.ComboDisplay.MakeVisible();
+                    playfield.Stage.HitError.AddJudgement(Judgement.Miss, info.StartTime - time);
+                    playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
+                    playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+                }
+
+                // Update Object Pooling
+                info.State = HitObjectState.Removed;
             }
         }
 

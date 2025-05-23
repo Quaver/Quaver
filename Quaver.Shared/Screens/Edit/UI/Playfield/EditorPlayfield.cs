@@ -1420,6 +1420,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 case EditorCompositionTool.Note:
                     ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
                     break;
+                case EditorCompositionTool.Mine:
+                    ActionManager.PlaceHitObject(lane, time, 0, layer, HitObjectType.Mine, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
+                    break;
                 case EditorCompositionTool.LongNote:
                     hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
 

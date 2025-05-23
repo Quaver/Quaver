@@ -725,7 +725,7 @@ namespace Quaver.Shared.Database.Maps
                     return CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, operatorKind, false);
                 case SearchFilterOption.NPS:
                     var valNps = (double)searchQuery.Value.Value!;
-                    var objectCount = map.LongNoteCount + map.RegularNoteCount;
+                    var objectCount = map.LongNoteCount + map.RegularNoteCount + map.MineCount;
                     var nps = (objectCount /
                                (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
 

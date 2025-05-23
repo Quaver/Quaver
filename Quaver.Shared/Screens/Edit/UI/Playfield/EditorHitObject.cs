@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
@@ -153,6 +154,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public Texture2D GetHitObjectTexture()
         {
             var index = SkinMode.ColorObjectsBySnapDistance && Map.TimingPoints.Count > 0 ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+
+            if (Info.Type is HitObjectType.Mine)
+                return SkinMode.NoteMines[Info.Lane - 1][index];
 
             if (Coloring.Value != HitObjectColoring.None)
                 return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];

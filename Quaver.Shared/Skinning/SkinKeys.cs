@@ -339,6 +339,11 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        internal List<List<Texture2D>> NoteMines { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        ///
+        /// </summary>
         internal List<List<Texture2D>> NoteHitObjects { get; } = new List<List<Texture2D>>();
 
         /// <summary>
@@ -735,6 +740,7 @@ namespace Quaver.Shared.Skinning
                 if (!UseHitObjectSheet)
                 {
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                    LoadHitObjects(NoteMines, $"note-mine-{i + 1}", i);
                     LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
                 }
                 else
@@ -744,11 +750,15 @@ namespace Quaver.Shared.Skinning
                     var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
 
                     NoteHitObjects.Add(objects);
+                    NoteMines.Add(objects);
                     NoteHoldHitObjects.Add(objects);
 
 
                     for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
                         NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+                    
+                    for (var j = 0; j < snapCount - NoteMines[i].Count; j++)
+                        NoteMines[i].Add(NoteMines[i].Last());
 
                     for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
                         NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());

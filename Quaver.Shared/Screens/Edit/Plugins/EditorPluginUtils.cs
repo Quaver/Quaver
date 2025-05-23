@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="hitsounds"></param>
         /// <param name="editorLayer"></param>
         /// <returns></returns>
-        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitsounds = 0, int editorLayer = 0)
+        public static HitObjectInfo CreateHitObject(int startTime, int lane, int endTime = 0, HitSounds hitsounds = 0, int editorLayer = 0, HitObjectType type = HitObjectType.Normal)
         {
             var ho = new HitObjectInfo
             {
@@ -123,6 +123,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 EndTime = endTime,
                 HitSound = hitsounds,
                 EditorLayer = editorLayer,
+                Type = type,
             };
 
             return ho;
