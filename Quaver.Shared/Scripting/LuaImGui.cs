@@ -200,10 +200,12 @@ namespace Quaver.Shared.Scripting
             RegisterWithConversion<Vector2>();
             RegisterWithConversion<Vector3>();
             RegisterWithConversion<Vector4>();
+            RegisterList<CustomAudioSampleInfo>();
             RegisterList<ScrollSpeedFactorInfo>();
             RegisterList<SliderVelocityInfo>();
             RegisterList<TimingPointInfo>();
             RegisterList<EditorLayerInfo>();
+            RegisterList<SoundEffectInfo>();
             RegisterList<HitObjectInfo>();
             RegisterList<BookmarkInfo>();
             RegisterList<string>();
