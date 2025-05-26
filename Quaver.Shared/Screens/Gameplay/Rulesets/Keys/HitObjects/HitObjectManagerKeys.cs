@@ -577,8 +577,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (currentAudioOffset <= endTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv])
                         continue;
                     
-                    Logger.Important($"{endTime} + {Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv]} < {currentAudioOffset}", LogType.Runtime);
-
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.UpdateScoreboardUsers();
@@ -604,10 +602,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     {
                         playfield.Stage.ComboDisplay.MakeVisible();
                         playfield.Stage.HitBubbles.AddJudgement(Judgement.Marv);
-                        playfield.Stage
-                            .JudgementHitBursts[
-                                Math.Clamp(info.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1)]
-                            .PerformJudgementAnimation(Judgement.Marv);
                     }
 
                     info.State = HitObjectState.Dead;
