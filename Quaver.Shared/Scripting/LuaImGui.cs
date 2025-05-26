@@ -208,6 +208,7 @@ namespace Quaver.Shared.Scripting
             RegisterList<SoundEffectInfo>();
             RegisterList<HitObjectInfo>();
             RegisterList<BookmarkInfo>();
+            RegisterList<KeySoundInfo>();
             RegisterList<string>();
             UserData.RegisterType<nuint>();
             UserData.RegisterType<nint>();
