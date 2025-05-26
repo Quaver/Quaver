@@ -590,7 +590,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Marv);
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Marv, isMine: true);
 
                     var view = (GameplayScreenView)Ruleset.Screen.View;
                     view.UpdateScoreAndAccuracyDisplays();

@@ -172,7 +172,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     continue;
 
                 var hitDifference = info.StartTime - time;
-                ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss);
+                ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, isMine: true);
                 var lane = info.Lane - 1;
 
                 // Play the HitSounds of closest hit object.
@@ -233,7 +233,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get Judgement and references
             var time = (int)manager.CurrentAudioOffset;
             var hitDifference = info.StartTime - time;
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press, ReplayInputManager == null);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press, false, ReplayInputManager == null);
             var lane = info.Lane - 1;
 
             // Ignore Ghost Taps
@@ -333,7 +333,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var time = (int)manager.CurrentAudioOffset;
             var hitDifference = info.EndTime - time;
 
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release,
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release, false,
                 ReplayInputManager == null);
 
             // Update animations

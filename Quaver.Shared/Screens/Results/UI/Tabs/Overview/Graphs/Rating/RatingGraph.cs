@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
 
             foreach (var stat in keysProcessor.Stats)
             {
-                simulatedProcessor.CalculateScore(stat.Judgement, stat.KeyPressType == KeyPressType.Release);
+                simulatedProcessor.CalculateScore(stat);
 
                 var acc = simulatedProcessor.Accuracy;
                 var rating = (float) RatingProcessor.CalculateRating(acc);
@@ -144,19 +144,20 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
                 // Separate ordered list is required because of hits being out of order if you go though each hit object
                 // and take the start/end time at that moment
                 // time, isLN
-                var hitTimes = new List<(int, bool)>();
+                var hitTimes = new List<(int, bool, bool)>();
 
                 foreach (var hitObject in hitObjectsLeftToPlay)
                 {
-                    hitTimes.Add((hitObject.StartTime, false));
+                    var isMine = hitObject.Type is HitObjectType.Mine;
+                    hitTimes.Add((hitObject.StartTime, false, isMine));
 
                     if (hitObject.IsLongNote)
-                        hitTimes.Add((hitObject.EndTime, true));
+                        hitTimes.Add((hitObject.EndTime, true, isMine));
                 }
 
-                foreach (var (time, isLn) in hitTimes.OrderBy(h => h.Item1))
+                foreach (var (time, isLn, isMine) in hitTimes.OrderBy(h => h.Item1))
                 {
-                    simulatedProcessor.CalculateScore(Judgement.Marv, isLn);
+                    simulatedProcessor.CalculateScore(Judgement.Marv, isLn, isMine);
 
                     var acc = simulatedProcessor.Accuracy;
                     var rating = (float) RatingProcessor.CalculateRating(acc);
