@@ -10,6 +10,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Online;
+using Quaver.Shared.Skinning;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.MultiplayerLobby;
@@ -132,12 +133,12 @@ namespace Quaver.Shared.Screens.Tournament
 
                 playfield.Container.Width = playfield.Width + playfield.Stage.HealthBar.Width;
 
-                var padingLeft = 92;
+                var paddingLeft = SkinManager.Skin.Keys[screen.Map.Mode].CoopPlayfieldPadding;
 
                 if (i + 1 <= TournamentScreen.GameplayScreens.Count / 2f)
                 {
                     playfield.Container.Alignment = Alignment.TopLeft;
-                    playfield.Container.X = padingLeft;
+                    playfield.Container.X = paddingLeft;
 
                     var healthBar = playfield.Stage.HealthBar;
                     healthBar.Parent = playfield.Stage.StageLeft;
@@ -153,7 +154,7 @@ namespace Quaver.Shared.Screens.Tournament
                 else
                 {
                     playfield.Container.Alignment = Alignment.TopRight;
-                    playfield.Container.X = -padingLeft;
+                    playfield.Container.X = -paddingLeft;
                 }
             }
         }
