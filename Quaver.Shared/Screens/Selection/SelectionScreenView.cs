@@ -428,8 +428,7 @@ namespace Quaver.Shared.Screens.Selection
                     PlaylistContainer.MoveToX(inactivePosition, easing, animTime);
                     break;
                 case SelectScrollContainerType.Playlists:
-                    if (PlaylistManager.Playlists.Count != 0)
-                        PlaylistContainer.MoveToX(activePosition, easing, animTime);
+                    PlaylistContainer.MoveToX(activePosition, easing, animTime);
 
                     MapsetContainer.MoveToX(inactivePosition, easing, animTime);
                     MapContainer.MoveToX(inactivePosition, easing, animTime);
