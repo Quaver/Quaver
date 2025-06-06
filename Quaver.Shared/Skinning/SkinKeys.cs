@@ -294,6 +294,7 @@ namespace Quaver.Shared.Skinning
 
         internal bool RotateHitObjectsByColumn { get; private set; }
         internal bool RotateReceptorsByColumn { get; private set; }
+        internal bool RotateEditorObjectsByColumn { get; private set; }
         internal bool UsePerLaneSpriteSheets { get; private set; }
 
         internal int JudgementHitBurstFps { get; private set; }
@@ -452,6 +453,11 @@ namespace Quaver.Shared.Skinning
             ReadConfig(true);
             ReadConfig(false);
 
+            if (!UseFallback)
+            {
+                FallbackKeys = null;
+            }
+
             FixScale();
             FixValues();
             LoadTextures();
@@ -510,18 +516,13 @@ namespace Quaver.Shared.Skinning
             KeyDataCollection ini = config[ModeShorthand(Mode).ToUpper()];
 
             UseFallback = ConfigHelper.ReadBool(UseFallback, ini["UseFallback"]);
-            if (!UseFallback)
-            {
-                FallbackKeys = null;
-            }
 
             if (loadFallback)
             {
-                if (!UseFallback)
+                if (UseFallback)
                 {
-                    return;
+                    ini = config[ModeShorthand(0).ToUpper()];
                 }
-                ini = config[ModeShorthand(0).ToUpper()];
             }
 
             StageReceptorPadding = ConfigHelper.ReadInt32((int)StageReceptorPadding, ini["StageReceptorPadding"]);
@@ -616,6 +617,7 @@ namespace Quaver.Shared.Skinning
             ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
             RotateHitObjectsByColumn = ConfigHelper.ReadBool(RotateHitObjectsByColumn, ini["RotateHitObjectsByColumn"]);
             RotateReceptorsByColumn = ConfigHelper.ReadBool(RotateReceptorsByColumn, ini["RotateReceptorsByColumn"]);
+            RotateEditorObjectsByColumn = ConfigHelper.ReadBool(RotateEditorObjectsByColumn, ini["RotateEditorObjectsByColumn"]);
             UsePerLaneSpriteSheets = ConfigHelper.ReadBool(UsePerLaneSpriteSheets, ini["UsePerLaneSpriteSheets"]);
             JudgementHitBurstFps = ConfigHelper.ReadInt32(JudgementHitBurstFps, ini["JudgementHitBurstFps"]);
             JudgementHitBurstBumpY = ConfigHelper.ReadInt32(JudgementHitBurstBumpY, ini["JudgementHitBurstBumpY"]);
