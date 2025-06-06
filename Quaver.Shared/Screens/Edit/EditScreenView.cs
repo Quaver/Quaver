@@ -2,6 +2,7 @@ using System;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -127,7 +128,7 @@ namespace Quaver.Shared.Screens.Edit
             CreatePlayfield();
             CreateFooter();
             CreateSelector();
-            PanelContainer = new Container {Parent = Container};
+            PanelContainer = new Container { Parent = Container };
             CreateDetailsPanel();
             CreateCompositionTools();
             CreateHitsoundsPanel();
@@ -144,10 +145,10 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             Footer.Parent = Container;
-            
+
             ThreadScheduler.Run(() =>
             {
-                if (MapManager.GetBackgroundPath(BackgroundHelper.Map) != MapManager.GetBackgroundPath(EditScreen.Map)) 
+                if (MapManager.GetBackgroundPath(BackgroundHelper.Map) != MapManager.GetBackgroundPath(EditScreen.Map))
                     BackgroundHelper.Load(EditScreen.Map);
             });
             StructuredConfigManager.WindowStates.Value.ApplyState(this);
@@ -322,7 +323,8 @@ namespace Quaver.Shared.Screens.Edit
             if (UnEditablePlayfield == null)
                 return;
 
-            var spacing = EditScreen.WorkingMap.Mode == GameMode.Keys4 ? 120 : 60;
+            var keyCount = ModeHelper.ToKeyCount(EditScreen.WorkingMap.Mode);
+            var spacing = 120 * 4 / keyCount;
 
             Playfield.X = -Playfield.Width / 2 - spacing;
             UnEditablePlayfield.X = Playfield.Width / 2 + spacing;
@@ -433,7 +435,8 @@ namespace Quaver.Shared.Screens.Edit
                 Y = 34,
             };
 
-            var spacing = EditScreen.WorkingMap.Mode == GameMode.Keys4 ? 120 : 60;
+            var keyCount = ModeHelper.ToKeyCount(EditScreen.WorkingMap.Mode);
+            var spacing = 120 * 4 / keyCount;
 
             Playfield.X = -Playfield.Width / 2 - spacing;
             MapPreview.X = Playfield.Width / 2 + spacing;

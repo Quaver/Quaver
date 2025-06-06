@@ -186,7 +186,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(laneSize , 0),
+                Size = new ScalableVector2(laneSize, 0),
                 Position = new ScalableVector2(posX, 0),
                 Parent = playfield.Stage.HitObjectContainer
             };
@@ -518,48 +518,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="mode"></param>
         /// <param name="lane"></param>
         /// <returns></returns>
-        public static float GetObjectRotation(GameMode mode, int lane)
+        public static float GetObjectRotation(GameMode mode, int lane) // 10kTodo
         {
-            switch (mode)
-            {
-                case GameMode.Keys4:
-                    switch (lane)
-                    {
-                        case 0:
-                            return MathF.PI / 2;
-                        case 1:
-                            // Already downwards
-                            break;
-                        case 2:
-                            return MathF.PI;
-                        case 3:
-                            return MathF.PI * 3 / 2;
-                    }
-                    break;
-                case GameMode.Keys7:
-                    switch (lane)
-                    {
-                        case 0:
-                            return MathF.PI / 2;
-                        case 1:
-                            return MathF.PI * 3 / 4;
-                        case 2:
-                            return MathF.PI;
-                        case 3:
-                            // Already downwards
-                            break;
-                        case 4:
-                            return MathF.PI;
-                        case 5:
-                            return MathF.PI * 5 / 4;
-                        case 6:
-                            return MathF.PI * 3 / 2;
-                    }
-
-                    break;
-            }
-
-            return 0;
+            return SkinManager.Skin.Keys[mode].HitObjectRotations[lane] / 180f * MathF.PI;
         }
     }
 }

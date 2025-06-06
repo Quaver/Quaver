@@ -16,6 +16,7 @@ using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using MoreLinq.Extensions;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning.Menus;
@@ -301,11 +302,13 @@ namespace Quaver.Shared.Skinning
             LoadConfig();
 
             // Load up Keys game mode skins.
-            Keys = new Dictionary<GameMode, SkinKeys>
+            Keys = new Dictionary<GameMode, SkinKeys>();
+            // keyCount 0 is the shared keys folder
+            for (var keyCount = 0; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
             {
-                {GameMode.Keys4, new SkinKeys(this, GameMode.Keys4)},
-                {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}
-            };
+                var mode = keyCount == 0 ? 0 : ModeHelper.FromKeyCount(keyCount);
+                Keys.Add(mode, new SkinKeys(this, mode, keyCount == 0 ? null : Keys[0]));
+            }
 
 
             try
@@ -382,15 +385,25 @@ namespace Quaver.Shared.Skinning
         /// <param name="path"></param>
         /// <param name="resource"></param>
         /// <param name="extension"></param>
-        internal static Texture2D LoadSingleTexture(string path, string resource, string extension = ".png")
+        internal static Texture2D LoadSingleTexture(string path, string resource, Texture2D? fallback = null, string extension = ".png")
         {
             path += extension;
 
             try
             {
-                return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) :
-                    GameBase.Game.Resources.Get(resource) is { } buffer ? AssetLoader.LoadTexture2D(buffer) :
-                    UserInterface.BlankBox;
+                if (File.Exists(path))
+                {
+                    return AssetLoader.LoadTexture2DFromFile(path);
+                }
+                if (fallback != null)
+                {
+                    return fallback;
+                }
+                if (GameBase.Game.Resources.Get(resource) is { } buffer)
+                {
+                    return AssetLoader.LoadTexture2D(buffer);
+                }
+                return UserInterface.BlankBox;
             }
             catch (Exception)
             {
@@ -409,7 +422,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
+        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, List<Texture2D>? fallback = null,
             string extension = ".png")
         {
             try
@@ -442,10 +455,15 @@ namespace Quaver.Shared.Skinning
                     }
                 }
 
+                if (fallback != null)
+                {
+                    return fallback;
+                }
+
                 // If we end up getting down here, that means we need to load the spritesheet from our resources.
                 // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
                 if (rows == 0 && columns == 0)
-                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png") };
+                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png", null) };
 
                 return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
                     GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
@@ -505,7 +523,7 @@ namespace Quaver.Shared.Skinning
         {
             // Load Grades
             HitBubbles = LoadSingleTexture($"{Dir}/HitBubbles/bubble", $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubble.png");
-            
+
             var hitBubblesFolder = $"/HitBubbles/";
 
             const string bubblesBackground = "bubbles-background";
@@ -757,7 +775,7 @@ namespace Quaver.Shared.Skinning
             const string soundSelect = "sound-select";
             if (File.Exists($"{sfxFolder}/{soundSelect}.wav"))
                 SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
-            
+
             const string soundComboAlert = "sound-combo-alert";
             SoundComboAlerts = new List<AudioSample>();
 

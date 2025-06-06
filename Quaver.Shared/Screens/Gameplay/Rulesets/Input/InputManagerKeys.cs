@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
@@ -100,7 +101,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     BindingStore[lane].Pressed = true;
                     needsUpdating = true;
 
-                    var screenView = (GameplayScreenView) Ruleset.Screen.View;
+                    var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.KpsDisplay.AddClick();
                 }
                 // A key was uniquely released.
@@ -189,7 +190,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             ));
 
             // Update Scoreboard
-            var view = (GameplayScreenView) Ruleset.Screen.View;
+            var view = (GameplayScreenView)Ruleset.Screen.View;
             view.UpdateScoreboardUsers();
             view.UpdateScoreAndAccuracyDisplays();
 
@@ -275,7 +276,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Dequeue from pool
             manager.HeldLongNoteLanes[lane].Dequeue();
 
-            var view = (GameplayScreenView) Ruleset.Screen.View;
+            var view = (GameplayScreenView)Ruleset.Screen.View;
 
             // Get hit burst lane
             var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
@@ -379,17 +380,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var speedIncrease = KeyboardManager.IsCtrlDown() ? 1 : 10;
             BindableInt scrollSpeed;
 
-            switch (Ruleset.Screen.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    scrollSpeed = ConfigManager.ScrollSpeed4K;
-                    break;
-                case GameMode.Keys7:
-                    scrollSpeed = ConfigManager.ScrollSpeed7K;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            scrollSpeed = ConfigManager.ScrollSpeeds[Ruleset.Screen.Map.Mode];
 
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
                 scrollSpeed.Value += speedIncrease;
@@ -419,65 +410,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void SetPlayer1Keybinds(GameMode mode)
         {
-            switch (mode)
-            {
-                case GameMode.Keys4:
-                    // Initialize 4K Input button container.
-                    if (!Ruleset.Screen.Map.HasScratchKey)
-                    {
-                        BindingStore = new List<InputBindingKeys>
-                        {
-                            new InputBindingKeys(ConfigManager.KeyMania4K1),
-                            new InputBindingKeys(ConfigManager.KeyMania4K2),
-                            new InputBindingKeys(ConfigManager.KeyMania4K3),
-                            new InputBindingKeys(ConfigManager.KeyMania4K4)
-                        };
-                    }
-                    else
-                    {
-                        BindingStore = new List<InputBindingKeys>
-                        {
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch1),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch2),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch3),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch4),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch5),
-                        };
-                    }
-                    break;
-                case GameMode.Keys7:
-                    if (!Ruleset.Screen.Map.HasScratchKey)
-                    {
-                        BindingStore = new List<InputBindingKeys>
-                        {
-                            new InputBindingKeys(ConfigManager.KeyMania7K1),
-                            new InputBindingKeys(ConfigManager.KeyMania7K2),
-                            new InputBindingKeys(ConfigManager.KeyMania7K3),
-                            new InputBindingKeys(ConfigManager.KeyMania7K4),
-                            new InputBindingKeys(ConfigManager.KeyMania7K5),
-                            new InputBindingKeys(ConfigManager.KeyMania7K6),
-                            new InputBindingKeys(ConfigManager.KeyMania7K7)
-                        };
-                    }
-                    else
-                    {
-                        BindingStore = new List<InputBindingKeys>()
-                        {
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch1),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch2),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch3),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch4),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch5),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch6),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch7),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch8),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch9)
-                        };
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
+            BindingStore = ConfigManager.KeyLayouts[mode].Select(x => new InputBindingKeys(x)).ToList();
         }
 
         /// <summary>
@@ -486,32 +419,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <param name="mode"></param>
         private void SetPlayer2Keybinds(GameMode mode)
         {
-            switch (mode)
-            {
-                case GameMode.Keys4:
-                    BindingStore = new List<InputBindingKeys>()
-                    {
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K1),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K2),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K3),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K4),
-                    };
-                    break;
-                case GameMode.Keys7:
-                    BindingStore = new List<InputBindingKeys>()
-                    {
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K1),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K2),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K3),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K4),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K5),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K6),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K7),
-                    };
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
+            BindingStore = ConfigManager.CoopKeyLayouts[mode].Select(x => new InputBindingKeys(x)).ToList();
         }
     }
 }

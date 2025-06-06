@@ -65,6 +65,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         private Sprite GameModes { get; set; }
 
         /// <summary>
+        ///    The game mode text
+        /// </summary>
+        private SpriteTextPlus GameModeText { get; set; }
+
+        /// <summary>
         ///     Signifies if the playlist is online
         /// </summary>
         private Sprite OnlineMapPoolIcon { get; set; }
@@ -137,7 +142,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             DifficultyDisplay.X = Creator.X + Creator.Width + metadataSpacing;
 
             RankedStatusSprite.Image = GetRankedStatusImage();
-            GameModes.Image = GetGameModeImage();
+            GameModeHelper.SetGameModeTexture(item.Maps, GameModes, GameModeText);
             Banner.UpdateContent(Playlist.Item);
 
             if (Playlist.IsSelected)
@@ -151,7 +156,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateButton()
         {
-            var container = (PlaylistContainer) Playlist.Container;
+            var container = (PlaylistContainer)Playlist.Container;
 
             Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHovered ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
@@ -190,7 +195,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             Button.RightClicked += (sender, args) =>
             {
-                var game = (QuaverGame) GameBase.Game;
+                var game = (QuaverGame)GameBase.Game;
                 game?.CurrentScreen?.ActivateRightClickOptions(new PlaylistRightClickOptions(Playlist));
             };
         }
@@ -203,7 +208,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             var targetAlpha = Button.IsHovered ? 0.35f : 0;
 
             Button.Alpha = MathHelper.Lerp(Button.Alpha, targetAlpha,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
+                (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
         }
 
         /// <summary>
@@ -218,7 +223,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             if (changeWidthInstantly)
                 Width = Playlist.Width;
             else
-                ChangeWidthTo((int) Playlist.Width, Easing.OutQuint, time + 400);
+                ChangeWidthTo((int)Playlist.Width, Easing.OutQuint, time + 400);
         }
 
         /// <summary>
@@ -233,7 +238,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             if (changeWidthInstantly)
                 Width = Playlist.Width - 50;
             else
-                ChangeWidthTo((int) Playlist.Width - 50, Easing.OutQuint, time + 400);
+                ChangeWidthTo((int)Playlist.Width - 50, Easing.OutQuint, time + 400);
         }
 
         /// <summary>
@@ -334,6 +339,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
                 UsePreviousSpriteBatchOptions = true
             };
+
+            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
+            {
+                Parent = GameModes,
+                Alignment = Alignment.MidCenter,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Color.White,
+            };
         }
 
         /// <summary>
@@ -382,7 +395,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             switch (Playlist.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
-                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ??  UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
                 case RankedStatus.Unranked:
                     return SkinManager.Skin?.SongSelect?.StatusUnranked ?? UserInterface.StatusUnranked;
                 case RankedStatus.Ranked:
@@ -392,39 +405,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        /// <summary>
-        ///     Gets the image for the game mode(s)
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D GetGameModeImage()
-        {
-            if (Playlist.Item.Maps.Count == 0)
-                return UserInterface.KeysNonePanel;
-
-            var has4k = false;
-            var has7K = false;
-
-            foreach (var map in Playlist.Item.Maps)
-            {
-                switch (map.Mode)
-                {
-                    case GameMode.Keys4:
-                        has4k = true;
-                        break;
-                    case GameMode.Keys7:
-                        has7K = true;
-                        break;
-                }
-            }
-
-            if (has4k && !has7K)
-                return SkinManager.Skin?.SongSelect?.GameMode4K ?? UserInterface.Keys4Panel;
-            if (has7K && !has4k)
-                return SkinManager.Skin?.SongSelect?.GameMode7K ?? UserInterface.Keys7Panel;
-
-            return SkinManager.Skin?.SongSelect?.GameMode4K7K ?? UserInterface.BothModesPanel;
         }
 
         /// <summary>

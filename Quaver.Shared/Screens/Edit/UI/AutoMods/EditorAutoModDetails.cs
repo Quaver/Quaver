@@ -92,7 +92,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                     Mode.Value.Tint = ColorHelper.HexToColor("#9B51E0");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    Mode.Value.Tint = Color.White; // 10kTodo: Add more colors for other modes
+                    break;
             }
         }
 

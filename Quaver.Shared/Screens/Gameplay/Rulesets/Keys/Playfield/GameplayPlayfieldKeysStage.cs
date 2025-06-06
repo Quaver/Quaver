@@ -371,7 +371,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Receptors = new List<Sprite>();
             ColumnLightingObjects = new List<ColumnLighting>();
 
-            var scratchLaneLeft = Screen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScratchLaneLeft4K.Value : ConfigManager.ScratchLaneLeft7K.Value;
+            var scratchLaneLeft = ConfigManager.ScratchLanesLeft[Screen.Map.Mode].Value;
 
             // Go through and create the receptors and column lighting objects.
             for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
@@ -414,6 +414,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
                     SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    Rotation = Skin.RotateReceptorsByColumn ? Skin.ReceptorRotations[i] / 180f * MathF.PI : 0
                 });
 
                 // Create the column lighting sprite.
@@ -778,7 +779,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             for (var i = 0; i < Receptors.Count; i++)
             {
-                var input = (KeysInputManager) Playfield.Ruleset.InputManager;
+                var input = (KeysInputManager)Playfield.Ruleset.InputManager;
 
                 if (input.ReplayInputManager != null)
                     continue;
@@ -788,7 +789,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     Parent = Receptors[i],
                     Alignment = Playfield.ScrollDirections[i] == ScrollDirection.Down ? Alignment.TopCenter : Alignment.BotCenter,
-                    Y = Playfield.ScrollDirections[i] == ScrollDirection.Down ? - 20 : 20,
+                    Y = Playfield.ScrollDirections[i] == ScrollDirection.Down ? -20 : 20,
                     Alpha = 1
                 };
 

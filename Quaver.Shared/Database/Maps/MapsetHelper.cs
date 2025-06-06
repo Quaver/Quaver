@@ -506,24 +506,24 @@ namespace Quaver.Shared.Database.Maps
             _searchKeywordTrie = new Trie();
             var keys = new Dictionary<string, SearchFilterOption>
             {
-                 ["artists"] = SearchFilterOption.Artist,
-                 ["bpm"] = SearchFilterOption.BPM,
-                 ["creators"] = SearchFilterOption.Creator,
-                 ["difficulty"] = SearchFilterOption.Difficulty,
-                 ["description"] = SearchFilterOption.Description,
-                 ["difficultyname"] = SearchFilterOption.DifficultyName,
-                 ["diffname"] = SearchFilterOption.DifficultyName,
-                 ["game"] = SearchFilterOption.Game,
-                 ["genre"] = SearchFilterOption.Genre,
-                 ["keys"] = SearchFilterOption.Keys,
-                 ["length"] = SearchFilterOption.Length,
-                 ["lns"] = SearchFilterOption.LNs,
-                 ["nps"] = SearchFilterOption.NPS,
-                 ["title"] = SearchFilterOption.Title,
-                 ["tags"] = SearchFilterOption.Tags,
-                 ["timesplayed"] = SearchFilterOption.TimesPlayed,
-                 ["status"] = SearchFilterOption.Status,
-                 ["sources"] = SearchFilterOption.Source
+                ["artists"] = SearchFilterOption.Artist,
+                ["bpm"] = SearchFilterOption.BPM,
+                ["creators"] = SearchFilterOption.Creator,
+                ["difficulty"] = SearchFilterOption.Difficulty,
+                ["description"] = SearchFilterOption.Description,
+                ["difficultyname"] = SearchFilterOption.DifficultyName,
+                ["diffname"] = SearchFilterOption.DifficultyName,
+                ["game"] = SearchFilterOption.Game,
+                ["genre"] = SearchFilterOption.Genre,
+                ["keys"] = SearchFilterOption.Keys,
+                ["length"] = SearchFilterOption.Length,
+                ["lns"] = SearchFilterOption.LNs,
+                ["nps"] = SearchFilterOption.NPS,
+                ["title"] = SearchFilterOption.Title,
+                ["tags"] = SearchFilterOption.Tags,
+                ["timesplayed"] = SearchFilterOption.TimesPlayed,
+                ["status"] = SearchFilterOption.Status,
+                ["sources"] = SearchFilterOption.Source
             };
 
             var gameTypes = new Dictionary<string, MapGame>
@@ -743,17 +743,8 @@ namespace Quaver.Shared.Database.Maps
                     return CompareValues(map.TimesPlayed, valTimesPlayed, operatorKind, false);
                 case SearchFilterOption.Keys:
                     var valKeys = (int)searchQuery.Value.Value!;
-                    switch (map.Mode)
-                    {
-                        case GameMode.Keys4:
-                            var keyCount = map.HasScratchKey ? 5 : 4;
-                            return CompareValues(keyCount, valKeys, operatorKind, false);
-                        case GameMode.Keys7:
-                            var keyCount7k = map.HasScratchKey ? 8 : 7;
-                            return CompareValues(keyCount7k, valKeys, operatorKind, false);
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    var keyCount = ModeHelper.ToKeyCount(map.Mode);
+                    return CompareValues(keyCount, valKeys, operatorKind, false);
                 case SearchFilterOption.Status:
                     return CompareEquality(map.RankedStatus,
                         searchQuery.Value.Value,
