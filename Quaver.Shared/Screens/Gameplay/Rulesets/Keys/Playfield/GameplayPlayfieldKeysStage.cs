@@ -787,9 +787,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
                     input.BindingStore[i].Key.Value.GetName(), 32)
                 {
-                    Parent = Receptors[i],
+                    Parent = Playfield.ForegroundContainer,
                     Alignment = Playfield.ScrollDirections[i] == ScrollDirection.Down ? Alignment.TopCenter : Alignment.BotCenter,
-                    Y = Playfield.ScrollDirections[i] == ScrollDirection.Down ? -20 : 20,
+                    Y = Receptors[i].Y + (Playfield.ScrollDirections[i] == ScrollDirection.Down ? -20 : 20),
+                    X = Receptors[i].X - Playfield.Width / 2f + Playfield.LaneSize / 2f,
                     Alpha = 1
                 };
 
