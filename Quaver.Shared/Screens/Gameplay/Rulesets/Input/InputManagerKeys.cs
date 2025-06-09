@@ -172,7 +172,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     continue;
 
                 var hitDifference = info.StartTime - time;
-                ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, isMine: true);
+                var stat = new HitStat(HitStatType.Miss, KeyPressType.Press, info.HitObjectInfo, time, Judgement.Miss,
+                    hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+
+                ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(stat);
                 var lane = info.Lane - 1;
 
                 // Play the HitSounds of closest hit object.
@@ -185,7 +188,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 }
 
                 // Update stats
-                Ruleset.ScoreProcessor.Stats.Add(new HitStat(HitStatType.Miss, KeyPressType.Press, info.HitObjectInfo, time, Judgement.Miss, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health));
+                Ruleset.ScoreProcessor.Stats.Add(stat);
 
                 // Update Scoreboard
                 var view = (GameplayScreenView)Ruleset.Screen.View;
@@ -283,7 +286,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     // Add another miss when hit missing LNS
                     if (ReplayInputManager == null)
                     {
-                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true);
+                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true, false);
 
                         Ruleset.ScoreProcessor.Stats.Add(
                             new HitStat(
@@ -414,7 +417,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             ));
 
             if (ReplayInputManager == null)
-                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true);
+                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true, false);
 
             // Update scoreboard
             view.UpdateScoreboardUsers();

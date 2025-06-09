@@ -306,7 +306,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 return;
 
             var processor = (ScoreProcessorKeys) Processor;
-            processor.CalculateScore(Judgements[CurrentJudgement]);
+            // FIXME It's not right to assume all judgements are not LN releases and not mines
+            processor.CalculateScore(Judgements[CurrentJudgement], false, false);
 
             if (setScoreboardValues)
             {

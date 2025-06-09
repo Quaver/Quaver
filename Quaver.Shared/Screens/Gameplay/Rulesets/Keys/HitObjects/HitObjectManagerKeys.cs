@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using MoreLinq;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
@@ -590,7 +591,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Marv, isMine: true);
+                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(stat);
 
                     var view = (GameplayScreenView)Ruleset.Screen.View;
                     view.UpdateScoreAndAccuracyDisplays();
@@ -642,7 +643,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(stat);
 
                     var view = (GameplayScreenView)Ruleset.Screen.View;
                     view.UpdateScoreAndAccuracyDisplays();
@@ -664,7 +665,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                         info.State = HitObjectState.Dead;
 
                         if (im?.ReplayInputManager == null)
-                            Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true);
+                            Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true, false);
 
                         view.UpdateScoreAndAccuracyDisplays();
                         Ruleset.ScoreProcessor.Stats.Add(stat);
@@ -710,7 +711,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        Ruleset.ScoreProcessor.CalculateScore(missedReleaseJudgement, true);
+                        Ruleset.ScoreProcessor.CalculateScore(missedReleaseJudgement, true, false);
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
