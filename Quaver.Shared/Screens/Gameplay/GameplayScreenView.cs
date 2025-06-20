@@ -411,7 +411,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
-            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayWidth, SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayHeight), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
+            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width / SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayWidthFactor, SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayHeight), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
                 skin.SongTimeProgressInactiveColor, skin.SongTimeProgressActiveColor, true)
             {
                 Parent = Container,

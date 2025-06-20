@@ -238,8 +238,9 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal int MiniSongBarDisplayPosY { get; private set; }
 
-        internal float MiniSongBarDisplayWidth { get; private set; } = WindowManager.Width / 30;
+        internal int MiniSongBarDisplayWidthFactor { get; private set; } = 30;
 
+        [FixedScale]
         internal int MiniSongBarDisplayHeight { get; private set; } = 4;
 
         internal float JudgementCounterAlpha { get; private set; }
@@ -555,7 +556,7 @@ namespace Quaver.Shared.Skinning
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
             MiniSongBarDisplayPosX = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosX, ini["MiniSongBarDisplayPosX"]);
             MiniSongBarDisplayPosY = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosY, ini["MiniSongBarDisplayPosY"]);
-            MiniSongBarDisplayWidth = ConfigHelper.ReadInt32((int)MiniSongBarDisplayWidth, ini["MiniSongBarDisplayWidth"]);
+            MiniSongBarDisplayWidthFactor = ConfigHelper.ReadInt32((int)MiniSongBarDisplayWidthFactor, ini["MiniSongBarDisplayWidthFactor"]);
             MiniSongBarDisplayHeight = ConfigHelper.ReadInt32((int)MiniSongBarDisplayHeight, ini["MiniSongBarDisplayHeight"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
