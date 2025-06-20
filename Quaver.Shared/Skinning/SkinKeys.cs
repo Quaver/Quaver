@@ -23,7 +23,6 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
-using Wobble.Window;
 
 
 namespace Quaver.Shared.Skinning
