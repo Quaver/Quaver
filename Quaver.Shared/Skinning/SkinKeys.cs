@@ -231,6 +231,8 @@ namespace Quaver.Shared.Skinning
 
         internal bool SongTimeProgressPositionAtTop { get; private set; }
 
+        internal bool ShowMiniSongBar { get; private set; } = false;
+
         [FixedScale]
         internal int MiniSongBarDisplayPosX { get; private set; } = 75;
 
@@ -553,6 +555,7 @@ namespace Quaver.Shared.Skinning
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
+            ShowMiniSongBar = ConfigHelper.ReadBool(ShowMiniSongBar, ini["ShowMiniSongBar"]);
             MiniSongBarDisplayPosX = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosX, ini["MiniSongBarDisplayPosX"]);
             MiniSongBarDisplayPosY = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosY, ini["MiniSongBarDisplayPosY"]);
             MiniSongBarDisplayWidthFactor = ConfigHelper.ReadInt32((int)MiniSongBarDisplayWidthFactor, ini["MiniSongBarDisplayWidthFactor"]);

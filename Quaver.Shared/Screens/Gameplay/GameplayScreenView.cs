@@ -222,7 +222,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             CreateProgressBar();
 
-            if (ConfigManager.DisplayMiniSongBar.Value)
+            if (SkinManager.Skin.Keys[Screen.Map.Mode].ShowMiniSongBar)
                 CreateMiniProgressBar();
                 
             CreateScoreDisplay();

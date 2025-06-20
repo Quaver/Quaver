@@ -211,7 +211,6 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                         new OptionsItemCheckbox(containerRect, "Display Hit Bubbles", ConfigManager.DisplayHitBubbles),
                         new OptionsItemCheckbox(containerRect, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
-                        new OptionsItemCheckbox(containerRect, "Display Mini Song Progress Bar", ConfigManager.DisplayMiniSongBar),
                     }),
                     new OptionsSubcategory("Scoreboard", new List<OptionsItem>()
                     {
