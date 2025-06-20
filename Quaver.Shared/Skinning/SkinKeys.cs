@@ -23,6 +23,8 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
+using Wobble.Window;
+
 
 namespace Quaver.Shared.Skinning
 {
@@ -231,10 +233,14 @@ namespace Quaver.Shared.Skinning
         internal bool SongTimeProgressPositionAtTop { get; private set; }
 
         [FixedScale]
-        internal float MiniSongBarDisplayPosX { get; private set; } = 100;
+        internal int MiniSongBarDisplayPosX { get; private set; } = 75;
 
         [FixedScale]
-        internal float MiniSongBarDisplayPosY { get; private set; }
+        internal int MiniSongBarDisplayPosY { get; private set; }
+
+        internal float MiniSongBarDisplayWidth { get; private set; } = WindowManager.Width / 30;
+
+        internal int MiniSongBarDisplayHeight { get; private set; } = 4;
 
         internal float JudgementCounterAlpha { get; private set; }
 
@@ -549,6 +555,8 @@ namespace Quaver.Shared.Skinning
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
             MiniSongBarDisplayPosX = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosX, ini["MiniSongBarDisplayPosX"]);
             MiniSongBarDisplayPosY = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosY, ini["MiniSongBarDisplayPosY"]);
+            MiniSongBarDisplayWidth = ConfigHelper.ReadInt32((int)MiniSongBarDisplayWidth, ini["MiniSongBarDisplayWidth"]);
+            MiniSongBarDisplayHeight = ConfigHelper.ReadInt32((int)MiniSongBarDisplayHeight, ini["MiniSongBarDisplayHeight"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
             UseJudgementColorForNumbers = ConfigHelper.ReadBool(UseJudgementColorForNumbers, ini["UseJudgementColorForNumbers"]);
