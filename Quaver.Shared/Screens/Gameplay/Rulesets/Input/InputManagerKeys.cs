@@ -236,7 +236,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get Judgement and references
             var time = (int)manager.CurrentAudioOffset;
             var hitDifference = info.StartTime - time;
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press, false, ReplayInputManager == null);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference,
+                KeyPressType.Press, ReplayInputManager == null);
             var lane = info.Lane - 1;
 
             // Ignore Ghost Taps
@@ -336,8 +337,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var time = (int)manager.CurrentAudioOffset;
             var hitDifference = info.EndTime - time;
 
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release, false,
-                ReplayInputManager == null);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference,
+                KeyPressType.Release, ReplayInputManager == null);
 
             // Update animations
             playfield.Stage.HitLightingObjects[lane].StopHolding();

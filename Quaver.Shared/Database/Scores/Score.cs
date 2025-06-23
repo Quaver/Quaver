@@ -352,7 +352,7 @@ namespace Quaver.Shared.Database.Scores
                 }
 
                 var judgement = processor.CalculateScore(deviance,
-                    hit.Contains("L") ? KeyPressType.Release : KeyPressType.Press, false);
+                    hit.Contains("L") ? KeyPressType.Release : KeyPressType.Press, isMine: false);
 
                 if (judgement == Judgement.Ghost)
                     continue;
