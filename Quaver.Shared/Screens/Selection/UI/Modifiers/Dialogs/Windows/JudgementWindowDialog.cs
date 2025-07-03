@@ -405,6 +405,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
         private void CreateComboBreakDropdown()
         {
+            LNMiss = new JudgementWindowLNMissDropdown(JudgementWindowsDatabaseCache.Selected)
+            {
+                Parent = ContentBackground,
+                Alignment = Alignment.TopRight,
+                X = -22
+            };
+
             ComboBreak = new JudgementWindowComboBreakDropdown(JudgementWindowsDatabaseCache.Selected)
             {
                 Parent = ContentBackground,
@@ -413,13 +420,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 X = -22
             };
 
-            LNMiss = new JudgementWindowLNMissDropdown(JudgementWindowsDatabaseCache.Selected)
-            {
-                Parent = ContentBackground,
-                Alignment = Alignment.TopRight,
-                Y = NameTextbox.Y + ComboBreak.Height,
-                X = -22
-            };
+            LNMiss.Y = NameTextbox.Y + ComboBreak.Height;
         }
 
         /// <summary>
