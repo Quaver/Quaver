@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
@@ -741,18 +742,21 @@ namespace Quaver.Shared.Skinning
                 {
                     const int snapCount = 9;
 
-                    var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
+                    var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
                     var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1);
+                      
+                    NoteHitObjects.Add(hitobjects);
 
-                    if (!File.Exists($"{Store.Dir}/{ModeHelper.ToShortHand(Mode).ToLower()}/{SkinKeysFolder.HitObjects}/note-holdobject-sheet@9x1.png"))
-                        holdobjects = objects;
+                    if (Directory.GetFiles($@"{Store.Dir}/{ModeHelper.ToShortHand(Mode).ToLower()}/{SkinKeysFolder.HitObjects}").Any(file => new Regex(SkinStore.SpritesheetRegex("note-holdobject-sheet")).IsMatch(Path.GetFileName(file))))
+                        NoteHoldHitObjects.Add(holdobjects);
+                    else
+                        NoteHoldHitObjects.Add(hitobjects);
 
-                    NoteHitObjects.Add(objects);
-                    NoteHoldHitObjects.Add(holdobjects);
+                    
 
 
                     for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
-                        NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+                            NoteHitObjects[i].Add(NoteHitObjects[i].Last());
 
                     for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
                         NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
