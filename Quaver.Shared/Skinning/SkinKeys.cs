@@ -24,6 +24,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
 
+
 namespace Quaver.Shared.Skinning
 {
     public class SkinKeys
@@ -229,6 +230,19 @@ namespace Quaver.Shared.Skinning
         internal float SongTimeProgressScale { get; private set; }
 
         internal bool SongTimeProgressPositionAtTop { get; private set; }
+
+        internal bool ShowMiniSongBar { get; private set; } = false;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayPosX { get; private set; } = 75;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayPosY { get; private set; }
+
+        internal int MiniSongBarDisplayWidthFactor { get; private set; } = 30;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayHeight { get; private set; } = 4;
 
         internal float JudgementCounterAlpha { get; private set; }
 
@@ -545,6 +559,11 @@ namespace Quaver.Shared.Skinning
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
+            ShowMiniSongBar = ConfigHelper.ReadBool(ShowMiniSongBar, ini["ShowMiniSongBar"]);
+            MiniSongBarDisplayPosX = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosX, ini["MiniSongBarDisplayPosX"]);
+            MiniSongBarDisplayPosY = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosY, ini["MiniSongBarDisplayPosY"]);
+            MiniSongBarDisplayWidthFactor = ConfigHelper.ReadInt32((int)MiniSongBarDisplayWidthFactor, ini["MiniSongBarDisplayWidthFactor"]);
+            MiniSongBarDisplayHeight = ConfigHelper.ReadInt32((int)MiniSongBarDisplayHeight, ini["MiniSongBarDisplayHeight"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
             UseJudgementColorForNumbers = ConfigHelper.ReadBool(UseJudgementColorForNumbers, ini["UseJudgementColorForNumbers"]);
