@@ -292,6 +292,10 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal int WidthForNoteHeightScale { get; private set; }
 
+        [FixedScale]
+        internal int CoopPlayfieldPadding { get; private set; } = 92;
+
+
         #endregion
 
         #region TEXTURES
@@ -575,6 +579,7 @@ namespace Quaver.Shared.Skinning
             JudgementHitBurstBumpY = ConfigHelper.ReadInt32(JudgementHitBurstBumpY, ini["JudgementHitBurstBumpY"]);
             JudgementHitBurstBumpTime = ConfigHelper.ReadInt32(JudgementHitBurstBumpTime, ini["JudgementHitBurstBumpTime"]);
             WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
+            CoopPlayfieldPadding = ConfigHelper.ReadInt32((int)CoopPlayfieldPadding, ini["CoopPlayfieldPadding"]);
 
             var defaultSkin = ini["DefaultSkin"];
 
