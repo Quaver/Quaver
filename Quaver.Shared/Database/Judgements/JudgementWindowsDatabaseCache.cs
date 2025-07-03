@@ -93,7 +93,10 @@ namespace Quaver.Shared.Database.Judgements
         /// </summary>
         private static List<JudgementWindows> FetchAllWindows()
         {
-            return DatabaseManager.Connection.Table<JudgementWindows>().ToList();
+            var windows = DatabaseManager.Connection.Table<JudgementWindows>().ToList();
+            foreach (var w in windows)
+                w.LNMissJudgement ??= API.Enums.Judgement.Good;
+            return windows;
         }
 
         /// <summary>
