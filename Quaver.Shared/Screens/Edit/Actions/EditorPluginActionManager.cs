@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         [MoonSharpVisible(false)]
-        public EditorActionManager ActionManager { get; }
+        public EditorActionManager ActionManager { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -252,5 +252,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         public void MoveObjectsToTimingGroup(List<HitObjectInfo> hitObjects, string timingGroupId) =>
             ActionManager.MoveObjectsToTimingGroup(hitObjects, timingGroupId, true);
+
+        public void Destroy()
+        {
+            ActionManager = null;
+        }
     }
 }
