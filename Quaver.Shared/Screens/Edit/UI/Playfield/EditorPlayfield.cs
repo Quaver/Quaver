@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        public EditorActionManager ActionManager { get; }
+        public EditorActionManager ActionManager { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -538,6 +538,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 HitObjects.ForEach(x => x.Destroy());
                 Timeline?.Destroy();
                 LineContainer?.Destroy();
+
+                HitObjects.Clear();
+                LineContainer = null;
+                Timeline = null;
             });
 
             Track.Seeked -= OnTrackSeeked;
@@ -577,6 +581,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorPlayfieldAlpha.ValueChanged -= OnPlayfieldAlphaChanged;
 
             base.Destroy();
+            ActionManager = null;
+            HitObjectPool.Clear();
         }
 
         /// <summary>
