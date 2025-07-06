@@ -746,28 +746,26 @@ namespace Quaver.Shared.Skinning
                     var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1);
                     NoteHitObjects.Add(hitobjects);
                     
-                    try
+                    var dir = $@"{Store.Dir}/{ModeHelper.ToShortHand(Mode).ToLower()}/{SkinKeysFolder.HitObjects}";
+
+                    if (Directory.Exists(dir))
                     {
-                        var dir = $@"{Store.Dir}/{ModeHelper.ToShortHand(Mode).ToLower()}/{SkinKeysFolder.HitObjects}";
                         var files = Directory.GetFiles(dir);
                         var holdsheetRegex = new Regex(SkinStore.SpritesheetRegex("note-holdobject-sheet"));
-
-
 
                         if (files.Any(file => holdsheetRegex.IsMatch(Path.GetFileName(file))))
                             NoteHoldHitObjects.Add(holdobjects);
                         else
                             NoteHoldHitObjects.Add(hitobjects);
                     }
-                    catch (DirectoryNotFoundException e)
-                    {
+                    else
                         NoteHoldHitObjects.Add(hitobjects);
-                    }
+
 
 
 
                     for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
-                        NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+                            NoteHitObjects[i].Add(NoteHitObjects[i].Last());
 
                     for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
                         NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
