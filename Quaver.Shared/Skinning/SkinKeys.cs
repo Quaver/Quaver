@@ -765,7 +765,7 @@ namespace Quaver.Shared.Skinning
 
 
                     for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
-                            NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+                        NoteHitObjects[i].Add(NoteHitObjects[i].Last());
 
                     for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
                         NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
