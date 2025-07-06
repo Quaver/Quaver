@@ -20,6 +20,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
@@ -745,24 +746,12 @@ namespace Quaver.Shared.Skinning
                     var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
                     var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1);
                     NoteHitObjects.Add(hitobjects);
-                    
-                    var dir = $@"{Store.Dir}/{ModeHelper.ToShortHand(Mode).ToLower()}/{SkinKeysFolder.HitObjects}";
 
-                    if (Directory.Exists(dir))
-                    {
-                        var files = Directory.GetFiles(dir);
-                        var holdsheetRegex = new Regex(SkinStore.SpritesheetRegex("note-holdobject-sheet"));
-
-                        if (files.Any(file => holdsheetRegex.IsMatch(Path.GetFileName(file))))
-                            NoteHoldHitObjects.Add(holdobjects);
-                        else
-                            NoteHoldHitObjects.Add(hitobjects);
-                    }
+                    // LoadSpriteSheet returns one UserInterface.BlankBox on error
+                    if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
+                        NoteHoldHitObjects.Add(holdobjects);
                     else
                         NoteHoldHitObjects.Add(hitobjects);
-
-
-
 
                     for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
                         NoteHitObjects[i].Add(NoteHitObjects[i].Last());
