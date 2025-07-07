@@ -409,8 +409,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
-            string extension = ".png")
+        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns)
         {
             try
             {
@@ -446,6 +445,9 @@ namespace Quaver.Shared.Skinning
                 // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
                 if (rows == 0 && columns == 0)
                     return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png") };
+
+                if (resource == null)
+                    return new List<Texture2D> { UserInterface.BlankBox };
 
                 return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
                     GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
@@ -505,7 +507,7 @@ namespace Quaver.Shared.Skinning
         {
             // Load Grades
             HitBubbles = LoadSingleTexture($"{Dir}/HitBubbles/bubble", $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubble.png");
-            
+
             var hitBubblesFolder = $"/HitBubbles/";
 
             const string bubblesBackground = "bubbles-background";
@@ -757,7 +759,7 @@ namespace Quaver.Shared.Skinning
             const string soundSelect = "sound-select";
             if (File.Exists($"{sfxFolder}/{soundSelect}.wav"))
                 SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
-            
+
             const string soundComboAlert = "sound-combo-alert";
             SoundComboAlerts = new List<AudioSample>();
 
