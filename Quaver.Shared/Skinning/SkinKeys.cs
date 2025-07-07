@@ -528,8 +528,8 @@ namespace Quaver.Shared.Skinning
             HoldLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HoldLightingScale"]);
             HitBubbleScale = ConfigHelper.ReadFloat(HitBubbleScale, ini["HitBubbleScale"]);
             HitBubblesAlignment = ConfigHelper.ReadEnum(HitBubblesAlignment, ini["HitBubblesAlignment"]);
-            HitBubblesPosX = ConfigHelper.ReadInt32((int) HitBubblesPosX, ini["HitBubblesPosX"]);
-            HitBubblesPosY = ConfigHelper.ReadInt32((int) HitBubblesPosY, ini["HitBubblesPosY"]);
+            HitBubblesPosX = ConfigHelper.ReadInt32((int)HitBubblesPosX, ini["HitBubblesPosX"]);
+            HitBubblesPosY = ConfigHelper.ReadInt32((int)HitBubblesPosY, ini["HitBubblesPosY"]);
             HitBubblesScale = ConfigHelper.ReadFloat(HitBubblesScale, ini["HitBubblesScale"]);
             HitBubbleBorderPadding = ConfigHelper.ReadFloat(HitBubbleBorderPadding, ini["HitBubbleBorderPadding"]);
             HitBubblePadding = ConfigHelper.ReadFloat(HitBubblePadding, ini["HitBubblePadding"]);
@@ -660,7 +660,7 @@ namespace Quaver.Shared.Skinning
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode).ToLower()}/{folder.ToString()}";
-            return SkinStore.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource);
+            return Store.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource);
         }
 
         /// <summary>
@@ -768,23 +768,34 @@ namespace Quaver.Shared.Skinning
                 }
                 else
                 {
-                    const int snapCount = 9;
+                    if (i == 0)
+                    {
 
-                    var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
-                    var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1, true);
-                    NoteHitObjects.Add(hitobjects);
+                        const int snapCount = 9;
 
-                    // LoadSpriteSheet returns one UserInterface.BlankBox on error
-                    if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
-                        NoteHoldHitObjects.Add(holdobjects);
+                        var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
+                        var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1, true);
+                        NoteHitObjects.Add(hitobjects);
+
+                        // LoadSpriteSheet returns one UserInterface.BlankBox on error
+                        if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
+                            NoteHoldHitObjects.Add(holdobjects);
+                        else
+                            NoteHoldHitObjects.Add(hitobjects);
+
+                        for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
+                            NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+
+                        for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
+                            NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
+                    }
                     else
-                        NoteHoldHitObjects.Add(hitobjects);
-
-                    for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
-                        NoteHitObjects[i].Add(NoteHitObjects[i].Last());
-
-                    for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
-                        NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
+                    {
+                        // no need to load the same image several times
+                        // should also reduce memory usage slightly
+                        NoteHitObjects.Add(NoteHitObjects[0]);
+                        NoteHoldHitObjects.Add(NoteHoldHitObjects[0]);
+                    }
                 }
 
                 // LNS
