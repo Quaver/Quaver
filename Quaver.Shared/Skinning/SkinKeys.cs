@@ -673,21 +673,24 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
+        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, bool noResource = false)
         {
-            string resource;
-            if (shared)
+            string resource = null;
+            if (!noResource)
             {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
-                           $"/{GetResourcePath(element)}";
+                if (shared)
+                {
+                    resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
+                }
+                else
+                {
+                    resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
+                               $"/{GetResourcePath(element)}";
+                }
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode).ToLower()}/{folder.ToString()}/";
-            return Store.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
+            return Store.LoadSpritesheet(folderName, element, resource, rows, columns);
         }
 
         /// <summary>
@@ -768,7 +771,7 @@ namespace Quaver.Shared.Skinning
                     const int snapCount = 9;
 
                     var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
-                    var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1);
+                    var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1, true);
                     NoteHitObjects.Add(hitobjects);
 
                     // LoadSpriteSheet returns one UserInterface.BlankBox on error
