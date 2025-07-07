@@ -364,6 +364,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
+            EditorPluginUtils.EditScreen = this;
             Map = map;
             BackgroundStore = visualTestBackground;
 
@@ -569,7 +570,8 @@ namespace Quaver.Shared.Screens.Edit
             View = null;
             ActionManager = null;
             BackupScheduler = null;
-            EditorPluginUtils.EditScreen = null;
+            if (EditorPluginUtils.EditScreen == this)
+                EditorPluginUtils.EditScreen = null;
         }
 
         /// <summary>
