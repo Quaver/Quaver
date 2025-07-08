@@ -14,12 +14,14 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using IniFileParser;
+using IniFileParser.Exceptions;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Skinning.Menus;
 using Wobble;
 using Wobble.Assets;
@@ -301,7 +303,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
         /// </summary>
-        internal SkinStore(string skin = null)
+        internal SkinStore(string skin = null, bool editor = false)
         {
             Stopwatch totalSW = new();
             Stopwatch k4SW = new();
@@ -315,11 +317,11 @@ namespace Quaver.Shared.Skinning
             Keys = new Dictionary<GameMode, SkinKeys>();
 
             k4SW.Restart();
-            Keys.Add(GameMode.Keys4, new SkinKeys(this, GameMode.Keys4));
+            Keys.Add(GameMode.Keys4, new SkinKeys(this, GameMode.Keys4, editor ? ConfigManager.DefaultEditorSkin.Value?.ToString() : null));
             k4SW.Stop();
             int k4CacheHits = _cacheCount;
             k7SW.Restart();
-            Keys.Add(GameMode.Keys7, new SkinKeys(this, GameMode.Keys7));
+            Keys.Add(GameMode.Keys7, new SkinKeys(this, GameMode.Keys7, editor ? ConfigManager.DefaultEditorSkin.Value?.ToString() : null));
             k7SW.Stop();
             int k7CacheHits = _cacheCount;
 
@@ -880,6 +882,56 @@ namespace Quaver.Shared.Skinning
                         tex.Dispose();
                 }
             }
+        }
+
+        public static List<string> GetSkins()
+        {
+            
+            var options = new List<string> { "Default Skin" };
+
+            if (ConfigManager.SkinDirectory == null)
+                return options;
+
+            var skins = new List<string>();
+
+            var skinDirectories = Directory.GetDirectories(ConfigManager.SkinDirectory.Value);
+
+            var dirs = skinDirectories.Select(dir => new DirectoryInfo(dir).Name);
+            skins.AddRange(dirs.ToList());
+
+            var workshopDirectories = Directory.GetDirectories(ConfigManager.SteamWorkshopDirectory.Value);
+
+            var workshopList = new List<string>();
+
+            foreach (var directory in workshopDirectories)
+            {
+                if (File.Exists($"{directory}/skin.ini"))
+                {
+                    try
+                    {
+                        var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                            .ReadFile($"{directory}/skin.ini")["General"];
+                        if (data["Name"] != null)
+                            workshopList.Add($"{data["Name"]} <{new DirectoryInfo(directory).Name}>");
+                    }
+                    catch (ParsingException e)
+                    {
+                        Logger.Error($"Workshop skin at {directory} has an invalid skin.ini: {e}", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error,
+                            $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
+                        workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
+                    }
+                }
+                else
+                    workshopList.Add($"({new DirectoryInfo(directory).Name})");
+            }
+
+            workshopList.Sort();
+            skins.AddRange(workshopList);
+
+            skins.Sort();
+            options.AddRange(skins);
+            return options;
         }
     }
 }
