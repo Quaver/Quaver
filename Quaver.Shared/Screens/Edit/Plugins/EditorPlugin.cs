@@ -80,7 +80,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             IsBuiltIn = isResource;
             Directory = directory;
             IsWorkshop = isWorkshop;
-            EditorPluginUtils.EditScreen = editScreen;
             EditorPluginMap = new EditorPluginMap();
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.String,
