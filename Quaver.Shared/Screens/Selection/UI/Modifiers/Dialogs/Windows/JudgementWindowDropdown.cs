@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
@@ -16,8 +15,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
         protected Bindable<JudgementWindows> SelectedWindow { get; }
 
-        public JudgementWindowDropdown(Bindable<JudgementWindows> selectedWindow, string label, List<string> options = null) : base(label, 24,
-            new Dropdown(options ?? GetDropdownItems(), new ScalableVector2(150, 40), 24, ColorHelper.HexToColor("#10C8F6")))
+        public JudgementWindowDropdown(Bindable<JudgementWindows> selectedWindow, string label, List<string> options) : base(label, 24,
+            new Dropdown(options, new ScalableVector2(150, 40), 24, ColorHelper.HexToColor("#10C8F6")))
         {
             SelectedWindow = selectedWindow;
             SelectedWindow.ValueChanged += OnSelectedWindowChanged;
@@ -41,15 +40,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             SelectedWindow.ValueChanged -= OnSelectedWindowChanged;
             base.Destroy();
         }
-
-        private static List<string> GetDropdownItems() => new()
-            {
-                "Perfect",
-                "Great",
-                "Good",
-                "Okay",
-                "Miss"
-            };
 
         private void SetSelectedItem() =>
             ScheduleUpdate(() => Dropdown.SelectItem(Dropdown.Items[Target]));
