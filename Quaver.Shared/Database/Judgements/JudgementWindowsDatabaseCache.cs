@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Config;
-using Quaver.Shared.Database.Settings;
-using SQLite;
 using Wobble.Bindables;
 using Wobble.Logging;
 
@@ -95,7 +94,7 @@ namespace Quaver.Shared.Database.Judgements
         {
             var windows = DatabaseManager.Connection.Table<JudgementWindows>().ToList();
             foreach (var w in windows)
-                w.LNMissJudgement ??= API.Enums.Judgement.Good;
+                w.LNMissJudgement ??= Judgement.Good;
             return windows;
         }
 

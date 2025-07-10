@@ -7,7 +7,6 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Judgements;
-using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
