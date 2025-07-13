@@ -72,7 +72,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override QuaverScreenType Type { get; } = QuaverScreenType.Editor;
 
-        public Timer BackupScheduler { get; }
+        public Timer BackupScheduler { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -278,7 +278,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public EditorActionManager ActionManager { get; }
+        public EditorActionManager ActionManager { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -364,6 +364,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
+            EditorPluginUtils.EditScreen = this;
             Map = map;
             BackgroundStore = visualTestBackground;
 
@@ -491,6 +492,7 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.Window.FileDropped -= OnFileDropped;
             ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
             ActionManager.TimingGroupDeleted -= ActionManagerOnTimingGroupDeleted;
+            ReferenceDifficultyIndex.ValueChanged -= LoadReferenceDifficulty;
 
             BackupScheduler?.Dispose();
             Track?.Dispose();
@@ -558,10 +560,18 @@ namespace Quaver.Shared.Screens.Edit
             SkinManager.SkinLoaded -= OnSkinLoaded;
 
             Plugins.ForEach(x => x.Destroy());
+            Plugins.Clear();
+            BuiltInPlugins.Clear();
             
             InputManager?.Destroy();
 
             base.Destroy();
+
+            View = null;
+            ActionManager = null;
+            BackupScheduler = null;
+            if (EditorPluginUtils.EditScreen == this)
+                EditorPluginUtils.EditScreen = null;
         }
 
         /// <summary>

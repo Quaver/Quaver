@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
@@ -19,10 +20,12 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
+
 
 namespace Quaver.Shared.Skinning
 {
@@ -241,6 +244,19 @@ namespace Quaver.Shared.Skinning
 
         internal bool SongTimeProgressPositionAtTop { get; private set; }
 
+        internal bool ShowMiniSongBar { get; private set; } = false;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayPosX { get; private set; } = 75;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayPosY { get; private set; }
+
+        internal int MiniSongBarDisplayWidthFactor { get; private set; } = 30;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayHeight { get; private set; } = 4;
+
         internal float JudgementCounterAlpha { get; private set; }
 
         internal Color JudgementCounterFontColor { get; private set; }
@@ -305,6 +321,9 @@ namespace Quaver.Shared.Skinning
 
         [FixedScale]
         internal int WidthForNoteHeightScale { get; private set; }
+
+        [FixedScale]
+        internal int CoopPlayfieldPadding { get; private set; } = 92;
 
         internal List<int> HitObjectFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
         internal List<int> HoldBodyFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
@@ -586,6 +605,11 @@ namespace Quaver.Shared.Skinning
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
+            ShowMiniSongBar = ConfigHelper.ReadBool(ShowMiniSongBar, ini["ShowMiniSongBar"]);
+            MiniSongBarDisplayPosX = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosX, ini["MiniSongBarDisplayPosX"]);
+            MiniSongBarDisplayPosY = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosY, ini["MiniSongBarDisplayPosY"]);
+            MiniSongBarDisplayWidthFactor = ConfigHelper.ReadInt32((int)MiniSongBarDisplayWidthFactor, ini["MiniSongBarDisplayWidthFactor"]);
+            MiniSongBarDisplayHeight = ConfigHelper.ReadInt32((int)MiniSongBarDisplayHeight, ini["MiniSongBarDisplayHeight"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
             UseJudgementColorForNumbers = ConfigHelper.ReadBool(UseJudgementColorForNumbers, ini["UseJudgementColorForNumbers"]);
@@ -623,6 +647,7 @@ namespace Quaver.Shared.Skinning
             JudgementHitBurstBumpY = ConfigHelper.ReadInt32(JudgementHitBurstBumpY, ini["JudgementHitBurstBumpY"]);
             JudgementHitBurstBumpTime = ConfigHelper.ReadInt32(JudgementHitBurstBumpTime, ini["JudgementHitBurstBumpTime"]);
             WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
+            CoopPlayfieldPadding = ConfigHelper.ReadInt32((int)CoopPlayfieldPadding, ini["CoopPlayfieldPadding"]);
 
             HitObjectFallbacks = ConfigHelper.ReadIntList(HitObjectFallbacks, ini["HitObjectFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
             HoldBodyFallbacks = ConfigHelper.ReadIntList(HoldBodyFallbacks, ini["HoldBodyFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
@@ -689,7 +714,7 @@ namespace Quaver.Shared.Skinning
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeShorthand(Mode).ToLower()}/{folder.ToString()}";
-            return SkinStore.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource, fallback);
+            return Store.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource, fallback);
         }
 
         /// <summary>
@@ -702,21 +727,24 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, List<Texture2D>? fallback, bool shared, int rows, int columns, string extension = ".png")
+        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, List<Texture2D>? fallback, bool shared, int rows, int columns, bool noResource = false)
         {
-            string resource;
-            if (shared)
+            string resource = null;
+            if (!noResource)
             {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{ModeString(Mode)}/{folder.ToString()}" +
-                           $"/{GetResourcePath(element)}";
+                if (shared)
+                {
+                    resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
+                }
+                else
+                {
+                    resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{ModeString(Mode)}/{folder.ToString()}" +
+                               $"/{GetResourcePath(element)}";
+                }
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeShorthand(Mode).ToLower()}/{folder.ToString()}/";
-            return Store.LoadSpritesheet(folderName, element, resource, rows, columns, fallback, extension);
+            return Store.LoadSpritesheet(folderName, element, resource, rows, columns, fallback);
         }
 
         /// <summary>
@@ -791,20 +819,36 @@ namespace Quaver.Shared.Skinning
                 }
                 else
                 {
-                    const int snapCount = 9;
+                    if (lane == 0 || UsePerLaneSpriteSheets)
+                    {
 
-                    string sheet = UsePerLaneSpriteSheets ? $"note-hitobject-sheet-{lane + 1}" : "note-hitobject-sheet";
-                    var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, sheet, FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
+                        const int snapCount = 9;
 
-                    NoteHitObjects.Add(objects);
-                    NoteHoldHitObjects.Add(objects);
+                        string hitObjectSheet = UsePerLaneSpriteSheets ? $"note-hitobject-sheet-{lane + 1}" : "note-hitobject-sheet";
+                        string holdObjectSheet = UsePerLaneSpriteSheets ? $"note-holdobject-sheet-{lane + 1}" : "note-holdobject-sheet";
+                        var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, hitObjectSheet, FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
+                        var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, holdObjectSheet, FallbackKeys?.NoteHoldHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
+                        NoteHitObjects.Add(hitobjects);
 
+                        // LoadSpriteSheet returns one UserInterface.BlankBox on error
+                        if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
+                            NoteHoldHitObjects.Add(holdobjects);
+                        else
+                            NoteHoldHitObjects.Add(hitobjects);
 
-                    for (var j = 0; j < snapCount - NoteHitObjects[lane].Count; j++)
-                        NoteHitObjects[lane].Add(NoteHitObjects[lane].Last());
+                        for (var j = 0; j < snapCount - NoteHitObjects[lane].Count; j++)
+                            NoteHitObjects[lane].Add(NoteHitObjects[lane].Last());
 
-                    for (var j = 0; j < snapCount - NoteHoldHitObjects[lane].Count; j++)
-                        NoteHoldHitObjects[lane].Add(NoteHoldHitObjects[lane].Last());
+                        for (var j = 0; j < snapCount - NoteHoldHitObjects[lane].Count; j++)
+                            NoteHoldHitObjects[lane].Add(NoteHoldHitObjects[lane].Last());
+                    }
+                    else
+                    {
+                        // no need to load the same image several times
+                        // should also reduce memory usage slightly
+                        NoteHitObjects.Add(NoteHitObjects[0]);
+                        NoteHoldHitObjects.Add(NoteHoldHitObjects[0]);
+                    }
                 }
 
                 // LNS

@@ -7,9 +7,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
@@ -51,6 +53,10 @@ namespace Quaver.Shared.Skinning
                 return $"{ConfigManager.SteamWorkshopDirectory.Value}/{Skin}";
             }
         }
+
+        // byte[].GetHashCode() is unreliable so we use int instead
+        private readonly Dictionary<int, Texture2D> _textureCache = new();
+        private int _cacheCount = 0;
 
         /// <summary>
         ///     The skin.ini file.
@@ -298,6 +304,11 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal SkinStore(string skin = null)
         {
+            Stopwatch totalSW = new();
+            Stopwatch k4SW = new();
+            Stopwatch k7SW = new();
+            totalSW.Restart();
+
             Skin = string.IsNullOrEmpty(skin) ? ConfigManager.Skin?.Value : skin;
             LoadConfig();
 
@@ -309,7 +320,6 @@ namespace Quaver.Shared.Skinning
                 var mode = keyCount == 0 ? 0 : ModeHelper.FromKeyCount(keyCount);
                 Keys.Add(mode, new SkinKeys(this, mode, keyCount == 0 ? null : Keys[0]));
             }
-
 
             try
             {
@@ -328,6 +338,14 @@ namespace Quaver.Shared.Skinning
             // Change cursor image.
             GameBase.Game.GlobalUserInterface.Cursor.Image = Cursor;
             GameBase.Game.GlobalUserInterface.Cursor.Center = CenterCursor;
+
+            totalSW.Stop();
+
+            Logger.Important($"skin loading times:\n" +
+                $"total: {(double)totalSW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{_cacheCount}]\n" +
+                $"4k: {(double)k4SW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{k4CacheHits}]\n" +
+                $"7k: {(double)k7SW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{k7CacheHits - k4CacheHits}]",
+            LogType.Runtime);
         }
 
         /// <summary>
@@ -379,31 +397,55 @@ namespace Quaver.Shared.Skinning
             LoadSoundEffects();
         }
 
+        private Texture2D GetTextureFromCacheOr(byte[] buffer, Func<byte[], Texture2D> func)
+        {
+            var md5 = MD5.HashData(buffer);
+
+            var hash = new HashCode();
+            hash.AddBytes(md5);
+            int hc = hash.ToHashCode();
+
+            if (_textureCache.ContainsKey(hc))
+            {
+                _cacheCount++;
+                return _textureCache[hc];
+            }
+
+            Texture2D texture = func(buffer);
+            _textureCache.Add(hc, texture);
+            return texture;
+        }
+
         /// <summary>
         ///     Loads a single texture element.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="resource"></param>
         /// <param name="extension"></param>
-        internal static Texture2D LoadSingleTexture(string path, string resource, Texture2D? fallback = null, string extension = ".png")
+        internal Texture2D LoadSingleTexture(string path, string resource, Texture2D? fallback = null, string extension = ".png")
         {
             path += extension;
 
             try
             {
+                byte[] buffer;
                 if (File.Exists(path))
                 {
-                    return AssetLoader.LoadTexture2DFromFile(path);
+                    buffer = File.ReadAllBytes(path);
                 }
-                if (fallback != null)
+                else
                 {
-                    return fallback;
+                    buffer = GameBase.Game.Resources.Get(resource);
+                    if (buffer == null)
+                    {
+                        if (fallback != null)
+                        {
+                            return fallback;
+                        }
+                        return UserInterface.BlankBox;
+                    }
                 }
-                if (GameBase.Game.Resources.Get(resource) is { } buffer)
-                {
-                    return AssetLoader.LoadTexture2D(buffer);
-                }
-                return UserInterface.BlankBox;
+                return GetTextureFromCacheOr(buffer, AssetLoader.LoadTexture2D);
             }
             catch (Exception)
             {
@@ -422,8 +464,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, List<Texture2D>? fallback = null,
-            string extension = ".png")
+        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, List<Texture2D>? fallback = null)
         {
             try
             {
@@ -441,8 +482,10 @@ namespace Quaver.Shared.Skinning
                         // See if the file matches the regex.
                         if (match.Success)
                         {
+                            byte[] file = File.ReadAllBytes(f);
+
                             // Load it up if so.
-                            var texture = AssetLoader.LoadTexture2DFromFile(f);
+                            var texture = GetTextureFromCacheOr(file, AssetLoader.LoadTexture2D);
 
                             return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value),
                                 int.Parse(match.Groups[2].Value));
@@ -464,6 +507,9 @@ namespace Quaver.Shared.Skinning
                 // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
                 if (rows == 0 && columns == 0)
                     return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png", null) };
+
+                if (resource == null)
+                    return new List<Texture2D> { UserInterface.BlankBox };
 
                 return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
                     GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);

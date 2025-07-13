@@ -4,6 +4,7 @@ using System.Numerics;
 using ImGuiNET;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Scripting;
@@ -79,8 +80,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             IsBuiltIn = isResource;
             Directory = directory;
             IsWorkshop = isWorkshop;
-            EditorPluginUtils.EditScreen = editScreen;
             EditorPluginMap = new EditorPluginMap();
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.String,
+                typeof(ScrollGroup),
+                x => EditorPluginMap.GetTimingGroup(x.String)
+            );
         }
 
         /// <inheritdoc />
