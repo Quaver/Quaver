@@ -305,8 +305,7 @@ namespace Quaver.Shared.Skinning
         internal SkinStore(string skin = null)
         {
             Stopwatch totalSW = new();
-            Stopwatch k4SW = new();
-            Stopwatch k7SW = new();
+            Dictionary<GameMode, (Stopwatch sw, int cacheHits)> keyTimingInfo = new();
             totalSW.Restart();
 
             Skin = string.IsNullOrEmpty(skin) ? ConfigManager.Skin?.Value : skin;
@@ -317,8 +316,15 @@ namespace Quaver.Shared.Skinning
             // keyCount 0 is the shared keys folder
             for (var keyCount = 0; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
             {
+                int cacheCountStart = _cacheCount;
+                Stopwatch sw = new();
+                sw.Restart();
+
                 var mode = keyCount == 0 ? 0 : ModeHelper.FromKeyCount(keyCount);
                 Keys.Add(mode, new SkinKeys(this, mode, keyCount == 0 ? null : Keys[0]));
+
+                sw.Stop();
+                keyTimingInfo.Add(mode, (sw, _cacheCount - cacheCountStart));
             }
 
             try
@@ -341,11 +347,20 @@ namespace Quaver.Shared.Skinning
 
             totalSW.Stop();
 
+            string keyTimeString = "";
+            foreach ((GameMode mode, (Stopwatch sw, int cacheHits)) in keyTimingInfo)
+            {
+                if (!string.IsNullOrEmpty(keyTimeString))
+                {
+                    keyTimeString += ", ";
+                }
+                keyTimeString += $"{SkinKeys.ModeShorthand(mode)}:{(double)sw.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00}[{cacheHits}]";
+            }
+
             Logger.Important($"skin loading times:\n" +
-                $"total: {(double)totalSW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{_cacheCount}]\n" +
-                $"4k: {(double)k4SW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{k4CacheHits}]\n" +
-                $"7k: {(double)k7SW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{k7CacheHits - k4CacheHits}]",
-            LogType.Runtime);
+                $"total: {(double)totalSW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{_cacheCount}]\n" + keyTimeString,
+                LogType.Runtime
+            );
         }
 
         /// <summary>

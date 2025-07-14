@@ -766,11 +766,6 @@ namespace Quaver.Shared.Screens.Results
 
             GameMode mode = screen.Map.Mode;
 
-            if (mode != GameMode.Keys4 || mode != GameMode.Keys7){
-                Logger.Important($"{skipping} map not 4 or 7 keys", LogType.Runtime);
-                return false;
-            }
-
             // Don't submit scores if disconnected from the server completely.
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
             {

@@ -43,7 +43,7 @@ namespace Quaver.Shared.Skinning
 
         private SkinKeys? FallbackKeys { get; set; }
 
-        private static string ModeShorthand(GameMode mode)
+        public static string ModeShorthand(GameMode mode)
         {
             if (mode == 0)
             {
@@ -52,7 +52,7 @@ namespace Quaver.Shared.Skinning
             return ModeHelper.ToShortHand(mode);
         }
 
-        private static string ModeString(GameMode mode)
+        public static string ModeString(GameMode mode)
         {
             if (mode == 0)
             {
@@ -805,7 +805,8 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
-            for (var lane = 0; lane < ModeHelper.MaxKeyCount + 1; lane++)
+            var keyCount = Mode == 0 ? ModeHelper.MaxKeyCount : ModeHelper.ToKeyCount(Mode, true);
+            for (var lane = 0; lane < keyCount; lane++)
             {
                 // Column Colors
                 if (Store.Config != null)
