@@ -607,7 +607,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     var judgements = mapScores[i].OnlineJudgements;
 
-                    if (!ConfigManager.EnableRealtimeOnlineScoreboard.Value || judgements == null || !OnlineManager.IsDonator)
+                    if (/* !ConfigManager.EnableRealtimeOnlineScoreboard.Value || */ judgements == null || !OnlineManager.IsDonator)
                         judgements = new List<Judgement>();
 
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
