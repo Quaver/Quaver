@@ -155,11 +155,11 @@ namespace Quaver.Shared.Online
         public static List<int> FriendsList { get; private set; }
 
         /// <summary>
-        ///     Returns if the user is currently wanting to fetch the realtime leaderboards
+        ///     Returns if the user is currently wanting to fetch the realtime leaderboards (currently unused)
         /// </summary>
-        public static bool ShouldFetchRealtimeLeaderboard => ConfigManager.EnableRealtimeOnlineScoreboard.Value
-                                                             && ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value
-                                                             && CurrentGame == null;
+        //public static bool ShouldFetchRealtimeLeaderboard => ConfigManager.EnableRealtimeOnlineScoreboard.Value
+        //                                                     && ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value
+        //                                                     && CurrentGame == null;
 
         /// <summary>
         ///     Event invoked when the user's friends list has changed

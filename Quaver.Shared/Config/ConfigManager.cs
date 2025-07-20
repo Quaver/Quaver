@@ -117,6 +117,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<DefaultSkins> DefaultSkin { get; private set; }
 
         /// <summary>
+        ///     The default editor skin that will be loaded if the skin property is blank
+        /// </summary>
+        internal static Bindable<DefaultSkins?> DefaultEditorSkin { get; private set; }
+
+        /// <summary>
         ///     The master volume of the game.
         /// </summary>
         internal static BindableInt VolumeGlobal { get; private set; }
@@ -705,6 +710,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<string> EditorNoteSkin { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static BindableInt VisualOffset { get; private set; }
 
         /// <summary>
@@ -721,7 +730,9 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
-        internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
+        
+        //this was removed somewhat recently, keeping as a comment to keep the door open for reimplementation in the future
+        //internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1089,6 +1100,7 @@ namespace Quaver.Shared.Config
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -500, 500, data);
             Skin = ReadValue(@"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
+            DefaultEditorSkin = ReadValue<DefaultSkins?>(@"DefaultEditorSkin", null, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
@@ -1237,6 +1249,7 @@ namespace Quaver.Shared.Config
             EditorLongNoteOpacity = ReadInt(@"EditorLongNoteOpacity", 100, 30, 100, data);
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
+            EditorNoteSkin = ReadValue<string>(@"EditorNoteSkin", null, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
             EditorInvertBeatSnapScroll = ReadValue(@"EditorInvertBeatSnapScroll", false, data);
             EditorLiveMapping = ReadValue(@"EditorLiveMapping", true, data);
@@ -1261,7 +1274,7 @@ namespace Quaver.Shared.Config
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
             ReloadSkinOnChange = ReadValue(@"ReloadSkinOnChange", false, data);
-            EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
+            //EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
             ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
             ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);

@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
@@ -19,10 +20,13 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
+using Wobble.Logging;
+
 
 namespace Quaver.Shared.Skinning
 {
@@ -230,6 +234,19 @@ namespace Quaver.Shared.Skinning
 
         internal bool SongTimeProgressPositionAtTop { get; private set; }
 
+        internal bool ShowMiniSongBar { get; private set; } = false;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayPosX { get; private set; } = 75;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayPosY { get; private set; }
+
+        internal int MiniSongBarDisplayWidthFactor { get; private set; } = 30;
+
+        [FixedScale]
+        internal int MiniSongBarDisplayHeight { get; private set; } = 4;
+
         internal float JudgementCounterAlpha { get; private set; }
 
         internal Color JudgementCounterFontColor { get; private set; }
@@ -291,6 +308,10 @@ namespace Quaver.Shared.Skinning
 
         [FixedScale]
         internal int WidthForNoteHeightScale { get; private set; }
+
+        [FixedScale]
+        internal int CoopPlayfieldPadding { get; private set; } = 92;
+
 
         #endregion
 
@@ -411,11 +432,12 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         /// <param name="store"></param>
         /// <param name="mode"></param>
-        internal SkinKeys(SkinStore store, GameMode mode)
+        /// <param name="defaultSkin"></param>
+        internal SkinKeys(SkinStore store, GameMode mode, string defaultSkin = null)
         {
             Store = store;
             Mode = mode;
-            DefaultSkin = ConfigManager.DefaultSkin?.Value.ToString() ?? DefaultSkins.Bar.ToString();
+            DefaultSkin = (defaultSkin ?? ConfigManager.DefaultSkin?.Value.ToString()) ?? nameof(DefaultSkins.Bar);
 
             // Set the generic config variables, and THEN try to read from
             // skin.ini.
@@ -508,8 +530,8 @@ namespace Quaver.Shared.Skinning
             HoldLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HoldLightingScale"]);
             HitBubbleScale = ConfigHelper.ReadFloat(HitBubbleScale, ini["HitBubbleScale"]);
             HitBubblesAlignment = ConfigHelper.ReadEnum(HitBubblesAlignment, ini["HitBubblesAlignment"]);
-            HitBubblesPosX = ConfigHelper.ReadInt32((int) HitBubblesPosX, ini["HitBubblesPosX"]);
-            HitBubblesPosY = ConfigHelper.ReadInt32((int) HitBubblesPosY, ini["HitBubblesPosY"]);
+            HitBubblesPosX = ConfigHelper.ReadInt32((int)HitBubblesPosX, ini["HitBubblesPosX"]);
+            HitBubblesPosY = ConfigHelper.ReadInt32((int)HitBubblesPosY, ini["HitBubblesPosY"]);
             HitBubblesScale = ConfigHelper.ReadFloat(HitBubblesScale, ini["HitBubblesScale"]);
             HitBubbleBorderPadding = ConfigHelper.ReadFloat(HitBubbleBorderPadding, ini["HitBubbleBorderPadding"]);
             HitBubblePadding = ConfigHelper.ReadFloat(HitBubblePadding, ini["HitBubblePadding"]);
@@ -541,6 +563,11 @@ namespace Quaver.Shared.Skinning
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
+            ShowMiniSongBar = ConfigHelper.ReadBool(ShowMiniSongBar, ini["ShowMiniSongBar"]);
+            MiniSongBarDisplayPosX = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosX, ini["MiniSongBarDisplayPosX"]);
+            MiniSongBarDisplayPosY = ConfigHelper.ReadInt32((int)MiniSongBarDisplayPosY, ini["MiniSongBarDisplayPosY"]);
+            MiniSongBarDisplayWidthFactor = ConfigHelper.ReadInt32((int)MiniSongBarDisplayWidthFactor, ini["MiniSongBarDisplayWidthFactor"]);
+            MiniSongBarDisplayHeight = ConfigHelper.ReadInt32((int)MiniSongBarDisplayHeight, ini["MiniSongBarDisplayHeight"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
             UseJudgementColorForNumbers = ConfigHelper.ReadBool(UseJudgementColorForNumbers, ini["UseJudgementColorForNumbers"]);
@@ -575,6 +602,7 @@ namespace Quaver.Shared.Skinning
             JudgementHitBurstBumpY = ConfigHelper.ReadInt32(JudgementHitBurstBumpY, ini["JudgementHitBurstBumpY"]);
             JudgementHitBurstBumpTime = ConfigHelper.ReadInt32(JudgementHitBurstBumpTime, ini["JudgementHitBurstBumpTime"]);
             WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
+            CoopPlayfieldPadding = ConfigHelper.ReadInt32((int)CoopPlayfieldPadding, ini["CoopPlayfieldPadding"]);
 
             var defaultSkin = ini["DefaultSkin"];
 
@@ -634,7 +662,7 @@ namespace Quaver.Shared.Skinning
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode).ToLower()}/{folder.ToString()}";
-            return SkinStore.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource);
+            return Store.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource);
         }
 
         /// <summary>
@@ -647,21 +675,24 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
+        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, bool noResource = false)
         {
-            string resource;
-            if (shared)
+            string resource = null;
+            if (!noResource)
             {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
-                           $"/{GetResourcePath(element)}";
+                if (shared)
+                {
+                    resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
+                }
+                else
+                {
+                    resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
+                               $"/{GetResourcePath(element)}";
+                }
             }
 
             var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode).ToLower()}/{folder.ToString()}/";
-            return Store.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
+            return Store.LoadSpritesheet(folderName, element, resource, rows, columns);
         }
 
         /// <summary>
@@ -739,19 +770,34 @@ namespace Quaver.Shared.Skinning
                 }
                 else
                 {
-                    const int snapCount = 9;
+                    if (i == 0)
+                    {
 
-                    var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
+                        const int snapCount = 9;
 
-                    NoteHitObjects.Add(objects);
-                    NoteHoldHitObjects.Add(objects);
+                        var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
+                        var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-holdobject-sheet", false, snapCount, 1, true);
+                        NoteHitObjects.Add(hitobjects);
 
+                        // LoadSpriteSheet returns one UserInterface.BlankBox on error
+                        if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
+                            NoteHoldHitObjects.Add(holdobjects);
+                        else
+                            NoteHoldHitObjects.Add(hitobjects);
 
-                    for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
-                        NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+                        for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
+                            NoteHitObjects[i].Add(NoteHitObjects[i].Last());
 
-                    for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
-                        NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
+                        for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
+                            NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
+                    }
+                    else
+                    {
+                        // no need to load the same image several times
+                        // should also reduce memory usage slightly
+                        NoteHitObjects.Add(NoteHitObjects[0]);
+                        NoteHoldHitObjects.Add(NoteHoldHitObjects[0]);
+                    }
                 }
 
                 // LNS

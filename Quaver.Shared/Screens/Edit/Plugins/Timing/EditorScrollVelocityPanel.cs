@@ -454,14 +454,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var point = SelectedScrollVelocities.First();
 
                 multiplier = point.Multiplier;
-                format = $"{multiplier:0.00}";
+                format = $"{multiplier}";
             }
             // All points are the same bpm
             else if (SelectedScrollVelocities.Count > 1 &&
                      SelectedScrollVelocities.All(x => x.Multiplier == SelectedScrollVelocities.First().Multiplier))
             {
                 multiplier = SelectedScrollVelocities.First().Multiplier;
-                format = $"{multiplier:0.00}";
+                format = $"{multiplier}";
             }
 
             ImGui.TextWrapped("Multiplier");

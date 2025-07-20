@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         /// <summary>
         /// </summary>
-        private EditScreen Screen { get; }
+        private EditScreen Screen { get; set; }
 
         /// <inheritdoc />
         /// <summary>

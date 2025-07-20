@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
@@ -22,10 +23,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="cellSize">Determines the size of each region.</param>
+        /// <param name="cellSize">Determines the upper bound of the size of each region.</param>
 		public SpatialHashMap(long cellSize)
 		{
-			CellSize = cellSize;
+			CellSize = Math.Max(1, cellSize);
 			Dictionary = new MultiValueDictionary<long, T>();
 		}
 
