@@ -568,14 +568,14 @@ namespace Quaver.Shared.Screens.Edit
 
             SkinManager.SkinLoaded -= OnSkinLoaded;
             SkinManager.EditorSkinLoaded -= OnEditorSkinLoaded;
-
-            Plugins.ForEach(x => x.Destroy());
-            Plugins.Clear();
-            BuiltInPlugins.Clear();
             
             InputManager?.Destroy();
 
             base.Destroy();
+
+            Plugins.ForEach(x => x.Destroy());
+            Plugins.Clear();
+            BuiltInPlugins.Clear();
 
             View = null;
             ActionManager = null;
