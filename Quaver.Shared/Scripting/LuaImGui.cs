@@ -474,10 +474,8 @@ namespace Quaver.Shared.Scripting
             );
 
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<List<T>>(
-                (_, obj) =>
+                (_, list) =>
                 {
-                    var list = obj;
-
                     DynValue ListIndex(ScriptExecutionContext s, CallbackArguments args) =>
                         DynValue.FromObject(
                             null,
