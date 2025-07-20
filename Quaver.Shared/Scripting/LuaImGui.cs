@@ -35,7 +35,7 @@ namespace Quaver.Shared.Scripting
         /// <summary>Wrapper to prevent lua scripts from accessing the list.</summary>
         /// <typeparam name="T">The type of list to encapsulate and protect.</typeparam>
         /// <param name="List">The list to encapsulate and protect.</param>
-        sealed record InaccessibleList<T>(List<T> List);
+        sealed record InaccessibleList<T>([field: MoonSharpHidden] [property: MoonSharpHidden] List<T> List);
 
         public const int RecursionLimit = 10;
 
@@ -449,6 +449,8 @@ namespace Quaver.Shared.Scripting
 
             static T ToGeneric(DynValue dyn) =>
                 typeof(T) == typeof(string) ? (T)(object)dyn.String : (T)dyn.UserData?.Object;
+
+            UserData.RegisterType<InaccessibleList<T>>();
 
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.Table,
