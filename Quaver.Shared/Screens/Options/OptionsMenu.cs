@@ -342,6 +342,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
                         new OptionsItemKeybind(containerRect, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),
                         new OptionsItemKeybind(containerRect, "Increase Map Offset", ConfigManager.KeyIncreaseMapOffset),
+                        new OptionsItemKeybind(containerRect, "Reset Map Offset", ConfigManager.KeyResetMapOffset),
                     }),
                     new OptionsSubcategory("Gameplay User Interface", new List<OptionsItem>()
                     {

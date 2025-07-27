@@ -906,6 +906,8 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyIncreaseMapOffset { get; private set; }
         internal static Bindable<Keys> KeyDecreaseMapOffset { get; private set; }
+        
+        internal static Bindable<Keys> KeyResetMapOffset { get; private set; }
 
         /// <summary>
         ///     The keys to toggle autoplay during playtesting
@@ -1175,6 +1177,7 @@ namespace Quaver.Shared.Config
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyDecreaseMapOffset = ReadValue(@"KeyDecreaseMapOffset", Keys.OemMinus, data);
             KeyIncreaseMapOffset = ReadValue(@"KeyIncreaseMapOffset", Keys.OemPlus, data);
+            KeyResetMapOffset = ReadValue(@"KeyResetMapOffset", Keys.D0, data);
             KeyTogglePlaytestAutoplay = ReadValue(@"KeyTogglePlaytestAutoplay", Keys.Tab, data);
             KeyScoreboardVisible = ReadValue(@"KeyScoreboardVisible", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
