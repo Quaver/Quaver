@@ -128,7 +128,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             CreateJudgementWindowScrollContainer();
             CreateNameTextbox();
             CreateSliders();
-            CreateComboBreakDropdown();
+            CreateDropdowns();
 
             HandleButtonVisibility();
         }
@@ -402,7 +402,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             NameTextbox.Textbox.Alignment = Alignment.MidLeft;
         }
 
-        private void CreateComboBreakDropdown()
+        private void CreateDropdowns()
         {
             LNMiss = new JudgementWindowLNMissDropdown(JudgementWindowsDatabaseCache.Selected)
             {
