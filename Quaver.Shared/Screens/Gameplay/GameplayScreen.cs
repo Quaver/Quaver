@@ -1665,6 +1665,25 @@ namespace Quaver.Shared.Screens.Gameplay
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
                 }
+                
+                // Handle reset offset to 0
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyResetMapOffset.Value))
+                {
+                    if (KeyboardManager.IsAltDown())
+                    {
+                        ConfigManager.VisualOffset.Value = 0;
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Visual offset has been reset to: {ConfigManager.VisualOffset.Value} ms", null, true);
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value.LocalOffset = 0;
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Local map audio offset has been reset to: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+
+                        ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
+                    }
+                }
             }
         }
 
