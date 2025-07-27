@@ -32,6 +32,11 @@ namespace Quaver.Shared.Scripting
 {
     public class LuaImGui : SpriteImGui
     {
+        /// <summary>Wrapper to prevent lua scripts from accessing the list.</summary>
+        /// <typeparam name="T">The type of list to encapsulate and protect.</typeparam>
+        /// <param name="List">The list to encapsulate and protect.</param>
+        sealed record InaccessibleList<T>([field: MoonSharpHidden] [property: MoonSharpHidden] List<T> List);
+
         public const int RecursionLimit = 10;
 
         private const int IterationLimit = 10;
@@ -442,12 +447,35 @@ namespace Quaver.Shared.Scripting
                     "For performance reasons, this table must be immutable. Consider performing a deep copy to a new table to mutate instead."
                 );
 
-            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion(
-                typeof(List<T>),
-                (_, obj) =>
-                {
-                    var list = (List<T>)obj;
+            static T ToGeneric(DynValue dyn) =>
+                typeof(T) == typeof(string) ? (T)(object)dyn.String : (T)dyn.UserData?.Object;
 
+            UserData.RegisterType<InaccessibleList<T>>();
+
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Table,
+                typeof(List<T>),
+                x =>
+                {
+                    if (x.Table?.MetaTable?.Get("__quaver_list")?.UserData?.Object is InaccessibleList<T> fromQuaver)
+                        return fromQuaver.List;
+
+                    List<T> ret = new();
+
+                    if (x.Table?.MetaTable?.Get("__ipairs")?.Function is { } function)
+                        for (var i = 1; function.Call(i)?.Tuple is { Length: >= 2 } array; i = (int)array[0].Number)
+                            ret.Add(ToGeneric(array[1]));
+                    else
+                        for (var i = 1; ToGeneric(x.Table?.Get(i)) is { } t; i++)
+                            ret.Add(t);
+
+                    return ret;
+                }
+            );
+
+            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<List<T>>(
+                (_, list) =>
+                {
                     DynValue ListIndex(ScriptExecutionContext s, CallbackArguments args) =>
                         DynValue.FromObject(
                             null,
@@ -479,7 +507,8 @@ namespace Quaver.Shared.Scripting
                                 ["__ipairs"] = ListPairs,
                                 ["__index"] = ListIndex,
                                 ["__newindex"] = ListNewIndex,
-                            }
+                                ["__quaver_list"] = new InaccessibleList<T>(list),
+                            },
                         }
                     );
                 }
