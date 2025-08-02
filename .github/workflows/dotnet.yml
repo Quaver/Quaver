@@ -5,9 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "ui-redesign" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "ui-redesign" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
