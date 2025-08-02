@@ -45,6 +45,8 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Platform;
+using System.Diagnostics;
+using Quaver.Shared.Screens.Gameplay.UI.Offset;
 
 namespace Quaver.Shared.Screens.Results
 {
@@ -705,6 +707,10 @@ namespace Quaver.Shared.Screens.Results
         {
             var processor = screen.Ruleset.ScoreProcessor;
 
+            if (screen.FailedDuringGameplay)
+                processor.Mods |= ModIdentifier.NoFail;
+                replay.Mods |= ModIdentifier.NoFail;
+
             // Handle which profile username is going to be attached to the score/replay
             var profileName = UserProfileDatabaseCache.Selected.Value.Username;
             var username = !string.IsNullOrEmpty(profileName) ? profileName : ConfigManager.Username.Value;
@@ -726,6 +732,9 @@ namespace Quaver.Shared.Screens.Results
                 score.LocalProfileId = UserProfileDatabaseCache.Selected.Value.Id;
 
             var scoreId = -1;
+
+            
+            
 
             try
             {
@@ -765,11 +774,11 @@ namespace Quaver.Shared.Screens.Results
             const string skipping = "Skipping online score submission due to:";
 
             // Don't submit scores if disconnected from the server completely.
-            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
+             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
             {
                 Logger.Important($"{skipping} being fully disconnected", LogType.Network);
                 return false;
-            }
+            } 
 
             // Don't submit scores that have unranked modifiers
             if (ModManager.CurrentModifiersList.Any(x => !x.Ranked()))

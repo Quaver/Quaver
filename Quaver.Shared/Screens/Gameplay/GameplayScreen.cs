@@ -1005,8 +1005,6 @@ namespace Quaver.Shared.Screens.Gameplay
                     NotificationManager.Show(NotificationLevel.Warning,
                         "WARNING! Your score will not be submitted due to failing during gameplay!", null, true);
                 FailedDuringGameplay = true;
-                ReplayCapturer.Replay.Mods |= ModIdentifier.NoFail;
-                Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
             }
             if (!Failed || FailureHandled)
                 return;
