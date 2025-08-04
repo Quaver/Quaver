@@ -5,12 +5,10 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
-using Wobble.Helpers;
 using Wobble.Input;
 using Wobble.Managers;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
@@ -19,6 +17,8 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 {
     public class OptionsItemKeybindMultiple : OptionsItem
     {
+        private IconButton ResetButton { get; }
+
         /// <summary>
         /// </summary>
         private IconButton Button { get; }
@@ -47,15 +47,44 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="name"></param>
         /// <param name="keys"></param>
         /// <param name="isOptionFocused"></param>
-        public OptionsItemKeybindMultiple(RectangleF containerRect, string name, List<Bindable<GenericKey>> keys) : base(containerRect, name)
+        public OptionsItemKeybindMultiple(RectangleF containerRect, string name, List<Bindable<GenericKey>> keys, List<GenericKey>? defaults = null) : base(containerRect, name)
         {
             BindedKeys = keys;
+
+            ResetButton = new IconButton(UserInterface.HubDownloadRetry)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -Name.X,
+                Size = new ScalableVector2(20, 20),
+                Tint = ColorHelper.HexToColor("#ffffff"),
+                UsePreviousSpriteBatchOptions = true
+            };
+
+            ResetButton.Clicked += (sender, args) =>
+            {
+                if (defaults == null || defaults.Count != keys.Count)
+                {
+                    foreach (var key in BindedKeys)
+                    {
+                        key.Value = new GenericKey() { KeyboardKey = Keys.None };
+                    }
+                    return;
+                }
+
+                for (int i = 0; i < BindedKeys.Count; i++)
+                {
+                    BindedKeys[i].Value = defaults[i];
+                }
+
+                InitializeText(BindedKeys.Select(x => x.Value).ToList());
+            };
 
             Button = new IconButton(UserInterface.DropdownClosed)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = -Name.X,
+                X = -(Name.X * 2 + ResetButton.Width),
                 Size = new ScalableVector2(250, 35),
                 Tint = ColorHelper.HexToColor("#181818"),
                 UsePreviousSpriteBatchOptions = true
@@ -106,6 +135,8 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 text += key.GetName() + " ";
 
             Text.Text = text;
+
+            Button.Width = Text.Width + 32;
         }
 
         /// <summary>
@@ -115,6 +146,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             Focused = true;
             Text.Text = $"Press {BindedKeys.Count} keys...";
             Text.Tint = Color.Crimson;
+            Button.Width = Text.Width + 32;
         }
 
         /// <summary>

@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
                 "All"
             };
 
-            foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
+            foreach (GameMode mode in ModeHelper.AllModes)
                 values.Add(ModeHelper.ToLongHand(mode));
 
             return values;

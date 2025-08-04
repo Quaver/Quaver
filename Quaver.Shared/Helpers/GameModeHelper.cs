@@ -72,7 +72,7 @@ namespace Quaver.Shared.Helpers
                 }
 
                 sprite.Image = UserInterface.Keys47Panel;
-                text.Text = "4K / 7K";
+                text.Text = "4K/7K";
                 return;
             }
 
@@ -81,7 +81,22 @@ namespace Quaver.Shared.Helpers
             sprite.Image = UserInterface.ModePanel;
             sprite.Tint = color;
 
-            var modesText = modes.Count == 1 ? ModeHelper.ToShortHand(modes[0]) : "MIXED";
+            string modesText = "";
+
+            if (modes.Count <= 5)
+            {
+                for (int i = 0; i < modes.Count; i++)
+                {
+                    if (i != 0) modesText += "/";
+
+                    modesText += modes.Count <= 3 ? ModeHelper.ToShortHand(modes[i]) : ModeHelper.ToKeyCount(modes[i]);
+                }
+            }
+            else
+            {
+                modesText = "MIXED";
+            }
+
 
             text.Text = modesText;
         }

@@ -1,6 +1,7 @@
 using System;
 using MonoGame.Extended;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Profiles;
@@ -37,7 +38,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.Clicked += (sender, args) =>
             {
-                foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
+                foreach (GameMode mode in ModeHelper.AllModes)
                     UpdateSuggestedDifficulty(mode);
 
                 NotificationManager.Show(NotificationLevel.Info, $"Suggested difficulties have been recalculated.");
