@@ -45,8 +45,6 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Platform;
-using System.Diagnostics;
-using Quaver.Shared.Screens.Gameplay.UI.Offset;
 
 namespace Quaver.Shared.Screens.Results
 {
