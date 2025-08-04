@@ -14,6 +14,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -27,6 +28,7 @@ using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -509,6 +511,49 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     }
 
                     ImGui.PopStyleColor();
+                }
+
+                ImGui.EndMenu();
+            }
+            
+            if (ImGui.BeginMenu("Editor NoteSkin"))
+            {
+                if (ImGui.MenuItem("Current skin", "", ConfigManager.EditorNoteSkin.Value == null))
+                {
+                    Transitioner.FadeIn();
+                    ConfigManager.EditorNoteSkin.Value = null;
+                    SkinManager.TimeEditorSkinReloadRequested = GameBase.Game.TimeRunning;
+                }
+
+                foreach (var skinName in SkinStore.GetSkins().Where(skinName => ImGui.MenuItem(skinName, "",
+                             ConfigManager.EditorNoteSkin.Value == skinName)))
+                {
+                    Transitioner.FadeIn();
+                    ConfigManager.EditorNoteSkin.Value = skinName;
+                    SkinManager.TimeEditorSkinReloadRequested = GameBase.Game.TimeRunning;
+                }
+
+                ImGui.EndMenu();
+            }
+            
+            if (ImGui.BeginMenu("Editor Default Skin"))
+            {
+                if (ImGui.MenuItem("Current default skin", "", ConfigManager.DefaultEditorSkin.Value == null))
+                {
+                    Transitioner.FadeIn();
+                    ConfigManager.DefaultEditorSkin.Value = null;
+                    SkinManager.TimeEditorSkinReloadRequested = GameBase.Game.TimeRunning;
+                }
+
+                foreach (DefaultSkins defaultSkin in Enum.GetValues(typeof(DefaultSkins)))
+                {
+                    if (!ImGui.MenuItem(defaultSkin.ToString(), "",
+                            ConfigManager.DefaultEditorSkin.Value == defaultSkin))
+                        continue;
+
+                    Transitioner.FadeIn();
+                    ConfigManager.DefaultEditorSkin.Value = defaultSkin;
+                    SkinManager.TimeEditorSkinReloadRequested = GameBase.Game.TimeRunning;
                 }
 
                 ImGui.EndMenu();

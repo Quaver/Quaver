@@ -124,6 +124,8 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public AudioSampleChannel ApplauseChannel { get; }
 
+        private bool removeNoFailOnExit = false;
+
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
@@ -248,6 +250,9 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public override void Destroy()
         {
+            if (removeNoFailOnExit)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
+
             if (ApplauseChannel != null && ApplauseChannel.HasPlayed && !ApplauseChannel.HasStopped)
                 ApplauseChannel.Stop();
 
@@ -556,6 +561,13 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void InitializeGameplayResultsScreen(GameplayScreen screen)
         {
+            if (screen.FailedDuringGameplay && ConfigManager.KeepPlayingUponFailing.Value)
+            {
+                ModManager.AddMod(ModIdentifier.NoFail);
+                screen.Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
+                removeNoFailOnExit = true;
+            }
+
             Processor = new Bindable<ScoreProcessor>(screen.Ruleset.ScoreProcessor)
             {
                 Value =

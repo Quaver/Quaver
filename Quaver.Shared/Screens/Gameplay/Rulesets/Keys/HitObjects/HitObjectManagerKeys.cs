@@ -606,6 +606,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // The release window. (Window * Multiplier)
             var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
 
+            // The judgement that is given when a user completely fails to release.
+            var missedReleaseJudgement = Ruleset.ScoreProcessor.Windows.LNMissJudgement.Value;
+
             // Check to see if any LN releases were missed (Counts as a good instead of a miss.)
             foreach (var lane in HeldLongNoteLanes)
             {
@@ -613,9 +616,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 {
                     // Current hit object
                     var info = lane.Dequeue();
-
-                    // The judgement that is given when a user completely fails to release.
-                    var missedReleaseJudgement = Judgement.Good;
 
                     // Add new hit stat data and update score
                     var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info.HitObjectInfo, info.EndTime, missedReleaseJudgement,

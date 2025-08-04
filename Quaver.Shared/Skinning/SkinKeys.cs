@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
+using Wobble.Logging;
 
 
 namespace Quaver.Shared.Skinning
@@ -453,12 +454,13 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         /// <param name="store"></param>
         /// <param name="mode"></param>
-        internal SkinKeys(SkinStore store, GameMode mode, SkinKeys? fallback)
+        /// <param name="defaultSkin"></param>
+        internal SkinKeys(SkinStore store, GameMode mode, SkinKeys? fallback, string defaultSkin = null)
         {
             Store = store;
             Mode = mode;
             FallbackKeys = fallback;
-            DefaultSkin = ConfigManager.DefaultSkin?.Value.ToString() ?? DefaultSkins.Bar.ToString();
+            DefaultSkin = (defaultSkin ?? ConfigManager.DefaultSkin?.Value.ToString()) ?? nameof(DefaultSkins.Bar);
 
             // Set the generic config variables, and THEN try to read from
             // skin.ini.

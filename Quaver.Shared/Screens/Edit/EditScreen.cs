@@ -115,9 +115,14 @@ namespace Quaver.Shared.Screens.Edit
         public EditorVisualTestBackground BackgroundStore { get; }
 
         /// <summary>
-        ///     The currently active skin
+        ///     The currently active skin (for gameplay preview)
         /// </summary>
         public Bindable<SkinStore> Skin { get; private set; }
+
+        /// <summary>
+        ///     The currently active skin (for editor previw)
+        /// </summary>
+        public Bindable<SkinStore> EditorSkin { get; private set; }
 
         /// <summary>
         ///     The index of the hitobjects in which hitsounds are being played
@@ -395,6 +400,7 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             LoadSkin();
+            LoadEditorSkin();
             SetHitSoundObjectIndex();
             LoadPlugins();
 
@@ -402,6 +408,7 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.Pitched.ValueChanged += OnPitchedChanged;
 
             SkinManager.SkinLoaded += OnSkinLoaded;
+            SkinManager.EditorSkinLoaded += OnEditorSkinLoaded;
             GameBase.Game.Window.FileDropped += OnFileDropped;
             ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
             ActionManager.TimingGroupDeleted += ActionManagerOnTimingGroupDeleted;
@@ -498,6 +505,8 @@ namespace Quaver.Shared.Screens.Edit
             Track?.Dispose();
             Skin?.Value?.Dispose();
             Skin?.Dispose();
+            EditorSkin?.Value?.Dispose();
+            EditorSkin?.Dispose();
             UneditableMap?.Dispose();
             BeatSnap?.Dispose();
             BackgroundStore?.Dispose();
@@ -558,14 +567,15 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
 
             SkinManager.SkinLoaded -= OnSkinLoaded;
-
-            Plugins.ForEach(x => x.Destroy());
-            Plugins.Clear();
-            BuiltInPlugins.Clear();
+            SkinManager.EditorSkinLoaded -= OnEditorSkinLoaded;
             
             InputManager?.Destroy();
 
             base.Destroy();
+
+            Plugins.ForEach(x => x.Destroy());
+            Plugins.Clear();
+            BuiltInPlugins.Clear();
 
             View = null;
             ActionManager = null;
@@ -619,6 +629,18 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private void LoadEditorSkin()
+        {
+            EditorSkin = new Bindable<SkinStore>(SkinManager.EditorSkin) { Value = SkinManager.EditorSkin };
+
+            if (EditorSkin.Value != null)
+                return;
+
+            EditorSkin.Value = new SkinStore(null, true);
+        }
+
+        /// <summary>
+        /// </summary>
         private void HandleInput()
         {
             if (Exiting)
@@ -665,7 +687,7 @@ namespace Quaver.Shared.Screens.Edit
                         // ignore and play
                     }
 
-                    HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
+                    HitObjectManager.PlayObjectHitSounds(obj, EditorSkin.Value, HitsoundVolume.Value);
                     HitsoundObjectIndex = i + 1;
                 }
                 else
@@ -1862,7 +1884,22 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => Skin.Value = SkinManager.Skin;
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e)
+        {
+            if (EditorSkin.Value != SkinManager.EditorSkin)
+                EditorSkin.Value = SkinManager.EditorSkin;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnEditorSkinLoaded(object sender, SkinReloadedEventArgs e)
+        {
+            if (EditorSkin.Value != SkinManager.EditorSkin)
+                EditorSkin.Value = SkinManager.EditorSkin;
+        }
 
         /// <summary>
         ///     Dragging backgrounds into the window
