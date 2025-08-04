@@ -126,6 +126,8 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public AudioSampleChannel ApplauseChannel { get; }
 
+        private bool removeNoFailOnExit = false;
+
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
@@ -250,6 +252,9 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public override void Destroy()
         {
+            if (removeNoFailOnExit)
+                ModManager.RemoveMod(ModIdentifier.NoFail);
+
             if (ApplauseChannel != null && ApplauseChannel.HasPlayed && !ApplauseChannel.HasStopped)
                 ApplauseChannel.Stop();
 
@@ -558,6 +563,13 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void InitializeGameplayResultsScreen(GameplayScreen screen)
         {
+            if (screen.FailedDuringGameplay && ConfigManager.KeepPlayingUponFailing.Value)
+            {
+                ModManager.AddMod(ModIdentifier.NoFail);
+                screen.Ruleset.ScoreProcessor.Mods |= ModIdentifier.NoFail;
+                removeNoFailOnExit = true;
+            }
+
             Processor = new Bindable<ScoreProcessor>(screen.Ruleset.ScoreProcessor)
             {
                 Value =
@@ -707,10 +719,6 @@ namespace Quaver.Shared.Screens.Results
         {
             var processor = screen.Ruleset.ScoreProcessor;
 
-            if (screen.FailedDuringGameplay)
-                processor.Mods |= ModIdentifier.NoFail;
-                replay.Mods |= ModIdentifier.NoFail;
-
             // Handle which profile username is going to be attached to the score/replay
             var profileName = UserProfileDatabaseCache.Selected.Value.Username;
             var username = !string.IsNullOrEmpty(profileName) ? profileName : ConfigManager.Username.Value;
@@ -732,9 +740,6 @@ namespace Quaver.Shared.Screens.Results
                 score.LocalProfileId = UserProfileDatabaseCache.Selected.Value.Id;
 
             var scoreId = -1;
-
-            
-            
 
             try
             {
@@ -774,11 +779,11 @@ namespace Quaver.Shared.Screens.Results
             const string skipping = "Skipping online score submission due to:";
 
             // Don't submit scores if disconnected from the server completely.
-             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
+            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
             {
                 Logger.Important($"{skipping} being fully disconnected", LogType.Network);
                 return false;
-            } 
+            }
 
             // Don't submit scores that have unranked modifiers
             if (ModManager.CurrentModifiersList.Any(x => !x.Ranked()))
