@@ -232,7 +232,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitError();
                 CreateHitBubbles();
                 CreateJudgementHitBurst();
-                CreateHitLighting();
 
                 if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale &&
                     ConfigManager.EnableBattleRoyaleAlerts.Value)
@@ -249,6 +248,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     CreateReceptorsAndLighting();
                     CreateHitPositionOverlay();
                 }
+                CreateHitLighting();
             }
 
             CreateHealthBar();
