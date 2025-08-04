@@ -1179,8 +1179,6 @@ namespace Quaver.Shared.Config
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
             ReloadSkinOnChange = ReadValue(@"ReloadSkinOnChange", false, data);
-            // ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
-            // ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
             //EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
             SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
