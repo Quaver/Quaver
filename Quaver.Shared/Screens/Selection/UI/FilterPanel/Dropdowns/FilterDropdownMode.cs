@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns;
@@ -30,12 +33,16 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetDropdownItems() => new List<string>
-        {
-            "All",
-            "4 Keys",
-            "7 Keys",
-        };
+        private static List<string> GetDropdownItems() {
+            var values = new List<string>(){
+                "All"
+            };
+
+            foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
+                values.Add(ModeHelper.ToLongHand(mode));
+
+            return values;
+        }
 
         /// <summary>
         ///     Retrieves the index of the selected value
@@ -58,7 +65,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             if (ConfigManager.SelectFilterGameModeBy == null)
                 return;
 
-            ConfigManager.SelectFilterGameModeBy.Value = (SelectFilterGameMode) e.Index;
+            ConfigManager.SelectFilterGameModeBy.Value = (GameMode) e.Index;
         }
     }
 }

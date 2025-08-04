@@ -75,7 +75,7 @@ namespace Quaver.Shared.Database.Maps
                 searched = SeparateMapsIntoOwnMapsets(searched);
 
             var separateMapsets = ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists;
-            var gameModes = musicPlayer ? new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) { Value = SelectFilterGameMode.All } : null;
+            var gameModes = musicPlayer ? new Bindable<GameMode>(0) { Value = 0 } : null;
             var orderMapsetsBy = musicPlayer ? ConfigManager.MusicPlayerOrderMapsBy : null;
 
             return OrderMapsetsByConfigValue(searched, separateMapsets, gameModes, orderMapsetsBy);
@@ -253,7 +253,7 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         internal static List<Mapset> OrderMapsetsByConfigValue(List<Mapset> mapsets, bool separateMapsets = true,
-            Bindable<SelectFilterGameMode> gameMode = null, Bindable<OrderMapsetsBy> orderMapsetsBy = null)
+            Bindable<GameMode> gameMode = null, Bindable<OrderMapsetsBy> orderMapsetsBy = null)
         {
             // Default to song select filter options
             if (gameMode == null)
@@ -266,23 +266,12 @@ namespace Quaver.Shared.Database.Maps
 
             switch (gameMode?.Value)
             {
-                case SelectFilterGameMode.All:
+                case 0:
                     break;
-                // Remove any maps that aren't 7K
-                case SelectFilterGameMode.Keys4:
+                default:
                     mapsets.ForEach(x =>
-                    {
-                        x.Maps.RemoveAll(y => y.Mode != GameMode.Keys4);
-
-                        if (x.Maps.Count == 0)
-                            mapsetsToRemove.Add(x);
-                    });
-                    break;
-                // Remove any maps that aren't 7K
-                case SelectFilterGameMode.Keys7:
-                    mapsets.ForEach(x =>
-                    {
-                        x.Maps.RemoveAll(y => y.Mode != GameMode.Keys7);
+                        {
+                        x.Maps.RemoveAll(y => y.Mode != gameMode?.Value);
 
                         if (x.Maps.Count == 0)
                             mapsetsToRemove.Add(x);

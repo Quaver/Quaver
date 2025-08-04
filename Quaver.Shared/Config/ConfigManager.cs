@@ -288,7 +288,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Dictates how to filter song select mpas
         /// </summary>
-        internal static Bindable<SelectFilterGameMode> SelectFilterGameModeBy { get; private set; }
+        internal static Bindable<GameMode> SelectFilterGameModeBy { get; private set; }
 
         /// <summary>
         ///     The currently selected game mode.
@@ -1113,7 +1113,7 @@ namespace Quaver.Shared.Config
             LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
             EnableBattleRoyaleBackgroundFlashing = ReadValue(@"EnableBattleRoyaleBackgroundFlashing", true, data);
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
-            SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", SelectFilterGameMode.All, data);
+            SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", (GameMode)0, data);
             DisplayUnbeatableScoresDuringGameplay = ReadValue(@"DisplayUnbeatableScoresDuringGameplay", true, data);
             ShowSpectators = ReadValue(@"ShowSpectators", true, data);
             JudgementWindows = ReadValue("JudgementWindows", "", data);
