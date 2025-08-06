@@ -161,7 +161,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     hitObject.LongNoteEndSprite.FadeToColor(newTint, Easing.OutQuad, 250);
                 }
 
-                var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+                var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
 
                 playfield.Stage.HitContainer.Children.ForEach(x =>
                 {
@@ -303,8 +303,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ResetHitObjectInfo();
 
             AudioEngine.Track.RateChanged += OnRateChanged;
-            ConfigManager.ScrollSpeed4K.ValueChanged += On4KScrollSpeedChanged;
-            ConfigManager.ScrollSpeed7K.ValueChanged += On7KScrollSpeedChanged;
+            ConfigManager.ScrollSpeeds.ForEach(speed => speed.Value.ValueChanged += OnScrollSpeedChanged);
         }
 
         public override void Destroy()
@@ -312,8 +311,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             AudioEngine.Track.RateChanged -= OnRateChanged;
 
             // ReSharper disable twice DelegateSubtraction
-            ConfigManager.ScrollSpeed4K.ValueChanged -= On4KScrollSpeedChanged;
-            ConfigManager.ScrollSpeed7K.ValueChanged -= On7KScrollSpeedChanged;
+            ConfigManager.ScrollSpeeds.ForEach(speed => speed.Value.ValueChanged -= OnScrollSpeedChanged);
 
             base.Destroy();
         }
@@ -327,7 +325,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (Ruleset.Screen.IsSongSelectPreview)
                 return;
 
-            var inputManager = ((KeysInputManager) Ruleset.InputManager).ReplayInputManager;
+            var inputManager = ((KeysInputManager)Ruleset.InputManager).ReplayInputManager;
 
             if (inputManager == null)
                 return;
@@ -754,8 +752,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         private void OnRateChanged(object sender, TrackRateChangedEventArgs e) => ForceUpdateLNSize();
 
-        private void On7KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
-
-        private void On4KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
+        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
     }
 }

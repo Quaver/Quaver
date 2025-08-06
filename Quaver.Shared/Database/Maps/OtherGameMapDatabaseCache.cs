@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using osu.Shared;
 using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps.Etterna;
@@ -182,8 +183,8 @@ namespace Quaver.Shared.Database.Maps
                 currentlyCached.RemoveAll(x => x.OriginalGame == OtherGameMapDatabaseGame.Etterna);
 
             // Make sure there're no duplicate Checksums
-            osuMaps = ListHelper.DistinctionBy(osuMaps, x => x.Md5Checksum).ToList();
-            etternaCharts = ListHelper.DistinctionBy(etternaCharts, x => x.Md5Checksum).ToList();
+            osuMaps = Quaver.Shared.Helpers.ListHelper.DistinctionBy(osuMaps, x => x.Md5Checksum).ToList();
+            etternaCharts = Quaver.Shared.Helpers.ListHelper.DistinctionBy(etternaCharts, x => x.Md5Checksum).ToList();
 
             // Creating hash objects
             var osuMapsHash = osuMaps.ToDictionary(x => x.Md5Checksum);
@@ -330,7 +331,7 @@ namespace Quaver.Shared.Database.Maps
                         Source = map.SongSource,
                         Tags = map.SongTags,
                         // ReSharper disable once CompareOfFloatsByEqualityOperator
-                        Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
+                        Mode = ModeHelper.FromKeyCount((int)map.CircleSize),
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
                         OriginalGame = OtherGameMapDatabaseGame.Osu,

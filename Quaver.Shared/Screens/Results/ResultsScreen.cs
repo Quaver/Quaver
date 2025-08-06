@@ -721,7 +721,7 @@ namespace Quaver.Shared.Screens.Results
             var profileName = UserProfileDatabaseCache.Selected.Value.Username;
             var username = !string.IsNullOrEmpty(profileName) ? profileName : ConfigManager.Username.Value;
 
-            var scrollSpeed = Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+            var scrollSpeed = ConfigManager.ScrollSpeeds[Map.Mode].Value;
             var rankedAccuracy = screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy;
 
             var score = Score.FromScoreProcessor(processor, screen.MapHash, username, scrollSpeed,
@@ -775,6 +775,8 @@ namespace Quaver.Shared.Screens.Results
         private bool SubmitOnlineScore(GameplayScreen screen, Replay replay)
         {
             const string skipping = "Skipping online score submission due to:";
+
+            GameMode mode = screen.Map.Mode;
 
             // Don't submit scores if disconnected from the server completely.
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)

@@ -81,6 +81,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private Sprite GameModes { get; set; }
 
         /// <summary>
+        ///    The game mode text
+        /// </summary>
+        private SpriteTextPlus GameModeText { get; set; }
+
+        /// <summary>
         /// </summary>
         private SpriteTextPlus ByText { get; set; }
 
@@ -163,7 +168,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 var diff = map.DifficultyFromMods(ModManager.Mods);
 
                 DifficultyName.Text = $"{StringHelper.RatingToString(diff)} - {map.DifficultyName}";
-                DifficultyName.Tint = ColorHelper.DifficultyToColor((float) diff);
+                DifficultyName.Tint = ColorHelper.DifficultyToColor((float)diff);
                 DifficultyName.Visible = true;
 
                 DifficultyName.TruncateWithEllipsis(260);
@@ -214,7 +219,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Creator.X = ByText.X + ByText.Width + ArtistCreatorSpacingX;
 
             RankedStatusSprite.Image = GetRankedStatusImage();
-            GameModes.Image = GetGameModeImage();
+            GameModeHelper.SetGameModeTexture(item.Maps, GameModes, GameModeText);
 
             if (ParentMapset.IsSelected)
                 Select(true);
@@ -229,7 +234,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateButton()
         {
-            var container = (SongSelectContainer<Mapset>) ParentMapset.Container;
+            var container = (SongSelectContainer<Mapset>)ParentMapset.Container;
 
             Button = new SongSelectContainerButton(SkinManager.Skin?.SongSelect?.MapsetHovered ?? WobbleAssets.WhiteBox, container.ClickableArea)
             {
@@ -245,7 +250,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             Button.RightClicked += (sender, args) =>
             {
-                var game = (QuaverGame) GameBase.Game;
+                var game = (QuaverGame)GameBase.Game;
 
                 if (MapsetHelper.IsSingleDifficultySorted())
                     game?.CurrentScreen?.ActivateRightClickOptions(new MapRightClickOptions(ParentMapset));
@@ -361,6 +366,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
                 UsePreviousSpriteBatchOptions = true
             };
+
+            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
+            {
+                Parent = GameModes,
+                Alignment = Alignment.MidCenter,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Color.White,
+            };
         }
 
         /// <summary>
@@ -414,7 +427,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             switch (ParentMapset.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
-                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ??  UserInterface.StatusNotSubmitted;
+                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
                 case RankedStatus.Unranked:
                     return SkinManager.Skin?.SongSelect?.StatusUnranked ?? UserInterface.StatusUnranked;
                 case RankedStatus.Ranked:
@@ -427,36 +440,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     Gets the image for the game mode(s)
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D GetGameModeImage()
-        {
-            var has4k = false;
-            var has7K = false;
-
-            foreach (var map in ParentMapset.Item.Maps)
-            {
-                switch (map.Mode)
-                {
-                    case GameMode.Keys4:
-                        has4k = true;
-                        break;
-                    case GameMode.Keys7:
-                        has7K = true;
-                        break;
-                }
-            }
-
-            if (has4k && !has7K)
-                return SkinManager.Skin?.SongSelect?.GameMode4K ?? UserInterface.Keys4Panel;
-            if (has7K && !has4k)
-                return SkinManager.Skin?.SongSelect?.GameMode7K ?? UserInterface.Keys7Panel;
-
-            return SkinManager.Skin?.SongSelect?.GameMode4K7K ?? UserInterface.BothModesPanel;
-        }
-
-        /// <summary>
         ///     Performs an animation when hovered over the button
         /// </summary>
         /// <param name="gameTime"></param>
@@ -465,7 +448,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             var targetAlpha = Button.IsHovered ? (SkinManager.Skin?.SongSelect?.MapsetPanelHoveringAlpha ?? 0.35f) : 0;
 
             Button.Alpha = MathHelper.Lerp(Button.Alpha, targetAlpha,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
+                (float)Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
         }
 
         /// <summary>
@@ -515,7 +498,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (instantSizeChange)
                 Width = ParentMapset.Width;
             else
-                ChangeWidthTo((int) ParentMapset.Width, Easing.OutQuint, time + 400);
+                ChangeWidthTo((int)ParentMapset.Width, Easing.OutQuint, time + 400);
         }
 
         /// <summary>
@@ -565,7 +548,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (changeWidthInstantly)
                 Width = ParentMapset.Width - 50;
             else
-                ChangeWidthTo((int) ParentMapset.Width - 50, Easing.OutQuint, time + 400);
+                ChangeWidthTo((int)ParentMapset.Width - 50, Easing.OutQuint, time + 400);
         }
 
         /// <summary>
@@ -575,7 +558,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             if (ParentMapset.Container != null)
             {
-                var container = (MapsetScrollContainer) ParentMapset.Container;
+                var container = (MapsetScrollContainer)ParentMapset.Container;
                 container.SelectedIndex.Value = ParentMapset.Index;
 
                 // If a mapset is clicked, then we want to take the user to the maps container
@@ -584,7 +567,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                     // Go straight to gameplay if sorting by diff
                     if (MapsetHelper.IsSingleDifficultySorted())
                     {
-                        var game = (QuaverGame) GameBase.Game;
+                        var game = (QuaverGame)GameBase.Game;
                         var screen = game.CurrentScreen as SelectionScreen;
                         screen?.ExitToGameplay();
                     }

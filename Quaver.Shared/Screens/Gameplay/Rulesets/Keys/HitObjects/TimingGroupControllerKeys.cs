@@ -32,11 +32,7 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     {
         get
         {
-            var speed = ConfigManager.ScrollSpeed4K;
-            if (MapManager.Selected.Value.Qua != null)
-                speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4
-                    ? ConfigManager.ScrollSpeed4K
-                    : ConfigManager.ScrollSpeed7K;
+            var speed = ConfigManager.ScrollSpeeds[MapManager.Selected.Value.Qua != null ? MapManager.Selected.Value.Qua.Mode : GameMode.Keys4];
 
             if (!Manager.HasSignificantSVs)
                 return speed.Value;

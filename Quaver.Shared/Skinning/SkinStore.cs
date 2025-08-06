@@ -19,6 +19,7 @@ using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using MoreLinq.Extensions;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
@@ -306,8 +307,7 @@ namespace Quaver.Shared.Skinning
         internal SkinStore(string skin = null, bool editor = false)
         {
             Stopwatch totalSW = new();
-            Stopwatch k4SW = new();
-            Stopwatch k7SW = new();
+            Dictionary<GameMode, (Stopwatch sw, int cacheHits)> keyTimingInfo = new();
             totalSW.Restart();
 
             Skin = string.IsNullOrEmpty(skin) ? ConfigManager.Skin?.Value : skin;
@@ -315,16 +315,19 @@ namespace Quaver.Shared.Skinning
 
             // Load up Keys game mode skins.
             Keys = new Dictionary<GameMode, SkinKeys>();
+            // keyCount 0 is the shared keys folder
+            for (var keyCount = 0; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
+            {
+                int cacheCountStart = _cacheCount;
+                Stopwatch sw = new();
+                sw.Restart();
 
-            k4SW.Restart();
-            Keys.Add(GameMode.Keys4, new SkinKeys(this, GameMode.Keys4, editor ? ConfigManager.DefaultEditorSkin.Value?.ToString() : null));
-            k4SW.Stop();
-            int k4CacheHits = _cacheCount;
-            k7SW.Restart();
-            Keys.Add(GameMode.Keys7, new SkinKeys(this, GameMode.Keys7, editor ? ConfigManager.DefaultEditorSkin.Value?.ToString() : null));
-            k7SW.Stop();
-            int k7CacheHits = _cacheCount;
+                var mode = keyCount == 0 ? 0 : ModeHelper.FromKeyCount(keyCount);
+                Keys.Add(mode, new SkinKeys(this, mode, keyCount == 0 ? null : Keys[0], editor ? ConfigManager.DefaultEditorSkin.Value?.ToString() : null));
 
+                sw.Stop();
+                keyTimingInfo.Add(mode, (sw, _cacheCount - cacheCountStart));
+            }
 
             try
             {
@@ -346,11 +349,20 @@ namespace Quaver.Shared.Skinning
 
             totalSW.Stop();
 
+            string keyTimeString = "";
+            foreach ((GameMode mode, (Stopwatch sw, int cacheHits)) in keyTimingInfo)
+            {
+                if (!string.IsNullOrEmpty(keyTimeString))
+                {
+                    keyTimeString += ", ";
+                }
+                keyTimeString += $"{SkinKeys.ModeShorthand(mode)}:{(double)sw.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00}[{cacheHits}]";
+            }
+
             Logger.Important($"skin loading times:\n" +
-                $"total: {(double)totalSW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{_cacheCount}]\n" +
-                $"4k: {(double)k4SW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{k4CacheHits}]\n" +
-                $"7k: {(double)k7SW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{k7CacheHits - k4CacheHits}]",
-            LogType.Runtime);
+                $"total: {(double)totalSW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{_cacheCount}]\n" + keyTimeString,
+                LogType.Runtime
+            );
         }
 
         /// <summary>
@@ -427,7 +439,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="path"></param>
         /// <param name="resource"></param>
         /// <param name="extension"></param>
-        internal Texture2D LoadSingleTexture(string path, string resource, string extension = ".png")
+        internal Texture2D LoadSingleTexture(string path, string resource, Texture2D? fallback = null, string extension = ".png")
         {
             path += extension;
 
@@ -443,6 +455,10 @@ namespace Quaver.Shared.Skinning
                     buffer = GameBase.Game.Resources.Get(resource);
                     if (buffer == null)
                     {
+                        if (fallback != null)
+                        {
+                            return fallback;
+                        }
                         return UserInterface.BlankBox;
                     }
                 }
@@ -465,7 +481,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns)
+        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, List<Texture2D>? fallback = null)
         {
             try
             {
@@ -499,10 +515,15 @@ namespace Quaver.Shared.Skinning
                     }
                 }
 
+                if (fallback != null)
+                {
+                    return fallback;
+                }
+
                 // If we end up getting down here, that means we need to load the spritesheet from our resources.
                 // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
                 if (rows == 0 && columns == 0)
-                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png") };
+                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png", null) };
 
                 if (resource == null)
                     return new List<Texture2D> { UserInterface.BlankBox };
