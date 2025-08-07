@@ -86,7 +86,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 var inputLane = lane;
 
                 // Allow multiple keybinds for scratch lane
-                if (Ruleset.Map.HasScratchKey && Ruleset.Map.Mode == GameMode.Keys7 && lane == BindingStore.Count - 1)
+                if (Ruleset.Map.HasScratchKey && lane == BindingStore.Count - 1)
                     inputLane--;
 
                 // A key was uniquely pressed.
@@ -411,7 +411,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private void SetPlayer1Keybinds(GameMode mode)
         {
             BindingStore = ConfigManager.KeyLayouts[mode].Select(x => new InputBindingKeys(x)).ToList();
-            BindingStore.AddRange(ConfigManager.ScratchKeyLayouts[mode].Select(x => new InputBindingKeys(x)));
+            if (Ruleset.Map.HasScratchKey)
+            {
+                BindingStore.AddRange(ConfigManager.ScratchKeyLayouts[mode].Select(x => new InputBindingKeys(x)));
+            }
         }
 
         /// <summary>
