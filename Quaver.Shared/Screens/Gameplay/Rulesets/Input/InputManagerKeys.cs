@@ -411,6 +411,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private void SetPlayer1Keybinds(GameMode mode)
         {
             BindingStore = ConfigManager.KeyLayouts[mode].Select(x => new InputBindingKeys(x)).ToList();
+            BindingStore.AddRange(ConfigManager.ScratchKeyLayouts[mode].Select(x => new InputBindingKeys(x)));
         }
 
         /// <summary>

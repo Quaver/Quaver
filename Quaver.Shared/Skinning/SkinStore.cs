@@ -452,13 +452,13 @@ namespace Quaver.Shared.Skinning
                 }
                 else
                 {
+                    if (fallback != null)
+                    {
+                        return fallback;
+                    }
                     buffer = GameBase.Game.Resources.Get(resource);
                     if (buffer == null)
                     {
-                        if (fallback != null)
-                        {
-                            return fallback;
-                        }
                         return UserInterface.BlankBox;
                     }
                 }
@@ -907,7 +907,7 @@ namespace Quaver.Shared.Skinning
 
         public static List<string> GetSkins()
         {
-            
+
             var options = new List<string> { "Default Skin" };
 
             if (ConfigManager.SkinDirectory == null)

@@ -955,7 +955,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLanesLeft[Map.Mode] != null && ConfigManager.ScratchLanesLeft[Map.Mode].Value)
             {
                 if (val == 1)
-                    val = 8;
+                    val = Map.GetKeyCount(true);
                 else
                     val--;
             }
