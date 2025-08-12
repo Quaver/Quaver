@@ -387,6 +387,21 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        internal List<List<Texture2D>> NoteMineBodies { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal List<Texture2D> NoteMineEnds { get; } = new List<Texture2D>();
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal List<List<Texture2D>> NoteMineStarts { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        ///
+        /// </summary>
         internal List<List<Texture2D>> NoteHitObjects { get; } = new List<List<Texture2D>>();
 
         /// <summary>
@@ -823,7 +838,8 @@ namespace Quaver.Shared.Skinning
                 if (!UseHitObjectSheet)
                 {
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{lane + 1}", lane, FallbackKeys?.NoteHitObjects, HitObjectFallbacks);
-                    LoadHitObjects(NoteMines, $"note-mine-{lane + 1}", lane, FallbackKeys?.NoteMines, MineFallbacks);
+                    LoadHitObjects(NoteMines, $"note-mine-{lane + 1}", lane, FallbackKeys?.NoteMines, HitObjectFallbacks);
+                    LoadHitObjects(NoteMineStarts, $"note-minestart-{lane + 1}", lane, FallbackKeys?.NoteMineStarts, HitObjectFallbacks);
                     LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{lane + 1}", lane, FallbackKeys?.NoteHoldHitObjects, HitObjectFallbacks);
                 }
                 else
@@ -835,10 +851,12 @@ namespace Quaver.Shared.Skinning
 
                         string hitObjectSheet = UsePerLaneSpriteSheets ? $"note-hitobject-sheet-{lane + 1}" : "note-hitobject-sheet";
                         string holdObjectSheet = UsePerLaneSpriteSheets ? $"note-holdobject-sheet-{lane + 1}" : "note-holdobject-sheet";
+                        string mineSheet = UsePerLaneSpriteSheets ? $"note-mine-sheet-{lane + 1}" : "note-mine-sheet";
                         var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, hitObjectSheet, FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
                         var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, holdObjectSheet, FallbackKeys?.NoteHoldHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
+                        var mines = LoadSpritesheet(SkinKeysFolder.HitObjects, mineSheet, FallbackKeys?.NoteMines?[HitObjectFallbacks[lane]], false, snapCount, 1);
                         NoteHitObjects.Add(hitobjects);
-                        NoteMines.Add(hitobjects);
+                        NoteMines.Add(mines);
 
                         // LoadSpriteSheet returns one UserInterface.BlankBox on error
                         if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
@@ -861,6 +879,9 @@ namespace Quaver.Shared.Skinning
                         // should also reduce memory usage slightly
                         NoteHitObjects.Add(NoteHitObjects[0]);
                         NoteMines.Add(NoteMines[0]);
+                        NoteMineStarts.Add(NoteMineStarts[0]);
+                        NoteMineBodies.Add(NoteMineBodies[0]);
+                        NoteMineEnds.Add(NoteMineEnds[0]);
                         NoteHoldHitObjects.Add(NoteHoldHitObjects[0]);
                     }
                 }
@@ -868,6 +889,10 @@ namespace Quaver.Shared.Skinning
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{lane + 1}", FallbackKeys?.NoteHoldBodies?[HoldBodyFallbacks[lane]], false, 0, 0));
                 NoteHoldEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-holdend-{lane + 1}", FallbackKeys?.NoteHoldEnds?[HoldEndFallbacks[lane]], false));
+
+                // Mines
+                NoteMineBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-minebody-{lane + 1}", FallbackKeys?.NoteHoldBodies?[HoldBodyFallbacks[lane]], false, 0, 0));
+                NoteMineEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-mineend-{lane + 1}", FallbackKeys?.NoteMineEnds?[HoldEndFallbacks[lane]], false));
 
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{lane + 1}", FallbackKeys?.NoteReceptorsUp?[ReceptorFallbacks[lane]], false));

@@ -156,7 +156,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var index = SkinMode.ColorObjectsBySnapDistance && Map.TimingPoints.Count > 0 ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
 
             if (Info.Type is HitObjectType.Mine)
+            {
+                if (Info.IsLongNote)
+                    return SkinMode.NoteMineStarts[Info.Lane - 1][index];
                 return SkinMode.NoteMines[Info.Lane - 1][index];
+            }
 
             if (Coloring.Value != HitObjectColoring.None)
                 return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];

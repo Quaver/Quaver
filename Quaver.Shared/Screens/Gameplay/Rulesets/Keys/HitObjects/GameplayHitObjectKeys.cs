@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -200,11 +201,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Parent = playfield.Stage.HitObjectContainer
             };
 
-            // Set long note end properties.
-            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
-            LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
-            LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
-
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
             HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
@@ -258,6 +254,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteEndSprite.Width = laneSize;
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
+            
             // Update hitobject sprites depending on LN or not
             if (!Info.IsLongNote)
             {
@@ -268,8 +265,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 LongNoteBodySprite.Tint = tint;
                 LongNoteEndSprite.Tint = tint;
+                var bodies = GetHoldBodyTexture(info.Lane, manager.Ruleset.Mode);
+                LongNoteBodySprite.ReplaceFrames(bodies);
+
+                LongNoteEndSprite.Image = GetHoldEndTexture(info.Lane, manager.Ruleset.Mode);
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
+
+                // Set long note end properties.
+                LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+                LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
                 InitializeLongNoteSize();
 
@@ -445,17 +450,61 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
 
-                if (HitObjectManager.SnapIndices.ContainsKey(Info.StartTime))
+                if (HitObjectManager.SnapIndices.TryGetValue(Info.StartTime, out var snap))
                 {
-                    var snap = HitObjectManager.SnapIndices[Info.StartTime];
-                    return snap < objects.Count ? objects[snap] : objects[objects.Count - 1];
+                    return snap < objects.Count ? objects[snap] : objects[^1];
                 }
 
                 return objects.First();
             }
 
-            return Info.HitObjectInfo.Type is HitObjectType.Mine ? skin.NoteMines[lane].First() :
-                Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
+            return Info.HitObjectInfo.Type switch
+            {
+                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineStarts[lane].First(),
+                HitObjectType.Mine when !Info.IsLongNote => skin.NoteMines[lane].First(),
+                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldHitObjects[lane].First(),
+                HitObjectType.Normal when !Info.IsLongNote => skin.NoteHitObjects[lane].First(),
+                _ => throw new ArgumentOutOfRangeException(nameof(Info.HitObjectInfo.Type),
+                    "Unknown HitObjectType for GetHitObjectTexture")
+            };
+        }
+
+        /// <summary>
+        ///     Gets the correct Hold Body texture also based on if we have note snapping and if
+        ///     the note is a long note or note.
+        /// </summary>
+        /// <returns></returns>
+        private List<Texture2D> GetHoldBodyTexture(int lane, GameMode mode)
+        {
+            lane = lane - 1;
+            var skin = SkinManager.Skin.Keys[mode];
+
+            return Info.HitObjectInfo.Type switch
+            {
+                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineBodies[lane],
+                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldBodies[lane],
+                _ => throw new ArgumentOutOfRangeException(nameof(Info.HitObjectInfo.Type),
+                    "Unknown HitObjectType for GetHitObjectTexture")
+            };
+        }
+
+        /// <summary>
+        ///     Gets the correct Hold End texture also based on if we have note snapping and if
+        ///     the note is a long note or note.
+        /// </summary>
+        /// <returns></returns>
+        private Texture2D GetHoldEndTexture(int lane, GameMode mode)
+        {
+            lane = lane - 1;
+            var skin = SkinManager.Skin.Keys[mode];
+
+            return Info.HitObjectInfo.Type switch
+            {
+                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineEnds[lane],
+                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldEnds[lane],
+                _ => throw new ArgumentOutOfRangeException(nameof(Info.HitObjectInfo.Type),
+                    "Unknown HitObjectType for GetHitObjectTexture")
+            };
         }
 
         /// <summary>
