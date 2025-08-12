@@ -319,7 +319,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSelectFilterGameModeChanged(object sender, BindableValueChangedEventArgs<SelectFilterGameMode> e) => StartFilterMapsetsTask();
+        private void OnSelectFilterGameModeChanged(object sender, BindableValueChangedEventArgs<GameMode> e) => StartFilterMapsetsTask();
 
         /// <summary>
         /// </summary>

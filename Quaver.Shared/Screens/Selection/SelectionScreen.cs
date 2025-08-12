@@ -224,7 +224,9 @@ namespace Quaver.Shared.Screens.Selection
                 ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
 
             // If the user is playing maps from a playlist, then automatically use the mapset container
-            if (PlaylistManager.Selected.Value != null && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            // this is except when the selected playlist has no maps
+            if (PlaylistManager.Selected.Value != null && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists
+                && PlaylistManager.Selected.Value.Maps.Count > 0)
                 ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
         }
 
@@ -563,19 +565,7 @@ namespace Quaver.Shared.Screens.Selection
             if (MapManager.Selected.Value == null)
                 return;
 
-            BindableInt scrollSpeed;
-
-            switch (MapManager.Selected.Value.Mode)
-            {
-                case GameMode.Keys4:
-                    scrollSpeed = ConfigManager.ScrollSpeed4K;
-                    break;
-                case GameMode.Keys7:
-                    scrollSpeed = ConfigManager.ScrollSpeed7K;
-                    break;
-                default:
-                    return;
-            }
+            var scrollSpeed = ConfigManager.ScrollSpeeds[MapManager.Selected.Value.Mode];
 
             var changed = false;
 

@@ -293,7 +293,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Body.Image = TextureBody;
             Tail.Image = TextureTail;
 
-            if (SkinMode.RotateHitObjectsByColumn && Coloring.Value == HitObjectColoring.None)
+            if (SkinMode.RotateHitObjectsByColumn && (Coloring.Value == HitObjectColoring.None || SkinMode.RotateEditorObjectsByColumn))
                 SpriteRotation = GameplayHitObjectKeys.GetObjectRotation(Map.Mode, Info.Lane - 1);
             else
                 SpriteRotation = 0;

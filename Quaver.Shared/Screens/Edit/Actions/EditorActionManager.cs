@@ -1047,6 +1047,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             BookmarkBatchAdded = null;
             BookmarkBatchRemoved = null;
             BookmarkBatchOffsetChanged = null;
+            PluginActionManager.Destroy();
         }
     }
 }

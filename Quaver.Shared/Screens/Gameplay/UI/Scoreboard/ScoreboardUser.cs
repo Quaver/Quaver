@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Multiplayer;
@@ -146,7 +147,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             LocalScore = score;
             Judgements = judgements;
             UsernameRaw = username;
-            RatingProcessor = (RatingProcessorKeys) score?.RatingProcessor ?? processor ?? new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
+            RatingProcessor = (RatingProcessorKeys)score?.RatingProcessor ?? processor ?? new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
             Type = type;
             Size = new ScalableVector2(299, 58);
 
@@ -172,21 +173,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     throw new ArgumentOutOfRangeException();
             }
 
-            switch (Screen.Map.Mode)
-            {
-                case GameMode.Keys4:
-                case GameMode.Keys7:
-                    if (screen.IsMultiplayerGame && Type == ScoreboardUserType.Other)
-                    {
-                        var mp = new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives);
-                        Processor = new ScoreProcessorKeys(Screen.Map, mods, mp);
-                    }
-                    else
-                        Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods): Screen.Ruleset.ScoreProcessor;
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
+            if (ModeHelper.IsKeyMode(screen.Map.Mode))
+                if (screen.IsMultiplayerGame && Type == ScoreboardUserType.Other)
+                {
+                    var mp = new ScoreProcessorMultiplayer((MultiplayerHealthType)OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives);
+                    Processor = new ScoreProcessorKeys(Screen.Map, mods, mp);
+                }
+                else
+                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods) : Screen.Ruleset.ScoreProcessor;
+            else
+                throw new InvalidEnumArgumentException();
 
             // Create avatar
             Avatar = new Sprite()

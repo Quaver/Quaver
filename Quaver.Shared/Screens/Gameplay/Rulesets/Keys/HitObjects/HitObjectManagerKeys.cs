@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     hitObject.LongNoteEndSprite.FadeToColor(newTint, Easing.OutQuad, 250);
                 }
 
-                var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+                var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
 
                 playfield.Stage.HitContainer.Children.ForEach(x =>
                 {
@@ -314,8 +314,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ResetHitObjectInfo();
 
             AudioEngine.Track.RateChanged += OnRateChanged;
-            ConfigManager.ScrollSpeed4K.ValueChanged += On4KScrollSpeedChanged;
-            ConfigManager.ScrollSpeed7K.ValueChanged += On7KScrollSpeedChanged;
+            ConfigManager.ScrollSpeeds.ForEach(speed => speed.Value.ValueChanged += OnScrollSpeedChanged);
         }
 
         public override void Destroy()
@@ -323,8 +322,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             AudioEngine.Track.RateChanged -= OnRateChanged;
 
             // ReSharper disable twice DelegateSubtraction
-            ConfigManager.ScrollSpeed4K.ValueChanged -= On4KScrollSpeedChanged;
-            ConfigManager.ScrollSpeed7K.ValueChanged -= On7KScrollSpeedChanged;
+            ConfigManager.ScrollSpeeds.ForEach(speed => speed.Value.ValueChanged -= OnScrollSpeedChanged);
 
             base.Destroy();
         }
@@ -338,7 +336,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (Ruleset.Screen.IsSongSelectPreview)
                 return;
 
-            var inputManager = ((KeysInputManager) Ruleset.InputManager).ReplayInputManager;
+            var inputManager = ((KeysInputManager)Ruleset.InputManager).ReplayInputManager;
 
             if (inputManager == null)
                 return;
@@ -691,6 +689,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // The release window. (Window * Multiplier)
             var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
 
+            // The judgement that is given when a user completely fails to release.
+            var missedReleaseJudgement = Ruleset.ScoreProcessor.Windows.LNMissJudgement.Value;
+
             // Check to see if any LN releases were missed (Counts as a good instead of a miss.)
             foreach (var lane in HeldLongNoteLanes)
             {
@@ -698,9 +699,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 {
                     // Current hit object
                     var info = lane.Dequeue();
-
-                    // The judgement that is given when a user completely fails to release.
-                    var missedReleaseJudgement = Judgement.Good;
 
                     // Add new hit stat data and update score
                     var stat = new HitStat(HitStatType.Miss, KeyPressType.None, info.HitObjectInfo, info.EndTime, missedReleaseJudgement,
@@ -837,8 +835,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         private void OnRateChanged(object sender, TrackRateChangedEventArgs e) => ForceUpdateLNSize();
 
-        private void On7KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
-
-        private void On4KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
+        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
     }
 }

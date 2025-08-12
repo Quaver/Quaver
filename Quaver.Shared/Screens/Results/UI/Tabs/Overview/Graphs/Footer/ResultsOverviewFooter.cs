@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Database.Maps;
@@ -99,19 +101,30 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
         /// <param name="e"></param>
         private void OnScoreSubmissionStatsChanged(object sender, BindableValueChangedEventArgs<ScoreSubmissionResponse> e)
         {
-            if (e.Value == null || e.Value.Status != 200  || e.Value.Stats == null)
+            if (e.Value == null || e.Value.Status != 200 || e.Value.Stats == null)
                 return;
 
-            var stats = new List<ResultsOverviewFooterStat>()
+            List<ResultsOverviewFooterStat> stats;
+
+            if (ModeHelper.IsRanked(e.Value.GameMode))
             {
-                new ResultsOverviewFooterStat("GLOBAL RANK", $"#{e.Value.Stats.NewGlobalRank:n0}"),
-                new ResultsOverviewFooterStat("COUNTRY RANK", $"#{e.Value.Stats.NewCountryRank:n0}"),
-                new ResultsOverviewFooterStat("OVERALL RATING", $"{StringHelper.RatingToString(e.Value.Stats.OverallPerformanceRating)}"),
-                new ResultsOverviewFooterStat("OVERALL ACCURACY", $"{StringHelper.AccuracyToString((float) e.Value.Stats.OverallAccuracy)}"),
-            };
+                stats = new List<ResultsOverviewFooterStat>()
+                {
+                    new ResultsOverviewFooterStat("GLOBAL RANK", $"#{e.Value.Stats.NewGlobalRank:n0}"),
+                    new ResultsOverviewFooterStat("COUNTRY RANK", $"#{e.Value.Stats.NewCountryRank:n0}"),
+                    new ResultsOverviewFooterStat("OVERALL RATING", $"{StringHelper.RatingToString(e.Value.Stats.OverallPerformanceRating)}"),
+                    new ResultsOverviewFooterStat("OVERALL ACCURACY", $"{StringHelper.AccuracyToString((float) e.Value.Stats.OverallAccuracy)}"),
+                };
+            }
+            else
+            {
+                stats = new List<ResultsOverviewFooterStat>() {
+                    new ResultsOverviewFooterStat("UNRANKED GAMEMODE", ""),
+                };
+            }
 
             var widthSum = stats.Sum(x => x.Width);
-            var widthPer = (Width- widthSum) / (stats.Count + 1);
+            var widthPer = (Width - widthSum) / (stats.Count + 1);
 
             for (var i = 0; i < stats.Count; i++)
             {

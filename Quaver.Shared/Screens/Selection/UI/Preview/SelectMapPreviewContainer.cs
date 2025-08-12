@@ -242,7 +242,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             AddScheduledUpdate(() =>
             {
-                var playfield = (GameplayPlayfieldKeys) LoadedGameplayScreen.Ruleset.Playfield;
+                var playfield = (GameplayPlayfieldKeys)LoadedGameplayScreen.Ruleset.Playfield;
 
                 playfield.Stage.HealthBar.Visible = false;
 
@@ -260,9 +260,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     x.StopHolding();
                 });
 
-                var scroll = LoadedGameplayScreen.Map.Mode == GameMode.Keys4
-                    ? ConfigManager.ScrollDirection4K
-                    : ConfigManager.ScrollDirection7K;
+                var scroll = ConfigManager.ScrollDirections[LoadedGameplayScreen.Map.Mode];
 
                 var skin = SkinManager.Skin.Keys[e.Result.Map.Mode];
 
@@ -366,7 +364,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                     Track = AudioEngine.Track;
                     TrackInPreviousFrame = Track;
-                    
+
                     LoadedGameplayScreen?.HandleReplaySeeking();
                 }
 
@@ -451,7 +449,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             {
                 ScheduleUpdate(() =>
                 {
-                    CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys) LoadedGameplayScreen?.Ruleset?.Playfield, false);
+                    CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys)LoadedGameplayScreen?.Ruleset?.Playfield, false);
                 });
                 return;
             }
@@ -476,12 +474,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 return;
             }
 
-            var stageRightWidth = (int) MathHelper.Clamp(playfield.Stage.StageRight.Width, 0, 8);
+            var stageRightWidth = (int)MathHelper.Clamp(playfield.Stage.StageRight.Width, 0, 8);
 
             SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(56, Height), 200)
             {
                 Alignment = Alignment.BotRight,
-                X =  stageRightWidth - 8,
+                X = stageRightWidth - 8,
                 Tint = ColorHelper.HexToColor("#181818"),
                 SetChildrenAlpha = true,
             };
@@ -572,7 +570,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 LoadedGameplayScreen.HandleReplaySeeking();
             else
             {
-                var hitobjectManager = (HitObjectManagerKeys) LoadedGameplayScreen.Ruleset.HitObjectManager;
+                var hitobjectManager = (HitObjectManagerKeys)LoadedGameplayScreen.Ruleset.HitObjectManager;
                 hitobjectManager.HandleSkip();
             }
         }

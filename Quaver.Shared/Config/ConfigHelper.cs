@@ -6,7 +6,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
@@ -184,5 +186,30 @@ namespace Quaver.Shared.Config
         internal static TEnum ReadEnum<TEnum>(TEnum defaultVal, string newVal)
             where TEnum : struct =>
             Enum.TryParse(newVal, out TEnum newOne) ? newOne : defaultVal;
+
+        internal static List<int> ReadIntList(List<int> defaultVal, string newVal, int size, int offset = 0)
+        {
+            if (newVal == null)
+            {
+                return defaultVal;
+            }
+
+            List<int> list = Enumerable.Repeat(0, size).ToList();
+            string[] split = newVal.Split(',');
+
+            for (int i = 0; i < split.Length; i++)
+            {
+                if (int.TryParse(split[i], out int n))
+                {
+                    list[i] = n + offset;
+                }
+                else
+                {
+                    list[i] = defaultVal[i];
+                }
+            }
+
+            return list;
+        }
     }
 }

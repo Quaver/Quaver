@@ -121,9 +121,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 // Use skin's ColumnSize if it fits inside the preview, otherwise scale down.
                 var previewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
-                
+
                 var columnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;
-                
+
                 if (Screen.IsSongSelectPreview && previewWidth < columnWidth)
                     return previewWidth;
 
@@ -258,18 +258,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             var keys = Ruleset.Screen.Map?.GetKeyCount() ?? 4;
 
-            ScrollDirection direction;
-            switch (Ruleset.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    direction = ConfigManager.ScrollDirection4K.Value;
-                    break;
-                case GameMode.Keys7:
-                    direction = ConfigManager.ScrollDirection7K.Value;
-                    break;
-                default:
-                    throw new Exception("Map Mode does not exist.");
-            }
+            var direction = ConfigManager.ScrollDirections[Ruleset.Map.Mode].Value;
 
             // Case: Config = Split Scroll
             if (direction.Equals(ScrollDirection.Split))
