@@ -438,7 +438,7 @@ namespace Quaver.Shared.Screens.Selection
 
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
-                ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+                ModManager.RemoveAllMods();
 
             // Toggle Mirror
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
