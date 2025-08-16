@@ -437,8 +437,12 @@ namespace Quaver.Shared.Screens.Selection
                 ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
 
             // Change from pitched to non-pitched
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePitch.Value))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+            
+            // Remove all mods
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRemoveAllMods.Value))
+                ModManager.RemoveAllMods();
 
             // Toggle Mirror
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))

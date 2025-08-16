@@ -234,6 +234,18 @@ namespace Quaver.Shared.Config
         ///     Dictates whether or not the song audio is pitched while using the ManiaModSpeed gameplayModifier.
         /// </summary>
         internal static Bindable<bool> Pitched { get; private set; }
+        
+        /// <summary>
+        ///     Key to toggle the pitch of the audio
+        /// </summary>
+        
+        internal static Bindable<Keys> KeyTogglePitch { get; private set; }
+        
+        /// <summary>
+        ///     Key to remove all mods
+        /// </summary>
+        
+        internal static Bindable<Keys> KeyRemoveAllMods { get; private set; }
 
         /// <summary>
         ///     The path of the osu!.db file
@@ -1045,6 +1057,8 @@ namespace Quaver.Shared.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             DefaultEditorSkin = ReadValue<DefaultSkins?>(@"DefaultEditorSkin", null, data);
             Pitched = ReadValue(@"Pitched", true, data);
+            KeyTogglePitch = ReadValue(@"KeyTogglePitch", Keys.OemPipe, data);
+            KeyRemoveAllMods = ReadValue(@"KeyRemoveAllMods", Keys.D0, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
             LeaderboardRankedAccuracy = ReadValue(@"LeaderboardRankedAccuracy", false, data);
