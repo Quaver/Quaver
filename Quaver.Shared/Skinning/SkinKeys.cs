@@ -793,10 +793,12 @@ namespace Quaver.Shared.Skinning
         /// <param name="element"></param>
         /// <param name="lane"></param>
         /// <returns></returns>
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int lane, IList<List<Texture2D>>? fallback, List<int> fallbackIndicies)
+        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int lane, IList<List<Texture2D>>? fallback, List<int> fallbackIndicies, bool fillWithFirstIfNotExist = false)
         {
             // First load the beginning HitObject element that doesn't require snapping.
-            var objectsList = new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, fallback?[fallbackIndicies[lane]]?[0], false) };
+            var fallbackTexture = fallback?[fallbackIndicies[lane]]?[0] ?? (fillWithFirstIfNotExist ? hitObjects.FirstOrDefault()?.FirstOrDefault() : null);
+
+            var objectsList = new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, fallbackTexture, false) };
 
             // Don't bother looking for snap objects if the skin config doesn't permit it.
             if (!ColorObjectsBySnapDistance)
@@ -838,9 +840,9 @@ namespace Quaver.Shared.Skinning
                 if (!UseHitObjectSheet)
                 {
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{lane + 1}", lane, FallbackKeys?.NoteHitObjects, HitObjectFallbacks);
-                    LoadHitObjects(NoteMines, $"note-mine-{lane + 1}", lane, FallbackKeys?.NoteMines, HitObjectFallbacks);
-                    LoadHitObjects(NoteMineStarts, $"note-minestart-{lane + 1}", lane, FallbackKeys?.NoteMineStarts, HitObjectFallbacks);
-                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{lane + 1}", lane, FallbackKeys?.NoteHoldHitObjects, HitObjectFallbacks);
+                    LoadHitObjects(NoteMines, $"note-mine-{lane + 1}", lane, FallbackKeys?.NoteMines, HitObjectFallbacks, true);
+                    LoadHitObjects(NoteMineStarts, $"note-minestart-{lane + 1}", lane, FallbackKeys?.NoteMineStarts, HitObjectFallbacks, true);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{lane + 1}", lane, FallbackKeys?.NoteHoldHitObjects, HitObjectFallbacks, true);
                 }
                 else
                 {
@@ -891,8 +893,8 @@ namespace Quaver.Shared.Skinning
                 NoteHoldEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-holdend-{lane + 1}", FallbackKeys?.NoteHoldEnds?[HoldEndFallbacks[lane]], false));
 
                 // Mines
-                NoteMineBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-minebody-{lane + 1}", FallbackKeys?.NoteHoldBodies?[HoldBodyFallbacks[lane]], false, 0, 0));
-                NoteMineEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-mineend-{lane + 1}", FallbackKeys?.NoteMineEnds?[HoldEndFallbacks[lane]], false));
+                NoteMineBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-minebody-{lane + 1}", FallbackKeys?.NoteHoldBodies?[HoldBodyFallbacks[lane]] ?? NoteMineBodies.FirstOrDefault(), false, 0, 0));
+                NoteMineEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-mineend-{lane + 1}", FallbackKeys?.NoteMineEnds?[HoldEndFallbacks[lane]] ?? NoteMineEnds.FirstOrDefault(), false));
 
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{lane + 1}", FallbackKeys?.NoteReceptorsUp?[ReceptorFallbacks[lane]], false));
