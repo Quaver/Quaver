@@ -854,9 +854,11 @@ namespace Quaver.Shared.Skinning
                         string hitObjectSheet = UsePerLaneSpriteSheets ? $"note-hitobject-sheet-{lane + 1}" : "note-hitobject-sheet";
                         string holdObjectSheet = UsePerLaneSpriteSheets ? $"note-holdobject-sheet-{lane + 1}" : "note-holdobject-sheet";
                         string mineSheet = UsePerLaneSpriteSheets ? $"note-mine-sheet-{lane + 1}" : "note-mine-sheet";
+                        string mineStartSheet = UsePerLaneSpriteSheets ? $"note-minestart-sheet-{lane + 1}" : "note-minestart-sheet";
                         var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, hitObjectSheet, FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
                         var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, holdObjectSheet, FallbackKeys?.NoteHoldHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
-                        var mines = LoadSpritesheet(SkinKeysFolder.HitObjects, mineSheet, FallbackKeys?.NoteMines?[HitObjectFallbacks[lane]], false, snapCount, 1);
+                        var mines = LoadSpritesheet(SkinKeysFolder.HitObjects, mineSheet, FallbackKeys?.NoteMines?[HitObjectFallbacks[lane]] ?? NoteMines.FirstOrDefault(), false, snapCount, 1);
+                        var mineStarts = LoadSpritesheet(SkinKeysFolder.HitObjects, mineStartSheet, FallbackKeys?.NoteMineStarts?[HitObjectFallbacks[lane]] ?? NoteMineStarts.FirstOrDefault(), false, snapCount, 1);
                         NoteHitObjects.Add(hitobjects);
                         NoteMines.Add(mines);
 
@@ -866,11 +868,20 @@ namespace Quaver.Shared.Skinning
                         else
                             NoteHoldHitObjects.Add(hitobjects);
 
+                        // LoadSpriteSheet returns one UserInterface.BlankBox on error
+                        if (mineStarts.Any() && mineStarts[0] != UserInterface.BlankBox)
+                            NoteMineStarts.Add(mineStarts);
+                        else
+                            NoteMineStarts.Add(mines);
+
                         for (var j = 0; j < snapCount - NoteHitObjects[lane].Count; j++)
                             NoteHitObjects[lane].Add(NoteHitObjects[lane].Last());
                         
-                        for (var j = 0; j < snapCount - NoteHitObjects[lane].Count; j++)
+                        for (var j = 0; j < snapCount - NoteMines[lane].Count; j++)
                             NoteMines[lane].Add(NoteMines[lane].Last());
+                        
+                        for (var j = 0; j < snapCount - NoteMineStarts[lane].Count; j++)
+                            NoteMineStarts[lane].Add(NoteMineStarts[lane].Last());
 
                         for (var j = 0; j < snapCount - NoteHoldHitObjects[lane].Count; j++)
                             NoteHoldHitObjects[lane].Add(NoteHoldHitObjects[lane].Last());
@@ -882,8 +893,6 @@ namespace Quaver.Shared.Skinning
                         NoteHitObjects.Add(NoteHitObjects[0]);
                         NoteMines.Add(NoteMines[0]);
                         NoteMineStarts.Add(NoteMineStarts[0]);
-                        NoteMineBodies.Add(NoteMineBodies[0]);
-                        NoteMineEnds.Add(NoteMineEnds[0]);
                         NoteHoldHitObjects.Add(NoteHoldHitObjects[0]);
                     }
                 }
