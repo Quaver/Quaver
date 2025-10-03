@@ -16,6 +16,7 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Helpers;
 using WilliamQiufeng.SearchParser.AST;
 using WilliamQiufeng.SearchParser.Parsing;
 using WilliamQiufeng.SearchParser.Tokenizing;
@@ -672,14 +673,14 @@ namespace Quaver.Shared.Database.Maps
                 var termContent = (string)searchQuery.Value.Value!;
                 try
                 {
-                    var containsText = !map.Artist.ToLower().Contains(termContent) &&
-                                       !map.Title.ToLower().Contains(termContent) &&
-                                       !map.Creator.ToLower().Contains(termContent) &&
-                                       !map.Source.ToLower().Contains(termContent) &&
-                                       !map.Description.ToLower().Contains(termContent) &&
-                                       !map.Tags.ToLower().Contains(termContent) &&
-                                       !map.DifficultyName.ToLower().Contains(termContent) &&
-                                       !map.Genre.ToLower().Contains(termContent);
+                    var containsText = !StringHelper.ContainsIgnoreCase(map.Artist, termContent) &&
+                                    !StringHelper.ContainsIgnoreCase(map.Title, termContent) &&
+                                    !StringHelper.ContainsIgnoreCase(map.Creator, termContent) &&
+                                    !StringHelper.ContainsIgnoreCase(map.Source, termContent) &&
+                                    !StringHelper.ContainsIgnoreCase(map.Description, termContent) &&
+                                    !StringHelper.ContainsIgnoreCase(map.Tags, termContent) &&
+                                    !StringHelper.ContainsIgnoreCase(map.DifficultyName, termContent) &&
+                                    !StringHelper.ContainsIgnoreCase(map.Genre, termContent);
                     if (containsText)
                     {
                         return false;

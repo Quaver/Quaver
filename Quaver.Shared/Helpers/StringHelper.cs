@@ -55,6 +55,15 @@ namespace Quaver.Shared.Helpers
         internal static string ColorToString(Color color) => $"{color.R},{color.G},{color.G},{color.A}";
 
         /// <summary>
+        ///     Returns a value indicating whether a specified string occurs within this string,
+        /// using ordinal (binary) sort rules and ignoring the case of the strings being compared..
+        /// </summary>
+        /// <param name="strA"></param>
+        /// <param name="strB"></param>
+        /// <returns></returns>
+        internal static bool ContainsIgnoreCase(string strA, string strB) => strA?.Contains(strB, StringComparison.OrdinalIgnoreCase) == true;
+
+        /// <summary>
         ///     Adds an ordinal to a string.
         /// </summary>
         /// <param name="num"></param>
