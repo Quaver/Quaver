@@ -112,6 +112,33 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="sf"></param>
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) => ActionManager.PlaceScrollSpeedFactor(sf, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) =>
+            ActionManager.PlaceScrollSpeedFactorBatch(sfs, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sf"></param>
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollSpeedFactorBatch(new List<ScrollSpeedFactorInfo> { sf }, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollSpeedFactorBatch(sfs, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
         /// <param name="tp"></param>
         public void PlaceTimingPoint(TimingPointInfo tp) => ActionManager.PlaceTimingPoint(tp, true);
 
