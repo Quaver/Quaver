@@ -524,7 +524,6 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Places a batch of scroll speed factors into the map
         /// </summary>
         /// <param name="sfs"></param>
-        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
         public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup), fromLua);
 
         /// <summary>
