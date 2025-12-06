@@ -26,6 +26,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
 using Wobble.Logging;
+using Quaver.Shared.Screens.Gameplay.UI;
 
 
 namespace Quaver.Shared.Skinning
@@ -328,6 +329,12 @@ namespace Quaver.Shared.Skinning
 
         [FixedScale]
         internal int CoopPlayfieldPadding { get; private set; } = 92;
+
+        [FixedScale]
+        internal int SkipDisplayPosX { get; private set; } = 0;
+
+        [FixedScale]
+        internal int SkipDisplayPosY { get; private set; } = 30;
 
         internal List<int> HitObjectFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
         internal List<int> HoldBodyFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
@@ -653,7 +660,9 @@ namespace Quaver.Shared.Skinning
             JudgementHitBurstBumpY = ConfigHelper.ReadInt32(JudgementHitBurstBumpY, ini["JudgementHitBurstBumpY"]);
             JudgementHitBurstBumpTime = ConfigHelper.ReadInt32(JudgementHitBurstBumpTime, ini["JudgementHitBurstBumpTime"]);
             WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
-            CoopPlayfieldPadding = ConfigHelper.ReadInt32((int)CoopPlayfieldPadding, ini["CoopPlayfieldPadding"]);
+            CoopPlayfieldPadding = ConfigHelper.ReadInt32(CoopPlayfieldPadding, ini["CoopPlayfieldPadding"]);
+            SkipDisplayPosX = ConfigHelper.ReadInt32(SkipDisplayPosX, ini["SkipDisplayPosX"]);
+            SkipDisplayPosY = ConfigHelper.ReadInt32(SkipDisplayPosY, ini["SkipDisplayPosY"]);
 
             HitObjectFallbacks = ConfigHelper.ReadIntList(HitObjectFallbacks, ini["HitObjectFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
             HoldBodyFallbacks = ConfigHelper.ReadIntList(HoldBodyFallbacks, ini["HoldBodyFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
