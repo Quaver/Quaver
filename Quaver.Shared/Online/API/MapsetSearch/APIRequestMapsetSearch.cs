@@ -4,6 +4,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Server.Client;
 using Quaver.Shared.Screens.Downloading.UI.Search;
 using RestSharp;
@@ -20,7 +21,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         /// <summary>
         /// </summary>
-        private DownloadFilterMode Mode { get; }
+        private GameMode Mode { get; }
 
         /// <summary>
         /// </summary>
@@ -131,7 +132,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// <param name="sortBy"></param>
         /// <param name="page"></param>
         /// <param name="showExplicit"></param>
-        public APIRequestMapsetSearch(string query, DownloadFilterMode mode, DownloadFilterRankedStatus status,
+        public APIRequestMapsetSearch(string query, GameMode mode, DownloadFilterRankedStatus status,
             float minDiff,
             float maxDiff, float minBpm, float maxBpm, int minLength, int maxLength, int minln, int maxln,
             int minPlayCount,
@@ -255,13 +256,10 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         private void SetModeQueryParams(RestRequest request)
         {
             // Game Mode Query Param
-            if (Mode == DownloadFilterMode.All)
+            if (Mode == 0)
             {
-                foreach (DownloadFilterMode mode in Enum.GetValues(typeof(DownloadFilterMode)))
+                foreach (GameMode mode in ModeHelper.AllModes)
                 {
-                    if (mode == DownloadFilterMode.All)
-                        continue;
-
                     request.AddQueryParameter("mode", ((int) mode).ToString());
                 }
             }

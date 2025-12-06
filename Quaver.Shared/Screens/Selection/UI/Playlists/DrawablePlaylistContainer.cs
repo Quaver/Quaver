@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             DifficultyDisplay.X = Creator.X + Creator.Width + metadataSpacing;
 
             RankedStatusSprite.Image = GetRankedStatusImage();
-            GameModeHelper.SetGameModeTexture(item.Maps, GameModes, GameModeText);
+            GameModeHelper.SetGameModeTexture(item.Maps.Select(x=>x.Mode), GameModes, GameModeText);
             Banner.UpdateContent(Playlist.Item);
 
             if (Playlist.IsSelected)
