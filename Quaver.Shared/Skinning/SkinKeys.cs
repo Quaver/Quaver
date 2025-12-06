@@ -225,6 +225,9 @@ namespace Quaver.Shared.Skinning
         internal float HitErrorHeight { get; private set; }
 
         [FixedScale]
+        internal float HitErrorWidthScale { get; private set; } = 1f;
+
+        [FixedScale]
         internal float HitErrorChevronSize { get; private set; }
 
         internal HealthBarType HealthBarType { get; private set; }
@@ -603,6 +606,7 @@ namespace Quaver.Shared.Skinning
             HitErrorPosY = ConfigHelper.ReadInt32((int)HitErrorPosY, ini["HitErrorPosY"]);
             HitErrorAlpha = ConfigHelper.ReadFloat(HitErrorAlpha, ini["HitErrorAlpha"]);
             HitErrorHeight = ConfigHelper.ReadInt32((int)HitErrorHeight, ini["HitErrorHeight"]);
+            HitErrorWidthScale = ConfigHelper.ReadFloat(HitErrorWidthScale, ini["HitErrorWidthScale"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32((int)HitErrorChevronSize, ini["HitErrorChevronSize"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
