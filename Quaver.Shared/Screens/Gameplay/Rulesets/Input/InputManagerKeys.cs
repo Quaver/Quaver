@@ -12,6 +12,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
@@ -378,17 +379,38 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 return;
 
             var speedIncrease = KeyboardManager.IsCtrlDown() ? 1 : 10;
-            BindableInt scrollSpeed;
 
-            scrollSpeed = ConfigManager.ScrollSpeeds[Ruleset.Screen.Map.Mode];
+            var scrollSpeed = ConfigManager.ScrollSpeeds[Ruleset.Screen.Map.Mode];
 
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
-                scrollSpeed.Value += speedIncrease;
-            else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
-                scrollSpeed.Value -= speedIncrease;
+            if (KeyboardManager.IsShiftDown())
+            {
+                var targetScrollSpeed = MapManager.CustomScrollSpeed ?? scrollSpeed.Value;
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+                {
+                    targetScrollSpeed += speedIncrease;
+                    MapManager.CustomScrollSpeed = targetScrollSpeed;
+                }
+                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                {
+                    targetScrollSpeed -= speedIncrease;
+                    MapManager.CustomScrollSpeed = targetScrollSpeed;
+                }
 
-            NotificationManager.Show(NotificationLevel.Info, $"Scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}",
-                null, true);
+                NotificationManager.Show(NotificationLevel.Info,
+                    $"Scroll speed (local) has been changed to: {targetScrollSpeed / 10f:0.0}",
+                    null, true);
+            }
+            else
+            {
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+                    scrollSpeed.Value += speedIncrease;
+                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                    scrollSpeed.Value -= speedIncrease;
+
+                NotificationManager.Show(NotificationLevel.Info,
+                    $"Scroll speed (global) has been changed to: {scrollSpeed.Value / 10f:0.0}",
+                    null, true);
+            }
         }
 
         /// <summary>
