@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
+ */
 
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online.API.Maps;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using RestSharp;
 using RestSharp.Extensions;
@@ -38,6 +39,11 @@ namespace Quaver.Shared.Database.Maps
 {
     public static class MapManager
     {
+        /// <summary>
+        ///     Default value for CustomScrollSpeed.
+        ///     If this is used, the scroll speed will be determined by the user's global settings instead.
+        /// </summary>
+        private const int DefaultCustomScrollSpeed = 0;
         /// <summary>
         ///     The currently selected map.
         /// </summary>
@@ -580,5 +586,28 @@ namespace Quaver.Shared.Database.Maps
                     onYes
                 )
             );
+
+        /// <summary>
+        /// </summary>
+        public static int? CustomScrollSpeed
+        {
+            get
+            {
+                var scrollSpeed = Selected.Value?.CustomScrollSpeed;
+                return scrollSpeed == DefaultCustomScrollSpeed ? null : scrollSpeed;
+            }
+            set
+            {
+                // Ignore if no map is selected
+                var map = Selected.Value;
+                if (map == null)
+                    return;
+
+                map.CustomScrollSpeed = value ?? DefaultCustomScrollSpeed;
+
+                // Update the map in the background
+                ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(map));
+            }
+        }
     }
 }
