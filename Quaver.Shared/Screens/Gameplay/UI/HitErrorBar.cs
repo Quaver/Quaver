@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
 
-            LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods)*SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorWidthScale;
+            LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods) * SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorWidthScale;
             LineObjectPool[CurrentLinePoolIndex].Alpha = Alpha;
         }
     }

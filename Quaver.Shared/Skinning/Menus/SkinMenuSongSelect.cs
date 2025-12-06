@@ -58,6 +58,10 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D SelectFilterPanelLeft { get; private set; }
 
+        public float? RankedStatusPosOffsetX { get; private set; }
+
+        public float? GameModePosOffsetX { get; private set; }
+
         #region MAPSET
 
         public Texture2D MapsetSelected { get; private set; }
@@ -76,8 +80,6 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D GameMode4K7K { get; private set; }
 
-        public float? GameModePosOffsetX { get; private set; }
-
         #endregion
 
         #region  RANKED_STATUS
@@ -93,7 +95,6 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D StatusStepmania { get; private set; }
 
         public Texture2D StatusVarious { get; private set; }
-        public float? RankedStatusPosOffsetX { get; private set; }
 
         #endregion
 
