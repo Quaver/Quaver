@@ -348,7 +348,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(115, 28),
-                X = Banner.X - Banner.Width - 18,
+                X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18),
                 Image = UserInterface.StatusPanel,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -363,7 +363,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(71, 28),
-                X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
+                X = RankedStatusSprite.X - RankedStatusSprite.Width + (SkinManager.Skin?.SongSelect?.GameModePosOffsetX ?? -18),
                 UsePreviousSpriteBatchOptions = true
             };
 
