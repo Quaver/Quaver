@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
@@ -145,6 +146,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.SameLine();
             DrawSelectNotesButton();
             DrawMoveObjectsButton();
+            DrawSelectTimingGroupOfSelectedNotesButton();
 
             if (SelectedTimingGroups.All(x =>
                     Screen.WorkingMap.TimingGroups.TryGetValue(x, out var v) && v is ScrollGroup))
@@ -186,6 +188,37 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 Screen.ActionManager.MoveObjectsToTimingGroup(Screen.SelectedHitObjects.Value, SelectedTimingGroups.First());
             }
             ImGui.EndDisabled();
+        }
+
+        private void DrawSelectTimingGroupOfSelectedNotesButton()
+        {
+            if (ImGui.Button("Select Timing Group Of Selected Notes"))
+            {
+                if (Screen.SelectedHitObjects.Value.Count == 0)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "No Notes Selected");
+                    return;
+                }
+                var groups = Screen.SelectedHitObjects.Value
+                    .Select(h => h.TimingGroup)
+                    .Distinct()
+                    .ToList();
+                var newGroupId = groups.First();
+                if (groups.Count > 1)
+                {
+                    if (SelectedTimingGroups.Count == 1)
+                    {
+                        // Cycle through the groups
+                        var currentGroupIndex = groups.IndexOf(SelectedTimingGroups.First());
+                        newGroupId = groups[(currentGroupIndex + 1) % groups.Count];
+                    }
+                }
+
+                SelectedTimingGroups.Clear();
+                SelectedTimingGroups.Add(newGroupId);
+                Screen.SelectedScrollGroupId = newGroupId;
+                NotificationManager.Show(NotificationLevel.Success, $"Selected timing group: {newGroupId}");
+            }
         }
 
         private void DrawSelectNotesButton()
