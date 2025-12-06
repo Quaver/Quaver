@@ -31,16 +31,16 @@ namespace Quaver.Shared.Helpers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="maps"></param>
+        /// <param name="mapModes"></param>
         /// <param name="sprite">
         /// Reference to the sprite that will be set to the game mode texture.
         /// </param>
         /// <param name="text">
         /// Reference to the text that will be set to the game mode text. Will be "" if skin has a custom game mode texture.
         /// </param>
-        public static void SetGameModeTexture(List<Map> maps, Sprite sprite, SpriteTextPlus text)
+        public static void SetGameModeTexture(IEnumerable<GameMode> mapModes, Sprite sprite, SpriteTextPlus text)
         {
-            var modes = maps.Select(m => m.Mode).Distinct().OrderBy(m => ModeHelper.ToKeyCount(m)).ToList();
+            var modes = mapModes.Distinct().OrderBy(m => ModeHelper.ToKeyCount(m)).ToList();
 
             if (modes.Count == 0)
             {

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Objects;
@@ -68,9 +69,9 @@ namespace Quaver.Shared.Screens.Downloading
         /// <summary>
         ///     The currently filtered game mode
         /// </summary>
-        public Bindable<DownloadFilterMode> FilterGameMode { get; } = new Bindable<DownloadFilterMode>(DownloadFilterMode.All)
+        public Bindable<GameMode> FilterGameMode { get; } = new Bindable<GameMode>(0)
         {
-            Value = DownloadFilterMode.All
+            Value = 0
         };
 
         /// <summary>
@@ -630,7 +631,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnGameModeChanged(object sender, BindableValueChangedEventArgs<DownloadFilterMode> e) => Page.Value = 0;
+        private void OnGameModeChanged(object sender, BindableValueChangedEventArgs<GameMode> e) => Page.Value = 0;
 
         /// <summary>
         /// </summary>

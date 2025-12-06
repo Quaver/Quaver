@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
@@ -11,39 +13,39 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
     {
         /// <summary>
         /// </summary>
-        private Bindable<DownloadFilterMode> Mode { get; }
+        private Bindable<GameMode> Mode { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="mode"></param>
-        public DownloadModeDropdown(Bindable<DownloadFilterMode> mode) : base("MODE: ", 22, new Dropdown(GetDropdownItems(),
+        public DownloadModeDropdown(Bindable<GameMode> mode) : base("MODE: ", 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(120, 38), 22, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
         {
             Mode = mode;
-            Dropdown.ItemSelected += (sender, args) => Mode.Value = (DownloadFilterMode) args.Index;
+            Dropdown.ItemSelected += (sender, args) => Mode.Value = (GameMode)args.Index;
         }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetDropdownItems() => new List<string>
+        private static List<string> GetDropdownItems()
         {
-            "All",
-            "4 Keys",
-            "7 Keys",
-        };
+            var list = new List<string> {
+                "All"
+            };
+
+            foreach (var mode in ModeHelper.AllModes)
+            {
+                list.Add(ModeHelper.ToLongHand(mode));
+            }
+
+            return list;
+        }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
         private static int GetSelectedIndex() => 0;
-    }
-
-    public enum DownloadFilterMode
-    {
-        All,
-        Keys4,
-        Keys7
     }
 }
