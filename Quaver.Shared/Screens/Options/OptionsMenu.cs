@@ -362,7 +362,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                         //new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Online Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
                         new OptionsItemCheckbox(containerRect, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay),
-                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing)
+                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing),
+                        new OptionsSlider(containerRect, "Normalise Scroll Velocity By Rate Percentage", ConfigManager.NormaliseScrollVelocityByRatePercentage, i => $"{i}%"),
                     }),
                     new OptionsSubcategory("Skin", new List<OptionsItem>()
                     {
