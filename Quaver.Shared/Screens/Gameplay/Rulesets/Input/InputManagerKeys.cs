@@ -388,17 +388,28 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
                 {
                     targetScrollSpeed += speedIncrease;
-                    MapManager.CustomScrollSpeed = targetScrollSpeed;
                 }
                 else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
                 {
                     targetScrollSpeed -= speedIncrease;
-                    MapManager.CustomScrollSpeed = targetScrollSpeed;
                 }
 
-                NotificationManager.Show(NotificationLevel.Info,
-                    $"Scroll speed (local) has been changed to: {targetScrollSpeed / 10f:0.0}",
-                    null, true);
+                if (targetScrollSpeed == scrollSpeed.Value)
+                {
+                    MapManager.CustomScrollSpeed = null;
+
+                    NotificationManager.Show(NotificationLevel.Info,
+                        $"Scroll speed (local) has been reset to global: {scrollSpeed.Value / 10f:0.0}",
+                        null, true);
+                }
+                else
+                {
+                    MapManager.CustomScrollSpeed = targetScrollSpeed;
+
+                    NotificationManager.Show(NotificationLevel.Info,
+                        $"Scroll speed (local) has been changed to: {targetScrollSpeed / 10f:0.0}",
+                        null, true);
+                }
             }
             else
             {
