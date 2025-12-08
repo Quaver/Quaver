@@ -214,6 +214,12 @@ namespace Quaver.Shared.Database.Maps
         public int OnlineOffset { get; set; }
         
         /// <summary>
+        ///     Default value for CustomScrollSpeed.
+        ///     If this is used, the scroll speed will be determined by the user's global settings instead.
+        /// </summary>
+        public const int DefaultCustomScrollSpeed = 0;
+
+        /// <summary>
         ///     Fixed custom scroll speed for this map.
         ///     If 0, uses the user's scroll speed.
         /// </summary>

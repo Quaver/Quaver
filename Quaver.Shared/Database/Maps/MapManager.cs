@@ -40,11 +40,6 @@ namespace Quaver.Shared.Database.Maps
     public static class MapManager
     {
         /// <summary>
-        ///     Default value for CustomScrollSpeed.
-        ///     If this is used, the scroll speed will be determined by the user's global settings instead.
-        /// </summary>
-        private const int DefaultCustomScrollSpeed = 0;
-        /// <summary>
         ///     The currently selected map.
         /// </summary>
         public static Bindable<Map> Selected { get; set; } = new Bindable<Map>(null);
@@ -599,7 +594,7 @@ namespace Quaver.Shared.Database.Maps
             get
             {
                 var scrollSpeed = Selected.Value?.CustomScrollSpeed;
-                return scrollSpeed == DefaultCustomScrollSpeed ? null : scrollSpeed;
+                return scrollSpeed == Map.DefaultCustomScrollSpeed ? null : scrollSpeed;
             }
             set
             {
@@ -608,7 +603,7 @@ namespace Quaver.Shared.Database.Maps
                 if (map == null)
                     return;
 
-                map.CustomScrollSpeed = value ?? DefaultCustomScrollSpeed;
+                map.CustomScrollSpeed = value ?? Map.DefaultCustomScrollSpeed;
 
                 // Update the map in the background
                 ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(map));
