@@ -21,10 +21,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 /// </summary>
 public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjectInfo, NoteControllerKeys>
 {
-    private readonly BindableInt _bindableScrollSpeed = ConfigManager.ScrollSpeeds[
+    private readonly BindableInt bindableGlobalScrollSpeed = ConfigManager.ScrollSpeeds[
         MapManager.Selected.Value.Qua != null ? MapManager.Selected.Value.Qua.Mode : GameMode.Keys4];
 
-    private readonly float _rateScaling = 1 + (ModHelper.GetRateFromMods(ModManager.Mods) - 1) *
+    private readonly float rateScaling = 1 + (ModHelper.GetRateFromMods(ModManager.Mods) - 1) *
         ConfigManager.NormaliseScrollVelocityByRatePercentage.Value / 100f;
 
     /// <summary>
@@ -39,13 +39,13 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     {
         get
         {
-            var scrollSpeed = MapManager.CustomScrollSpeed ?? _bindableScrollSpeed.Value;
+            var scrollSpeed = MapManager.CustomScrollSpeed ?? bindableGlobalScrollSpeed.Value;
 
             if (!Manager.HasSignificantSVs)
                 return scrollSpeed;
 
             // Cap the speed
-            var adjustedScrollSpeed = Math.Clamp(scrollSpeed * _rateScaling, 50, 1000);
+            var adjustedScrollSpeed = Math.Clamp(scrollSpeed * rateScaling, 50, 1000);
             return adjustedScrollSpeed;
         }
     }
