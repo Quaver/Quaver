@@ -384,6 +384,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             if (KeyboardManager.IsShiftDown())
             {
+                // Handle local scroll speed changes with <shift> key held.
                 var targetScrollSpeed = MapManager.CustomScrollSpeed ?? scrollSpeed.Value;
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
                 {
@@ -396,6 +397,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
                 if (targetScrollSpeed == scrollSpeed.Value)
                 {
+                    // Reset to global if the target speed is the same as global
                     MapManager.CustomScrollSpeed = null;
 
                     NotificationManager.Show(NotificationLevel.Info,
@@ -404,6 +406,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 }
                 else
                 {
+                    // Set custom local scroll speed
                     MapManager.CustomScrollSpeed = targetScrollSpeed;
 
                     NotificationManager.Show(NotificationLevel.Info,
@@ -413,6 +416,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             }
             else
             {
+                // Update the global scroll speed.
+                // If there is a custom local scroll speed set, this would not have any
+                // visual effect right away.
+
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
                     scrollSpeed.Value += speedIncrease;
                 else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))

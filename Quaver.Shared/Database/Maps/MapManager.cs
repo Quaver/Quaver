@@ -588,6 +588,11 @@ namespace Quaver.Shared.Database.Maps
             );
 
         /// <summary>
+        ///     The custom scroll speed for the selected map.
+        ///     Null indicates that the selected map does not have a custom scroll speed,
+        ///     and therefore should use the global one.
+        ///
+        ///     Setting this to null will reset the map's custom scroll speed to the global one.
         /// </summary>
         public static int? CustomScrollSpeed
         {
