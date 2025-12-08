@@ -842,7 +842,7 @@ namespace Quaver.Shared.Skinning
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{lane + 1}", lane, FallbackKeys?.NoteHitObjects, HitObjectFallbacks);
                     LoadHitObjects(NoteMines, $"note-mine-{lane + 1}", lane, FallbackKeys?.NoteMines, HitObjectFallbacks, true);
                     LoadHitObjects(NoteMineStarts, $"note-minestart-{lane + 1}", lane, FallbackKeys?.NoteMineStarts, HitObjectFallbacks, true);
-                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{lane + 1}", lane, FallbackKeys?.NoteHoldHitObjects, HitObjectFallbacks, true);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{lane + 1}", lane, FallbackKeys?.NoteHoldHitObjects, HitObjectFallbacks);
                 }
                 else
                 {
