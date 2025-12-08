@@ -273,6 +273,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Toggle Mirror Mod", ConfigManager.KeyToggleMirror),
+                        new OptionsItemKeybind(containerRect, "Toggle Pitch", ConfigManager.KeyTogglePitch),
+                        new OptionsItemKeybind(containerRect, "Remove All Mods", ConfigManager.KeyRemoveAllMods),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {
@@ -360,7 +362,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                         //new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Online Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
                         new OptionsItemCheckbox(containerRect, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay),
-                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing)
+                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing),
+                        new OptionsSlider(containerRect, "Normalise Scroll Velocity By Rate Percentage", ConfigManager.NormaliseScrollVelocityByRatePercentage, i => $"{i}%"),
                     }),
                     new OptionsSubcategory("Skin", new List<OptionsItem>()
                     {

@@ -433,29 +433,25 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            var isNone = e.ChangedMods.HasFlag(ModIdentifier.None);
+            if (e.ChangedMods.HasFlag(ModIdentifier.None)) // why is ModIdentifier.None not 0
+                return;
 
-            if (!isNone)
-            {
-                if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop) || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
-                    return;
-            }
-
-            var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
-                             e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X ||
-                             e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X || isNone;
-
-            if (isSpeedMod)
+            if ((e.ChangedMods & ModIdentifier.SpeedMods) != 0)
             {
                 ScheduleUpdate(() =>
                 {
                     CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys)LoadedGameplayScreen?.Ruleset?.Playfield, false);
                 });
-                return;
             }
 
-            // Reload the entire
-            RunLoadTask();
+            var reloadTriggers = e.ChangedMods
+                                 & ~ModIdentifier.SpeedMods
+                                 & ~ModIdentifier.Autoplay
+                                 & ~ModIdentifier.Coop
+                                 & ~ModIdentifier.Randomize;
+
+            if (reloadTriggers != 0) //  once again why is ModIdentifier.None not 0
+                RunLoadTask();
         }
 
         /// <summary>

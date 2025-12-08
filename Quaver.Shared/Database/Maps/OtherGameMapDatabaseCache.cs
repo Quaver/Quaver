@@ -306,7 +306,7 @@ namespace Quaver.Shared.Database.Maps
                 }
 
                 // Find all osu!mania maps and order them by their difficulty value.
-                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania).ToList();
+                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (1 <= x.CircleSize && x.CircleSize <= 10)).ToList();
                 osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
 
                 var osuToQuaverMaps = new List<OtherGameMap>();

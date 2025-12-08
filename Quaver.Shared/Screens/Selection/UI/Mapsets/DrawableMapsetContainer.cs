@@ -219,7 +219,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Creator.X = ByText.X + ByText.Width + ArtistCreatorSpacingX;
 
             RankedStatusSprite.Image = GetRankedStatusImage();
-            GameModeHelper.SetGameModeTexture(item.Maps, GameModes, GameModeText);
+            GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.Mode), GameModes, GameModeText);
 
             if (ParentMapset.IsSelected)
                 Select(true);
