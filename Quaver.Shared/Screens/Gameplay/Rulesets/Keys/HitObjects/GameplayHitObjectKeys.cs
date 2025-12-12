@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     LN bodies are drawn from the middle of the start object to the middle of the end object, and this
         ///     difference takes those two half-heights into account.
         /// </summary>
-        private float LongNoteSizeDifference { get; }
+        private float LongNoteSizeDifference { get; set; }
 
         /// <summary>
         ///     Base tint of the sprites.
@@ -128,8 +128,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var lane = info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
 
-            LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
-
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             InitializeObject(manager, info);
         }
@@ -148,8 +146,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
 
-            LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
-
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             Hide();
         }
@@ -164,7 +160,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             var posX = playfield.Stage.Receptors[lane].X;
-            var flipNoteBody = direction.Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll;
+            var flipNoteBody = direction.Equals(ScrollDirection.Up) &&
+                               SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll;
             ScrollDirection = direction;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
@@ -217,9 +214,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="manager"></param>
         public void InitializeObject(HitObjectManagerKeys manager, NoteControllerKeys info)
         {
+            var hitObjectType = info.HitObjectInfo.Type;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
-            HoldEndHitPosition = playfield.HoldEndHitPositionY[info.Lane - 1];
+            HitPosition = info.IsLongNote
+                ? playfield.HoldHitPositionY[(int)hitObjectType, info.Lane - 1]
+                : playfield.HitPositionY[(int)hitObjectType, info.Lane - 1];
+            HoldEndHitPosition = playfield.HoldEndHitPositionY[(int)hitObjectType, info.Lane - 1];
             Info = info;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
@@ -234,7 +234,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 if (info.Lane == Ruleset.Screen.Map.GetKeyCount())
                 {
                     laneSize = skin.ScratchLaneSize * scale;
-                    defaultLaneSize = skin.WidthForNoteHeightScale > 0 ? skin.WidthForNoteHeightScale : playfield.LaneSize;
+                    defaultLaneSize = skin.WidthForNoteHeightScale > 0
+                        ? skin.WidthForNoteHeightScale
+                        : playfield.LaneSize;
                 }
             }
 
@@ -249,12 +251,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
-            HitObjectSprite.Size = new ScalableVector2(laneSize, defaultLaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
+            HitObjectSprite.Size = new ScalableVector2(laneSize,
+                defaultLaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
             LongNoteBodySprite.Width = laneSize;
             LongNoteEndSprite.Width = laneSize;
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
-            
+
             // Update hitobject sprites depending on LN or not
             if (!Info.IsLongNote)
             {
@@ -263,6 +266,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
             else
             {
+                LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[(int)hitObjectType, info.Lane - 1];
+
                 LongNoteBodySprite.Tint = tint;
                 LongNoteEndSprite.Tint = tint;
                 var bodies = GetHoldBodyTexture(info.Lane, manager.Ruleset.Mode);
@@ -278,7 +283,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 InitializeLongNoteSize();
 
-                var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
+                var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) &&
+                                  SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
                 if (Info.ShouldFlipLongNoteEnd)
                     // LN ends on negative SV => end should be flipped (since it's going upside down).
                     flipNoteEnd = !flipNoteEnd;
@@ -335,6 +341,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             PressHit.Destroy();
             ReleaseHit.Destroy();
         }
+
         /// <summary>
         ///     Updates the earliest and latest track positions as well as the current LN body size.
         /// </summary>
