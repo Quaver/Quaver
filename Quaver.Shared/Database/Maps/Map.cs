@@ -212,6 +212,18 @@ namespace Quaver.Shared.Database.Maps
         ///     Retroactively fixed offset for ranked maps.
         /// </summary>
         public int OnlineOffset { get; set; }
+        
+        /// <summary>
+        ///     Default value for CustomScrollSpeed.
+        ///     If this is used, the scroll speed will be determined by the user's global settings instead.
+        /// </summary>
+        public const int DefaultCustomScrollSpeed = 0;
+
+        /// <summary>
+        ///     Fixed custom scroll speed for this map.
+        ///     If 0, uses the user's scroll speed.
+        /// </summary>
+        public int CustomScrollSpeed { get; set; }
 
         /// <summary>
         ///    Returns the notes per second a map has
