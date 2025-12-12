@@ -188,7 +188,7 @@ namespace Quaver.Shared.Database.Maps
         public int LongNoteCount { get; set; }
 
         /// <summary>
-        ///     The count of long notes.
+        ///     The count of mines.
         /// </summary>
         public int MineCount { get; set; }
 
