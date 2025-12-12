@@ -513,7 +513,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!IsSongSelectPreview && MapManager.CustomScrollSpeed != null)
             {
                 NotificationManager.Show(NotificationLevel.Info,
-                    $"Scroll speed (local) is set to: {MapManager.CustomScrollSpeed / 10:0.0}", forceShow: true);
+                    $"Scroll speed (local) is set to: {MapManager.CustomScrollSpeed / 10f:0.0}", forceShow: true);
             }
 
             base.OnFirstUpdate();
