@@ -185,7 +185,10 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Visuals", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Long Note Shrink Amount", ConfigManager.PercyAmount,
-                            i => i.ToString()),
+                            i => i.ToString())
+                        {
+                            Tags = new List<string> {"percy", "ln"}
+                        },
                     }),
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
