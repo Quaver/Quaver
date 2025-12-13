@@ -372,6 +372,29 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
+        ///     Shrinks the height based on Percy amount
+        /// </summary>
+        /// <param name="height"></param>
+        /// <returns>Shrunk height, minimum 0</returns>
+        private float PercyHeight(double height)
+        {
+            return (float)Math.Max(0,
+                height - Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
+        }
+
+        /// <summary>
+        ///     Adjusts the position based on Percy amount
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>adjusted position</returns>
+        private float PercyPosition(double position)
+        {
+            if (ScrollDirection.Equals(ScrollDirection.Down))
+                return (float)(position + Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
+            return (float)(position - Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
+        }
+
+        /// <summary>
         ///     Updates the HitObject sprite positions
         /// </summary>
         public void UpdateSpritePositions(double curTime)
@@ -407,20 +430,25 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 return;
 
             //Update HoldBody Position and Size
-            LongNoteBodySprite.Height = CurrentLongNoteBodySize;
+            var currentLongNoteBodySize = CurrentLongNoteBodySize;
+            var earliestHeldPosition = Info.GetSpritePosition(HitPosition, Info.EarliestHeldPosition);
 
-            var earliestSpritePosition = Info.GetSpritePosition(HitPosition, Info.EarliestHeldPosition);
+            var longNoteBodyHeight = PercyHeight(currentLongNoteBodySize);
+            LongNoteBodySprite.Height = longNoteBodyHeight;
+
+            // var earliestSpritePositionRp = RPercy(earliestHeldPosition);
             if (ScrollDirection.Equals(ScrollDirection.Down))
-                LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset - CurrentLongNoteBodySize;
+                LongNoteBodySprite.Y = earliestHeldPosition + LongNoteBodyOffset - PercyHeight(currentLongNoteBodySize);
             else
-                LongNoteBodySprite.Y = earliestSpritePosition + LongNoteBodyOffset;
+                LongNoteBodySprite.Y = earliestHeldPosition + LongNoteBodyOffset;
 
-            LongNoteEndSprite.Y = Info.GetSpritePosition(HoldEndHitPosition, Info.LatestHeldPosition);
+            LongNoteEndSprite.Y = PercyPosition(Info.GetSpritePosition(HoldEndHitPosition, Info.LatestHeldPosition));
 
             // Stop drawing LN body + end if the ln reaches half the height of the hitobject
             // (prevents body + end extending below this point)
-            var longNoteOverlap = CurrentLongNoteBodySize + LongNoteSizeDifference <= HitObjectSprite.Height / 2f ||
-                                  CurrentLongNoteBodySize <= 0 ||
+            var longNoteOverlap =
+                longNoteBodyHeight + LongNoteSizeDifference <= HitObjectSprite.Height / 2f ||
+                longNoteBodyHeight <= 0 ||
                                   curTime >= Info.EndTime && Info.State is HitObjectState.Held or HitObjectState.Dead;
             LongNoteEndSprite.Visible = !longNoteOverlap && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
             LongNoteBodySprite.Visible = !longNoteOverlap;

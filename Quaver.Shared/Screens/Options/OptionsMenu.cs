@@ -182,6 +182,11 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),
                     }),
+                    new OptionsSubcategory("Visuals", new List<OptionsItem>()
+                    {
+                        new OptionsSlider(containerRect, "Long Note Shrink Amount", ConfigManager.PercyAmount,
+                            i => i.ToString()),
+                    }),
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Enable Hitsounds", ConfigManager.EnableHitsounds),

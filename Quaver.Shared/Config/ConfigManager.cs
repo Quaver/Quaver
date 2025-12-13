@@ -214,6 +214,12 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> DisplaySongTimeProgress { get; private set; }
 
+        /// <summary>
+        ///     The amount of percy applied to long notes
+        ///     This is scaled by the scroll speed of the current timing group
+        /// </summary>
+        internal static BindableInt PercyAmount { get; private set; }
+
         [IgnoreWrite]
         internal static Dictionary<GameMode, BindableInt> ScrollSpeeds { get; private set; }
 
@@ -1205,6 +1211,7 @@ namespace Quaver.Shared.Config
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
+            PercyAmount = ReadInt(@"PercyAmount", 0, -50, 200, data);
 
             KeyLayouts = new();
             CoopKeyLayouts = new();
