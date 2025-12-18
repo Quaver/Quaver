@@ -215,8 +215,8 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplaySongTimeProgress { get; private set; }
 
         /// <summary>
-        ///     The amount of percy applied to long notes
-        ///     This is scaled by the scroll speed of the current timing group
+        ///     The amount of Percy (long-note shrinkage) applied to long notes for visual effect.
+        ///     This value is scaled by the scroll speed of the current timing group.
         /// </summary>
         internal static BindableInt PercyAmount { get; private set; }
 

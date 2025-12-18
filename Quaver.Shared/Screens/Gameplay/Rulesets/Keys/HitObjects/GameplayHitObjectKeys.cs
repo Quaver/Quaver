@@ -374,8 +374,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Shrinks the height based on Percy amount
         /// </summary>
-        /// <param name="height"></param>
-        /// <returns>Shrunk height, minimum 0</returns>
+        /// <param name="height">Original unmodified height before applying Percy.</param>
+        /// <returns>Shrunk height, minimum 0.</returns>
         private float PercyHeight(double height)
         {
             return (float)Math.Max(0,
@@ -385,8 +385,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Adjusts the position based on Percy amount
         /// </summary>
-        /// <param name="position"></param>
-        /// <returns>adjusted position</returns>
+        /// <param name="position">Original unadjusted position value.</param>
+        /// <returns>Adjusted position after applying Percy amount.</returns>
         private float PercyPosition(double position)
         {
             if (ScrollDirection.Equals(ScrollDirection.Down))
@@ -436,9 +436,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var longNoteBodyHeight = PercyHeight(currentLongNoteBodySize);
             LongNoteBodySprite.Height = longNoteBodyHeight;
 
-            // var earliestSpritePositionRp = RPercy(earliestHeldPosition);
             if (ScrollDirection.Equals(ScrollDirection.Down))
-                LongNoteBodySprite.Y = earliestHeldPosition + LongNoteBodyOffset - PercyHeight(currentLongNoteBodySize);
+                LongNoteBodySprite.Y = earliestHeldPosition + LongNoteBodyOffset - longNoteBodyHeight;
             else
                 LongNoteBodySprite.Y = earliestHeldPosition + LongNoteBodyOffset;
 
