@@ -216,6 +216,9 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         ///     The amount of Percy (long-note shrinkage) applied to long notes for visual effect.
+        ///     Percy refers to the shrinking of a long note so that it appears
+        ///     shorter visually than actual. This makes LN maps easier to read, since
+        ///     long note bodies take up less space than before.
         ///     This value is scaled by the scroll speed of the current timing group.
         /// </summary>
         internal static BindableInt PercyAmount { get; private set; }
