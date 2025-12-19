@@ -1420,17 +1420,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             switch (Tool.Value)
             {
                 case EditorCompositionTool.Note:
+                {
                     ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
                     break;
+                }
                 case EditorCompositionTool.Mine:
-                    ActionManager.PlaceHitObject(lane, time, 0, layer, HitObjectType.Mine, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
+                {
+                    hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer, HitObjectType.Mine,
+                        timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
+
+                    var ln = HitObjects.Find(y => y.Info == hitObject);
+                    LongNoteInDrag = ln;
                     break;
+                }
                 case EditorCompositionTool.LongNote:
+                {
                     hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
 
                     var ln = HitObjects.Find(y => y.Info == hitObject);
                     LongNoteInDrag = ln;
                     break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
