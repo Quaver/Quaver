@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
@@ -75,7 +74,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health
 
             foreach (var stat in keysProcessor.Stats)
             {
-                simulatedProcessor.CalculateScore(stat);
+                simulatedProcessor.CalculateScore(stat.Judgement, stat.KeyPressType == KeyPressType.Release);
 
                 var hp = simulatedProcessor.Health;
 

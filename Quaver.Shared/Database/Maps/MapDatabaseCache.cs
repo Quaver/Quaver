@@ -321,7 +321,7 @@ namespace Quaver.Shared.Database.Maps
                 foreach (var map in mapset.Maps)
                 {
                     // The difficulty calculator only calculates for maps with >= 2 hitobjects
-                    if (map.RegularNoteCount + map.LongNoteCount + map.MineCount >= 2)
+                    if (map.RegularNoteCount + map.LongNoteCount >= 2)
                     {
                         // ReSharper disable once CompareOfFloatsByEqualityOperator
                         if (map.Difficulty105X == 0f && !OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Add].Contains(map))
