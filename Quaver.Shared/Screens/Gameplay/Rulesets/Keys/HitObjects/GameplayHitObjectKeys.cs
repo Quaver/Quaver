@@ -6,7 +6,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -89,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     LN bodies are drawn from the middle of the start object to the middle of the end object, and this
         ///     difference takes those two half-heights into account.
         /// </summary>
-        private float LongNoteSizeDifference { get; set; }
+        private float LongNoteSizeDifference { get; }
 
         /// <summary>
         ///     Base tint of the sprites.
@@ -128,6 +127,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var lane = info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
 
+            LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
+
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             InitializeObject(manager, info);
         }
@@ -146,6 +147,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
 
+            LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
+
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             Hide();
         }
@@ -160,8 +163,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             var posX = playfield.Stage.Receptors[lane].X;
-            var flipNoteBody = direction.Equals(ScrollDirection.Up) &&
-                               SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll;
+            var flipNoteBody = direction.Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll;
             ScrollDirection = direction;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
@@ -198,6 +200,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Parent = playfield.Stage.HitObjectContainer
             };
 
+            // Set long note end properties.
+            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
+            LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+            LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
+
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
             HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
@@ -214,12 +221,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="manager"></param>
         public void InitializeObject(HitObjectManagerKeys manager, NoteControllerKeys info)
         {
-            var hitObjectType = info.HitObjectInfo.Type;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            HitPosition = info.IsLongNote
-                ? playfield.HoldHitPositionY[(int)hitObjectType, info.Lane - 1]
-                : playfield.HitPositionY[(int)hitObjectType, info.Lane - 1];
-            HoldEndHitPosition = playfield.HoldEndHitPositionY[(int)hitObjectType, info.Lane - 1];
+            HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
+            HoldEndHitPosition = playfield.HoldEndHitPositionY[info.Lane - 1];
             Info = info;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
@@ -234,9 +238,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 if (info.Lane == Ruleset.Screen.Map.GetKeyCount())
                 {
                     laneSize = skin.ScratchLaneSize * scale;
-                    defaultLaneSize = skin.WidthForNoteHeightScale > 0
-                        ? skin.WidthForNoteHeightScale
-                        : playfield.LaneSize;
+                    defaultLaneSize = skin.WidthForNoteHeightScale > 0 ? skin.WidthForNoteHeightScale : playfield.LaneSize;
                 }
             }
 
@@ -251,12 +253,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
-            HitObjectSprite.Size = new ScalableVector2(laneSize,
-                defaultLaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
+            HitObjectSprite.Size = new ScalableVector2(laneSize, defaultLaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
             LongNoteBodySprite.Width = laneSize;
             LongNoteEndSprite.Width = laneSize;
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
-
 
             // Update hitobject sprites depending on LN or not
             if (!Info.IsLongNote)
@@ -266,25 +266,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
             else
             {
-                LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[(int)hitObjectType, info.Lane - 1];
-
                 LongNoteBodySprite.Tint = tint;
                 LongNoteEndSprite.Tint = tint;
-                var bodies = GetHoldBodyTexture(info.Lane, manager.Ruleset.Mode);
-                LongNoteBodySprite.ReplaceFrames(bodies);
-
-                LongNoteEndSprite.Image = GetHoldEndTexture(info.Lane, manager.Ruleset.Mode);
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
 
-                // Set long note end properties.
-                LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
-                LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
-
                 InitializeLongNoteSize();
 
-                var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) &&
-                                  SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
+                var flipNoteEnd = playfield.ScrollDirections[info.Lane - 1].Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
                 if (Info.ShouldFlipLongNoteEnd)
                     // LN ends on negative SV => end should be flipped (since it's going upside down).
                     flipNoteEnd = !flipNoteEnd;
@@ -341,7 +330,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             PressHit.Destroy();
             ReleaseHit.Destroy();
         }
-
         /// <summary>
         ///     Updates the earliest and latest track positions as well as the current LN body size.
         /// </summary>
@@ -480,65 +468,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
 
-            if (skin.ColorObjectsBySnapDistance && Info.HitObjectInfo.Type is not HitObjectType.Mine)
+            if (skin.ColorObjectsBySnapDistance)
             {
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
 
-                if (HitObjectManager.SnapIndices.TryGetValue(Info.StartTime, out var snap))
+                if (HitObjectManager.SnapIndices.ContainsKey(Info.StartTime))
                 {
-                    return snap < objects.Count ? objects[snap] : objects[^1];
+                    var snap = HitObjectManager.SnapIndices[Info.StartTime];
+                    return snap < objects.Count ? objects[snap] : objects[objects.Count - 1];
                 }
 
                 return objects.First();
             }
 
-            return Info.HitObjectInfo.Type switch
-            {
-                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineStarts[lane].First(),
-                HitObjectType.Mine when !Info.IsLongNote => skin.NoteMines[lane].First(),
-                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldHitObjects[lane].First(),
-                HitObjectType.Normal when !Info.IsLongNote => skin.NoteHitObjects[lane].First(),
-                _ => throw new ArgumentOutOfRangeException(nameof(Info.HitObjectInfo.Type),
-                    "Unknown HitObjectType for GetHitObjectTexture")
-            };
-        }
-
-        /// <summary>
-        ///     Gets the correct Hold Body texture also based on if we have note snapping and if
-        ///     the note is a long note or note.
-        /// </summary>
-        /// <returns></returns>
-        private List<Texture2D> GetHoldBodyTexture(int lane, GameMode mode)
-        {
-            lane = lane - 1;
-            var skin = SkinManager.Skin.Keys[mode];
-
-            return Info.HitObjectInfo.Type switch
-            {
-                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineBodies[lane],
-                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldBodies[lane],
-                _ => throw new ArgumentOutOfRangeException(nameof(Info.HitObjectInfo.Type),
-                    "Unknown HitObjectType for GetHitObjectTexture")
-            };
-        }
-
-        /// <summary>
-        ///     Gets the correct Hold End texture also based on if we have note snapping and if
-        ///     the note is a long note or note.
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D GetHoldEndTexture(int lane, GameMode mode)
-        {
-            lane = lane - 1;
-            var skin = SkinManager.Skin.Keys[mode];
-
-            return Info.HitObjectInfo.Type switch
-            {
-                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineEnds[lane],
-                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldEnds[lane],
-                _ => throw new ArgumentOutOfRangeException(nameof(Info.HitObjectInfo.Type),
-                    "Unknown HitObjectType for GetHitObjectTexture")
-            };
+            return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }
 
         /// <summary>

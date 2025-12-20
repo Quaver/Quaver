@@ -1096,7 +1096,6 @@ namespace Quaver.Shared.Screens.Edit
                     EditorLayer = h.EditorLayer,
                     HitSound = h.HitSound,
                     Lane = h.Lane,
-                    Type = h.Type,
                     TimingGroup = WorkingMap.TimingGroups.ContainsKey(h.TimingGroup)
                         ? h.TimingGroup
                         : Qua.DefaultScrollGroupId
@@ -1309,10 +1308,7 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     // Remove any long notes that this note would reside in before placing
                     ActionManager.RemoveHitObjectBatch(lnsAtTime);
-                    var type = CompositionTool.Value is EditorCompositionTool.Mine
-                        ? HitObjectType.Mine
-                        : HitObjectType.Normal;
-                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer, type, timingGroupId: SelectedScrollGroupId);
+                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: SelectedScrollGroupId);
                 }
             }
         }

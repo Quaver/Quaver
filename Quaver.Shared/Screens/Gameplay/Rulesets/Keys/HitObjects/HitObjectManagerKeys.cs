@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework;
 using MoreLinq;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
-using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
@@ -86,12 +85,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     One queue for each lane.
         /// </summary>
         public List<Queue<NoteControllerKeys>> HitObjectQueueLanes { get; set; }
-
-        /// <summary>
-        ///     Hitobject info queues used for input and scoring.
-        ///     One queue for each lane.
-        /// </summary>
-        public List<Queue<NoteControllerKeys>> MineLanes { get; set; }
 
         /// <summary>
         ///     Queues for held long notes used for input and scoring.
@@ -198,10 +191,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 // If there are objects to hit, we're not done.
                 if (HitObjectQueueLanes.Any(lane => lane.Any()))
-                    return false;
-
-                // If there are objects to hit, we're not done.
-                if (MineLanes.Any(lane => lane.Any()))
                     return false;
 
                 // If there are held LNs, we're not done.
@@ -382,7 +371,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             MaxHitObjectCount *= 2;
 
             HitObjectQueueLanes = new List<Queue<NoteControllerKeys>>(KeyCount);
-            MineLanes = new List<Queue<NoteControllerKeys>>(KeyCount);
             HeldLongNoteLanes = new List<Queue<NoteControllerKeys>>(KeyCount);
             RenderedHitObjectInfos = new HashSet<NoteControllerKeys>(MaxHitObjectCount);
             InRangeHitObjectInfos = new HashSet<NoteControllerKeys>(MaxHitObjectCount);
@@ -390,7 +378,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             for (int i = 0; i < KeyCount; i++)
             {
                 HitObjectQueueLanes.Add(new Queue<NoteControllerKeys>(HitObjectInfos.Count));
-                MineLanes.Add(new Queue<NoteControllerKeys>(HitObjectInfos.Count));
                 HeldLongNoteLanes.Add(new Queue<NoteControllerKeys>(1));
             }
         }
@@ -408,7 +395,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // reset collections that change during gameplay
             HitObjectQueueLanes.ForEach(lane => lane.Clear());
-            MineLanes.ForEach(lane => lane.Clear());
             HeldLongNoteLanes.ForEach(lane => lane.Clear());
             RenderedHitObjectInfos.Clear();
 
@@ -424,17 +410,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 // reset hitobject states before queueing them back up
                 info.State = HitObjectState.Alive;
-                switch (info.HitObjectInfo.Type)
-                {
-                    case HitObjectType.Mine:
-                        MineLanes[info.Lane - 1].Enqueue(info);
-                        break;
-                    case HitObjectType.Normal:
-                        HitObjectQueueLanes[info.Lane - 1].Enqueue(info);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                HitObjectQueueLanes[info.Lane - 1].Enqueue(info);
             }
         }
 
@@ -483,7 +459,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             UpdateCurrentTrackPosition();
 
-            ScoreMissedMines();
             ScoreMissedHitObjects();
             ScoreMissedReleases();
 
@@ -554,64 +529,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 info.HitObject.UpdateSpritePositions(CurrentVisualAudioOffset);
             }
         }
-        
-        /// <summary>
-        ///     Check if any mines were passed from lack of input
-        /// </summary>
-        private void ScoreMissedMines()
-        {
-            if (Ruleset.Screen.Failed)
-                return;
-
-            // Check to see if the player has passed any active mines
-            foreach (var lane in MineLanes)
-            {
-                foreach(var info in lane) {
-                    var endTime = info.IsLongNote ? info.EndTime : info.StartTime;
-                    var currentAudioOffset = (int)CurrentAudioOffset;
-                    if (currentAudioOffset < info.StartTime - Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv])
-                        break;
-                    if (info.State is HitObjectState.Dead or HitObjectState.Removed)
-                        continue;
-                    if (currentAudioOffset <= endTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv])
-                        continue;
-                    
-                    // Update scoreboard for simulated plays
-                    var screenView = (GameplayScreenView)Ruleset.Screen.View;
-                    screenView.UpdateScoreboardUsers();
-
-                    // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Hit, KeyPressType.None, info.HitObjectInfo, info.StartTime,
-                        Judgement.Marv,
-                        0, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                    Ruleset.ScoreProcessor.Stats.Add(stat);
-
-                    var im = Ruleset.InputManager as KeysInputManager;
-
-                    if (im?.ReplayInputManager == null)
-                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(stat);
-
-                    var view = (GameplayScreenView)Ruleset.Screen.View;
-                    view.UpdateScoreAndAccuracyDisplays();
-
-                    // Perform Playfield animations
-                    var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-
-                    if (im?.ReplayInputManager == null)
-                    {
-                        playfield.Stage.ComboDisplay.MakeVisible();
-                        playfield.Stage.HitBubbles.AddJudgement(Judgement.Marv);
-                    }
-
-                    info.State = HitObjectState.Dead;
-                }
-
-                while (lane.Count > 0 && lane.Peek().State is HitObjectState.Removed or HitObjectState.Dead)
-                {
-                    lane.Dequeue();
-                }
-            }
-        }
 
         /// <summary>
         ///     Check if any hitobjects were missed from lack of input
@@ -641,7 +558,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(stat);
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
                     var view = (GameplayScreenView)Ruleset.Screen.View;
                     view.UpdateScoreAndAccuracyDisplays();
@@ -663,7 +580,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                         info.State = HitObjectState.Dead;
 
                         if (im?.ReplayInputManager == null)
-                            Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true, false);
+                            Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true);
 
                         view.UpdateScoreAndAccuracyDisplays();
                         Ruleset.ScoreProcessor.Stats.Add(stat);
@@ -709,7 +626,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        Ruleset.ScoreProcessor.CalculateScore(missedReleaseJudgement, true, false);
+                        Ruleset.ScoreProcessor.CalculateScore(missedReleaseJudgement, true);
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;

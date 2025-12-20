@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
 
             foreach (var stat in keysProcessor.Stats)
             {
-                simulatedProcessor.CalculateScore(stat);
+                simulatedProcessor.CalculateScore(stat.Judgement, stat.KeyPressType == KeyPressType.Release);
 
                 var acc = simulatedProcessor.Accuracy;
 
@@ -131,20 +131,19 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 // Separate ordered list is required because of hits being out of order if you go though each hit object
                 // and take the start/end time at that moment
                 // time, isLN
-                var hitTimes = new List<(int, bool, bool)>();
+                var hitTimes = new List<(int, bool)>();
 
                 foreach (var hitObject in hitObjectsLeftToPlay)
                 {
-                    var isMine = hitObject.Type is HitObjectType.Mine;
-                    hitTimes.Add((hitObject.StartTime, false, isMine));
+                    hitTimes.Add((hitObject.StartTime, false));
 
                     if (hitObject.IsLongNote)
-                        hitTimes.Add((hitObject.EndTime, true, isMine));
+                        hitTimes.Add((hitObject.EndTime, true));
                 }
 
-                foreach (var (time, isLn, isMine) in hitTimes.OrderBy(h => h.Item1))
+                foreach (var (time, isLn) in hitTimes.OrderBy(h => h.Item1))
                 {
-                    simulatedProcessor.CalculateScore(Judgement.Marv, isLn, isMine);
+                    simulatedProcessor.CalculateScore(Judgement.Marv, isLn);
 
                     var acc = simulatedProcessor.Accuracy;
                     MaximumPossibleHistory.Add((time, acc));

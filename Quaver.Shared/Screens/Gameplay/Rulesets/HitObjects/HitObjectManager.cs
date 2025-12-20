@@ -90,8 +90,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
             }
 
             // Normal
-            if (hitObject.Type != HitObjectType.Mine &&
-                (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0))
+            if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
             {
                 var chan = skin?.SoundHit?.CreateChannel();
 

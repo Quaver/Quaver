@@ -17,8 +17,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         static readonly DynValue s_hitSounds = DefineEnum<HitSounds>();
 
-        static readonly DynValue s_hitObjectType = DefineEnum<HitObjectType>();
-
         static readonly DynValue s_gameMode = DefineEnum<GameMode>();
 
         static readonly DynValue s_timeSignature = DefineEnum<TimeSignature>();
@@ -108,7 +106,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 globals["utils"] = typeof(EditorPluginUtils);
                 globals["game_mode"] = s_gameMode;
                 globals["hitsounds"] = s_hitSounds;
-                globals["hitobject_type"] = s_hitObjectType;
                 globals["time_signature"] = s_timeSignature;
                 globals["action_type"] = s_actionType;
                 globals["actions"] = Editor.ActionManager.PluginActionManager;

@@ -64,7 +64,6 @@ using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Scripting;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -434,7 +433,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="hitsounds"></param>
         /// <param name="timingGroupId"></param>
         /// <param name="fromLua"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitObjectType type = HitObjectType.Normal, HitSounds hitsounds = 0, string timingGroupId = Qua.DefaultScrollGroupId, bool fromLua = false)
+        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0, string timingGroupId = Qua.DefaultScrollGroupId, bool fromLua = false)
         {
             var hitObject = new HitObjectInfo
             {
@@ -443,7 +442,6 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 EndTime = endTime,
                 EditorLayer = layer,
                 HitSound = hitsounds,
-                Type = type,
                 TimingGroup = timingGroupId
             };
 
