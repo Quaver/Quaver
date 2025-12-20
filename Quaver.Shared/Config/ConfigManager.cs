@@ -214,6 +214,15 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> DisplaySongTimeProgress { get; private set; }
 
+        /// <summary>
+        ///     The amount of Percy (long-note shrinkage) applied to long notes for visual effect.
+        ///     Percy refers to the shrinking of a long note so that it appears
+        ///     shorter visually than actual. This makes LN maps easier to read, since
+        ///     long note bodies take up less space than before.
+        ///     This value is scaled by the scroll speed of the current timing group.
+        /// </summary>
+        internal static BindableInt PercyAmount { get; private set; }
+
         [IgnoreWrite]
         internal static Dictionary<GameMode, BindableInt> ScrollSpeeds { get; private set; }
 
@@ -1205,6 +1214,7 @@ namespace Quaver.Shared.Config
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
+            PercyAmount = ReadInt(@"PercyAmount", 0, -50, 200, data);
 
             KeyLayouts = new();
             CoopKeyLayouts = new();
