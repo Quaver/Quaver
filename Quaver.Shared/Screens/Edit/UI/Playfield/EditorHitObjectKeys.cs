@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
@@ -236,7 +237,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetBodyTexture()
         {
-            return Coloring.Value != HitObjectColoring.None ? SkinMode.EditorLayerNoteHoldBodies[Info.Lane - 1] : SkinMode.NoteHoldBodies[Info.Lane - 1].First();
+            if (Info.Type is HitObjectType.Mine)
+                return SkinMode.NoteMineBodies[Info.Lane - 1].First();
+            return Coloring.Value != HitObjectColoring.None
+                ? SkinMode.EditorLayerNoteHoldBodies[Info.Lane - 1]
+                : SkinMode.NoteHoldBodies[Info.Lane - 1].First();
         }
 
         /// <summary>
@@ -244,7 +249,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetTailTexture()
         {
-            return Coloring.Value != HitObjectColoring.None ? SkinMode.EditorLayerNoteHoldEnds[Info.Lane - 1] : SkinMode.NoteHoldEnds[Info.Lane - 1];
+            if (Info.Type is HitObjectType.Mine)
+                return SkinMode.NoteMineEnds[Info.Lane - 1];
+            return Coloring.Value != HitObjectColoring.None
+                ? SkinMode.EditorLayerNoteHoldEnds[Info.Lane - 1]
+                : SkinMode.NoteHoldEnds[Info.Lane - 1];
         }
 
         /// <inheritdoc />
