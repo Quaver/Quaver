@@ -36,6 +36,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Select, UserInterface.EditorIconSelect, "Select"),
                 new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Note, UserInterface.EditorIconNote, "Note"),
                 new DrawableEditorCompositionTool(Tool, EditorCompositionTool.LongNote, UserInterface.EditorIconLongNote, "Long Note"),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Mine, UserInterface.EditorIconMine, "Mines"),
             };
 
             AlignTools();

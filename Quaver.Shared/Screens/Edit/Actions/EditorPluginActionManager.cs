@@ -50,15 +50,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="layer"></param>
         /// <param name="hitsounds"></param>
         /// <param name="timingGroupId"></param>
+        /// <param name="type"></param>
         public HitObjectInfo PlaceHitObject(
             int lane,
             int startTime,
             int endTime = 0,
             int layer = 0,
             HitSounds hitsounds = 0,
-            string timingGroupId = Qua.DefaultScrollGroupId
+            string timingGroupId = Qua.DefaultScrollGroupId,
+            HitObjectType type = HitObjectType.Normal
         ) =>
-            ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds, timingGroupId, true);
+            ActionManager.PlaceHitObject(lane, startTime, endTime, layer, type, hitsounds, timingGroupId, true);
 
         /// <summary>
         /// </summary>
