@@ -51,6 +51,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         internal List<bool> UniquePresses { get; } = new List<bool>();
 
         /// <summary>
+        ///     If there are key presses in the current frame, per lane.
+        /// </summary>
+        internal List<bool> Presses { get; } = new List<bool>();
+
+        /// <summary>
         ///     If there are unique key releases in the current frame, per lane.
         /// </summary>
         internal List<bool> UniqueReleases { get; } = new List<bool>();
@@ -106,6 +111,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             {
                 UniquePresses.Add(false);
                 UniqueReleases.Add(false);
+                Presses.Add(false);
             }
         }
 
@@ -137,6 +143,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     : new List<int>();
 
                 var currentActive = Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame].Keys);
+
+                for (var i = 0; i < Presses.Count; i++)
+                    Presses[i] = currentActive.Contains(i);
 
                 foreach (var lane in currentActive)
                     UniquePresses[lane] = !previousActive.Contains(lane);
@@ -193,11 +202,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             {
                 var hom = Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;
 
-                if (hom?.CurrentAudioOffset >= VirtualPlayer.ScoreProcessor.Stats[i].SongPosition)
+                var hitStat = VirtualPlayer.ScoreProcessor.Stats[i];
+                if (hom?.CurrentAudioOffset >= hitStat.SongPosition)
                 {
-                    var judgement = VirtualPlayer.ScoreProcessor.Stats[i].Judgement;
-
-                    ((ScoreProcessorKeys)Screen.Ruleset.ScoreProcessor).CalculateScore(judgement);
+                    ((ScoreProcessorKeys)Screen.Ruleset.ScoreProcessor).CalculateScore(hitStat);
 
                     // Update Scoreboard
                     var view = (GameplayScreenView) Screen.View;
@@ -206,12 +214,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     var playfield = (GameplayPlayfieldKeys)Screen.Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
 
-                    if (judgement != Judgement.Miss)
-                        playfield.Stage.HitError.AddJudgement(judgement, VirtualPlayer.ScoreProcessor.Stats[i].HitDifference);
+                    if (hitStat.Judgement != Judgement.Miss)
+                        playfield.Stage.HitError.AddJudgement(hitStat.Judgement, hitStat.HitDifference);
 
-                    var lane = Math.Clamp(VirtualPlayer.ScoreProcessor.Stats[i].HitObject.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1);
-                    playfield.Stage.HitBubbles.AddJudgement(judgement);
-                    playfield.Stage.JudgementHitBursts[lane].PerformJudgementAnimation(judgement);
+                    var lane = Math.Clamp(hitStat.HitObject.Lane - 1, 0, playfield.Stage.JudgementHitBursts.Count - 1);
+                    playfield.Stage.HitBubbles.AddJudgement(hitStat.Judgement);
+                    playfield.Stage.JudgementHitBursts[lane].PerformJudgementAnimation(hitStat.Judgement);
 
                     CurrentVirtualReplayStat++;
                 }
@@ -237,11 +245,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Reset the replay input state to one frame prior
             UniquePresses.Clear();
             UniqueReleases.Clear();
+            Presses.Clear();
 
             for (var i = 0; i < KeyCount; i++)
             {
                 UniquePresses.Add(false);
                 UniqueReleases.Add(false);
+                Presses.Add(false);
             }
 
             var im = Screen.Ruleset.InputManager as KeysInputManager;
