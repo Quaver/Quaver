@@ -206,6 +206,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
             ProgressBarButton.Clicked += (sender, args) =>
             {
+                if (Screen == null || AudioEngine.Track.Time == 0)
+                    return;
+
                 var percentage = (MouseManager.CurrentState.X - ProgressBarButton.AbsolutePosition.X) / ProgressBarButton.AbsoluteSize.X;
                 Screen?.HandleReplaySeeking(Screen.Map.Length * percentage);
             };
@@ -253,7 +256,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
             PausePlayButton.Clicked += (sender, args) =>
             {
-                if (Screen == null)
+                if (Screen == null || AudioEngine.Track.Time == 0)
                     return;
 
                 Screen.IsPaused = !Screen.IsPaused;
@@ -271,8 +274,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                 Size = new ScalableVector2(BUTTON_SIZE, BUTTON_SIZE),
                 X = BUTTON_SIZE + BUTTON_SPACING
             };
+            
+            FastForwardButton.Clicked += (sender, args) => 
+            {
+                if (Screen == null || AudioEngine.Track.Time == 0)
+                    return;
 
-            FastForwardButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(AudioEngine.Track.Time + 10000);
+                Screen?.HandleReplaySeeking(AudioEngine.Track.Time + 10000);
+            };
         }
 
         /// <summary>
@@ -288,7 +297,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                 X = -BUTTON_SIZE - BUTTON_SPACING
             };
 
-            BackwardButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(AudioEngine.Track.Time - 10000);
+            BackwardButton.Clicked += (sender, args) => 
+            {
+                if (Screen == null || AudioEngine.Track.Time == 0)
+                    return;
+
+                Screen?.HandleReplaySeeking(AudioEngine.Track.Time - 10000);
+            };
         }
 
         /// <summary>
@@ -303,7 +318,18 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                 X = BackwardButton.X - BackwardButton.Width - BUTTON_SPACING
             };
 
-            RestartButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(0);
+            RestartButton.Clicked += (sender, args) => 
+            {
+                if (Screen == null || AudioEngine.Track.Time == 0)
+                    return;
+                    
+                Screen?.HandleReplaySeeking(0);
+                Screen.IsPaused = false;
+
+                if (!AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Play();
+                    
+            };
         }
 
         /// <summary>
@@ -318,7 +344,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                 X = FastForwardButton.X + FastForwardButton.Width + BUTTON_SPACING
             };
 
-            SkipToEndButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(Screen.Map.Length);
+            SkipToEndButton.Clicked += (sender, args) => 
+            {
+                if (Screen == null || AudioEngine.Track.Time == 0)
+                    return;
+                
+                Screen?.HandleReplaySeeking(Screen.Map.Length);
+            };
         }
 
         /// <summary>

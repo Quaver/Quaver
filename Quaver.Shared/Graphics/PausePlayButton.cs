@@ -30,7 +30,7 @@ namespace Quaver.Shared.Graphics
 
             Clicked += (sender, args) =>
             {
-                if (Track == null || Track.IsDisposed)
+                if (Track == null || Track.IsDisposed || Track.Time == 0)
                     return;
 
                 if (Track.IsPlaying)
