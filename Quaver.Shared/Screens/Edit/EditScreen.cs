@@ -1803,7 +1803,7 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
-            if (Map.Mapset.Maps.Any(x=>x.Mode != GameMode.Keys4 || x.Mode != GameMode.Keys7))
+            if (Map.Mapset.Maps.Any(x => x.Mode != GameMode.Keys4 && x.Mode != GameMode.Keys7))
             {
                 NotificationManager.Show(NotificationLevel.Warning, "Only 4K and 7K are allowed for ranking.");
                 return;
