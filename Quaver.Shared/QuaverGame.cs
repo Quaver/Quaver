@@ -459,7 +459,7 @@ namespace Quaver.Shared
                 {
                     NotificationManager.Show(NotificationLevel.Info, "Full screen is not supported on macOS. Use the borderless window mode instead.");
                     
-                    ConfigManager.WindowFullScreen.ChangeWithoutTrigger(!ConfigManager.WindowFullScreen.Value);
+                    ConfigManager.WindowFullScreen.ChangeWithoutTrigger(false);
                 }
                 else
                 {
