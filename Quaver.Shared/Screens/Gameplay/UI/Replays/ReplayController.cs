@@ -19,6 +19,7 @@ using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Replays
@@ -253,7 +254,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
             PausePlayButton.Clicked += (sender, args) =>
             {
-                if (Screen == null)
+                if (Screen == null || AudioEngine.Track.Time == 0)
                     return;
 
                 Screen.IsPaused = !Screen.IsPaused;
