@@ -279,7 +279,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             {
                 if (Screen == null || AudioEngine.Track.Time == 0)
                     return;
-                    
+
                 Screen?.HandleReplaySeeking(AudioEngine.Track.Time + 10000);
             };
         }
@@ -324,6 +324,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                     return;
                     
                 Screen?.HandleReplaySeeking(0);
+                Screen.IsPaused = false;
+
+                if (!AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Play();
+                    
             };
         }
 
@@ -339,7 +344,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                 X = FastForwardButton.X + FastForwardButton.Width + BUTTON_SPACING
             };
 
-            SkipToEndButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(Screen.Map.Length);
+            SkipToEndButton.Clicked += (sender, args) => 
+            {
+                if (Screen == null || AudioEngine.Track.Time == 0)
+                    return;
+                
+                Screen?.HandleReplaySeeking(Screen.Map.Length);
+            };
         }
 
         /// <summary>
