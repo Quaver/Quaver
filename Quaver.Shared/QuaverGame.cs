@@ -453,20 +453,13 @@ namespace Quaver.Shared
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
             
-            bool suppressWindowFullScreenEvent = false;
-            
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
             {
-                if (suppressWindowFullScreenEvent)
-                    return;
-                
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    NotificationManager.Show(NotificationLevel.Info, "Full screen mode is not supported on macOS. Please use the borderless window mode instead.");
+                    NotificationManager.Show(NotificationLevel.Info, "Full screen is not supported on macOS. Use the borderless window mode instead.");
                     
-                    suppressWindowFullScreenEvent = true;
-                    ConfigManager.WindowFullScreen.Value = false;
-                    suppressWindowFullScreenEvent = false;
+                    ConfigManager.WindowFullScreen.ChangeWithoutTrigger(!ConfigManager.WindowFullScreen.Value);
                 }
                 else
                 {
