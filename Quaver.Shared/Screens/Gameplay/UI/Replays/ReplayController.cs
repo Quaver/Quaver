@@ -19,7 +19,6 @@ using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
-using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Replays
