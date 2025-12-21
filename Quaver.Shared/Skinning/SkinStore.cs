@@ -246,6 +246,11 @@ namespace Quaver.Shared.Skinning
         ///     The scoreboard for the blue team (other players)
         /// </summary>
         internal Texture2D ScoreboardBlueTeamOther { get; set; }
+		
+		/// <summary>
+        ///     The avatar mask for scoreboard avatars
+        /// </summary>
+        internal Texture2D ScoreboardAvatarMask { get; private set; }
 
         /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
@@ -706,6 +711,9 @@ namespace Quaver.Shared.Skinning
 
             const string scoreboardBlueTeamOther = "scoreboard-blue-team-other";
             ScoreboardBlueTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeamOther}.png");
+			
+			const string scoreboardAvatarMask = "scoreboard-avatar-mask";
+            ScoreboardAvatarMask = LoadSingleTexture($"{scoreboardFolder}/{scoreboardAvatarMask}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardAvatarMask}.png");
         }
 
         /// <summary>

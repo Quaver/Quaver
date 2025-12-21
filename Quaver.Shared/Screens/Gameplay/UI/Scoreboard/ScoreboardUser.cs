@@ -32,6 +32,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
+using Wobble;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 {
@@ -77,7 +78,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     The avatar for the user.
         /// </summary>
-        internal Sprite Avatar { get; }
+        internal SpriteAlphaMaskBlend Avatar { get; }
 
         /// <summary>
         ///     Text that displays the username of the player.
@@ -185,7 +186,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 throw new InvalidEnumArgumentException();
 
             // Create avatar
-            Avatar = new Sprite()
+            Avatar = new SpriteAlphaMaskBlend()
             {
                 Parent = this,
                 Size = new ScalableVector2(Height, Height),
@@ -226,6 +227,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 }
             }
 
+			// Perform alpha mask blend for avatar
+            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            {
+                var mask = SkinManager.Skin?.ScoreboardAvatarMask;
+                Avatar.Image = Avatar.PerformBlend(Avatar.Image, mask);
+            });
+	
             // Create username text.
             Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21)
             {
@@ -372,6 +380,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 return;
 
             Avatar.Image = e.Texture;
+			var mask = SkinManager.Skin?.ScoreboardAvatarMask;
+            Avatar.Image = Avatar.PerformBlend(Avatar.Image, mask);
             Avatar.ClearAnimations();
             Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
         }
