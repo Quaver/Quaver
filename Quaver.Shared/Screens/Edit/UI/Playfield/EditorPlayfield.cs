@@ -1339,7 +1339,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             {
                 if (MouseManager.CurrentState.LeftButton == ButtonState.Pressed && KeyboardManager.IsCtrlDown())
                 {
-                    if (Tool.Value == EditorCompositionTool.Note)
+                    if (Tool.Value is EditorCompositionTool.Note or EditorCompositionTool.Mine)
                         HandleHitObjectPlacement();
                 }
 
@@ -1429,8 +1429,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                     hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer, HitObjectType.Mine,
                         timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
 
-                    var ln = HitObjects.Find(y => y.Info == hitObject);
-                    LongNoteInDrag = ln;
+                    if (!KeyboardManager.IsCtrlDown())
+                    {
+                        var ln = HitObjects.Find(y => y.Info == hitObject);
+                        LongNoteInDrag = ln;
+                    }
+                    else
+                    {
+                        LongNoteInDrag = null;
+                    }
                     break;
                 }
                 case EditorCompositionTool.LongNote:

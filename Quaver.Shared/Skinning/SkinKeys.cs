@@ -450,6 +450,18 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal List<Texture2D> EditorLayerNoteHoldEnds { get; } = new List<Texture2D>();
 
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteMines { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteMineBodies { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteMineEnds { get; } = new List<Texture2D>();
+
         // ----- Receptors ----- //
 
         /// <summary>
@@ -948,10 +960,21 @@ namespace Quaver.Shared.Skinning
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{lane + 1}", FallbackKeys?.NoteReceptorsUp?[ReceptorFallbacks[lane]], false));
                 NoteReceptorsDown.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-down-{lane + 1}", FallbackKeys?.NoteReceptorsDown?[ReceptorFallbacks[lane]], false));
 
-                // Editor
+                // Editor (Regular notes)
                 EditorLayerNoteHitObjects.Add(LoadTexture(SkinKeysFolder.Editor, $"note-hitobject-{lane + 1}", FallbackKeys?.EditorLayerNoteHitObjects?[HitObjectFallbacks[lane]], false));
                 EditorLayerNoteHoldBodies.Add(LoadTexture(SkinKeysFolder.Editor, $"note-holdbody-{lane + 1}", FallbackKeys?.EditorLayerNoteHoldBodies?[HoldBodyFallbacks[lane]], false));
                 EditorLayerNoteHoldEnds.Add(LoadTexture(SkinKeysFolder.Editor, $"note-holdend-{lane + 1}", FallbackKeys?.EditorLayerNoteHoldEnds?[HoldEndFallbacks[lane]], false));
+
+                // Editor (Mines)
+                EditorLayerNoteMines.Add(LoadTexture(SkinKeysFolder.Editor, $"note-mine-{lane + 1}",
+                    FallbackKeys?.EditorLayerNoteMines?[MineFallbacks[lane]] ?? EditorLayerNoteMines.FirstOrDefault(),
+                    false));
+                EditorLayerNoteMineBodies.Add(LoadTexture(SkinKeysFolder.Editor, $"note-minebody-{lane + 1}",
+                    FallbackKeys?.EditorLayerNoteMineBodies?[MineBodyFallbacks[lane]] ??
+                    EditorLayerNoteMineBodies.FirstOrDefault(), false));
+                EditorLayerNoteMineEnds.Add(LoadTexture(SkinKeysFolder.Editor, $"note-mineend-{lane + 1}",
+                    FallbackKeys?.EditorLayerNoteMineEnds?[MineEndFallbacks[lane]] ??
+                    EditorLayerNoteMineEnds.FirstOrDefault(), false));
             }
         }
     }

@@ -154,21 +154,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public Texture2D GetHitObjectTexture()
         {
             var index = SkinMode.ColorObjectsBySnapDistance && Map.TimingPoints.Count > 0 ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var lane = Info.Lane - 1;
 
-            if (Info.Type is HitObjectType.Mine)
+            return Info.Type switch
             {
-                if (Info.IsLongNote)
-                    return SkinMode.NoteMineStarts[Info.Lane - 1][index];
-                return SkinMode.NoteMines[Info.Lane - 1][index];
-            }
-
-            if (Coloring.Value != HitObjectColoring.None)
-                return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];
-
-            if (Info.IsLongNote)
-                return SkinMode.NoteHoldHitObjects[Info.Lane - 1][index];
-
-            return SkinMode.NoteHitObjects[Info.Lane - 1][index];
+                HitObjectType.Normal when Coloring.Value != HitObjectColoring.None => SkinMode.EditorLayerNoteHitObjects[lane],
+                HitObjectType.Mine when Coloring.Value != HitObjectColoring.None => SkinMode.EditorLayerNoteMines[lane],
+                HitObjectType.Normal when Info.IsLongNote => SkinMode.NoteHoldHitObjects[lane][index],
+                HitObjectType.Mine when Info.IsLongNote => SkinMode.NoteMineStarts[lane][index],
+                HitObjectType.Normal => SkinMode.NoteHitObjects[lane][index],
+                HitObjectType.Mine => SkinMode.NoteMines[lane][index],
+                _ => throw new ArgumentOutOfRangeException(nameof(Info.Type), Info.Type, "Unknown editor hit object texture")
+            };
         }
 
         /// <summary>
