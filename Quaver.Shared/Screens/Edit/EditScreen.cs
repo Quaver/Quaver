@@ -687,7 +687,8 @@ namespace Quaver.Shared.Screens.Edit
                         // ignore and play
                     }
 
-                    HitObjectManager.PlayObjectHitSounds(obj, EditorSkin.Value, HitsoundVolume.Value);
+                    if (obj.Type != HitObjectType.Mine)
+                        HitObjectManager.PlayObjectHitSounds(obj, EditorSkin.Value, HitsoundVolume.Value);
                     HitsoundObjectIndex = i + 1;
                 }
                 else
