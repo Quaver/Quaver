@@ -967,14 +967,12 @@ namespace Quaver.Shared.Skinning
 
                 // Editor (Mines)
                 EditorLayerNoteMines.Add(LoadTexture(SkinKeysFolder.Editor, $"note-mine-{lane + 1}",
-                    FallbackKeys?.EditorLayerNoteMines?[MineFallbacks[lane]] ?? EditorLayerNoteMines.FirstOrDefault(),
+                    FallbackKeys?.EditorLayerNoteMines?[MineFallbacks[lane]],
                     false));
                 EditorLayerNoteMineBodies.Add(LoadTexture(SkinKeysFolder.Editor, $"note-minebody-{lane + 1}",
-                    FallbackKeys?.EditorLayerNoteMineBodies?[MineBodyFallbacks[lane]] ??
-                    EditorLayerNoteMineBodies.FirstOrDefault(), false));
+                    FallbackKeys?.EditorLayerNoteMineBodies?[MineBodyFallbacks[lane]], false));
                 EditorLayerNoteMineEnds.Add(LoadTexture(SkinKeysFolder.Editor, $"note-mineend-{lane + 1}",
-                    FallbackKeys?.EditorLayerNoteMineEnds?[MineEndFallbacks[lane]] ??
-                    EditorLayerNoteMineEnds.FirstOrDefault(), false));
+                    FallbackKeys?.EditorLayerNoteMineEnds?[MineEndFallbacks[lane]], false));
             }
         }
     }
