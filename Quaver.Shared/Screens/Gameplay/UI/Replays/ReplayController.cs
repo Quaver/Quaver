@@ -305,8 +305,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                 Screen?.HandleReplaySeeking(AudioEngine.Track.Time - 10000);
 
                 if (AudioEngine.Track.IsPlaying == false && AudioEngine.Track.Time == 0)
+                {
                     AudioEngine.Track.Play();
                     Screen.IsPaused = false;
+                }
             };
         }
 
