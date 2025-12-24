@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// </summary>
         private void CreatePausePlayButton()
         {
-            PausePlayButton = new PausePlayButton(UserInterface.JukeboxPauseButton, UserInterface.JukeboxPlayButton)
+            PausePlayButton = new PausePlayButton(UserInterface.JukeboxPauseButton, UserInterface.JukeboxPlayButton, null, true)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -303,6 +303,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
                     return;
 
                 Screen?.HandleReplaySeeking(AudioEngine.Track.Time - 10000);
+
+                if (AudioEngine.Track.IsPlaying == false && AudioEngine.Track.Time == 0)
+                {
+                    AudioEngine.Track.Play();
+                    Screen.IsPaused = false;
+                }
             };
         }
 
@@ -320,9 +326,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
             RestartButton.Clicked += (sender, args) => 
             {
-                if (Screen == null || AudioEngine.Track.Time == 0)
+                if (Screen == null || (AudioEngine.Track.Time == 0 && Screen.InReplayMode))
                     return;
-                    
+
                 Screen?.HandleReplaySeeking(0);
                 Screen.IsPaused = false;
 
@@ -346,7 +352,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
             SkipToEndButton.Clicked += (sender, args) => 
             {
-                if (Screen == null || AudioEngine.Track.Time == 0)
+                if (Screen == null || AudioEngine.Track.Time == 0 && Screen.InReplayMode)
                     return;
                 
                 Screen?.HandleReplaySeeking(Screen.Map.Length);

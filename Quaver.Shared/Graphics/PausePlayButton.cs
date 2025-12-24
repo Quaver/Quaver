@@ -16,11 +16,13 @@ namespace Quaver.Shared.Graphics
 
         private Texture2D PlayButton { get; }
 
+        private bool LockButton { get; }
+
         /// <summary>
         /// </summary>
         private IAudioTrack Track { get; }
 
-        public PausePlayButton(Texture2D pauseButton = null, Texture2D playButton = null, IAudioTrack track = null)
+        public PausePlayButton(Texture2D pauseButton = null, Texture2D playButton = null, IAudioTrack track = null, bool LockButton = false)
             : base(pauseButton ?? FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
         {
             Track = track ?? AudioEngine.Track;
@@ -30,7 +32,7 @@ namespace Quaver.Shared.Graphics
 
             Clicked += (sender, args) =>
             {
-                if (Track == null || Track.IsDisposed || Track.Time == 0)
+                if (Track == null || Track.IsDisposed || (Track.Time == 0 && LockButton == true))
                     return;
 
                 if (Track.IsPlaying)
