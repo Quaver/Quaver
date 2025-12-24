@@ -246,7 +246,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// </summary>
         private void CreatePausePlayButton()
         {
-            PausePlayButton = new PausePlayButton(UserInterface.JukeboxPauseButton, UserInterface.JukeboxPlayButton)
             PausePlayButton = new PausePlayButton(UserInterface.JukeboxPauseButton, UserInterface.JukeboxPlayButton,null,true)
             {
                 Parent = this,
