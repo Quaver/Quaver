@@ -835,10 +835,10 @@ namespace Quaver.Shared.Skinning
         /// <param name="element"></param>
         /// <param name="lane"></param>
         /// <returns></returns>
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int lane, IList<List<Texture2D>>? fallback, List<int> fallbackIndicies, bool fillWithFirstIfNotExist = false)
+        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int lane, IList<List<Texture2D>>? fallback, List<int> fallbackIndicies)
         {
             // First load the beginning HitObject element that doesn't require snapping.
-            var fallbackTexture = fallback?[fallbackIndicies[lane]]?[0] ?? (fillWithFirstIfNotExist ? hitObjects.FirstOrDefault()?.FirstOrDefault() : null);
+            var fallbackTexture = fallback?[fallbackIndicies[lane]]?[0];
 
             var objectsList = new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, fallbackTexture, false) };
 
