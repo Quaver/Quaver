@@ -101,6 +101,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
                 chan?.Play();
             }
 
+            if (hitObject.Type == HitObjectType.Mine)
+            {
+                var chan = skin?.SoundMineExplode?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
+
             // Clap
             if ((HitSounds.Clap & hitObject.HitSound) != 0)
             {

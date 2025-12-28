@@ -479,28 +479,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
-
-            if (skin.ColorObjectsBySnapDistance && Info.HitObjectInfo.Type is not HitObjectType.Mine)
+            var objects = Info.HitObjectInfo.Type switch
             {
-                var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
-
-                if (HitObjectManager.SnapIndices.TryGetValue(Info.StartTime, out var snap))
-                {
-                    return snap < objects.Count ? objects[snap] : objects[^1];
-                }
-
-                return objects.First();
-            }
-
-            return Info.HitObjectInfo.Type switch
-            {
-                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineStarts[lane].First(),
-                HitObjectType.Mine when !Info.IsLongNote => skin.NoteMines[lane].First(),
-                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldHitObjects[lane].First(),
-                HitObjectType.Normal when !Info.IsLongNote => skin.NoteHitObjects[lane].First(),
+                HitObjectType.Mine when Info.IsLongNote => skin.NoteMineStarts[lane],
+                HitObjectType.Mine when !Info.IsLongNote => skin.NoteMines[lane],
+                HitObjectType.Normal when Info.IsLongNote => skin.NoteHoldHitObjects[lane],
+                HitObjectType.Normal when !Info.IsLongNote => skin.NoteHitObjects[lane],
                 _ => throw new ArgumentOutOfRangeException(nameof(Info.HitObjectInfo.Type),
                     "Unknown HitObjectType for GetHitObjectTexture")
             };
+
+            if (skin.ColorObjectsBySnapDistance &&
+                HitObjectManager.SnapIndices.TryGetValue(Info.StartTime, out var snap))
+            {
+                return snap < objects.Count ? objects[snap] : objects[^1];
+            }
+
+            return objects.First();
         }
 
         /// <summary>

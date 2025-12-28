@@ -237,11 +237,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetBodyTexture()
         {
-            if (Info.Type is HitObjectType.Mine)
-                return SkinMode.NoteMineBodies[Info.Lane - 1].First();
-            return Coloring.Value != HitObjectColoring.None
-                ? SkinMode.EditorLayerNoteHoldBodies[Info.Lane - 1]
-                : SkinMode.NoteHoldBodies[Info.Lane - 1].First();
+            var lane = Info.Lane - 1;
+            return Info.Type switch
+            {
+                HitObjectType.Normal when Coloring.Value != HitObjectColoring.None =>
+                    SkinMode.EditorLayerNoteHoldBodies[lane],
+                HitObjectType.Normal => SkinMode.NoteHoldBodies[lane].First(),
+                HitObjectType.Mine when Coloring.Value != HitObjectColoring.None =>
+                    SkinMode.EditorLayerNoteMineBodies[lane],
+                HitObjectType.Mine => SkinMode.NoteMineBodies[lane].First(),
+                _ => throw new ArgumentOutOfRangeException(nameof(Info.Type), Info.Type, "Unknown hit object type")
+            };
         }
 
         /// <summary>
@@ -249,11 +255,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private Texture2D GetTailTexture()
         {
-            if (Info.Type is HitObjectType.Mine)
-                return SkinMode.NoteMineEnds[Info.Lane - 1];
-            return Coloring.Value != HitObjectColoring.None
-                ? SkinMode.EditorLayerNoteHoldEnds[Info.Lane - 1]
-                : SkinMode.NoteHoldEnds[Info.Lane - 1];
+            var lane = Info.Lane - 1;
+            return Info.Type switch
+            {
+                HitObjectType.Normal when Coloring.Value != HitObjectColoring.None =>
+                    SkinMode.EditorLayerNoteHoldEnds[lane],
+                HitObjectType.Normal => SkinMode.NoteHoldEnds[lane],
+                HitObjectType.Mine when Coloring.Value != HitObjectColoring.None =>
+                    SkinMode.EditorLayerNoteMineEnds[lane],
+                HitObjectType.Mine => SkinMode.NoteMineEnds[lane],
+                _ => throw new ArgumentOutOfRangeException(nameof(Info.Type), Info.Type, "Unknown hit object type")
+            };
         }
 
         /// <inheritdoc />
