@@ -15,6 +15,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics.UI;
 using Wobble.Logging;
 using Wobble.Scheduling;
@@ -22,7 +23,7 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
-    public class DrawableBanner : Sprite
+    public class DrawableBanner : SpriteAlphaMaskBlend
     {
         /// <summary>
         /// </summary>
@@ -49,9 +50,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public bool HasBannerLoaded { get; private set; }
 
-        /// <summary>
-        /// </summary>
         public static float DeselectedAlpha { get; } = 0.75f;
+
+        /// <summary>
+        ///     The original unmasked texture
+        /// </summary>
+        private Texture2D OriginalTexture { get; set; }
 
         /// <summary>
         /// </summary>
@@ -185,16 +189,28 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private void HandleFade(Texture2D tex)
         {
             var selected = Type == DrawableBannerType.Mapsets ? Mapset.IsSelected : PlaylistManager.Selected.Value == Playlist;
+            var mask = SkinManager.Skin?.SongSelect?.MapsetBannerMask ?? UserInterface.MapsetBannerMask;
 
-            if (Image != tex)
+            if (OriginalTexture != tex)
             {
-                Image = tex;
-                FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
+                OriginalTexture = tex;
+
+                if (mask != null)
+                {
+                    GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+                    {
+                        Image = PerformBlend(tex, mask);
+                        FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
+                    });
+                }
+                else
+                {
+                    Image = tex;
+                    FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
+                }
             }
             else
             {
-                Image = tex;
-
                 ClearAnimations();
                 FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
             }
