@@ -510,6 +510,12 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static BindableInt HitErrorFadeTime { get; private set; }
 
+        /// <summary>
+        /// The amount of time in milliseconds a hit need to deviate from the expected hit time such that
+        /// the chevron will change its color to reflect if the hit is an early/late
+        /// </summary>
+        internal static BindableInt HitErrorEarlyLateWindow { get; private set; }
+
         /// <summary></summary>
         ///     If true, the user will skip the results screen after quitting the game.
         /// </summary>
@@ -1134,6 +1140,7 @@ namespace Quaver.Shared.Config
             DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
+            HitErrorEarlyLateWindow = ReadInt(@"HitErrorEarlyLateWindow", 10, 0, 100, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             LockWinkeyDuringGameplay = ReadValue(@"LockWinkeyDuringGameplay", true, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
