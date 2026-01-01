@@ -11,8 +11,10 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Counter
@@ -32,32 +34,59 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// <summary>
         ///     The current judgement count for this
         /// </summary>
-        private int _judgementCount;
+        private int _judgementCount = -1;
         public int JudgementCount
         {
             get => _judgementCount;
             set
             {
                 // Ignore if the judgement count is the same as the incoming value.
-                if (_judgementCount == value)
+                if (_judgementCount == value && value != 0)
                     return;
 
                 _judgementCount = value;
 
-                // Change the color to its active one.
-                Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[Judgement];
-                Alpha = DefaultAlpha;
+                var skin = SkinManager.Skin.Keys[ParentDisplay.Screen.Map.Mode];
+                var color = skin.JudgeColors[Judgement];
 
-                SpriteText.Text = value == 0
-                    ? JudgementHelper.JudgementToShortName(Judgement)
-                    : JudgementCount.ToString();
+                // Change the color to its active one, respecting the skin settings.
+                if (skin.UseJudgementColorForNumbers)
+                {
+                    SpriteLabel.Tint = color * 2;
+                    Counter.Tint = color * 2;
+                }
+                else
+                {
+                    SpriteLabel.Tint = skin.JudgementCounterFontColor;
+                    Counter.Tint = skin.JudgementCounterFontColor;
+                }
+
+                this.Alpha = DefaultAlpha;
+
+                // If the value is 0, we want to display the label.
+                if (value == 0)
+                {
+                    SpriteLabel.Visible = true;
+                    Counter.Visible = false;
+                }
+                else
+                {
+                    SpriteLabel.Visible = false;
+                    Counter.Visible = true;
+                    Counter.Value = value.ToString();
+                }
             }
         }
 
         /// <summary>
         ///     The sprite text for this given judgement.
         /// </summary>
-        public SpriteTextBitmap SpriteText { get; }
+        public Sprite SpriteLabel { get; }
+
+        /// <summary>
+        ///     The number display for the judgement count.
+        /// </summary>
+        public NumberDisplay Counter { get; }
 
         /// <summary>
         ///     The inactive color for this.
@@ -80,20 +109,57 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
             ParentDisplay = parentDisplay;
 
             Size = new ScalableVector2(size.X, size.Y);
-            DefaultAlpha = Alpha;
+            DefaultAlpha = this.Alpha;
 
             var skin = SkinManager.Skin.Keys[parentDisplay.Screen.Map.Mode];
 
-            SpriteText = new SpriteTextBitmap(FontsBitmap.AllerRegular, JudgementHelper.JudgementToShortName(j), false)
+            // Create the label sprite.
+            SpriteLabel = new Sprite
             {
-                Alignment = Alignment.MidCenter,
                 Parent = this,
-                Tint = skin.UseJudgementColorForNumbers ? color * 2 : skin.JudgementCounterFontColor,
-                X = 0,
-                FontSize = (int)(Width * 0.35f)
+                Alignment = Alignment.MidCenter,
+                Image = SkinManager.Skin.JudgementCounterNames.ContainsKey(j) ? SkinManager.Skin.JudgementCounterNames[j] : null,
+                Tint = color,
             };
 
-            InactiveColor = color;
+            if (SpriteLabel.Image != null)
+            {
+                SpriteLabel.Size = new ScalableVector2(SpriteLabel.Image.Width * skin.JudgementCounterNumberScale,
+                    SpriteLabel.Image.Height * skin.JudgementCounterNumberScale);
+            }
+            else
+            {
+                SpriteLabel.Size = new ScalableVector2(size.X * skin.JudgementCounterNumberScale, size.Y * skin.JudgementCounterNumberScale);
+            }
+
+            // Create the counter display.
+            Counter = new NumberDisplay(NumberDisplayType.Judgement, "0", new Vector2(skin.JudgementCounterNumberScale))
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Tint = color,
+                Visible = false
+            };
+
+            // Re-assign tint logic from existing code (UseJudgementColorForNumbers check handled in setter mostly, but here for init)
+            if (!skin.UseJudgementColorForNumbers)
+            {
+                Counter.Tint = skin.JudgementCounterFontColor;
+                SpriteLabel.Tint = skin.JudgementCounterFontColor;
+            }
+            else
+            {
+                // Double color intensity if using judgement colors (as per original code logic, though applied to Tint)
+                // Original was: Tint = skin.UseJudgementColorForNumbers ? color * 2 : skin.JudgementCounterFontColor
+                // We apply it here.
+                Counter.Tint = color * 2;
+                SpriteLabel.Tint = color * 2;
+            }
+
+            InactiveColor = Counter.Tint;
+
+            // Set initial state
+            JudgementCount = 0;
         }
 
         /// <inheritdoc />
@@ -104,9 +170,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         {
             // Make sure the color is always tweening down back to its inactive one.
             if (SkinManager.Skin.Keys[ParentDisplay.Screen.Map.Mode].JudgementCounterFadeToAlpha)
-                FadeTo(0, Wobble.Graphics.Animations.Easing.Linear, 360);
+                this.FadeTo(0, Wobble.Graphics.Animations.Easing.Linear, 360);
             else
-                FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
+            {
+                // We need to fade the color of whatever is visible
+                if (SpriteLabel.Visible)
+                    SpriteLabel.FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
+
+                if (Counter.Visible)
+                    Counter.FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
+            }
 
             base.Update(gameTime);
         }
