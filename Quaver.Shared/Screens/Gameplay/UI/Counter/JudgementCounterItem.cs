@@ -50,6 +50,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 var color = skin.JudgeColors[Judgement];
 
                 // Change the color to its active one, respecting the skin settings.
+                this.Tint = color;
+
                 if (skin.UseJudgementColorForNumbers)
                 {
                     SpriteLabel.Tint = color * 2;
@@ -88,10 +90,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// </summary>
         public NumberDisplay Counter { get; }
 
-        /// <summary>
-        ///     The inactive color for this.
-        /// </summary>
         private Color InactiveColor { get; }
+
+        /// <summary>
+        ///     The inactive color for the overlay.
+        /// </summary>
+        private Color InactiveOverlayColor { get; }
 
         private float DefaultAlpha { get; }
 
@@ -110,6 +114,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             Size = new ScalableVector2(size.X, size.Y);
             DefaultAlpha = this.Alpha;
+            Tint = color;
 
             var skin = SkinManager.Skin.Keys[parentDisplay.Screen.Map.Mode];
 
@@ -157,6 +162,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
             }
 
             InactiveColor = Counter.Tint;
+            InactiveOverlayColor = Tint;
 
             // Set initial state
             JudgementCount = 0;
@@ -168,17 +174,22 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
             // Make sure the color is always tweening down back to its inactive one.
             if (SkinManager.Skin.Keys[ParentDisplay.Screen.Map.Mode].JudgementCounterFadeToAlpha)
                 this.FadeTo(0, Wobble.Graphics.Animations.Easing.Linear, 360);
             else
             {
+                // Fade the overlay itself.
+                this.FadeToColor(InactiveOverlayColor, dt, 360);
+
                 // We need to fade the color of whatever is visible
                 if (SpriteLabel.Visible)
-                    SpriteLabel.FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
+                    SpriteLabel.FadeToColor(InactiveColor, dt, 360);
 
                 if (Counter.Visible)
-                    Counter.FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
+                    Counter.FadeToColor(InactiveColor, dt, 360);
             }
 
             base.Update(gameTime);
