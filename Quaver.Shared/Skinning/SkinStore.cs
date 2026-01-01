@@ -798,7 +798,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         public void LoadSoundEffects()
         {
-            var sfxFolder = $"{Dir}/SFX/";
+            var sfxFolder = Path.Combine(Dir, "SFX").Replace("\\", "/");
 
             const string soundHit = "sound-hit";
             SoundHit = LoadSoundEffect($"{sfxFolder}/{soundHit}", soundHit, "Gameplay");
