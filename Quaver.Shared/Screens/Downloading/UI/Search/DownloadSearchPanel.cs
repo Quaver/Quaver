@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Quaver.API.Enums;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.API.MapsetSearch;
 using Wobble.Bindables;
@@ -16,7 +17,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
 
         /// <summary>
         /// </summary>
-        private Bindable<DownloadFilterMode> Mode { get; }
+        private Bindable<GameMode> Mode { get; }
 
         /// <summary>
         /// </summary>
@@ -82,7 +83,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <param name="selectedMapset"></param>
         /// <param name="sortBy"></param>
         /// <param name="reverseSort"></param>
-        public DownloadSearchPanel(Bindable<string> searchQuery, Bindable<DownloadFilterMode> mode,
+        public DownloadSearchPanel(Bindable<string> searchQuery, Bindable<GameMode> mode,
             Bindable<DownloadFilterRankedStatus> status, BindableList<DownloadableMapset> availableMapsets,
             Bindable<DownloadableMapset> selectedMapset, Bindable<DownloadSortBy> sortBy,
             Bindable<bool> reverseSort)

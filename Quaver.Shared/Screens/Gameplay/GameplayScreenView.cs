@@ -679,7 +679,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < judgements.Count; j++)
                     {
                         var processor = user.Processor as ScoreProcessorKeys;
-                        processor?.CalculateScore(judgements[i]);
+                        // FIXME It's not right to assume all judgements are not LN releases and not mines
+                        processor?.CalculateScore(judgements[i], false, false);
                     }
                 }
 

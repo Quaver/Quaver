@@ -26,6 +26,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Bubble;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
 using Wobble.Logging;
+using Quaver.Shared.Screens.Gameplay.UI;
 
 
 namespace Quaver.Shared.Skinning
@@ -225,6 +226,9 @@ namespace Quaver.Shared.Skinning
         internal float HitErrorHeight { get; private set; }
 
         [FixedScale]
+        internal float HitErrorWidthScale { get; private set; } = 1f;
+
+        [FixedScale]
         internal float HitErrorChevronSize { get; private set; }
 
         internal HealthBarType HealthBarType { get; private set; }
@@ -326,9 +330,24 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal int CoopPlayfieldPadding { get; private set; } = 92;
 
+        [FixedScale]
+        internal int SkipDisplayPosX { get; private set; } = 0;
+
+        [FixedScale]
+        internal int SkipDisplayPosY { get; private set; } = 30;
+
         internal List<int> HitObjectFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
         internal List<int> HoldBodyFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
         internal List<int> HoldEndFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
+
+        internal List<int> MineFallbacks { get; private set; } =
+            Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
+
+        internal List<int> MineBodyFallbacks { get; private set; } =
+            Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
+
+        internal List<int> MineEndFallbacks { get; private set; } =
+            Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
         internal List<int> ReceptorFallbacks { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
         internal List<int> HitObjectRotations { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
         internal List<int> ReceptorRotations { get; private set; } = Enumerable.Repeat(0, ModeHelper.MaxKeyCount + 1).ToList();
@@ -382,6 +401,26 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
+        internal List<List<Texture2D>> NoteMines { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal List<List<Texture2D>> NoteMineBodies { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal List<Texture2D> NoteMineEnds { get; } = new List<Texture2D>();
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal List<List<Texture2D>> NoteMineStarts { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        ///
+        /// </summary>
         internal List<List<Texture2D>> NoteHitObjects { get; } = new List<List<Texture2D>>();
 
         /// <summary>
@@ -410,6 +449,18 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         /// </summary>
         internal List<Texture2D> EditorLayerNoteHoldEnds { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteMines { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteMineBodies { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteMineEnds { get; } = new List<Texture2D>();
 
         // ----- Receptors ----- //
 
@@ -603,6 +654,7 @@ namespace Quaver.Shared.Skinning
             HitErrorPosY = ConfigHelper.ReadInt32((int)HitErrorPosY, ini["HitErrorPosY"]);
             HitErrorAlpha = ConfigHelper.ReadFloat(HitErrorAlpha, ini["HitErrorAlpha"]);
             HitErrorHeight = ConfigHelper.ReadInt32((int)HitErrorHeight, ini["HitErrorHeight"]);
+            HitErrorWidthScale = ConfigHelper.ReadFloat(HitErrorWidthScale, ini["HitErrorWidthScale"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32((int)HitErrorChevronSize, ini["HitErrorChevronSize"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
@@ -649,11 +701,21 @@ namespace Quaver.Shared.Skinning
             JudgementHitBurstBumpY = ConfigHelper.ReadInt32(JudgementHitBurstBumpY, ini["JudgementHitBurstBumpY"]);
             JudgementHitBurstBumpTime = ConfigHelper.ReadInt32(JudgementHitBurstBumpTime, ini["JudgementHitBurstBumpTime"]);
             WidthForNoteHeightScale = ConfigHelper.ReadInt32(WidthForNoteHeightScale, ini["WidthForNoteHeightScale"]);
-            CoopPlayfieldPadding = ConfigHelper.ReadInt32((int)CoopPlayfieldPadding, ini["CoopPlayfieldPadding"]);
+            CoopPlayfieldPadding = ConfigHelper.ReadInt32(CoopPlayfieldPadding, ini["CoopPlayfieldPadding"]);
+            SkipDisplayPosX = ConfigHelper.ReadInt32(SkipDisplayPosX, ini["SkipDisplayPosX"]);
+            SkipDisplayPosY = ConfigHelper.ReadInt32(SkipDisplayPosY, ini["SkipDisplayPosY"]);
 
             HitObjectFallbacks = ConfigHelper.ReadIntList(HitObjectFallbacks, ini["HitObjectFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
             HoldBodyFallbacks = ConfigHelper.ReadIntList(HoldBodyFallbacks, ini["HoldBodyFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
             HoldEndFallbacks = ConfigHelper.ReadIntList(HoldEndFallbacks, ini["HoldEndFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
+
+            MineFallbacks =
+                ConfigHelper.ReadIntList(MineFallbacks, ini["MineFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
+            MineBodyFallbacks = ConfigHelper.ReadIntList(MineBodyFallbacks, ini["MineBodyFallbacks"],
+                ModeHelper.MaxKeyCount + 1, -1);
+            MineEndFallbacks = ConfigHelper.ReadIntList(MineEndFallbacks, ini["MineEndFallbacks"],
+                ModeHelper.MaxKeyCount + 1, -1);
+
             ReceptorFallbacks = ConfigHelper.ReadIntList(ReceptorFallbacks, ini["ReceptorFallbacks"], ModeHelper.MaxKeyCount + 1, -1);
             HitObjectRotations = ConfigHelper.ReadIntList(HitObjectRotations, ini["HitObjectRotations"], ModeHelper.MaxKeyCount + 1);
             ReceptorRotations = ConfigHelper.ReadIntList(ReceptorRotations, ini["ReceptorRotations"], ModeHelper.MaxKeyCount + 1);
@@ -776,7 +838,9 @@ namespace Quaver.Shared.Skinning
         private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int lane, IList<List<Texture2D>>? fallback, List<int> fallbackIndicies)
         {
             // First load the beginning HitObject element that doesn't require snapping.
-            var objectsList = new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, fallback?[fallbackIndicies[lane]]?[0], false) };
+            var fallbackTexture = fallback?[fallbackIndicies[lane]]?[0];
+
+            var objectsList = new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, fallbackTexture, false) };
 
             // Don't bother looking for snap objects if the skin config doesn't permit it.
             if (!ColorObjectsBySnapDistance)
@@ -818,7 +882,11 @@ namespace Quaver.Shared.Skinning
                 if (!UseHitObjectSheet)
                 {
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{lane + 1}", lane, FallbackKeys?.NoteHitObjects, HitObjectFallbacks);
-                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{lane + 1}", lane, FallbackKeys?.NoteHoldHitObjects, HitObjectFallbacks);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{lane + 1}", lane,
+                        FallbackKeys?.NoteHoldHitObjects, HitObjectFallbacks);
+                    LoadHitObjects(NoteMines, $"note-mine-{lane + 1}", lane, FallbackKeys?.NoteMines, MineFallbacks);
+                    LoadHitObjects(NoteMineStarts, $"note-minestart-{lane + 1}", lane, FallbackKeys?.NoteMineStarts,
+                        MineFallbacks);
                 }
                 else
                 {
@@ -829,9 +897,18 @@ namespace Quaver.Shared.Skinning
 
                         string hitObjectSheet = UsePerLaneSpriteSheets ? $"note-hitobject-sheet-{lane + 1}" : "note-hitobject-sheet";
                         string holdObjectSheet = UsePerLaneSpriteSheets ? $"note-holdobject-sheet-{lane + 1}" : "note-holdobject-sheet";
+                        string mineSheet = UsePerLaneSpriteSheets ? $"note-mine-sheet-{lane + 1}" : "note-mine-sheet";
+                        string mineStartSheet = UsePerLaneSpriteSheets ? $"note-minestart-sheet-{lane + 1}" : "note-minestart-sheet";
                         var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, hitObjectSheet, FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
                         var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, holdObjectSheet, FallbackKeys?.NoteHoldHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
+                        var mines = LoadSpritesheet(SkinKeysFolder.HitObjects, mineSheet,
+                            FallbackKeys?.NoteMines?[MineFallbacks[lane]], false,
+                            snapCount, 1);
+                        var mineStarts = LoadSpritesheet(SkinKeysFolder.HitObjects, mineStartSheet,
+                            FallbackKeys?.NoteMineStarts?[MineFallbacks[lane]],
+                            false, snapCount, 1);
                         NoteHitObjects.Add(hitobjects);
+                        NoteMines.Add(mines);
 
                         // LoadSpriteSheet returns one UserInterface.BlankBox on error
                         if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
@@ -839,11 +916,23 @@ namespace Quaver.Shared.Skinning
                         else
                             NoteHoldHitObjects.Add(hitobjects);
 
+                        // LoadSpriteSheet returns one UserInterface.BlankBox on error
+                        if (mineStarts.Any() && mineStarts[0] != UserInterface.BlankBox)
+                            NoteMineStarts.Add(mineStarts);
+                        else
+                            NoteMineStarts.Add(mines);
+
                         for (var j = 0; j < snapCount - NoteHitObjects[lane].Count; j++)
                             NoteHitObjects[lane].Add(NoteHitObjects[lane].Last());
 
                         for (var j = 0; j < snapCount - NoteHoldHitObjects[lane].Count; j++)
                             NoteHoldHitObjects[lane].Add(NoteHoldHitObjects[lane].Last());
+
+                        for (var j = 0; j < snapCount - NoteMines[lane].Count; j++)
+                            NoteMines[lane].Add(NoteMines[lane].Last());
+
+                        for (var j = 0; j < snapCount - NoteMineStarts[lane].Count; j++)
+                            NoteMineStarts[lane].Add(NoteMineStarts[lane].Last());
                     }
                     else
                     {
@@ -851,6 +940,8 @@ namespace Quaver.Shared.Skinning
                         // should also reduce memory usage slightly
                         NoteHitObjects.Add(NoteHitObjects[0]);
                         NoteHoldHitObjects.Add(NoteHoldHitObjects[0]);
+                        NoteMines.Add(NoteMines[0]);
+                        NoteMineStarts.Add(NoteMineStarts[0]);
                     }
                 }
 
@@ -858,14 +949,29 @@ namespace Quaver.Shared.Skinning
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{lane + 1}", FallbackKeys?.NoteHoldBodies?[HoldBodyFallbacks[lane]], false, 0, 0));
                 NoteHoldEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-holdend-{lane + 1}", FallbackKeys?.NoteHoldEnds?[HoldEndFallbacks[lane]], false));
 
+                // Mines
+                NoteMineBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-minebody-{lane + 1}",
+                    FallbackKeys?.NoteMineBodies?[MineBodyFallbacks[lane]], false, 0, 0));
+                NoteMineEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-mineend-{lane + 1}",
+                    FallbackKeys?.NoteMineEnds?[MineEndFallbacks[lane]], false));
+
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{lane + 1}", FallbackKeys?.NoteReceptorsUp?[ReceptorFallbacks[lane]], false));
                 NoteReceptorsDown.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-down-{lane + 1}", FallbackKeys?.NoteReceptorsDown?[ReceptorFallbacks[lane]], false));
 
-                // Editor
+                // Editor (Regular notes)
                 EditorLayerNoteHitObjects.Add(LoadTexture(SkinKeysFolder.Editor, $"note-hitobject-{lane + 1}", FallbackKeys?.EditorLayerNoteHitObjects?[HitObjectFallbacks[lane]], false));
                 EditorLayerNoteHoldBodies.Add(LoadTexture(SkinKeysFolder.Editor, $"note-holdbody-{lane + 1}", FallbackKeys?.EditorLayerNoteHoldBodies?[HoldBodyFallbacks[lane]], false));
                 EditorLayerNoteHoldEnds.Add(LoadTexture(SkinKeysFolder.Editor, $"note-holdend-{lane + 1}", FallbackKeys?.EditorLayerNoteHoldEnds?[HoldEndFallbacks[lane]], false));
+
+                // Editor (Mines)
+                EditorLayerNoteMines.Add(LoadTexture(SkinKeysFolder.Editor, $"note-mine-{lane + 1}",
+                    FallbackKeys?.EditorLayerNoteMines?[MineFallbacks[lane]],
+                    false));
+                EditorLayerNoteMineBodies.Add(LoadTexture(SkinKeysFolder.Editor, $"note-minebody-{lane + 1}",
+                    FallbackKeys?.EditorLayerNoteMineBodies?[MineBodyFallbacks[lane]], false));
+                EditorLayerNoteMineEnds.Add(LoadTexture(SkinKeysFolder.Editor, $"note-mineend-{lane + 1}",
+                    FallbackKeys?.EditorLayerNoteMineEnds?[MineEndFallbacks[lane]], false));
             }
         }
     }

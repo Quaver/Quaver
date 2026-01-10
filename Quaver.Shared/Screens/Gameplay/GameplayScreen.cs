@@ -510,6 +510,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 ScreenExiting += (_, _) => SkinManager.StopWatching();
             }
 
+            if (!IsSongSelectPreview && MapManager.CustomScrollSpeed != null)
+            {
+                NotificationManager.Show(NotificationLevel.Info,
+                    $"Scroll speed (local) is set to: {MapManager.CustomScrollSpeed / 10f:0.0}", forceShow: true);
+            }
+
             base.OnFirstUpdate();
         }
 

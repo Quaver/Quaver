@@ -90,9 +90,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
             }
 
             // Normal
-            if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
+            if (hitObject.Type != HitObjectType.Mine &&
+                (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0))
             {
                 var chan = skin?.SoundHit?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
+
+            if (hitObject.Type == HitObjectType.Mine)
+            {
+                var chan = skin?.SoundMineExplode?.CreateChannel();
 
                 if (chan != null && volume != -1)
                     chan.Volume = volume;

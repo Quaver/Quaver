@@ -214,6 +214,15 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> DisplaySongTimeProgress { get; private set; }
 
+        /// <summary>
+        ///     The amount of Percy (long-note shrinkage) applied to long notes for visual effect.
+        ///     Percy refers to the shrinking of a long note so that it appears
+        ///     shorter visually than actual. This makes LN maps easier to read, since
+        ///     long note bodies take up less space than before.
+        ///     This value is scaled by the scroll speed of the current timing group.
+        /// </summary>
+        internal static BindableInt PercyAmount { get; private set; }
+
         [IgnoreWrite]
         internal static Dictionary<GameMode, BindableInt> ScrollSpeeds { get; private set; }
 
@@ -234,6 +243,18 @@ namespace Quaver.Shared.Config
         ///     Dictates whether or not the song audio is pitched while using the ManiaModSpeed gameplayModifier.
         /// </summary>
         internal static Bindable<bool> Pitched { get; private set; }
+        
+        /// <summary>
+        ///     Key to toggle the pitch of the audio
+        /// </summary>
+        
+        internal static Bindable<Keys> KeyTogglePitch { get; private set; }
+        
+        /// <summary>
+        ///     Key to remove all mods
+        /// </summary>
+        
+        internal static Bindable<Keys> KeyRemoveAllMods { get; private set; }
 
         /// <summary>
         ///     The path of the osu!.db file
@@ -1045,6 +1066,8 @@ namespace Quaver.Shared.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             DefaultEditorSkin = ReadValue<DefaultSkins?>(@"DefaultEditorSkin", null, data);
             Pitched = ReadValue(@"Pitched", true, data);
+            KeyTogglePitch = ReadValue(@"KeyTogglePitch", Keys.OemPipe, data);
+            KeyRemoveAllMods = ReadValue(@"KeyRemoveAllMods", Keys.D0, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
             LeaderboardRankedAccuracy = ReadValue(@"LeaderboardRankedAccuracy", false, data);
@@ -1191,6 +1214,7 @@ namespace Quaver.Shared.Config
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);
             PrioritizedGameMode = ReadValue(@"PrioritizedGameMode", (GameMode)0, data);
+            PercyAmount = ReadInt(@"PercyAmount", 0, -50, 200, data);
 
             KeyLayouts = new();
             CoopKeyLayouts = new();

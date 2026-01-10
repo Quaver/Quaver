@@ -49,6 +49,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private Sprite Mode { get; set; }
 
+        private SpriteTextPlus ModeText { get; set; }
+
         /// <summary>
         /// </summary>
         private PlaylistDifficultyDisplay DifficultyRange { get; set; }
@@ -189,6 +191,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 Size = new ScalableVector2(54, 23),
                 Image = UserInterface.Mode4K7KSmall,
                 Visible = false
+            };
+
+            ModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 16)
+            {
+                Parent = Mode,
+                Alignment = Alignment.MidCenter,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Color.White,
             };
         }
 
@@ -355,14 +365,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             // Temporary map to use for the "BPM" and "Length" values
             var tempMap = new Map()
             {
-                SongLength = (int) e.Value.Maps.Max(x => x.Length),
+                SongLength = (int)e.Value.Maps.Max(x => x.Length),
                 Bpm = e.Value.Maps.Max(x => x.Bpm)
             };
 
             Bpm.Map.Value = tempMap;
             Length.Map.Value = tempMap;
 
-            Mode.Image = DrawableDownloadableMapset.GetModeIcon(e.Value);
+            GameModeHelper.SetGameModeTexture(e.Value.Maps.Select(x => x.GameMode), Mode, ModeText);
             RankedStatus.Image = DrawableDownloadableMapset.GetRankedStatusTexture(e.Value);
 
             const int spacing = 30;

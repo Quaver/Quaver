@@ -687,7 +687,8 @@ namespace Quaver.Shared.Screens.Edit
                         // ignore and play
                     }
 
-                    HitObjectManager.PlayObjectHitSounds(obj, EditorSkin.Value, HitsoundVolume.Value);
+                    if (obj.Type != HitObjectType.Mine)
+                        HitObjectManager.PlayObjectHitSounds(obj, EditorSkin.Value, HitsoundVolume.Value);
                     HitsoundObjectIndex = i + 1;
                 }
                 else
@@ -1096,6 +1097,7 @@ namespace Quaver.Shared.Screens.Edit
                     EditorLayer = h.EditorLayer,
                     HitSound = h.HitSound,
                     Lane = h.Lane,
+                    Type = h.Type,
                     TimingGroup = WorkingMap.TimingGroups.ContainsKey(h.TimingGroup)
                         ? h.TimingGroup
                         : Qua.DefaultScrollGroupId
@@ -1308,7 +1310,10 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     // Remove any long notes that this note would reside in before placing
                     ActionManager.RemoveHitObjectBatch(lnsAtTime);
-                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: SelectedScrollGroupId);
+                    var type = CompositionTool.Value is EditorCompositionTool.Mine
+                        ? HitObjectType.Mine
+                        : HitObjectType.Normal;
+                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer, type, timingGroupId: SelectedScrollGroupId);
                 }
             }
         }
@@ -1796,6 +1801,12 @@ namespace Quaver.Shared.Screens.Edit
             {
                 NotificationManager.Show(NotificationLevel.Warning,
                     "Your map has unsaved changes. Please save & upload before submitting for rank.");
+                return;
+            }
+
+            if (Map.Mapset.Maps.Any(x => x.Mode != GameMode.Keys4 && x.Mode != GameMode.Keys7))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Only 4K and 7K are allowed for ranking.");
                 return;
             }
 

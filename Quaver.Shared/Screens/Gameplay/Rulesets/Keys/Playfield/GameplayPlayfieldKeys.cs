@@ -158,17 +158,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     HitObject Target Position from the relative top of the screen.
         /// </summary>
-        internal float[] HitPositionY { get; private set; }
+        internal float[,] HitPositionY { get; private set; }
 
         /// <summary>
         ///     HeldHitObject Target Position relative from the top of the screen.
         /// </summary>
-        internal float[] HoldHitPositionY { get; private set; }
+        internal float[,] HoldHitPositionY { get; private set; }
 
         /// <summary>
         ///     LN end Target Position relative from the top of the screen.
         /// </summary>
-        internal float[] HoldEndHitPositionY { get; private set; }
+        internal float[,] HoldEndHitPositionY { get; private set; }
 
         /// <summary>
         ///     Position for each Timing Line relative from the top of the screen.
@@ -178,7 +178,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Size Adjustment for each LongNote in specific lane so the LN EndTime snaps with StartTime.
         /// </summary>
-        internal float[] LongNoteSizeAdjustment { get; private set; }
+        internal float[,] LongNoteSizeAdjustment { get; private set; }
 
         /// <summary>
         ///     Determines the scroll direction of each lane
@@ -287,11 +287,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             ReceptorPositionY = new float[ScrollDirections.Length];
             ColumnLightingPositionY = new float[ScrollDirections.Length];
-            HitPositionY = new float[ScrollDirections.Length];
-            HoldHitPositionY = new float[ScrollDirections.Length];
-            HoldEndHitPositionY = new float[ScrollDirections.Length];
+            HitPositionY = new float[2, ScrollDirections.Length];
+            HoldHitPositionY = new float[2, ScrollDirections.Length];
+            HoldEndHitPositionY = new float[2, ScrollDirections.Length];
             TimingLinePositionY = new float[ScrollDirections.Length];
-            LongNoteSizeAdjustment = new float[ScrollDirections.Length];
+            LongNoteSizeAdjustment = new float[2, ScrollDirections.Length];
 
             var defaultLaneSize = skin.WidthForNoteHeightScale > 0 ? skin.WidthForNoteHeightScale : LaneSize;
 
@@ -302,10 +302,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var holdEndOffset = LaneSize * skin.NoteHoldEnds[i].Height / skin.NoteHoldEnds[i].Width;
                 var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
 
+                var mineOffset = defaultLaneSize * skin.NoteMines[i][0].Height / skin.NoteMines[i][0].Width;
+                var mineStartOffset =
+                    defaultLaneSize * skin.NoteMineStarts[i][0].Height / skin.NoteMineStarts[i][0].Width;
+                var mineEndOffset = LaneSize * skin.NoteMineEnds[i].Height / skin.NoteMineEnds[i].Width;
+
                 if (SkinManager.Skin.Keys[Screen.Map.Mode].DrawLongNoteEnd)
-                    LongNoteSizeAdjustment[i] = (holdHitObOffset - holdEndOffset) / 2;
+                {
+                    LongNoteSizeAdjustment[(int)HitObjectType.Normal, i] = (holdHitObOffset - holdEndOffset) / 2;
+                    LongNoteSizeAdjustment[(int)HitObjectType.Mine, i] = (mineStartOffset - mineEndOffset) / 2;
+                }
                 else
-                    LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
+                {
+                    LongNoteSizeAdjustment[(int)HitObjectType.Normal, i] = holdHitObOffset / 2;
+                    LongNoteSizeAdjustment[(int)HitObjectType.Mine, i] = mineStartOffset / 2;
+                }
 
                 var oldHitpos = skin.HitPosOffsetY;
 
@@ -319,18 +330,42 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     case ScrollDirection.Down:
                         ReceptorPositionY[i] = WindowManager.Height - skin.ReceptorPosOffsetY - receptorOffset;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.ColumnLightingOffsetY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;
-                        HitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
-                        HoldEndHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdEndOffset;
+
+                        HitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
+                        HoldHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - holdEndOffset;
+
+                        HitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - mineOffset;
+                        HoldHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - mineStartOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - mineEndOffset;
+
                         TimingLinePositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
                         break;
                     case ScrollDirection.Up:
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
-                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
-                        HoldEndHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+
+                        HitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+
+                        HitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.ColumnLightingOffsetY;
-                        TimingLinePositionY[i] = HitPositionY[i];
+                        TimingLinePositionY[i] = HitPositionY[(int)HitObjectType.Normal, i];
                         break;
                     default:
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");

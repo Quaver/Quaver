@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -31,7 +33,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             Screen = screen;
             Size = new ScalableVector2(230, 56);
-            Y = 30;
+            X = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].SkipDisplayPosX;
+            Y = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].SkipDisplayPosY;
             Alignment = Alignment.TopCenter;
         }
 
