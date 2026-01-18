@@ -20,7 +20,7 @@ public class EpilepsyWarning : Sprite
         Screen = screen;
         Image = UserInterface.EpilepsyWarning;
         Alpha = 0;
-        Visible = screen.Map.Tags.Contains("sv", StringComparison.InvariantCultureIgnoreCase);
+        Visible = screen.Map?.Tags?.Contains("sv", StringComparison.InvariantCultureIgnoreCase) ?? true;
     }
 
     public override void Update(GameTime gameTime)
