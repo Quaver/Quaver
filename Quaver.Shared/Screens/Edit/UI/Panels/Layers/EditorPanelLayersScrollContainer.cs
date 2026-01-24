@@ -82,6 +82,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         public override void Destroy()
         {
             ActionManager.LayerCreated -= OnLayerCreated;
+            ActionManager.LayerDeleted -= OnLayerDeleted;
             base.Destroy();
         }
 
