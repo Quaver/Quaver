@@ -257,16 +257,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawHeaderText()
         {
             ImGui.TextWrapped(
-                "Scroll Speed Factors (SF) allow you to scale the distance from the notes to the receptor directly");
+                "Scroll Speed Factors (SSF) allow you to scale the distance from the notes to the receptor directly");
             ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1), "(Help)");
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos(300);
-                ImGui.TextWrapped("SF is a multiplier to your current scroll speed. " +
+                ImGui.TextWrapped("SSF is a multiplier to your current scroll speed. " +
                                   "The entries you add will be linearly transformed from one to another, like keyframes.");
                 ImGui.TextWrapped(
-                    "You can click on an individual SF point to edit it and double-click to go to its position in time.");
+                    "You can click on an individual SSF point to edit it and double-click to go to its position in time.");
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
@@ -452,14 +452,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var point = SelectedScrollSpeedFactors.First();
 
                 multiplier = point.Multiplier;
-                format = $"{multiplier:0.00}";
+                format = $"{multiplier}";
             }
             // All points are the same bpm
             else if (SelectedScrollSpeedFactors.Count > 1 &&
                      SelectedScrollSpeedFactors.All(x => x.Multiplier == SelectedScrollSpeedFactors.First().Multiplier))
             {
                 multiplier = SelectedScrollSpeedFactors.First().Multiplier;
-                format = $"{multiplier:0.00}";
+                format = $"{multiplier}";
             }
 
             ImGui.TextWrapped("Multiplier");
@@ -475,7 +475,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawSelectedCountLabel()
         {
             var count = SelectedScrollSpeedFactors.Count;
-            var labelText = count > 1 ? $"{count} scroll velocities selected" : "";
+            var labelText = count > 1 ? $"{count} scroll speed factors selected" : "";
             ImGui.Text(labelText);
         }
 

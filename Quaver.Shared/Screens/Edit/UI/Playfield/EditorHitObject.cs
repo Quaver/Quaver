@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
@@ -128,9 +129,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var lane = Info.Lane - 1;
 
             // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
-            if (Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
+            if (Map.HasScratchKey && ConfigManager.ScratchLanesLeft[Map.Mode] != null && ConfigManager.ScratchLanesLeft[Map.Mode].Value)
             {
-                if (Info.Lane == 8)
+                if (Info.Lane == Map.GetKeyCount(true))
                     lane = 0;
                 else
                     lane++;
@@ -153,14 +154,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public Texture2D GetHitObjectTexture()
         {
             var index = SkinMode.ColorObjectsBySnapDistance && Map.TimingPoints.Count > 0 ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
+            var lane = Info.Lane - 1;
 
-            if (Coloring.Value != HitObjectColoring.None)
-                return SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1];
-
-            if (Info.IsLongNote)
-                return SkinMode.NoteHoldHitObjects[Info.Lane - 1][index];
-
-            return SkinMode.NoteHitObjects[Info.Lane - 1][index];
+            return Info.Type switch
+            {
+                HitObjectType.Normal when Coloring.Value != HitObjectColoring.None => SkinMode.EditorLayerNoteHitObjects[lane],
+                HitObjectType.Mine when Coloring.Value != HitObjectColoring.None => SkinMode.EditorLayerNoteMines[lane],
+                HitObjectType.Normal when Info.IsLongNote => SkinMode.NoteHoldHitObjects[lane][index],
+                HitObjectType.Mine when Info.IsLongNote => SkinMode.NoteMineStarts[lane][index],
+                HitObjectType.Normal => SkinMode.NoteHitObjects[lane][index],
+                HitObjectType.Mine => SkinMode.NoteMines[lane][index],
+                _ => throw new ArgumentOutOfRangeException(nameof(Info.Type), Info.Type, "Unknown editor hit object texture")
+            };
         }
 
         /// <summary>

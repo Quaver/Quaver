@@ -113,6 +113,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 new MultiplayerTableItemFreeRate(game, isMultiplayer),
                 new MultiplayerTableItemAutoHost(game, isMultiplayer),
                 new MultiplayerTableItemAutoHostRotation(game, isMultiplayer),
+                new MultiplayerTableItemEnablePreview(game, isMultiplayer),
             });
 
             if (isMultiplayer)

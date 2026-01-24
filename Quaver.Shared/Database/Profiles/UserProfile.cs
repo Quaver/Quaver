@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.User;
@@ -32,7 +33,7 @@ namespace Quaver.Shared.Database.Profiles
         /// </summary>
         public UserProfile PopulateStats()
         {
-            foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
+            foreach (GameMode mode in ModeHelper.AllModes)
             {
                 if (!IsOnline && Stats.ContainsKey(mode))
                 {
@@ -49,7 +50,7 @@ namespace Quaver.Shared.Database.Profiles
             {
                 var stats = new APIRequestUsersFull(OnlineManager.Self.OnlineUser.Id).ExecuteRequest();
 
-                foreach (GameMode mode in Enum.GetValues(typeof(GameMode)))
+                foreach (GameMode mode in ModeHelper.AllModes)
                 {
                     APIResponseUsersFullMode modeStats = null;
 

@@ -469,16 +469,22 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
-                    
+
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map);
                     MapsetInfoRetriever.Enqueue(map);
                     lastImported = map;
                 }
             }
+            catch (QuaVersionException e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, e.Message);
+            }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Error loading map, check runtime.log for details.");
             }
 
             return lastImported;

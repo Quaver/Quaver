@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        public EditorActionManager ActionManager { get; }
+        public EditorActionManager ActionManager { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<bool> ShowWaveform { get; }
-        
+
         /// <summary>
         /// </summary>
         private Bindable<bool> ShowSpectrogram { get; }
@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<EditorPlayfieldWaveformFilter> WaveformFilter { get; }
-        
+
         /// <summary>
         /// </summary>
         private Bindable<int> SpectrogramFftSize { get; }
@@ -142,21 +142,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             get
             {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        return 74;
-                    case GameMode.Keys7:
-                        return 70;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                var keyCount = API.Helpers.ModeHelper.ToKeyCount(Map.Mode);
+                if (keyCount < 7)
+                    return 74;
+
+                return 70 * 7 / keyCount;
             }
         }
 
         /// <summary>
         /// </summary>
-        public int HitPositionY { get; } = (int) (820 * WindowManager.BaseToVirtualRatio);
+        public int HitPositionY { get; } = (int)(820 * WindowManager.BaseToVirtualRatio);
 
         /// <summary>
         ///     The speed at which the container scrolls at.
@@ -166,7 +162,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         ///     The current y positon of the playfield track
         /// </summary>
-        public float TrackPositionY => (float) Track.Time * TrackSpeed;
+        public float TrackPositionY => (float)Track.Time * TrackSpeed;
 
         /// <summary>
         /// </summary>
@@ -221,7 +217,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private TaskHandler<int, int> WaveformLoadTask { get; set; }
-        
+
         /// <summary>
         /// </summary>
         private TaskHandler<int, int> SpectrogramLoadTask { get; set; }
@@ -229,7 +225,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         public EditorPlayfieldWaveform Waveform { get; set; }
-        
+
         /// <summary>
         /// </summary>
         public EditorPlayfieldSpectrogram Spectrogram { get; set; }
@@ -237,7 +233,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private LoadingWheelText LoadingWaveform { get; set; }
-        
+
         /// <summary>
         /// </summary>
         private LoadingWheelText LoadingSpectrogram { get; set; }
@@ -369,8 +365,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             SpectrogramFftSize = spectrogramFftSize;
 
             Alignment = Alignment.TopCenter;
-            Tint = new Color(24,24,24);
+            Tint = new Color(24, 24, 24);
             Size = new ScalableVector2(ColumnSize * Map.GetKeyCount(), WindowManager.Height);
+            Alpha = ConfigManager.EditorPlayfieldAlpha.Value / 100f;
 
             CreateBorders();
             CreateDividerLines();
@@ -415,6 +412,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged += OnSpectrogramIntensityFactorChanged;
             ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged += OnSpectrogramFrequencyScaleChanged;
             ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged += OnSpectrogramInterleaveCountChanged;
+            ConfigManager.EditorPlayfieldAlpha.ValueChanged += OnPlayfieldAlphaChanged;
         }
 
         /// <inheritdoc />
@@ -455,7 +453,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 LoadingWaveform.Position = new ScalableVector2(X + BorderLeft.Width / 2f, 200);
                 LoadingWaveform.Update(gameTime);
             }
-            
+
             if (LoadingSpectrogram != null)
             {
                 LoadingSpectrogram.Alignment = Alignment;
@@ -503,9 +501,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 Waveform?.Draw(gameTime);
 
             LineContainer.Draw(gameTime);
-            
+
             DrawHitObjects(gameTime);
-            
+
             GameBase.Game.SpriteBatch.End();
 
             // Draw the button on top of the hitobjects because it serves as a dimming
@@ -513,7 +511,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (ShowWaveform.Value)
                 LoadingWaveform?.Draw(gameTime);
-            
+
             if (ShowSpectrogram.Value)
                 LoadingSpectrogram?.Draw(gameTime);
 
@@ -536,6 +534,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 HitObjects.ForEach(x => x.Destroy());
                 Timeline?.Destroy();
                 LineContainer?.Destroy();
+
+                HitObjects.Clear();
+                LineContainer = null;
+                Timeline = null;
             });
 
             Track.Seeked -= OnTrackSeeked;
@@ -572,8 +574,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramIntensityFactor.ValueChanged -= OnSpectrogramIntensityFactorChanged;
             ConfigManager.EditorSpectrogramFrequencyScale.ValueChanged -= OnSpectrogramFrequencyScaleChanged;
             ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged -= OnSpectrogramInterleaveCountChanged;
+            ConfigManager.EditorPlayfieldAlpha.ValueChanged -= OnPlayfieldAlphaChanged;
 
             base.Destroy();
+            ActionManager = null;
+            HitObjectPool.Clear();
         }
 
         /// <summary>
@@ -718,7 +723,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             return 0;
         }
 
-        
+
         /// <summary>
         /// </summary>
         /// <param name="info"></param>
@@ -904,8 +909,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (timingPoint == null)
                 return time;
 
-            var timeFwd = (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Forward, beatSnap, time);
-            var timeBwd = (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time);
+            var timeFwd = (int)AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Forward, beatSnap, time);
+            var timeBwd = (int)AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time);
 
             var fwdDiff = Math.Abs(time - timeFwd);
             var bwdDiff = Math.Abs(time - timeBwd);
@@ -917,9 +922,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 var snapTimePerBeat = 60000f / timingPoint.Bpm / beatSnap;
 
                 if (PlaceObjectsOnNearestTick.Value)
-                    return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
+                    return (int)AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
 
-                return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Forward, beatSnap, time - snapTimePerBeat);
+                return (int)AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Forward, beatSnap, time - snapTimePerBeat);
             }
 
             if (!PlaceObjectsOnNearestTick.Value)
@@ -944,13 +949,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var percentage = (x - AbsolutePosition.X) / AbsoluteSize.X;
             var lane = Map.GetKeyCount() * percentage + 1;
 
-            var val = (int) MathHelper.Clamp(lane, 1, Map.GetKeyCount());
+            var val = (int)MathHelper.Clamp(lane, 1, Map.GetKeyCount());
 
             // Place the scratch key on the left instead of right if the user has it enabled in gameplay.
-            if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLaneLeft7K != null && ConfigManager.ScratchLaneLeft7K.Value)
+            if (handleScratch && Map.HasScratchKey && ConfigManager.ScratchLanesLeft[Map.Mode] != null && ConfigManager.ScratchLanesLeft[Map.Mode].Value)
             {
                 if (val == 1)
-                    val = 8;
+                    val = Map.GetKeyCount(true);
                 else
                     val--;
             }
@@ -1334,7 +1339,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             {
                 if (MouseManager.CurrentState.LeftButton == ButtonState.Pressed && KeyboardManager.IsCtrlDown())
                 {
-                    if (Tool.Value == EditorCompositionTool.Note)
+                    if (Tool.Value is EditorCompositionTool.Note or EditorCompositionTool.Mine)
                         HandleHitObjectPlacement();
                 }
 
@@ -1397,7 +1402,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void HandleHitObjectPlacement()
         {
-            var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
+            var time = (int)Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
             var lane = GetLaneFromX(MouseManager.CurrentState.X, true);
@@ -1415,14 +1420,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             switch (Tool.Value)
             {
                 case EditorCompositionTool.Note:
+                {
                     ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
                     break;
+                }
+                case EditorCompositionTool.Mine:
+                {
+                    hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer, HitObjectType.Mine,
+                        timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
+
+                    if (!KeyboardManager.IsCtrlDown())
+                    {
+                        var ln = HitObjects.Find(y => y.Info == hitObject);
+                        LongNoteInDrag = ln;
+                    }
+                    else
+                    {
+                        LongNoteInDrag = null;
+                    }
+                    break;
+                }
                 case EditorCompositionTool.LongNote:
+                {
                     hitObject = ActionManager.PlaceHitObject(lane, time, 0, layer, timingGroupId: ActionManager.EditScreen.SelectedScrollGroupId);
 
                     var ln = HitObjects.Find(y => y.Info == hitObject);
                     LongNoteInDrag = ln;
                     break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -1469,7 +1494,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (LongNoteInDrag == null || !Button.IsHeld)
                 return;
 
-            var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
+            var time = (int)Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
             if (time <= LongNoteInDrag.Info.StartTime)
@@ -1531,7 +1556,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 // offsetted.
                 if (HitObjectInDrag.Info.IsLongNote)
                 {
-                    var relativeMouseY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
+                    var relativeMouseY = HitPositionY - (int)GetTimeFromY(MouseManager.CurrentState.Y);
                     NoteMoveGrabOffset = relativeMouseY - HitObjectInDrag.Y;
                 }
                 else
@@ -1548,10 +1573,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             // Start dragging all objects to the given y position
-            var time = GetNearestTickFromTime((int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y - NoteMoveGrabOffset) / TrackSpeed,
+            var time = GetNearestTickFromTime((int)Math.Round(GetTimeFromY(MouseManager.CurrentState.Y - NoteMoveGrabOffset) / TrackSpeed,
                 MidpointRounding.AwayFromZero), BeatSnap.Value);
 
-            var offset = (int) Math.Round((float) (time - TimeDragStart), MidpointRounding.AwayFromZero);
+            var offset = (int)Math.Round((float)(time - TimeDragStart), MidpointRounding.AwayFromZero);
 
             // ReSharper disable once PossibleInvalidOperationException
             var laneOffset = GetLaneFromX(MouseManager.CurrentState.X, true) - GetLaneFromX(NoteMoveInitialMousePosition.Value.X, true);
@@ -1592,14 +1617,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (PreviousDragOffset != offset)
                 {
                     var startTime = ho.StartTime + (offset - PreviousDragOffset);
-                    ho.StartTime = MathHelper.Clamp(startTime, 0, (int) Track.Length);
+                    ho.StartTime = MathHelper.Clamp(startTime, 0, (int)Track.Length);
 
                     // Only change the end time of long notes if the user drags it 0 or above.
                     // Notes should never begin before the maps actually start. This handles the case
                     // of the end time being automatically clamped to zero if the user tries to drag
                     // before the start of the map
                     if (ho.IsLongNote && startTime >= 0)
-                        ho.EndTime = MathHelper.Clamp(ho.EndTime + (offset - PreviousDragOffset), 0, (int) Track.Length);
+                        ho.EndTime = MathHelper.Clamp(ho.EndTime + (offset - PreviousDragOffset), 0, (int)Track.Length);
                 }
 
                 // Move the x position of the note
@@ -1623,7 +1648,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         public Vector2 GetRelativeMousePosition()
         {
-            var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
+            var relativeY = HitPositionY - (int)GetTimeFromY(MouseManager.CurrentState.Y);
             return new Vector2(MouseManager.CurrentState.X, relativeY);
         }
 
@@ -1673,12 +1698,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         private void OnSpectrogramIntensityFactorChanged(object sender, BindableValueChangedEventArgs<float> e)
             => ReloadSpectrogram();
-        
+
         private void OnSpectrogramFrequencyScaleChanged(object sender, BindableValueChangedEventArgs<EditorPlayfieldSpectrogramFrequencyScale> e)
             => ReloadSpectrogram();
-        
+
         private void OnSpectrogramInterleaveCountChanged(object sender, BindableValueChangedEventArgs<int> e)
             => ReloadSpectrogram();
+
+        private void OnPlayfieldAlphaChanged(object sender, BindableValueChangedEventArgs<int> e)
+        {
+            Alpha = e.Value / 100f;
+        }
 
         private void ReloadWaveform()
         {

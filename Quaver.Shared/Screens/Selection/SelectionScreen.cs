@@ -224,7 +224,9 @@ namespace Quaver.Shared.Screens.Selection
                 ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
 
             // If the user is playing maps from a playlist, then automatically use the mapset container
-            if (PlaylistManager.Selected.Value != null && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            // this is except when the selected playlist has no maps
+            if (PlaylistManager.Selected.Value != null && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists
+                && PlaylistManager.Selected.Value.Maps.Count > 0)
                 ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
         }
 
@@ -435,8 +437,12 @@ namespace Quaver.Shared.Screens.Selection
                 ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
 
             // Change from pitched to non-pitched
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePitch.Value))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+            
+            // Remove all mods
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRemoveAllMods.Value))
+                ModManager.RemoveAllMods();
 
             // Toggle Mirror
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
@@ -563,19 +569,7 @@ namespace Quaver.Shared.Screens.Selection
             if (MapManager.Selected.Value == null)
                 return;
 
-            BindableInt scrollSpeed;
-
-            switch (MapManager.Selected.Value.Mode)
-            {
-                case GameMode.Keys4:
-                    scrollSpeed = ConfigManager.ScrollSpeed4K;
-                    break;
-                case GameMode.Keys7:
-                    scrollSpeed = ConfigManager.ScrollSpeed7K;
-                    break;
-                default:
-                    return;
-            }
+            var scrollSpeed = ConfigManager.ScrollSpeeds[MapManager.Selected.Value.Mode];
 
             var changed = false;
 
@@ -660,6 +654,12 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
+            if (SkinManager.Skin.SoundSelect != null)
+            {
+                AudioEngine.Track.Pause();
+                SkinManager.Skin.SoundSelect.CreateChannel().Play();
+            }
+
             if (OnlineManager.IsSpectatingSomeone)
                 OnlineManager.Client?.StopSpectating();
 
@@ -668,7 +668,6 @@ namespace Quaver.Shared.Screens.Selection
                 Exit(() => new TournamentScreen(2));
                 return;
             }
-
             Exit(() => new MapLoadingScreen(new List<Score>()));
         }
 

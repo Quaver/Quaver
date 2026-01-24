@@ -88,6 +88,7 @@ namespace Quaver.Shared.Screens.Multi
                 OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
                 OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
                 OnlineManager.Client.OnGameMaxPlayersChanged += OnMaxPlayersChanged;
+                OnlineManager.Client.OnGameEnablePreviewChanged += OnGameEnablePreviewChanged;
             }
 
             SetRichPresence();
@@ -145,6 +146,7 @@ namespace Quaver.Shared.Screens.Multi
                 OnlineManager.Client.OnUserJoinedGame -= OnUserJoinedGame;
                 OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
                 OnlineManager.Client.OnGameMaxPlayersChanged -= OnMaxPlayersChanged;
+                OnlineManager.Client.OnGameEnablePreviewChanged -= OnGameEnablePreviewChanged;
             }
 
             base.Destroy();
@@ -342,6 +344,11 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         private void HandleKeyPressF3()
         {
+            if (!Game.Value.EnablePreview && Game.Value.HostId != OnlineManager.Self.OnlineUser.Id)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Preview is disabled in this game!");
+                return;
+            }
             if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
                 ActiveLeftPanel.Value = SelectContainerPanel.MapPreview;
             else
@@ -443,6 +450,7 @@ namespace Quaver.Shared.Screens.Multi
                 },
                 RefereeUserId = 11,
                 HostRotation = true,
+                EnablePreview = true,
                 FreeModType = MultiplayerFreeModType.Regular,
             };
         }
@@ -454,5 +462,15 @@ namespace Quaver.Shared.Screens.Multi
         private void OnUserLeftGame(object sender, UserLeftGameEventArgs e) => SetRichPresence();
 
         private void OnMaxPlayersChanged(object sender, MaxPlayersChangedEventArgs e) => SetRichPresence();
+
+        private void OnGameEnablePreviewChanged(object sender, EnablePreviewChangedEventArgs e)
+        {
+            if (!e.EnablePreview && ActiveLeftPanel.Value is SelectContainerPanel.MapPreview
+                                 && Game.Value.HostId != OnlineManager.Self.OnlineUser.Id)
+            {
+                ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
+                NotificationManager.Show(NotificationLevel.Info, "Map preview is disabled by host.");
+            }
+        }
     }
 }

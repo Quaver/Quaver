@@ -58,6 +58,10 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D SelectFilterPanelLeft { get; private set; }
 
+        public float? RankedStatusPosOffsetX { get; private set; }
+
+        public float? GameModePosOffsetX { get; private set; }
+
         #region MAPSET
 
         public Texture2D MapsetSelected { get; private set; }
@@ -133,6 +137,12 @@ namespace Quaver.Shared.Skinning.Menus
 
             var mapsetPanelHoveringAlpha = ini["MapsetPanelHoveringAlpha"];
             ReadIndividualConfig(mapsetPanelHoveringAlpha, () => MapsetPanelHoveringAlpha = ConfigHelper.ReadFloat(0.35f, mapsetPanelHoveringAlpha));
+
+            var rankedStatusPosOffsetX = ini["RankedStatusPosOffsetX"];
+            ReadIndividualConfig(rankedStatusPosOffsetX, () => RankedStatusPosOffsetX = ConfigHelper.ReadInt32(-18, rankedStatusPosOffsetX));
+
+            var gameModePosOffsetX = ini["GameModePosOffsetX"];
+            ReadIndividualConfig(gameModePosOffsetX, () => GameModePosOffsetX = ConfigHelper.ReadInt32(-18, gameModePosOffsetX));
 
             var leaderboardScoreColorEven = ini["LeaderboardScoreColorEven"];
             ReadIndividualConfig(leaderboardScoreColorEven, () => LeaderboardScoreColorEven = ConfigHelper.ReadColor(Color.Transparent, leaderboardScoreColorEven));

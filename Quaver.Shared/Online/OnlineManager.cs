@@ -155,11 +155,11 @@ namespace Quaver.Shared.Online
         public static List<int> FriendsList { get; private set; }
 
         /// <summary>
-        ///     Returns if the user is currently wanting to fetch the realtime leaderboards
+        ///     Returns if the user is currently wanting to fetch the realtime leaderboards (currently unused)
         /// </summary>
-        public static bool ShouldFetchRealtimeLeaderboard => ConfigManager.EnableRealtimeOnlineScoreboard.Value
-                                                             && ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value
-                                                             && CurrentGame == null;
+        //public static bool ShouldFetchRealtimeLeaderboard => ConfigManager.EnableRealtimeOnlineScoreboard.Value
+        //                                                     && ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value
+        //                                                     && CurrentGame == null;
 
         /// <summary>
         ///     Event invoked when the user's friends list has changed
@@ -258,6 +258,7 @@ namespace Quaver.Shared.Online
             Client.OnGameHealthTypeChanged += OnGameHealthTypeChanged;
             Client.OnGameLivesChanged += OnGameLivesChanged;
             Client.OnGameHostRotationChanged += OnGameHostRotationChanged;
+            Client.OnGameEnablePreviewChanged += OnGameEnablePreviewChanged;
             Client.OnGamePlayerTeamChanged += OnGamePlayerTeamChanged;
             Client.OnGameRulesetChanged += OnGameRulesetChanged;
             Client.OnGameLongNotePercentageChanged += OnGameLongNotePercentageChanged;
@@ -1029,6 +1030,18 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.HostRotation = e.HostRotation;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameEnablePreviewChanged(object sender, EnablePreviewChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.EnablePreview = e.EnablePreview;
         }
 
         /// <summary>
