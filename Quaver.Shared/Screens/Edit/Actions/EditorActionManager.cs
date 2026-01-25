@@ -29,6 +29,7 @@ using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.Layers.MoveLayer;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
@@ -178,6 +179,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a layer has been renamed
         /// </summary>
         public event EventHandler<EditorLayerRenamedEventArgs> LayerRenamed;
+
+        /// <summary>
+        ///     Event invoked when a layer has been moved
+        /// </summary>
+        public event EventHandler<EditorLayerMovedEventArgs> LayerMoved;
 
         /// <summary>
         ///     Event invoked when a timing group has been created
@@ -662,6 +668,15 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects), fromLua);
 
         /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="toIndex">the layer number. index of the layer in the list + 1</param>
+        /// <param name="fromLua"></param>
+        public void MoveLayer(EditorLayerInfo layer, int toIndex, bool fromLua = false) => Perform(
+            new EditorActionMoveLayer(this, WorkingMap, layer,
+                WorkingMap.EditorLayers.IndexOf(layer), toIndex - 1), fromLua);
+
+        /// <summary>
         ///     Changes the color of a non-default editor layer
         /// </summary>
         /// <param name="layer"></param>
@@ -877,6 +892,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RenameLayer:
                     LayerRenamed?.Invoke(this, (EditorLayerRenamedEventArgs)args);
                     break;
+                case EditorActionType.MoveLayer:
+                    LayerMoved?.Invoke(this, (EditorLayerMovedEventArgs)args);
+                    break;
                 case EditorActionType.ColorLayer:
                     LayerColorChanged?.Invoke(this, (EditorLayerColorChangedEventArgs)args);
                     break;
@@ -1014,6 +1032,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             LayerCreated = null;
             LayerDeleted = null;
             LayerRenamed = null;
+            LayerMoved = null;
             LayerColorChanged = null;
             ScrollVelocityAdded = null;
             ScrollVelocityRemoved = null;

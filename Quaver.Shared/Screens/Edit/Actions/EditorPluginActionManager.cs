@@ -212,6 +212,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
+        /// <param name="toIndex"></param>
+        public void MoveLayer(EditorLayerInfo layer, int toIndex) =>
+            ActionManager.MoveLayer(layer, toIndex, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
         /// <param name="color"></param>
         public void ChangeLayerColor(EditorLayerInfo layer, int r, int g, int b) =>
             ActionManager.ChangeLayerColor(layer, new(r, g, b), true);
