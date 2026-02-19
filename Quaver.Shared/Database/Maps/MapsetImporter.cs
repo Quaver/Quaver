@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Helpers;
@@ -276,6 +277,27 @@ namespace Quaver.Shared.Database.Maps
 
                 ConfigManager.AutoLoadOsuBeatmaps.Value = true;
                 NotificationManager.Show(NotificationLevel.Success, $"Successfully set the path for your .db file");
+            }
+            // Archive with maps (playlists)
+            else if (path.EndsWith(".zip"))
+            {
+                var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+                var tempFolder = $@"{ConfigManager.TempDirectory}";
+
+                if (Directory.Exists(tempFolder))
+                    Directory.Delete(tempFolder, true);
+
+                Directory.CreateDirectory(tempFolder);
+
+                using (ZipArchive archive = ZipFile.OpenRead(path))
+                {
+                    archive.ExtractToDirectory(tempFolder);
+                }
+
+                foreach (var file in Directory.GetFiles(tempFolder))
+                {
+                    ImportFile(file);
+                }
             }
             // Folder with maps
             else if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
