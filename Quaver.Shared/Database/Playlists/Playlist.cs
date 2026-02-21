@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework.Media;
+using Newtonsoft.Json;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
@@ -54,6 +57,7 @@ namespace Quaver.Shared.Database.Playlists
         ///     The maps that are inside of the playlist
         /// </summary>
         [Ignore]
+        [JsonIgnore]
         public List<Map> Maps { get; set; } = new List<Map>();
 
         /// <summary>
@@ -74,15 +78,17 @@ namespace Quaver.Shared.Database.Playlists
         public void Export()
         {
             var mapsetsAdded = new List<Mapset>();
+            var mapsMd5 = new List<string>();
 
             var tempFolder = $"{ConfigManager.TempDirectory}/{GameBase.Game.TimeRunning}/";
             Directory.CreateDirectory(tempFolder);
-            var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.zip";
+            var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.qpl";
 
             using (var archive = ZipArchive.Create())
             {
                 foreach (var map in Maps)
                 {
+                    mapsMd5.Add(map.Md5Checksum);
                     if (mapsetsAdded.Contains(map.Mapset))
                         continue;
 
@@ -132,7 +138,14 @@ namespace Quaver.Shared.Database.Playlists
                         mapsetsAdded.Add(map.Mapset);
                     }
                 }
+                // add playlist metadata
+                var json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(json);
+                obj.Maps = mapsMd5;
+                json = JsonConvert.SerializeObject(obj);
+                File.WriteAllText($"{tempFolder}/metadata.json", json);
 
+                archive.AddAllFromDirectory(tempFolder, "*.json");
                 archive.AddAllFromDirectory(tempFolder, "*.qp");
                 archive.SaveTo(outputPath, CompressionType.Deflate);
             }
