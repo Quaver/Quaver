@@ -12,6 +12,7 @@ using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
+using static Quaver.Shared.Database.Playlists.Playlist;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Selection.UI.Playlists
@@ -31,6 +32,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         private const string Delete = "Delete";
 
         private const string Sync = "Sync Map Pool";
+
+        private const string ExportToPlaylist = "Export To Playlist";
 
         private const string ExportToZip = "Export To Zip";
 
@@ -81,7 +84,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                         DialogManager.Show(new SyncPlaylistDialog(Playlist));
                         break;
                     case ExportToZip:
-                        DialogManager.Show(new ExportPlaylistDialog(Playlist));
+                        DialogManager.Show(new ExportPlaylistDialog(Playlist, ExportMode.Zip));
+                        break;
+                    case ExportToPlaylist:
+                        DialogManager.Show(new ExportPlaylistDialog(Playlist, ExportMode.Playlist));
                         break;
                     case Edit:
                         if (Playlist.IsOnlineMapPool() && Playlist.OnlineMapPoolCreatorId != OnlineManager.Self.OnlineUser.Id)
@@ -136,6 +142,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 {Edit, ColorHelper.HexToColor("#F2994A")},
                 {Delete, ColorHelper.HexToColor($"#FF6868")},
                 {ExportToZip, ColorHelper.HexToColor("#0787E3")},
+                {ExportToPlaylist, ColorHelper.HexToColor("#27B06E")},
                 {Copy, ColorHelper.HexToColor("#0FBAE5")}
             };
 

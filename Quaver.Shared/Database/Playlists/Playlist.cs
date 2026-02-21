@@ -75,14 +75,14 @@ namespace Quaver.Shared.Database.Playlists
         /// <summary>
         ///     Exports the playlist to a directory
         /// </summary>
-        public void Export()
+        public void Export(ExportMode exportMode)
         {
             var mapsetsAdded = new List<Mapset>();
             var mapsMd5 = new List<string>();
 
             var tempFolder = $"{ConfigManager.TempDirectory}/{GameBase.Game.TimeRunning}/";
             Directory.CreateDirectory(tempFolder);
-            var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.qpl";
+            var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.{(exportMode == ExportMode.Zip ? "zip" : "qpl")}";
 
             using (var archive = ZipArchive.Create())
             {
@@ -138,14 +138,18 @@ namespace Quaver.Shared.Database.Playlists
                         mapsetsAdded.Add(map.Mapset);
                     }
                 }
-                // add playlist metadata
-                var json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-                dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(json);
-                obj.Maps = mapsMd5;
-                json = JsonConvert.SerializeObject(obj);
-                File.WriteAllText($"{tempFolder}/metadata.json", json);
 
-                archive.AddAllFromDirectory(tempFolder, "*.json");
+                // add playlist metadata
+                if (exportMode == ExportMode.Playlist)
+                {
+                    var json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                    dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(json);
+                    obj.Maps = mapsMd5;
+                    json = JsonConvert.SerializeObject(obj);
+                    File.WriteAllText($"{tempFolder}/metadata.json", json);
+                    archive.AddAllFromDirectory(tempFolder, "*.json");
+                }
+                
                 archive.AddAllFromDirectory(tempFolder, "*.qp");
                 archive.SaveTo(outputPath, CompressionType.Deflate);
             }
@@ -182,5 +186,11 @@ namespace Quaver.Shared.Database.Playlists
         }
 
         public void OpenUrl() => BrowserHelper.OpenURL($"https://quavergame.com/playlist/{OnlineMapPoolId}");
+
+        public enum ExportMode
+        {
+            Zip,
+            Playlist
+        }
     }
 }
