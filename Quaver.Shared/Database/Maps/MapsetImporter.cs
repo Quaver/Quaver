@@ -294,7 +294,7 @@ namespace Quaver.Shared.Database.Maps
                     archive.ExtractToDirectory(tempFolder);
                 }
 
-                foreach (var file in Directory.GetFiles(tempFolder))
+                foreach (var file in Directory.GetFiles(tempFolder, "*", SearchOption.AllDirectories))
                 {
                     ImportFile(file);
                 }
@@ -568,8 +568,8 @@ namespace Quaver.Shared.Database.Maps
 
                 if(isNewPlaylist)
                     PlaylistManager.AddPlaylist(playlist);
-
-                ThreadScheduler.Run(() => playlist.Maps.ForEach(x => PlaylistManager.AddMapToPlaylist(playlist, x)));
+                    
+                playlist.Maps.ForEach(x => PlaylistManager.AddMapToPlaylist(playlist, x));
             }
             
             Directory.Delete(tempFolder, true);
