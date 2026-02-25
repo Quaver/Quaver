@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
         private const string Sync = "Sync Map Pool";
 
-        private const string ExportToPlaylist = "Export To Playlist";
+        private const string ExportToPlaylist = "Export Playlist";
 
         private const string ExportToZip = "Export To Zip";
 

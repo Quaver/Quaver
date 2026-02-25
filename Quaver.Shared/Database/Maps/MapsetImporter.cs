@@ -137,14 +137,14 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="path">Path to file</param>
         private static bool AcceptedMapType(string path)
         {
-            return path.EndsWith(".qp") || path.EndsWith(".qpl") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc");
+            return path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc");
         }
 
         /// <summary>
         ///     Adds the map dragged into the window to be scheduled to import
         /// </summary>
         /// <param name="path"></param>
-        private static void AddMapImportToQueue(string path)
+        private static void AddMapImportToQueue(string path, bool silent = false)
         {
             // Only one .mc file under the same directory should be imported
             // since .mc import
@@ -156,7 +156,9 @@ namespace Quaver.Shared.Database.Maps
                 }
             }
 
-            NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
+            if(! silent)
+                NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
+
             Queue.Add(path);
             PostMapQueue();
         }
@@ -165,7 +167,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Tries to import the given file, be it a map, a replay, a skin, etc.
         ///     <param name="path">path to the file to import</param>
         /// </summary>
-        public static void ImportFile(string path)
+        public static void ImportFile(string path, bool silent = false)
         {
             var game = GameBase.Game as QuaverGame;
             var screen = game.CurrentScreen;
@@ -173,7 +175,7 @@ namespace Quaver.Shared.Database.Maps
             // Mapset files (or directory of Mapset files)
             if (AcceptedMapType(path))
             {
-                AddMapImportToQueue(path);
+                AddMapImportToQueue(path, silent);
             }
             // Quaver Replay
             else if (path.EndsWith(".qr"))
@@ -284,7 +286,7 @@ namespace Quaver.Shared.Database.Maps
                 NotificationManager.Show(NotificationLevel.Success, $"Successfully set the path for your .db file");
             }
             // Archive with maps (batch import)
-            else if (path.EndsWith(".zip"))
+            else if (path.EndsWith(".zip") || path.EndsWith(".qpl"))
             {
                 var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
                 var tempFolder = $@"{ConfigManager.TempDirectory}/{Path.GetFileNameWithoutExtension(path)} - {time}";
@@ -294,10 +296,23 @@ namespace Quaver.Shared.Database.Maps
                     archive.ExtractToDirectory(tempFolder);
                 }
 
-                foreach (var file in Directory.GetFiles(tempFolder, "*", SearchOption.AllDirectories))
+                ImportFile(tempFolder, true);
+
+                if(path.EndsWith(".qpl"))
                 {
-                    ImportFile(file);
+                    var metadata = Directory.GetFiles(tempFolder, "metadata.json").FirstOrDefault();
+                    if (metadata == null)
+                    {
+                        Logger.Log($"metadata not found for playlist {Path.GetFileName(path)}", LogLevel.Important, LogType.Runtime);
+                    }
+
+                    Queue.Add(metadata);
                 }
+
+                // Add parent folder for deletion after import
+                Queue.Add(tempFolder);
+
+                NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
 
                 // delete zip file after all maps have been extracted
                 if (ConfigManager.DeleteOriginalFileAfterImport.Value)
@@ -313,12 +328,12 @@ namespace Quaver.Shared.Database.Maps
                 {
                     if (AcceptedMapType(subPath))
                     {
-                        AddMapImportToQueue(subPath);
+                        AddMapImportToQueue(subPath, silent);
                     }
                 }
                 foreach (var subDir in dirs)
                 {
-                    ImportFile(subDir);
+                    ImportFile(subDir, silent);
                 }
 
                 PostMapQueue();
@@ -337,9 +352,17 @@ namespace Quaver.Shared.Database.Maps
 
             var done = -1;
 
-            var skipPlaylistReload = true;
+            // Remove temp folder from import queue
+            var tempFolders = Queue.FindAll(f => File.GetAttributes(f).HasFlag(FileAttributes.Directory));
+            tempFolders.ForEach(tf => Queue.Remove(tf));
+
+            // Handle playlist import
+            var playlistsMetadata = Queue.FindAll(f => f.EndsWith("metadata.json"));
+            playlistsMetadata.ForEach(pl => Queue.Remove(pl));
 
             MapsetInfoRetriever.InfoUpdateEnabled = false;
+
+            // Import map
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
@@ -362,12 +385,6 @@ namespace Quaver.Shared.Database.Maps
                     if (file.EndsWith(".qp"))
                     {
                         ExtractQuaverMapset(file, extractDirectory);
-                        deleteOriginalFile = true;
-                    }
-                    else if (file.EndsWith(".qpl"))
-                    {
-                        selectedMap = ExtractQuaverPlaylist(file);
-                        skipPlaylistReload = false;
                         deleteOriginalFile = true;
                     }
                     else if (file.EndsWith(".osz"))
@@ -393,8 +410,7 @@ namespace Quaver.Shared.Database.Maps
                     || file.IsSubDirectoryOf(ConfigManager.DataDirectory.Value))
                         File.Delete(file);
 
-                    if (!file.EndsWith(".qpl"))
-                        selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
+                    selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
                     
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
 
@@ -408,7 +424,68 @@ namespace Quaver.Shared.Database.Maps
                 }
             });
 
-            MapDatabaseCache.OrderAndSetMapsets(skipPlaylistReload);
+            // Import playlist
+            Parallel.For(0, playlistsMetadata.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
+            {
+                var metadata = playlistsMetadata[i];
+
+                try
+                {
+                    dynamic json = JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(metadata));
+
+                    var onlineMapPoolId = (int)json.OnlineMapPoolId;
+                    if (onlineMapPoolId > -1)
+                        PlaylistManager.ImportPlaylist(onlineMapPoolId);
+                    else
+                    {
+                        var isNewPlaylist = false;
+                        var playlist = PlaylistManager.Playlists.Find(p => p.Name == json.Name && p.Description == json.Description && p.Creator == json.Creator);
+                        if (playlist == null)
+                        {
+                            isNewPlaylist = true;
+                            playlist = new Playlist()
+                            {
+                                Name = json.Name,
+                                Description = json.Description,
+                                Creator = json.Creator,
+                                OnlineMapPoolId = onlineMapPoolId,
+                                OnlineMapPoolCreatorId = (int)json.OnlineMapPoolCreatorId
+                            };
+                        }
+                        else
+                        {
+                            // Update playlist content to match metadata's content
+                            playlist.Maps.Where(m => !json.Maps.Contains(m.Md5Checksum)).ToList().ForEach(m =>
+                            {
+                                PlaylistManager.RemoveMapFromPlaylist(playlist, m);
+                            });
+                        }
+
+                        foreach (var map in json.Maps)
+                        {
+                            if (playlist.Maps.Find(m => m.Md5Checksum == map) != null)
+                                continue;
+
+                            playlist.Maps.Add(new Map { Md5Checksum = map });
+                        }
+
+                        if (isNewPlaylist)
+                            PlaylistManager.AddPlaylist(playlist);
+
+                        playlist.Maps.ForEach(x => PlaylistManager.AddMapToPlaylist(playlist, x));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, $"Failed to import playlist");
+                }
+            });
+
+            // delete temp files associated to batch import
+            tempFolders.ForEach(d => Directory.Delete(d, true));
+
+            MapDatabaseCache.OrderAndSetMapsets(playlistsMetadata.Count == 0);
             Queue.Clear();
             MapsetInfoRetriever.InfoUpdateEnabled = true;
 
@@ -486,95 +563,6 @@ namespace Quaver.Shared.Database.Maps
                     }
                 }
             }
-        }
-
-        /// <summary>
-        ///     Responsible for extracting the files from the .qpl
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="extractPath"></param>
-        private static Map ExtractQuaverPlaylist(string fileName)
-        {
-            var options = new ExtractionOptions { ExtractFullPath = true, Overwrite = true };
-
-            var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
-            var tempFolder = $@"{ConfigManager.TempDirectory}/{Path.GetFileNameWithoutExtension(fileName)} - {time}";
-
-            if (Directory.Exists(tempFolder))
-                Directory.Delete(tempFolder, true);
-
-            Directory.CreateDirectory(tempFolder);
-
-            // Extract files to temp directory
-            using (var archive = ArchiveFactory.Open(fileName))
-            {
-                foreach (var entry in archive.Entries)
-                {
-                    if (!entry.IsDirectory)
-                        entry.WriteToDirectory(tempFolder, options);
-                }
-            }
-
-            // Import mapsets
-            Map selectedMap = null;
-            foreach (var path in Directory.GetFiles(tempFolder, "*.qp", SearchOption.AllDirectories))
-            {
-                // Basically recreate the import process
-                var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(path)} - {time}/";
-
-                ExtractQuaverMapset(path, extractDirectory);
-                if (ConfigManager.DeleteOriginalFileAfterImport.Value || path.IsSubDirectoryOf(ConfigManager.DataDirectory.Value))
-                    File.Delete(path);
-
-                Logger.Important($"Successfully imported {path}", LogType.Runtime);
-
-                selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
-            }
-
-            // Find metadata file
-            var metadata = Directory.GetFiles(tempFolder, "metadata.json").FirstOrDefault();
-            if (metadata == null)
-            {
-                Logger.Log("metadata not found", LogLevel.Important, LogType.Runtime);
-                return selectedMap;
-            }
-
-            // Create playlist
-            dynamic json = JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(metadata));
-
-            var onlineMapPoolId = (int)json.OnlineMapPoolId;
-            if(onlineMapPoolId > -1)
-                PlaylistManager.ImportPlaylist(onlineMapPoolId);
-            else
-            {
-                var isNewPlaylist = false;
-                var playlist = PlaylistManager.Playlists.Find(p => p.Name == json.Name && p.Description == json.Description && p.Creator == json.Creator);
-                if(playlist == null)
-                {
-                    isNewPlaylist = true;
-                    playlist = new Playlist()
-                    {
-                        Name = json.Name,
-                        Description = json.Description,
-                        Creator = json.Creator,
-                        OnlineMapPoolId = onlineMapPoolId,
-                        OnlineMapPoolCreatorId = (int)json.OnlineMapPoolCreatorId
-                    };
-                }
-                foreach (var map in json.Maps)
-                {
-                    playlist.Maps.Add(new Map { Md5Checksum = map });
-                }
-
-                if(isNewPlaylist)
-                    PlaylistManager.AddPlaylist(playlist);
-                    
-                playlist.Maps.ForEach(x => PlaylistManager.AddMapToPlaylist(playlist, x));
-            }
-            
-            Directory.Delete(tempFolder, true);
-
-            return selectedMap;
         }
 
         /// <summary>
