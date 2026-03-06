@@ -63,6 +63,10 @@ namespace Quaver.Shared.Database.Profiles
 
         /// <summary>
         /// </summary>
+        public int CountMineHit { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="profile"></param>
         /// <param name="mode"></param>
         public UserProfileStats(UserProfile profile, GameMode mode)
@@ -168,6 +172,7 @@ namespace Quaver.Shared.Database.Profiles
                 JudgementCounts[Judgement.Good] += score.CountGood;
                 JudgementCounts[Judgement.Okay] += score.CountOkay;
                 JudgementCounts[Judgement.Miss] += score.CountMiss;
+                CountMineHit += score.CountMineHit;
             }
         }
 

@@ -57,7 +57,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
                 Bars.Add(new ResultsJudgementGraphBar(judgement, Processor, new ScalableVector2(Width, 50)));
             }
-
+            
             var heightSum = Bars.First().Height * Bars.Count;
             var heightPer = (Height - heightSum) / (Bars.Count + 1);
 
@@ -170,7 +170,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void UpdateTextCount() => TextCount.Text = $"{Processor.Value.CurrentJudgements[Judgement]:n0}";
+        private void UpdateTextCount() => TextCount.Text = Judgement switch
+        {
+            Judgement.Miss when Processor.Value.CountMineHit > 0 => 
+                $"{Processor.Value.CurrentJudgements[Judgement.Miss] - Processor.Value.CountMineHit:n0} + {Processor.Value.CountMineHit:n0}",
+            _ => $"{Processor.Value.CurrentJudgements[Judgement]:n0}"
+        };
 
         /// <summary>
         /// </summary>
