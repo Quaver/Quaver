@@ -286,7 +286,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                             [Judgement.Good] = score.CountGood,
                             [Judgement.Okay] = score.CountOkay,
                             [Judgement.Miss] = score.CountMiss
-                        }
+                        },
+                        CountMineHit = score.CountMineHit
                     };
 
                     players.Add(processor);
