@@ -42,6 +42,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         ChangeToolToSelect,
         ChangeToolToNote,
         ChangeToolToLongNote,
+        ChangeToolToMine,
         IncreaseSnap,
         DecreaseSnap,
         ChangeSnapTo1,
