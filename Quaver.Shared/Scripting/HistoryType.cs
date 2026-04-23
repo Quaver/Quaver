@@ -20,4 +20,9 @@ public enum HistoryType
     ///     Indicates the editor action is an undo that came from the stack.
     /// </summary>
     Undo,
+
+    /// <summary>
+    ///     Indicates the editor action is an out of stack action that cannot be undone or redone.
+    /// </summary>
+    Silent,
 }

@@ -383,11 +383,31 @@ namespace Quaver.Shared.Screens.Edit.Actions
         }
 
         /// <summary>
+        ///     Performs an action without adding it to the action history.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="fromLua"></param>
+        public void PerformSilently(IEditorAction action, bool fromLua = false)
+        {
+            action.Perform();
+
+            LuaImGui.Inform(action, HistoryType.Silent, fromLua);
+        }
+
+        /// <summary>
         ///     Performs a list of actions as a single action.
         /// </summary>
         /// <param name="actions"></param>
         public void PerformBatch(List<IEditorAction> actions, bool fromLua = false) =>
             Perform(new EditorActionBatch(this, actions), fromLua);
+
+        /// <summary>
+        ///     Performs a list of actions as a single action without adding to the action history.
+        /// </summary>
+        /// <param name="actions"></param>
+        /// <param name="fromLua"></param>
+        public void PerformBatchSilently(List<IEditorAction> actions, bool fromLua = false) =>
+            PerformSilently(new EditorActionBatch(this, actions), fromLua);
 
         /// <summary>
         ///     Undoes the first action in the stack

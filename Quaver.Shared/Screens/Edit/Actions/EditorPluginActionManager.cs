@@ -33,6 +33,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="actions"></param>
         public void PerformBatch(List<IEditorAction> actions) => ActionManager.PerformBatch(actions, true);
 
+        /// <summary>
+        ///     Performs an action from Lua without adding it to the action history.
+        /// </summary>
+        /// <param name="action"></param>
+        public void PerformSilently(IEditorAction action) => ActionManager.PerformSilently(action, true);
+
+        /// <summary>
+        ///     Performs a batch of actions from Lua without adding them to the action history.
+        /// </summary>
+        /// <param name="actions"></param>
+        public void PerformBatchSilently(List<IEditorAction> actions) => ActionManager.PerformBatchSilently(actions, true);
+
         public void Redo() => ActionManager.Redo(true);
 
         public void Undo() => ActionManager.Undo(true);
