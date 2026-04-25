@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -384,14 +385,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
+        ///     A constant reduction in size of the LN based on Percy amount
+        /// </summary>
+        private float PercyReduction =>
+            Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value *
+            AudioEngine.Track.Rate;
+
+        /// <summary>
         ///     Shrinks the height based on Percy amount
         /// </summary>
         /// <param name="height">Original unmodified height before applying Percy.</param>
         /// <returns>Shrunk height, minimum 0.</returns>
         private float PercyHeight(double height)
         {
-            return (float)Math.Max(0,
-                height - Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
+            return (float)Math.Max(0, height - PercyReduction);
         }
 
         /// <summary>
@@ -402,8 +409,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private float PercyPosition(double position)
         {
             if (ScrollDirection.Equals(ScrollDirection.Down))
-                return (float)(position + Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
-            return (float)(position - Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
+                return (float)(position + PercyReduction);
+            return (float)(position - PercyReduction);
         }
 
         /// <summary>
