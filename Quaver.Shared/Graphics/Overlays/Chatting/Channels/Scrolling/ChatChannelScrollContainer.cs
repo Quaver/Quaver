@@ -310,7 +310,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
 
                     // Create the message in the new channel
                     e.Message.Sender = OnlineManager.OnlineUsers.FirstOrDefault(p => p.Value.OnlineUser.Username == e.Message.SenderName).Value;
-                    chatChannel.QueueMessage(e.Message);
+                    if(e.Message.Sender != null)
+                        chatChannel.QueueMessage(e.Message);
                 }
                 else
                 {
