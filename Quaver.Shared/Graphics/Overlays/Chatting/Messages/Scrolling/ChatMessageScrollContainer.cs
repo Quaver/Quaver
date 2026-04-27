@@ -241,8 +241,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 AddMessage(MessageQueue[0]);
                 MessageQueue.RemoveAt(0);
 
-                Logger.Important($"Flushed {MessageQueue.Count} messages from the `{Channel.Name}` message queue.", LogType.Runtime);
-                MessageQueue.Clear();
+                Logger.Important($"Flushed the latest message from the `{Channel.Name}` message queue. {MessageQueue.Count} messages remaining", LogType.Runtime);
             }
         }
 
