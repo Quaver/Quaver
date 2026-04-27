@@ -118,6 +118,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
             Slices = tempSlices;
             Bass.StreamFree(Stream);
+            _trackData = null;
         }
 
         /// <summary>
@@ -208,6 +209,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         public void DisposeWaveform()
         {
             DisposeSlices();
+            _trackData = null;
             base.Destroy();
         }
 
