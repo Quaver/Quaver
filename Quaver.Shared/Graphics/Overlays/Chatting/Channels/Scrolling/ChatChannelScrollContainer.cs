@@ -323,7 +323,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
                 e.Message.Sender = OnlineManager.OnlineUsers.FirstOrDefault(p => p.Value.OnlineUser.Username == e.Message.SenderName).Value;
                 if (e.Message.Sender != null)
                     chatChannel.QueueMessage(e.Message);
-                Logger.Log("msg sent: " + e.Message, LogLevel.Debug, LogType.Runtime);
 
                 // Send a message with the active channel
                 if (!OnlineChat.Instance.IsOpen)
