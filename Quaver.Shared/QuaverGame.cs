@@ -627,7 +627,7 @@ namespace Quaver.Shared
                     break;
                 default:
                     // Pause/Unpause music
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     {
                         if (AudioEngine.Track.IsPaused)
                         {
