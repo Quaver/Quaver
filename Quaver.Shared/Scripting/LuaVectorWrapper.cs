@@ -111,6 +111,17 @@ namespace Quaver.Shared.Scripting
                 _ => throw Unreachable(value),
             };
 
+        public static float LengthSquared(DynValue value) =>
+            CoerceToVectorOrFloat(value) switch
+            {
+                float f => f,
+                Vector2 v => v.LengthSquared(),
+                Vector3 v => v.LengthSquared(),
+                Vector4 v => v.LengthSquared(),
+                _ => throw Unreachable(value),
+            };
+
+
         public static DynValue Lerp(DynValue first, DynValue second, DynValue third) =>
             Create(
                 0 switch
