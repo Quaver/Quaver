@@ -405,10 +405,10 @@ namespace Quaver.Shared.Scripting
         private static DynValue Create(IFormattable value) => UserData.Create(value);
 
         private static IFormattable CoerceToVectorOrFloat(DynValue value) =>
-            value is
-        {
-            Type: DataType.UserData, UserData.Object: not Vector2 and not Vector3 and not Vector4,
-        } or { Type: DataType.Nil }
+            value is {
+                Type: DataType.UserData,
+                UserData.Object: not Vector2 and not Vector3 and not Vector4,
+            } or { Type: DataType.Nil }
                 ? 0
                 : value.TryCoerceToFloat() ??
                 (value.Type is DataType.UserData ? (IFormattable)value.UserData.Object :
