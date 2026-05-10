@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Configurations>Debug;Release;Visual Tests</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Visual Tests|AnyCPU'">
@@ -20,12 +20,9 @@
     <ProjectReference Include="../Wobble/Wobble/Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference
-      Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj"
-      Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"
-    />
+    <ProjectReference Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj" Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')" />
 
-    <Reference Include="Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"/>
+    <Reference Include="Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')" />
     <Reference Include="MonoGame.Framework">
       <HintPath>..\Wobble\MonoGame.Framework.dll</HintPath>
     </Reference>
@@ -35,15 +32,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
 
-    <None Update="discord-rpc.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="libdiscord-rpc.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="libdiscord-rpc.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="libsteam_api.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -62,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Emik.Rubbish" Version="1.1.0" />
+    <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="3.2.0" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />

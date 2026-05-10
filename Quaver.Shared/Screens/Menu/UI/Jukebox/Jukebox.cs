@@ -20,7 +20,6 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
-using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
