@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
@@ -21,7 +23,29 @@ public class EpilepsyWarning : Sprite
         Screen = screen;
         Image = SkinManager.Skin.EpilepsyWarning;
         Alpha = 0;
-        Visible = ConfigManager.DisplayEpilepsyWarning.Value && (screen.Map?.Tags?.Contains("sv", StringComparison.InvariantCultureIgnoreCase) ?? true);
+        Visible = ShouldDisplayWarning();
+    }
+
+    private bool ShouldDisplayWarning()
+    {
+        if (!ConfigManager.DisplayEpilepsyWarning.Value)
+            return false;
+
+        var map = Screen.Map;
+
+        if (map == null)
+            return true;
+
+        var hasSvTag = map.Tags?.Contains("sv", StringComparison.InvariantCultureIgnoreCase) ??
+                       false;
+
+        const float extremeSvThreshold = 5;
+        var hasExtremeSv = map.TimingGroups.Values
+            .OfType<ScrollGroup>()
+            .Any(group => group.ScrollVelocities.Any(sv =>
+                sv.Multiplier is > extremeSvThreshold or < -extremeSvThreshold));
+
+        return hasSvTag || hasExtremeSv;
     }
 
     public override void Update(GameTime gameTime)
