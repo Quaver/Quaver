@@ -115,6 +115,7 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Platform;
 using Wobble.Window;
 using Version = YamlDotNet.Core.Version;
@@ -531,7 +532,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
