@@ -273,11 +273,6 @@ public class ScrollGroupControllerKeys : TimingGroupControllerKeys
 
 
         CurrentTrackPosition = GetPositionFromTime(Manager.CurrentVisualAudioOffset, CurrentSvIndex);
-        if (CurrentTrackPosition < -9223372036852000000)
-        {
-            ;
-            GetPositionFromTime(Manager.CurrentVisualAudioOffset, CurrentSvIndex);
-        }
     }
 
     /// <summary>
