@@ -416,7 +416,7 @@ namespace Quaver.Shared.Database.Maps
                         File.Delete(file);
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
-                    
+
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
 
                     done++;
