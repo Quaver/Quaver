@@ -155,7 +155,7 @@ namespace Quaver.Shared.Database.Maps
                 }
             }
 
-            if(! silent)
+            if(!silent)
                 NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
 
             Queue.Add(path);
@@ -287,7 +287,7 @@ namespace Quaver.Shared.Database.Maps
             // Archive with maps (batch import)
             else if (path.EndsWith(".zip") || path.EndsWith(".qpl"))
             {
-                var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+                var time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 var tempFolder = $@"{ConfigManager.TempDirectory}/{Path.GetFileNameWithoutExtension(path)} - {time}";
                 try
                 {
@@ -412,7 +412,7 @@ namespace Quaver.Shared.Database.Maps
                     // If we are importing a mapset downloaded from in-game downloader,
                     // We should delete it no matter what
                     if ((deleteOriginalFile && ConfigManager.DeleteOriginalFileAfterImport.Value)
-                    || file.IsSubDirectoryOf(ConfigManager.DataDirectory.Value))
+                        || file.IsSubDirectoryOf(ConfigManager.DataDirectory.Value))
                         File.Delete(file);
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
