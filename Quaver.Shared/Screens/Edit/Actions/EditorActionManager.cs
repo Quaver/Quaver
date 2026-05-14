@@ -541,26 +541,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Places an sf down in the map
         /// </summary>
         /// <param name="sf"></param>
-        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf, scrollGroup));
+        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf, scrollGroup), fromLua);
 
         /// <summary>
         ///     Places a batch of scroll speed factors into the map
         /// </summary>
         /// <param name="sfs"></param>
-        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Removes a batch of scroll speed factors from the map
         /// </summary>
         /// <param name="sfs"></param>
-        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Changes the offset of a batch of scroll speed factors
         /// </summary>
         /// <param name="sfs"></param>
         /// <param name="offset"></param>
-        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset));
+        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset, bool fromLua = false) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset), fromLua);
 
         /// <summary>
         ///     Changes the multiplier of a batch of scroll speed factors
