@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.UI;
@@ -18,7 +18,7 @@ public class EpilepsyWarning : Sprite
     public EpilepsyWarning(GameplayScreen screen)
     {
         Screen = screen;
-        Image = UserInterface.EpilepsyWarning;
+        Image = SkinManager.Skin.EpilepsyWarning;
         Alpha = 0;
         Visible = screen.Map?.Tags?.Contains("sv", StringComparison.InvariantCultureIgnoreCase) ?? true;
     }
