@@ -63,6 +63,7 @@ using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Scripting;
 using Wobble.Logging;
 
@@ -848,6 +849,15 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="bookmarks"></param>
         /// <param name="offset"></param>
         public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset, bool fromLua = false) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset), fromLua);
+
+        /// <summary>
+        ///     Sets the hit object coloring mode of the editor
+        /// </summary>
+        /// <param name="type"></param>
+        public void SetViewColoring(HitObjectColoring hitObjectColoringType)
+        {
+            EditScreen.ObjectColoring.Value = hitObjectColoringType;
+        }
 
         /// <summary>
         ///     Triggers an event of a specific action type

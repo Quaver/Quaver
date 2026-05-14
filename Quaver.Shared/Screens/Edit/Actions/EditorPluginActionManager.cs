@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -266,6 +267,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         public void MoveObjectsToTimingGroup(List<HitObjectInfo> hitObjects, string timingGroupId) =>
             ActionManager.MoveObjectsToTimingGroup(hitObjects, timingGroupId, true);
+
+        public void SetViewColoring(HitObjectColoring hitObjectColoringType) => ActionManager.SetViewColoring(hitObjectColoringType);
 
         public void Destroy()
         {
