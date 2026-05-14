@@ -57,11 +57,11 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
                         ThreadScheduler.Run(() =>
                         {
                             NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to zip archive. Please wait!");
-
-                            Mapset.Maps.First().Mapset.ExportToZip();
+                            var mapsetExported = Mapset.Maps.First().Mapset;
+                            mapsetExported.ExportToZip();
 
                             NotificationManager.Show(NotificationLevel.Success,
-                                $"Successfully exported {MapManager.Selected.Value.Mapset.Artist} - {MapManager.Selected.Value.Mapset.Title}!");
+                                $"Successfully exported {mapsetExported.Artist} - {mapsetExported.Title}!");
                         });
                         break;
                     case OnlineListing:
