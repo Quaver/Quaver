@@ -417,7 +417,7 @@ namespace Quaver.Shared
         {
             DeleteTemporaryFiles();
 
-            SetAudioDevice();
+            SetAudioDevice(true);
             DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
@@ -985,7 +985,7 @@ namespace Quaver.Shared
             if (!reloadResources)
                 return;
 
-            AudioEngine.Track.Stop();
+            AudioEngine.Track?.Stop();
             CustomAudioSampleCache.Dispose();
             SkinManager.Skin.LoadSoundEffects();
         }
