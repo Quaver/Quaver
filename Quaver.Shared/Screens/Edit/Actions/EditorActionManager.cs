@@ -63,6 +63,7 @@ using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Scripting;
 using Wobble.Logging;
 
@@ -384,11 +385,31 @@ namespace Quaver.Shared.Screens.Edit.Actions
         }
 
         /// <summary>
+        ///     Performs an action without adding it to the action history.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="fromLua"></param>
+        public void PerformSilently(IEditorAction action, bool fromLua = false)
+        {
+            action.Perform();
+
+            LuaImGui.Inform(action, HistoryType.Silent, fromLua);
+        }
+
+        /// <summary>
         ///     Performs a list of actions as a single action.
         /// </summary>
         /// <param name="actions"></param>
         public void PerformBatch(List<IEditorAction> actions, bool fromLua = false) =>
             Perform(new EditorActionBatch(this, actions), fromLua);
+
+        /// <summary>
+        ///     Performs a list of actions as a single action without adding to the action history.
+        /// </summary>
+        /// <param name="actions"></param>
+        /// <param name="fromLua"></param>
+        public void PerformBatchSilently(List<IEditorAction> actions, bool fromLua = false) =>
+            PerformSilently(new EditorActionBatch(this, actions), fromLua);
 
         /// <summary>
         ///     Undoes the first action in the stack
@@ -520,26 +541,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Places an sf down in the map
         /// </summary>
         /// <param name="sf"></param>
-        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf, scrollGroup));
+        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf, scrollGroup), fromLua);
 
         /// <summary>
         ///     Places a batch of scroll speed factors into the map
         /// </summary>
         /// <param name="sfs"></param>
-        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Removes a batch of scroll speed factors from the map
         /// </summary>
         /// <param name="sfs"></param>
-        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Changes the offset of a batch of scroll speed factors
         /// </summary>
         /// <param name="sfs"></param>
         /// <param name="offset"></param>
-        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset));
+        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset, bool fromLua = false) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset), fromLua);
 
         /// <summary>
         ///     Changes the multiplier of a batch of scroll speed factors
@@ -828,6 +849,15 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="bookmarks"></param>
         /// <param name="offset"></param>
         public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset, bool fromLua = false) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset), fromLua);
+
+        /// <summary>
+        ///     Sets the hit object coloring mode of the editor
+        /// </summary>
+        /// <param name="type"></param>
+        public void SetViewColoring(HitObjectColoring hitObjectColoringType)
+        {
+            EditScreen.ObjectColoring.Value = hitObjectColoringType;
+        }
 
         /// <summary>
         ///     Triggers an event of a specific action type

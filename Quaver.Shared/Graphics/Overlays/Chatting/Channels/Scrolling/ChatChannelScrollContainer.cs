@@ -304,6 +304,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
                         IsUnread = true
                     };
 
+                    // Get user sending msg
                     Add(chatChannel);
                     OnlineChat.Instance.MessageContainer.AddChannel(chatChannel);
                 }
@@ -317,6 +318,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
                         channel.UpdateContent(channel.Item, channel.Index);
                     }
                 }
+
+                // Create the message in the new channel
+                e.Message.Sender = OnlineManager.OnlineUsers.FirstOrDefault(p => p.Value.OnlineUser.Username == e.Message.SenderName).Value;
+                if (e.Message.Sender != null)
+                    chatChannel.QueueMessage(e.Message);
 
                 // Send a message with the active channel
                 if (!OnlineChat.Instance.IsOpen)

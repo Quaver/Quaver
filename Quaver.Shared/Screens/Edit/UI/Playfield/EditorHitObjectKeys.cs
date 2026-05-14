@@ -71,12 +71,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateSelectionSprite();
 
             Refresh();
-
-            Coloring.ValueChanged += OnViewLayersChanged;
-            SelectedHitObjects.ItemAdded += OnSelectedHitObject;
-            SelectedHitObjects.ItemRemoved += OnDeselectedHitObject;
-            SelectedHitObjects.ListCleared += OnAllObjectsDeselected;
-            SelectedHitObjects.MultipleItemsAdded += OnMultipleItemsAdded;
         }
 
         /// <inheritdoc />
@@ -97,14 +91,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             base.Destroy();
             Body?.Destroy();
             Tail?.Destroy();
-
-            // ReSharper disable twice DelegateSubtraction
-            Coloring.ValueChanged -= OnViewLayersChanged;
-
-            SelectedHitObjects.ItemAdded -= OnSelectedHitObject;
-            SelectedHitObjects.ItemRemoved -= OnDeselectedHitObject;
-            SelectedHitObjects.ListCleared -= OnAllObjectsDeselected;
-            SelectedHitObjects.MultipleItemsAdded -= OnMultipleItemsAdded;
         }
 
         /// <inheritdoc />
@@ -335,7 +321,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<HitObjectColoring> e)
+        public void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<HitObjectColoring> e)
         {
             UpdateTextures();
             SetSize();
@@ -351,11 +337,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSelectedHitObject(object sender, BindableListItemAddedEventArgs<HitObjectInfo> e)
+        public void OnSelectedHitObject(object sender, BindableListItemAddedEventArgs<HitObjectInfo> e)
         {
-            if (e.Item != Info)
-                return;
-
             SelectionSprite.Visible = true;
         }
 
@@ -363,19 +346,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDeselectedHitObject(object sender, BindableListItemRemovedEventArgs<HitObjectInfo> e)
-        {
-            if (e.Item != Info)
-                return;
-
-            SelectionSprite.Visible = false;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnAllObjectsDeselected(object sender, BindableListClearedEventArgs e)
+        public void OnDeselectedHitObject(object sender, BindableListItemRemovedEventArgs<HitObjectInfo> e)
         {
             SelectionSprite.Visible = false;
         }
@@ -384,11 +355,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMultipleItemsAdded(object sender, BindableListMultipleItemsAddedEventArgs<HitObjectInfo> e)
+        public void OnAllObjectsDeselected(object sender, BindableListClearedEventArgs e)
         {
-            if (!e.Items.Contains(Info))
-                return;
+            SelectionSprite.Visible = false;
+        }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnMultipleItemsAdded(object sender, BindableListMultipleItemsAddedEventArgs<HitObjectInfo> e)
+        {
             SelectionSprite.Visible = true;
         }
     }

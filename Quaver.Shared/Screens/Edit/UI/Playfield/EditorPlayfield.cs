@@ -189,6 +189,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private List<EditorHitObjectKeys> HitObjects { get; set; }
 
         /// <summary>
+        ///     A dictionary of the hitobjects for quick lookup
+        /// </summary>
+        private Dictionary<HitObjectInfo, EditorHitObjectKeys> HitObjectMap { get; set; }
+
+        /// <summary>
         ///     The objects that are currently visible and ready to be drawn to the screen
         /// </summary>
         private List<EditorHitObjectKeys> HitObjectPool { get; set; }
@@ -405,6 +410,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Skin.ValueChanged += OnSkinChanged;
             WaveFormAudioDirection.ValueChanged += OnWaveFormAudioDirectionChanged;
             WaveformFilter.ValueChanged += OnWaveformFilterChanged;
+            Coloring.ValueChanged += OnViewLayersChanged;
+            SelectedHitObjects.ItemAdded += OnSelectedHitObject;
+            SelectedHitObjects.ItemRemoved += OnDeselectedHitObject;
+            SelectedHitObjects.ListCleared += OnAllObjectsDeselected;
+            SelectedHitObjects.MultipleItemsAdded += OnMultipleItemsAdded;
             SpectrogramFftSize.ValueChanged += OnSpectrogramFftSizeChanged;
             ConfigManager.EditorSpectrogramMaximumFrequency.ValueChanged += OnSpectrogramFrequencyWindowSizeChanged;
             ConfigManager.EditorSpectrogramMinimumFrequency.ValueChanged += OnSpectrogramMinimumFrequencyChanged;
@@ -531,11 +541,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             ThreadScheduler.Run(() =>
             {
-                HitObjects.ForEach(x => x.Destroy());
+                if (HitObjects.Count < 1000)
+                    HitObjects.ForEach(x => x.Destroy());
+
                 Timeline?.Destroy();
                 LineContainer?.Destroy();
 
                 HitObjects.Clear();
+                HitObjectMap.Clear();
                 LineContainer = null;
                 Timeline = null;
             });
@@ -566,6 +579,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Skin.ValueChanged -= OnSkinChanged;
             WaveFormAudioDirection.ValueChanged -= OnWaveFormAudioDirectionChanged;
             WaveformFilter.ValueChanged -= OnWaveformFilterChanged;
+
+            Coloring.ValueChanged -= OnViewLayersChanged;
+            SelectedHitObjects.ItemAdded -= OnSelectedHitObject;
+            SelectedHitObjects.ItemRemoved -= OnDeselectedHitObject;
+            SelectedHitObjects.ListCleared -= OnAllObjectsDeselected;
+            SelectedHitObjects.MultipleItemsAdded -= OnMultipleItemsAdded;
 
             SpectrogramFftSize.ValueChanged -= OnSpectrogramFftSizeChanged;
             ConfigManager.EditorSpectrogramMaximumFrequency.ValueChanged -= OnSpectrogramFrequencyWindowSizeChanged;
@@ -648,6 +667,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void CreateHitObjects()
         {
             HitObjects = new List<EditorHitObjectKeys>();
+            HitObjectMap = new Dictionary<HitObjectInfo, EditorHitObjectKeys>();
             Map.HitObjects.ForEach(x => CreateHitObject(x));
         }
 
@@ -746,6 +766,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             }
             else
                 HitObjects.Add(ho);
+
+            HitObjectMap[info] = ho;
         }
 
         /// <summary>
@@ -1059,13 +1081,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            var ho = HitObjects.Find(x => x.Info == e.HitObject);
-
-            if (ho == null)
+            if (!HitObjectMap.TryGetValue(e.HitObject, out var ho))
                 return;
 
             ho.Destroy();
             HitObjects.Remove(ho);
+            HitObjectMap.Remove(e.HitObject);
 
             InitializeHitObjectPool();
         }
@@ -1081,13 +1102,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             foreach (var obj in e.HitObjects)
             {
-                var drawable = HitObjects.Find(x => x.Info == obj);
-
-                if (drawable == null)
+                if (!HitObjectMap.TryGetValue(obj, out var drawable))
                     continue;
 
                 drawable.Destroy();
                 HitObjects.Remove(drawable);
+                HitObjectMap.Remove(obj);
             }
 
             InitializeHitObjectPool();
@@ -1665,6 +1685,59 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                     continue;
 
                 drawable.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<HitObjectColoring> e)
+        {
+            for (var i = 0; i < HitObjects.Count; i++)
+                HitObjects[i].OnViewLayersChanged(sender, e);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedHitObject(object sender, BindableListItemAddedEventArgs<HitObjectInfo> e)
+        {
+            if (HitObjectMap.TryGetValue(e.Item, out var ho))
+                ho.OnSelectedHitObject(sender, e);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDeselectedHitObject(object sender, BindableListItemRemovedEventArgs<HitObjectInfo> e)
+        {
+            if (HitObjectMap.TryGetValue(e.Item, out var ho))
+                ho.OnDeselectedHitObject(sender, e);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAllObjectsDeselected(object sender, BindableListClearedEventArgs e)
+        {
+            for (var i = 0; i < HitObjects.Count; i++)
+                HitObjects[i].OnAllObjectsDeselected(sender, e);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultipleItemsAdded(object sender, BindableListMultipleItemsAddedEventArgs<HitObjectInfo> e)
+        {
+            for (var i = 0; i < e.Items.Count; i++)
+            {
+                if (HitObjectMap.TryGetValue(e.Items[i], out var ho))
+                    ho.OnMultipleItemsAdded(sender, e);
             }
         }
 

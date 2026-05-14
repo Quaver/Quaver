@@ -223,6 +223,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {ChangeToolToSelect, new KeybindList(Keys.Q)},
             {ChangeToolToNote, new KeybindList(Keys.W)},
             {ChangeToolToLongNote, new KeybindList(Keys.E)},
+            {ChangeToolToMine, new KeybindList(Keys.R)},
             {IncreaseSnap, new KeybindList(new[] {new Keybind(Keys.Right), new Keybind(KeyModifiers.Shift, Keys.Right), new Keybind(KeyModifiers.Free, Keys.L), new Keybind(KeyModifiers.Ctrl, MouseScrollDirection.Up)})},
             {DecreaseSnap, new KeybindList(new[] {new Keybind(Keys.Left), new Keybind(KeyModifiers.Shift, Keys.Left), new Keybind(KeyModifiers.Free, Keys.J), new Keybind(KeyModifiers.Ctrl, MouseScrollDirection.Down)})},
             {ChangeSnapTo1, new KeybindList(new [] {new Keybind(KeyModifiers.Shift, Keys.D1)})},
@@ -313,7 +314,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {Save, new KeybindList(new[] {new Keybind(Keys.S), new Keybind(KeyModifiers.Ctrl, Keys.S)})},
             {Deselect, new KeybindList(new[] {new Keybind(Keys.D), new Keybind(KeyModifiers.Ctrl, Keys.D)})},
             {ApplyOffsetToMap, new KeybindList()},
-            {ResnapToCurrentBeatSnap, new KeybindList(new[] {new Keybind(Keys.R), new Keybind(KeyModifiers.Ctrl, Keys.R)})},
+            {ResnapToCurrentBeatSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.R)})},
             {AddBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.B)},
             {SeekToLastBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.Left)},
             {SeekToNextBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.Right)}

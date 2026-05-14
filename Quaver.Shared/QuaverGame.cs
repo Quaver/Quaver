@@ -417,7 +417,7 @@ namespace Quaver.Shared
         {
             DeleteTemporaryFiles();
 
-            SetAudioDevice();
+            SetAudioDevice(true);
             DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
@@ -627,7 +627,7 @@ namespace Quaver.Shared
                     break;
                 default:
                     // Pause/Unpause music
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     {
                         if (AudioEngine.Track.IsPaused)
                         {
@@ -985,7 +985,7 @@ namespace Quaver.Shared
             if (!reloadResources)
                 return;
 
-            AudioEngine.Track.Stop();
+            AudioEngine.Track?.Stop();
             CustomAudioSampleCache.Dispose();
             SkinManager.Skin.LoadSoundEffects();
         }
