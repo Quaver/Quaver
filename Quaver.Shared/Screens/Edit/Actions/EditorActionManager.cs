@@ -668,13 +668,25 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects), fromLua);
 
         /// <summary>
+        ///     Moves a layer to a new index
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="toIndex">the layer number. index of the layer in the list + 1</param>
         /// <param name="fromLua"></param>
-        public void MoveLayer(EditorLayerInfo layer, int toIndex, bool fromLua = false) => Perform(
-            new EditorActionMoveLayer(this, WorkingMap, layer,
-                WorkingMap.EditorLayers.IndexOf(layer), toIndex - 1), fromLua);
+        /// <returns>Whether the operation succeeded</returns>
+        public bool MoveLayer(EditorLayerInfo layer, int toIndex, bool fromLua = false)
+        {
+            // originalIndex and toIndex are all one-indexed
+            var originalIndex = WorkingMap.EditorLayers.IndexOf(layer) + 1;
+            if (originalIndex < 1 || originalIndex > WorkingMap.EditorLayers.Count
+                                  || toIndex < 1 || toIndex > WorkingMap.EditorLayers.Count)
+                return false;
+            // EditorActionMoveLayer takes zero-indexed indices
+            Perform(
+                new EditorActionMoveLayer(this, WorkingMap, layer,
+                    originalIndex - 1, toIndex - 1), fromLua);
+            return true;
+        }
 
         /// <summary>
         ///     Changes the color of a non-default editor layer

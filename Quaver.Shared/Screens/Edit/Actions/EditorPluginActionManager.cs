@@ -213,8 +213,19 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="toIndex"></param>
-        public void MoveLayer(EditorLayerInfo layer, int toIndex) =>
+        public bool MoveLayer(EditorLayerInfo layer, int toIndex) =>
             ActionManager.MoveLayer(layer, toIndex, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="fromIndex"></param>
+        /// <param name="toIndex"></param>
+        public bool MoveLayer(int fromIndex, int toIndex)
+        {
+            if (fromIndex < 1 || fromIndex > ActionManager.EditScreen.WorkingMap.EditorLayers.Count)
+                return false;
+            return ActionManager.MoveLayer(ActionManager.EditScreen.WorkingMap.EditorLayers[fromIndex - 1], toIndex, true);
+        }
 
         /// <summary>
         /// </summary>
