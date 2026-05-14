@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics.Sprites;
 
@@ -20,7 +21,7 @@ public class EpilepsyWarning : Sprite
         Screen = screen;
         Image = SkinManager.Skin.EpilepsyWarning;
         Alpha = 0;
-        Visible = screen.Map?.Tags?.Contains("sv", StringComparison.InvariantCultureIgnoreCase) ?? true;
+        Visible = ConfigManager.DisplayEpilepsyWarning.Value && (screen.Map?.Tags?.Contains("sv", StringComparison.InvariantCultureIgnoreCase) ?? true);
     }
 
     public override void Update(GameTime gameTime)
