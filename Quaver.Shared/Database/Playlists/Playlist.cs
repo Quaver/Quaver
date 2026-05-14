@@ -82,7 +82,10 @@ namespace Quaver.Shared.Database.Playlists
 
             var tempFolder = $"{ConfigManager.TempDirectory}/{GameBase.Game.TimeRunning}/";
             Directory.CreateDirectory(tempFolder);
-            var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.{(exportMode == ExportMode.Zip ? "zip" : "qpl")}";
+            var exportsDirectory = $"{ConfigManager.DataDirectory}/Exports";
+            Directory.CreateDirectory(exportsDirectory);
+            
+            var outputPath = $"{exportsDirectory}/{StringHelper.FileNameSafeString(Name)}.{(exportMode == ExportMode.Zip ? "zip" : "qpl")}";
 
             using (var archive = ZipArchive.Create())
             {
