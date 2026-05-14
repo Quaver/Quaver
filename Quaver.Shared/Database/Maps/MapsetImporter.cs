@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -438,9 +437,9 @@ namespace Quaver.Shared.Database.Maps
 
                 try
                 {
-                    dynamic json = JsonConvert.DeserializeObject<ExpandoObject>(File.ReadAllText(metadata));
+                    var json = JsonConvert.DeserializeObject<Playlist.PlaylistExportMetadata>(File.ReadAllText(metadata));
 
-                    var onlineMapPoolId = (int)json.OnlineMapPoolId;
+                    var onlineMapPoolId = json.OnlineMapPoolId;
                     if (onlineMapPoolId > -1)
                     {
                         PlaylistManager.ImportPlaylist(onlineMapPoolId);
@@ -458,7 +457,7 @@ namespace Quaver.Shared.Database.Maps
                             Description = json.Description,
                             Creator = json.Creator,
                             OnlineMapPoolId = onlineMapPoolId,
-                            OnlineMapPoolCreatorId = (int)json.OnlineMapPoolCreatorId
+                            OnlineMapPoolCreatorId = json.OnlineMapPoolCreatorId
                         };
                     }
                     else
