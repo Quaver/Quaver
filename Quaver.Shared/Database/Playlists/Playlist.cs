@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -145,10 +144,17 @@ namespace Quaver.Shared.Database.Playlists
                 // add playlist metadata
                 if (exportMode == ExportMode.Playlist)
                 {
-                    var json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-                    dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(json);
-                    obj.Maps = mapsMd5;
-                    json = JsonConvert.SerializeObject(obj);
+                    var metadata = new PlaylistExportMetadata
+                    {
+                        Name = Name,
+                        Creator = Creator,
+                        Description = Description,
+                        OnlineMapPoolId = OnlineMapPoolId,
+                        OnlineMapPoolCreatorId = OnlineMapPoolCreatorId,
+                        Maps = mapsMd5
+                    };
+
+                    var json = JsonConvert.SerializeObject(metadata);
                     File.WriteAllText($"{tempFolder}/metadata.json", json);
                     archive.AddAllFromDirectory(tempFolder, "*.json");
                 }
@@ -194,6 +200,21 @@ namespace Quaver.Shared.Database.Playlists
         {
             Zip,
             Playlist
+        }
+
+        internal class PlaylistExportMetadata
+        {
+            public string Name { get; set; }
+
+            public string Creator { get; set; }
+
+            public string Description { get; set; }
+
+            public int OnlineMapPoolId { get; set; }
+
+            public int OnlineMapPoolCreatorId { get; set; }
+
+            public List<string> Maps { get; set; }
         }
     }
 }
