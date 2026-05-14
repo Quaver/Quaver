@@ -54,10 +54,6 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     return;
                 }
 
-                IsRunning = true;
-
-                NotificationManager.Show(NotificationLevel.Info, "Your maps' ranked statuses are now being updated in the background...");
-
                 Run();
             };
         }
@@ -65,7 +61,16 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         public static void Run(bool fromOptions = true)
         {
             // Don't run if client is not connected
-            if (!OnlineManager.Connected) return;
+            if (!OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Cannot update ranked statuses when not online.");
+                return;
+            }
+
+            if (fromOptions)
+                IsRunning = true;
+
+            NotificationManager.Show(NotificationLevel.Info, "Your maps' ranked statuses are now being updated in the background...");
 
             var mapsets = new List<Mapset>(MapManager.Mapsets);
 
