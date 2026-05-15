@@ -241,7 +241,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                     Pool[i].Index = i;
 
                     Pool[i].ClearAnimations();
-                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT + PaddingTop, Easing.OutQuint, 7500);
+                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT + PaddingTop, Easing.OutQuint, 1000);
                 }
 
                 RecalculateContainerHeight();

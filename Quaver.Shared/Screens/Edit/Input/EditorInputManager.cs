@@ -393,6 +393,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                 case KeybindActions.ChangeToolToLongNote:
                     Screen.ChangeToolTo(EditorCompositionTool.LongNote);
                     break;
+                case KeybindActions.ChangeToolToMine:
+                    Screen.ChangeToolTo(EditorCompositionTool.Mine);
+                    break;
                 case KeybindActions.IncreaseSnap:
                     Screen.ChangeBeatSnap(Direction.Forward);
                     break;

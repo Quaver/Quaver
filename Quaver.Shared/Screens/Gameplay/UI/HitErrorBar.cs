@@ -94,7 +94,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 1,
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_caret_down),
                 Y = -Height - 3,
-                Size = new ScalableVector2(chevronSize, chevronSize)
+                Size = new ScalableVector2(chevronSize, chevronSize),
+                Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorNeutralColor
             };
         }
 
@@ -131,6 +132,19 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods) * SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorWidthScale;
             LineObjectPool[CurrentLinePoolIndex].Alpha = Alpha;
+
+            if (ConfigManager.HitErrorEarlyLateWindow.Value <= hitTime)
+            {
+                LastHitCheveron.Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorEarlyColor;
+            }
+            else if (hitTime <= -ConfigManager.HitErrorEarlyLateWindow.Value)
+            {
+                LastHitCheveron.Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorLateColor;
+            }
+            else
+            {
+                LastHitCheveron.Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorNeutralColor;
+            }
         }
     }
 }
