@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.Remove
 
         private Qua WorkingMap { get; }
 
-        private ScrollSpeedFactorInfo ScrollSpeedFactor { get; }
+        public ScrollSpeedFactorInfo ScrollSpeedFactor { get; }
 
         public ScrollGroup ScrollGroup { get; }
 

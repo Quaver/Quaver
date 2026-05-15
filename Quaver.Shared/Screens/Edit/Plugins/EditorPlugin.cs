@@ -7,6 +7,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -18,6 +19,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         static readonly DynValue s_hitSounds = DefineEnum<HitSounds>();
 
         static readonly DynValue s_hitObjectType = DefineEnum<HitObjectType>();
+
+        static readonly DynValue s_hitObjectColoring = DefineEnum<HitObjectColoring>();
 
         static readonly DynValue s_gameMode = DefineEnum<GameMode>();
 
@@ -113,6 +116,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 globals["action_type"] = s_actionType;
                 globals["actions"] = Editor.ActionManager.PluginActionManager;
                 globals["map"] = EditorPluginMap;
+                globals["coloring_type"] = s_hitObjectColoring;
             }
 
             base.SetFrameState();

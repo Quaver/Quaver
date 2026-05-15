@@ -382,7 +382,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public void Update(GameTime gameTime)
         {
             Stage.Update(gameTime);
-            Container?.Update(gameTime);
+
+            // In Song Select Preview, the Container is parented to SelectMapPreviewContainer,
+            // so it gets updated via the scene graph. Updating it here would cause a double update (2x speed).
+            if (!Screen.IsSongSelectPreview)
+                Container?.Update(gameTime);
         }
 
         /// <inheritdoc />

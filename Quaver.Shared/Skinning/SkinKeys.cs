@@ -231,6 +231,12 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float HitErrorChevronSize { get; private set; }
 
+        internal Color HitErrorEarlyColor { get; private set; } = Colors.MainBlue;
+
+        internal Color HitErrorLateColor { get; private set; } = Colors.Negative;
+
+        internal Color HitErrorNeutralColor { get; private set; } = Color.White;
+        
         internal HealthBarType HealthBarType { get; private set; }
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
@@ -659,6 +665,9 @@ namespace Quaver.Shared.Skinning
             HitErrorHeight = ConfigHelper.ReadInt32((int)HitErrorHeight, ini["HitErrorHeight"]);
             HitErrorWidthScale = ConfigHelper.ReadFloat(HitErrorWidthScale, ini["HitErrorWidthScale"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32((int)HitErrorChevronSize, ini["HitErrorChevronSize"]);
+            HitErrorEarlyColor = ConfigHelper.ReadColor(HitErrorEarlyColor, ini["HitErrorEarlyColor"]);
+            HitErrorLateColor = ConfigHelper.ReadColor(HitErrorLateColor, ini["HitErrorLateColor"]);
+            HitErrorNeutralColor = ConfigHelper.ReadColor(HitErrorNeutralColor, ini["HitErrorNeutralColor"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);

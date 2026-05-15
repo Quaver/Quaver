@@ -72,9 +72,9 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Loads the currently selected skin
         /// </summary>
-        public static void Load()
+        public static void Load(UniversalSkinElementsLoadFlags loadFlags = UniversalSkinElementsLoadFlags.All)
         {
-            Skin = new SkinStore();
+            Skin = new SkinStore(loadFlags: loadFlags);
 
             if (ConfigManager.TournamentPlayer2Skin.Value == null ||
                 ConfigManager.TournamentPlayer2Skin.Value == ConfigManager.Skin.Value)
