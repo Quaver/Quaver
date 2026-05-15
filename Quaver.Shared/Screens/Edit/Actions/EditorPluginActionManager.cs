@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -32,6 +33,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="actions"></param>
         public void PerformBatch(List<IEditorAction> actions) => ActionManager.PerformBatch(actions, true);
+
+        /// <summary>
+        ///     Performs an action from Lua without adding it to the action history.
+        /// </summary>
+        /// <param name="action"></param>
+        public void PerformSilently(IEditorAction action) => ActionManager.PerformSilently(action, true);
+
+        /// <summary>
+        ///     Performs a batch of actions from Lua without adding them to the action history.
+        /// </summary>
+        /// <param name="actions"></param>
+        public void PerformBatchSilently(List<IEditorAction> actions) => ActionManager.PerformBatchSilently(actions, true);
 
         public void Redo() => ActionManager.Redo(true);
 
@@ -111,6 +124,33 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="scrollGroup"></param>
         public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs, ScrollGroup scrollGroup) =>
             ActionManager.RemoveScrollVelocityBatch(svs, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sf"></param>
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) => ActionManager.PlaceScrollSpeedFactor(sf, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="scrollGroup"></param>
+        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) =>
+            ActionManager.PlaceScrollSpeedFactorBatch(sfs, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sf"></param>
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollSpeedFactorBatch(new List<ScrollSpeedFactorInfo> { sf }, scrollGroup, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sfs"></param>
+        /// <param name="scrollGroup"></param>
+        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) =>
+            ActionManager.RemoveScrollSpeedFactorBatch(sfs, scrollGroup, true);
 
         /// <summary>
         /// </summary>
@@ -212,6 +252,24 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         /// </summary>
         /// <param name="layer"></param>
+        /// <param name="toIndex"></param>
+        public bool MoveLayer(EditorLayerInfo layer, int toIndex) =>
+            ActionManager.MoveLayer(layer, toIndex, true);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="fromIndex"></param>
+        /// <param name="toIndex"></param>
+        public bool MoveLayer(int fromIndex, int toIndex)
+        {
+            if (fromIndex < 1 || fromIndex > ActionManager.EditScreen.WorkingMap.EditorLayers.Count)
+                return false;
+            return ActionManager.MoveLayer(ActionManager.EditScreen.WorkingMap.EditorLayers[fromIndex - 1], toIndex, true);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layer"></param>
         /// <param name="color"></param>
         public void ChangeLayerColor(EditorLayerInfo layer, int r, int g, int b) =>
             ActionManager.ChangeLayerColor(layer, new(r, g, b), true);
@@ -254,6 +312,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         public void MoveObjectsToTimingGroup(List<HitObjectInfo> hitObjects, string timingGroupId) =>
             ActionManager.MoveObjectsToTimingGroup(hitObjects, timingGroupId, true);
+
+        public void SetViewColoring(HitObjectColoring hitObjectColoringType) => ActionManager.SetViewColoring(hitObjectColoringType);
 
         public void Destroy()
         {

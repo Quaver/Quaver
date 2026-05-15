@@ -48,7 +48,7 @@ namespace Quaver.Shared.Converters.Malody
             Directory.CreateDirectory(extractDirectory);
 
             // Go through each file in the temp folder and add it to the target directory
-            foreach (var tempFile in Directory.GetFiles(tempFolder))
+            foreach (var tempFile in Directory.GetFiles(tempFolder, "*.*", SearchOption.AllDirectories))
             {
                 var fileName = $"{extractDirectory}/{Path.GetFileName(tempFile)}";
 

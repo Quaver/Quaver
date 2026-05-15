@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -50,7 +51,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     The container that holds all of the HitObjects.
         /// </summary>
-        public Container HitObjectContainer { get; private set; }
+        public Container[] HitObjectContainers { get; private set; }
 
         /// <summary>
         ///     The Container that holds every Timing Line object
@@ -437,12 +438,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Creates the HitObjectContainer
         /// </summary>
-        private void CreateHitObjectContainer() => HitObjectContainer = new Container
+        private void CreateHitObjectContainer()
         {
-            Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
-            Alignment = Alignment.TopCenter,
-            Parent = Playfield.ForegroundContainer
-        };
+            HitObjectContainers = new Container[Screen.Map.EditorLayers.Count + 1];
+            for (var i = 0; i <= Screen.Map.EditorLayers.Count; i++)
+            {
+                HitObjectContainers[i] = new Container
+                {
+                    Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
+                    Alignment = Alignment.TopCenter,
+                    Parent = Playfield.ForegroundContainer
+                };
+            }
+        }
 
         /// <summary>
         ///     Creates the TimingLineContainer
@@ -824,14 +832,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 x.FadeTo(1, Easing.Linear, time);
             });
 
-            HitObjectContainer.Children.ForEach(x =>
+            HitObjectContainers.ForEach(container => container.Children.ForEach(x =>
             {
                 if (x is Sprite sprite)
                 {
                     sprite.Alpha = 0;
                     sprite.FadeTo(1, Easing.Linear, time - 200);
                 }
-            });
+            }));
 
             HitError.Children.ForEach(x =>
             {

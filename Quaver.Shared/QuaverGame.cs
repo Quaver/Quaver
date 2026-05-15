@@ -115,6 +115,7 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Platform;
 using Wobble.Window;
 using Version = YamlDotNet.Core.Version;
@@ -417,7 +418,7 @@ namespace Quaver.Shared
         {
             DeleteTemporaryFiles();
 
-            SetAudioDevice();
+            SetAudioDevice(true);
             DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
@@ -531,7 +532,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
@@ -627,7 +628,7 @@ namespace Quaver.Shared
                     break;
                 default:
                     // Pause/Unpause music
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     {
                         if (AudioEngine.Track.IsPaused)
                         {
@@ -985,7 +986,7 @@ namespace Quaver.Shared
             if (!reloadResources)
                 return;
 
-            AudioEngine.Track.Stop();
+            AudioEngine.Track?.Stop();
             CustomAudioSampleCache.Dispose();
             SkinManager.Skin.LoadSoundEffects();
         }

@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch
 
         private Qua WorkingMap { get; }
 
-        private List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; }
+        public List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; }
 
         public ScrollGroup ScrollGroup { get; }
 
@@ -32,9 +32,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch
         [MoonSharpVisible(false)]
         public void Perform()
         {
-            foreach (var sf in ScrollSpeedFactors)
-                ScrollGroup.ScrollSpeedFactors.Remove(sf);
-
+            ScrollGroup.ScrollSpeedFactors.RemoveAll(sf => ScrollSpeedFactors.Contains(sf));
             ActionManager.TriggerEvent(Type, new EditorScrollSpeedFactorBatchRemovedEventArgs(ScrollSpeedFactors, ScrollGroup));
         }
 

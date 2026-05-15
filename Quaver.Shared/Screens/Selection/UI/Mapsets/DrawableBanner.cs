@@ -197,11 +197,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 if (mask != null)
                 {
-                    GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+                    AddScheduledUpdate(() => GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
                     {
                         Image = PerformBlend(tex, mask);
                         FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
-                    });
+                    }));
                 }
                 else
                 {
