@@ -339,7 +339,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             if (ImGui.InputFloat("##bpm", ref bpm, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
-                bpm = Math.Max(0f, bpm);
+                bpm = Math.Max(0.1f, bpm);
                 if (SelectedTimingPoints.Count == 1)
                     Screen.ActionManager.ChangeTimingPointBpm(SelectedTimingPoints.First(), bpm);
                 else
