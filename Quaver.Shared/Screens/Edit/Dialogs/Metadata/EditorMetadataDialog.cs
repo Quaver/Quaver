@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
@@ -7,13 +8,17 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 {
@@ -55,6 +60,12 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             Color.White
         );
 
+        private IconButton SyncMetadataButton { get; set; }
+
+        private SpriteTextPlus SyncMetadataText { get; set; }
+
+        private Tooltip SyncMetadataTooltip { get; } = new("Copy all of the metadata from this difficulty to all of the difficulties from this mapset", Color.White);
+
         private TextboxTabControl TabControl { get; }
 
         private const int LabelSize = 21;
@@ -80,6 +91,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             CreateBpmAffectsSvCheckbox();
             CreateScratchKeyCheckbox();
             CreateLegacyLNRenderingCheckbox();
+            CreateSyncMetadataButton();
 
             TabControl = new TextboxTabControl(new List<Textbox>()
             {
@@ -112,7 +124,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             base.Draw(gameTime);
 
             if (!TryActivate(BpmAffectsScrollVelocityTooltip, BpmAffectsScrollVelocity) &&
-                !TryActivate(LegacyLNRenderingTooltip, LegacyLNRendering))
+                !TryActivate(LegacyLNRenderingTooltip, LegacyLNRendering) &&
+                !TryActivate(SyncMetadataTooltip, SyncMetadataButton))
                 DeactivateTooltip();
         }
 
@@ -263,6 +276,28 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             };
         }
 
+        private void CreateSyncMetadataButton()
+        {
+            SyncMetadataButton = new IconButton(UserInterface.BlankButton, (sender, args) => SyncMetadata())
+            {
+                Parent = Panel,
+                Y = LegacyLNRendering.Y + LegacyLNRendering.Height / 2f - 20,
+                X = ScratchKey.X,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(221, 40),
+                SetChildrenAlpha = true,
+                Visible = Screen.Map.Mapset?.Maps?.Count >= 2,
+                IsClickable = Screen.Map.Mapset?.Maps?.Count >= 2
+            };
+
+            SyncMetadataText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SYNC METADATA", 18)
+            {
+                Parent = SyncMetadataButton,
+                Alignment = Alignment.MidCenter,
+                TextAlignment = TextAlignment.Center
+            };
+        }
+
         public override void Close()
         {
             Artist.Visible = false;
@@ -274,6 +309,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             KeyCount.Visible = false;
             BpmAffectsScrollVelocity.Visible = false;
             LegacyLNRendering.Visible = false;
+            SyncMetadataButton.Visible = false;
             ScratchKey.Visible = false;
 
             base.Close();
@@ -321,6 +357,52 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 return new EditScreen(Screen.Map, AudioEngine.LoadMapAudioTrack(Screen.Map));
             }
             );
+        }
+
+        private void SyncMetadata()
+        {
+            if (Screen.Map.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the metadata for a map loaded from another game.");
+                return;
+            }
+
+            var maps = Screen.Map.Mapset?.Maps;
+
+            if (maps == null || maps.Count < 2)
+                return;
+
+            var syncedMaps = 0;
+
+            foreach (var map in maps.Where(x => x != Screen.Map && x.Game == MapGame.Quaver))
+            {
+                var path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
+
+                if (!File.Exists(path))
+                    continue;
+
+                var qua = Qua.Parse(path, false);
+
+                qua.Artist = Artist.Textbox.RawText.Trim();
+                qua.Title = Title.Textbox.RawText.Trim();
+                qua.Creator = Creator.Textbox.RawText.Trim();
+                qua.Source = Source.Textbox.RawText.Trim();
+                qua.Tags = Tags.Textbox.RawText.Trim();
+                qua.Save(path);
+
+                map.Artist = qua.Artist;
+                map.Title = qua.Title;
+                map.Creator = qua.Creator;
+                map.Source = qua.Source;
+                map.Tags = qua.Tags;
+                map.Md5Checksum = MapsetHelper.GetMd5Checksum(path);
+                map.LastFileWrite = File.GetLastWriteTimeUtc(path);
+
+                MapDatabaseCache.UpdateMap(map);
+                syncedMaps++;
+            }
+
+            NotificationManager.Show(NotificationLevel.Success, $"Metadata synced to {syncedMaps} map(s)!");
         }
 
         private void DeactivateTooltip()
