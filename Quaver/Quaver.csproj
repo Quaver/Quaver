@@ -40,11 +40,8 @@
     <ProjectReference Include="../Quaver.Shared/Quaver.Shared.csproj" />
     <ProjectReference Include="../Wobble/Wobble/Wobble.csproj" />
 
-	<ProjectReference
-      Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj"
-      Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"
-    />
-	<Reference Include="../Quaver.Shared/Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')"/>
+	<ProjectReference Include="../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj" Condition="Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')" />
+	<Reference Include="../Quaver.Shared/Quaver.Server.Client.dll" Condition="!Exists('../Quaver.Server.Client/Quaver.Server.Client/Quaver.Server.Client.csproj')" />
     <Reference Include="MonoGame.Framework">
       <HintPath>..\Wobble\MonoGame.Framework.dll</HintPath>
     </Reference> 
