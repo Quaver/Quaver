@@ -91,7 +91,6 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             CreateBpmAffectsSvCheckbox();
             CreateScratchKeyCheckbox();
             CreateLegacyLNRenderingCheckbox();
-            CreateSyncMetadataButton();
 
             TabControl = new TextboxTabControl(new List<Textbox>()
             {
@@ -108,11 +107,27 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             };
 
             const int Spread = 25;
-            YesButton.X -= Spread;
-            NoButton.X += Spread;
 
             YesButton.Y += 32;
             NoButton.Y = YesButton.Y;
+
+            if (CanSyncMetadata())
+            {
+                const int ButtonSpacing = 230;
+
+                YesButton.Alignment = Alignment.BotCenter;
+                YesButton.X = -ButtonSpacing;
+
+                NoButton.Alignment = Alignment.BotCenter;
+                NoButton.X = ButtonSpacing;
+            }
+            else
+            {
+                YesButton.X -= Spread;
+                NoButton.X += Spread;
+            }
+
+            CreateSyncMetadataButton();
 
             Panel.Height = Panel.Children.Max(x => x.Y + x.Height) + YesButton.Height + 40;
 
@@ -281,13 +296,12 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             SyncMetadataButton = new IconButton(UserInterface.BlankButton, (sender, args) => SyncMetadata())
             {
                 Parent = Panel,
-                Y = LegacyLNRendering.Y + LegacyLNRendering.Height / 2f - 20,
-                X = ScratchKey.X,
-                Alignment = Alignment.TopLeft,
+                Alignment = Alignment.BotCenter,
+                Y = YesButton.Y,
                 Size = new ScalableVector2(221, 40),
                 SetChildrenAlpha = true,
-                Visible = Screen.Map.Mapset?.Maps?.Count >= 2,
-                IsClickable = Screen.Map.Mapset?.Maps?.Count >= 2
+                Visible = CanSyncMetadata(),
+                IsClickable = CanSyncMetadata()
             };
 
             SyncMetadataText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SYNC METADATA", 18)
@@ -297,6 +311,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 TextAlignment = TextAlignment.Center
             };
         }
+
+        private bool CanSyncMetadata() => Screen.Map.Mapset?.Maps?.Count >= 2;
 
         public override void Close()
         {
@@ -323,6 +339,21 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 return;
             }
 
+            if (!ApplyMetadataChanges())
+                return;
+
+            Screen.Exit(() =>
+            {
+                Screen.Save(true, true);
+                NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+
+                return new EditScreen(Screen.Map, AudioEngine.LoadMapAudioTrack(Screen.Map));
+            }
+            );
+        }
+
+        private bool ApplyMetadataChanges()
+        {
             WorkingMap.Artist = Artist.Textbox.RawText.Trim();
             WorkingMap.Title = Title.Textbox.RawText.Trim();
             WorkingMap.Creator = Creator.Textbox.RawText.Trim();
@@ -340,7 +371,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             }
 
             if (string.IsNullOrEmpty(KeyCount.Textbox.RawText.Trim()))
-                return;
+                return false;
             WorkingMap.Mode = ModeHelper.FromKeyCount(int.Parse(KeyCount.Textbox.RawText.Trim()));
 
             // 7K+1
@@ -349,14 +380,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             var keyCount = ModeHelper.ToKeyCount(WorkingMap.Mode, WorkingMap.HasScratchKey);
             WorkingMap.HitObjects.RemoveAll(x => x.Lane > keyCount);
 
-            Screen.Exit(() =>
-            {
-                Screen.Save(true, true);
-                NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
-
-                return new EditScreen(Screen.Map, AudioEngine.LoadMapAudioTrack(Screen.Map));
-            }
-            );
+            return true;
         }
 
         private void SyncMetadata()
@@ -371,6 +395,12 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
             if (maps == null || maps.Count < 2)
                 return;
+
+            if (!ApplyMetadataChanges())
+                return;
+
+            Screen.Save(true, true);
+            NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
 
             var syncedMaps = 0;
 
