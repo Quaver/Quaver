@@ -227,13 +227,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 }
             }
 
-			// Perform alpha mask blend for avatar
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
-            {
-                var mask = SkinManager.Skin?.ScoreboardAvatarMask;
-                Avatar.Image = Avatar.PerformBlend(Avatar.Image, mask);
-            });
-	
+            ScheduleAvatarMaskBlend(Avatar.Image);
+
             // Create username text.
             Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21)
             {
@@ -379,11 +374,27 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (e.SteamId != (ulong)LocalScore.SteamId)
                 return;
 
-            Avatar.Image = e.Texture;
-			var mask = SkinManager.Skin?.ScoreboardAvatarMask;
-            Avatar.Image = Avatar.PerformBlend(Avatar.Image, mask);
-            Avatar.ClearAnimations();
-            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
+            AddScheduledUpdate(() =>
+            {
+                if (IsDisposed)
+                    return;
+
+                Avatar.Image = e.Texture;
+                ScheduleAvatarMaskBlend(e.Texture);
+                Avatar.ClearAnimations();
+                Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
+            });
+        }
+
+        private void ScheduleAvatarMaskBlend(Texture2D avatar)
+        {
+            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            {
+                if (IsDisposed || avatar == null || avatar.IsDisposed)
+                    return;
+
+                Avatar.Image = Avatar.PerformBlend(avatar, SkinManager.Skin?.ScoreboardAvatarMask);
+            });
         }
 
         /// <summary>
