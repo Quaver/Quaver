@@ -40,6 +40,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private double TimeLastProgressChange { get; set; }
 
+        /// <summary>
+        ///    Used to turn off text for the mini progress bar.
+        /// </summary>
+        private readonly bool _isMini;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -50,13 +55,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="defaultValue"></param>
         /// <param name="inactiveColor"></param>
         /// <param name="activeColor"></param>
-        public SongTimeProgressBar(GameplayScreen screen, Vector2 size, double minValue, double maxValue, double defaultValue, Color inactiveColor, Color activeColor)
+        public SongTimeProgressBar(GameplayScreen screen, Vector2 size, double minValue, double maxValue, double defaultValue, Color inactiveColor, Color activeColor, bool isMini = false)
             : base(size, minValue, maxValue, defaultValue, inactiveColor, activeColor)
         {
             Screen = screen;
+            _isMini = isMini;
 
             var skin = SkinManager.Skin.Keys[screen.Map.Mode];
-            if (ConfigManager.DisplaySongTimeProgressNumbers.Value)
+            if (ConfigManager.DisplaySongTimeProgressNumbers.Value && !isMini)
             {
                 CurrentTime = new GameplayNumberDisplay(NumberDisplayType.SongTime, "00:00",
                     new Vector2(skin.SongTimeProgressScale / 100f, skin.SongTimeProgressScale / 100f))
@@ -100,7 +106,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             TimeLastProgressChange = Screen.Timing.Time;
 
             // Set the time of the current time
-            if (ConfigManager.DisplaySongTimeProgressNumbers.Value)
+            if (ConfigManager.DisplaySongTimeProgressNumbers.Value && !_isMini)
             {
                 if (Bindable.Value > 0)
                 {

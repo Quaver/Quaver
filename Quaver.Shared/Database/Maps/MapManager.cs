@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
+ */
 
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online.API.Maps;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using RestSharp;
 using RestSharp.Extensions;
@@ -103,22 +104,13 @@ namespace Quaver.Shared.Database.Maps
             {
                 if (maps.Count == 0) return null;
 
-                // target difficulty
-                double target4K = ConfigManager.PrioritizedMapDifficulty4K.Value / 10d;
-                double target7K = ConfigManager.PrioritizedMapDifficulty7K.Value / 10d;
-
                 // find closest map to target
                 var minDelta = Double.PositiveInfinity;
                 Map selection = null;
 
                 foreach (var map in maps)
                 {
-                    var target = map.Mode switch
-                    {
-                        GameMode.Keys4 => target4K,
-                        GameMode.Keys7 => target7K,
-                        _ => throw new InvalidOperationException("Map is an invalid game mode")
-                    };
+                    var target = ConfigManager.PrioritizedMapDifficulty[map.Mode].Value / 10d;
 
                     double delta = Math.Abs(map.DifficultyFromMods(mods) - target);
 
@@ -589,5 +581,33 @@ namespace Quaver.Shared.Database.Maps
                     onYes
                 )
             );
+
+        /// <summary>
+        ///     The custom scroll speed for the selected map.
+        ///     Null indicates that the selected map does not have a custom scroll speed,
+        ///     and therefore should use the global one.
+        ///
+        ///     Setting this to null will reset the map's custom scroll speed to the global one.
+        /// </summary>
+        public static int? CustomScrollSpeed
+        {
+            get
+            {
+                var scrollSpeed = Selected.Value?.CustomScrollSpeed;
+                return scrollSpeed == Map.DefaultCustomScrollSpeed ? null : scrollSpeed;
+            }
+            set
+            {
+                // Ignore if no map is selected
+                var map = Selected.Value;
+                if (map == null)
+                    return;
+
+                map.CustomScrollSpeed = value ?? Map.DefaultCustomScrollSpeed;
+
+                // Update the map in the background
+                ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(map));
+            }
+        }
     }
 }

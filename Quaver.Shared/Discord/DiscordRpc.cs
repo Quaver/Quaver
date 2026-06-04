@@ -5,21 +5,23 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
  */
 
-using System.Runtime.InteropServices;
+using System;
+using DiscordRPC;
+using DiscordRPC.Logging;
 
 namespace Quaver.Shared.Discord
 {
-    // https://github.com/discordapp/discord-rpc/blob/master/examples/button-clicker/Assets/DiscordRpc.cs
+    // https://github.com/Lachee/discord-rpc-csharp.
     public class DiscordRpc
     {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void ReadyCallback();
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void DisconnectedCallback(int errorCode, string message);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void ErrorCallback(int errorCode, string message);
+
+        private static EventHandlers _handlers;
+        private static DiscordRpcClient _client;
 
         public struct EventHandlers
         {
@@ -50,19 +52,110 @@ namespace Quaver.Shared.Discord
             public bool Instance;
         }
 
-        [DllImport("discord-rpc", EntryPoint = "Discord_Initialize", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Initialize(string applicationId, ref EventHandlers handlers, bool autoRegister, string optionalSteamId);
+        public static void Initialize(string applicationId, ref EventHandlers handlers, bool autoRegister, string optionalSteamId)
+        {
+            _handlers = handlers;
 
-        [DllImport("discord-rpc", EntryPoint = "Discord_UpdatePresence", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void UpdatePresence(ref RichPresence presence);
+            if (_client != null && !_client.IsDisposed)
+                _client.Dispose();
 
-        [DllImport("discord-rpc", EntryPoint = "Discord_RunCallbacks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void RunCallbacks();
-        
-        [DllImport("discord-rpc", EntryPoint = "Discord_ClearPresence", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ClearPresence();
+            _client = new DiscordRpcClient(applicationId, -1, new ConsoleLogger { Level = LogLevel.None });
 
-        [DllImport("discord-rpc", EntryPoint = "Discord_Shutdown", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Shutdown();
+            _client.OnReady += (sender, message) => _handlers.ReadyCallback?.Invoke();
+            _client.OnClose += (sender, message) => _handlers.DisconnectedCallback?.Invoke(message.Code, message.Reason);
+            _client.OnError += (sender, message) => _handlers.ErrorCallback?.Invoke((int) message.Code, message.Message);
+
+            if (autoRegister)
+                _client.RegisterUriScheme(optionalSteamId);
+
+            _client.Initialize();
+        }
+
+        public static void UpdatePresence(ref RichPresence presence) => _client?.SetPresence(ToManagedPresence(presence));
+
+        public static void RunCallbacks()
+        {
+            if (_client != null && !_client.AutoEvents)
+                _client.Invoke();
+        }
+
+        public static void ClearPresence() => _client?.ClearPresence();
+
+        public static void Shutdown()
+        {
+            _client?.Dispose();
+            _client = null;
+        }
+
+        private static DiscordRPC.RichPresence ToManagedPresence(RichPresence presence)
+        {
+            return new DiscordRPC.RichPresence
+            {
+                State = presence.State,
+                Details = presence.Details,
+                Timestamps = CreateTimestamps(presence),
+                Assets = CreateAssets(presence),
+                Party = CreateParty(presence),
+                Secrets = CreateSecrets(presence)
+            };
+        }
+
+        private static DiscordRPC.Timestamps CreateTimestamps(RichPresence presence)
+        {
+            if (presence.StartTimestamp <= 0 && presence.EndTimestamp <= 0)
+                return null;
+
+            return new DiscordRPC.Timestamps
+            {
+                Start = presence.StartTimestamp > 0 ? FromUnixSeconds(presence.StartTimestamp) : (DateTime?) null,
+                End = presence.EndTimestamp > 0 ? FromUnixSeconds(presence.EndTimestamp) : (DateTime?) null
+            };
+        }
+
+        private static DiscordRPC.Assets CreateAssets(RichPresence presence)
+        {
+            if (string.IsNullOrEmpty(presence.LargeImageKey) &&
+                string.IsNullOrEmpty(presence.LargeImageText) &&
+                string.IsNullOrEmpty(presence.SmallImageKey) &&
+                string.IsNullOrEmpty(presence.SmallImageText))
+                return null;
+
+            return new DiscordRPC.Assets
+            {
+                LargeImageKey = presence.LargeImageKey,
+                LargeImageText = presence.LargeImageText,
+                SmallImageKey = presence.SmallImageKey,
+                SmallImageText = presence.SmallImageText
+            };
+        }
+
+        private static DiscordRPC.Party CreateParty(RichPresence presence)
+        {
+            if (presence.PartySize <= 0 && presence.PartyMax <= 0 && string.IsNullOrEmpty(presence.PartyId))
+                return null;
+
+            return new DiscordRPC.Party
+            {
+                ID = string.IsNullOrEmpty(presence.PartyId) ? "quaver" : presence.PartyId,
+                Size = presence.PartySize,
+                Max = presence.PartyMax
+            };
+        }
+
+        private static DiscordRPC.Secrets CreateSecrets(RichPresence presence)
+        {
+            if (string.IsNullOrEmpty(presence.JoinSecret) &&
+                string.IsNullOrEmpty(presence.SpectateSecret))
+                return null;
+
+            return new DiscordRPC.Secrets
+            {
+                JoinSecret = presence.JoinSecret,
+                SpectateSecret = presence.SpectateSecret
+            };
+        }
+
+        private static DateTime FromUnixSeconds(long unixSeconds) =>
+            new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixSeconds);
     }
 }

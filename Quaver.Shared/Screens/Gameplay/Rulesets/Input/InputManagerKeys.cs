@@ -7,10 +7,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
@@ -85,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 var inputLane = lane;
 
                 // Allow multiple keybinds for scratch lane
-                if (Ruleset.Map.HasScratchKey && Ruleset.Map.Mode == GameMode.Keys7 && lane == BindingStore.Count - 1)
+                if (Ruleset.Map.HasScratchKey && lane == BindingStore.Count - 1)
                     inputLane--;
 
                 // A key was uniquely pressed.
@@ -100,7 +102,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     BindingStore[lane].Pressed = true;
                     needsUpdating = true;
 
-                    var screenView = (GameplayScreenView) Ruleset.Screen.View;
+                    var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.KpsDisplay.AddClick();
                 }
                 // A key was uniquely released.
@@ -117,6 +119,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     needsUpdating = true;
                 }
 
+                // Handle Key Pressing/Releasing for this specific frame
+                var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
+
+                if (BindingStore[lane].Pressed && !Ruleset.Screen.InReplayMode 
+                    || Ruleset.Screen.InReplayMode && ReplayInputManager.Presses[lane])
+                {
+                    HandleMinePresses(manager, inputLane);
+                }
+
                 // Don't bother updating the game any further if this event isn't important.
                 if (!needsUpdating)
                     continue;
@@ -124,8 +135,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // Update Playfield
                 ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage.SetReceptorAndLightingActivity(inputLane, BindingStore[lane].Pressed || BindingStore[inputLane].Pressed);
 
-                // Handle Key Pressing/Releasing for this specific frame
-                var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
                 if (BindingStore[lane].Pressed)
                 {
                     var hitObject = manager.GetClosestTap(inputLane);
@@ -140,6 +149,70 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     if (hitObject != null)
                         HandleKeyRelease(manager, hitObject);
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Handles the following mines during press of a lane
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="inputLane"></param>
+        private void HandleMinePresses(HitObjectManagerKeys manager, int inputLane)
+        {
+            foreach (var info in manager.MineLanes[inputLane])
+            {
+                if (info.State is HitObjectState.Dead or HitObjectState.Removed)
+                    continue;
+
+                // Get Judgement and references
+                var time = (int)manager.CurrentAudioOffset;
+                var endTime = info.IsLongNote ? info.EndTime : info.StartTime;
+
+                if (time < info.StartTime - Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv])
+                    break;
+                if (time > endTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Marv])
+                    continue;
+
+                var hitDifference = info.StartTime - time;
+                var stat = new HitStat(HitStatType.Miss, KeyPressType.Press, info.HitObjectInfo, time, Judgement.Miss,
+                    hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+
+                ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(stat);
+                var lane = info.Lane - 1;
+
+                // Play the HitSounds of closest hit object.
+                var game = GameBase.Game as QuaverGame;
+
+                if (game?.CurrentScreen?.Type != QuaverScreenType.Editor)
+                {
+                    if (ConfigManager.EnableHitsounds.Value) HitObjectManager.PlayObjectHitSounds(info.HitObjectInfo);
+                    if (ConfigManager.EnableKeysounds.Value) HitObjectManager.PlayObjectKeySounds(info.HitObjectInfo);
+                }
+
+                // Update stats
+                Ruleset.ScoreProcessor.Stats.Add(stat);
+
+                // Update Scoreboard
+                var view = (GameplayScreenView)Ruleset.Screen.View;
+                view.UpdateScoreboardUsers();
+                view.UpdateScoreAndAccuracyDisplays();
+
+                // Update Playfield
+                var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+
+                // Get hit burst lane
+                var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
+
+                if (ReplayInputManager == null)
+                {
+                    playfield.Stage.ComboDisplay.MakeVisible();
+                    playfield.Stage.HitError.AddJudgement(Judgement.Miss, info.StartTime - time);
+                    playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
+                    playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+                }
+
+                // Update Object Pooling
+                info.State = HitObjectState.Removed;
             }
         }
 
@@ -165,7 +238,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get Judgement and references
             var time = (int)manager.CurrentAudioOffset;
             var hitDifference = info.StartTime - time;
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press, ReplayInputManager == null);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference,
+                KeyPressType.Press, ReplayInputManager == null);
             var lane = info.Lane - 1;
 
             // Ignore Ghost Taps
@@ -189,7 +263,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             ));
 
             // Update Scoreboard
-            var view = (GameplayScreenView) Ruleset.Screen.View;
+            var view = (GameplayScreenView)Ruleset.Screen.View;
             view.UpdateScoreboardUsers();
             view.UpdateScoreAndAccuracyDisplays();
 
@@ -215,7 +289,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     // Add another miss when hit missing LNS
                     if (ReplayInputManager == null)
                     {
-                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true);
+                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true, false);
 
                         Ruleset.ScoreProcessor.Stats.Add(
                             new HitStat(
@@ -265,8 +339,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var time = (int)manager.CurrentAudioOffset;
             var hitDifference = info.EndTime - time;
 
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release,
-                ReplayInputManager == null);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference,
+                KeyPressType.Release, ReplayInputManager == null);
 
             // Update animations
             playfield.Stage.HitLightingObjects[lane].StopHolding();
@@ -275,7 +349,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Dequeue from pool
             manager.HeldLongNoteLanes[lane].Dequeue();
 
-            var view = (GameplayScreenView) Ruleset.Screen.View;
+            var view = (GameplayScreenView)Ruleset.Screen.View;
 
             // Get hit burst lane
             var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
@@ -346,7 +420,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             ));
 
             if (ReplayInputManager == null)
-                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true);
+                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true, false);
 
             // Update scoreboard
             view.UpdateScoreboardUsers();
@@ -377,27 +451,56 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 return;
 
             var speedIncrease = KeyboardManager.IsCtrlDown() ? 1 : 10;
-            BindableInt scrollSpeed;
 
-            switch (Ruleset.Screen.Map.Mode)
+            var scrollSpeed = ConfigManager.ScrollSpeeds[Ruleset.Screen.Map.Mode];
+
+            if (KeyboardManager.IsShiftDown())
             {
-                case GameMode.Keys4:
-                    scrollSpeed = ConfigManager.ScrollSpeed4K;
-                    break;
-                case GameMode.Keys7:
-                    scrollSpeed = ConfigManager.ScrollSpeed7K;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                // Handle local scroll speed changes with <shift> key held.
+                var targetScrollSpeed = MapManager.CustomScrollSpeed ?? scrollSpeed.Value;
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+                {
+                    targetScrollSpeed += speedIncrease;
+                }
+                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                {
+                    targetScrollSpeed -= speedIncrease;
+                }
+
+                if (targetScrollSpeed == scrollSpeed.Value)
+                {
+                    // Reset to global if the target speed is the same as global
+                    MapManager.CustomScrollSpeed = null;
+
+                    NotificationManager.Show(NotificationLevel.Info,
+                        $"Scroll speed (local) has been reset to global: {scrollSpeed.Value / 10f:0.0}",
+                        null, true);
+                }
+                else
+                {
+                    // Set custom local scroll speed
+                    MapManager.CustomScrollSpeed = targetScrollSpeed;
+
+                    NotificationManager.Show(NotificationLevel.Info,
+                        $"Scroll speed (local) has been changed to: {targetScrollSpeed / 10f:0.0}",
+                        null, true);
+                }
             }
+            else
+            {
+                // Update the global scroll speed.
+                // If there is a custom local scroll speed set, this would not have any
+                // visual effect right away.
 
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
-                scrollSpeed.Value += speedIncrease;
-            else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
-                scrollSpeed.Value -= speedIncrease;
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+                    scrollSpeed.Value += speedIncrease;
+                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                    scrollSpeed.Value -= speedIncrease;
 
-            NotificationManager.Show(NotificationLevel.Info, $"Scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}",
-                null, true);
+                NotificationManager.Show(NotificationLevel.Info,
+                    $"Scroll speed (global) has been changed to: {scrollSpeed.Value / 10f:0.0}",
+                    null, true);
+            }
         }
 
         /// <summary>
@@ -419,64 +522,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void SetPlayer1Keybinds(GameMode mode)
         {
-            switch (mode)
+            BindingStore = ConfigManager.KeyLayouts[mode].Select(x => new InputBindingKeys(x)).ToList();
+            if (Ruleset.Map.HasScratchKey)
             {
-                case GameMode.Keys4:
-                    // Initialize 4K Input button container.
-                    if (!Ruleset.Screen.Map.HasScratchKey)
-                    {
-                        BindingStore = new List<InputBindingKeys>
-                        {
-                            new InputBindingKeys(ConfigManager.KeyMania4K1),
-                            new InputBindingKeys(ConfigManager.KeyMania4K2),
-                            new InputBindingKeys(ConfigManager.KeyMania4K3),
-                            new InputBindingKeys(ConfigManager.KeyMania4K4)
-                        };
-                    }
-                    else
-                    {
-                        BindingStore = new List<InputBindingKeys>
-                        {
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch1),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch2),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch3),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch4),
-                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch5),
-                        };
-                    }
-                    break;
-                case GameMode.Keys7:
-                    if (!Ruleset.Screen.Map.HasScratchKey)
-                    {
-                        BindingStore = new List<InputBindingKeys>
-                        {
-                            new InputBindingKeys(ConfigManager.KeyMania7K1),
-                            new InputBindingKeys(ConfigManager.KeyMania7K2),
-                            new InputBindingKeys(ConfigManager.KeyMania7K3),
-                            new InputBindingKeys(ConfigManager.KeyMania7K4),
-                            new InputBindingKeys(ConfigManager.KeyMania7K5),
-                            new InputBindingKeys(ConfigManager.KeyMania7K6),
-                            new InputBindingKeys(ConfigManager.KeyMania7K7)
-                        };
-                    }
-                    else
-                    {
-                        BindingStore = new List<InputBindingKeys>()
-                        {
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch1),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch2),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch3),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch4),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch5),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch6),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch7),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch8),
-                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch9)
-                        };
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+                BindingStore.AddRange(ConfigManager.ScratchKeyLayouts[mode].Select(x => new InputBindingKeys(x)));
             }
         }
 
@@ -486,32 +535,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <param name="mode"></param>
         private void SetPlayer2Keybinds(GameMode mode)
         {
-            switch (mode)
-            {
-                case GameMode.Keys4:
-                    BindingStore = new List<InputBindingKeys>()
-                    {
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K1),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K2),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K3),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P4K4),
-                    };
-                    break;
-                case GameMode.Keys7:
-                    BindingStore = new List<InputBindingKeys>()
-                    {
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K1),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K2),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K3),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K4),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K5),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K6),
-                        new InputBindingKeys(ConfigManager.KeyCoop2P7K7),
-                    };
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
+            BindingStore = ConfigManager.CoopKeyLayouts[mode].Select(x => new InputBindingKeys(x)).ToList();
         }
     }
 }

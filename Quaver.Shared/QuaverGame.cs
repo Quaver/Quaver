@@ -105,8 +105,6 @@ using Wobble.Audio;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Wobble.Discord;
-using Wobble.Discord.RPC;
 using Wobble.Extended.HotReload;
 using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
@@ -115,6 +113,7 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Platform;
 using Wobble.Window;
 using Version = YamlDotNet.Core.Version;
@@ -417,7 +416,7 @@ namespace Quaver.Shared
         {
             DeleteTemporaryFiles();
 
-            SetAudioDevice();
+            SetAudioDevice(true);
             DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
@@ -452,7 +451,21 @@ namespace Quaver.Shared
 
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
-            ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
+            
+            ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    NotificationManager.Show(NotificationLevel.Info, "Full screen is not supported on macOS. Use the borderless window mode instead.");
+                    
+                    ConfigManager.WindowFullScreen.ChangeWithoutTrigger(false);
+                }
+                else
+                {
+                    Graphics.IsFullScreen = e.Value;
+                }
+            };
+            
             ConfigManager.WindowBorderless.ValueChanged += (sender, e) => Window.IsBorderless = e.Value;
             ConfigManager.SelectedGameMode.ValueChanged += (sender, args) =>
             {
@@ -517,7 +530,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
@@ -613,7 +626,7 @@ namespace Quaver.Shared
                     break;
                 default:
                     // Pause/Unpause music
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     {
                         if (AudioEngine.Track.IsPaused)
                         {
@@ -971,7 +984,7 @@ namespace Quaver.Shared
             if (!reloadResources)
                 return;
 
-            AudioEngine.Track.Stop();
+            AudioEngine.Track?.Stop();
             CustomAudioSampleCache.Dispose();
             SkinManager.Skin.LoadSoundEffects();
         }

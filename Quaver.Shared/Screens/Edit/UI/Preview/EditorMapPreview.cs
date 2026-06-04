@@ -10,6 +10,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Reverse;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Swap;
+using Quaver.Shared.Screens.Edit.Actions.Layers.MoveLayer;
 using Quaver.Shared.Screens.Edit.Actions.SF.Add;
 using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SF.ChangeMultiplierBatch;
@@ -65,6 +66,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             DelayTime = 650;
             ActionManager = manager;
 
+            ActionManager.LayerMoved += OnLayerMoved;
             ActionManager.HitObjectPlaced += OnHitObjectPlaced;
             ActionManager.HitObjectRemoved += OnHitObjectRemoved;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
@@ -109,6 +111,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         /// </summary>
         public override void Destroy()
         {
+            ActionManager.LayerMoved -= OnLayerMoved;
             ActionManager.HitObjectPlaced -= OnHitObjectPlaced;
             ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
@@ -153,6 +156,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
 
             RunLoadTask();
         }
+
+        private void OnLayerMoved(object sender, EditorLayerMovedEventArgs e) => Refresh();
 
         private void OnHitObjectPlaced(object sender, EditorHitObjectPlacedEventArgs e) => Refresh();
 

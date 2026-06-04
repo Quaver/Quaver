@@ -93,6 +93,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
         public override void Destroy()
         {
             RenderTarget?.Dispose();
+            (GameBase.Game as QuaverGame)?.CurrentScreen?.DeactivateTooltip();
             base.Destroy();
         }
 

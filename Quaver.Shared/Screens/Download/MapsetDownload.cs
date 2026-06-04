@@ -59,6 +59,7 @@ namespace Quaver.Shared.Screens.Download
 
         /// <summary>
         ///     This is used to signal to <see cref="Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling.DownloadScrollContainer"/>
+        ///     and <see cref="Quaver.Shared.Screens.Downloading.DownloadingScreen"/>
         ///     to remove this mapset download
         /// </summary>
         public event EventHandler Removed;

@@ -11,6 +11,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -20,6 +21,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 /// </summary>
 public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjectInfo, NoteControllerKeys>
 {
+    private readonly BindableInt bindableGlobalScrollSpeed = ConfigManager.ScrollSpeeds[
+        MapManager.Selected.Value.Qua != null ? MapManager.Selected.Value.Qua.Mode : GameMode.Keys4];
+
+    private readonly float rateScaling = 1 + (ModHelper.GetRateFromMods(ModManager.Mods) - 1) *
+        ConfigManager.NormaliseScrollVelocityByRatePercentage.Value / 100f;
+
     /// <summary>
     /// </summary>
     public HitObjectManagerKeys Manager { get; }
@@ -32,20 +39,13 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     {
         get
         {
-            var speed = ConfigManager.ScrollSpeed4K;
-            if (MapManager.Selected.Value.Qua != null)
-                speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4
-                    ? ConfigManager.ScrollSpeed4K
-                    : ConfigManager.ScrollSpeed7K;
+            var scrollSpeed = MapManager.CustomScrollSpeed ?? bindableGlobalScrollSpeed.Value;
 
             if (!Manager.HasSignificantSVs)
-                return speed.Value;
-
-            var rateScaling = 1 + (ModHelper.GetRateFromMods(ModManager.Mods) - 1) *
-                ConfigManager.NormaliseScrollVelocityByRatePercentage.Value / 100f;
+                return scrollSpeed;
 
             // Cap the speed
-            var adjustedScrollSpeed = Math.Clamp(speed.Value * rateScaling, 50, 1000);
+            var adjustedScrollSpeed = Math.Clamp(scrollSpeed * rateScaling, 50, 1000);
             return adjustedScrollSpeed;
         }
     }

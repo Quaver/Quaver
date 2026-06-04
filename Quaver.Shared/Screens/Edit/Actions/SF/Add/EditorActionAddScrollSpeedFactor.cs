@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.Add
 
         public ScrollGroup ScrollGroup { get; }
 
-        private ScrollSpeedFactorInfo ScrollSpeedFactor { get; }
+        public ScrollSpeedFactorInfo ScrollSpeedFactor { get; }
 
         [MoonSharpVisible(false)]
         public EditorActionAddScrollSpeedFactor(EditorActionManager manager, Qua workingMap, ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup)

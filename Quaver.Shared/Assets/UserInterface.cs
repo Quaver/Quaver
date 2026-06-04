@@ -95,6 +95,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D SearchBox => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/search-box.png");
         public static Texture2D Keys4Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys4.png");
         public static Texture2D Keys7Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys7.png");
+        public static Texture2D Keys47Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys4-7-panel.png");
         public static Texture2D KeysNonePanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys-none.png");
         public static Texture2D BothModesPanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/both-modes-panel.png");
         public static Texture2D ModePanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/mode-panel.png");
@@ -115,6 +116,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D ClosePanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/close-panel.png");
         public static Texture2D CreateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/create-button.png");
         public static Texture2D SureButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/sure-button.png");
+        public static Texture2D BlankButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/blank-button.png");
         public static Texture2D AcceptButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/accept-button.png");
         public static Texture2D SaveButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/save-button.png");
         public static Texture2D DeclineButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/decline-button.png");
@@ -228,6 +230,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorIconSelect => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-select.png");
         public static Texture2D EditorIconNote => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-note.png");
         public static Texture2D EditorIconLongNote => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-long-note.png");
+        public static Texture2D EditorIconMine => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-mine.png");
         public static Texture2D EditorIconWhistle => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-whistle.png");
         public static Texture2D EditorIconFinish => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-finish.png");
         public static Texture2D EditorIconClap => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-clap.png");

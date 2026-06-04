@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Input;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Playlists
 {
@@ -36,6 +40,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private bool HasReinitialized { get; set; }
 
+        /// <summary>
+        ///     Shows if there are no playlists
+        /// </summary>
+        private SpriteTextPlus NoPlaylistText { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -43,6 +52,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         public PlaylistContainer(Bindable<SelectScrollContainerType> activeScrollContainer) : base(PlaylistManager.Playlists, 12)
         {
             ActiveScrollContainer = activeScrollContainer;
+            NoPlaylistText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "No playlists created!", 30)
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Tint = Color.White,
+                Visible = PlaylistManager.Playlists.Count == 0
+            };
         }
 
         /// <inheritdoc />
@@ -155,6 +171,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
                 // Snap to it immediately
                 SnapToSelected();
+
+                NoPlaylistText.Visible = AvailableItems.Count == 0;
             }
 
             HasReinitialized = true;

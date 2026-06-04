@@ -8,8 +8,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
@@ -19,10 +21,12 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Converters.Malody;
 using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Importing;
@@ -34,6 +38,7 @@ using SharpCompress.Archives;
 using SharpCompress.Common;
 using Wobble;
 using Wobble.Logging;
+using YamlDotNet.Serialization;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -138,7 +143,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Adds the map dragged into the window to be scheduled to import
         /// </summary>
         /// <param name="path"></param>
-        private static void AddMapImportToQueue(string path)
+        private static void AddMapImportToQueue(string path, bool silent = false)
         {
             // Only one .mc file under the same directory should be imported
             // since .mc import
@@ -150,7 +155,9 @@ namespace Quaver.Shared.Database.Maps
                 }
             }
 
-            NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
+            if(!silent)
+                NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
+
             Queue.Add(path);
             PostMapQueue();
         }
@@ -159,7 +166,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Tries to import the given file, be it a map, a replay, a skin, etc.
         ///     <param name="path">path to the file to import</param>
         /// </summary>
-        public static void ImportFile(string path)
+        public static void ImportFile(string path, bool silent = false)
         {
             var game = GameBase.Game as QuaverGame;
             var screen = game.CurrentScreen;
@@ -167,7 +174,7 @@ namespace Quaver.Shared.Database.Maps
             // Mapset files (or directory of Mapset files)
             if (AcceptedMapType(path))
             {
-                AddMapImportToQueue(path);
+                AddMapImportToQueue(path, silent);
             }
             // Quaver Replay
             else if (path.EndsWith(".qr"))
@@ -277,6 +284,45 @@ namespace Quaver.Shared.Database.Maps
                 ConfigManager.AutoLoadOsuBeatmaps.Value = true;
                 NotificationManager.Show(NotificationLevel.Success, $"Successfully set the path for your .db file");
             }
+            // Archive with maps (batch import)
+            else if (path.EndsWith(".zip") || path.EndsWith(".qpl"))
+            {
+                var time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                var tempFolder = $@"{ConfigManager.TempDirectory}/{Path.GetFileNameWithoutExtension(path)} - {time}";
+                try
+                {
+                    using (ZipArchive archive = ZipFile.OpenRead(path))
+                    {
+                        archive.ExtractToDirectory(tempFolder);
+                    }
+
+                    ImportFile(tempFolder, true);
+
+                    if (path.EndsWith(".qpl"))
+                    {
+                        var metadata = Directory.GetFiles(tempFolder, "metadata.json").FirstOrDefault();
+                        if (metadata != null)
+                            Queue.Add(metadata);
+                        else 
+                            Logger.Log($"metadata not found for playlist {Path.GetFileName(path)}", LogLevel.Important, LogType.Runtime);
+                    }
+
+                    // Add parent folder for deletion after import
+                    Queue.Add(tempFolder);
+
+                    NotificationManager.Show(NotificationLevel.Info, $"Scheduled {Path.GetFileName(path)} to be imported!");
+
+                    // delete file after all maps have been extracted
+                    if (ConfigManager.DeleteOriginalFileAfterImport.Value)
+                        File.Delete(path);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, $"Failed to import playlist");
+                }
+                
+            }
             // Folder with maps
             else if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
             {
@@ -287,12 +333,12 @@ namespace Quaver.Shared.Database.Maps
                 {
                     if (AcceptedMapType(subPath))
                     {
-                        AddMapImportToQueue(subPath);
+                        AddMapImportToQueue(subPath, silent);
                     }
                 }
                 foreach (var subDir in dirs)
                 {
-                    ImportFile(subDir);
+                    ImportFile(subDir, silent);
                 }
 
                 PostMapQueue();
@@ -311,7 +357,17 @@ namespace Quaver.Shared.Database.Maps
 
             var done = -1;
 
+            // Remove batch import temp folder from queue
+            var tempFolders = Queue.FindAll(f => File.GetAttributes(f).HasFlag(FileAttributes.Directory));
+            tempFolders.ForEach(tf => Queue.Remove(tf));
+
+            // Handle playlist import
+            var playlistsMetadata = Queue.FindAll(f => f.EndsWith("metadata.json"));
+            playlistsMetadata.ForEach(pl => Queue.Remove(pl));
+
             MapsetInfoRetriever.InfoUpdateEnabled = false;
+
+            // Import map
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
@@ -373,7 +429,78 @@ namespace Quaver.Shared.Database.Maps
                 }
             });
 
-            MapDatabaseCache.OrderAndSetMapsets(true);
+            // Import playlist
+            var importedPlaylist = new List<Playlist>();
+            Parallel.For(0, playlistsMetadata.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
+            {
+                var metadata = playlistsMetadata[i];
+
+                try
+                {
+                    var json = JsonConvert.DeserializeObject<Playlist.PlaylistExportMetadata>(File.ReadAllText(metadata));
+
+                    var onlineMapPoolId = json.OnlineMapPoolId;
+                    if (onlineMapPoolId > -1)
+                    {
+                        PlaylistManager.ImportPlaylist(onlineMapPoolId);
+                        return;
+                    }
+
+                    var isNewPlaylist = false;
+                    var playlist = PlaylistManager.Playlists.Find(p => p.Name == json.Name && p.Description == json.Description && p.Creator == json.Creator);
+                    if (playlist == null)
+                    {
+                        isNewPlaylist = true;
+                        playlist = new Playlist()
+                        {
+                            Name = json.Name,
+                            Description = json.Description,
+                            Creator = json.Creator,
+                            OnlineMapPoolId = onlineMapPoolId,
+                            OnlineMapPoolCreatorId = json.OnlineMapPoolCreatorId
+                        };
+                    }
+                    else
+                    {
+                        // Update playlist content to match metadata's content
+                        playlist.Maps.Where(m => !json.Maps.Contains(m.Md5Checksum)).ToList().ForEach(m =>
+                        {
+                            PlaylistManager.RemoveMapFromPlaylist(playlist, m);
+                        });
+                    }
+
+                    foreach (var map in json.Maps)
+                    {
+                        if (playlist.Maps.Find(m => m.Md5Checksum == map) != null)
+                            continue;
+
+                        playlist.Maps.Add(new Map { Md5Checksum = map });
+                    }
+
+                    // Check if current playlist hasn't already been imported during this import
+                    if (importedPlaylist.Contains(playlist))
+                    {
+                        Logger.Important($"Playlist {playlist.Name} has already been imported, skipping...", LogType.Runtime);
+                        return;
+                    }
+
+                    if (isNewPlaylist)
+                        PlaylistManager.AddPlaylist(playlist);
+
+                    playlist.Maps.ForEach(x => PlaylistManager.AddMapToPlaylist(playlist, x));
+                    importedPlaylist.Add(playlist);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, $"Failed to import playlist");
+                }
+            });
+
+            // delete temp folders
+            tempFolders.ForEach(d => Directory.Delete(d, true));
+
+            MapDatabaseCache.OrderAndSetMapsets(playlistsMetadata.Count == 0);
             Queue.Clear();
             MapsetInfoRetriever.InfoUpdateEnabled = true;
 
@@ -469,16 +596,22 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
-                    
+
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map);
                     MapsetInfoRetriever.Enqueue(map);
                     lastImported = map;
                 }
             }
+            catch (QuaVersionException e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, e.Message);
+            }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Error loading map, check runtime.log for details.");
             }
 
             return lastImported;

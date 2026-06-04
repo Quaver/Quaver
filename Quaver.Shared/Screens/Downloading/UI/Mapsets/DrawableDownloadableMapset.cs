@@ -78,6 +78,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private Sprite GameModeIcon { get; set; }
 
+        private SpriteTextPlus GameModeText { get; set; }
+
         /// <summary>
         /// </summary>
         private PlaylistDifficultyDisplay DifficultyRange { get; set; }
@@ -184,7 +186,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 Creator.Text = Item.CreatorUsername;
 
                 RankedStatusIcon.Image = GetRankedStatusTexture(Item);
-                GameModeIcon.Image = GetModeIcon(Item);
+                GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.GameMode), GameModeIcon, GameModeText);
 
                 DifficultyRange.ChangeValue(Item.Maps.Min(x => x.DifficultyRating),
                     Item.Maps.Max(x => x.DifficultyRating));
@@ -339,16 +341,27 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        private void CreateGameModeIcon() => GameModeIcon = new Sprite
+        private void CreateGameModeIcon()
         {
-            Parent = ContentContainer,
-            Alignment = Alignment.TopRight,
-            Y = RankedStatusIcon.Y,
-            X = RankedStatusIcon.X - RankedStatusIcon.Width - 12,
-            Alpha = 0.85f,
-            Size = new ScalableVector2(61, 24),
-            UsePreviousSpriteBatchOptions = true
-        };
+            GameModeIcon = new Sprite
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.TopRight,
+                Y = RankedStatusIcon.Y,
+                X = RankedStatusIcon.X - RankedStatusIcon.Width - 12,
+                Alpha = 0.85f,
+                Size = new ScalableVector2(61, 24),
+                UsePreviousSpriteBatchOptions = true
+            };
+
+            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 16)
+            {
+                Parent = GameModeIcon,
+                Alignment = Alignment.MidCenter,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Color.White,
+            };
+        }
 
         /// <summary>
         /// </summary>
@@ -369,26 +382,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public static Texture2D GetModeIcon(DownloadableMapset item)
-        {
-            var has4K = item.Maps.Any(x => x.GameMode == GameMode.Keys4);
-            var has7K = item.Maps.Any(x => x.GameMode == GameMode.Keys7);
-            
-            if (has4K && has7K)
-                return UserInterface.Mode4K7KSmall;
-
-            if (has4K)
-                return UserInterface.Mode4KSmall;
-
-            if (has7K)
-                return UserInterface.Mode7KSmall;
-
-            throw new ArgumentException();
         }
 
         /// <summary>

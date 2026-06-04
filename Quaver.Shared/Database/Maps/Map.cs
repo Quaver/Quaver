@@ -26,6 +26,7 @@ using Quaver.Shared.Modifiers;
 using SQLite;
 using Wobble.Bindables;
 using Wobble.Platform;
+using HitObjectType = Quaver.API.Enums.HitObjectType;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -187,13 +188,18 @@ namespace Quaver.Shared.Database.Maps
         public int LongNoteCount { get; set; }
 
         /// <summary>
+        ///     The count of mines.
+        /// </summary>
+        public int MineCount { get; set; }
+
+        /// <summary>
         ///     The percentage of long notes among the map's hit objects.
         /// </summary>
         public float LNPercentage
         {
             get
             {
-                var hitObjectCount = RegularNoteCount + LongNoteCount;
+                var hitObjectCount = RegularNoteCount + LongNoteCount + MineCount;
                 return hitObjectCount == 0 ? 0 : ((float)LongNoteCount / hitObjectCount * 100);
             }
         }
@@ -212,6 +218,18 @@ namespace Quaver.Shared.Database.Maps
         ///     Retroactively fixed offset for ranked maps.
         /// </summary>
         public int OnlineOffset { get; set; }
+        
+        /// <summary>
+        ///     Default value for CustomScrollSpeed.
+        ///     If this is used, the scroll speed will be determined by the user's global settings instead.
+        /// </summary>
+        public const int DefaultCustomScrollSpeed = 0;
+
+        /// <summary>
+        ///     Fixed custom scroll speed for this map.
+        ///     If 0, uses the user's scroll speed.
+        /// </summary>
+        public int CustomScrollSpeed { get; set; }
 
         /// <summary>
         ///    Returns the notes per second a map has
@@ -333,8 +351,9 @@ namespace Quaver.Shared.Database.Maps
                 Genre = qua.Genre,
                 SongLength = qua.Length,
                 Mode = qua.Mode,
-                RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),
-                LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote),
+                RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote && x.Type is HitObjectType.Normal),
+                LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote && x.Type is HitObjectType.Normal),
+                MineCount = qua.HitObjects.Count(x => x.Type is HitObjectType.Mine),
                 HasScratchKey = qua.HasScratchKey
             };
 

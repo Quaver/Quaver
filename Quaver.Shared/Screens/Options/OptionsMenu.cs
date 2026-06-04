@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -177,21 +178,17 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {
-                    new OptionsSubcategory("Scrolling", new List<OptionsItem>()
-                    {
-                        new OptionsItemScrollDirection(containerRect, "4K Scroll Direction", ConfigManager.ScrollDirection4K),
-                        new OptionsItemScrollDirection(containerRect, "7K Scroll Direction", ConfigManager.ScrollDirection7K),
-                        new OptionsSlider(containerRect, "4K Scroll Speed", ConfigManager.ScrollSpeed4K, i => $"{i / 10f:0.0}"),
-                        new OptionsSlider(containerRect, "7K Scroll Speed", ConfigManager.ScrollSpeed7K, i => $"{i / 10f:0.0}"),
-                        new OptionsSlider(containerRect, "Normalise Scroll Velocity By Rate Percentage", ConfigManager.NormaliseScrollVelocityByRatePercentage, i => $"{i}%"),
-                    }),
-                    new OptionsSubcategory("Scratch Lane", new List<OptionsItem>()
-                    {
-                        new OptionsItemCheckbox(containerRect, "Place 7K Scratch Lane On Left", ConfigManager.ScratchLaneLeft7K)
-                    }),
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),
+                    }),
+                    new OptionsSubcategory("Visuals", new List<OptionsItem>()
+                    {
+                        new OptionsSlider(containerRect, "Long Note Shrink Amount", ConfigManager.PercyAmount,
+                            i => i.ToString())
+                        {
+                            Tags = new List<string> {"percy", "ln"}
+                        },
                     }),
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
@@ -229,7 +226,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
                         new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover),
                         new OptionsItemCheckbox(containerRect, "Display Receptors Over Lane Covers", ConfigManager.ReceptorsOverLaneCover)
-                    })
+                    }),
                 }),
                 new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
                 {
@@ -259,79 +256,6 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Input", UserInterface.OptionsInput, new List<OptionsSubcategory>
                 {
-                    new OptionsSubcategory("Gameplay", new List<OptionsItem>()
-                    {
-                        new OptionsItemKeybindMultiple(containerRect, "4K Gameplay Layout", new List<Bindable<GenericKey>>()
-                        {
-                            ConfigManager.KeyMania4K1,
-                            ConfigManager.KeyMania4K2,
-                            ConfigManager.KeyMania4K3,
-                            ConfigManager.KeyMania4K4
-                        })
-                        {
-                            Tags = new List<string> {"keybind", "keyboard", "keys"}
-                        },
-                        new OptionsItemKeybindMultiple(containerRect, "7K Gameplay Layout", new List<Bindable<GenericKey>>()
-                        {
-                            ConfigManager.KeyMania7K1,
-                            ConfigManager.KeyMania7K2,
-                            ConfigManager.KeyMania7K3,
-                            ConfigManager.KeyMania7K4,
-                            ConfigManager.KeyMania7K5,
-                            ConfigManager.KeyMania7K6,
-                            ConfigManager.KeyMania7K7,
-                        })
-                        {
-                            Tags = new List<string> {"keybind", "keyboard", "keys"}
-                        },
-                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<GenericKey>>()
-                        {
-                            ConfigManager.KeyLayout7KScratch1,
-                            ConfigManager.KeyLayout7KScratch2,
-                            ConfigManager.KeyLayout7KScratch3,
-                            ConfigManager.KeyLayout7KScratch4,
-                            ConfigManager.KeyLayout7KScratch5,
-                            ConfigManager.KeyLayout7KScratch6,
-                            ConfigManager.KeyLayout7KScratch7,
-                        })
-                        {
-                            Tags = new List<string> {"keybind", "keyboard", "keys"}
-                        },
-                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Scratch Lane Keys", new List<Bindable<GenericKey>>()
-                        {
-                            ConfigManager.KeyLayout7KScratch8,
-                            ConfigManager.KeyLayout7KScratch9,
-                        })
-                        {
-                            Tags = new List<string> {"keybind", "keyboard", "keys"}
-                        },
-                    }) ,
-                    new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()
-                    {
-                        new OptionsItemKeybindMultiple(containerRect, "4K Co-op Player 2 Layout", new List<Bindable<GenericKey>>()
-                        {
-                            ConfigManager.KeyCoop2P4K1,
-                            ConfigManager.KeyCoop2P4K2,
-                            ConfigManager.KeyCoop2P4K3,
-                            ConfigManager.KeyCoop2P4K4
-                        })
-                        {
-                            Tags = new List<string> {"keybind", "keyboard", "keys"}
-                        },
-                        new OptionsItemKeybindMultiple(containerRect, "7K Co-op Player 2 Layout", new List<Bindable<GenericKey>>()
-                        {
-                            ConfigManager.KeyCoop2P7K1,
-                            ConfigManager.KeyCoop2P7K2,
-                            ConfigManager.KeyCoop2P7K3,
-                            ConfigManager.KeyCoop2P7K4,
-                            ConfigManager.KeyCoop2P7K5,
-                            ConfigManager.KeyCoop2P7K6,
-                            ConfigManager.KeyCoop2P7K7,
-                        })
-                        {
-                            Tags = new List<string> {"keybind", "keyboard", "keys"}
-                        }
-                    }),
                     new OptionsSubcategory("Gameplay Controls", new List<OptionsItem>()
                     {
                         new OptionsItemKeybindGeneric(containerRect, "Pause", ConfigManager.KeyPause),
@@ -342,6 +266,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
                         new OptionsItemKeybind(containerRect, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),
                         new OptionsItemKeybind(containerRect, "Increase Map Offset", ConfigManager.KeyIncreaseMapOffset),
+                        new OptionsItemKeybind(containerRect, "Reset Map Offset", ConfigManager.KeyResetMapOffset),
                     }),
                     new OptionsSubcategory("Gameplay User Interface", new List<OptionsItem>()
                     {
@@ -356,6 +281,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
                         new OptionsItemKeybind(containerRect, "Toggle Mirror Mod", ConfigManager.KeyToggleMirror),
+                        new OptionsItemKeybind(containerRect, "Toggle Pitch", ConfigManager.KeyTogglePitch),
+                        new OptionsItemKeybind(containerRect, "Remove All Mods", ConfigManager.KeyRemoveAllMods),
                     }),
                     new OptionsSubcategory("Editor", new List<OptionsItem>()
                     {
@@ -368,6 +295,13 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot),
                     })
                 }),
+                // new OptionsSection("Gamemode specific", UserInterface.OptionsInput, new List<OptionsSubcategory>{
+                //     CreateGamemodeCategory(containerRect, GameMode.Keys4),
+                // }),
+                // new OptionsSectionGamemodeSpecific(containerRect, this),
+                new OptionsSection("Game mode specific", UserInterface.OptionsInput,
+                    ModeHelper.AllModes.Select(x => CreateGamemodeCategory(containerRect,x)).ToList()
+                ),
                 new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Navigation & Maintenance", new List<OptionsItem>()
@@ -394,11 +328,16 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
-                        new OptionsItemPrioritizedGameMode(containerRect, "Prioritized Game Mode"),
-                        new OptionsSlider(containerRect, "Prioritized 4K Difficulty", ConfigManager.PrioritizedMapDifficulty4K, i => $"{i / 10f:0.0}"),
-                        new OptionsSlider(containerRect, "Prioritized 7K Difficulty", ConfigManager.PrioritizedMapDifficulty7K, i => $"{i / 10f:0.0}"),
-                        new OptionsItemSuggestDifficulty(containerRect, "Suggest Difficulty from Overall Rating")
-                    }),
+                        new OptionsItemGameMode(containerRect, "Prioritized Game Mode", ConfigManager.PrioritizedGameMode),
+                        new OptionsItemSuggestDifficulty(containerRect, "Suggest Difficulty from Overall Rating"),
+                    }.Concat(
+                        ConfigManager.PrioritizedMapDifficulty.Select(x =>
+                            new OptionsSlider(
+                                containerRect,
+                                $"Prioritized {ModeHelper.ToShortHand(x.Key)} Difficulty",
+                                x.Value, i => $"{i / 10f:0.0}")
+                            )
+                    ).ToList()),
                     // new OptionsSubcategory("Beta", new List<OptionsItem>()
                     // {
                     //     new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),
@@ -428,10 +367,13 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
                         new OptionsItemCheckbox(containerRect, "Display Ranked Accuracy With Custom Judgements", ConfigManager.DisplayRankedAccuracy),
                         new OptionsSlider(containerRect, "Hit Error Fade Time", ConfigManager.HitErrorFadeTime, i => $"{i / 1000f:0.0} sec"),
+                        new OptionsSlider(containerRect, "Hit Error Early Late Window",
+                            ConfigManager.HitErrorEarlyLateWindow, i => $"{i} ms"),
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
-                        new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Online Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
+                        //new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Online Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
                         new OptionsItemCheckbox(containerRect, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay),
-                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing)
+                        new OptionsItemCheckbox(containerRect, "Keep Playing Upon Failing", ConfigManager.KeepPlayingUponFailing),
+                        new OptionsSlider(containerRect, "Normalise Scroll Velocity By Rate Percentage", ConfigManager.NormaliseScrollVelocityByRatePercentage, i => $"{i}%"),
                     }),
                     new OptionsSubcategory("Skin", new List<OptionsItem>()
                     {
@@ -461,6 +403,57 @@ namespace Quaver.Shared.Screens.Options
             };
 
             SelectedSection = new Bindable<OptionsSection>(Sections.First()) { Value = Sections.First() };
+        }
+
+        private static OptionsSubcategory CreateGamemodeCategory(RectangleF containerRect, GameMode mode)
+        {
+            var optionItems = new List<OptionsItem>(){
+                new OptionsItemKeybindMultiple(
+                    containerRect,
+                    $"{ModeHelper.ToShortHand(mode)} Gameplay Layout",
+                    ConfigManager.KeyLayouts[mode],
+                    Enumerable.Range(0, ModeHelper.ToKeyCount(mode)).Select(x => ConfigManager.DefaultKeyLayout(mode, x)).ToList()
+                )
+                {
+                    Tags = new List<string> { "keybind", "keyboard", "keys" }
+                },
+                new OptionsSlider(
+                    containerRect,
+                    $"{ModeHelper.ToShortHand(mode)} Scroll Speed",
+                    ConfigManager.ScrollSpeeds[mode],
+                    i => $"{i / 10f:0.0}"
+                ),
+                new OptionsItemScrollDirection(
+                    containerRect,
+                    $"{ModeHelper.ToShortHand(mode)} Scroll Direction",
+                    ConfigManager.ScrollDirections[mode]
+                ),
+                new OptionsItemKeybindMultiple(
+                    containerRect,
+                    $"{ModeHelper.ToShortHand(mode)} Scratch Layout",
+                    ConfigManager.ScratchKeyLayouts[mode],
+                    Enumerable.Range(0, 2).Select(x => new GenericKey(){KeyboardKey = Keys.None}).ToList()
+                )
+                {
+                    Tags = new List<string> { "keybind", "keyboard", "keys" }
+                },
+                new OptionsItemCheckbox(
+                    containerRect,
+                    $"Place {ModeHelper.ToShortHand(mode)} Scratch Lane On Left",
+                    ConfigManager.ScratchLanesLeft[mode]
+                ),
+                new OptionsItemKeybindMultiple(
+                    containerRect,
+                    $"{ModeHelper.ToShortHand(mode)} Co-op Layout",
+                    ConfigManager.CoopKeyLayouts[mode],
+                    Enumerable.Range(0, ModeHelper.ToKeyCount(mode)).Select(x => new GenericKey(){KeyboardKey = Keys.None}).ToList()
+                )
+                {
+                    Tags = new List<string> { "keybind", "keyboard", "keys" }
+                }
+            };
+
+            return new OptionsSubcategory(ModeHelper.ToLongHand(mode), optionItems);
         }
 
         /// <summary>

@@ -510,6 +510,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 ScreenExiting += (_, _) => SkinManager.StopWatching();
             }
 
+            if (!IsSongSelectPreview && MapManager.CustomScrollSpeed != null)
+            {
+                NotificationManager.Show(NotificationLevel.Info,
+                    $"Scroll speed (local) is set to: {MapManager.CustomScrollSpeed / 10f:0.0}", forceShow: true);
+            }
+
             base.OnFirstUpdate();
         }
 
@@ -672,15 +678,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void SetRuleset()
         {
-            switch (Map.Mode)
-            {
-                case GameMode.Keys4:
-                case GameMode.Keys7:
-                    Ruleset = new GameplayRulesetKeys(this, Map);
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
+            if (ModeHelper.IsKeyMode(Map.Mode))
+                Ruleset = new GameplayRulesetKeys(this, Map);
+            else
+                throw new InvalidEnumArgumentException();
         }
 
         /// <summary>
@@ -709,27 +710,28 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
             }
 
+            // Go back to editor if we're currently play testing.
+            if (IsPlayTesting)
+            {
+                if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
+
+                CustomAudioSampleCache.StopAll();
+
+                if (IsTestPlayingInNewEditor)
+                    ExitToNewEditor();
+                else
+                    Exit(() => new EditorScreen(OriginalEditorMap));
+            }
+
             // If the pause key was just pressed...
             if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
             {
-                // Go back to editor if we're currently play testing.
-                if (IsPlayTesting)
-                {
-                    if (AudioEngine.Track.IsPlaying)
-                    {
-                        AudioEngine.Track.Pause();
-                        AudioEngine.Track.Seek(PlayTestAudioTime);
-                    }
-
-                    CustomAudioSampleCache.StopAll();
-
-                    if (IsTestPlayingInNewEditor)
-                        ExitToNewEditor();
-                    else
-                        Exit(() => new EditorScreen(OriginalEditorMap));
-                }
                 // Exit the offset calibration.
-                else if (IsCalibratingOffset)
+                if (IsCalibratingOffset)
                 {
                     OffsetConfirmDialog.Exit(this);
                 }
@@ -1661,6 +1663,25 @@ namespace Quaver.Shared.Screens.Gameplay
                         MapManager.Selected.Value.LocalOffset -= change;
                         NotificationManager.Show(NotificationLevel.Success,
                             $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+
+                        ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
+                    }
+                }
+                
+                // Handle reset offset to 0
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyResetMapOffset.Value))
+                {
+                    if (KeyboardManager.IsAltDown())
+                    {
+                        ConfigManager.VisualOffset.Value = 0;
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Visual offset has been reset to: {ConfigManager.VisualOffset.Value} ms", null, true);
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value.LocalOffset = 0;
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Local map audio offset has been reset to: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
