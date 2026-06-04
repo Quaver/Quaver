@@ -50,6 +50,20 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         public List<TournamentPlayer> TournamentPlayers { get; private set; }
 
+        /// <summary>
+        ///     Screen-space clipping bounds for tiled gameplay screens.
+        /// </summary>
+        private Dictionary<TournamentGameplayScreen, RectangleF> GameplayScreenClipBounds { get; } =
+            new Dictionary<TournamentGameplayScreen, RectangleF>();
+
+        /// <summary>
+        ///     Rasterizer state used when drawing clipped tournament gameplay views.
+        /// </summary>
+        private static readonly RasterizerState ScissorRasterizerState = new RasterizerState
+        {
+            ScissorTestEnable = true
+        };
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -173,14 +187,17 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         /// <param name="screens"></param>
         /// <param name="rectangle"></param>
-        private static void TileScreens(List<TournamentGameplayScreen> screens, RectangleF rectangle)
+        /// <param name="clipBounds"></param>
+        private static void TileScreens(List<TournamentGameplayScreen> screens, RectangleF rectangle,
+            IDictionary<TournamentGameplayScreen, RectangleF> clipBounds)
         {
             if (screens.Count <= 0)
                 return;
 
             if (screens.Count == 1)
             {
-                var screen = (GameplayPlayfieldKeys)screens[0].Ruleset.Playfield;
+                var gameplayScreen = screens[0];
+                var screen = (GameplayPlayfieldKeys)gameplayScreen.Ruleset.Playfield;
                 var supposedScale = rectangle.Size / screen.Container.AbsoluteSize;
                 var minScale = Math.Min(supposedScale.X, supposedScale.Y);
                 var scale = new Vector2(minScale);
@@ -189,6 +206,7 @@ namespace Quaver.Shared.Screens.Tournament
                 screen.Container.Scale = scale;
                 screen.Container.X = pos.X;
                 screen.Container.Y = pos.Y;
+                clipBounds[gameplayScreen] = rectangle;
                 // Console.WriteLine($"Screen placed at {pos} with scale {scale} (supposed scale {supposedScale}) to fit {rectangle}");
                 return;
             }
@@ -198,18 +216,18 @@ namespace Quaver.Shared.Screens.Tournament
                 // Tile it horizontally
                 var size = new Size2(rectangle.Width / 2, rectangle.Height);
                 TileScreens(screens.Take(screens.Count / 2).ToList(),
-                    new RectangleF(rectangle.Position, size));
+                    new RectangleF(rectangle.Position, size), clipBounds);
                 TileScreens(screens.Skip(screens.Count / 2).ToList(),
-                    new RectangleF(rectangle.Position + new Size2(size.Width, 0), size));
+                    new RectangleF(rectangle.Position + new Size2(size.Width, 0), size), clipBounds);
             }
             else
             {
                 // Tile vertically
                 var size = new Size2(rectangle.Width, rectangle.Height / 2);
                 TileScreens(screens.Take(screens.Count / 2).ToList(),
-                    new RectangleF(rectangle.Position, size));
+                    new RectangleF(rectangle.Position, size), clipBounds);
                 TileScreens(screens.Skip(screens.Count / 2).ToList(),
-                    new RectangleF(rectangle.Position + new Size2(0, size.Height), size));
+                    new RectangleF(rectangle.Position + new Size2(0, size.Height), size), clipBounds);
             }
         }
 
@@ -228,10 +246,13 @@ namespace Quaver.Shared.Screens.Tournament
                 playfield.Container.AddBorder(Color.Red, 3);
             }
 
-            TileScreens(TournamentScreen.GameplayScreens.Take((screensCount + 1) / 2).ToList(), 
-                    new RectangleF(0, 0, WindowManager.Width / 2, WindowManager.Height));
+            GameplayScreenClipBounds.Clear();
+
+            TileScreens(TournamentScreen.GameplayScreens.Take((screensCount + 1) / 2).ToList(),
+                    new RectangleF(0, 0, WindowManager.Width / 2, WindowManager.Height), GameplayScreenClipBounds);
             TileScreens(TournamentScreen.GameplayScreens.Skip((screensCount + 1) / 2).ToList(),
-                    new RectangleF(WindowManager.Width / 2, 0, WindowManager.Width / 2, WindowManager.Height));
+                    new RectangleF(WindowManager.Width / 2, 0, WindowManager.Width / 2, WindowManager.Height),
+                    GameplayScreenClipBounds);
         }
 
         /// <summary>
@@ -355,7 +376,91 @@ namespace Quaver.Shared.Screens.Tournament
         private void DrawPlayfields(GameTime gameTime)
         {
             foreach (var screen in TournamentScreen.GameplayScreens)
+            {
+                if (!GameplayScreenClipBounds.TryGetValue(screen, out var clipBounds))
+                {
+                    screen.Ruleset?.Playfield.Draw(gameTime);
+                    continue;
+                }
+
+                DrawPlayfieldClipped(screen, clipBounds, gameTime);
+            }
+        }
+
+        /// <summary>
+        ///     Draws a playfield clipped to its tournament tile.
+        /// </summary>
+        /// <param name="screen"></param>
+        /// <param name="clipBounds"></param>
+        /// <param name="gameTime"></param>
+        private static void DrawPlayfieldClipped(TournamentGameplayScreen screen, RectangleF clipBounds, GameTime gameTime)
+        {
+            var graphicsDevice = GameBase.Game.GraphicsDevice;
+            var previousScissorRectangle = graphicsDevice.ScissorRectangle;
+            var previousDefaultRasterizerState = GameBase.DefaultSpriteBatchOptions.RasterizerState;
+            var changedSpriteBatchOptions = new List<(Drawable Drawable, RasterizerState RasterizerState)>();
+
+            GameBase.Game.TryEndBatch();
+
+            try
+            {
+                graphicsDevice.ScissorRectangle = ToBackBufferRectangle(clipBounds);
+                GameBase.DefaultSpriteBatchOptions.RasterizerState = ScissorRasterizerState;
+
+                var playfield = (GameplayPlayfieldKeys)screen.Ruleset.Playfield;
+                EnableScissorOnSpriteBatchOptions(playfield.Container, changedSpriteBatchOptions);
+
                 screen.Ruleset?.Playfield.Draw(gameTime);
+                GameBase.Game.TryEndBatch();
+            }
+            finally
+            {
+                GameBase.Game.TryEndBatch();
+
+                foreach (var item in changedSpriteBatchOptions)
+                    item.Drawable.SpriteBatchOptions.RasterizerState = item.RasterizerState;
+
+                GameBase.DefaultSpriteBatchOptions.RasterizerState = previousDefaultRasterizerState;
+                graphicsDevice.ScissorRectangle = previousScissorRectangle;
+            }
+        }
+
+        /// <summary>
+        ///     Converts virtual screen coordinates to back-buffer coordinates for scissor testing.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <returns></returns>
+        private static Rectangle ToBackBufferRectangle(RectangleF rectangle)
+        {
+            var graphics = GameBase.Game.Graphics;
+            var widthScale = graphics.PreferredBackBufferWidth / WindowManager.Width;
+            var heightScale = graphics.PreferredBackBufferHeight / WindowManager.Height;
+
+            return new Rectangle
+            {
+                X = (int)(rectangle.X * widthScale),
+                Y = (int)(rectangle.Y * heightScale),
+                Width = (int)(rectangle.Width * widthScale),
+                Height = (int)(rectangle.Height * heightScale)
+            };
+        }
+
+        /// <summary>
+        ///     Ensures custom sprite batches inside the playfield do not bypass the active scissor rectangle.
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="changedSpriteBatchOptions"></param>
+        private static void EnableScissorOnSpriteBatchOptions(Drawable drawable,
+            ICollection<(Drawable Drawable, RasterizerState RasterizerState)> changedSpriteBatchOptions)
+        {
+            if (drawable.SpriteBatchOptions != null)
+            {
+                changedSpriteBatchOptions.Add((drawable, drawable.SpriteBatchOptions.RasterizerState));
+                drawable.SpriteBatchOptions.RasterizerState = ScissorRasterizerState;
+            }
+
+            foreach (var child in drawable.Children)
+                EnableScissorOnSpriteBatchOptions(child, changedSpriteBatchOptions);
         }
 
         /// <summary>
