@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Theater
         /// <param name="e"></param>
         private void OnFileDropped(object sender, string e)
         {
-            if (Replays.Count >= 4)
+            if (Replays.Count >= 16)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "You cannot watch more than 4 replays at a time!");
                 return;
@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Theater
                         }
 
                         // Add replay to the list
-                        if (Replays.Count != 4)
+                        if (Replays.Count != 16)
                             Replays.Add(replay);
 
                         ReplayLoaded?.Invoke(this, new ReplayLoadedEventArgs(replay));
