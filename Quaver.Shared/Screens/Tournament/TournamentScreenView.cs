@@ -215,6 +215,22 @@ namespace Quaver.Shared.Screens.Tournament
                 return;
             }
 
+            if (screens.Count == 3)
+            {
+                var tileSize = new Size2(rectangle.Width / 2f, rectangle.Height / 2f);
+
+                TileScreens(new List<TournamentGameplayScreen> { screens[0] },
+                    new RectangleF(rectangle.X + rectangle.Width / 4f, rectangle.Y, tileSize.Width, tileSize.Height),
+                    clipBounds);
+                TileScreens(new List<TournamentGameplayScreen> { screens[1] },
+                    new RectangleF(rectangle.X, rectangle.Y + rectangle.Height / 2f, tileSize.Width, tileSize.Height),
+                    clipBounds);
+                TileScreens(new List<TournamentGameplayScreen> { screens[2] },
+                    new RectangleF(rectangle.X + rectangle.Width / 2f, rectangle.Y + rectangle.Height / 2f, tileSize.Width, tileSize.Height),
+                    clipBounds);
+                return;
+            }
+
             var widthHeightRatio = rectangle.Width / rectangle.Height;
             const float horizontalMinimumRatio = 3 / 4f;
 
@@ -256,11 +272,8 @@ namespace Quaver.Shared.Screens.Tournament
 
             GameplayScreenClipBounds.Clear();
 
-            TileScreens(TournamentScreen.GameplayScreens.Take((screensCount + 1) / 2).ToList(),
-                    new RectangleF(0, 0, WindowManager.Width / 2, WindowManager.Height), GameplayScreenClipBounds);
-            TileScreens(TournamentScreen.GameplayScreens.Skip((screensCount + 1) / 2).ToList(),
-                    new RectangleF(WindowManager.Width / 2, 0, WindowManager.Width / 2, WindowManager.Height),
-                    GameplayScreenClipBounds);
+            TileScreens(TournamentScreen.GameplayScreens,
+                    new RectangleF(0, 0, WindowManager.Width, WindowManager.Height), GameplayScreenClipBounds);
         }
 
         /// <summary>
