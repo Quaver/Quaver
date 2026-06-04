@@ -266,8 +266,9 @@ namespace Quaver.Shared.Screens.Tournament
                 var playfield = (GameplayPlayfieldKeys)TournamentScreen.GameplayScreens[i].Ruleset.Playfield;
                 playfield.Container.Width = playfield.Width + playfield.Stage.HealthBar.Width;
                 playfield.Container.Pivot = Vector2.Zero;
-                
-                playfield.Container.AddBorder(Color.Red, 3);
+
+                // For debug purpose, a red border around the playfield 
+                // playfield.Container.AddBorder(Color.Red, 3);
             }
 
             GameplayScreenClipBounds.Clear();
