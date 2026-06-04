@@ -105,8 +105,6 @@ using Wobble.Audio;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Wobble.Discord;
-using Wobble.Discord.RPC;
 using Wobble.Extended.HotReload;
 using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
