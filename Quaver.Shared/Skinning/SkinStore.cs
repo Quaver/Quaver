@@ -283,6 +283,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D EpilepsyWarning { get; private set; }
 
         /// <summary>
+        ///     Icon displayed on the epilepsy warning.
+        /// </summary>
+        internal Texture2D EpilepsyWarningIcon { get; private set; }
+
+        /// <summary>
         ///     Backgrounds for the skin. Only loaded if UseSkinBackgrounds is true.
         /// </summary>
         internal List<string> BackgroundPaths { get; private set; }
@@ -775,6 +780,10 @@ namespace Quaver.Shared.Skinning
             const string epilepsyWarning = "epilepsy-warning";
             EpilepsyWarning = LoadSingleTexture($"{warningFolder}/{epilepsyWarning}"
                 , $"Quaver.Resources/Textures/UI/{epilepsyWarning}.png");
+
+            const string warningIcon = "warning-icon";
+            EpilepsyWarningIcon = LoadSingleTexture($"{warningFolder}/{warningIcon}"
+                , $"Quaver.Resources/Textures/UI/{warningIcon}.png");
         }
 
         private void LoadBackgrounds()

@@ -3,14 +3,23 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Gameplay.UI;
 
 public class EpilepsyWarning : Sprite
 {
+    private const int WarningHeight = 180;
+
+    private const string WarningBody =
+        "This map contains rapid movements, flashing lights, or visual patterns that may trigger seizures for people with photosensitive epilepsy. Viewer discretion is advised.";
+
     private GameplayScreen Screen { get; }
 
     /// <summary>
@@ -21,10 +30,54 @@ public class EpilepsyWarning : Sprite
     public EpilepsyWarning(GameplayScreen screen)
     {
         Screen = screen;
-        Image = SkinManager.Skin.EpilepsyWarning;
+        Image = UserInterface.BlankBox;
+        Tint = Color.Transparent;
+        SetChildrenAlpha = true;
         Alpha = 0;
         Visible = ShouldDisplayWarning();
+
+        CreateBackground();
+        CreateIcon();
+        CreateTitle();
+        CreateBody();
     }
+
+    private void CreateBackground() => new Sprite
+    {
+        Parent = this,
+        Image = SkinManager.Skin.EpilepsyWarning,
+        Alignment = Alignment.MidCenter,
+        Size = new ScalableVector2(0, WarningHeight, 1, 0)
+    };
+
+    private void CreateIcon() => new Sprite
+    {
+        Parent = this,
+        Image = SkinManager.Skin.EpilepsyWarningIcon,
+        Alignment = Alignment.MidCenter,
+        Size = new ScalableVector2(42, 37),
+        Y = -50
+    };
+
+    private void CreateTitle() =>
+        new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "WARNING!", 28)
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            TextAlignment = TextAlignment.Center,
+            Tint = new Color(255, 209, 67),
+            Y = 0
+        };
+
+    private void CreateBody() =>
+        new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), WarningBody, 22)
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            MaxWidth = 1720,
+            TextAlignment = TextAlignment.Center,
+            Y = 30
+        };
 
     private bool ShouldDisplayWarning()
     {
