@@ -30,7 +30,6 @@ using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Theater;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Wobble.Discord.RPC;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;

@@ -710,27 +710,28 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
             }
 
+            // Go back to editor if we're currently play testing.
+            if (IsPlayTesting)
+            {
+                if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
+
+                CustomAudioSampleCache.StopAll();
+
+                if (IsTestPlayingInNewEditor)
+                    ExitToNewEditor();
+                else
+                    Exit(() => new EditorScreen(OriginalEditorMap));
+            }
+
             // If the pause key was just pressed...
             if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
             {
-                // Go back to editor if we're currently play testing.
-                if (IsPlayTesting)
-                {
-                    if (AudioEngine.Track.IsPlaying)
-                    {
-                        AudioEngine.Track.Pause();
-                        AudioEngine.Track.Seek(PlayTestAudioTime);
-                    }
-
-                    CustomAudioSampleCache.StopAll();
-
-                    if (IsTestPlayingInNewEditor)
-                        ExitToNewEditor();
-                    else
-                        Exit(() => new EditorScreen(OriginalEditorMap));
-                }
                 // Exit the offset calibration.
-                else if (IsCalibratingOffset)
+                if (IsCalibratingOffset)
                 {
                     OffsetConfirmDialog.Exit(this);
                 }
