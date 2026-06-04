@@ -29,7 +29,7 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Unlocks or updates each achievement
         /// </summary>
-        public void Unlock() => SteamUserStats.RequestCurrentStats();
+        public void Unlock() => SteamUserStats.RequestUserStats(SteamUser.GetSteamID());
 
         /// <summary>
         ///     In order to unlock achievements, a request for updated user stats must be called
