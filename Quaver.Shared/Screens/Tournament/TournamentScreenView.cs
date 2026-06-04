@@ -206,12 +206,20 @@ namespace Quaver.Shared.Screens.Tournament
                 screen.Container.Scale = scale;
                 screen.Container.X = pos.X;
                 screen.Container.Y = pos.Y;
-                clipBounds[gameplayScreen] = rectangle;
+
+                // Scaled width accepted to overflow from the playfield container (hit bubble and health bar)
+                var allowedOverflowX = 70f * scale.X;
+                clipBounds[gameplayScreen] = new RectangleF(pos.X - allowedOverflowX / 2, pos.Y,
+                    screen.Container.Width * scale.X + allowedOverflowX, screen.Container.Height * scale.Y);
                 // Console.WriteLine($"Screen placed at {pos} with scale {scale} (supposed scale {supposedScale}) to fit {rectangle}");
                 return;
             }
+
+            var widthHeightRatio = rectangle.Width / rectangle.Height;
+            const float horizontalMinimumRatio = 3 / 4f;
+
             // Tile it vertically or horizontally depending on rectangle width and height
-            if (rectangle.Width > rectangle.Height)
+            if (widthHeightRatio > horizontalMinimumRatio)
             {
                 // Tile it horizontally
                 var size = new Size2(rectangle.Width / 2, rectangle.Height);
