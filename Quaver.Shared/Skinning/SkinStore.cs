@@ -626,6 +626,16 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     The numbers that display the judgement counter counts.
+        /// </summary>
+        internal Texture2D[] JudgementCounterNumbers { get; } = new Texture2D[10];
+
+        /// <summary>
+        ///     The names of the judgements for the counter.
+        /// </summary>
+        internal Dictionary<Judgement, Texture2D> JudgementCounterNames { get; } = new Dictionary<Judgement, Texture2D>();
+
+        /// <summary>
         ///     Loads all number display skin elements.
         /// </summary>
         private void LoadNumberDisplays()
@@ -648,6 +658,11 @@ namespace Quaver.Shared.Skinning
                 var songTimeElement = $"song-time-{i}";
                 SongTimeDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{songTimeElement}",
                     $"Quaver.Resources/Textures/Skins/Shared/Numbers/{songTimeElement}.png");
+
+                // Judgement Counter Numbers
+                var judgementElement = $"judgement-{i}";
+                JudgementCounterNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{judgementElement}",
+                    $"Quaver.Resources/Textures/Skins/Shared/Numbers/{judgementElement}.png");
             }
 
             const string scoreDecimal = "score-decimal";
@@ -661,6 +676,32 @@ namespace Quaver.Shared.Skinning
 
             const string songTimeMinus = "song-time-minus";
             SongTimeDisplayMinus = LoadSingleTexture($"{numberDisplayFolder}/{songTimeMinus}", $"Quaver.Resources/Textures/Skins/Shared/Numbers/{songTimeMinus}.png");
+
+            // Load Judgement Names
+            foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
+            {
+                if (j == Judgement.Ghost)
+                    continue;
+
+                // mv, pr, gr, gd, ok, ms
+                string shortName = "";
+                switch (j)
+                {
+                    case Judgement.Marv: shortName = "mv"; break;
+                    case Judgement.Perf: shortName = "pf"; break;
+                    case Judgement.Great: shortName = "gr"; break;
+                    case Judgement.Good: shortName = "gd"; break;
+                    case Judgement.Okay: shortName = "ok"; break;
+                    case Judgement.Miss: shortName = "ms"; break;
+                }
+
+                if (string.IsNullOrEmpty(shortName))
+                    continue;
+
+                var element = $"judgement-{shortName}";
+                JudgementCounterNames[j] = LoadSingleTexture($"{numberDisplayFolder}/{element}",
+                   $"Quaver.Resources/Textures/Skins/Shared/Numbers/{element}.png");
+            }
         }
 
         /// <summary>

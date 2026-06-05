@@ -85,6 +85,24 @@ namespace Quaver.Shared.Graphics
 
         /// <inheritdoc />
         /// <summary>
+        /// </summary>
+        public override Color Tint
+        {
+            get => base.Tint;
+            set
+            {
+                base.Tint = value;
+
+                if (Digits == null)
+                    return;
+
+                foreach (var digit in Digits)
+                    digit.Tint = value;
+            }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="type"></param>
@@ -222,6 +240,7 @@ namespace Quaver.Shared.Graphics
                     {
                         Parent = this,
                         Image = CharacterToTexture(Value[i]),
+                        Tint = Tint
                     });
 
                     // Set size
@@ -308,98 +327,22 @@ namespace Quaver.Shared.Graphics
         /// <returns></returns>
         private Texture2D CharacterToTexture(char c)
         {
+            if (c >= '0' && c <= '9')
+            {
+                int i = c - '0';
+                switch (Type)
+                {
+                    case NumberDisplayType.Score:
+                    case NumberDisplayType.Accuracy:
+                    case NumberDisplayType.Rating: return SkinManager.Skin.ScoreDisplayNumbers[i];
+                    case NumberDisplayType.Combo: return SkinManager.Skin.ComboDisplayNumbers[i];
+                    case NumberDisplayType.SongTime: return SkinManager.Skin.SongTimeDisplayNumbers[i];
+                    case NumberDisplayType.Judgement: return SkinManager.Skin.JudgementCounterNumbers[i];
+                }
+            }
+
             switch (c)
             {
-                // 0
-                case '0' when Type == NumberDisplayType.Score:
-                case '0' when Type == NumberDisplayType.Accuracy:
-                case '0' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[0];
-                case '0' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[0];
-                case '0' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[0];
-                // 1
-                case '1' when Type == NumberDisplayType.Score:
-                case '1' when Type == NumberDisplayType.Accuracy:
-                case '1' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[1];
-                case '1' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[1];
-                case '1' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[1];
-                // 2
-                case '2' when Type == NumberDisplayType.Score:
-                case '2' when Type == NumberDisplayType.Accuracy:
-                case '2' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[2];
-                case '2' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[2];
-                case '2' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[2];
-                // 3
-                case '3' when Type == NumberDisplayType.Score:
-                case '3' when Type == NumberDisplayType.Accuracy:
-                case '3' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[3];
-                case '3' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[3];
-                case '3' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[3];
-                // 4
-                case '4' when Type == NumberDisplayType.Score:
-                case '4' when Type == NumberDisplayType.Accuracy:
-                case '4' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[4];
-                case '4' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[4];
-                case '4' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[4];
-                // 5
-                case '5' when Type == NumberDisplayType.Score:
-                case '5' when Type == NumberDisplayType.Accuracy:
-                case '5' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[5];
-                case '5' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[5];
-                case '5' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[5];
-                // 6
-                case '6' when Type == NumberDisplayType.Score:
-                case '6' when Type == NumberDisplayType.Accuracy:
-                case '6' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[6];
-                case '6' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[6];
-                case '6' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[6];
-                // 7
-                case '7' when Type == NumberDisplayType.Score:
-                case '7' when Type == NumberDisplayType.Accuracy:
-                case '7' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[7];
-                case '7' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[7];
-                case '7' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[7];
-                // 8
-                case '8' when Type == NumberDisplayType.Score:
-                case '8' when Type == NumberDisplayType.Accuracy:
-                case '8' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[8];
-                case '8' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[8];
-                case '8' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[8];
-                // 9
-                case '9' when Type == NumberDisplayType.Score:
-                case '9' when Type == NumberDisplayType.Accuracy:
-                case '9' when Type == NumberDisplayType.Rating:
-                    return SkinManager.Skin.ScoreDisplayNumbers[9];
-                case '9' when Type == NumberDisplayType.Combo:
-                    return SkinManager.Skin.ComboDisplayNumbers[9];
-                case '9' when Type == NumberDisplayType.SongTime:
-                    return SkinManager.Skin.SongTimeDisplayNumbers[9];
                 case '.':
                     return SkinManager.Skin.ScoreDisplayDecimal;
                 case '%':
@@ -408,9 +351,8 @@ namespace Quaver.Shared.Graphics
                     return SkinManager.Skin.SongTimeDisplayMinus;
                 case ':':
                     return SkinManager.Skin.SongTimeDisplayColon;
-                default:
-                    throw new ArgumentException($"Invalid character {c} specified.");
             }
+            throw new ArgumentException($"Invalid character {c} specified.");
         }
     }
 
@@ -425,6 +367,7 @@ namespace Quaver.Shared.Graphics
         Accuracy,
         Combo,
         SongTime,
-        Rating
+        Rating,
+        Judgement
     }
 }
