@@ -13,9 +13,9 @@ namespace Quaver.Shared.Online
         private List<ScoreSubmissionResponseAchievement> Achievements { get; }
 
         /// <summary>
-        ///     The callback that will be ran when the client receives updated user stats
+        ///     The call result that will be ran when the client receives updated user stats
         /// </summary>
-        private static Callback<UserStatsReceived_t> UserStatsReceivedCallback { get; set; }
+        private CallResult<UserStatsReceived_t>? UserStatsReceivedCallResult { get; set; }
 
         /// <summary>
         /// </summary>
@@ -23,21 +23,32 @@ namespace Quaver.Shared.Online
         public SteamAchievements(List<ScoreSubmissionResponseAchievement> achievements)
         {
             Achievements = achievements;
-            UserStatsReceivedCallback = Callback<UserStatsReceived_t>.Create(OnUserStatsReceived);
+            UserStatsReceivedCallResult = CallResult<UserStatsReceived_t>.Create(OnUserStatsReceived);
         }
 
         /// <summary>
         ///     Unlocks or updates each achievement
         /// </summary>
-        public void Unlock() => SteamUserStats.RequestUserStats(SteamUser.GetSteamID());
+        public void Unlock()
+        {
+            var call = SteamUserStats.RequestUserStats(SteamUser.GetSteamID());
+            UserStatsReceivedCallResult?.Set(call);
+        }
 
         /// <summary>
         ///     In order to unlock achievements, a request for updated user stats must be called
         ///     So we'll handle the actual unlock process here.
         /// </summary>
         /// <param name="param"></param>
-        private void OnUserStatsReceived(UserStatsReceived_t param)
+        private void OnUserStatsReceived(UserStatsReceived_t param, bool bIOfailure)
         {
+            if (bIOfailure)
+            {
+                Logger.Error("Failed to receive Steam user stats before unlocking achievements", LogType.Network);
+                Dispose();
+                return;
+            }
+
             foreach (var achievement in Achievements)
             {
                 Logger.Important($"Achievement Progress Received - {achievement.Id} | {achievement.SteamApiName}", LogType.Network);
@@ -51,6 +62,10 @@ namespace Quaver.Shared.Online
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Dispose() => UserStatsReceivedCallback.Dispose();
+        public void Dispose()
+        {
+            UserStatsReceivedCallResult?.Dispose();
+            UserStatsReceivedCallResult = null;
+        }
     }
 }
