@@ -13,6 +13,11 @@ namespace Quaver.Shared.Online
         private List<ScoreSubmissionResponseAchievement> Achievements { get; }
 
         /// <summary>
+        ///     Called when the pending Steam user stats call has completed.
+        /// </summary>
+        private Action<SteamAchievements> OnCompleted { get; }
+
+        /// <summary>
         ///     The call result that will be ran when the client receives updated user stats
         /// </summary>
         private CallResult<UserStatsReceived_t>? UserStatsReceivedCallResult { get; set; }
@@ -20,9 +25,11 @@ namespace Quaver.Shared.Online
         /// <summary>
         /// </summary>
         /// <param name="achievements"></param>
-        public SteamAchievements(List<ScoreSubmissionResponseAchievement> achievements)
+        /// <param name="onCompleted"></param>
+        public SteamAchievements(List<ScoreSubmissionResponseAchievement> achievements, Action<SteamAchievements> onCompleted)
         {
             Achievements = achievements;
+            OnCompleted = onCompleted;
             UserStatsReceivedCallResult = CallResult<UserStatsReceived_t>.Create(OnUserStatsReceived);
         }
 
@@ -45,7 +52,7 @@ namespace Quaver.Shared.Online
             if (bIOfailure)
             {
                 Logger.Error("Failed to receive Steam user stats before unlocking achievements", LogType.Network);
-                Dispose();
+                Complete();
                 return;
             }
 
@@ -56,7 +63,16 @@ namespace Quaver.Shared.Online
                 SteamUserStats.StoreStats();
             }
 
+            Complete();
+        }
+
+        /// <summary>
+        ///     Disposes the call result and tells the owner this pending call no longer needs to be rooted.
+        /// </summary>
+        private void Complete()
+        {
             Dispose();
+            OnCompleted(this);
         }
 
         /// <inheritdoc />
