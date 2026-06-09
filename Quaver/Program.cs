@@ -44,9 +44,13 @@ namespace Quaver
         /// </summary>
         private static int IpcPort { get; } = 43596;
 
+        private static string[] LaunchArguments { get; set; } = Array.Empty<string>();
+
         [STAThread]
         public static void Main(string[] args)
         {
+            LaunchArguments = Array.ConvertAll(args, NormalizeLaunchArgument);
+
             // Prevents more than one instance of Quaver to run at a time
             using (var mutex = new Mutex(false, "Global\\" + Guid))
             {
@@ -55,8 +59,8 @@ namespace Quaver
                     Logger.Error("Quaver is already running", LogType.Runtime);
 
                     // Send to running instance only if we have actual data to send
-                    if (args.Length > 0)
-                        SendToRunningInstanceIpc(args);
+                    if (LaunchArguments.Length > 0)
+                        SendToRunningInstanceIpc(LaunchArguments);
 
                     return;
                 }
@@ -96,6 +100,9 @@ namespace Quaver
             StructuredConfigManager.Initialize();
             StartIpcServer();
 
+            foreach (var argument in LaunchArguments)
+                QuaverIpcHandler.HandleMessage(argument);
+
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
@@ -131,6 +138,14 @@ namespace Quaver
                     "Detected wine runtime. Using wine over the native version is discouraged as it may lead to stability or compatibility issues. If possible, please use the native version of the game.",
                     LogType.Runtime
                 );
+        }
+
+        private static string NormalizeLaunchArgument(string argument)
+        {
+            if (Uri.TryCreate(argument, UriKind.Absolute, out var uri) && uri.IsFile)
+                return uri.LocalPath;
+
+            return argument;
         }
 
         /// <summary>
