@@ -140,19 +140,6 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
-        ///     Converts file:// launch/open messages into local filesystem paths before import type checks.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private static string NormalizeImportPath(string path)
-        {
-            if (Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.IsFile)
-                return uri.LocalPath;
-
-            return path;
-        }
-
-        /// <summary>
         ///     Adds the map dragged into the window to be scheduled to import
         /// </summary>
         /// <param name="path"></param>
@@ -181,8 +168,6 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public static void ImportFile(string path, bool silent = false)
         {
-            path = NormalizeImportPath(path);
-
             var game = GameBase.Game as QuaverGame;
             var screen = game.CurrentScreen;
 
