@@ -84,6 +84,9 @@ public class EpilepsyWarning : Sprite
         if (!ConfigManager.DisplayEpilepsyWarning.Value)
             return false;
 
+        if (!Screen.ShouldShowEpilepsyWarning)
+            return false;
+
         var map = Screen.Map;
 
         if (map == null)
