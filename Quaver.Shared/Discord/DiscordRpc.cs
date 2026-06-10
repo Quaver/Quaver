@@ -8,6 +8,7 @@
 using System;
 using DiscordRPC;
 using DiscordRPC.Logging;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Discord
 {
@@ -59,14 +60,25 @@ namespace Quaver.Shared.Discord
             if (_client != null && !_client.IsDisposed)
                 _client.Dispose();
 
-            _client = new DiscordRpcClient(applicationId, -1, new ConsoleLogger { Level = LogLevel.None });
+            _client = new DiscordRpcClient(applicationId, -1, new ConsoleLogger { Level = DiscordRPC.Logging.LogLevel.None });
 
             _client.OnReady += (sender, message) => _handlers.ReadyCallback?.Invoke();
             _client.OnClose += (sender, message) => _handlers.DisconnectedCallback?.Invoke(message.Code, message.Reason);
             _client.OnError += (sender, message) => _handlers.ErrorCallback?.Invoke((int) message.Code, message.Message);
 
             if (autoRegister)
-                _client.RegisterUriScheme(optionalSteamId);
+            {
+                try
+                {
+                    _client.RegisterUriScheme(optionalSteamId);
+                }
+                catch (Exception e)
+                {
+                    // It appears to be a common bug where Discord RPC fails to register the URI scheme on some platforms like Linux.
+                    // There is not yet a known fix, so we ignore the error.
+                    Logger.Error($"Failed to register Discord RPC URI scheme: {e}", LogType.Runtime);
+                }
+            }
 
             _client.Initialize();
         }
