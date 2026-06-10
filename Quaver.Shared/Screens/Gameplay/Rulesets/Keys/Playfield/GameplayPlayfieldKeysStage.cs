@@ -254,7 +254,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             CreateHealthBar();
             CreateKeybindOverlay();
-            CreateEpilepsyWarning();
         }
 
         /// <summary>
@@ -811,15 +810,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 keybind.Wait(2000);
                 keybind.FadeTo(0, Easing.Linear, 500);
             }
-        }
-
-        private void CreateEpilepsyWarning()
-        {
-            var epilepsyWarning = new EpilepsyWarning(Screen)
-            {
-                Parent = Playfield.Container,
-                Size = new ScalableVector2(0, 0, 1, 1)
-            };
         }
 
         public void FadeIn()

@@ -115,6 +115,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public Scoreboard ScoreboardRight { get; set; }
 
         /// <summary>
+        ///     The epilepsy warning
+        /// </summary>
+        public EpilepsyWarning EpilepsyWarning { get; set; }
+
+        /// <summary>
         ///     The display to skip the map.
         /// </summary>
         public SkipDisplay SkipDisplay { get; set; }
@@ -280,6 +285,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     Position = new ScalableVector2(-12, -110)
                 };
             }
+
+            CreateEpilepsyWarning();
 
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
@@ -560,6 +567,15 @@ namespace Quaver.Shared.Screens.Gameplay
 
             ScoreboardLeft?.Users.ForEach(x => x.SetImage());
             ScoreboardRight?.Users.ForEach(x => x.SetImage());
+        }
+
+        private void CreateEpilepsyWarning()
+        {
+            EpilepsyWarning = new EpilepsyWarning(Screen)
+            {
+                Parent = Container,
+                Size = new ScalableVector2(0, 0, 1, 1)
+            };
         }
 
         /// <summary>
