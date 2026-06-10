@@ -256,6 +256,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private EditorPlayfieldZoom Zoom { get; set; }
 
         /// <summary>
+        /// </summary>
+        private bool IsDestroyed { get; set; }
+
+        /// <summary>
         ///     The long note that is currently being dragged
         /// </summary>
         private EditorHitObjectKeys LongNoteInDrag { get; set; }
@@ -532,6 +536,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public override void Destroy()
         {
+            if (IsDestroyed)
+                return;
+
+            IsDestroyed = true;
+
             Button.Destroy();
 
             WaveformLoadTask?.Dispose();
