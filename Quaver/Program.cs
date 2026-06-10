@@ -20,7 +20,6 @@ using Quaver.Shared;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.IPC;
-using Quaver.Shared.Utils;
 using Quaver.Shared.Online;
 using Wobble;
 using Wobble.IO;
