@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
@@ -8,6 +9,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Checkboxes;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting.Channels;
@@ -21,6 +23,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Platform;
@@ -111,6 +114,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// </summary>
         public void Open()
         {
+            SetClickable(this, true);
+            SetRetainedContainersClickable(true);
+
             ClearAnimations();
             MoveToY(0, Easing.OutQuint, 500);
             IsOpen = true;
@@ -121,9 +127,13 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// </summary>
         public void Close()
         {
+            DismissActiveDropdowns();
+
             ClearAnimations();
             MoveToY((int)Height + 10, Easing.OutQuint, 500);
             IsOpen = false;
+            SetClickable(this, false);
+            SetRetainedContainersClickable(false);
         }
 
         /// <summary>
@@ -131,6 +141,53 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// </summary>
         /// <returns></returns>
         public bool IsJoinChannelDialogOpen() => ActiveJoinChatChannelContainer != null && ActiveJoinChatChannelContainer.IsOpen;
+
+        /// <summary>
+        /// </summary>
+        private void DismissActiveDropdowns()
+        {
+            CloseOpenedDropdowns(this);
+
+            ActiveJoinChatChannelContainer?.Destroy();
+            ActiveJoinChatChannelContainer = null;
+
+            ChannelList.ChannelContainer.DismissActiveRightClickOptions();
+            MessageContainer.DismissActiveRightClickOptions();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        private void CloseOpenedDropdowns(Drawable drawable)
+        {
+            if (drawable is Dropdown { Opened: true } dropdown)
+                dropdown.Close(0);
+
+            foreach (var child in drawable.Children)
+                CloseOpenedDropdowns(child);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="clickable"></param>
+        private void SetClickable(Drawable drawable, bool clickable)
+        {
+            if (drawable is Button button)
+                button.IsClickable = clickable;
+
+            foreach (var child in drawable.Children)
+                SetClickable(child, clickable);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="clickable"></param>
+        private void SetRetainedContainersClickable(bool clickable)
+        {
+            foreach (var container in MessageContainer.MessageScrollContainers.Values.ToList())
+                SetClickable(container, clickable);
+        }
 
         /// <summary>
         /// </summary>

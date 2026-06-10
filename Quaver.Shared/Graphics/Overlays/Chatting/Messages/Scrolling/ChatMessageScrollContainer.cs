@@ -325,9 +325,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         {
             if (ActiveRightClickOptions != null)
             {
-                ActiveRightClickOptions.Visible = false;
-                ActiveRightClickOptions.Parent = null;
-                ActiveRightClickOptions.Destroy();
+                DismissActiveRightClickOptions();
             }
 
             ActiveRightClickOptions = rco;
@@ -344,6 +342,19 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             ActiveRightClickOptions.Position = new ScalableVector2(x, y);
             ActiveRightClickOptions.Open(350);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void DismissActiveRightClickOptions()
+        {
+            if (ActiveRightClickOptions == null)
+                return;
+
+            ActiveRightClickOptions.Visible = false;
+            ActiveRightClickOptions.Parent = null;
+            ActiveRightClickOptions.Destroy();
+            ActiveRightClickOptions = null;
         }
 
         /// <summary>
