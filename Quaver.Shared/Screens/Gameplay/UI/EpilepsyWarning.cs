@@ -93,7 +93,7 @@ public class EpilepsyWarning : Sprite
             return true;
 
         var hasSvTag = map.Tags?
-            .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Split([',', ' '], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Contains("sv", StringComparer.InvariantCultureIgnoreCase) ?? false;
 
         const float extremeSvThreshold = 5;
