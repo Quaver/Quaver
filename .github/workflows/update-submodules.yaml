@@ -1,0 +1,43 @@
+name: Update submodules
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          token: ${{ secrets.SUBMODULE_UPDATE_TOKEN || github.token }}
+
+      - name: Update submodules to tracked remote branches
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive
+          git submodule update --remote --recursive
+
+      - name: Show changed submodules
+        run: git status --short
+
+      - name: Create PR if submodules changed
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.SUBMODULE_UPDATE_TOKEN || github.token }}
+          branch: chore/update-submodules
+          delete-branch: true
+          title: "chore: update submodules"
+          commit-message: "chore: update submodules"
+          body: |
+            Updates repository submodule pointers to their latest tracked remote commits.
