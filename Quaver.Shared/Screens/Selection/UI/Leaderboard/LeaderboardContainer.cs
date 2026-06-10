@@ -408,12 +408,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         public void StartLoading()
         {
+            ScoresContainer.StartLoading();
+
             foreach (var x in new List<Drawable>(Children))
             {
                 if (x is ILoadable loadable)
                     loadable.StartLoading();
-
-                ScoresContainer.StartLoading();
 
                 const int animTime = 20;
 
@@ -429,12 +429,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         public void StopLoading()
         {
+            ScoresContainer.StopLoading();
+
             foreach (var x in new List<Drawable>(Children))
             {
                 if (x is ILoadable loadable)
                     loadable.StopLoading();
-
-                ScoresContainer.StopLoading();
             }
         }
 
