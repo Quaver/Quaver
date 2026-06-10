@@ -345,6 +345,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             Container.AddScheduledUpdate(() =>
             {
+                if (e.Value != EditScreen.UneditableMap.Value)
+                    return;
+
                 if (e.Value != null)
                 {
                     if (MapPreview != null)
@@ -357,6 +360,7 @@ namespace Quaver.Shared.Screens.Edit
                 }
 
                 UnEditablePlayfield?.Destroy();
+                UnEditablePlayfield = null;
 
                 if (e.Value == null)
                 {
@@ -466,6 +470,7 @@ namespace Quaver.Shared.Screens.Edit
             if (e.Value)
             {
                 UnEditablePlayfield?.Destroy();
+                UnEditablePlayfield = null;
 
                 if (MapPreview == null)
                     CreateGameplayPreview();

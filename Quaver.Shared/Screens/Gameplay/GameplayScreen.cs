@@ -725,6 +725,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     ExitToNewEditor();
                 else
                     Exit(() => new EditorScreen(OriginalEditorMap));
+
+                return;
             }
 
             // If the pause key was just pressed...
@@ -896,6 +898,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     ExitToNewEditor();
                 else
                     Exit(() => new EditorScreen(OriginalEditorMap));
+
+                return;
             }
 
             TimesRequestedToPause++;
@@ -1569,7 +1573,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
+            if (IsPlayTesting && !ModManager.IsActivated(ModIdentifier.Autoplay) && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
             {
                 var inputManager = (KeysInputManager)Ruleset.InputManager;
 
