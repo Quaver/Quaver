@@ -719,6 +719,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (ProgressBar != null)
                 ProgressBar.Parent = Container;
 
+            if (EpilepsyWarning != null)
+                EpilepsyWarning.Parent = Container;
+
             Transitioner.Parent = Container;
 
             if (PauseScreen != null)
