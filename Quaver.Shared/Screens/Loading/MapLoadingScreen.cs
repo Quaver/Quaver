@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Loading
                 try
                 {
                     ParseAndLoadMap();
-                    WriteStreamerFiles();
+                    WriteStreamerFiles(MapManager.Selected.Value);
                     LoadGameplayScreen();
                 }
                 catch (Exception e)
@@ -158,20 +158,26 @@ namespace Quaver.Shared.Screens.Loading
         /// <summary>
         ///    Asynchronously writes files for livestreamers
         /// </summary>
-        private static void WriteStreamerFiles()
+        /// <param name="map"></param>
+        public static void WriteStreamerFiles(Map map)
         {
+            if (map == null)
+                return;
+
             var streamerValues = new[]
             {
-                ("difficulty", $"{MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods):0.00}"),
-                ("map", MapManager.Selected.Value.Qua + " "),
+                ("difficulty", $"{map.DifficultyFromMods(ModManager.Mods):0.00}"),
+                ("map", $"{(map.Qua != null ? map.Qua.ToString() : map.ToString())} "),
                 ("mods", ModHelper.GetModsString(ModManager.Mods)),
-                ("mapid", MapManager.Selected.Value.MapId.ToString())
+                ("mapid", map.MapId.ToString())
             };
 
             foreach (var (fileName, value) in streamerValues)
             {
                 try
                 {
+                    Directory.CreateDirectory($"{ConfigManager.TempDirectory}/Now Playing");
+
                     using (var writer = File.CreateText($"{ConfigManager.TempDirectory}/Now Playing/{fileName}.txt"))
                         writer.Write(value);
                 }
