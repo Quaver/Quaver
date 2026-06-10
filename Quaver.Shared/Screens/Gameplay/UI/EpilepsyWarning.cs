@@ -89,8 +89,9 @@ public class EpilepsyWarning : Sprite
         if (map == null)
             return true;
 
-        var hasSvTag = map.Tags?.Contains("sv", StringComparison.InvariantCultureIgnoreCase) ??
-                       false;
+        var hasSvTag = map.Tags?
+            .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Contains("sv", StringComparer.InvariantCultureIgnoreCase) ?? false;
 
         const float extremeSvThreshold = 5;
         var hasExtremeSv = map.TimingGroups.Values
