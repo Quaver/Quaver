@@ -131,7 +131,10 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapDeleted += OnMapDeleted;
             MapManager.MapUpdated += OnMapUpdated;
             MapManager.SongRequestPlayed += OnSongRequestPlayed;
+            MapManager.Selected.ValueChanged += OnSelectedMapChangedForStreamerFiles;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
+
+            MapLoadingScreen.WriteStreamerFiles(MapManager.Selected.Value);
 
             View = new SelectionScreenView(this);
         }
@@ -179,6 +182,7 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapDeleted -= OnMapDeleted;
             MapManager.MapUpdated -= OnMapUpdated;
             MapManager.SongRequestPlayed -= OnSongRequestPlayed;
+            MapManager.Selected.ValueChanged -= OnSelectedMapChangedForStreamerFiles;
             SkinManager.StopWatching();
 
             // ReSharper disable once DelegateSubtraction
@@ -971,6 +975,14 @@ namespace Quaver.Shared.Screens.Selection
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
             });
         }
+
+        /// <summary>
+        ///     Writes the streamer "Now Playing" files when the selected song changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedMapChangedForStreamerFiles(object sender, BindableValueChangedEventArgs<Map> e)
+            => MapLoadingScreen.WriteStreamerFiles(e.Value);
 
         /// <summary>
         /// </summary>

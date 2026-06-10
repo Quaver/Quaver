@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -21,6 +22,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.IPC;
 using Quaver.Shared.Online;
 using Wobble;
+using Wobble.IO;
 using Wobble.Logging;
 using Wobble.Platform;
 using ZetaIpc.Runtime.Client;
@@ -44,9 +46,13 @@ namespace Quaver
         /// </summary>
         private static int IpcPort { get; } = 43596;
 
+        private static string[] LaunchArguments { get; set; } = Array.Empty<string>();
+
         [STAThread]
         public static void Main(string[] args)
         {
+            LaunchArguments = Array.ConvertAll(args, NormalizeLaunchArgument);
+
             // Prevents more than one instance of Quaver to run at a time
             using (var mutex = new Mutex(false, "Global\\" + Guid))
             {
@@ -55,8 +61,8 @@ namespace Quaver
                     Logger.Error("Quaver is already running", LogType.Runtime);
 
                     // Send to running instance only if we have actual data to send
-                    if (args.Length > 0)
-                        SendToRunningInstanceIpc(args);
+                    if (LaunchArguments.Length > 0)
+                        SendToRunningInstanceIpc(LaunchArguments);
 
                     return;
                 }
@@ -96,6 +102,9 @@ namespace Quaver
             StructuredConfigManager.Initialize();
             StartIpcServer();
 
+            foreach (var argument in LaunchArguments)
+                QuaverIpcHandler.HandleMessage(argument);
+
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
@@ -105,7 +114,12 @@ namespace Quaver
 
             try
             {
+                var fileAssociations = CreateFileAssociations();
+                var applicationIconPath = GetFileIconPath(GetNativeIconFileName("quaver-logo"));
+
                 Utils.NativeUtils.RegisterURIScheme("quaver", "Quaver");
+                ExtractNativeIcons(fileAssociations, applicationIconPath);
+                Utils.NativeUtils.RegisterFileAssociations(fileAssociations, applicationIconPath);
             }
             catch (Exception e)
             {
@@ -131,6 +145,14 @@ namespace Quaver
                     "Detected wine runtime. Using wine over the native version is discouraged as it may lead to stability or compatibility issues. If possible, please use the native version of the game.",
                     LogType.Runtime
                 );
+        }
+
+        private static string NormalizeLaunchArgument(string argument)
+        {
+            if (Uri.TryCreate(argument, UriKind.Absolute, out var uri) && uri.IsFile)
+                return uri.LocalPath;
+
+            return argument;
         }
 
         /// <summary>
@@ -177,6 +199,97 @@ namespace Quaver
                 Logger.Error(e, LogType.Runtime);
             }
         }
+
+        /// <summary>
+        ///     Extracts embedded file icons to disk so the operating system can use them for file associations.
+        /// </summary>
+        private static void ExtractNativeIcons(IReadOnlyDictionary<string, FileAssociation> fileAssociations,
+            string applicationIconPath)
+        {
+            var iconDirectory = GetFileIconDirectory();
+            Directory.CreateDirectory(iconDirectory);
+
+            using (var resources = new DllResourceStore("Quaver.Resources.dll"))
+            {
+                foreach (var association in fileAssociations)
+                {
+                    var iconFileName = Path.GetFileName(association.Value.IconPath);
+                    var icon = resources.Get($"Quaver.Resources/Icons/{iconFileName}");
+
+                    if (icon == null)
+                        continue;
+
+                    File.WriteAllBytes(association.Value.IconPath, icon);
+                }
+
+                var applicationIconFileName = Path.GetFileName(applicationIconPath);
+                var applicationIcon = resources.Get($"Quaver.Resources/Icons/{applicationIconFileName}");
+
+                if (applicationIcon != null)
+                    File.WriteAllBytes(applicationIconPath, applicationIcon);
+            }
+        }
+
+        private static string GetFileIconPath(string iconFileName) => Path.Combine(GetFileIconDirectory(), iconFileName);
+
+        private static string GetFileIconDirectory()
+            => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Quaver", "File Icons");
+
+        private static string GetNativeIconFileName(string fileType)
+        {
+            if (OperatingSystem.IsMacOS())
+                return $"{fileType}.icns";
+
+            if (OperatingSystem.IsLinux())
+                return $"{fileType}.png";
+
+            return $"{fileType}.ico";
+        }
+
+        private static Dictionary<string, FileAssociation> CreateFileAssociations()
+            => new Dictionary<string, FileAssociation>
+            {
+                {
+                    ".qp",
+                    new FileAssociation
+                    {
+                        ProgId = "Quaver.qp",
+                        FriendlyName = "Quaver Mapset",
+                        IconPath = GetFileIconPath(GetNativeIconFileName("qp")),
+                        MimeType = "application/x-quaver-qp"
+                    }
+                },
+                {
+                    ".qpl",
+                    new FileAssociation
+                    {
+                        ProgId = "Quaver.qpl",
+                        FriendlyName = "Quaver Playlist",
+                        IconPath = GetFileIconPath(GetNativeIconFileName("qpl")),
+                        MimeType = "application/x-quaver-qpl"
+                    }
+                },
+                {
+                    ".qr",
+                    new FileAssociation
+                    {
+                        ProgId = "Quaver.qr",
+                        FriendlyName = "Quaver Replay",
+                        IconPath = GetFileIconPath(GetNativeIconFileName("qr")),
+                        MimeType = "application/x-quaver-qr"
+                    }
+                },
+                {
+                    ".qs",
+                    new FileAssociation
+                    {
+                        ProgId = "Quaver.qs",
+                        FriendlyName = "Quaver Skin",
+                        IconPath = GetFileIconPath(GetNativeIconFileName("qs")),
+                        MimeType = "application/x-quaver-qs"
+                    }
+                }
+            };
 
         /// <summary>
         ///     Automatically sends crash logs to the server.

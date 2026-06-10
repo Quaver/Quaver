@@ -119,6 +119,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D SureButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/sure-button.png");
         public static Texture2D BlankButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/blank-button.png");
         public static Texture2D AcceptButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/accept-button.png");
+        public static Texture2D EpilepsyWarning => TextureManager.Load(@"Quaver.Resources/Textures/UI/epilepsy-warning.png");
         public static Texture2D SaveButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/save-button.png");
         public static Texture2D DeclineButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/decline-button.png");
         public static Texture2D LegalPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/legal-panel.png");
