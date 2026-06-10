@@ -778,6 +778,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> DisplayEpilepsyWarning { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static Bindable<string> TournamentPlayer2Skin { get; private set; }
 
         /// <summary>
@@ -1217,6 +1221,7 @@ namespace Quaver.Shared.Config
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
             DisplayPauseWarning = ReadValue(@"DisplayPauseWarning", true, data);
             DisplayFailWarning = ReadValue(@"DisplayFailWarning", true, data);
+            DisplayEpilepsyWarning = ReadValue(@"DisplayEpilepsyWarning", true, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);

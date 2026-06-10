@@ -343,6 +343,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool UseExistingAudioTime { get; }
 
         /// <summary>
+        ///     If true, show epilepsy warning. On retry, this should be false.
+        /// </summary>
+        public bool ShouldShowEpilepsyWarning { get; }
+
+        /// <summary>
         ///     Used to reset the input manager when toggling autoplay on/off.
         ///     Prevents having to virtually play all replay frames again
         /// </summary>
@@ -386,9 +391,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="isSongSelectPreview"></param>
         /// <param name="isTestPlayingInNewEditor"></param>
         /// <param name="useExistingAudioTime"></param>
+        /// <param name="shouldShowEpilepsyWarning"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
-            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false)
+            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false, bool shouldShowEpilepsyWarning = true)
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -414,6 +420,7 @@ namespace Quaver.Shared.Screens.Gameplay
             TournamentOptions = options;
             IsSongSelectPreview = isSongSelectPreview;
             UseExistingAudioTime = useExistingAudioTime;
+            ShouldShowEpilepsyWarning = shouldShowEpilepsyWarning;
 
             if (TournamentOptions != null && !(this is TournamentGameplayScreen))
                 throw new InvalidOperationException("Cannot provide tournament options for a non-tournament gameplay screen");
@@ -1108,11 +1115,32 @@ namespace Quaver.Shared.Screens.Gameplay
             CustomAudioSampleCache.StopAll();
 
             if (IsPlayTesting)
-                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor), true);
+                QuaverScreenManager.ScheduleScreenChange(
+                    () => new GameplayScreen(OriginalEditorMap,
+                        MapHash,
+                        LocalScores,
+                        replay: null,
+                        isPlayTesting: true,
+                        playTestTime: PlayTestAudioTime,
+                        isCalibratingOffset: false,
+                        spectatorClient: null,
+                        options: null,
+                        isSongSelectPreview: false,
+                        isTestPlayingInNewEditor: IsTestPlayingInNewEditor,
+                        shouldShowEpilepsyWarning: false), true);
             else if (InReplayMode)
-                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay), true);
+                QuaverScreenManager.ScheduleScreenChange(
+                    () => new GameplayScreen(Map,
+                        MapHash,
+                        LocalScores,
+                        LoadedReplay,
+                        shouldShowEpilepsyWarning: false), true);
             else
-                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(Map, MapHash, LocalScores), true);
+                QuaverScreenManager.ScheduleScreenChange(
+                    () => new GameplayScreen(Map,
+                        MapHash,
+                        LocalScores,
+                        shouldShowEpilepsyWarning: false), true);
         }
 
         /// <summary>
