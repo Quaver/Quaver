@@ -186,8 +186,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(laneSize, 0),
-                Position = new ScalableVector2(posX, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Position = new ScalableVector2(posX, 0)
             };
 
             // Create the Hold End
@@ -195,13 +194,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                Size = new ScalableVector2(laneSize, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Size = new ScalableVector2(laneSize, 0)
             };
 
-            // We set the parent of the HitObjectSprite **AFTER** we create the long note
-            // so that the body of the long note isn't drawn over the object.
-            HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
+            // Set long note end properties.
+            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
+            LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+            LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
             // Hits go above the hit object.
             PressHit = new DrawableReplayHit(Ruleset, HitObjectManager, lane);
@@ -297,6 +296,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Update Positions
             UpdateSpritePositions(manager.CurrentVisualAudioOffset);
+            LongNoteBodySprite.Parent = playfield.Stage.HitObjectContainers[Info.HitObjectInfo.EditorLayer];
+            LongNoteEndSprite.Parent = playfield.Stage.HitObjectContainers[Info.HitObjectInfo.EditorLayer];
+
+            // We set the parent of the HitObjectSprite **AFTER** we create the long note
+            // so that the body of the long note isn't drawn over the object.
+            HitObjectSprite.Parent = playfield.Stage.HitObjectContainers[Info.HitObjectInfo.EditorLayer];
         }
 
         /// <summary>

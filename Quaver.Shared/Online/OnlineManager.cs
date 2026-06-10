@@ -81,6 +81,16 @@ namespace Quaver.Shared.Online
         }
 
         /// <summary>
+        ///     Keeps Steam achievement call results rooted until Steam dispatches the pending API callback.
+        /// </summary>
+        private static List<SteamAchievements> PendingSteamAchievements { get; } = new List<SteamAchievements>();
+
+        /// <summary>
+        ///     Lock used for pending Steam achievement call result lifetime management.
+        /// </summary>
+        private static object PendingSteamAchievementsLock { get; } = new object();
+
+        /// <summary>
         ///     The current online connection status.
         /// </summary>
         public static Bindable<ConnectionStatus> Status { get; } = new Bindable<ConnectionStatus>(ConnectionStatus.Disconnected);
@@ -581,7 +591,7 @@ namespace Quaver.Shared.Online
 
             // Unlock any achievements
             if (e.Response.Achievements != null && e.Response.Achievements.Count > 0)
-                new SteamAchievements(e.Response.Achievements).Unlock();
+                UnlockSteamAchievements(e.Response.Achievements);
 
             try
             {
@@ -593,6 +603,30 @@ namespace Quaver.Shared.Online
             {
                 Logger.Error(ex, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Unlocks achievements through Steam while holding onto the call result wrapper until it completes.
+        /// </summary>
+        /// <param name="achievements"></param>
+        private static void UnlockSteamAchievements(List<ScoreSubmissionResponseAchievement> achievements)
+        {
+            var steamAchievements = new SteamAchievements(achievements, OnSteamAchievementsCompleted);
+
+            lock (PendingSteamAchievementsLock)
+                PendingSteamAchievements.Add(steamAchievements);
+
+            steamAchievements.Unlock();
+        }
+
+        /// <summary>
+        ///     Removes completed Steam achievement calls from the rooted pending list.
+        /// </summary>
+        /// <param name="steamAchievements"></param>
+        private static void OnSteamAchievementsCompleted(SteamAchievements steamAchievements)
+        {
+            lock (PendingSteamAchievementsLock)
+                PendingSteamAchievements.Remove(steamAchievements);
         }
 
         /// <summary>

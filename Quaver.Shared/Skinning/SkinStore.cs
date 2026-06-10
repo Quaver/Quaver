@@ -966,8 +966,6 @@ namespace Quaver.Shared.Skinning
                         workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
                     }
                 }
-                else
-                    workshopList.Add($"({new DirectoryInfo(directory).Name})");
             }
 
             workshopList.Sort();

@@ -188,5 +188,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="time"></param>
         /// <returns></returns>
         public double GetNearestSnapTimeFromTime(bool forwards, int snap, float time) => AudioEngine.GetNearestSnapTimeFromTime(Map, forwards ? Direction.Forward : Direction.Backward, snap, time);
+
+        /// <summary>
+        ///     Returns the 1-indexed layer number (the one used in the hit objects) of the provided
+        ///     layer.
+        /// </summary>
+        /// <param name="layerInfo">layer to get its index</param>
+        /// <returns>the index of the layer (1-indexed)</returns>
+        public int GetEditorLayerIndex(EditorLayerInfo layerInfo) => Map.EditorLayers.IndexOf(layerInfo) + 1;
     }
 }

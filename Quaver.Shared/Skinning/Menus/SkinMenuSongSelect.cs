@@ -80,6 +80,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D GameMode4K7K { get; private set; }
 
+        public Texture2D GameModeOther { get; private set; }
+
         #endregion
 
         #region  RANKED_STATUS
@@ -200,6 +202,7 @@ namespace Quaver.Shared.Skinning.Menus
             GameMode4K = LoadSkinElement(folder, "game-mode-4k.png");
             GameMode7K = LoadSkinElement(folder, "game-mode-7k.png");
             GameMode4K7K = LoadSkinElement(folder, "game-mode-4k7k.png");
+            GameModeOther = LoadSkinElement(folder, "game-mode-other.png");
             StatusNotSubmitted = LoadSkinElement(folder, "status-notsubmitted.png");
             StatusUnranked = LoadSkinElement(folder, "status-unranked.png");
             StatusRanked = LoadSkinElement(folder, "status-ranked.png");

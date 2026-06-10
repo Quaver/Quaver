@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework.Media;
+using Newtonsoft.Json;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
@@ -54,6 +56,7 @@ namespace Quaver.Shared.Database.Playlists
         ///     The maps that are inside of the playlist
         /// </summary>
         [Ignore]
+        [JsonIgnore]
         public List<Map> Maps { get; set; } = new List<Map>();
 
         /// <summary>
@@ -71,18 +74,23 @@ namespace Quaver.Shared.Database.Playlists
         /// <summary>
         ///     Exports the playlist to a directory
         /// </summary>
-        public void Export()
+        public void Export(ExportMode exportMode)
         {
             var mapsetsAdded = new List<Mapset>();
+            var mapsMd5 = new List<string>();
 
             var tempFolder = $"{ConfigManager.TempDirectory}/{GameBase.Game.TimeRunning}/";
             Directory.CreateDirectory(tempFolder);
-            var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.zip";
+            var exportsDirectory = $"{ConfigManager.DataDirectory}/Exports";
+            Directory.CreateDirectory(exportsDirectory);
+            
+            var outputPath = $"{exportsDirectory}/{StringHelper.FileNameSafeString(Name)}.{(exportMode == ExportMode.Zip ? "zip" : "qpl")}";
 
             using (var archive = ZipArchive.Create())
             {
                 foreach (var map in Maps)
                 {
+                    mapsMd5.Add(map.Md5Checksum);
                     if (mapsetsAdded.Contains(map.Mapset))
                         continue;
 
@@ -133,6 +141,24 @@ namespace Quaver.Shared.Database.Playlists
                     }
                 }
 
+                // add playlist metadata
+                if (exportMode == ExportMode.Playlist)
+                {
+                    var metadata = new PlaylistExportMetadata
+                    {
+                        Name = Name,
+                        Creator = Creator,
+                        Description = Description,
+                        OnlineMapPoolId = OnlineMapPoolId,
+                        OnlineMapPoolCreatorId = OnlineMapPoolCreatorId,
+                        Maps = mapsMd5
+                    };
+
+                    var json = JsonConvert.SerializeObject(metadata);
+                    File.WriteAllText($"{tempFolder}/metadata.json", json);
+                    archive.AddAllFromDirectory(tempFolder, "*.json");
+                }
+                
                 archive.AddAllFromDirectory(tempFolder, "*.qp");
                 archive.SaveTo(outputPath, CompressionType.Deflate);
             }
@@ -169,5 +195,26 @@ namespace Quaver.Shared.Database.Playlists
         }
 
         public void OpenUrl() => BrowserHelper.OpenURL($"https://quavergame.com/playlist/{OnlineMapPoolId}");
+
+        public enum ExportMode
+        {
+            Zip,
+            Playlist
+        }
+
+        internal class PlaylistExportMetadata
+        {
+            public string Name { get; set; }
+
+            public string Creator { get; set; }
+
+            public string Description { get; set; }
+
+            public int OnlineMapPoolId { get; set; }
+
+            public int OnlineMapPoolCreatorId { get; set; }
+
+            public List<string> Maps { get; set; }
+        }
     }
 }
