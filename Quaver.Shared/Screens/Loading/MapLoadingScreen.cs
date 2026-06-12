@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Replays;
@@ -28,12 +29,16 @@ using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
+using Wobble.Scheduling;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Loading
 {
     public class MapLoadingScreen : QuaverScreen
     {
+        private static TaskHandler<Map, bool> StreamerFilesWriteTask { get; } =
+            new TaskHandler<Map, bool>(WriteStreamerFiles);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -159,10 +164,24 @@ namespace Quaver.Shared.Screens.Loading
         ///    Asynchronously writes files for livestreamers
         /// </summary>
         /// <param name="map"></param>
-        public static void WriteStreamerFiles(Map map)
+        /// <param name="delay"></param>
+        public static void QueueStreamerFilesWrite(Map map, int delay = 0) => StreamerFilesWriteTask.Run(map, delay);
+
+        /// <summary>
+        ///    Writes files for livestreamers.
+        /// </summary>
+        /// <param name="map"></param>
+        public static void WriteStreamerFiles(Map map) => WriteStreamerFiles(map, CancellationToken.None);
+
+        /// <summary>
+        ///    Writes files for livestreamers.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="token"></param>
+        private static bool WriteStreamerFiles(Map map, CancellationToken token)
         {
             if (map == null)
-                return;
+                return false;
 
             var streamerValues = new[]
             {
@@ -172,13 +191,25 @@ namespace Quaver.Shared.Screens.Loading
                 ("mapid", map.MapId.ToString())
             };
 
+            var nowPlayingDirectory = $"{ConfigManager.TempDirectory}/Now Playing";
+
+            try
+            {
+                Directory.CreateDirectory(nowPlayingDirectory);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                return false;
+            }
+
             foreach (var (fileName, value) in streamerValues)
             {
+                token.ThrowIfCancellationRequested();
+
                 try
                 {
-                    Directory.CreateDirectory($"{ConfigManager.TempDirectory}/Now Playing");
-
-                    using (var writer = File.CreateText($"{ConfigManager.TempDirectory}/Now Playing/{fileName}.txt"))
+                    using (var writer = File.CreateText($"{nowPlayingDirectory}/{fileName}.txt"))
                         writer.Write(value);
                 }
                 catch (Exception e)
@@ -186,6 +217,8 @@ namespace Quaver.Shared.Screens.Loading
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+
+            return true;
         }
 
         /// <summary>
