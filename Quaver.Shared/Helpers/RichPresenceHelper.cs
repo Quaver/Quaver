@@ -25,13 +25,13 @@ namespace Quaver.Shared.Helpers
             }
 
             SteamManager.SetRichPresence("State", Truncate(state, Constants.k_cchMaxRichPresenceValueLength));
-            DiscordHelper.Presence.State = Truncate(state, DiscordRpc.RichPresence.MaxStateLength);
+            DiscordHelper.Presence.State = Truncate(state, 120);
 
             // This would be potentially problematic as the source specifies 'bytes', and .NET using UTF-16 could have
             // made things complicated. Fortunately however, through direct testing it appears that they consider
             // UTF-16 codepoints to be 1 byte long, even if the underlying memory layout would suggest otherwise.
             SteamManager.SetRichPresence("Details", Truncate(details, Constants.k_cchMaxRichPresenceValueLength));
-            DiscordHelper.Presence.Details = Truncate(details, DiscordRpc.RichPresence.MaxDetailsLength);
+            DiscordHelper.Presence.Details = Truncate(details, 120);
 
             DiscordHelper.UpdatePresence();
         }
