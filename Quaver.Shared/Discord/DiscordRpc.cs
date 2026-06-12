@@ -103,8 +103,8 @@ namespace Quaver.Shared.Discord
         {
             return new DiscordRPC.RichPresence
             {
-                State = presence.State,
-                Details = presence.Details,
+                State = Truncate(presence.State, RichPresence.MaxStateLength),
+                Details = Truncate(presence.Details, RichPresence.MaxDetailsLength),
                 Timestamps = CreateTimestamps(presence),
                 Assets = CreateAssets(presence),
                 Party = CreateParty(presence),
@@ -134,10 +134,10 @@ namespace Quaver.Shared.Discord
 
             return new DiscordRPC.Assets
             {
-                LargeImageKey = presence.LargeImageKey,
-                LargeImageText = presence.LargeImageText,
-                SmallImageKey = presence.SmallImageKey,
-                SmallImageText = presence.SmallImageText
+                LargeImageKey = Truncate(presence.LargeImageKey, 32),
+                LargeImageText = Truncate(presence.LargeImageText, 128),
+                SmallImageKey = Truncate(presence.SmallImageKey, 32),
+                SmallImageText = Truncate(presence.SmallImageText, 128)
             };
         }
 
@@ -148,7 +148,7 @@ namespace Quaver.Shared.Discord
 
             return new DiscordRPC.Party
             {
-                ID = string.IsNullOrEmpty(presence.PartyId) ? "quaver" : presence.PartyId,
+                ID = string.IsNullOrEmpty(presence.PartyId) ? "quaver" : Truncate(presence.PartyId, 128),
                 Size = presence.PartySize,
                 Max = presence.PartyMax
             };
@@ -162,9 +162,17 @@ namespace Quaver.Shared.Discord
 
             return new DiscordRPC.Secrets
             {
-                JoinSecret = presence.JoinSecret,
-                SpectateSecret = presence.SpectateSecret
+                JoinSecret = Truncate(presence.JoinSecret, 128),
+                SpectateSecret = Truncate(presence.SpectateSecret, 128)
             };
+        }
+
+        private static string Truncate(string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value) || value.Length <= maxLength)
+                return value;
+
+            return $"{value[..(maxLength - 1)]}…";
         }
 
         private static DateTime FromUnixSeconds(long unixSeconds) =>

@@ -1,9 +1,5 @@
 using Quaver.Shared.Discord;
 using Quaver.Shared.Online;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using Steamworks;
 
 namespace Quaver.Shared.Helpers
@@ -20,19 +16,16 @@ namespace Quaver.Shared.Helpers
         /// <param name="details">Details of the game. Strings too long gets automatically truncated.</param>
         public static void UpdateRichPresence(string state, string details)
         {
-            static string Truncate(string s, int length) => s.Length >= length ? $"{s[..(length - 1)]}…" : s;
+            static string Truncate(string s, int length)
+            {
+                if (string.IsNullOrEmpty(s) || s.Length <= length)
+                    return s;
 
-            // It is assumed that state is already sufficiently small enough to fit in both the rich presences.
-            // The largest case is multiplayer lobby names, which is 50 characters long. Combine that with the
-            // interpolation, and it ends up at most 61 characters long.
-            Debug.Assert(
-                state.Length <= DiscordRpc.RichPresence.MaxStateLength &&
-                state.Length <= Constants.k_cchMaxRichPresenceKeyLength,
-                $"State is too long for rich presence: {state.Length} chars"
-            );
+                return $"{s[..(length - 1)]}…";
+            }
 
-            SteamManager.SetRichPresence("State", state);
-            DiscordHelper.Presence.State = state;
+            SteamManager.SetRichPresence("State", Truncate(state, Constants.k_cchMaxRichPresenceValueLength));
+            DiscordHelper.Presence.State = Truncate(state, DiscordRpc.RichPresence.MaxStateLength);
 
             // This would be potentially problematic as the source specifies 'bytes', and .NET using UTF-16 could have
             // made things complicated. Fortunately however, through direct testing it appears that they consider
