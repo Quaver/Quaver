@@ -282,7 +282,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         {
             lock (MessageQueue)
             {
-                if (!HasRequestedMessageHistory || MessageQueue.Count == 0 || RequestHistoryTask.IsRunning)
+                if (!HasRequestedMessageHistory || MessageQueue.Count == 0 || RequestHistoryTask.IsRunning || HasPendingHistoryMessages())
                     return;
 
                 var count = Math.Min(MessageQueue.Count, MaxMessagesFlushedPerUpdate);
@@ -294,6 +294,15 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
                 Logger.Important($"Flushed {count} messages from the `{Channel.Name}` message queue. {MessageQueue.Count} messages remaining", LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private bool HasPendingHistoryMessages()
+        {
+            lock (MessageHistoryQueue)
+                return MessageHistoryQueue.Count != 0;
         }
 
         /// <summary>
