@@ -103,8 +103,8 @@ namespace Quaver.Shared.Discord
         {
             return new DiscordRPC.RichPresence
             {
-                State = Truncate(presence.State, 120),
-                Details = Truncate(presence.Details, 120),
+                State = Truncate(presence.State, RichPresence.MaxStateLength - 4),
+                Details = Truncate(presence.Details, RichPresence.MaxDetailsLength - 4),
                 Timestamps = CreateTimestamps(presence),
                 Assets = CreateAssets(presence),
                 Party = CreateParty(presence),
@@ -134,10 +134,10 @@ namespace Quaver.Shared.Discord
 
             return new DiscordRPC.Assets
             {
-                LargeImageKey = Truncate(presence.LargeImageKey, 25),
-                LargeImageText = Truncate(presence.LargeImageText, 120),
-                SmallImageKey = Truncate(presence.SmallImageKey, 25),
-                SmallImageText = Truncate(presence.SmallImageText, 120)
+                LargeImageKey = Truncate(presence.LargeImageKey, 32 - 4),
+                LargeImageText = Truncate(presence.LargeImageText, RichPresence.MaxDetailsLength - 4),
+                SmallImageKey = Truncate(presence.SmallImageKey, 32 - 4),
+                SmallImageText = Truncate(presence.SmallImageText, RichPresence.MaxDetailsLength - 4)
             };
         }
 
@@ -148,7 +148,7 @@ namespace Quaver.Shared.Discord
 
             return new DiscordRPC.Party
             {
-                ID = string.IsNullOrEmpty(presence.PartyId) ? "quaver" : Truncate(presence.PartyId, 120),
+                ID = string.IsNullOrEmpty(presence.PartyId) ? "quaver" : Truncate(presence.PartyId, RichPresence.MaxDetailsLength - 4),
                 Size = presence.PartySize,
                 Max = presence.PartyMax
             };
@@ -162,8 +162,8 @@ namespace Quaver.Shared.Discord
 
             return new DiscordRPC.Secrets
             {
-                JoinSecret = Truncate(presence.JoinSecret, 120),
-                SpectateSecret = Truncate(presence.SpectateSecret, 120)
+                JoinSecret = Truncate(presence.JoinSecret, RichPresence.MaxDetailsLength - 4),
+                SpectateSecret = Truncate(presence.SpectateSecret, RichPresence.MaxDetailsLength - 4)
             };
         }
 
