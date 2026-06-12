@@ -67,8 +67,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
             TextboxContainer.Width = Width;
 
             // Make sure the correct channel is displayed
-            foreach (var container in MessageScrollContainers.Values)
+            foreach (var container in MessageScrollContainers.Values.ToList())
             {
+                if (container.IsDisposed)
+                    continue;
+
                 if (ActiveChannel.Value == container.Channel && container.Parent != this)
                     container.Parent = this;
                 else if (ActiveChannel.Value != container.Channel && container.Parent != null)
@@ -108,8 +111,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
                     c.ChangeSize(size);
             }
 
-            foreach (var channel in MessageScrollContainers)
-                channel.Value.ChangeSize(size);
+            foreach (var container in MessageScrollContainers.Values.ToList())
+                container.ChangeSize(size);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void DismissActiveRightClickOptions()
+        {
+            foreach (var container in MessageScrollContainers.Values.ToList())
+                container.DismissActiveRightClickOptions();
         }
 
         /// <summary>

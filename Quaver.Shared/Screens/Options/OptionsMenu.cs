@@ -497,15 +497,15 @@ namespace Quaver.Shared.Screens.Options
         private void CreateContentContainers()
         {
             ContentContainers = new Dictionary<OptionsSection, OptionsContentContainer>();
-
-            foreach (var section in Sections)
-                ContentContainers.Add(section, new OptionsContentContainer(section, Content.Size));
         }
 
         /// <summary>
         /// </summary>
         private void SetActiveContentContainer()
         {
+            if (!ContentContainers.ContainsKey(SelectedSection.Value))
+                ContentContainers.Add(SelectedSection.Value, new OptionsContentContainer(SelectedSection.Value, Content.Size));
+
             foreach (var container in ContentContainers)
                 container.Value.Parent = SelectedSection.Value == container.Key ? Content : null;
         }
