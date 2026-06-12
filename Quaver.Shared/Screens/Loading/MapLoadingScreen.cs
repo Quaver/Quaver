@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Replays;
@@ -28,12 +29,29 @@ using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
+using Wobble.Scheduling;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Loading
 {
     public class MapLoadingScreen : QuaverScreen
     {
+        private static TaskHandler<StreamerFilesWriteRequest, bool> StreamerFilesWriteTask { get; } =
+            new TaskHandler<StreamerFilesWriteRequest, bool>(WriteStreamerFiles);
+
+        private sealed class StreamerFilesWriteRequest
+        {
+            public Map Map { get; }
+
+            public ModIdentifier Mods { get; }
+
+            public StreamerFilesWriteRequest(Map map, ModIdentifier mods)
+            {
+                Map = map;
+                Mods = mods;
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -159,26 +177,57 @@ namespace Quaver.Shared.Screens.Loading
         ///    Asynchronously writes files for livestreamers
         /// </summary>
         /// <param name="map"></param>
+        /// <param name="delay"></param>
+        public static void QueueStreamerFilesWrite(Map map, int delay = 0)
+            => StreamerFilesWriteTask.Run(new StreamerFilesWriteRequest(map, ModManager.Mods), delay);
+
+        /// <summary>
+        ///    Writes files for livestreamers.
+        /// </summary>
+        /// <param name="map"></param>
         public static void WriteStreamerFiles(Map map)
+            => WriteStreamerFiles(new StreamerFilesWriteRequest(map, ModManager.Mods), CancellationToken.None);
+
+        /// <summary>
+        ///    Writes files for livestreamers.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="token"></param>
+        private static bool WriteStreamerFiles(StreamerFilesWriteRequest request, CancellationToken token)
         {
+            var map = request.Map;
+            var mods = request.Mods;
+
             if (map == null)
-                return;
+                return false;
 
             var streamerValues = new[]
             {
-                ("difficulty", $"{map.DifficultyFromMods(ModManager.Mods):0.00}"),
+                ("difficulty", $"{map.DifficultyFromMods(mods):0.00}"),
                 ("map", $"{(map.Qua != null ? map.Qua.ToString() : map.ToString())} "),
-                ("mods", ModHelper.GetModsString(ModManager.Mods)),
+                ("mods", ModHelper.GetModsString(mods)),
                 ("mapid", map.MapId.ToString())
             };
 
+            var nowPlayingDirectory = $"{ConfigManager.TempDirectory}/Now Playing";
+
+            try
+            {
+                Directory.CreateDirectory(nowPlayingDirectory);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                return false;
+            }
+
             foreach (var (fileName, value) in streamerValues)
             {
+                token.ThrowIfCancellationRequested();
+
                 try
                 {
-                    Directory.CreateDirectory($"{ConfigManager.TempDirectory}/Now Playing");
-
-                    using (var writer = File.CreateText($"{ConfigManager.TempDirectory}/Now Playing/{fileName}.txt"))
+                    using (var writer = File.CreateText($"{nowPlayingDirectory}/{fileName}.txt"))
                         writer.Write(value);
                 }
                 catch (Exception e)
@@ -186,6 +235,8 @@ namespace Quaver.Shared.Screens.Loading
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+
+            return true;
         }
 
         /// <summary>
