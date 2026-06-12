@@ -39,6 +39,10 @@ namespace Quaver.Shared.Screens.Loading
         private static TaskHandler<StreamerFilesWriteRequest, bool> StreamerFilesWriteTask { get; } =
             new TaskHandler<StreamerFilesWriteRequest, bool>(WriteStreamerFiles);
 
+        private static object StreamerFilesWriteLock { get; } = new object();
+
+        private static Dictionary<string, string> LastStreamerValues { get; } = new Dictionary<string, string>();
+
         private sealed class StreamerFilesWriteRequest
         {
             public Map Map { get; }
@@ -103,7 +107,7 @@ namespace Quaver.Shared.Screens.Loading
                 try
                 {
                     ParseAndLoadMap();
-                    WriteStreamerFiles(MapManager.Selected.Value);
+                    QueueStreamerFilesWrite(MapManager.Selected.Value);
                     LoadGameplayScreen();
                 }
                 catch (Exception e)
@@ -182,11 +186,10 @@ namespace Quaver.Shared.Screens.Loading
             => StreamerFilesWriteTask.Run(new StreamerFilesWriteRequest(map, ModManager.Mods), delay);
 
         /// <summary>
-        ///    Writes files for livestreamers.
+        ///    Queues files for livestreamers to be written.
         /// </summary>
         /// <param name="map"></param>
-        public static void WriteStreamerFiles(Map map)
-            => WriteStreamerFiles(new StreamerFilesWriteRequest(map, ModManager.Mods), CancellationToken.None);
+        public static void WriteStreamerFiles(Map map) => QueueStreamerFilesWrite(map);
 
         /// <summary>
         ///    Writes files for livestreamers.
@@ -209,34 +212,103 @@ namespace Quaver.Shared.Screens.Loading
                 ("mapid", map.MapId.ToString())
             };
 
-            var nowPlayingDirectory = $"{ConfigManager.TempDirectory}/Now Playing";
-
-            try
-            {
-                Directory.CreateDirectory(nowPlayingDirectory);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-                return false;
-            }
-
-            foreach (var (fileName, value) in streamerValues)
+            lock (StreamerFilesWriteLock)
             {
                 token.ThrowIfCancellationRequested();
 
+                var nowPlayingDirectory = $"{ConfigManager.TempDirectory}/Now Playing";
+
                 try
                 {
-                    using (var writer = File.CreateText($"{nowPlayingDirectory}/{fileName}.txt"))
-                        writer.Write(value);
+                    Directory.CreateDirectory(nowPlayingDirectory);
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
+                    return false;
+                }
+
+                if (!NeedsStreamerFilesWrite(nowPlayingDirectory, streamerValues))
+                    return true;
+
+                foreach (var (fileName, value) in streamerValues)
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    if (LastStreamerValues.TryGetValue(fileName, out var lastValue) && lastValue == value &&
+                        File.Exists($"{nowPlayingDirectory}/{fileName}.txt"))
+                        continue;
+
+                    if (!WriteStreamerFile($"{nowPlayingDirectory}/{fileName}.txt", value))
+                        continue;
+
+                    LastStreamerValues[fileName] = value;
                 }
             }
 
             return true;
+        }
+
+        /// <summary>
+        ///     Checks if any streamer file value changed or target file is missing.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="streamerValues"></param>
+        /// <returns></returns>
+        private static bool NeedsStreamerFilesWrite(string directory, (string FileName, string Value)[] streamerValues)
+        {
+            foreach (var (fileName, value) in streamerValues)
+            {
+                if (!LastStreamerValues.TryGetValue(fileName, out var lastValue))
+                    return true;
+
+                if (lastValue != value)
+                    return true;
+
+                if (!File.Exists($"{directory}/{fileName}.txt"))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Writes a streamer file through a temp file before replacing the target.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static bool WriteStreamerFile(string path, string value)
+        {
+            var tempPath = $"{path}.{Guid.NewGuid():N}.tmp";
+
+            try
+            {
+                File.WriteAllText(tempPath, value);
+
+                if (File.Exists(path))
+                    File.Replace(tempPath, path, null);
+                else
+                    File.Move(tempPath, path);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+
+                try
+                {
+                    if (File.Exists(tempPath))
+                        File.Delete(tempPath);
+                }
+                catch (Exception deleteException)
+                {
+                    Logger.Error(deleteException, LogType.Runtime);
+                }
+
+                return false;
+            }
         }
 
         /// <summary>
