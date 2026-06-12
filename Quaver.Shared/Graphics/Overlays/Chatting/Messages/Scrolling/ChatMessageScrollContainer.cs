@@ -159,8 +159,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 ForceScrollToBottom = false;
             }
 
-            base.Update(gameTime);
             UpdateVisibleMessageDrawables();
+
+            base.Update(gameTime);
         }
 
         /// <summary>
