@@ -289,6 +289,7 @@ namespace Quaver.Shared
             // Handle file dropped event.
             Window.FileDropped += MapsetImporter.OnFileDropped;
             Window.ClientSizeChanged += OnClientSizeChanged;
+            AudioManager.OutputDeviceChanged += OnAudioOutputDeviceChanged;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
@@ -327,6 +328,7 @@ namespace Quaver.Shared
         /// </summary>
         protected override void UnloadContent()
         {
+            AudioManager.OutputDeviceChanged -= OnAudioOutputDeviceChanged;
             ConfigManager.WriteConfigFileAsync().Wait();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
@@ -953,6 +955,12 @@ namespace Quaver.Shared
             ConfigManager.WindowHeight.Value = Window.ClientBounds.Height;
 
             ChangeResolution();
+        }
+
+        private static void OnAudioOutputDeviceChanged(string deviceName)
+        {
+            if (ConfigManager.AudioOutputDevice.Value != deviceName)
+                ConfigManager.AudioOutputDevice.Value = deviceName;
         }
 
         public void SetProcessPriority()
