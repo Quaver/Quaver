@@ -511,6 +511,11 @@ namespace Quaver.Shared.Config
         internal static BindableInt HitErrorFadeTime { get; private set; }
 
         /// <summary>
+        ///     If true, the hit error chevron changes color for early and late hits.
+        /// </summary>
+        internal static Bindable<bool> ColorHitErrorByTiming { get; private set; }
+        
+        /// <summary>
         /// The amount of time in milliseconds a hit need to deviate from the expected hit time such that
         /// the chevron will change its color to reflect if the hit is an early/late
         /// </summary>
@@ -1145,6 +1150,7 @@ namespace Quaver.Shared.Config
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
             HitErrorEarlyLateWindow = ReadInt(@"HitErrorEarlyLateWindow", 10, 0, 100, data);
+            ColorHitErrorByTiming = ReadValue(@"ColorHitErrorByTiming", true, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             LockWinkeyDuringGameplay = ReadValue(@"LockWinkeyDuringGameplay", true, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
