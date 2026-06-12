@@ -36,8 +36,21 @@ namespace Quaver.Shared.Screens.Loading
 {
     public class MapLoadingScreen : QuaverScreen
     {
-        private static TaskHandler<Map, bool> StreamerFilesWriteTask { get; } =
-            new TaskHandler<Map, bool>(WriteStreamerFiles);
+        private static TaskHandler<StreamerFilesWriteRequest, bool> StreamerFilesWriteTask { get; } =
+            new TaskHandler<StreamerFilesWriteRequest, bool>(WriteStreamerFiles);
+
+        private sealed class StreamerFilesWriteRequest
+        {
+            public Map Map { get; }
+
+            public ModIdentifier Mods { get; }
+
+            public StreamerFilesWriteRequest(Map map, ModIdentifier mods)
+            {
+                Map = map;
+                Mods = mods;
+            }
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -165,29 +178,34 @@ namespace Quaver.Shared.Screens.Loading
         /// </summary>
         /// <param name="map"></param>
         /// <param name="delay"></param>
-        public static void QueueStreamerFilesWrite(Map map, int delay = 0) => StreamerFilesWriteTask.Run(map, delay);
+        public static void QueueStreamerFilesWrite(Map map, int delay = 0)
+            => StreamerFilesWriteTask.Run(new StreamerFilesWriteRequest(map, ModManager.Mods), delay);
 
         /// <summary>
         ///    Writes files for livestreamers.
         /// </summary>
         /// <param name="map"></param>
-        public static void WriteStreamerFiles(Map map) => WriteStreamerFiles(map, CancellationToken.None);
+        public static void WriteStreamerFiles(Map map)
+            => WriteStreamerFiles(new StreamerFilesWriteRequest(map, ModManager.Mods), CancellationToken.None);
 
         /// <summary>
         ///    Writes files for livestreamers.
         /// </summary>
-        /// <param name="map"></param>
+        /// <param name="request"></param>
         /// <param name="token"></param>
-        private static bool WriteStreamerFiles(Map map, CancellationToken token)
+        private static bool WriteStreamerFiles(StreamerFilesWriteRequest request, CancellationToken token)
         {
+            var map = request.Map;
+            var mods = request.Mods;
+
             if (map == null)
                 return false;
 
             var streamerValues = new[]
             {
-                ("difficulty", $"{map.DifficultyFromMods(ModManager.Mods):0.00}"),
+                ("difficulty", $"{map.DifficultyFromMods(mods):0.00}"),
                 ("map", $"{(map.Qua != null ? map.Qua.ToString() : map.ToString())} "),
-                ("mods", ModHelper.GetModsString(ModManager.Mods)),
+                ("mods", ModHelper.GetModsString(mods)),
                 ("mapid", map.MapId.ToString())
             };
 
