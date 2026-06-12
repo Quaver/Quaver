@@ -64,6 +64,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private const int MaxMessagesFlushedPerUpdate = 8;
 
         /// <summary>
+        ///     Extra pixels above and below the viewport to keep message drawables active while scrolling.
+        /// </summary>
+        private const int VisibleMessageBuffer = 300;
+
+        /// <summary>
         ///     The total height of all messages
         /// </summary>
         private float TotalMessageHeight { get; set; }
@@ -155,6 +160,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             }
 
             base.Update(gameTime);
+            UpdateVisibleMessageDrawables();
         }
 
         /// <summary>
@@ -309,9 +315,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
                 var drawable = AddObject(AvailableItems.Count - 1);
 
-                if (Pool.Count < PoolSize)
-                    AddContainedDrawable(drawable);
-
                 if (ShouldScrollToBottom(message))
                     NeedsScrollToBottom = true;
 
@@ -338,6 +341,29 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 TotalMessageHeight = y;
                 NeedsReflow = false;
                 UpdateContentContainerSize();
+            }
+        }
+
+        /// <summary>
+        ///     Keeps only visible or near-visible messages parented to the content container.
+        ///     Detached messages keep their layout data, but they do not update or draw while offscreen.
+        /// </summary>
+        private void UpdateVisibleMessageDrawables()
+        {
+            lock (Pool)
+            {
+                var visibleTop = -ContentContainer.Y - VisibleMessageBuffer;
+                var visibleBottom = -ContentContainer.Y + Height + VisibleMessageBuffer;
+
+                foreach (var drawable in Pool)
+                {
+                    var isVisible = drawable.Y + drawable.Height >= visibleTop && drawable.Y <= visibleBottom;
+
+                    if (isVisible && drawable.Parent != ContentContainer)
+                        AddContainedDrawable(drawable);
+                    else if (!isVisible && drawable.Parent == ContentContainer)
+                        RemoveContainedDrawable(drawable);
+                }
             }
         }
 
