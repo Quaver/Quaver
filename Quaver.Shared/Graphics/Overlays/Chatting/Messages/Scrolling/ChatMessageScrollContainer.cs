@@ -377,19 +377,19 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         }
 
         /// <summary>
-        ///     Checks whether a message has already been added. Chat messages are often re-created as
-        ///     separate objects between local echo, server echo, and history fetches, so reference equality
-        ///     is not enough to prevent duplicate drawables.
+        ///     Checks whether a message has already been added. Messages can be re-created as separate
+        ///     objects when coming from history or queue paths, so compare stable message fields too.
         /// </summary>
         /// <param name="messages"></param>
         /// <param name="message"></param>
         /// <returns></returns>
         private static bool ContainsMessage(List<ChatMessage> messages, ChatMessage message)
         {
-            return messages.Any(x => x.SenderId == message.SenderId
+            return messages.Any(x => ReferenceEquals(x, message)
+                                     || x.SenderId == message.SenderId
                                      && x.Channel == message.Channel
                                      && x.Message == message.Message
-                                     && Math.Abs(x.Time - message.Time) < 1000);
+                                     && x.Time == message.Time);
         }
 
         /// <summary>
