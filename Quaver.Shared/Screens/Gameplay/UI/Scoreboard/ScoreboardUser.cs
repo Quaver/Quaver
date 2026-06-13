@@ -25,6 +25,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Steamworks;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -77,7 +78,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     The avatar for the user.
         /// </summary>
-        internal Sprite Avatar { get; }
+        internal SpriteAlphaMaskBlend Avatar { get; }
 
         /// <summary>
         ///     Text that displays the username of the player.
@@ -185,7 +186,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 throw new InvalidEnumArgumentException();
 
             // Create avatar
-            Avatar = new Sprite()
+            Avatar = new SpriteAlphaMaskBlend()
             {
                 Parent = this,
                 Size = new ScalableVector2(Height, Height),
@@ -225,6 +226,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                         : UserInterface.UnknownAvatar;
                 }
             }
+
+            ScheduleAvatarMaskBlend(Avatar.Image);
 
             // Create username text.
             Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21)
@@ -371,9 +374,27 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (e.SteamId != (ulong)LocalScore.SteamId)
                 return;
 
-            Avatar.Image = e.Texture;
-            Avatar.ClearAnimations();
-            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
+            AddScheduledUpdate(() =>
+            {
+                if (IsDisposed)
+                    return;
+
+                Avatar.Image = e.Texture;
+                ScheduleAvatarMaskBlend(e.Texture);
+                Avatar.ClearAnimations();
+                Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
+            });
+        }
+
+        private void ScheduleAvatarMaskBlend(Texture2D avatar)
+        {
+            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            {
+                if (IsDisposed || avatar == null || avatar.IsDisposed || SkinManager.Skin?.ScoreboardAvatarMask == null)
+                    return;
+
+                Avatar.Image = Avatar.PerformBlend(avatar, SkinManager.Skin.ScoreboardAvatarMask);
+            });
         }
 
         /// <summary>

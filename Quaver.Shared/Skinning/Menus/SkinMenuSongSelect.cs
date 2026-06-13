@@ -58,6 +58,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D SelectFilterPanelLeft { get; private set; }
 
+        public Texture2D MapsetBannerMask { get; private set; }
+
         public float? RankedStatusPosOffsetX { get; private set; }
 
         public float? GameModePosOffsetX { get; private set; }
@@ -213,6 +215,7 @@ namespace Quaver.Shared.Skinning.Menus
             PersonalBestPanel = LoadSkinElement(folder, "personalbest-panel.png");
             SelectFilterPanelRight = LoadSkinElement(folder, "select-filter-panel-right.png");
             SelectFilterPanelLeft = LoadSkinElement(folder, "select-filter-panel-left.png");
+            MapsetBannerMask = LoadSkinElement(folder, "mapset-banner-mask.png");
         }
     }
 }
