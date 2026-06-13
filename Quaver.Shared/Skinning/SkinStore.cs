@@ -248,6 +248,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D ScoreboardBlueTeamOther { get; set; }
 
         /// <summary>
+        ///     The avatar mask for scoreboard avatars.
+        /// </summary>
+        internal Texture2D ScoreboardAvatarMask { get; private set; }
+
+        /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
         internal List<Texture2D> HealthBarBackground { get; private set; }
@@ -276,6 +281,16 @@ namespace Quaver.Shared.Skinning
         ///     Displayed when in danger of being eliminated
         /// </summary>
         internal Texture2D BattleRoyaleWarning { get; private set; }
+
+        /// <summary>
+        ///     Displayed on maps with potentially seizure-inducing visuals.
+        /// </summary>
+        internal Texture2D EpilepsyWarning { get; private set; }
+
+        /// <summary>
+        ///     Icon displayed on the epilepsy warning.
+        /// </summary>
+        internal Texture2D EpilepsyWarningIcon { get; private set; }
 
         /// <summary>
         ///     Backgrounds for the skin. Only loaded if UseSkinBackgrounds is true.
@@ -707,6 +722,9 @@ namespace Quaver.Shared.Skinning
 
             const string scoreboardBlueTeamOther = "scoreboard-blue-team-other";
             ScoreboardBlueTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeamOther}.png");
+
+            const string scoreboardAvatarMask = "scoreboard-avatar-mask";
+            ScoreboardAvatarMask = LoadSingleTexture($"{scoreboardFolder}/{scoreboardAvatarMask}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardAvatarMask}.png");
         }
 
         /// <summary>
@@ -765,6 +783,15 @@ namespace Quaver.Shared.Skinning
             const string battleRoyaleWarning = "warning";
             BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
                 , $"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
+
+            var warningFolder = $"{Dir}/Warnings/";
+            const string epilepsyWarning = "epilepsy-warning";
+            EpilepsyWarning = LoadSingleTexture($"{warningFolder}/{epilepsyWarning}"
+                , $"Quaver.Resources/Textures/UI/{epilepsyWarning}.png");
+
+            const string warningIcon = "warning-icon";
+            EpilepsyWarningIcon = LoadSingleTexture($"{warningFolder}/{warningIcon}"
+                , $"Quaver.Resources/Textures/UI/{warningIcon}.png");
         }
 
         private void LoadBackgrounds()

@@ -367,8 +367,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
                         new OptionsItemCheckbox(containerRect, "Display Ranked Accuracy With Custom Judgements", ConfigManager.DisplayRankedAccuracy),
                         new OptionsSlider(containerRect, "Hit Error Fade Time", ConfigManager.HitErrorFadeTime, i => $"{i / 1000f:0.0} sec"),
-                        new OptionsSlider(containerRect, "Hit Error Early Late Window",
-                            ConfigManager.HitErrorEarlyLateWindow, i => $"{i} ms"),
+                        new OptionsItemCheckbox(containerRect, "Hit Error Early / Late Coloring", ConfigManager.ColorHitErrorByTiming),
+                        new OptionsSlider(containerRect, "Hit Error Early / Late Window", ConfigManager.HitErrorEarlyLateWindow, i => $"{i} ms"),
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                         //new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Online Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
                         new OptionsItemCheckbox(containerRect, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay),
@@ -393,6 +393,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications),
                         new OptionsItemCheckbox(containerRect, "Display Warning For Pausing", ConfigManager.DisplayPauseWarning),
                         new OptionsItemCheckbox(containerRect, "Display Warning For Failing", ConfigManager.DisplayFailWarning),
+                        new OptionsItemCheckbox(containerRect, "Display Epilepsy Warning", ConfigManager.DisplayEpilepsyWarning),
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
                         new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport),
@@ -496,15 +497,15 @@ namespace Quaver.Shared.Screens.Options
         private void CreateContentContainers()
         {
             ContentContainers = new Dictionary<OptionsSection, OptionsContentContainer>();
-
-            foreach (var section in Sections)
-                ContentContainers.Add(section, new OptionsContentContainer(section, Content.Size));
         }
 
         /// <summary>
         /// </summary>
         private void SetActiveContentContainer()
         {
+            if (!ContentContainers.ContainsKey(SelectedSection.Value))
+                ContentContainers.Add(SelectedSection.Value, new OptionsContentContainer(SelectedSection.Value, Content.Size));
+
             foreach (var container in ContentContainers)
                 container.Value.Parent = SelectedSection.Value == container.Key ? Content : null;
         }
