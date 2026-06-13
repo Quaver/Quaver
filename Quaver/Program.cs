@@ -22,6 +22,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.IPC;
 using Quaver.Shared.Online;
 using Wobble;
+using Wobble.Audio;
 using Wobble.IO;
 using Wobble.Logging;
 using Wobble.Platform;
@@ -131,7 +132,17 @@ namespace Quaver
 #else
             using (var game = new QuaverGame())
 #endif
-                game.Run();
+            {
+                try
+                {
+                    game.Run();
+                }
+                catch (AudioEngineException e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    Utils.NativeUtils.ShowErrorMessage("Quaver Audio Error", e.Message);
+                }
+            }
         }
 
         [SupportedOSPlatform("windows")]
