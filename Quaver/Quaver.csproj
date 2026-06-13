@@ -19,10 +19,12 @@
   <PropertyGroup>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
-  <ItemGroup>
+    <ItemGroup>
+    <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />
   </ItemGroup>
-  <ItemGroup>
+    <ItemGroup>
+    <EmbeddedResource Include="Icon.bmp" />
     <EmbeddedResource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
