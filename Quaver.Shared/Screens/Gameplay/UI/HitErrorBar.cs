@@ -133,7 +133,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods) * SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorWidthScale;
             LineObjectPool[CurrentLinePoolIndex].Alpha = Alpha;
 
-            if (ConfigManager.HitErrorEarlyLateWindow.Value <= hitTime)
+            if (!ConfigManager.ColorHitErrorByTiming.Value)
+            {
+                LastHitCheveron.Tint = Color.White;
+            }
+            else if (ConfigManager.HitErrorEarlyLateWindow.Value <= hitTime)
             {
                 LastHitCheveron.Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorEarlyColor;
             }
