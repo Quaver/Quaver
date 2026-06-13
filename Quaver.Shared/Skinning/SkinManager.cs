@@ -203,7 +203,16 @@ namespace Quaver.Shared.Skinning
                         game.CurrentScreen.Exit(() => new MainMenuScreen());
                         break;
                     case QuaverScreenType.Select:
-                        game.CurrentScreen.Exit(() => new SelectionScreen());
+                        if (game.CurrentScreen is SelectionScreen selectionScreen)
+                        {
+                            var activeScrollContainer = selectionScreen.ActiveScrollContainer.Value;
+                            var activeLeftPanel = selectionScreen.ActiveLeftPanel.Value;
+                            game.CurrentScreen.Exit(() => new SelectionScreen(activeScrollContainer, activeLeftPanel));
+                        }
+                        else
+                        {
+                            game.CurrentScreen.Exit(() => new SelectionScreen());
+                        }
                         break;
                     case QuaverScreenType.Gameplay when
                         game.CurrentScreen is GameplayScreen gameplayScreen and not TournamentGameplayScreen
