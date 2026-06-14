@@ -108,12 +108,11 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
-            var fileHashSet = files.ToHashSet();
+            var fileHashSet = files.ToHashSet().Select(BackslashToForward);
 
             foreach (var map in maps)
             {
                 var filePath = BackslashToForward($"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}");
-
                 // Check if the file actually exists.
                 if (fileHashSet.Contains(BackslashToForward(filePath)))
                 {
@@ -358,6 +357,7 @@ namespace Quaver.Shared.Database.Maps
                     map.Id = MapsToUpdate[i].Id;
                     map.Directory = MapsToUpdate[i].Directory;
                     map.Mapset = MapsToUpdate[i].Mapset;
+                    map.DateAdded = MapsToUpdate[i].DateAdded;
 
                     if (map.Id == 0)
                     {
