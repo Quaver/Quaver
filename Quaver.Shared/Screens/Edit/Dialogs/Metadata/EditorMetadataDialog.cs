@@ -293,6 +293,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateSyncMetadataButton()
         {
+            var canSyncMetadata = CanSyncMetadata();
+
             SyncMetadataButton = new IconButton(UserInterface.BlankButton, (sender, args) => SyncMetadata())
             {
                 Parent = Panel,
@@ -300,8 +302,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Y = YesButton.Y,
                 Size = new ScalableVector2(221, 40),
                 SetChildrenAlpha = true,
-                Visible = CanSyncMetadata(),
-                IsClickable = CanSyncMetadata()
+                Visible = canSyncMetadata,
+                IsClickable = canSyncMetadata
             };
 
             SyncMetadataText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SYNC METADATA", 18)
@@ -446,7 +448,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private bool TryActivate(Tooltip tooltip, Drawable drawable)
         {
-            if (drawable is null || !drawable.IsHovered())
+            if (drawable is null || !drawable.Visible || !drawable.IsHovered())
                 return false;
 
             if (tooltip == CurrentToolTip)
