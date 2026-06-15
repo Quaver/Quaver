@@ -17,6 +17,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
         /// <summary>
         /// </summary>
+        private int? LoadedMapsetId { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private int? RequestedMapsetId { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="size"></param>
         /// <param name="mapset"></param>
         public DownloadableMapsetBanner(DownloadableMapset mapset, ScalableVector2 size)
@@ -32,7 +40,25 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="mapset"></param>
         public void UpdateMapset(DownloadableMapset mapset)
         {
+            if (Mapset?.Id == mapset.Id)
+                return;
+
             Mapset = mapset;
+            LoadedMapsetId = null;
+            RequestedMapsetId = null;
+
+            ClearAnimations();
+            Alpha = 0;
+            Image = null;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void LoadIfNeeded()
+        {
+            if (Mapset == null || LoadedMapsetId == Mapset.Id || RequestedMapsetId == Mapset.Id)
+                return;
+
             LoadBanner();
         }
 
@@ -40,16 +66,16 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void LoadBanner()
         {
-            var mapset = Mapset;
+            var mapsetId = Mapset.Id;
 
-             ClearAnimations();
-             Alpha = 0;
+            RequestedMapsetId = mapsetId;
 
-            ImageDownloader.DownloadMapsetBanner(Mapset.Id).ContinueWith(x =>
+            ImageDownloader.DownloadMapsetBanner(mapsetId).ContinueWith(x =>
             {
-                if (Mapset != mapset)
+                if (Mapset == null || Mapset.Id != mapsetId)
                     return;
 
+                LoadedMapsetId = mapsetId;
                 Image = x.Result;
 
                 var alpha = Mapset.IsOwned ? 0.45f : 0.85f;

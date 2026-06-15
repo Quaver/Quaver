@@ -20,6 +20,24 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 {
     public class DownloadableMapsetContainer : SongSelectContainer<DownloadableMapset>
     {
+        /// <summary>
+        ///     Keeps enough rows alive to cover the viewport plus a small buffer while scrolling quickly.
+        /// </summary>
+        private const int VisiblePoolSize = 14;
+
+        /// <summary>
+        ///     Prevents banner load bursts while middle-mouse fast scrolling is still settling.
+        /// </summary>
+        private const int BannerLoadResumeDelay = 200;
+
+        /// <summary>
+        /// </summary>
+        public bool ShouldLoadMapsetBanners { get; private set; } = true;
+
+        /// <summary>
+        /// </summary>
+        private double TimeSinceFastScrollEnded { get; set; } = BannerLoadResumeDelay;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -58,7 +76,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="searchTask"></param>
         public DownloadableMapsetContainer(BindableList<DownloadableMapset> mapsets,
             Bindable<DownloadableMapset> selectedMapset, Bindable<int> page, Bindable<bool> reachedEnd, TaskHandler<int, int> searchTask)
-            : base(mapsets.Value, int.MaxValue)
+            : base(mapsets.Value, VisiblePoolSize)
         {
             AvailableMapsets = mapsets;
             SelectedMapset = selectedMapset;
@@ -81,6 +99,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            UpdateBannerLoadState(gameTime);
+
             // Handle infinite scrolling
             if (ContentContainer.Height - Math.Abs(ContentContainer.Y) - Height < 500 && !SearchTask.IsRunning
                 && !ReachedEnd.Value)
@@ -94,6 +114,24 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void UpdateBannerLoadState(GameTime gameTime)
+        {
+            var middleMouseScrollingDown = IsMiddleMouseDragging && TargetY < ContentContainer.Y;
+
+            if (middleMouseScrollingDown)
+            {
+                TimeSinceFastScrollEnded = 0;
+                ShouldLoadMapsetBanners = false;
+                return;
+            }
+
+            TimeSinceFastScrollEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
+            ShouldLoadMapsetBanners = TimeSinceFastScrollEnded >= BannerLoadResumeDelay;
         }
 
         /// <inheritdoc />
@@ -256,18 +294,23 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         {
             AddScheduledUpdate(() =>
             {
-                foreach (var item in e.Items)
-                {
-                    var mapset = new DrawableDownloadableMapset(this, item, Pool.Count, SelectedMapset);
-                    mapset.UpdateContent(mapset.Item, mapset.Index);
-
-                    Pool.Add(mapset);
-                    AddContainedDrawable(mapset);
-                    mapset.Y = (PoolStartingIndex + mapset.Index) * Pool[mapset.Index].HEIGHT + PaddingTop;
-                }
+                if (Pool.Count < PoolSize)
+                    CreateMissingPoolItems();
 
                 RecalculateContainerHeight();
+                PositionAndContainPoolObjects();
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateMissingPoolItems()
+        {
+            while (Pool.Count < PoolSize && PoolStartingIndex + Pool.Count < AvailableItems.Count)
+            {
+                var index = PoolStartingIndex + Pool.Count;
+                AddContainedDrawable(AddObject(index));
+            }
         }
 
         /// <summary>
