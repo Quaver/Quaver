@@ -20,6 +20,11 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 {
     public class DownloadableMapsetContainer : SongSelectContainer<DownloadableMapset>
     {
+        /// <summary>
+        ///     Keeps enough rows alive to cover the viewport plus a small buffer while scrolling quickly.
+        /// </summary>
+        private const int VisiblePoolSize = 14;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -58,7 +63,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="searchTask"></param>
         public DownloadableMapsetContainer(BindableList<DownloadableMapset> mapsets,
             Bindable<DownloadableMapset> selectedMapset, Bindable<int> page, Bindable<bool> reachedEnd, TaskHandler<int, int> searchTask)
-            : base(mapsets.Value, int.MaxValue)
+            : base(mapsets.Value, VisiblePoolSize)
         {
             AvailableMapsets = mapsets;
             SelectedMapset = selectedMapset;
@@ -256,18 +261,23 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         {
             AddScheduledUpdate(() =>
             {
-                foreach (var item in e.Items)
-                {
-                    var mapset = new DrawableDownloadableMapset(this, item, Pool.Count, SelectedMapset);
-                    mapset.UpdateContent(mapset.Item, mapset.Index);
-
-                    Pool.Add(mapset);
-                    AddContainedDrawable(mapset);
-                    mapset.Y = (PoolStartingIndex + mapset.Index) * Pool[mapset.Index].HEIGHT + PaddingTop;
-                }
+                if (Pool.Count < PoolSize)
+                    CreateMissingPoolItems();
 
                 RecalculateContainerHeight();
+                PositionAndContainPoolObjects();
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateMissingPoolItems()
+        {
+            while (Pool.Count < PoolSize && PoolStartingIndex + Pool.Count < AvailableItems.Count)
+            {
+                var index = PoolStartingIndex + Pool.Count;
+                AddContainedDrawable(AddObject(index));
+            }
         }
 
         /// <summary>
