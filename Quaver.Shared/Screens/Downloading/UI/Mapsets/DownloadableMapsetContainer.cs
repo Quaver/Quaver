@@ -25,6 +25,19 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private const int VisiblePoolSize = 14;
 
+        /// <summary>
+        ///     Prevents banner load bursts while middle-mouse fast scrolling is still settling.
+        /// </summary>
+        private const int BannerLoadResumeDelay = 200;
+
+        /// <summary>
+        /// </summary>
+        public bool ShouldLoadMapsetBanners { get; private set; } = true;
+
+        /// <summary>
+        /// </summary>
+        private double TimeSinceFastScrollEnded { get; set; } = BannerLoadResumeDelay;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -86,6 +99,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            UpdateBannerLoadState(gameTime);
+
             // Handle infinite scrolling
             if (ContentContainer.Height - Math.Abs(ContentContainer.Y) - Height < 500 && !SearchTask.IsRunning
                 && !ReachedEnd.Value)
@@ -99,6 +114,24 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void UpdateBannerLoadState(GameTime gameTime)
+        {
+            var middleMouseScrollingDown = IsMiddleMouseDragging && TargetY < ContentContainer.Y;
+
+            if (middleMouseScrollingDown)
+            {
+                TimeSinceFastScrollEnded = 0;
+                ShouldLoadMapsetBanners = false;
+                return;
+            }
+
+            TimeSinceFastScrollEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
+            ShouldLoadMapsetBanners = TimeSinceFastScrollEnded >= BannerLoadResumeDelay;
         }
 
         /// <inheritdoc />

@@ -141,7 +141,9 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 return;
             }
 
-            Banner.LoadIfNeeded();
+            if (Container is not DownloadableMapsetContainer downloadContainer || downloadContainer.ShouldLoadMapsetBanners)
+                Banner.LoadIfNeeded();
+
             Button.Size = ContentContainer.Size;
 
             if (Button.IsHovered)
