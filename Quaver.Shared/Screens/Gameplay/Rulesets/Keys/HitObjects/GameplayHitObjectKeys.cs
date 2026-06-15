@@ -296,12 +296,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Update Positions
             UpdateSpritePositions(manager.CurrentVisualAudioOffset);
-            LongNoteBodySprite.Parent = playfield.Stage.HitObjectContainers[Info.HitObjectInfo.EditorLayer];
-            LongNoteEndSprite.Parent = playfield.Stage.HitObjectContainers[Info.HitObjectInfo.EditorLayer];
+            var hitObjectContainer = GetHitObjectContainer(playfield);
+            LongNoteBodySprite.Parent = hitObjectContainer;
+            LongNoteEndSprite.Parent = hitObjectContainer;
 
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
-            HitObjectSprite.Parent = playfield.Stage.HitObjectContainers[Info.HitObjectInfo.EditorLayer];
+            HitObjectSprite.Parent = hitObjectContainer;
+        }
+
+        private Container GetHitObjectContainer(GameplayPlayfieldKeys playfield)
+        {
+            var editorLayer = Info.HitObjectInfo.EditorLayer;
+
+            if (editorLayer < 0 || editorLayer >= playfield.Stage.HitObjectContainers.Length)
+                return playfield.Stage.HitObjectContainers[0];
+
+            return playfield.Stage.HitObjectContainers[editorLayer];
         }
 
         /// <summary>
