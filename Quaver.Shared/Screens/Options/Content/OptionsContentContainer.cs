@@ -79,13 +79,32 @@ namespace Quaver.Shared.Screens.Options.Content
 
         public void ReInitialize()
         {
-            for (var i = Children.Count - 1; i >= 0; i--)
+            foreach (var category in Section.Subcategories)
+                category.ScrolledTo -= OnScrolledToCategory;
+
+            for (var i = ContentContainer.Children.Count - 1; i >= 0; i--)
             {
-                if (Children[i] is SpriteTextPlus text)
+                if (ContentContainer.Children[i] is SpriteTextPlus text)
                     text.Destroy();
             }
 
             Initialize();
+        }
+
+        public void ClearOptionItems()
+        {
+            foreach (var subcategory in Section.Subcategories)
+            {
+                foreach (var item in subcategory.Items)
+                {
+                    if (item.Parent != ContentContainer)
+                        continue;
+
+                    item.DestroyIfParentIsNull = false;
+                    RemoveContainedDrawable(item);
+                    item.DestroyIfParentIsNull = true;
+                }
+            }
         }
 
         /// <summary>
@@ -122,6 +141,7 @@ namespace Quaver.Shared.Screens.Options.Content
 
                     item.Alignment = Alignment.TopCenter;
                     item.Y = totalHeight;
+                    item.Visible = true;
 
                     totalHeight += item.Height + spacing;
                 }

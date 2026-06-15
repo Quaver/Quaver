@@ -568,6 +568,7 @@ namespace Quaver.Shared.Screens.Options
             var container = ContentContainers[searchedSection];
 
             ContentContainers.Remove(searchedSection);
+            container.ClearOptionItems();
 
             foreach (var contentContainer in ContentContainers)
                 contentContainer.Value.ReInitialize();
