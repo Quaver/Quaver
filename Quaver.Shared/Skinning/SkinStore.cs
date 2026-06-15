@@ -544,8 +544,11 @@ namespace Quaver.Shared.Skinning
                 if (resource == null)
                     return new List<Texture2D> { UserInterface.BlankBox };
 
-                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
-                    GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
+                var buffer = GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png");
+                if (buffer == null)
+                    return new List<Texture2D> { UserInterface.BlankBox };
+
+                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(buffer), rows, columns);
             }
             catch (Exception e)
             {
