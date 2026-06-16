@@ -192,6 +192,31 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrame { get; set; }
 
         /// <summary>
+        ///     Keeps SDL's Cocoa event pump from being throttled by fixed timestep sleeps on macOS.
+        /// </summary>
+        private bool MacOsCocoaEventLoopFpsLimiter { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private double MacOsCocoaEventLoopFpsLimiterTicks { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private long MacOsCocoaEventLoopLastDrawTicks { get; set; }
+
+        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+        private static extern uint CGMainDisplayID();
+
+        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+        private static extern IntPtr CGDisplayCopyDisplayMode(uint display);
+
+        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+        private static extern double CGDisplayModeGetRefreshRate(IntPtr mode);
+
+        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+        private static extern void CGDisplayModeRelease(IntPtr mode);
+
+        /// <summary>
         ///     Sometimes we'd like to perform actions on the first update, such as
         ///     creating <see cref="OnlineHub"/>
         /// </summary>
@@ -250,15 +275,29 @@ namespace Quaver.Shared
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 
-        public QuaverGame(HotLoader hl) : base(hl, ConfigManager.PreferWayland.Value)
+        public QuaverGame(HotLoader hl) : base(hl, GetPreferWayland())
 #else
-        public QuaverGame() : base(ConfigManager.PreferWayland.Value)
+        public QuaverGame() : base(GetPreferWayland())
 #endif
         {
             Content.RootDirectory = "Content";
 
             if (Environment.GetEnvironmentVariable("QUAVER_LOGLEVEL") is null)
                 Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
+        }
+
+        /// <summary>
+        ///     Applies SDL video backend preferences before MonoGame initializes SDL.
+        /// </summary>
+        private static bool GetPreferWayland()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) &&
+                string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SDL_VIDEODRIVER")))
+            {
+                Environment.SetEnvironmentVariable("SDL_VIDEODRIVER", "cocoa");
+            }
+
+            return ConfigManager.PreferWayland.Value;
         }
 
         /// <inheritdoc />
@@ -383,6 +422,7 @@ namespace Quaver.Shared
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
+            LimitMacOsFpsWithoutBlockingCocoaEvents();
             UpdateFpsCounterPosition();
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
@@ -558,6 +598,7 @@ namespace Quaver.Shared
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
+            MacOsCocoaEventLoopFpsLimiter = false;
 
             switch (fpsLimitType)
             {
@@ -568,13 +609,26 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Limited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    IsFixedTimeStep = true;
-                    TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        SetMacOsCocoaEventLoopFpsLimiter(240);
+                    else
+                    {
+                        IsFixedTimeStep = true;
+                        TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    }
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.Vsync:
-                    Graphics.SynchronizeWithVerticalRetrace = true;
-                    IsFixedTimeStep = false;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        Graphics.SynchronizeWithVerticalRetrace = false;
+                        SetMacOsCocoaEventLoopFpsLimiter(GetMacOsDisplayRefreshRate());
+                    }
+                    else
+                    {
+                        Graphics.SynchronizeWithVerticalRetrace = true;
+                        IsFixedTimeStep = false;
+                    }
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.WaylandVsync:
@@ -583,15 +637,87 @@ namespace Quaver.Shared
                     WaylandVsync = true;
                     break;
                 case FpsLimitType.Custom:
+                    if (customFpsLimit <= 0)
+                        throw new ArgumentOutOfRangeException(nameof(customFpsLimit), customFpsLimit,
+                            "Custom FPS limit must be greater than zero.");
+
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
-                    IsFixedTimeStep = true;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        SetMacOsCocoaEventLoopFpsLimiter(customFpsLimit);
+                    else
+                    {
+                        TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
+                        IsFixedTimeStep = true;
+                    }
                     WaylandVsync = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             Graphics.ApplyChanges();
+        }
+
+        /// <summary>
+        ///     Gets the active macOS display refresh rate for the draw-only VSync limiter.
+        /// </summary>
+        /// <returns></returns>
+        private static int GetMacOsDisplayRefreshRate()
+        {
+            const int fallbackRefreshRate = 60;
+
+            try
+            {
+                var mode = CGDisplayCopyDisplayMode(CGMainDisplayID());
+
+                if (mode == IntPtr.Zero)
+                    return fallbackRefreshRate;
+
+                try
+                {
+                    var refreshRate = CGDisplayModeGetRefreshRate(mode);
+                    return refreshRate > 0 ? Math.Max(1, (int)Math.Round(refreshRate)) : fallbackRefreshRate;
+                }
+                finally
+                {
+                    CGDisplayModeRelease(mode);
+                }
+            }
+            catch (Exception)
+            {
+                return fallbackRefreshRate;
+            }
+        }
+
+        /// <summary>
+        ///     Limits rendered frames on macOS without using MonoGame's fixed timestep sleep.
+        /// </summary>
+        /// <param name="fps"></param>
+        private void SetMacOsCocoaEventLoopFpsLimiter(int fps)
+        {
+            IsFixedTimeStep = false;
+            MacOsCocoaEventLoopFpsLimiter = true;
+            MacOsCocoaEventLoopFpsLimiterTicks = Stopwatch.Frequency / (double)fps;
+            MacOsCocoaEventLoopLastDrawTicks = 0;
+        }
+
+        /// <summary>
+        ///     Suppresses draws until the selected macOS FPS interval elapses, while updates still pump SDL events.
+        /// </summary>
+        private void LimitMacOsFpsWithoutBlockingCocoaEvents()
+        {
+            if (!MacOsCocoaEventLoopFpsLimiter)
+                return;
+
+            var now = Stopwatch.GetTimestamp();
+
+            if (MacOsCocoaEventLoopLastDrawTicks != 0 &&
+                now - MacOsCocoaEventLoopLastDrawTicks < MacOsCocoaEventLoopFpsLimiterTicks)
+            {
+                SuppressDraw();
+                return;
+            }
+
+            MacOsCocoaEventLoopLastDrawTicks = now;
         }
 
         /// <summary>
