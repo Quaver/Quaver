@@ -194,27 +194,15 @@ namespace Quaver.Shared
         /// <summary>
         ///     Keeps SDL's Cocoa event pump from being throttled by fixed timestep sleeps on macOS.
         /// </summary>
-        private bool MacOsCocoaEventLoopFpsLimiter { get; set; }
+        private bool MacOsCocoaEventLoopDrawLimiter { get; set; }
 
         /// <summary>
         /// </summary>
-        private double MacOsCocoaEventLoopFpsLimiterTicks { get; set; }
+        private double MacOsCocoaEventLoopDrawLimiterTicks { get; set; }
 
         /// <summary>
         /// </summary>
         private long MacOsCocoaEventLoopLastDrawTicks { get; set; }
-
-        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
-        private static extern uint CGMainDisplayID();
-
-        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
-        private static extern IntPtr CGDisplayCopyDisplayMode(uint display);
-
-        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
-        private static extern double CGDisplayModeGetRefreshRate(IntPtr mode);
-
-        [DllImport("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
-        private static extern void CGDisplayModeRelease(IntPtr mode);
 
         /// <summary>
         ///     Sometimes we'd like to perform actions on the first update, such as
@@ -430,11 +418,16 @@ namespace Quaver.Shared
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
-            LimitMacOsFpsWithoutBlockingCocoaEvents();
             UpdateFpsCounterPosition();
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Determines whether the game should draw this update.
+        /// </summary>
+        protected override bool BeginDraw() => base.BeginDraw() && ShouldRunMacOsDraw();
 
         /// <inheritdoc />
         /// <summary>
@@ -551,7 +544,7 @@ namespace Quaver.Shared
                 MapManager.RecentlyPlayed.Add(args.Value);
             };
 
-            InactiveSleepTime = ConfigManager.LowerFpsOnWindowInactive.Value ? TimeSpan.FromSeconds(1d / 30) : TimeSpan.Zero;
+            InactiveSleepTime = GetInactiveSleepTime();
         }
 
         /// <summary>
@@ -607,7 +600,7 @@ namespace Quaver.Shared
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
-            MacOsCocoaEventLoopFpsLimiter = false;
+            MacOsCocoaEventLoopDrawLimiter = false;
 
             switch (fpsLimitType)
             {
@@ -619,7 +612,7 @@ namespace Quaver.Shared
                 case FpsLimitType.Limited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     if (PreferCocoaEventLoop())
-                        SetMacOsCocoaEventLoopFpsLimiter(240);
+                        SetMacOsCocoaEventLoopDrawLimiter(240);
                     else
                     {
                         IsFixedTimeStep = true;
@@ -628,16 +621,8 @@ namespace Quaver.Shared
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.Vsync:
-                    if (PreferCocoaEventLoop())
-                    {
-                        Graphics.SynchronizeWithVerticalRetrace = false;
-                        SetMacOsCocoaEventLoopFpsLimiter(GetMacOsDisplayRefreshRate());
-                    }
-                    else
-                    {
-                        Graphics.SynchronizeWithVerticalRetrace = true;
-                        IsFixedTimeStep = false;
-                    }
+                    Graphics.SynchronizeWithVerticalRetrace = true;
+                    IsFixedTimeStep = false;
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.WaylandVsync:
@@ -652,7 +637,7 @@ namespace Quaver.Shared
 
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     if (PreferCocoaEventLoop())
-                        SetMacOsCocoaEventLoopFpsLimiter(customFpsLimit);
+                        SetMacOsCocoaEventLoopDrawLimiter(customFpsLimit);
                     else
                     {
                         TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
@@ -667,66 +652,59 @@ namespace Quaver.Shared
         }
 
         /// <summary>
-        ///     Gets the active macOS display refresh rate for the draw-only VSync limiter.
-        /// </summary>
-        /// <returns></returns>
-        private static int GetMacOsDisplayRefreshRate()
-        {
-            const int fallbackRefreshRate = 60;
-
-            try
-            {
-                var mode = CGDisplayCopyDisplayMode(CGMainDisplayID());
-
-                if (mode == IntPtr.Zero)
-                    return fallbackRefreshRate;
-
-                try
-                {
-                    var refreshRate = CGDisplayModeGetRefreshRate(mode);
-                    return refreshRate > 0 ? Math.Max(1, (int)Math.Round(refreshRate)) : fallbackRefreshRate;
-                }
-                finally
-                {
-                    CGDisplayModeRelease(mode);
-                }
-            }
-            catch (Exception)
-            {
-                return fallbackRefreshRate;
-            }
-        }
-
-        /// <summary>
         ///     Limits rendered frames on macOS without using MonoGame's fixed timestep sleep.
         /// </summary>
         /// <param name="fps"></param>
-        private void SetMacOsCocoaEventLoopFpsLimiter(int fps)
+        private void SetMacOsCocoaEventLoopDrawLimiter(int fps)
         {
             IsFixedTimeStep = false;
-            MacOsCocoaEventLoopFpsLimiter = true;
-            MacOsCocoaEventLoopFpsLimiterTicks = Stopwatch.Frequency / (double)fps;
+            MacOsCocoaEventLoopDrawLimiter = true;
+            MacOsCocoaEventLoopDrawLimiterTicks = Stopwatch.Frequency / (double)fps;
             MacOsCocoaEventLoopLastDrawTicks = 0;
         }
 
         /// <summary>
-        ///     Suppresses draws until the selected macOS FPS interval elapses, while updates still pump SDL events.
+        ///     Allows draws only when the selected macOS FPS interval elapses, while updates still pump SDL events.
         /// </summary>
-        private void LimitMacOsFpsWithoutBlockingCocoaEvents()
+        /// <returns></returns>
+        private bool ShouldRunMacOsDraw()
         {
-            if (!MacOsCocoaEventLoopFpsLimiter)
-                return;
+            var limitInactiveDraws = ShouldLimitMacOsInactiveDraws();
+
+            if (!MacOsCocoaEventLoopDrawLimiter && !limitInactiveDraws)
+                return true;
 
             var now = Stopwatch.GetTimestamp();
+            var limiterTicks = limitInactiveDraws ? Stopwatch.Frequency : MacOsCocoaEventLoopDrawLimiterTicks;
 
             if (MacOsCocoaEventLoopLastDrawTicks != 0 &&
-                now - MacOsCocoaEventLoopLastDrawTicks < MacOsCocoaEventLoopFpsLimiterTicks)
-            {
-                SuppressDraw();
-                return;
-            }
+                now - MacOsCocoaEventLoopLastDrawTicks < limiterTicks)
+                return false;
 
             MacOsCocoaEventLoopLastDrawTicks = now;
+            return true;
+        }
+
+        /// <summary>
+        ///     Whether to throttle macOS inactive-window rendering without sleeping the Cocoa event loop.
+        /// </summary>
+        /// <returns></returns>
+        private bool ShouldLimitMacOsInactiveDraws() => PreferCocoaEventLoop() &&
+                                                        ConfigManager.LowerFpsOnWindowInactive.Value &&
+                                                        !IsActive &&
+                                                        OtherGameMapDatabaseCache.OnSyncableScreen() &&
+                                                        !(CurrentScreen != null && CurrentScreen.Exiting);
+
+        /// <summary>
+        ///     Gets the sleep time used when the inactive-window limiter is allowed to throttle the full game loop.
+        /// </summary>
+        /// <returns></returns>
+        private static TimeSpan GetInactiveSleepTime()
+        {
+            if (!ConfigManager.LowerFpsOnWindowInactive.Value || PreferCocoaEventLoop())
+                return TimeSpan.Zero;
+
+            return TimeSpan.FromSeconds(1d / 30);
         }
 
         /// <summary>
@@ -974,6 +952,13 @@ namespace Quaver.Shared
         {
             if (!ConfigManager.LowerFpsOnWindowInactive.Value || CurrentScreen != null && CurrentScreen.Exiting)
                 return;
+
+            if (PreferCocoaEventLoop())
+            {
+                InactiveSleepTime = TimeSpan.Zero;
+                WindowActiveInPreviousFrame = IsActive;
+                return;
+            }
 
             if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen() ||
                 OtherGameMapDatabaseCache.OnSyncableScreen() && !IsActive && !WindowActiveInPreviousFrame)
