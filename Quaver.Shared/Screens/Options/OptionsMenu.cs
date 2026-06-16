@@ -353,6 +353,10 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> {"linux"}
                         },
+                        new OptionsItemCheckbox(containerRect, "Prefer macOS Input Handling", ConfigManager.PreferCocoaEventLoop)
+                        {
+                            Tags = new List<string> {"macos", "cocoa", "sdl", "input"}
+                        },
                         new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage)
                     }),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()

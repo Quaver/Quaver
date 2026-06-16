@@ -275,9 +275,9 @@ namespace Quaver.Shared
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 
-        public QuaverGame(HotLoader hl) : base(hl, GetPreferWayland())
+        public QuaverGame(HotLoader hl) : base(hl, ConfigureSdlVideoBackend())
 #else
-        public QuaverGame() : base(GetPreferWayland())
+        public QuaverGame() : base(ConfigureSdlVideoBackend())
 #endif
         {
             Content.RootDirectory = "Content";
@@ -289,9 +289,10 @@ namespace Quaver.Shared
         /// <summary>
         ///     Applies SDL video backend preferences before MonoGame initializes SDL.
         /// </summary>
-        private static bool GetPreferWayland()
+        /// <returns></returns>
+        private static bool ConfigureSdlVideoBackend()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) &&
+            if (PreferCocoaEventLoop() &&
                 string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SDL_VIDEODRIVER")))
             {
                 Environment.SetEnvironmentVariable("SDL_VIDEODRIVER", "cocoa");
@@ -299,6 +300,13 @@ namespace Quaver.Shared
 
             return ConfigManager.PreferWayland.Value;
         }
+
+        /// <summary>
+        ///     Whether to use the macOS Cocoa SDL event loop behavior.
+        /// </summary>
+        /// <returns></returns>
+        private static bool PreferCocoaEventLoop() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && ConfigManager.PreferCocoaEventLoop.Value;
 
         /// <inheritdoc />
         /// <summary>
@@ -493,6 +501,7 @@ namespace Quaver.Shared
 
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
+            ConfigManager.PreferCocoaEventLoop.ValueChanged += (sender, e) => InitializeFpsLimiting();
             
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
             {
@@ -609,7 +618,7 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Limited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    if (PreferCocoaEventLoop())
                         SetMacOsCocoaEventLoopFpsLimiter(240);
                     else
                     {
@@ -619,7 +628,7 @@ namespace Quaver.Shared
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.Vsync:
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    if (PreferCocoaEventLoop())
                     {
                         Graphics.SynchronizeWithVerticalRetrace = false;
                         SetMacOsCocoaEventLoopFpsLimiter(GetMacOsDisplayRefreshRate());
@@ -642,7 +651,7 @@ namespace Quaver.Shared
                             "Custom FPS limit must be greater than zero.");
 
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    if (PreferCocoaEventLoop())
                         SetMacOsCocoaEventLoopFpsLimiter(customFpsLimit);
                     else
                     {
