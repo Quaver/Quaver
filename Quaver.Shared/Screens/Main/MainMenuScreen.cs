@@ -20,6 +20,7 @@ using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
+using Quaver.Shared.Screens.SkinEditor;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
@@ -253,6 +254,10 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         /// </summary>
         public void ExitToDownload() => Exit(() => new DownloadingScreen(Type));
+
+        /// <summary>
+        /// </summary>
+        public void ExitToSkinEditor() => Exit(() => new SkinEditorScreen());
 
         /// <summary>
         /// </summary>

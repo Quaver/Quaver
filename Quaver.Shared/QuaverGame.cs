@@ -59,6 +59,7 @@ using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.SkinEditor;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.AutoMods;
 using Quaver.Shared.Screens.Tests.Border;
@@ -710,6 +711,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
                 case QuaverScreenType.Results:
+                case QuaverScreenType.SkinEditor:
                     DialogManager.Show(new OptionsDialog());
                     break;
             }
@@ -732,6 +734,7 @@ namespace Quaver.Shared
             {
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
+                case QuaverScreenType.SkinEditor:
                     Transitioner.FadeIn();
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                     break;
@@ -942,6 +945,9 @@ namespace Quaver.Shared
                     break;
                 case QuaverScreenType.Theatre:
                     CurrentScreen?.Exit(() => new TheaterScreen());
+                    break;
+                case QuaverScreenType.SkinEditor:
+                    CurrentScreen?.Exit(() => new SkinEditorScreen());
                     break;
             }
 

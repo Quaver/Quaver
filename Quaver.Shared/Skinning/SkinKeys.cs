@@ -568,6 +568,71 @@ namespace Quaver.Shared.Skinning
                 ScratchLaneSize = ColumnSize;
         }
 
+        internal void ApplySkinEditorPreviewValues(IReadOnlyDictionary<string, string> values)
+        {
+            if (values == null)
+                return;
+
+            if (TryReadInt(values, "HitPosOffsetY", out var hitPosOffsetY))
+                HitPosOffsetY = hitPosOffsetY;
+
+            if (TryReadInt(values, "NotePadding", out var notePadding))
+                NotePadding = notePadding;
+
+            if (TryReadInt(values, "ColumnSize", out var columnSize))
+                ColumnSize = columnSize;
+
+            if (TryReadInt(values, "ReceptorPosOffsetY", out var receptorPosOffsetY))
+                ReceptorPosOffsetY = receptorPosOffsetY;
+
+            if (TryReadBool(values, "ColorObjectsBySnapDistance", out var colorObjectsBySnapDistance))
+                ColorObjectsBySnapDistance = colorObjectsBySnapDistance;
+
+            if (TryReadBool(values, "UseHitObjectSheet", out var useHitObjectSheet))
+                UseHitObjectSheet = useHitObjectSheet;
+
+            if (TryReadBool(values, "RotateHitObjectsByColumn", out var rotateHitObjectsByColumn))
+                RotateHitObjectsByColumn = rotateHitObjectsByColumn;
+
+            for (var i = 0; i < ColumnColors.Count; i++)
+            {
+                if (TryReadColor(values, $"ColumnColor{i + 1}", out var color))
+                    ColumnColors[i] = color;
+            }
+
+            FixValues();
+        }
+
+        private static bool TryReadInt(IReadOnlyDictionary<string, string> values, string key, out int result)
+        {
+            result = 0;
+            return values.TryGetValue(key, out var value) && int.TryParse(value, out result);
+        }
+
+        private static bool TryReadBool(IReadOnlyDictionary<string, string> values, string key, out bool result)
+        {
+            result = false;
+            return values.TryGetValue(key, out var value) && bool.TryParse(value, out result);
+        }
+
+        private static bool TryReadColor(IReadOnlyDictionary<string, string> values, string key, out Color color)
+        {
+            color = Color.Transparent;
+
+            if (!values.TryGetValue(key, out var value))
+                return false;
+
+            var split = value.Split(',');
+
+            if (split.Length < 3)
+                return false;
+
+            return byte.TryParse(split[0].Trim(), out var r)
+                   && byte.TryParse(split[1].Trim(), out var g)
+                   && byte.TryParse(split[2].Trim(), out var b)
+                   && (color = new Color(r, g, b)) != Color.Transparent;
+        }
+
         /// <summary>
         ///     Reads config file for skin.ini elements.
         ///

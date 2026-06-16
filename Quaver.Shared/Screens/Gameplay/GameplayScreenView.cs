@@ -276,7 +276,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 X = -10
             };
 
-            if (Screen.InReplayMode && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview)
+            if (Screen.InReplayMode && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview && !Screen.IsSkinEditorPreview)
             {
                 ReplayController = new ReplayController(Screen)
                 {
@@ -743,6 +743,18 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Screen.Failed && !Screen.HasQuit && Screen.Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.NoMiss))
             {
                 Screen.Retry();
+                return;
+            }
+
+            if (Screen.IsSkinEditorPreview)
+            {
+                if (!ResultsScreenLoadInitiated)
+                {
+                    ResultsScreenLoadInitiated = true;
+                    Screen.TimePlayEnd = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    Screen.TriggerSkinEditorPreviewCompleted();
+                }
+
                 return;
             }
 

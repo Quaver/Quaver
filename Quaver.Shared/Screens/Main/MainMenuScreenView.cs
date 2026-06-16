@@ -184,6 +184,8 @@ namespace Quaver.Shared.Screens.Main
                     (o, e) => screen?.ExitToMultiplayer()),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Editor",
                     (o, e) => screen?.ExitToEditor()),
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin Editor",
+                    (o, e) => screen?.ExitToSkinEditor()),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), "Download Songs",
                     (o, e) => screen?.ExitToDownload()),
                 new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), "Steam Workshop",

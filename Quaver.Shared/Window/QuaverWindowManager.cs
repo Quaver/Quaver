@@ -8,6 +8,7 @@ using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.SkinEditor;
 using Quaver.Shared.Screens.Theater;
 using Wobble;
 using Wobble.Window;
@@ -71,6 +72,7 @@ namespace Quaver.Shared.Window
                     case QuaverScreenType.Multiplayer:
                     case QuaverScreenType.Music:
                     case QuaverScreenType.Theatre:
+                    case QuaverScreenType.SkinEditor:
                         return true;
                 }
 

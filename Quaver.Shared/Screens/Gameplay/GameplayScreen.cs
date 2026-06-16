@@ -127,6 +127,16 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool IsTestPlayingInNewEditor { get; }
 
         /// <summary>
+        ///     If this screen is embedded inside the skin editor preview.
+        /// </summary>
+        public bool IsSkinEditorPreview { get; }
+
+        /// <summary>
+        ///     Invoked when an embedded skin editor preview reaches the end of the map.
+        /// </summary>
+        public event EventHandler SkinEditorPreviewCompleted;
+
+        /// <summary>
         ///     The time in the audio the play test began.
         ///     Used for retries
         /// </summary>
@@ -392,9 +402,11 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="isTestPlayingInNewEditor"></param>
         /// <param name="useExistingAudioTime"></param>
         /// <param name="shouldShowEpilepsyWarning"></param>
+        /// <param name="isSkinEditorPreview"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
-            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false, bool shouldShowEpilepsyWarning = true)
+            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false, bool shouldShowEpilepsyWarning = true,
+            bool isSkinEditorPreview = false)
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -421,6 +433,7 @@ namespace Quaver.Shared.Screens.Gameplay
             IsSongSelectPreview = isSongSelectPreview;
             UseExistingAudioTime = useExistingAudioTime;
             ShouldShowEpilepsyWarning = shouldShowEpilepsyWarning;
+            IsSkinEditorPreview = isSkinEditorPreview;
 
             if (TournamentOptions != null && !(this is TournamentGameplayScreen))
                 throw new InvalidOperationException("Cannot provide tournament options for a non-tournament gameplay screen");
@@ -511,7 +524,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!InReplayMode && ConfigManager.LockWinkeyDuringGameplay.Value)
                 Utils.NativeUtils.DisableWindowsKey();
 
-            if (InReplayMode && !IsPlayTesting && !IsSongSelectPreview && !IsCalibratingOffset)
+            if (InReplayMode && !IsPlayTesting && !IsSongSelectPreview && !IsCalibratingOffset && !IsSkinEditorPreview)
             {
                 SkinManager.StartWatching();
                 ScreenExiting += (_, _) => SkinManager.StopWatching();
@@ -603,6 +616,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (IsSkinEditorPreview)
+            {
+                Ruleset.HandleInput(gameTime);
+                return;
+            }
 
             // Handle pausing
             if (!Failed && !IsPlayComplete && !IsSongSelectPreview)
@@ -1720,6 +1739,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
             }
         }
+
+        internal void TriggerSkinEditorPreviewCompleted() => SkinEditorPreviewCompleted?.Invoke(this, EventArgs.Empty);
 
         private void HandleOverlayToggleInput(GameTime gameTime)
         {

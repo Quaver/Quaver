@@ -17,6 +17,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.SkinEditor;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using SharpCompress.Archives;
 using SharpCompress.Common;
@@ -201,6 +202,9 @@ namespace Quaver.Shared.Skinning
                 {
                     case QuaverScreenType.Menu:
                         game.CurrentScreen.Exit(() => new MainMenuScreen());
+                        break;
+                    case QuaverScreenType.SkinEditor:
+                        game.CurrentScreen.Exit(() => new SkinEditorScreen());
                         break;
                     case QuaverScreenType.Select:
                         if (game.CurrentScreen is SelectionScreen selectionScreen)
