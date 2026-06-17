@@ -159,15 +159,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             drawable.Visible = visible;
 
             foreach (var child in drawable.Children)
-            {
-                if (drawable is Dropdown dropdown && child == dropdown.ItemContainer)
-                {
-                    SetDrawableTreeVisible(child, visible && dropdown.Opened);
-                    continue;
-                }
-
                 SetDrawableTreeVisible(child, visible);
-            }
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
         }
 
         /// <summary>

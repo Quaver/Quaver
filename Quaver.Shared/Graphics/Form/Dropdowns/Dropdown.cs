@@ -258,7 +258,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 new ScalableVector2(Width, height))
             {
                 Parent = this,
-                SetChildrenVisibility = true,
                 Visible = false,
                 Y = DividerLine.Y + DividerLine.Height,
                 Scrollbar =
@@ -350,12 +349,19 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         private void SetItemVisibility(bool visible)
         {
             ItemContainer.Visible = visible;
+            ItemContainer.ContentContainer.Visible = visible;
+            ItemContainer.Scrollbar.Visible = visible && MaxHeight != 0 && Height * Options.Count > OpenHeight;
 
             if (Items == null)
                 return;
 
             Items.ForEach(x => x.Visible = visible);
         }
+
+        /// <summary>
+        ///     Restores the dropdown item list visibility after an external owner toggles the drawable tree.
+        /// </summary>
+        public void ApplyItemVisibilityState() => SetItemVisibility(Opened);
 
         /// <summary>
         /// </summary>

@@ -289,6 +289,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
 
             foreach (var child in drawable.Children)
                 SetDrawableTreeVisible(child, visible);
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
         }
 
         /// <summary>
