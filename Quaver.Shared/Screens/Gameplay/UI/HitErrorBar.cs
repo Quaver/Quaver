@@ -6,8 +6,8 @@
 */
 
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
@@ -15,6 +15,8 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Skinning;
+using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
@@ -36,7 +38,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     The list of lines that are currently in the hit error.
         /// </summary>
-        public List<Sprite> LineObjectPool { get; }
+        private HitErrorLine[] LinePool { get; }
 
         /// <summary>
         ///     The current index we're in within the object pool.
@@ -71,18 +73,18 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Parent = this
             };
 
-            // Create the object pool and initialize all of the sprites.
-            LineObjectPool = new List<Sprite>();
-            for (var i = 0; i < PoolSize; i++)
+            // Create the object pool and initialize all of the lines.
+            LinePool = new HitErrorLine[PoolSize];
+
+            _ = new HitErrorLineBatch(LinePool)
             {
-                LineObjectPool.Add(new Sprite()
-                {
-                    Parent = this,
-                    Size = new ScalableVector2(4, 0, 0, 1),
-                    Alignment = Alignment.MidCenter,
-                    Alpha = 0
-                });
-            }
+                Parent = this,
+                Size = new ScalableVector2(0, 0, 1, 1),
+                Alignment = Alignment.MidCenter
+            };
+
+            for (var i = 0; i < PoolSize; i++)
+                LinePool[i].Alpha = 0;
 
             // Create the hit chevron.
             var chevronSize = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorChevronSize;
@@ -108,12 +110,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Gradually fade out the line.
-            foreach (var line in LineObjectPool)
-                line.Alpha = MathHelper.Lerp(line.Alpha, 0, (float)Math.Min(dt / ConfigManager.HitErrorFadeTime.Value, 1));
+            for (var i = 0; i < LinePool.Length; i++)
+                LinePool[i].Alpha = MathHelper.Lerp(LinePool[i].Alpha, 0, (float)Math.Min(dt / ConfigManager.HitErrorFadeTime.Value, 1));
 
             // Tween the chevron to the last hit
             if (CurrentLinePoolIndex != -1)
-                LastHitCheveron.X = MathHelper.Lerp(LastHitCheveron.X, LineObjectPool[CurrentLinePoolIndex].X, (float)Math.Min(dt / 360, 1));
+                LastHitCheveron.X = MathHelper.Lerp(LastHitCheveron.X, LinePool[CurrentLinePoolIndex].X, (float)Math.Min(dt / 360, 1));
 
             base.Update(gameTime);
         }
@@ -128,10 +130,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (CurrentLinePoolIndex >= PoolSize)
                 CurrentLinePoolIndex = 0;
 
-            LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
+            LinePool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
 
-            LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods) * SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorWidthScale;
-            LineObjectPool[CurrentLinePoolIndex].Alpha = Alpha;
+            LinePool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods) * SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorWidthScale;
+            LinePool[CurrentLinePoolIndex].Alpha = Alpha;
 
             if (!ConfigManager.ColorHitErrorByTiming.Value)
             {
@@ -148,6 +150,56 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             else
             {
                 LastHitCheveron.Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorNeutralColor;
+            }
+        }
+
+        private struct HitErrorLine
+        {
+            public float X;
+
+            public float Alpha;
+
+            public Color Tint;
+        }
+
+        private class HitErrorLineBatch : Sprite
+        {
+            private const float LineWidth = 4;
+
+            private readonly HitErrorLine[] lines;
+
+            public HitErrorLineBatch(HitErrorLine[] lines)
+            {
+                this.lines = lines;
+                Image = WobbleAssets.WhiteBox;
+            }
+
+            public override void DrawToSpriteBatch()
+            {
+                if (!Visible)
+                    return;
+
+                var scaledLineWidth = LineWidth * Math.Abs(AbsoluteScale.X);
+                var lineHeight = RenderRectangle.Height;
+                var centerX = RenderRectangle.X + RenderRectangle.Width / 2f;
+                var y = RenderRectangle.Y;
+
+                for (var i = 0; i < lines.Length; i++)
+                {
+                    var line = lines[i];
+
+                    if (line.Alpha <= 0.001f)
+                        continue;
+
+                    var rect = new RectangleF(
+                        centerX + line.X * AbsoluteScale.X - scaledLineWidth / 2f,
+                        y,
+                        scaledLineWidth,
+                        lineHeight);
+
+                    GameBase.Game.SpriteBatch.Draw(Image, rect, null, line.Tint * line.Alpha, SpriteOverallRotation,
+                        Origin, SpriteEffect, 0f);
+                }
             }
         }
     }
