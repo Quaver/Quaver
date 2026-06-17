@@ -192,6 +192,11 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrame { get; set; }
 
         /// <summary>
+        ///     FPS to use when reducing rendering for an inactive visible window.
+        /// </summary>
+        private const int InactiveWindowFpsLimit = 30;
+
+        /// <summary>
         ///     Keeps SDL's Cocoa event pump from being throttled by fixed timestep sleeps on macOS.
         /// </summary>
         private bool MacOsCocoaEventLoopDrawLimiter { get; set; }
@@ -675,7 +680,9 @@ namespace Quaver.Shared
                 return true;
 
             var now = Stopwatch.GetTimestamp();
-            var limiterTicks = limitInactiveDraws ? Stopwatch.Frequency : MacOsCocoaEventLoopDrawLimiterTicks;
+            var limiterTicks = limitInactiveDraws
+                ? Stopwatch.Frequency / (double)InactiveWindowFpsLimit
+                : MacOsCocoaEventLoopDrawLimiterTicks;
 
             if (MacOsCocoaEventLoopLastDrawTicks != 0 &&
                 now - MacOsCocoaEventLoopLastDrawTicks < limiterTicks)
@@ -704,7 +711,7 @@ namespace Quaver.Shared
             if (!ConfigManager.LowerFpsOnWindowInactive.Value || PreferCocoaEventLoop())
                 return TimeSpan.Zero;
 
-            return TimeSpan.FromSeconds(1d / 30);
+            return TimeSpan.FromSeconds(1d / InactiveWindowFpsLimit);
         }
 
         /// <summary>
@@ -963,7 +970,7 @@ namespace Quaver.Shared
             if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen() ||
                 OtherGameMapDatabaseCache.OnSyncableScreen() && !IsActive && !WindowActiveInPreviousFrame)
             {
-                InactiveSleepTime = TimeSpan.FromSeconds(1d / 30);
+                InactiveSleepTime = TimeSpan.FromSeconds(1d / InactiveWindowFpsLimit);
             }
             // Restore user's settings
             else if (!WindowActiveInPreviousFrame && (IsActive || !OtherGameMapDatabaseCache.OnSyncableScreen()))
