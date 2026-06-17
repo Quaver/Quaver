@@ -176,9 +176,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             public override void DrawToSpriteBatch()
             {
-                if (!Visible)
+                if (!Visible || Alpha <= 0.001f)
                     return;
 
+                var batchAlpha = Alpha;
                 var scaledLineWidth = LineWidth * Math.Abs(AbsoluteScale.X);
                 var lineHeight = RenderRectangle.Height;
                 var centerX = RenderRectangle.X + RenderRectangle.Width / 2f;
@@ -197,7 +198,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                         scaledLineWidth,
                         lineHeight);
 
-                    GameBase.Game.SpriteBatch.Draw(Image, rect, null, line.Tint * line.Alpha, SpriteOverallRotation,
+                    GameBase.Game.SpriteBatch.Draw(Image, rect, null, line.Tint * (line.Alpha * batchAlpha), SpriteOverallRotation,
                         Origin, SpriteEffect, 0f);
                 }
             }

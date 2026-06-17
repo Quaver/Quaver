@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
 using Quaver.Shared.Graphics.Overlays.Hub.Notifications;
@@ -158,7 +159,15 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             drawable.Visible = visible;
 
             foreach (var child in drawable.Children)
+            {
+                if (drawable is Dropdown dropdown && child == dropdown.ItemContainer)
+                {
+                    SetDrawableTreeVisible(child, visible && dropdown.Opened);
+                    continue;
+                }
+
                 SetDrawableTreeVisible(child, visible);
+            }
         }
 
         /// <summary>
