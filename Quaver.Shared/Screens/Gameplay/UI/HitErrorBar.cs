@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             // Create the object pool and initialize all of the lines.
             LinePool = new HitErrorLine[PoolSize];
 
-            _ = new HitErrorLineBatch(LinePool)
+            _ = new HitErrorLineBatch(LinePool, MiddleLine)
             {
                 Parent = this,
                 Size = new ScalableVector2(0, 0, 1, 1),
@@ -167,10 +167,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             private const float LineWidth = 4;
 
             private readonly HitErrorLine[] lines;
+            private readonly Sprite middleLine;
 
-            public HitErrorLineBatch(HitErrorLine[] lines)
+            public HitErrorLineBatch(HitErrorLine[] lines, Sprite middleLine)
             {
                 this.lines = lines;
+                this.middleLine = middleLine;
                 Image = WobbleAssets.WhiteBox;
             }
 
@@ -182,7 +184,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 var batchAlpha = Alpha;
                 var scaledLineWidth = LineWidth * Math.Abs(AbsoluteScale.X);
                 var lineHeight = RenderRectangle.Height;
-                var centerX = RenderRectangle.X + RenderRectangle.Width / 2f;
+                var centerX = middleLine.RenderRectangle.X + middleLine.RenderRectangle.Width / 2f;
                 var y = RenderRectangle.Y;
 
                 for (var i = 0; i < lines.Length; i++)
