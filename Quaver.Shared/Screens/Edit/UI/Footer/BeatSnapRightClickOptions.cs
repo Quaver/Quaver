@@ -89,6 +89,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
                 MouseManager.CurrentState.Position
             );
 
+            if (Opened)
+                SetVisibleCheck();
+
             base.Update(gameTime);
         }
 
