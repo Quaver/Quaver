@@ -151,6 +151,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             RatingProcessor = (RatingProcessorKeys)score?.RatingProcessor ?? processor ?? new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
             Type = type;
             Size = new ScalableVector2(299, 58);
+            var hasLiveScoreText = Type == ScoreboardUserType.Self || Judgements?.Count > 0;
 
             // Set position initially to offscreen
             X = -Width - 10;
@@ -194,7 +195,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Image = avatar,
             };
 
-            RankText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "?.", 20, false)
+            RankText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "?.", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -230,7 +231,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             ScheduleAvatarMaskBlend(Avatar.Image);
 
             // Create username text.
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21, Type != ScoreboardUserType.Self)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -240,7 +241,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, false)
+            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -250,7 +251,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Processor.Combo:N0}x", 18, false)
+            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Processor.Combo:N0}x", 18, !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

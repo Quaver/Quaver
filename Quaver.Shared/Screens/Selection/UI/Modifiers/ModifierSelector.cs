@@ -165,8 +165,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         /// <param name="tooltip"></param>
         public void ActivateTooltip(Tooltip tooltip)
         {
-            if (ActiveTooltip != null)
-                ActiveTooltip.Parent = null;
+            ActiveTooltip?.Hide();
 
             ActiveTooltip = tooltip;
 
@@ -174,10 +173,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                 return;
 
             ActiveTooltip.Parent = this;
+            ActiveTooltip.Show();
 
             ActiveTooltip.Alpha = 0;
             ActiveTooltip.ClearAnimations();
             ActiveTooltip.FadeTo(1, Easing.Linear, 150);
+        }
+
+        public void DeactivateTooltip()
+        {
+            if (ActiveTooltip == null)
+                return;
+
+            ActiveTooltip.Hide();
+            ActiveTooltip = null;
         }
 
         /// <summary>
