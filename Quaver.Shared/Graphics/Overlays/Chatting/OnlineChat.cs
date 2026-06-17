@@ -18,6 +18,7 @@ using Quaver.Shared.Graphics.Overlays.Chatting.Messages;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -69,6 +70,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         ///     If the closed visibility state has been applied after the close animation.
         /// </summary>
         private bool IsClosedVisibilityApplied { get; set; }
+
+        /// <summary>
+        ///     If chat event processing is suspended while gameplay is active.
+        /// </summary>
+        public bool IsEventProcessingSuspended { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -164,6 +170,23 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         {
             SetChatVisibility(false);
             IsClosedVisibilityApplied = true;
+        }
+
+        /// <summary>
+        ///     Suspends chat event processing while gameplay is active to avoid background UI work during play.
+        /// </summary>
+        public void UpdateEventProcessingSuspension()
+        {
+            var game = GameBase.Game as QuaverGame;
+            var shouldSuspend = game?.CurrentScreen?.Type == QuaverScreenType.Gameplay;
+
+            if (IsEventProcessingSuspended == shouldSuspend)
+                return;
+
+            IsEventProcessingSuspended = shouldSuspend;
+
+            foreach (var container in MessageContainer.MessageScrollContainers.Values.ToList())
+                container.SetEventProcessingSuspended(shouldSuspend);
         }
 
         /// <summary>

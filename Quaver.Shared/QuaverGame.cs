@@ -369,6 +369,7 @@ namespace Quaver.Shared
 
             BackgroundHelper.Update(gameTime);
             DialogManager.Update(gameTime);
+            OnlineChat?.UpdateEventProcessingSuspension();
 
             HandleGlobalInput(gameTime);
             HandleOnlineHubInput();
