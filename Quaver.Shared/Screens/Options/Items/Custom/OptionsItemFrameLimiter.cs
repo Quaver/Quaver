@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
@@ -31,7 +32,12 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             var options = new List<string>();
 
             foreach (FpsLimitType val in Enum.GetValues(typeof(FpsLimitType)))
+            {
+                if (val == FpsLimitType.WaylandVsync && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    continue;
+
                 options.Add(val.ToString());
+            }
 
             return options;
         }
@@ -44,7 +50,11 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             if (ConfigManager.FpsLimiterType == null)
                 return 0;
 
-            return (int) ConfigManager.FpsLimiterType.Value;
+            var options = GetOptions();
+            var selected = ConfigManager.FpsLimiterType.Value.ToString();
+            var index = options.IndexOf(selected);
+
+            return index == -1 ? 0 : index;
         }
     }
 }

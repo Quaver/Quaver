@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -345,20 +346,7 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Advanced", FontAwesome.Get(FontAwesomeIcon.fa_open_folder), new List<OptionsSubcategory>
                 {
-                    new OptionsSubcategory("Video", new List<OptionsItem>()
-                    {
-                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
-                        new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority),
-                        new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
-                        {
-                            Tags = new List<string> {"linux"}
-                        },
-                        new OptionsItemCheckbox(containerRect, "Prefer macOS Input Handling", ConfigManager.PreferCocoaEventLoop)
-                        {
-                            Tags = new List<string> {"macos", "cocoa", "sdl", "input"}
-                        },
-                        new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage)
-                    }),
+                    new OptionsSubcategory("Video", CreateAdvancedVideoOptions(containerRect)),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay),
@@ -408,6 +396,35 @@ namespace Quaver.Shared.Screens.Options
             };
 
             SelectedSection = new Bindable<OptionsSection>(Sections.First()) { Value = Sections.First() };
+        }
+
+        private static List<OptionsItem> CreateAdvancedVideoOptions(RectangleF containerRect)
+        {
+            var options = new List<OptionsItem>
+            {
+                new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
+                new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority)
+            };
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                options.Add(new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
+                {
+                    Tags = new List<string> {"linux"}
+                });
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                options.Add(new OptionsItemCheckbox(containerRect, "Prefer macOS Input Handling", ConfigManager.PreferCocoaEventLoop)
+                {
+                    Tags = new List<string> {"macos", "cocoa", "sdl", "input"}
+                });
+            }
+
+            options.Add(new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage));
+
+            return options;
         }
 
         private static OptionsSubcategory CreateGamemodeCategory(RectangleF containerRect, GameMode mode)
