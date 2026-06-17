@@ -181,6 +181,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> PreferWayland { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> PreferCocoaEventLoop { get; private set; }
+
+        /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
         internal static Bindable<bool> FpsCounter { get; private set; }
@@ -1068,6 +1072,7 @@ namespace Quaver.Shared.Config
             WindowBorderless = ReadValue(@"WindowBorderless", false, data);
             PlayfieldScale = ReadInt(@"PlayfieldScale", 100, 25, 100, data);
             PreferWayland = ReadValue(@"PreferWayland", false, data);
+            PreferCocoaEventLoop = ReadValue(@"PreferCocoaEventLoop", true, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);

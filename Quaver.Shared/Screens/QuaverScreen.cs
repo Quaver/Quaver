@@ -180,15 +180,11 @@ namespace Quaver.Shared.Screens
         /// <param name="tooltip"></param>
         public void ActivateTooltip(Tooltip tooltip)
         {
-            if (ActiveTooltip != null)
-            {
-                ActiveTooltip.Visible = false;
-                ActiveTooltip.Parent = null;
-            }
+            ActiveTooltip?.Hide();
 
             ActiveTooltip = tooltip;
             ActiveTooltip.Parent = View.Container;
-            ActiveTooltip.Visible = true;
+            ActiveTooltip.Show();
 
             var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width, 0,
                 WindowManager.Width - ActiveTooltip.Width);
@@ -210,8 +206,8 @@ namespace Quaver.Shared.Screens
             if (ActiveTooltip == null)
                 return;
 
-            ActiveTooltip.Visible = false;
-            ActiveTooltip.Parent = null;
+            ActiveTooltip.Hide();
+            ActiveTooltip = null;
         }
 
         /// <summary>

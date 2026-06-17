@@ -93,6 +93,21 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         public RightClickOptions ActiveRightClickOptions { get; private set; }
 
+        /// <summary>
+        ///     If this container is subscribed to online chat message events.
+        /// </summary>
+        private bool IsSubscribedToChatEvents { get; set; }
+
+        /// <summary>
+        ///     If chat message event processing is currently suspended.
+        /// </summary>
+        private bool IsEventProcessingSuspended { get; set; }
+
+        /// <summary>
+        ///     If message history should be refreshed when chat processing resumes.
+        /// </summary>
+        private bool ShouldRefreshHistoryOnResume { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -127,7 +142,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 OnlineManager.Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
 
                 if (OnlineManager.Connected)
-                    OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+                    SubscribeToEvents();
             }
         }
 
@@ -168,8 +183,39 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         public override void Destroy()
         {
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnConnectionStatusChanged -= OnConnectionStatusChanged;
+
             UnsubscribeFromEvents();
             base.Destroy();
+        }
+
+        /// <summary>
+        ///     Suspends or resumes chat message event processing for this channel.
+        /// </summary>
+        /// <param name="suspended"></param>
+        public void SetEventProcessingSuspended(bool suspended)
+        {
+            if (IsEventProcessingSuspended == suspended)
+                return;
+
+            IsEventProcessingSuspended = suspended;
+
+            if (suspended)
+            {
+                ShouldRefreshHistoryOnResume = true;
+                UnsubscribeFromEvents();
+            }
+            else if (OnlineManager.Connected)
+            {
+                if (ShouldRefreshHistoryOnResume)
+                {
+                    HasRequestedMessageHistory = false;
+                    ShouldRefreshHistoryOnResume = false;
+                }
+
+                SubscribeToEvents();
+            }
         }
 
         /// <inheritdoc />
@@ -525,15 +571,22 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void SubscribeToEvents()
         {
+            if (IsSubscribedToChatEvents || IsEventProcessingSuspended || OnlineManager.Client == null)
+                return;
+
             OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+            IsSubscribedToChatEvents = true;
         }
 
         /// <summary>
         /// </summary>
         private void UnsubscribeFromEvents()
         {
-            if (OnlineManager.Client != null)
-                OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            if (!IsSubscribedToChatEvents || OnlineManager.Client == null)
+                return;
+
+            OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            IsSubscribedToChatEvents = false;
         }
 
         /// <summary>

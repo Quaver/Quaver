@@ -25,6 +25,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 {
     public class SongInformation : Sprite
     {
+        private const float HiddenAlphaThreshold = 0.001f;
+
         /// <summary>
         /// Reference to the actual gameplay screen.
         /// </summary>
@@ -80,7 +82,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             Size = new ScalableVector2(750, 150);
             Tint = Colors.MainAccentInactive;
+            SetChildrenVisibility = true;
             Alpha = 0;
+            Visible = false;
 
             // Create watching text outside of replay mode because other text relies on it.
             Watching = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
@@ -144,6 +148,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Y = Rating.Y + TextYSpacing + TextYSpacing * 0.7f,
                 Alpha = 0
             };
+
+            Visible = false;
         }
 
         /// <inheritdoc />
@@ -158,6 +164,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             // Fade in on map start
             if (Screen.Timing.Time < -500)
             {
+                Visible = true;
+
                 var alpha = MathHelper.Lerp(Title.Alpha, 1, (float)Math.Min(dt / AnimationScale, 1));
 
                 Title.Alpha = alpha;
@@ -178,6 +186,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Creator.Alpha = alpha;
                 Rating.Alpha = alpha;
                 Mods.Alpha = alpha;
+
+                if (alpha <= HiddenAlphaThreshold)
+                    Visible = false;
             }
 
             base.Update(gameTime);

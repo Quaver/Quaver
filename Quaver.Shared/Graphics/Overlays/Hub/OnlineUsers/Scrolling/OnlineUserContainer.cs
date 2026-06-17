@@ -10,6 +10,7 @@ using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter;
 using Quaver.Shared.Helpers;
@@ -149,6 +150,35 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             }
 
             base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="visible"></param>
+        public void ApplyVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(this, visible);
+
+            if (Pool == null)
+                return;
+
+            foreach (var drawable in Pool.ToList())
+                SetDrawableTreeVisible(drawable, visible);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
         }
 
         /// <summary>
