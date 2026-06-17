@@ -101,6 +101,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         public PauseScreen(GameplayScreen screen)
         {
             Screen = screen;
+            SetChildrenVisibility = true;
+            Visible = false;
 
             // Background
             Background = new Sprite()
@@ -294,6 +296,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Screen.Failed || Screen.SpectatorClient != null)
                 Visible = false;
 
+            if (!Screen.IsPaused && Background.Alpha <= 0 && Buttons.TrueForAll(x => x.Alpha <= 0))
+                Visible = false;
+
             Continue.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
             Retry.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
             Quit.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
@@ -318,6 +323,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Screen.SpectatorClient != null)
                 return;
 
+            Visible = true;
             Background.ClearAnimations();
             Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.Alpha, 1, ANIMATION_TIME));
             Container.ClearAnimations();
