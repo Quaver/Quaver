@@ -31,6 +31,11 @@ namespace Quaver.Shared.Database.Maps
     public static class MapDatabaseCache
     {
         /// <summary>
+        ///     Invoked when the map database cache is performing a full sync.
+        /// </summary>
+        public static event EventHandler<MapDatabaseCacheProgressEventArgs> SyncProgress;
+
+        /// <summary>
         ///     List of maps to force update after editing them.
         /// </summary>
         public static List<Map> MapsToUpdate { get; } = new List<Map>();
@@ -108,11 +113,15 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
-            var fileHashSet = files.ToHashSet().Select(BackslashToForward);
+            var fileHashSet = files.Select(BackslashToForward).ToHashSet();
 
-            foreach (var map in maps)
+            for (var i = 0; i < maps.Count; i++)
             {
+                var map = maps[i];
                 var filePath = BackslashToForward($"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}");
+                SyncProgress?.Invoke(typeof(MapDatabaseCache),
+                    new MapDatabaseCacheProgressEventArgs("Checking cached map", map.Path, i, maps.Count));
+
                 // Check if the file actually exists.
                 if (fileHashSet.Contains(filePath))
                 {
@@ -168,10 +177,17 @@ namespace Quaver.Shared.Database.Maps
             var hashset = new HashSet<string>();
             maps.ForEach(x => hashset.Add(BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")));
 
-            foreach (var file in files)
+            for (var i = 0; i < files.Count; i++)
             {
+                var file = files[i];
+                SyncProgress?.Invoke(typeof(MapDatabaseCache),
+                    new MapDatabaseCacheProgressEventArgs("Checking new map", Path.GetFileName(file), i, files.Count));
+
                 if (hashset.Contains(BackslashToForward(file)))
                     continue;
+
+                SyncProgress?.Invoke(typeof(MapDatabaseCache),
+                    new MapDatabaseCacheProgressEventArgs("Adding new map", Path.GetFileName(file), i, files.Count));
 
                 // Found map that isn't cached in the database yet.
                 try

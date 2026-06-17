@@ -22,6 +22,11 @@ namespace Quaver.Shared.Database.Settings
     public static class QuaverSettingsDatabaseCache
     {
         /// <summary>
+        ///     Invoked when outdated maps are having their difficulties recalculated.
+        /// </summary>
+        public static event EventHandler<MapDatabaseCacheProgressEventArgs> DifficultyRecalculationProgress;
+
+        /// <summary>
         ///     Current maps with outdated difficulties
         /// </summary>
         public static List<Map> OutdatedMaps { get; private set; } = new List<Map>();
@@ -81,8 +86,12 @@ namespace Quaver.Shared.Database.Settings
         /// </summary>
         public static void RecalculateDifficultiesForOutdatedMaps()
         {
-            foreach (var map in OutdatedMaps)
+            for (var i = 0; i < OutdatedMaps.Count; i++)
             {
+                var map = OutdatedMaps[i];
+                DifficultyRecalculationProgress?.Invoke(typeof(QuaverSettingsDatabaseCache),
+                    new MapDatabaseCacheProgressEventArgs("Calculating difficulty", map.Path, i, OutdatedMaps.Count));
+
                 map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
 
                 try

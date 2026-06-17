@@ -105,6 +105,7 @@ namespace Quaver.Shared.Screens.Importing
                 }
 
                 MapsetImporter.ImportMapsetsInQueue(SelectMapIdAfterImport);
+                UpdateRankedStatuses();
                 OnImportCompletion(true);
             });
 
@@ -117,9 +118,6 @@ namespace Quaver.Shared.Screens.Importing
         private void OnImportCompletion(bool refreshMapsetStatuses = false)
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
-
-            if (FullSync || refreshMapsetStatuses)
-                OptionsItemUpdateRankedStatuses.Run(false);
 
             if (OnlineManager.CurrentGame != null)
             {
@@ -160,6 +158,28 @@ namespace Quaver.Shared.Screens.Importing
                     Exit(() => new MainMenuScreen());
                 else
                     Exit(() => new SelectionScreen());
+            }
+        }
+
+        /// <summary>
+        ///     Updates ranked statuses as part of the importing screen process.
+        /// </summary>
+        private static void UpdateRankedStatuses()
+        {
+            if (!OnlineManager.Connected)
+            {
+                Logger.Important("Skipped ranked status update because the client is not connected.", LogType.Runtime);
+                return;
+            }
+
+            try
+            {
+                var count = OptionsItemUpdateRankedStatuses.UpdateRankedStatuses();
+                Logger.Important($"Finished updating statuses of: {count} maps", LogType.Runtime);
+            }
+            catch (System.Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
             }
         }
     }
