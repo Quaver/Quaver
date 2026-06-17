@@ -70,6 +70,18 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
             base.Destroy();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (Opened)
+                SetVisibleCheck();
+
+            base.Update(gameTime);
+        }
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -93,9 +105,23 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
             for (var i = 0; i < Items.Count; i++)
             {
                 var item = Items[i];
-                Checks[item].Visible = Screen.Processor.Value.Windows == JudgementWindowsDatabaseCache.Presets[i];
+                Checks[item].Visible = JudgementWindowsMatch(Screen.Processor.Value.Windows, JudgementWindowsDatabaseCache.Presets[i]);
             }
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="preset"></param>
+        /// <returns></returns>
+        private static bool JudgementWindowsMatch(JudgementWindows current, JudgementWindows preset) =>
+            current.Name == preset.Name &&
+            current.Marvelous == preset.Marvelous &&
+            current.Perfect == preset.Perfect &&
+            current.Great == preset.Great &&
+            current.Good == preset.Good &&
+            current.Okay == preset.Okay &&
+            current.Miss == preset.Miss;
 
         private void OnProcessorChanged(object sender, BindableValueChangedEventArgs<ScoreProcessor> e) =>
             SetVisibleCheck();
