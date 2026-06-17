@@ -153,6 +153,32 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         /// <summary>
         /// </summary>
+        /// <param name="visible"></param>
+        public void ApplyVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(this, visible);
+
+            if (Pool == null)
+                return;
+
+            foreach (var drawable in Pool.ToList())
+                SetDrawableTreeVisible(drawable, visible);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="user"></param>
         private void AddUser(User user)
         {

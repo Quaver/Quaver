@@ -73,6 +73,11 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         public bool Opened { get; private set; }
 
         /// <summary>
+        ///     If the dropdown item list is waiting for its close animation to finish before hiding.
+        /// </summary>
+        private bool HidingItemsAfterClose { get; set; }
+
+        /// <summary>
         ///     The line that divides the top element from the items
         /// </summary>
         public Sprite DividerLine { get; private set; }
@@ -158,6 +163,21 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (HidingItemsAfterClose && ItemContainer.Height <= 0)
+            {
+                HidingItemsAfterClose = false;
+                SetItemVisibility(false);
+            }
+
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             ItemSelected = null;
@@ -238,6 +258,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 new ScalableVector2(Width, height))
             {
                 Parent = this,
+                SetChildrenVisibility = true,
+                Visible = false,
                 Y = DividerLine.Y + DividerLine.Height,
                 Scrollbar =
                 {
@@ -265,6 +287,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 Items.Add(item);
                 ItemContainer.AddContainedDrawable(item);
             }
+
+            SetItemVisibility(false);
         }
 
         /// <summary>
@@ -273,6 +297,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         public void Open(int time = 500)
         {
             Opened = true;
+            HidingItemsAfterClose = false;
+            SetItemVisibility(true);
 
             Image = UserInterface.DropdownOpen;
             HoverSprite.Image = UserInterface.DropdownOpen;
@@ -298,6 +324,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         public void Close(int time = 500)
         {
             Opened = false;
+            HidingItemsAfterClose = time > 0;
 
             Image = UserInterface.DropdownClosed;
             HoverSprite.Image = UserInterface.DropdownClosed;
@@ -312,6 +339,22 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             ItemContainer.ChangeHeightTo(0, Easing.OutQuint, time);
 
             Items.ForEach(x => x.IsClickable = false);
+
+            if (!HidingItemsAfterClose)
+                SetItemVisibility(false);
+        }
+
+        /// <summary>
+        ///     Toggles visibility of the closed dropdown item list and its child text.
+        /// </summary>
+        private void SetItemVisibility(bool visible)
+        {
+            ItemContainer.Visible = visible;
+
+            if (Items == null)
+                return;
+
+            Items.ForEach(x => x.Visible = visible);
         }
 
         /// <summary>

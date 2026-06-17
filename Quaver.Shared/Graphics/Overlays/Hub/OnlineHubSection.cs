@@ -68,6 +68,27 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
         /// <summary>
         /// </summary>
+        /// <param name="visible"></param>
+        public virtual void ApplyVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(Container, visible);
+            SetDrawableTreeVisible(Icon, visible);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        protected static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreateContainer()
         {
             Container = new Sprite()

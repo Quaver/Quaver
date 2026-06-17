@@ -29,6 +29,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         public bool IsOpen { get; private set; }
 
         /// <summary>
+        ///     If the closed visibility state has been applied after the close animation.
+        /// </summary>
+        private bool IsClosedVisibilityApplied { get; set; }
+
+        /// <summary>
         /// </summary>
         private Sprite Background { get; set; }
 
@@ -70,6 +75,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             CreateHeaderText();
             CreateIconContainer();
             CreateSections();
+            ApplyClosedVisibility();
         }
 
         /// <inheritdoc />
@@ -83,6 +89,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             foreach (var section in Sections)
                 section.Value.Update(gameTime);
 
+            HandleClosedVisibility();
+
             base.Update(gameTime);
         }
 
@@ -92,6 +100,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         public void Open()
         {
             IsOpen = true;
+            IsClosedVisibilityApplied = false;
+            SetHubVisibility(true);
 
             ClearAnimations();
             MoveToX(0, Easing.OutQuint, 500);
@@ -103,9 +113,52 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         public void Close()
         {
             IsOpen = false;
+            IsClosedVisibilityApplied = false;
 
             ClearAnimations();
             MoveToX(Width + 10, Easing.OutQuint, 500);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleClosedVisibility()
+        {
+            if (IsOpen || Animations.Count != 0 || IsClosedVisibilityApplied)
+                return;
+
+            ApplyClosedVisibility();
+        }
+
+        /// <summary>
+        ///     Immediately applies the closed visibility state to the retained hub drawable trees.
+        /// </summary>
+        public void ApplyClosedVisibility()
+        {
+            SetHubVisibility(false);
+            IsClosedVisibilityApplied = true;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="visible"></param>
+        private void SetHubVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(this, visible);
+
+            foreach (var section in Sections.Values.ToList())
+                section.ApplyVisibility(visible);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
         }
 
         /// <summary>

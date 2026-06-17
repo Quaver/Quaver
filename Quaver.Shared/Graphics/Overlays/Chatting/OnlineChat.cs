@@ -66,6 +66,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         public bool IsOpen { get; private set; }
 
         /// <summary>
+        ///     If the closed visibility state has been applied after the close animation.
+        /// </summary>
+        private bool IsClosedVisibilityApplied { get; set; }
+
+        /// <summary>
         /// </summary>
         public static OnlineChat Instance
         {
@@ -95,6 +100,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             DestroyIfParentIsNull = false;
 
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
+            ApplyClosedVisibility();
         }
 
         /// <inheritdoc />
@@ -105,6 +111,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         {
             HandleResizing();
             HandleActiveJoinChatChannelDialogClosing();
+            HandleClosedVisibility();
 
             base.Update(gameTime);
         }
@@ -114,6 +121,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// </summary>
         public void Open()
         {
+            IsClosedVisibilityApplied = false;
+            SetChatVisibility(true);
             SetClickable(this, true);
             SetRetainedContainersClickable(true);
 
@@ -132,8 +141,29 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             ClearAnimations();
             MoveToY((int)Height + 10, Easing.OutQuint, 500);
             IsOpen = false;
+            IsClosedVisibilityApplied = false;
             SetClickable(this, false);
             SetRetainedContainersClickable(false);
+        }
+
+        /// <summary>
+        ///     Keeps retained chat drawables from drawing after the close animation has completed.
+        /// </summary>
+        private void HandleClosedVisibility()
+        {
+            if (IsOpen || Animations.Count != 0 || IsClosedVisibilityApplied)
+                return;
+
+            ApplyClosedVisibility();
+        }
+
+        /// <summary>
+        ///     Immediately applies the closed visibility state to the retained chat drawable trees.
+        /// </summary>
+        public void ApplyClosedVisibility()
+        {
+            SetChatVisibility(false);
+            IsClosedVisibilityApplied = true;
         }
 
         /// <summary>
@@ -187,6 +217,45 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         {
             foreach (var container in MessageContainer.MessageScrollContainers.Values.ToList())
                 SetClickable(container, clickable);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="visible"></param>
+        private void SetChatVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(this, visible);
+
+            SetDrawableTreeVisible(ChannelList.ChannelContainer, visible);
+
+            if (ChannelList.ChannelContainer.Pool != null)
+            {
+                foreach (var drawable in ChannelList.ChannelContainer.Pool.ToList())
+                    SetDrawableTreeVisible(drawable, visible);
+            }
+
+            foreach (var container in MessageContainer.MessageScrollContainers.Values.ToList())
+            {
+                SetDrawableTreeVisible(container, visible);
+
+                if (container.Pool == null)
+                    continue;
+
+                foreach (var drawable in container.Pool.ToList())
+                    SetDrawableTreeVisible(drawable, visible);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
         }
 
         /// <summary>
