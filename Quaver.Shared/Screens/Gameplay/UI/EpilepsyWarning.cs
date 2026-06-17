@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -87,14 +89,13 @@ public class EpilepsyWarning : Sprite
         if (!Screen.ShouldShowEpilepsyWarning)
             return false;
 
+        if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+            return false;
+
         var map = Screen.Map;
 
         if (map == null)
             return true;
-
-        var hasSvTag = map.Tags?
-            .Split([',', ' '], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-            .Contains("sv", StringComparer.InvariantCultureIgnoreCase) ?? false;
 
         const float extremeSvThreshold = 5;
         var hasExtremeSv = map.TimingGroups.Values
@@ -102,7 +103,7 @@ public class EpilepsyWarning : Sprite
             .Any(group => group.ScrollVelocities.Any(sv =>
                 sv.Multiplier is > extremeSvThreshold or < -extremeSvThreshold));
 
-        return hasSvTag || hasExtremeSv;
+        return hasExtremeSv;
     }
 
     public override void Update(GameTime gameTime)
