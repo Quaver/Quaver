@@ -254,7 +254,12 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             if (ChannelList.ChannelContainer.Pool != null)
             {
                 foreach (var drawable in ChannelList.ChannelContainer.Pool.ToList())
+                {
                     SetDrawableTreeVisible(drawable, visible);
+
+                    if (visible)
+                        drawable.UpdateContent(drawable.Item, drawable.Index);
+                }
             }
 
             foreach (var container in MessageContainer.MessageScrollContainers.Values.ToList())
@@ -265,7 +270,12 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
                     continue;
 
                 foreach (var drawable in container.Pool.ToList())
+                {
                     SetDrawableTreeVisible(drawable, visible);
+
+                    if (visible)
+                        drawable.UpdateContent(drawable.Item, drawable.Index);
+                }
             }
         }
 
