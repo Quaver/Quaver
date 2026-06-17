@@ -152,6 +152,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             Type = type;
             Size = new ScalableVector2(299, 58);
             var hasLiveScoreText = Type == ScoreboardUserType.Self || Judgements?.Count > 0;
+            var cacheStaticText = !screen.IsMultiplayerGame;
 
             // Set position initially to offscreen
             X = -Width - 10;
@@ -231,7 +232,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             ScheduleAvatarMaskBlend(Avatar.Image);
 
             // Create username text.
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21, Type != ScoreboardUserType.Self)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21, cacheStaticText && Type != ScoreboardUserType.Self)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -241,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, !hasLiveScoreText)
+            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, cacheStaticText && !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -251,7 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Processor.Combo:N0}x", 18, !hasLiveScoreText)
+            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Processor.Combo:N0}x", 18, cacheStaticText && !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
