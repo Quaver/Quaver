@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
 using Quaver.Shared.Graphics.Overlays.Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling;
 using Quaver.Shared.Graphics.Overlays.Hub.SongRequests;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
@@ -116,8 +117,28 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             IsOpen = false;
             IsClosedVisibilityApplied = false;
 
+            CloseDropdowns(this);
+
+            foreach (var section in Sections.Values)
+                CloseDropdowns(section.Container);
+
             ClearAnimations();
             MoveToX(Width + 10, Easing.OutQuint, 500);
+        }
+
+        /// <summary>
+        ///     Immediately finishes dropdown close animations before the retained hub is hidden.
+        /// </summary>
+        private static void CloseDropdowns(Drawable drawable)
+        {
+            if (drawable is OnlineUserContainer onlineUsers)
+                onlineUsers.DismissActiveRightClickOptions();
+
+            if (drawable is Dropdown dropdown)
+                dropdown.Close(0);
+
+            foreach (var child in drawable.Children)
+                CloseDropdowns(child);
         }
 
         /// <summary>
