@@ -456,6 +456,8 @@ namespace Quaver.Shared
             Transitioner.Draw(gameTime);
 
             ClearAlphaChannel(gameTime);
+
+            TryEndBatch();
         }
 
         /// <summary>
@@ -776,10 +778,11 @@ namespace Quaver.Shared
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F7))
                 return;
 
-            var index = (int)ConfigManager.FpsLimiterType.Value;
+            var availableFpsLimitTypes = GetAvailableFpsLimitTypes();
+            var index = availableFpsLimitTypes.IndexOf(ConfigManager.FpsLimiterType.Value);
 
-            if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
-                ConfigManager.FpsLimiterType.Value = (FpsLimitType)index + 1;
+            if (index + 1 < availableFpsLimitTypes.Count)
+                ConfigManager.FpsLimiterType.Value = availableFpsLimitTypes[index + 1];
             else
                 ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
 
@@ -806,6 +809,22 @@ namespace Quaver.Shared
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private static List<FpsLimitType> GetAvailableFpsLimitTypes() =>
+            Enum.GetValues(typeof(FpsLimitType))
+                .Cast<FpsLimitType>()
+                .Where(IsFpsLimitTypeAvailable)
+                .ToList();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="fpsLimitType"></param>
+        /// <returns></returns>
+        private static bool IsFpsLimitTypeAvailable(FpsLimitType fpsLimitType) =>
+            !(fpsLimitType == FpsLimitType.WaylandVsync && RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         /// <summary>
         ///     Handles when the user holds either Control (CTRL) button and presses O
