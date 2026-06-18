@@ -545,12 +545,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// <param name="rco"></param>
         public void ActivateRightClickOptions(RightClickOptions rco)
         {
-            if (ActiveRightClickOptions != null)
-            {
-                ActiveRightClickOptions.Visible = false;
-                ActiveRightClickOptions.Parent = null;
-                ActiveRightClickOptions.Destroy();
-            }
+            DismissActiveRightClickOptions();
 
             ActiveRightClickOptions = rco;
             ActiveRightClickOptions.Parent = this;
@@ -566,6 +561,20 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
             ActiveRightClickOptions.Position = new ScalableVector2(x, y);
             ActiveRightClickOptions.Open(350);
+        }
+
+        /// <summary>
+        ///     Dismisses the currently active user right-click menu.
+        /// </summary>
+        public void DismissActiveRightClickOptions()
+        {
+            if (ActiveRightClickOptions == null)
+                return;
+
+            ActiveRightClickOptions.Visible = false;
+            ActiveRightClickOptions.Parent = null;
+            ActiveRightClickOptions.Destroy();
+            ActiveRightClickOptions = null;
         }
 
         /// <summary>
