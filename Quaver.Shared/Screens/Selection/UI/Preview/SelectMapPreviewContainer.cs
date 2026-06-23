@@ -446,16 +446,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            if (e.ChangedMods.HasFlag(ModIdentifier.None)) // why is ModIdentifier.None not 0
+            var changedModsIsNone = e.ChangedMods.HasFlag(ModIdentifier.None);
+
+            if (changedModsIsNone && e.Type != ModChangeType.RemoveSpeed) // why is ModIdentifier.None not 0
                 return;
 
-            if ((e.ChangedMods & ModIdentifier.SpeedMods) != 0)
+            if (e.Type == ModChangeType.RemoveSpeed || (e.ChangedMods & ModIdentifier.SpeedMods) != 0)
             {
                 ScheduleUpdate(() =>
                 {
                     CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys)LoadedGameplayScreen?.Ruleset?.Playfield, false);
                 });
             }
+
+            if (changedModsIsNone)
+                return;
 
             var reloadTriggers = e.ChangedMods
                                  & ~ModIdentifier.SpeedMods
