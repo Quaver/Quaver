@@ -409,13 +409,10 @@ namespace Quaver.Shared.Screens.Gameplay
         }
 
         /// <summary>
-        ///     Creates a mini progress bar if the user defined it in config.
+        ///     Creates a mini progress bar if the skin defines it.
         /// </summary>
         private void CreateMiniProgressBar()
         {
-            if (!ConfigManager.DisplaySongTimeProgress.Value)
-                return;
-
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width / SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayWidthFactor, SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayHeight), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
