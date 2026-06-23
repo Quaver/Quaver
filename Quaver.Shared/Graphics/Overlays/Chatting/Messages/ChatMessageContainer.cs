@@ -72,10 +72,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
                 if (container.IsDisposed)
                     continue;
 
-                if (ActiveChannel.Value == container.Channel && container.Parent != this)
+                var isActiveChannel = ActiveChannel.Value == container.Channel;
+
+                if (isActiveChannel && container.Parent != this)
                     container.Parent = this;
-                else if (ActiveChannel.Value != container.Channel && container.Parent != null)
+                else if (!isActiveChannel && container.Parent != null)
                     container.Parent = null;
+
+                container.ApplyVisibility(isActiveChannel && OnlineChat.Instance?.IsOpen == true);
 
                 container.Width = Width;
                 container.ContentContainer.Width = Width;
