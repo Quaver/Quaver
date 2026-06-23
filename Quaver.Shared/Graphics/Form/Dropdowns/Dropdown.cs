@@ -303,16 +303,25 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             HoverSprite.Image = UserInterface.DropdownOpen;
 
             DividerLine.ClearAnimations();
-            DividerLine.FadeTo(1, Easing.OutQuint, time / 2);
 
             Chevron.ClearAnimations();
-            Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, Chevron.Rotation, MathF.PI, time));
 
             ItemContainer.ClearAnimations();
 
             var height = OpenHeight;
 
-            ItemContainer.ChangeHeightTo(height, Easing.OutQuint, time);
+            if (time <= 0)
+            {
+                DividerLine.Alpha = 1;
+                Chevron.Rotation = MathF.PI;
+                ItemContainer.Height = height;
+            }
+            else
+            {
+                DividerLine.FadeTo(1, Easing.OutQuint, time / 2);
+                Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, Chevron.Rotation, MathF.PI, time));
+                ItemContainer.ChangeHeightTo(height, Easing.OutQuint, time);
+            }
 
             Items.ForEach(x => x.IsClickable = true);
         }
@@ -329,13 +338,23 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             HoverSprite.Image = UserInterface.DropdownClosed;
 
             DividerLine.ClearAnimations();
-            DividerLine.FadeTo(0, Easing.OutQuint, (int)(time * 2.5f));
 
             Chevron.ClearAnimations();
-            Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, Chevron.Rotation, 0, time));
 
             ItemContainer.ClearAnimations();
-            ItemContainer.ChangeHeightTo(0, Easing.OutQuint, time);
+
+            if (time <= 0)
+            {
+                DividerLine.Alpha = 0;
+                Chevron.Rotation = 0;
+                ItemContainer.Height = 0;
+            }
+            else
+            {
+                DividerLine.FadeTo(0, Easing.OutQuint, (int)(time * 2.5f));
+                Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, Chevron.Rotation, 0, time));
+                ItemContainer.ChangeHeightTo(0, Easing.OutQuint, time);
+            }
 
             Items.ForEach(x => x.IsClickable = false);
 
