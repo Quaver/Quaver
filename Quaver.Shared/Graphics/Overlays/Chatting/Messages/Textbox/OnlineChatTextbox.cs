@@ -69,8 +69,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
                     msg = msg.Replace(word, char.ConvertFromUtf32(EmojiHelper.Emojis[word]));
                 }
 
-                var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username, ActiveChannel.Value.Name,
-                    msg, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+                var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username,
+                    user.OnlineUser.ClanTag, user.OnlineUser.ClanAccentColor,
+                    ActiveChannel.Value.Name, msg, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                 {
                     Sender = user,
                     IsFromSelf = true

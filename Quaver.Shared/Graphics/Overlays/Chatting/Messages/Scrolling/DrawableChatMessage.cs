@@ -32,6 +32,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private Sprite Icon { get; set; }
 
         /// <summary>
+        ///     The clan tag of the user
+        /// </summary>
+        private SpriteTextPlus Clan { get; set; }
+
+        /// <summary>
         ///     The username of the user
         /// </summary>
         private SpriteTextPlus Username { get; set; }
@@ -64,6 +69,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             CreateTime();
             CreateIcon();
+            CreateClan();
             CreateUsername();
             CreateUsernameButton();
             CreateMessage();
@@ -75,8 +81,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         public override void Update(GameTime gameTime)
         {
             var color = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
-            Username.Tint = UsernameButton.IsHovered ? new Color(color.R / 2, color.G / 2, color.B / 2) : color;
+            Username.Tint = UsernameButton.IsHovered ? Darken(color) : color;
             Icon.Tint = Username.Tint;
+
+            var clanColor = GetClanColor();
+            Clan.Tint = UsernameButton.IsHovered ? Darken(clanColor) : clanColor;
 
             var container = (ChatMessageScrollContainer) Container;
 
@@ -97,27 +106,49 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             Time.Text = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";
             var icon = GetIcon(Item.Sender.OnlineUser.UserGroups);
+            var clanTag = GetClanTag();
+            var hasClan = !string.IsNullOrEmpty(clanTag);
+            var labelStartX = Time.X + Time.Width + PADDING_X / 2f;
 
             if (icon != null)
             {
                 Icon.Image = icon;
                 Icon.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
-                Icon.X = Time.X + Time.Width + PADDING_X / 2f;
+                Icon.X = labelStartX;
 
-                Username.X = Icon.X + Icon.Width + PADDING_X / 2f;
+                labelStartX = Icon.X + Icon.Width + PADDING_X / 2f;
             }
-            else
-                Username.X = Time.X + Time.Width + PADDING_X / 2f;
 
             Icon.Visible = icon != null;
 
+            Clan.Visible = hasClan;
+            Clan.Text = hasClan ? $"[{clanTag}]" : "";
+            Clan.Tint = GetClanColor();
+            Clan.X = labelStartX;
+
+            Username.X = hasClan ? Clan.X + Clan.Width + PADDING_X / 4f : labelStartX;
             Username.Text = $"{Item.SenderName}:";
             Username.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
 
-            Message.X = Username.X + Username.Width + PADDING_X / 2f;
+            var clickableStartX = Icon.Visible ? Icon.X : Clan.Visible ? Clan.X : Username.X;
+            var clickableWidth = Username.X + Username.Width - clickableStartX;
+
+            Message.X = clickableStartX + clickableWidth + PADDING_X / 2f;
             Message.Text = Item.Message;
 
-            Message.MaxWidth = Container.Width - PADDING_X * 4 - Time.Width - Username.Width;
+            Message.MaxWidth = Container.Width - Message.X - PADDING_X;
+
+            Time.Alignment = Alignment.MidLeft;
+            Time.Y = 0;
+
+            Icon.Alignment = Time.Alignment;
+            Icon.Y = 0;
+
+            Clan.Alignment = Time.Alignment;
+            Clan.Y = 0;
+
+            Username.Alignment = Time.Alignment;
+            Username.Y = 0;
 
             // Message spans across multiple lines, so make sure the username is moved upwards
             if (Message.Children.Count > 1)
@@ -128,14 +159,17 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Icon.Alignment = Time.Alignment;
                 Icon.Y = Time.Y + 2;
 
+                Clan.Alignment = Time.Alignment;
+                Clan.Y = Time.Y;
+
                 Username.Alignment = Time.Alignment;
                 Username.Y = Time.Y;
             }
 
             // Make sure the button is properly aligned with the sender's username
             UsernameButton.Alignment = Username.Alignment;
-            UsernameButton.Position = Icon.Visible ? Icon.Position : Username.Position;
-            UsernameButton.Size = new ScalableVector2(Username.Width + (Icon.Visible ? Icon.Width : 0) + PADDING_X / 2f, Username.Height);
+            UsernameButton.Position = new ScalableVector2(clickableStartX, Username.Y);
+            UsernameButton.Size = new ScalableVector2(clickableWidth, Username.Height);
 
             Height = Message.Height + 16;
         }
@@ -166,6 +200,19 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(16, 16)
+            };
+        }
+
+        /// <summary>
+        ///     Creates <see cref="Clan"/>
+        /// </summary>
+        private void CreateClan()
+        {
+            Clan = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", Time.FontSize)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -247,5 +294,45 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             return null;
         }
+
+        /// <summary>
+        ///     Gets the clan accent color, falling back to the normal chat color if the color is missing or invalid.
+        /// </summary>
+        private Color GetClanColor()
+        {
+            var fallback = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
+            var color = GetClanAccentColor();
+
+            if (string.IsNullOrEmpty(color))
+                return fallback;
+
+            try
+            {
+                return ColorHelper.HexToColor(color);
+            }
+            catch
+            {
+                return fallback;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the sender's clan tag from the chat payload, falling back to the sender's online user info.
+        /// </summary>
+        private string GetClanTag() => !string.IsNullOrEmpty(Item.SenderClanTag)
+            ? Item.SenderClanTag
+            : Item.Sender?.OnlineUser?.ClanTag;
+
+        /// <summary>
+        ///     Gets the sender's clan accent color from the chat payload, falling back to the sender's online user info.
+        /// </summary>
+        private string GetClanAccentColor() => !string.IsNullOrEmpty(Item.SenderClanAccentColor)
+            ? Item.SenderClanAccentColor
+            : Item.Sender?.OnlineUser?.ClanAccentColor;
+
+        /// <summary>
+        ///     Darkens a color for hover state.
+        /// </summary>
+        private static Color Darken(Color color) => new Color(color.R / 2, color.G / 2, color.B / 2);
     }
 }

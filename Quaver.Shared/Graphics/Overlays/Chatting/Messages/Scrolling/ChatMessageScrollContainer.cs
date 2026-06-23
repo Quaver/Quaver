@@ -225,7 +225,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                         if (BlockedUsers.IsUserBlocked(message.User.Id))
                             continue;
 
-                        MessageHistoryQueue.Add(message.ToChatMessage(message.User.ToUser()));
+                        MessageHistoryQueue.Add(message.ToChatMessage(message.MakeUser()));
                     }
                 }
             }
