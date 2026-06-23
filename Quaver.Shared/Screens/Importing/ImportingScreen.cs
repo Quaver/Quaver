@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Linq;
 using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Objects.Listening;
@@ -89,23 +90,24 @@ namespace Quaver.Shared.Screens.Importing
         {
             AudioEngine.Track?.Fade(100, 300);
 
+            var view = View as ImportingScreenView;
+            Action<ImportProgressEventArgs> reportProgress = progress => view?.SetProgress(progress);
+
             ThreadScheduler.Run(() =>
             {
+                ImportProgressEventArgs.Report(reportProgress, "Preparing Map Library", "Checking for modified maps, queued imports, and outdated difficulties", 0, 0, false);
+
                 if (MapDatabaseCache.MapsToUpdate.Count != 0)
-                    MapDatabaseCache.ForceUpdateMaps();
+                    MapDatabaseCache.ForceUpdateMaps(true, reportProgress);
 
                 if (FullSync)
-                    MapDatabaseCache.Load(true);
+                    MapDatabaseCache.Load(true, reportProgress);
 
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
-                {
-                    var view = View as ImportingScreenView;
-                    view.Status.Text = "Performing difficulty calculation for outdated maps".ToUpper();
-                    QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();
-                }
+                    QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps(reportProgress);
 
-                MapsetImporter.ImportMapsetsInQueue(SelectMapIdAfterImport);
-                OnImportCompletion(true);
+                MapsetImporter.ImportMapsetsInQueue(SelectMapIdAfterImport, reportProgress);
+                OnImportCompletion(true, reportProgress);
             });
 
             base.OnFirstUpdate();
@@ -114,12 +116,14 @@ namespace Quaver.Shared.Screens.Importing
         /// <summary>
         ///     Called after all maps have been imported to the database.
         /// </summary>
-        private void OnImportCompletion(bool refreshMapsetStatuses = false)
+        private void OnImportCompletion(bool refreshMapsetStatuses = false, Action<ImportProgressEventArgs>? progress = null)
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
 
             if (FullSync || refreshMapsetStatuses)
                 OptionsItemUpdateRankedStatuses.Run(false);
+
+            ImportProgressEventArgs.Report(progress, "Import Complete", "Returning to song select", 1, 1, false);
 
             if (OnlineManager.CurrentGame != null)
             {
@@ -147,7 +151,7 @@ namespace Quaver.Shared.Screens.Importing
             }
             else if (OnlineManager.IsSpectatingSomeone)
             {
-                // TODO: Whenever handling multiple spectatee's, this should be reworked, but it's fine for now.
+                // TODO: Whenever handling multiple spectatee's, this should be reworked, but it's fine for now
                 var spectatee = OnlineManager.SpectatorClients.First();
                 spectatee.Value.WatchUserImmediately();
 
@@ -162,5 +166,6 @@ namespace Quaver.Shared.Screens.Importing
                     Exit(() => new SelectionScreen());
             }
         }
+
     }
 }

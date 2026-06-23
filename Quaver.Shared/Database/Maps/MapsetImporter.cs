@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Quaver.API.Helpers;
@@ -348,14 +349,15 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Goes through all the mapsets in the queue and imports them.
         /// </summary>
-        public static void ImportMapsetsInQueue(int? selectMapIdAfterImport = null)
+        public static void ImportMapsetsInQueue(int? selectMapIdAfterImport = null, Action<ImportProgressEventArgs>? progress = null)
         {
             Map selectedMap = null;
 
             if (MapManager.Selected.Value != null)
                 selectedMap = MapManager.Selected.Value;
 
-            var done = -1;
+            var successfulMapsets = -1;
+            var completedMapsets = 0;
 
             // Remove batch import temp folder from queue
             var tempFolders = Queue.FindAll(f => File.GetAttributes(f).HasFlag(FileAttributes.Directory));
@@ -368,10 +370,13 @@ namespace Quaver.Shared.Database.Maps
             MapsetInfoRetriever.InfoUpdateEnabled = false;
 
             // Import map
+            ImportProgressEventArgs.Report(progress, "Importing Queued Mapsets", $"Importing {Queue.Count} queued mapsets", 0, Queue.Count, false);
+
             Parallel.For(0, Queue.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var file = Queue[i];
                 var extension = Path.GetExtension(file);
+                var success = false;
                 // Use directory of .sm files, because during scheduled bulk import, there can be multiple files named file.sm, for example
                 var isPartOfMapset = extension == ".sm";
                 var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
@@ -419,18 +424,29 @@ namespace Quaver.Shared.Database.Maps
 
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
 
-                    done++;
-                    ImportingMapset?.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), done));
+                    success = true;
+                    var successfulIndex = Interlocked.Increment(ref successfulMapsets);
+                    ImportingMapset?.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), successfulIndex));
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, $"Failed to import file: {Path.GetFileName(file)}");
                 }
+                finally
+                {
+                    var completed = Interlocked.Increment(ref completedMapsets);
+                    var result = success ? "Imported" : "Failed to import";
+                    ImportProgressEventArgs.Report(progress, "Importing Queued Mapsets", $"{result}: {Path.GetFileName(file)}", completed, Queue.Count, false);
+                }
             });
 
             // Import playlist
             var importedPlaylist = new List<Playlist>();
+            var completedPlaylists = 0;
+
+            ImportProgressEventArgs.Report(progress, "Importing Playlists", $"Importing {playlistsMetadata.Count} playlists", 0, playlistsMetadata.Count, false);
+
             Parallel.For(0, playlistsMetadata.Count, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
             {
                 var metadata = playlistsMetadata[i];
@@ -495,11 +511,23 @@ namespace Quaver.Shared.Database.Maps
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, $"Failed to import playlist");
                 }
+                finally
+                {
+                    var completed = Interlocked.Increment(ref completedPlaylists);
+                    ImportProgressEventArgs.Report(progress, "Importing Playlists", $"Importing playlist metadata", completed, playlistsMetadata.Count, false);
+                }
             });
 
             // delete temp folders
-            tempFolders.ForEach(d => Directory.Delete(d, true));
+            ImportProgressEventArgs.Report(progress, "Cleaning Up Imported Files", $"Removing {tempFolders.Count} temporary import folders", 0, tempFolders.Count, false);
 
+            for (var i = 0; i < tempFolders.Count; i++)
+            {
+                Directory.Delete(tempFolders[i], true);
+                ImportProgressEventArgs.Report(progress, "Cleaning Up Imported Files", $"Removed {Path.GetFileName(tempFolders[i])}", i + 1, tempFolders.Count, false);
+            }
+
+            ImportProgressEventArgs.Report(progress, "Finalizing Imported Maps", "Ordering mapsets and loading playlists", 0, 0, false);
             MapDatabaseCache.OrderAndSetMapsets(playlistsMetadata.Count == 0);
             Queue.Clear();
             MapsetInfoRetriever.InfoUpdateEnabled = true;
