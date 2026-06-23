@@ -44,6 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             IsPersonalBest = isPersonalBest;
             Size = new ScalableVector2(560, 66);
             Alpha = 0;
+            SetChildrenVisibility = true;
 
             ChildContainer = new DrawableLeaderboardScoreContainer(this)
             {
@@ -78,5 +79,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         }
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
+
+        public void SetScrollVisibility(bool visible)
+        {
+            Visible = visible;
+            ChildContainer.SetScrollVisibility(visible);
+        }
     }
 }

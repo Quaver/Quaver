@@ -145,6 +145,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private Texture2D BlankImage { get; set; }
 
+        private bool IsScrollVisible { get; set; } = true;
+
+        private bool CantBeatAlertShouldBeVisible { get; set; }
+
+        private bool RequiredAccuracyAlertShouldBeVisible { get; set; }
+
         /// <summary>
         /// </summary>
         /// <param name="score"></param>
@@ -183,6 +189,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!IsScrollVisible)
+                return;
+
             PerformHoverAnimation(gameTime);
             ContainAlertIconClickableStatus();
 
@@ -668,12 +677,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods)).CalculateRating(100) >=
                 Score.Item.PerformanceRating)
             {
-                CantBeatAlert.Visible = false;
+                CantBeatAlertShouldBeVisible = false;
+                ApplyAlertVisibility();
             }
             else
             {
                 CantBeatAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
-                CantBeatAlert.Visible = true;
+                CantBeatAlertShouldBeVisible = true;
+                ApplyAlertVisibility();
             }
         }
 
@@ -681,16 +692,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void UpdateRequiredAccuracyAlert()
         {
-            if (CantBeatAlert.Visible ||
+            if (CantBeatAlertShouldBeVisible ||
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 ModHelper.GetRateFromMods(ModManager.Mods) == ModHelper.GetRateFromMods((ModIdentifier) Score.Item.Mods))
             {
-                RequiredAccuracyAlert.Visible = false;
+                RequiredAccuracyAlertShouldBeVisible = false;
+                ApplyAlertVisibility();
                 return;
             }
 
-            RequiredAccuracyAlert.Visible = true;
+            RequiredAccuracyAlertShouldBeVisible = true;
             RequiredAccuracyAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
+            ApplyAlertVisibility();
         }
 
         /// <summary>
@@ -852,8 +865,52 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (Score.IsPersonalBest || Score.Item.IsEmptyScore)
                 return;
 
-            CantBeatAlert.IsClickable = CantBeatAlert.ScreenRectangle.Intersects(Score.Container.ScreenRectangle);
+            CantBeatAlert.IsClickable = IsScrollVisible && CantBeatAlert.ScreenRectangle.Intersects(Score.Container.ScreenRectangle);
             RequiredAccuracyAlert.IsClickable = CantBeatAlert.IsClickable;
+        }
+
+        public void SetScrollVisibility(bool visible)
+        {
+            if (IsScrollVisible == visible)
+                return;
+
+            IsScrollVisible = visible;
+            Visible = visible;
+
+            if (Score.Item.IsEmptyScore)
+                return;
+
+            if (!Score.IsPersonalBest)
+                Rank.Visible = visible;
+
+            Button.Visible = visible;
+            Grade.Visible = visible;
+            Avatar.Visible = visible;
+            Flag.Visible = visible;
+            Username.Visible = visible;
+            PerformanceRating.Visible = visible;
+            AccuracyMaxCombo.Visible = visible;
+            Mods.Visible = visible;
+            Clock.Visible = visible;
+            Time.Visible = visible;
+            Modifiers?.ForEach(x => x.Visible = visible);
+
+            ApplyAlertVisibility();
+
+            if (!visible)
+            {
+                CantBeatAlert.IsClickable = false;
+                RequiredAccuracyAlert.IsClickable = false;
+            }
+        }
+
+        private void ApplyAlertVisibility()
+        {
+            if (CantBeatAlert == null || RequiredAccuracyAlert == null)
+                return;
+
+            CantBeatAlert.Visible = IsScrollVisible && CantBeatAlertShouldBeVisible;
+            RequiredAccuracyAlert.Visible = IsScrollVisible && RequiredAccuracyAlertShouldBeVisible;
         }
     }
 }
