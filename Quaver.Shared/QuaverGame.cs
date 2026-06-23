@@ -456,8 +456,6 @@ namespace Quaver.Shared
             Transitioner.Draw(gameTime);
 
             ClearAlphaChannel(gameTime);
-
-            TryEndBatch();
         }
 
         /// <summary>
