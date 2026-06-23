@@ -393,15 +393,28 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void OnLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
         {
             if (e.Value != SelectContainerPanel.MapPreview)
-                return;
+            {
+                if (LoadGameplayScreenTask.IsRunning)
+                    LoadGameplayScreenTask.Cancel();
 
+                return;
+            }
+
+            RunLoadTask();
             ShowTestPlayPrompt();
         }
 
         /// <summary>
         /// </summary>
-        protected void RunLoadTask()
+        protected void RunLoadTask(bool force = false)
         {
+            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview || MapManager.Selected.Value == null)
+                return;
+
+            if (!force && LoadedGameplayScreen != null && !LoadedGameplayScreen.IsDisposed &&
+                LoadedGameplayScreen.MapHash == MapManager.Selected.Value.Md5Checksum)
+                return;
+
             Wheel.ClearAnimations();
             Wheel.FadeTo(1, Easing.Linear, 150);
 
@@ -412,7 +425,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask(true);
 
         /// <summary>
         /// </summary>
@@ -451,7 +464,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                                  & ~ModIdentifier.Randomize;
 
             if (reloadTriggers != 0) //  once again why is ModIdentifier.None not 0
-                RunLoadTask();
+                RunLoadTask(true);
         }
 
         /// <summary>
