@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Parsers;
+using Quaver.API.Maps.Parsers.Stepmania;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
@@ -90,20 +91,24 @@ namespace Quaver.Shared.Database.Playlists
             {
                 foreach (var map in Maps)
                 {
-                    mapsMd5.Add(map.Md5Checksum);
+                    mapsMd5.Add(map.GetAlternativeMd5());
                     if (mapsetsAdded.Contains(map.Mapset))
                         continue;
 
                     try
                     {
-                        Directory.CreateDirectory($"{tempFolder}/{map.Directory}");
+                        var exportDirectory = map.Game == MapGame.Etterna
+                            ? StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}]")
+                            : map.Directory;
+
+                        Directory.CreateDirectory($"{tempFolder}/{exportDirectory}");
 
                         switch (map.Game)
                         {
                             // Quaver mapset, so just copy over the folder
                             case MapGame.Quaver:
                                 foreach (var file in Directory.GetFiles($"{ConfigManager.SongDirectory.Value}/{map.Directory}"))
-                                    File.Copy(file, $"{tempFolder}/{map.Directory}/{Path.GetFileName(file)}");
+                                    File.Copy(file, $"{tempFolder}/{exportDirectory}/{Path.GetFileName(file)}");
                                 break;
                             // osu! mapset - .qua files need to be
                             case MapGame.Osu:
@@ -113,22 +118,36 @@ namespace Quaver.Shared.Database.Playlists
                                 map.BackgroundPath = osu.Background;
 
                                 var name = StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}].qua");
-                                var savePath = $"{tempFolder}/{map.Directory}/{name}";
+                                var savePath = $"{tempFolder}/{exportDirectory}/{name}";
 
                                 osu.ToQua().Save(savePath);
 
                                 foreach (var file in Directory.GetFiles($"{MapManager.OsuSongsFolder}{map.Directory}/"))
                                 {
                                     if (!file.EndsWith(".osu") && !file.EndsWith(".osb"))
-                                        File.Copy(file, $"{tempFolder}/{map.Directory}/{Path.GetFileName(file)}");
+                                        File.Copy(file, $"{tempFolder}/{exportDirectory}/{Path.GetFileName(file)}");
+                                }
+                                break;
+                            case MapGame.Etterna:
+                                var folderPath = Path.GetDirectoryName(map.Path);
+                                var stepFile = new StepFile(map.Path);
+
+                                var fileName = StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}].qua");
+                                var fileSavePath = $"{tempFolder}/{exportDirectory}/{fileName}";
+                                stepFile.ToQuas().Find(x => x.DifficultyName == map.DifficultyName).Save(fileSavePath);
+
+                                foreach (var file in Directory.GetFiles(folderPath))
+                                {
+                                    if (!file.EndsWith(".sm") && !file.EndsWith(".ssc"))
+                                        File.Copy(file, $"{tempFolder}/{exportDirectory}/{Path.GetFileName(file)}");
                                 }
                                 break;
                         }
 
                         using (var mapArchive = ZipArchive.Create())
                         {
-                            mapArchive.AddAllFromDirectory($"{tempFolder}/{map.Directory}/");
-                            mapArchive.SaveTo($"{tempFolder}/{map.Directory}.qp", CompressionType.Deflate);
+                            mapArchive.AddAllFromDirectory($"{tempFolder}/{exportDirectory}/");
+                            mapArchive.SaveTo($"{tempFolder}/{exportDirectory}.qp", CompressionType.Deflate);
                         }
                     }
                     catch (Exception e)
