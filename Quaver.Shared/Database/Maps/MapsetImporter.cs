@@ -360,7 +360,6 @@ namespace Quaver.Shared.Database.Maps
             if (MapManager.Selected.Value != null)
                 selectedMap = MapManager.Selected.Value;
 
-            var successfulMapsets = -1;
             var completedMapsets = 0;
 
             // Remove batch import temp folder from queue
@@ -430,8 +429,6 @@ namespace Quaver.Shared.Database.Maps
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
 
                     success = true;
-                    var successfulIndex = Interlocked.Increment(ref successfulMapsets);
-                    ImportingMapset?.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), successfulIndex));
                 }
                 catch (Exception e)
                 {
@@ -441,6 +438,9 @@ namespace Quaver.Shared.Database.Maps
                 finally
                 {
                     var completed = Interlocked.Increment(ref completedMapsets);
+                    if (success)
+                        ImportingMapset?.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), completed - 1));
+
                     var result = success ? "Imported" : "Failed to import";
                     ImportProgressEventArgs.Report(progress, "Importing Queued Mapsets", $"{result}: {Path.GetFileName(file)}", completed, Queue.Count, false);
                 }
