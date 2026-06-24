@@ -905,11 +905,9 @@ namespace Quaver.Shared.Skinning
                         const int snapCount = 9;
 
                         string hitObjectSheet = UsePerLaneSpriteSheets ? $"note-hitobject-sheet-{lane + 1}" : "note-hitobject-sheet";
-                        string holdObjectSheet = UsePerLaneSpriteSheets ? $"note-holdobject-sheet-{lane + 1}" : "note-holdobject-sheet";
                         string mineSheet = UsePerLaneSpriteSheets ? $"note-mine-sheet-{lane + 1}" : "note-mine-sheet";
                         string mineStartSheet = UsePerLaneSpriteSheets ? $"note-minestart-sheet-{lane + 1}" : "note-minestart-sheet";
                         var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, hitObjectSheet, FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
-                        var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, holdObjectSheet, FallbackKeys?.NoteHoldHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
                         var mines = LoadSpritesheet(SkinKeysFolder.HitObjects, mineSheet,
                             FallbackKeys?.NoteMines?[MineFallbacks[lane]], false,
                             snapCount, 1);
@@ -917,13 +915,8 @@ namespace Quaver.Shared.Skinning
                             FallbackKeys?.NoteMineStarts?[MineFallbacks[lane]],
                             false, snapCount, 1);
                         NoteHitObjects.Add(hitobjects);
+                        NoteHoldHitObjects.Add(hitobjects);
                         NoteMines.Add(mines);
-
-                        // LoadSpriteSheet returns one UserInterface.BlankBox on error
-                        if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
-                            NoteHoldHitObjects.Add(holdobjects);
-                        else
-                            NoteHoldHitObjects.Add(hitobjects);
 
                         // LoadSpriteSheet returns one UserInterface.BlankBox on error
                         if (mineStarts.Any() && mineStarts[0] != UserInterface.BlankBox)
@@ -933,9 +926,6 @@ namespace Quaver.Shared.Skinning
 
                         for (var j = 0; j < snapCount - NoteHitObjects[lane].Count; j++)
                             NoteHitObjects[lane].Add(NoteHitObjects[lane].Last());
-
-                        for (var j = 0; j < snapCount - NoteHoldHitObjects[lane].Count; j++)
-                            NoteHoldHitObjects[lane].Add(NoteHoldHitObjects[lane].Last());
 
                         for (var j = 0; j < snapCount - NoteMines[lane].Count; j++)
                             NoteMines[lane].Add(NoteMines[lane].Last());
