@@ -426,7 +426,7 @@ namespace Quaver.Shared
             LimitFpsOnInactiveWindow();
             UpdateFpsCounterPosition();
 
-            Window.AllowUserResizing = false;
+            Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
         }
 
         /// <inheritdoc />
