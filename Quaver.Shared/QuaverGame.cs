@@ -596,7 +596,8 @@ namespace Quaver.Shared
         /// <summary>
         ///     Shows the FPS counter based on the current config variable.
         /// </summary>
-        private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
+        private void ShowFpsCounter(FpsCounter counter) =>
+            counter.Visible = ConfigManager.FpsCounter.Value && CurrentScreen?.Type != QuaverScreenType.Gameplay;
 
         /// <summary>
         ///     Uses a custom fps config
@@ -1005,6 +1006,8 @@ namespace Quaver.Shared
         {
             if (Fps == null)
                 return;
+
+            ShowFpsCounter(Fps);
 
             Fps.Y = -MenuBorder.HEIGHT - 10;
 
