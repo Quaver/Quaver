@@ -30,7 +30,6 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             ("BPM", OrderMapsetsBy.BPM),
             ("Times Played", OrderMapsetsBy.TimesPlayed),
             ("Recently Played", OrderMapsetsBy.RecentlyPlayed),
-            ("Genre", OrderMapsetsBy.Genre),
             ("Game", OrderMapsetsBy.Game),
             ("Length", OrderMapsetsBy.Length),
             ("Source", OrderMapsetsBy.Source),
