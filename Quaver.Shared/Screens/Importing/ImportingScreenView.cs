@@ -42,7 +42,23 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
+        private ProgressBar ImportProgressBar { get; set; }
+
+        /// <summary>
+        /// </summary>
         public SpriteTextPlus Status { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        private SpriteTextPlus Details { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private string CurrentAction { get; set; } = "Performing Initial Processing";
+
+        /// <summary>
+        /// </summary>
+        private string CurrentDetails { get; set; } = "Gathering import tasks";
 
         /// <summary>
         /// </summary>
@@ -65,6 +81,8 @@ namespace Quaver.Shared.Screens.Importing
             CreateBackground();
             CreateBanner();
             CreatePleaseWaitText();
+            CreateDetailsText();
+            CreateProgressBar();
             CreateStatusText();
             CreateLoadingWheel();
             CreateVisualizers();
@@ -103,7 +121,50 @@ namespace Quaver.Shared.Screens.Importing
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnImportingMapset(object sender, ImportingMapsetEventArgs e)
-            => Status.ScheduleUpdate(() => Status.Text = $"[{e.Index + 1}/{e.Queue.Count}] IMPORTING: \"{e.FileName}\"");
+            => SetProgress(new ImportProgressEventArgs("Importing Queued Mapsets", $"Importing: {e.FileName}", e.Index + 1, e.Queue.Count));
+
+        /// <summary>
+        ///     Updates the progress display from the import worker thread.
+        /// </summary>
+        /// <param name="progress"></param>
+        public void SetProgress(ImportProgressEventArgs progress)
+        {
+            Status.ScheduleUpdate(() =>
+            {
+                CurrentAction = GetActionText(progress);
+                CurrentDetails = progress.Details;
+
+                SetTextAndTruncate(Status, CurrentAction.ToUpper(), (int) ImportProgressBar.Width - 24);
+                SetTextAndTruncate(Details, CurrentDetails, (int) Banner.Width - 120);
+
+                ImportProgressBar.Bindable.Value = progress.Percentage;
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <returns></returns>
+        private static string GetActionText(ImportProgressEventArgs progress)
+        {
+            if (!progress.HasProgress)
+                return progress.Status;
+
+            return $"[{progress.Percentage:0}%] {progress.Status}";
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="value"></param>
+        /// <param name="maxWidth"></param>
+        private static void SetTextAndTruncate(SpriteTextPlus text, string value, int maxWidth)
+        {
+            text.Text = value;
+
+            if (!string.IsNullOrEmpty(text.Text) && text.Width > maxWidth)
+                text.TruncateWithEllipsis(maxWidth);
+        }
 
         /// <summary>
         ///     Creates <see cref="Background"/>
@@ -120,7 +181,7 @@ namespace Quaver.Shared.Screens.Importing
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(WindowManager.Width + 4, 180),
+                Size = new ScalableVector2(WindowManager.Width + 4, 240),
                 Tint = ColorHelper.HexToColor($"#242424")
             };
 
@@ -145,13 +206,41 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private void CreateStatusText()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "Performing Initial Processing".ToUpper(), 24)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), CurrentAction.ToUpper(), 22, false)
+            {
+                Parent = ImportProgressBar,
+                Alignment = Alignment.MidCenter,
+                Tint = Color.White
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateDetailsText()
+        {
+            Details = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), CurrentDetails, 21, false)
             {
                 Parent = Banner,
                 Alignment = Alignment.TopCenter,
-                Y = PleaseWaitText.Y + PleaseWaitText.Height + 16
+                Y = PleaseWaitText.Y + PleaseWaitText.Height + 18,
+                Tint = Color.LightGray
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateProgressBar()
+        {
+            var width = Math.Min(WindowManager.Width * 0.58f, 760);
+
+            ImportProgressBar = new ProgressBar(new Vector2(width, 36), 0, 100, 0, ColorHelper.HexToColor("#151515"), ColorHelper.HexToColor("#45D6F5"))
+            {
+                Parent = Banner,
+                Alignment = Alignment.TopCenter,
+                Y = Details.Y + Details.Height + 14
+            };
+
+            ImportProgressBar.AddBorder(ColorHelper.HexToColor("#45D6F5"), 2);
         }
 
         /// <summary>
@@ -162,8 +251,8 @@ namespace Quaver.Shared.Screens.Importing
             {
                 Parent = Banner,
                 Alignment = Alignment.TopCenter,
-                Y = Status.Y + Status.Height + 18,
-                Size = new ScalableVector2(50, 50)
+                Y = ImportProgressBar.Y + ImportProgressBar.Height + 22,
+                Size = new ScalableVector2(42, 42)
             };
         }
 
