@@ -6,12 +6,14 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Quaver.API.Enums;
 using Newtonsoft.Json;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -27,6 +29,8 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.API.Offsets;
+using Quaver.Shared.Online.API.Ranked;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Edit;
@@ -366,6 +370,8 @@ namespace Quaver.Shared.Database.Maps
             // Handle playlist import
             var playlistsMetadata = Queue.FindAll(f => f.EndsWith("metadata.json"));
             playlistsMetadata.ForEach(pl => Queue.Remove(pl));
+            var importedMaps = new ConcurrentBag<Map>();
+            var importOnlineInfo = Queue.Count == 0 ? new ImportOnlineInfo() : FetchImportOnlineInfo(progress);
 
             MapsetInfoRetriever.InfoUpdateEnabled = false;
 
@@ -420,7 +426,7 @@ namespace Quaver.Shared.Database.Maps
                         || file.IsSubDirectoryOf(ConfigManager.DataDirectory.Value))
                         File.Delete(file);
 
-                    selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
+                    selectedMap = InsertAndUpdateSelectedMap(extractDirectory, importedMaps);
 
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
 
@@ -518,6 +524,8 @@ namespace Quaver.Shared.Database.Maps
                 }
             });
 
+            ApplyImportOnlineInfo(importedMaps.ToList(), importOnlineInfo, progress);
+
             // delete temp folders
             ImportProgressEventArgs.Report(progress, "Cleaning Up Imported Files", $"Removing {tempFolders.Count} temporary import folders", 0, tempFolders.Count, false);
 
@@ -556,6 +564,94 @@ namespace Quaver.Shared.Database.Maps
             }
             else
                 MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == selectedMap?.Md5Checksum);
+        }
+
+        /// <summary>
+        ///     Fetches online map info that can be applied in bulk to imported maps.
+        /// </summary>
+        /// <param name="progress"></param>
+        private static ImportOnlineInfo FetchImportOnlineInfo(Action<ImportProgressEventArgs>? progress = null)
+        {
+            var info = new ImportOnlineInfo();
+
+            if (!OnlineManager.Connected)
+                return info;
+
+            ImportProgressEventArgs.Report(progress, "Checking Online Map Info", "Retrieving ranked statuses and online offsets", 0, 2, false);
+
+            try
+            {
+                var rankedResponse = new APIRequestRankedMapsets().ExecuteRequest();
+
+                if (rankedResponse?.Mapsets != null)
+                    info.RankedMapsets = rankedResponse.Mapsets.ToHashSet();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            ImportProgressEventArgs.Report(progress, "Checking Online Map Info", "Retrieved ranked statuses", 1, 2, false);
+
+            try
+            {
+                var offsetResponse = new APIRequestOnlineOffsets().ExecuteRequest();
+
+                if (offsetResponse?.Maps != null)
+                {
+                    foreach (var map in offsetResponse.Maps)
+                        info.OnlineOffsets[map.Id] = map.Offset;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            ImportProgressEventArgs.Report(progress, "Checking Online Map Info", "Retrieved online offsets", 2, 2, false);
+
+            return info;
+        }
+
+        /// <summary>
+        ///     Applies online info retrieved at the beginning of import to handled maps
+        /// </summary>
+        /// <param name="importedMaps"></param>
+        /// <param name="onlineInfo"></param>
+        /// <param name="progress"></param>
+        private static void ApplyImportOnlineInfo(List<Map> importedMaps, ImportOnlineInfo onlineInfo, Action<ImportProgressEventArgs>? progress = null)
+        {
+            importedMaps = importedMaps.FindAll(x => x.MapId != -1);
+
+            if (importedMaps.Count == 0)
+                return;
+
+            ImportProgressEventArgs.Report(progress, "Updating Imported Map Info", $"Updating {importedMaps.Count} imported maps", 0, importedMaps.Count, false);
+
+            for (var i = 0; i < importedMaps.Count; i++)
+            {
+                var map = importedMaps[i];
+                var updated = false;
+
+                var rankedStatus = onlineInfo.RankedMapsets.Contains(map.MapSetId) ? RankedStatus.Ranked : RankedStatus.Unranked;
+
+                if (map.RankedStatus != rankedStatus)
+                {
+                    map.RankedStatus = rankedStatus;
+                    updated = true;
+                }
+
+                if (onlineInfo.OnlineOffsets.TryGetValue(map.MapId, out var onlineOffset) && map.OnlineOffset != onlineOffset)
+                {
+                    map.OnlineOffset = onlineOffset;
+                    updated = true;
+                }
+
+                if (updated)
+                    MapDatabaseCache.UpdateMap(map);
+
+                ImportProgressEventArgs.Report(progress, "Updating Imported Map Info", $"Updated {map.Artist} - {map.Title} [{map.DifficultyName}]", i + 1, importedMaps.Count);
+            }
         }
 
         /// <summary>
@@ -612,7 +708,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Inserts an entire extracted directory of maps to the DB
         /// </summary>
         /// <param name="extractDirectory"></param>
-        private static Map InsertAndUpdateSelectedMap(string extractDirectory)
+        private static Map InsertAndUpdateSelectedMap(string extractDirectory, ConcurrentBag<Map> importedMaps)
         {
             // Go through each file in the directory and import it into the database.
             var quaFiles = Directory.GetFiles(extractDirectory, "*.qua", SearchOption.AllDirectories).ToList();
@@ -626,8 +722,11 @@ namespace Quaver.Shared.Database.Maps
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
 
                     map.CalculateDifficulties();
-                    MapDatabaseCache.InsertMap(map);
-                    MapsetInfoRetriever.Enqueue(map);
+                    map.Id = MapDatabaseCache.InsertMap(map);
+
+                    if (map.Id != -1)
+                        importedMaps.Add(map);
+
                     lastImported = map;
                 }
             }
@@ -643,6 +742,13 @@ namespace Quaver.Shared.Database.Maps
             }
 
             return lastImported;
+        }
+
+        private class ImportOnlineInfo
+        {
+            public HashSet<int> RankedMapsets { get; set; } = new HashSet<int>();
+
+            public Dictionary<int, int> OnlineOffsets { get; } = new Dictionary<int, int>();
         }
     }
 }
