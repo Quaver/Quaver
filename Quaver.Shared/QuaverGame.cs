@@ -426,7 +426,7 @@ namespace Quaver.Shared
             LimitFpsOnInactiveWindow();
             UpdateFpsCounterPosition();
 
-            Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
+            Window.AllowUserResizing = false;
         }
 
         /// <inheritdoc />
@@ -1044,21 +1044,39 @@ namespace Quaver.Shared
         }
 
         /// <summary>
+        /// Applies the configured game resolution and updates the virtual screen size
+        /// to maintain the correct aspect ratio. If the resolution changes, the current
+        /// screen is reloaded to ensure all UI elements and game components are recreated
+        /// with the new viewport settings. The game window is then centered on the active
+        /// display and the volume controller is recreated.
         /// </summary>
         public void ChangeResolution()
         {
             if (!QuaverWindowManager.CanChangeResolutionOnScene)
                 return;
 
-            if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
-                WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+            var targetWidth = ConfigManager.WindowWidth.Value;
+            var targetHeight = ConfigManager.WindowHeight.Value;
 
-            var ratio = (float)ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
+            if (Graphics.PreferredBackBufferWidth != targetWidth ||
+                Graphics.PreferredBackBufferHeight != targetHeight)
+            {
+                WindowManager.ChangeScreenResolution(new Point(targetWidth, targetHeight));
 
-            if (ratio >= 16 / 9f)
-                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
-            else
-                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
+                var ratio = (float)targetWidth / targetHeight;
+
+                if (ratio >= 16f / 9f)
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
+                else
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
+            }
+
+            Graphics.ApplyChanges();
+
+            var display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+            var x = Math.Max(0, (display.Width - targetWidth) / 2);
+            var y = Math.Max(0, (display.Height - targetHeight) / 2);
+            Window.Position = new Point(x, y);
 
             if (CurrentScreen == null)
                 return;
