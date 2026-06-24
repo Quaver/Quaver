@@ -108,6 +108,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private bool ShouldRefreshHistoryOnResume { get; set; }
 
+        /// <summary>
+        ///     Last visibility state applied by the chat overlay.
+        /// </summary>
+        private bool? AppliedVisibility { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -174,9 +179,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 ForceScrollToBottom = false;
             }
 
-            UpdateVisibleMessageDrawables();
-
             base.Update(gameTime);
+            UpdateVisibleMessageDrawables();
         }
 
         /// <summary>
@@ -216,6 +220,32 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
                 SubscribeToEvents();
             }
+        }
+
+        /// <summary>
+        ///     Applies the chat overlay visibility state while preserving this container's viewport culling.
+        /// </summary>
+        /// <param name="visible"></param>
+        public void ApplyVisibility(bool visible)
+        {
+            if (AppliedVisibility == visible && !visible)
+                return;
+
+            AppliedVisibility = visible;
+            SetDrawableTreeVisible(this, visible);
+
+            if (Pool == null)
+                return;
+
+            if (!visible)
+            {
+                foreach (var drawable in Pool.OfType<DrawableChatMessage>())
+                    drawable.SetScrollVisibility(false);
+
+                return;
+            }
+
+            UpdateVisibleMessageDrawables();
         }
 
         /// <inheritdoc />
@@ -419,8 +449,23 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                         AddContainedDrawable(drawable);
                     else if (!isVisible && drawable.Parent == ContentContainer)
                         RemoveContainedDrawable(drawable);
+
+                    if (drawable is DrawableChatMessage message)
+                        message.SetScrollVisibility(isVisible);
                 }
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
         }
 
         /// <summary>

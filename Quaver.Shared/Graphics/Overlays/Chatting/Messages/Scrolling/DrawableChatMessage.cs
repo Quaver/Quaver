@@ -50,6 +50,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private const int PADDING_X = 16;
 
+        private bool IsScrollVisible { get; set; } = true;
+
+        private bool IconShouldBeVisible { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -74,6 +78,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!IsScrollVisible)
+                return;
+
             var color = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
             Username.Tint = UsernameButton.IsHovered ? new Color(color.R / 2, color.G / 2, color.B / 2) : color;
             Icon.Tint = Username.Tint;
@@ -109,7 +116,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             else
                 Username.X = Time.X + Time.Width + PADDING_X / 2f;
 
-            Icon.Visible = icon != null;
+            IconShouldBeVisible = icon != null;
+            Icon.Visible = IsScrollVisible && IconShouldBeVisible;
 
             Username.Text = $"{Item.SenderName}:";
             Username.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
@@ -138,6 +146,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             UsernameButton.Size = new ScalableVector2(Username.Width + (Icon.Visible ? Icon.Width : 0) + PADDING_X / 2f, Username.Height);
 
             Height = Message.Height + 16;
+            ApplyScrollVisibility();
         }
 
         /// <summary>
@@ -246,6 +255,23 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 return FontAwesome.Get(FontAwesomeIcon.fa_heart_shape_silhouette);
 
             return null;
+        }
+
+        public void SetScrollVisibility(bool visible)
+        {
+            IsScrollVisible = visible;
+            ApplyScrollVisibility();
+        }
+
+        private void ApplyScrollVisibility()
+        {
+            Visible = IsScrollVisible;
+            Time.Visible = IsScrollVisible;
+            Icon.Visible = IsScrollVisible && IconShouldBeVisible;
+            Username.Visible = IsScrollVisible;
+            UsernameButton.Visible = IsScrollVisible;
+            UsernameButton.IsClickable = IsScrollVisible;
+            Message.Visible = IsScrollVisible;
         }
     }
 }
