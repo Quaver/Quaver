@@ -371,7 +371,6 @@ namespace Quaver.Shared.Database.Maps
             var playlistsMetadata = Queue.FindAll(f => f.EndsWith("metadata.json"));
             playlistsMetadata.ForEach(pl => Queue.Remove(pl));
             var importedMaps = new ConcurrentBag<Map>();
-            var importOnlineInfo = Queue.Count == 0 ? new ImportOnlineInfo() : FetchImportOnlineInfo(progress);
 
             MapsetInfoRetriever.InfoUpdateEnabled = false;
 
@@ -524,7 +523,12 @@ namespace Quaver.Shared.Database.Maps
                 }
             });
 
-            ApplyImportOnlineInfo(importedMaps.ToList(), importOnlineInfo, progress);
+            var importedMapsList = importedMaps.ToList();
+            var importOnlineInfo = OnlineManager.Connected && importedMapsList.Any(x => x.MapId != -1)
+                ? FetchImportOnlineInfo(progress)
+                : new ImportOnlineInfo();
+
+            ApplyImportOnlineInfo(importedMapsList, importOnlineInfo, progress);
 
             // delete temp folders
             ImportProgressEventArgs.Report(progress, "Cleaning Up Imported Files", $"Removing {tempFolders.Count} temporary import folders", 0, tempFolders.Count, false);
@@ -584,7 +588,9 @@ namespace Quaver.Shared.Database.Maps
                 var rankedResponse = new APIRequestRankedMapsets().ExecuteRequest();
 
                 if (rankedResponse?.Mapsets != null)
+                {
                     info.RankedMapsets = rankedResponse.Mapsets.ToHashSet();
+                }
             }
             catch (Exception e)
             {
@@ -610,11 +616,12 @@ namespace Quaver.Shared.Database.Maps
 
             ImportProgressEventArgs.Report(progress, "Checking Online Map Info", "Retrieved online offsets", 2, 2, false);
 
+            info.IsRetrieved = true;
             return info;
         }
 
         /// <summary>
-        ///     Applies online info retrieved at the beginning of import to handled maps
+        ///     Applies online info retrieved during import to handled maps
         /// </summary>
         /// <param name="importedMaps"></param>
         /// <param name="onlineInfo"></param>
@@ -623,7 +630,7 @@ namespace Quaver.Shared.Database.Maps
         {
             importedMaps = importedMaps.FindAll(x => x.MapId != -1);
 
-            if (importedMaps.Count == 0)
+            if (importedMaps.Count == 0 || (!onlineInfo.IsRetrieved && onlineInfo.OnlineOffsets.Count == 0))
                 return;
 
             ImportProgressEventArgs.Report(progress, "Updating Imported Map Info", $"Updating {importedMaps.Count} imported maps", 0, importedMaps.Count, false);
@@ -633,12 +640,15 @@ namespace Quaver.Shared.Database.Maps
                 var map = importedMaps[i];
                 var updated = false;
 
-                var rankedStatus = onlineInfo.RankedMapsets.Contains(map.MapSetId) ? RankedStatus.Ranked : RankedStatus.Unranked;
-
-                if (map.RankedStatus != rankedStatus)
+                if (onlineInfo.IsRetrieved)
                 {
-                    map.RankedStatus = rankedStatus;
-                    updated = true;
+                    var rankedStatus = onlineInfo.RankedMapsets.Contains(map.MapSetId) ? RankedStatus.Ranked : RankedStatus.Unranked;
+
+                    if (map.RankedStatus != rankedStatus)
+                    {
+                        map.RankedStatus = rankedStatus;
+                        updated = true;
+                    }
                 }
 
                 if (onlineInfo.OnlineOffsets.TryGetValue(map.MapId, out var onlineOffset) && map.OnlineOffset != onlineOffset)
@@ -746,6 +756,8 @@ namespace Quaver.Shared.Database.Maps
 
         private class ImportOnlineInfo
         {
+            public bool IsRetrieved { get; set; }
+
             public HashSet<int> RankedMapsets { get; set; } = new HashSet<int>();
 
             public Dictionary<int, int> OnlineOffsets { get; } = new Dictionary<int, int>();
