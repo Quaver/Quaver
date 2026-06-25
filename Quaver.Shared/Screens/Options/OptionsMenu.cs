@@ -128,6 +128,7 @@ namespace Quaver.Shared.Screens.Options
         private void CreateSections()
         {
             var containerRect = Content.ScreenRectangle;
+            var skinOptions = SkinStore.GetSkins();
 
             Sections = new List<OptionsSection>
             {
@@ -234,8 +235,8 @@ namespace Quaver.Shared.Screens.Options
                 {
                     new OptionsSubcategory("Selection", new List<OptionsItem>()
                     {
-                        new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin),
-                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin),
+                        new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin, skinOptions),
+                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin, skinOptions),
                         new OptionsItemDefaultSkin(containerRect, "Default Skin", ConfigManager.DefaultSkin)
                     }),
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()
