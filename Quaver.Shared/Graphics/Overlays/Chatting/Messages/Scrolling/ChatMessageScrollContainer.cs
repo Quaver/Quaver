@@ -10,6 +10,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
@@ -466,6 +467,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             foreach (var child in drawable.Children)
                 SetDrawableTreeVisible(child, visible);
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
         }
 
         /// <summary>
@@ -575,6 +579,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             if (ActiveRightClickOptions == null)
                 return;
 
+            ActiveRightClickOptions.Close(0);
             ActiveRightClickOptions.Visible = false;
             ActiveRightClickOptions.Parent = null;
             ActiveRightClickOptions.Destroy();
