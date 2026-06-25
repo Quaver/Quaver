@@ -30,6 +30,7 @@ using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics.Sprites;
@@ -1279,6 +1280,10 @@ namespace Quaver.Shared.Config
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
+
+            SkinDirectory.ValueChanged += (sender, args) => SkinStore.InvalidateSkinListCache();
+            SteamWorkshopDirectory.ValueChanged += (sender, args) => SkinStore.InvalidateSkinListCache();
+            SkinStore.QueueSkinListRefresh();
 
             WriteConfigFileAsync().Wait();
         }

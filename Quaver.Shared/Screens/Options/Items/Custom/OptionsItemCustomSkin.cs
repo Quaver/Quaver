@@ -25,10 +25,19 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 {
     public class OptionsItemCustomSkin : OptionsItemDropdown
     {
-        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin) : base(containerRect, name,
-            new Dropdown(GetOptions(), new ScalableVector2(300, 35), 22,
-            Colors.MainAccent, GetSelectedIndex(skin), 240, 700))
+        private Bindable<string> Skin { get; }
+
+        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin)
+            : this(containerRect, name, skin, GetOptions())
         {
+        }
+
+        private OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin, List<string> options) : base(containerRect, name,
+            new Dropdown(options, new ScalableVector2(300, 35), 22,
+            Colors.MainAccent, GetSelectedIndex(skin, options), 240, 700))
+        {
+            Skin = skin;
+
             Dropdown.ItemContainer.Scrollbar.Tint = Color.White;
             Dropdown.ItemContainer.Scrollbar.Width = 2;
 
@@ -36,21 +45,11 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             Dropdown.ItemContainer.TimeToCompleteScroll = 1200;
             Dropdown.ItemContainer.ScrollSpeed = 220;
 
-            foreach (var item in Dropdown.Items)
-            {
-                var option = Dropdown.Options[item.Index];
-
-                // Workshop Skin
-                if (option.Contains("<") && option.Contains(">"))
-                {
-                    item.Text.Tint = ColorHelper.HexToColor("#4798d6");
-                    item.Text.Text = item.Text.Text.Split("<")[0];
-                }
-            }
+            StyleWorkshopItems();
 
             Dropdown.ItemSelected += (sender, args) =>
             {
-                if (skin == null)
+                if (Skin == null)
                     return;
 
                 var option = Dropdown.Options[args.Index];
@@ -60,17 +59,28 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     var workshopId = option.Split("<")[1].Replace(">", "");
 
                     ConfigManager.UseSteamWorkshopSkin.Value = true;
-                    skin.Value = workshopId;
+                    Skin.Value = workshopId;
                 }
                 else
                 {
                     ConfigManager.UseSteamWorkshopSkin.Value = false;
-                    skin.Value = option;
+                    Skin.Value = option;
                 }
 
                 Transitioner.FadeIn();
                 SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
             };
+
+            SkinStore.SkinsRefreshed += OnSkinsRefreshed;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            SkinStore.SkinsRefreshed -= OnSkinsRefreshed;
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -93,12 +103,38 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             return SkinStore.GetSkins();
         }
 
-        private static int GetSelectedIndex(Bindable<string> skin)
+        private void OnSkinsRefreshed(object sender, EventArgs e)
+        {
+            AddScheduledUpdate(() =>
+            {
+                if (IsDisposed)
+                    return;
+
+                var options = GetOptions();
+                Dropdown.SetOptions(options, GetSelectedIndex(Skin, options));
+                StyleWorkshopItems();
+            });
+        }
+
+        private void StyleWorkshopItems()
+        {
+            foreach (var item in Dropdown.Items)
+            {
+                var option = Dropdown.Options[item.Index];
+
+                // Workshop Skin
+                if (option.Contains("<") && option.Contains(">"))
+                {
+                    item.Text.Tint = ColorHelper.HexToColor("#4798d6");
+                    item.Text.Text = item.Text.Text.Split("<")[0];
+                }
+            }
+        }
+
+        private static int GetSelectedIndex(Bindable<string> skin, List<string> options)
         {
             if (skin == null)
                 return 0;
-
-            var options = GetOptions();
 
             if (ConfigManager.UseSteamWorkshopSkin != null)
             {

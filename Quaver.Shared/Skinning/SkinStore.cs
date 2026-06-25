@@ -23,6 +23,7 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning.Menus;
 using Wobble;
 using Wobble.Assets;
@@ -59,6 +60,26 @@ namespace Quaver.Shared.Skinning
         // byte[].GetHashCode() is unreliable so we use int instead
         private readonly Dictionary<int, Texture2D> _textureCache = new();
         private int _cacheCount = 0;
+
+        /// <summary>
+        ///     Cached list of available skins, used by dropdown/menu call sites.
+        /// </summary>
+        private static List<string> CachedSkins { get; set; }
+
+        /// <summary>
+        ///     Lock for the available-skin cache.
+        /// </summary>
+        private static object CachedSkinsLock { get; } = new object();
+
+        /// <summary>
+        ///     Whether or not a background skin-list refresh is currently queued.
+        /// </summary>
+        private static bool SkinListRefreshQueued { get; set; }
+
+        /// <summary>
+        ///     Invoked when the available-skin cache is refreshed.
+        /// </summary>
+        internal static event EventHandler SkinsRefreshed;
 
         /// <summary>
         ///     The skin.ini file.
@@ -941,7 +962,81 @@ namespace Quaver.Shared.Skinning
 
         public static List<string> GetSkins()
         {
+            lock (CachedSkinsLock)
+            {
+                if (CachedSkins != null)
+                    return CachedSkins.ToList();
+            }
 
+            var skins = BuildSkinList(true);
+
+            lock (CachedSkinsLock)
+            {
+                CachedSkins = skins;
+            }
+
+            return skins.ToList();
+        }
+
+        /// <summary>
+        ///     Queues a background refresh of the available-skin cache.
+        /// </summary>
+        public static void QueueSkinListRefresh(bool force = false)
+        {
+            lock (CachedSkinsLock)
+            {
+                if (SkinListRefreshQueued)
+                    return;
+
+                if (!force && CachedSkins != null)
+                    return;
+
+                SkinListRefreshQueued = true;
+            }
+
+            ThreadScheduler.Run(() =>
+            {
+                List<string> skins = null;
+
+                try
+                {
+                    skins = BuildSkinList(false);
+                }
+                finally
+                {
+                    lock (CachedSkinsLock)
+                    {
+                        if (skins != null)
+                            CachedSkins = skins;
+
+                        SkinListRefreshQueued = false;
+                    }
+
+                    if (skins != null)
+                        SkinsRefreshed?.Invoke(typeof(SkinStore), EventArgs.Empty);
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Clears the available-skin cache and optionally queues a background refresh.
+        /// </summary>
+        public static void InvalidateSkinListCache(bool refresh = true)
+        {
+            lock (CachedSkinsLock)
+            {
+                CachedSkins = null;
+            }
+
+            if (refresh)
+                QueueSkinListRefresh(true);
+        }
+
+        /// <summary>
+        ///     Builds a fresh list of available skins.
+        /// </summary>
+        private static List<string> BuildSkinList(bool showNotifications)
+        {
             var options = new List<string> { "Default Skin" };
 
             if (ConfigManager.SkinDirectory == null)
@@ -949,32 +1044,43 @@ namespace Quaver.Shared.Skinning
 
             var skins = new List<string>();
 
-            var skinDirectories = Directory.GetDirectories(ConfigManager.SkinDirectory.Value);
+            if (Directory.Exists(ConfigManager.SkinDirectory.Value))
+            {
+                var skinDirectories = Directory.GetDirectories(ConfigManager.SkinDirectory.Value);
 
-            var dirs = skinDirectories.Select(dir => new DirectoryInfo(dir).Name);
-            skins.AddRange(dirs.ToList());
-
-            var workshopDirectories = Directory.GetDirectories(ConfigManager.SteamWorkshopDirectory.Value);
+                var dirs = skinDirectories.Select(dir => new DirectoryInfo(dir).Name);
+                skins.AddRange(dirs.ToList());
+            }
 
             var workshopList = new List<string>();
 
-            foreach (var directory in workshopDirectories)
+            if (ConfigManager.SteamWorkshopDirectory != null && Directory.Exists(ConfigManager.SteamWorkshopDirectory.Value))
             {
-                if (File.Exists($"{directory}/skin.ini"))
+                var workshopDirectories = Directory.GetDirectories(ConfigManager.SteamWorkshopDirectory.Value);
+
+                foreach (var directory in workshopDirectories)
                 {
-                    try
+                    if (File.Exists($"{directory}/skin.ini"))
                     {
-                        var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
-                            .ReadFile($"{directory}/skin.ini")["General"];
-                        if (data["Name"] != null)
-                            workshopList.Add($"{data["Name"]} <{new DirectoryInfo(directory).Name}>");
-                    }
-                    catch (ParsingException e)
-                    {
-                        Logger.Error($"Workshop skin at {directory} has an invalid skin.ini: {e}", LogType.Runtime);
-                        NotificationManager.Show(NotificationLevel.Error,
-                            $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
-                        workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
+                        try
+                        {
+                            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                                .ReadFile($"{directory}/skin.ini")["General"];
+                            if (data["Name"] != null)
+                                workshopList.Add($"{data["Name"]} <{new DirectoryInfo(directory).Name}>");
+                        }
+                        catch (ParsingException e)
+                        {
+                            Logger.Error($"Workshop skin at {directory} has an invalid skin.ini: {e}", LogType.Runtime);
+
+                            if (showNotifications)
+                            {
+                                NotificationManager.Show(NotificationLevel.Error,
+                                    $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
+                            }
+
+                            workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
+                        }
                     }
                 }
             }
