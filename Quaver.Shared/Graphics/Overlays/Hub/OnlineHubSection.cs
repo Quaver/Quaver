@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -64,6 +65,30 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         {
             Container.Height = Hub.Height - Hub.IconContainer.Height - Hub.IconContainer.Y;
             AnimateIcon();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="visible"></param>
+        public virtual void ApplyVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(Container, visible);
+            SetDrawableTreeVisible(Icon, visible);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        protected static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
         }
 
         /// <summary>

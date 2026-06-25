@@ -46,6 +46,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         {
             Dropdown = dropdown;
             Index = index;
+            SetChildrenVisibility = true;
 
             Size = Dropdown.Size;
             Tint = ColorHelper.HexToColor("#181818");

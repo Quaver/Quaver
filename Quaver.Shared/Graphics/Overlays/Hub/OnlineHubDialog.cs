@@ -95,6 +95,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// </summary>
         public override void Destroy()
         {
+            Hub.ApplyClosedVisibility();
+            Chat.ApplyClosedVisibility();
+
             Hub.Parent = null;
             Chat.Parent = null;
 

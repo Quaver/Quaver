@@ -61,6 +61,9 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         public override void Update(GameTime gameTime)
         {
+            if (!Visible)
+                return;
+
             if (Banner != null && Banner.Animations.Count == 0)
             {
                 Banner.Alpha = Alpha;
@@ -118,16 +121,18 @@ namespace Quaver.Shared.Screens.Main.UI.News
                 {
                     Logger.Error(e, LogType.Runtime);
 
-                    Wheel.ClearAnimations();
-                    Wheel.FadeTo(0, Easing.Linear, 450);
+                    ScheduleUpdate(Hide);
                 }
             });
         }
 
         private void Initialize(APIResponseNewsFeed newsFeed)
         {
-            if (newsFeed.Items.Count == 0)
+            if (newsFeed?.Items == null || newsFeed.Items.Count == 0)
+            {
+                Hide();
                 return;
+            }
 
             var latestPost = newsFeed.Items.First();
 
@@ -210,5 +215,14 @@ namespace Quaver.Shared.Screens.Main.UI.News
             Size = new ScalableVector2(Width - 4, Height - 4),
             Alpha = 0
         };
+
+        private void Hide()
+        {
+            ClearAnimations();
+            Wheel?.ClearAnimations();
+
+            IsClickable = false;
+            Visible = false;
+        }
     }
 }

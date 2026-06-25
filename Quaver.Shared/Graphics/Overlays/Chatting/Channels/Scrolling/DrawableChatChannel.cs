@@ -99,14 +99,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
             Item = item;
             Index = index;
 
-            AddScheduledUpdate(() =>
-            {
-                Name.Text = Item.GetDisplayedName();
-                Name.Tint = GetTextColor();
+            Name.Text = Item.GetDisplayedName();
+            Name.Tint = GetTextColor();
 
-                MentionedIcon.X = Name.X + Name.Width + 8;
-                MentionedIcon.Visible = Item.IsMentioned;
-            });
+            MentionedIcon.X = Name.X + Name.Width + 8;
+            MentionedIcon.Visible = Item.IsMentioned;
         }
 
         /// <summary>

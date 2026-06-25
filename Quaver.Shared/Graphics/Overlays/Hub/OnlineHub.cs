@@ -4,10 +4,12 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
 using Quaver.Shared.Graphics.Overlays.Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling;
 using Quaver.Shared.Graphics.Overlays.Hub.SongRequests;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
@@ -27,6 +29,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         ///     If the hub is currently open
         /// </summary>
         public bool IsOpen { get; private set; }
+
+        /// <summary>
+        ///     If the closed visibility state has been applied after the close animation.
+        /// </summary>
+        private bool IsClosedVisibilityApplied { get; set; }
 
         /// <summary>
         /// </summary>
@@ -70,6 +77,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             CreateHeaderText();
             CreateIconContainer();
             CreateSections();
+            ApplyClosedVisibility();
         }
 
         /// <inheritdoc />
@@ -83,6 +91,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             foreach (var section in Sections)
                 section.Value.Update(gameTime);
 
+            HandleClosedVisibility();
+
             base.Update(gameTime);
         }
 
@@ -92,6 +102,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         public void Open()
         {
             IsOpen = true;
+            IsClosedVisibilityApplied = false;
+            SetHubVisibility(true);
 
             ClearAnimations();
             MoveToX(0, Easing.OutQuint, 500);
@@ -103,9 +115,75 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         public void Close()
         {
             IsOpen = false;
+            IsClosedVisibilityApplied = false;
+
+            CloseDropdowns(this);
+
+            foreach (var section in Sections.Values)
+                CloseDropdowns(section.Container);
 
             ClearAnimations();
             MoveToX(Width + 10, Easing.OutQuint, 500);
+        }
+
+        /// <summary>
+        ///     Immediately finishes dropdown close animations before the retained hub is hidden.
+        /// </summary>
+        private static void CloseDropdowns(Drawable drawable)
+        {
+            if (drawable is OnlineUserContainer onlineUsers)
+                onlineUsers.DismissActiveRightClickOptions();
+
+            if (drawable is Dropdown dropdown)
+                dropdown.Close(0);
+
+            foreach (var child in drawable.Children)
+                CloseDropdowns(child);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleClosedVisibility()
+        {
+            if (IsOpen || Animations.Count != 0 || IsClosedVisibilityApplied)
+                return;
+
+            ApplyClosedVisibility();
+        }
+
+        /// <summary>
+        ///     Immediately applies the closed visibility state to the retained hub drawable trees.
+        /// </summary>
+        public void ApplyClosedVisibility()
+        {
+            SetHubVisibility(false);
+            IsClosedVisibilityApplied = true;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="visible"></param>
+        private void SetHubVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(this, visible);
+
+            foreach (var section in Sections.Values.ToList())
+                section.ApplyVisibility(visible);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
         }
 
         /// <summary>

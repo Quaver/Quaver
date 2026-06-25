@@ -10,6 +10,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
@@ -93,6 +94,26 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         public RightClickOptions ActiveRightClickOptions { get; private set; }
 
+        /// <summary>
+        ///     If this container is subscribed to online chat message events.
+        /// </summary>
+        private bool IsSubscribedToChatEvents { get; set; }
+
+        /// <summary>
+        ///     If chat message event processing is currently suspended.
+        /// </summary>
+        private bool IsEventProcessingSuspended { get; set; }
+
+        /// <summary>
+        ///     If message history should be refreshed when chat processing resumes.
+        /// </summary>
+        private bool ShouldRefreshHistoryOnResume { get; set; }
+
+        /// <summary>
+        ///     Last visibility state applied by the chat overlay.
+        /// </summary>
+        private bool? AppliedVisibility { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -127,7 +148,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 OnlineManager.Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
 
                 if (OnlineManager.Connected)
-                    OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+                    SubscribeToEvents();
             }
         }
 
@@ -159,17 +180,73 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 ForceScrollToBottom = false;
             }
 
-            UpdateVisibleMessageDrawables();
-
             base.Update(gameTime);
+            UpdateVisibleMessageDrawables();
         }
 
         /// <summary>
         /// </summary>
         public override void Destroy()
         {
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnConnectionStatusChanged -= OnConnectionStatusChanged;
+
             UnsubscribeFromEvents();
             base.Destroy();
+        }
+
+        /// <summary>
+        ///     Suspends or resumes chat message event processing for this channel.
+        /// </summary>
+        /// <param name="suspended"></param>
+        public void SetEventProcessingSuspended(bool suspended)
+        {
+            if (IsEventProcessingSuspended == suspended)
+                return;
+
+            IsEventProcessingSuspended = suspended;
+
+            if (suspended)
+            {
+                ShouldRefreshHistoryOnResume = true;
+                UnsubscribeFromEvents();
+            }
+            else if (OnlineManager.Connected)
+            {
+                if (ShouldRefreshHistoryOnResume)
+                {
+                    HasRequestedMessageHistory = false;
+                    ShouldRefreshHistoryOnResume = false;
+                }
+
+                SubscribeToEvents();
+            }
+        }
+
+        /// <summary>
+        ///     Applies the chat overlay visibility state while preserving this container's viewport culling.
+        /// </summary>
+        /// <param name="visible"></param>
+        public void ApplyVisibility(bool visible)
+        {
+            if (AppliedVisibility == visible && !visible)
+                return;
+
+            AppliedVisibility = visible;
+            SetDrawableTreeVisible(this, visible);
+
+            if (Pool == null)
+                return;
+
+            if (!visible)
+            {
+                foreach (var drawable in Pool.OfType<DrawableChatMessage>())
+                    drawable.SetScrollVisibility(false);
+
+                return;
+            }
+
+            UpdateVisibleMessageDrawables();
         }
 
         /// <inheritdoc />
@@ -373,8 +450,26 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                         AddContainedDrawable(drawable);
                     else if (!isVisible && drawable.Parent == ContentContainer)
                         RemoveContainedDrawable(drawable);
+
+                    if (drawable is DrawableChatMessage message)
+                        message.SetScrollVisibility(isVisible);
                 }
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
         }
 
         /// <summary>
@@ -484,6 +579,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             if (ActiveRightClickOptions == null)
                 return;
 
+            ActiveRightClickOptions.Close(0);
             ActiveRightClickOptions.Visible = false;
             ActiveRightClickOptions.Parent = null;
             ActiveRightClickOptions.Destroy();
@@ -525,15 +621,22 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void SubscribeToEvents()
         {
+            if (IsSubscribedToChatEvents || IsEventProcessingSuspended || OnlineManager.Client == null)
+                return;
+
             OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+            IsSubscribedToChatEvents = true;
         }
 
         /// <summary>
         /// </summary>
         private void UnsubscribeFromEvents()
         {
-            if (OnlineManager.Client != null)
-                OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            if (!IsSubscribedToChatEvents || OnlineManager.Client == null)
+                return;
+
+            OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            IsSubscribedToChatEvents = false;
         }
 
         /// <summary>
