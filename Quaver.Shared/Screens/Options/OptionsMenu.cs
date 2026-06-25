@@ -82,8 +82,6 @@ namespace Quaver.Shared.Screens.Options
             SelectedSection.ValueChanged += OnSectionChanged;
             CurrentSearchQuery.ValueChanged += OnSearchChanged;
 
-            SkinStore.QueueSkinListRefresh(true);
-
             DestroyIfParentIsNull = false;
         }
 
