@@ -117,6 +117,10 @@ namespace Quaver.Shared.Screens.Selection
             InitialActiveLeftPanel = activeLeftPanel;
             IsMultiplayer = OnlineManager.CurrentGame != null;
 
+            // The paused modifier is gameplay-only state and should never persist into song select.
+            if (ModManager.IsActivated(ModIdentifier.Paused))
+                ModManager.RemoveMod(ModIdentifier.Paused);
+
             // Go to the import screen if we've imported a map not on the select screen
             if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
                                                || MapDatabaseCache.MapsToUpdate.Count != 0)
