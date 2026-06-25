@@ -454,10 +454,6 @@ namespace Quaver.Shared.Screens.Gameplay
             NextSoundEffectIndex = 0;
             UpdateNextSoundEffectIndex();
 
-            // Remove paused modifier if enabled.
-            if (ModManager.IsActivated(ModIdentifier.Paused))
-                ModManager.RemoveMod(ModIdentifier.Paused);
-
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
                 LoadedReplay = ReplayHelper.GeneratePerfectReplay(map, MapHash);
