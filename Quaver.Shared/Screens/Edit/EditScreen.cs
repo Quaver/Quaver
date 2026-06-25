@@ -1529,6 +1529,35 @@ namespace Quaver.Shared.Screens.Edit
                 $"The cached data for this file will be updated when you leave the editor.");
         }
 
+        public void ToggleScrollVelocityLines()
+        {
+            if (Exiting)
+                return;
+
+            if (ActionManager.HasUnsavedChanges)
+            {
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "Save your changes before toggling SV lines. The editor needs to reload.");
+                return;
+            }
+
+            var time = Track.Time;
+            var wasPlaying = Track.IsPlaying;
+
+            ConfigManager.EditorShowScrollVelocityLines.Value = !ConfigManager.EditorShowScrollVelocityLines.Value;
+
+            Exit(() =>
+            {
+                var track = AudioEngine.LoadMapAudioTrack(Map);
+                track.Seek(time);
+
+                if (wasPlaying)
+                    track.Play();
+
+                return new EditScreen(Map, track);
+            });
+        }
+
         /// <summary>
         ///     Exits the editor and returns to song select
         /// </summary>

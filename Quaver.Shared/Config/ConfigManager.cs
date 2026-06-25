@@ -546,6 +546,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EditorColorSvLineByTimingGroup { get; private set; }
 
         /// <summary>
+        ///     If true, SV editor lines will be displayed.
+        /// </summary>
+        internal static Bindable<bool> EditorShowScrollVelocityLines { get; private set; }
+
+        /// <summary>
         /// </summary>
         internal static Bindable<bool> LobbyFilterHasPassword { get; private set; }
 
@@ -1167,6 +1172,7 @@ namespace Quaver.Shared.Config
             ReceptorsOverLaneCover = ReadValue(@"ReceptorsOverLaneCover", false, data);
             EditorObjectColoring = ReadValue(@"EditorObjectColoring", HitObjectColoring.None, data);
             EditorColorSvLineByTimingGroup = ReadValue(@"EditorColorSVLineByTimingGroup", true, data);
+            EditorShowScrollVelocityLines = ReadValue(@"EditorShowScrollVelocityLines", true, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
             LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);

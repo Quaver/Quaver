@@ -819,6 +819,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem($"Color SV Lines By Timing Group", "", ConfigManager.EditorColorSvLineByTimingGroup.Value))
                 ConfigManager.EditorColorSvLineByTimingGroup.Value = !ConfigManager.EditorColorSvLineByTimingGroup.Value;
 
+            if (ImGui.MenuItem($"Show SV Lines", "", ConfigManager.EditorShowScrollVelocityLines.Value))
+                Screen.ToggleScrollVelocityLines();
+
             ImGui.Separator();
 
             if (ImGui.MenuItem("Test Play Modifiers", ""))
