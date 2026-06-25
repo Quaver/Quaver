@@ -167,6 +167,10 @@ namespace Quaver.Shared.Screens.Results
 
             SetDiscordRichPresence();
             View = new ResultsScreenView(this);
+
+            // Remove paused modifier if enabled.
+            if (ModManager.IsActivated(ModIdentifier.Paused))
+                ModManager.RemoveMod(ModIdentifier.Paused);
         }
 
         /// <summary>
