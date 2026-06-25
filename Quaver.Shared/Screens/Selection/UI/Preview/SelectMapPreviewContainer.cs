@@ -408,7 +408,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         protected void RunLoadTask(bool force = false)
         {
-            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview || MapManager.Selected.Value == null)
+            if (MapManager.Selected.Value == null)
+                return;
+
+            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview && (!force || LoadedGameplayScreen == null))
                 return;
 
             if (!force && LoadedGameplayScreen != null && !LoadedGameplayScreen.IsDisposed &&
@@ -459,16 +462,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 });
             }
 
-            if (changedModsIsNone)
+            if (changedModsIsNone && e.Type != ModChangeType.RemoveSpeed)
                 return;
 
-            var reloadTriggers = e.ChangedMods
-                                 & ~ModIdentifier.SpeedMods
-                                 & ~ModIdentifier.Autoplay
-                                 & ~ModIdentifier.Coop
-                                 & ~ModIdentifier.Randomize;
-
-            if (reloadTriggers != 0) //  once again why is ModIdentifier.None not 0
+            if (LoadedGameplayScreen != null)
                 RunLoadTask(true);
         }
 
