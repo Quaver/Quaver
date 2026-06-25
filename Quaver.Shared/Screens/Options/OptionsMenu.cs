@@ -76,6 +76,7 @@ namespace Quaver.Shared.Screens.Options
             CreateContentContainers();
             CreateHeader();
 
+            HideAllSectionItems();
             SelectedSection.Value = Sections.Find(x => x.Name == LastOpenedSection) ?? Sections.First();
             SetActiveContentContainer();
             SelectedSection.ValueChanged += OnSectionChanged;
@@ -398,6 +399,20 @@ namespace Quaver.Shared.Screens.Options
             SelectedSection = new Bindable<OptionsSection>(Sections.First()) { Value = Sections.First() };
         }
 
+        private void HideAllSectionItems()
+        {
+            foreach (var section in Sections)
+            {
+                foreach (var subcategory in section.Subcategories)
+                {
+                    foreach (var item in subcategory.Items)
+                    {
+                        item.ApplyVisibility(false);
+                    }
+                }
+            }
+        }
+
         private static List<OptionsItem> CreateAdvancedVideoOptions(RectangleF containerRect)
         {
             var options = new List<OptionsItem>
@@ -528,7 +543,12 @@ namespace Quaver.Shared.Screens.Options
                 ContentContainers.Add(SelectedSection.Value, new OptionsContentContainer(SelectedSection.Value, Content.Size));
 
             foreach (var container in ContentContainers)
-                container.Value.Parent = SelectedSection.Value == container.Key ? Content : null;
+            {
+                var active = SelectedSection.Value == container.Key;
+
+                container.Value.ApplyVisibility(active);
+                container.Value.Parent = active ? Content : null;
+            }
         }
 
         /// <summary>
