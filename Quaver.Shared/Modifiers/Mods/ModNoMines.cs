@@ -18,13 +18,13 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
-        public bool OnlyMultiplayerHostCanCanChange { get; set; } = true;
+        public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public bool ChangesMapObjects { get; set; } = true;
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
 
-        public Color ModColor { get; } = ColorHelper.HexToColor("#F2994A");
+        public Color ModColor { get; } = ColorHelper.HexToColor("#EB5757");
 
         public void InitializeMod() { }
     }
