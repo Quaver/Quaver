@@ -506,6 +506,12 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
         {
+            if (e.Response.Status < 200 || e.Response.Status >= 300)
+            {
+                Logger.Important($"Could not retrieve scores and ranked status for: {e.Id} | {e.Md5}, status code: {e.Response.Status}", LogType.Network);
+                return;
+            }
+
             Logger.Important($"Retrieved scores and ranked status for: {e.Id} | {e.Md5}", LogType.Network);
 
             try
