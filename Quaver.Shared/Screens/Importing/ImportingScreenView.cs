@@ -175,7 +175,7 @@ namespace Quaver.Shared.Screens.Importing
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(WindowManager.Width + 4, 240),
+                Size = new ScalableVector2(WindowManager.Width + 4, 170),
                 Tint = ColorHelper.HexToColor($"#242424")
             };
 
@@ -191,7 +191,7 @@ namespace Quaver.Shared.Screens.Importing
             {
                 Parent = Banner,
                 Alignment = Alignment.TopCenter,
-                Y = 54,
+                Y = 24,
                 Tint = ColorHelper.HexToColor("#F2C94C")
             };
         }
