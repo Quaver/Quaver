@@ -14,7 +14,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Removes mines from the map.";
 
-        public bool Ranked() => true;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
