@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
@@ -48,7 +50,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular, Name)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Name)
             {
                 Parent = DialogBox,
                 Y = -25,

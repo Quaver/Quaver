@@ -9,6 +9,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
@@ -32,12 +34,12 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
         /// <summary>
         ///     The title of the panel.
         /// </summary>
-        public SpriteTextBitmap Title { get; private set; }
+        public SpriteTextPlus Title { get; private set; }
 
         /// <summary>
         ///     The description of the panel.
         /// </summary>
-        public SpriteTextBitmap Description { get; private set; }
+        public SpriteTextPlus Description { get; private set; }
 
         /// <summary>
         ///     The original size of the panel.
@@ -140,7 +142,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
         ///     Creates the text that displays the title of the panel.
         /// </summary>
         /// <param name="title"></param>
-        private void CreateTitleText(string title) => Title = new SpriteTextBitmap(FontsBitmap.GothamBold, title.ToUpper())
+        private void CreateTitleText(string title) => Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title.ToUpper())
         {
             Parent = HeadingContainer,
             Alignment = Alignment.TopLeft,
@@ -155,7 +157,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
         ///     Creates the text that displays the description of the panel.
         /// </summary>
         /// <param name="description"></param>
-        private void CreateDescriptionText(string description) => Description = new SpriteTextBitmap(FontsBitmap.GothamRegular,
+        private void CreateDescriptionText(string description) => Description = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
             description)
         {
             Parent = HeadingContainer,

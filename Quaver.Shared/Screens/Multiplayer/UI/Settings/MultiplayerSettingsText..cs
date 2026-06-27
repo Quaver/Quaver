@@ -1,5 +1,7 @@
 using System;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Wobble.Graphics.Sprites;
 
@@ -13,7 +15,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
 
         /// <summary>
         /// </summary>
-        public SpriteTextBitmap Value { get; set; }
+        public SpriteTextPlus Value { get; set; }
 
         /// <summary>
         /// </summary>
@@ -29,7 +31,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
             CreateDialog = createDialog;
             Name = name;
 
-            Value = new SpriteTextBitmap(FontsBitmap.GothamRegular, value)
+            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), value)
             {
                 FontSize = 16
             };

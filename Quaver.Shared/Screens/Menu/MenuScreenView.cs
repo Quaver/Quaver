@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
@@ -275,7 +277,7 @@ namespace Quaver.Shared.Screens.Menu
         {
             Footer = new MenuFooter(new List<ButtonText>()
             {
-                new ButtonText(FontsBitmap.GothamRegular, "Quit Game", 14, (sender, args) =>
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Quit Game", 14, (sender, args) =>
                 {
                     DialogManager.Show(new ConfirmCancelDialog("Are you sure you want to exit Quaver?", (o, ex) =>
                     {
@@ -283,8 +285,8 @@ namespace Quaver.Shared.Screens.Menu
                         game?.Exit();
                     }));
                 }),
-                new ButtonText(FontsBitmap.GothamRegular, "Options", 14, (sender, args) => DialogManager.Show(new OptionsDialog())),
-                new ButtonText(FontsBitmap.GothamRegular, "Chat", 14, (sender, args) =>
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Options", 14, (sender, args) => DialogManager.Show(new OptionsDialog())),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Chat", 14, (sender, args) =>
                 {
                     if (OnlineManager.Status.Value != ConnectionStatus.Connected)
                     {
@@ -292,7 +294,7 @@ namespace Quaver.Shared.Screens.Menu
                         return;
                     }
                 }),
-                new ButtonText(FontsBitmap.GothamRegular, "Download Maps", 14, (sender, args) =>
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Download Maps", 14, (sender, args) =>
                 {
                     if (OnlineManager.Status.Value != ConnectionStatus.Connected)
                     {
@@ -305,10 +307,10 @@ namespace Quaver.Shared.Screens.Menu
                 }),
             }, new List<ButtonText>()
             {
-                new ButtonText(FontsBitmap.GothamRegular, "Report Bugs", 14, (sender, args) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
-                new ButtonText(FontsBitmap.GothamRegular, "Discord", 14, (sender, args) => BrowserHelper.OpenURL("https://discord.gg/nJa8VFr")),
-                new ButtonText(FontsBitmap.GothamRegular, "Twitter", 14, (sender, args) => BrowserHelper.OpenURL("https://twitter.com/QuaverGame")),
-                new ButtonText(FontsBitmap.GothamRegular, "Website", 14, (sender, args) => BrowserHelper.OpenURL("https://quavergame.com")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Report Bugs", 14, (sender, args) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Discord", 14, (sender, args) => BrowserHelper.OpenURL("https://discord.gg/nJa8VFr")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Twitter", 14, (sender, args) => BrowserHelper.OpenURL("https://twitter.com/QuaverGame")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Website", 14, (sender, args) => BrowserHelper.OpenURL("https://quavergame.com")),
             }, Colors.MainAccent)
             {
                 Parent = Container,

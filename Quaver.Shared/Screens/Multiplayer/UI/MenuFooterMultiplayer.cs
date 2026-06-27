@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
@@ -76,7 +78,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateReadyUpButton()
         {
-            ReadyUp = new ButtonText(FontsBitmap.GothamRegular,
+            ReadyUp = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack),
                 OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser ? "start match" : "ready up", 14, (o, e) =>
                 {
                     if (OnlineManager.CurrentGame.InProgress)
@@ -127,7 +129,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateSelectMapButton()
         {
-            SelectMap = new ButtonText(FontsBitmap.GothamRegular, "select map", 14, (o, e) =>
+            SelectMap = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "select map", 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.InProgress)
                 {
@@ -302,7 +304,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateModifiersButton()
         {
-            SelectModifiers = new ButtonText(FontsBitmap.GothamRegular, "Modifiers", 14, (o, e) =>
+            SelectModifiers = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Modifiers", 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.InProgress)
                 {
@@ -322,7 +324,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         private void CreateChangeTeamButton()
         {
-            ChangeTeam = new ButtonText(FontsBitmap.GothamRegular, "Change Team", 14, (o, e) =>
+            ChangeTeam = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Change Team", 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
                 {

@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Config;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -21,12 +23,12 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// <summary>
         ///     The bolded text that says "Tip:"
         /// </summary>
-        public SpriteTextBitmap TextTip { get; private set; }
+        public SpriteTextPlus TextTip { get; private set; }
 
         /// <summary>
         ///     The actual content of the tip.
         /// </summary>
-        public SpriteTextBitmap TextTipContent { get; private set; }
+        public SpriteTextPlus TextTipContent { get; private set; }
 
         /// <summary>
         ///     The amount of time this tip has been active.
@@ -115,7 +117,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTip()
         {
-            TextTip = new SpriteTextBitmap(FontsBitmap.GothamBold, "TIP:")
+            TextTip = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "TIP:")
             {
                 Alignment = Alignment.MidLeft,
                 X = 5,
@@ -130,7 +132,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTipContent()
         {
-            TextTipContent = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
+            TextTipContent = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), " ")
             {
                 Alignment = Alignment.MidLeft,
                 FontSize = 14

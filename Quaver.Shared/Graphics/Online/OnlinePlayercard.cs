@@ -5,6 +5,8 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Helpers;
@@ -37,15 +39,15 @@ namespace Quaver.Shared.Graphics.Online
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Username { get; }
+        private SpriteTextPlus Username { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap GameMode { get; }
+        private SpriteTextPlus GameMode { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Status { get; }
+        private SpriteTextPlus Status { get; }
 
         /// <summary>
         /// </summary>
@@ -101,7 +103,7 @@ namespace Quaver.Shared.Graphics.Online
                 Image = Flags.Get("XX")
             };
 
-            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, ConfigManager.Username.Value)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ConfigManager.Username.Value)
             {
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
@@ -109,7 +111,7 @@ namespace Quaver.Shared.Graphics.Online
                 FontSize = 20
             };
 
-            GameMode = new SpriteTextBitmap(FontsBitmap.GothamRegular, ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value))
+            GameMode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value))
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
@@ -118,7 +120,7 @@ namespace Quaver.Shared.Graphics.Online
                 Tint = Colors.SecondaryAccent,
             };
 
-            Status = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Offline")
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Offline")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

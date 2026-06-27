@@ -334,9 +334,6 @@ namespace Quaver.Shared
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
 
-#if VISUAL_TESTS
-            HotLoaderGame.Font = FontsBitmap.CodeProBold;
-#endif
             base.Initialize();
         }
 
@@ -373,7 +370,6 @@ namespace Quaver.Shared
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
             base.UnloadContent();
-            OnlineManager.Client?.Disconnect();
             SteamAPI.Shutdown();
         }
 

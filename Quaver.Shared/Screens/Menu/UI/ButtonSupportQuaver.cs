@@ -1,7 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.BitmapFonts;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Helpers;
@@ -16,7 +17,7 @@ namespace Quaver.Shared.Screens.Menu.UI
     {
         private Sprite Heart { get; }
 
-        public ButtonSupportQuaver() : base(FontsBitmap.GothamRegular, "Support Quaver", 14)
+        public ButtonSupportQuaver() : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "Support Quaver", 14)
         {
             Heart = new Sprite()
             {

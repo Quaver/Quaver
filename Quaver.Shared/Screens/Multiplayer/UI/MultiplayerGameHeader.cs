@@ -1,5 +1,7 @@
 using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
@@ -11,7 +13,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
     {
         private PausePlayButton PausePlayButton { get; }
 
-        private SpriteTextBitmap RoomName { get; }
+        private SpriteTextPlus RoomName { get; }
 
         public MultiplayerGameHeader()
             : base(new ScalableVector2(650, 36), new ScalableVector2(650, 36))
@@ -25,7 +27,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Size = new ScalableVector2(20, 20)
             };
 
-            RoomName = new SpriteTextBitmap(FontsBitmap.GothamRegular, OnlineManager.CurrentGame.Name)
+            RoomName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), OnlineManager.CurrentGame.Name)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
