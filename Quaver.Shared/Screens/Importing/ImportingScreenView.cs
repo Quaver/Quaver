@@ -233,13 +233,14 @@ namespace Quaver.Shared.Screens.Importing
         {
             var width = Math.Min(WindowManager.Width * 0.58f, 760);
 
-            ImportProgressBar = new ProgressBar(new Vector2(width, 36), 0, 100, 0, ColorHelper.HexToColor("#151515"), ColorHelper.HexToColor("#45D6F5"))
+            ImportProgressBar = new ProgressBar(new Vector2(width, 36), 0, 100, 0, ColorHelper.HexToColor("#151515"), ColorHelper.HexToColor("#128AA4"))
             {
                 Parent = Banner,
                 Alignment = Alignment.TopCenter,
                 Y = Details.Y + Details.Height + 14
             };
 
+            ImportProgressBar.ActiveBar.Alpha = 0.8f;
             ImportProgressBar.AddBorder(ColorHelper.HexToColor("#45D6F5"), 2);
         }
 
