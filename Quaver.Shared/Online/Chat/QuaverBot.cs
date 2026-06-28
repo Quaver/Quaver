@@ -113,16 +113,6 @@ namespace Quaver.Shared.Online.Chat
             channel.QueueMessage(chatMessage);
         }
 
-        /// <summary>
-        ///     Sends a message to the user in chat letting them know they're muted.
-        /// </summary>
-        public static void SendMutedMessage()
-        {
-            SendMessage(OnlineChat.Instance.ActiveChannel.Value, "Whoa there! Unfortunately you're muted for another: " +
-                                             $"{OnlineManager.Self.GetMuteTimeLeftString()}.\n" +
-                                            "You won't be able to speak 'till then. Check your profile for more details.");
-        }
-
         private static async void OnDisconnection(object sender, DisconnectedEventArgs e)
         {
             await Task.Delay(500);
