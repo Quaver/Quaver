@@ -222,7 +222,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("sort_order", ReverseSort ^ invertSort ? "desc" : "asc");
                 request.AddQueryParameter("sort_by", SortBy switch
                 {
-                    DownloadSortBy.DateLastUpdated => Status == DownloadFilterRankedStatus.ClanRanked ? "date_clan_ranked" : "date_last_updated",
+                    DownloadSortBy.DateLastUpdated => (Status == DownloadFilterRankedStatus.ClanRanked ? "date_clan_ranked" : "date_last_updated"),
                     DownloadSortBy.DateSubmitted => "date_submitted",
                     DownloadSortBy.Length => "length",
                     DownloadSortBy.DifficultyRating => "difficulty_rating",
