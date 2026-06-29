@@ -94,6 +94,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 
                     // mod.OriginalColor = j % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
                     mod.OriginalColor = ColorHelper.HexToColor("#242424");
+                    mod.Tint = mod.OriginalColor;
                     AddContainedDrawable(mod);
 
                     mod.Y = totalY;

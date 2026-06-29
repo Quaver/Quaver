@@ -1087,7 +1087,10 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MainMenuScreen());
                     break;
                 case QuaverScreenType.Select:
-                    CurrentScreen?.Exit(() => new SelectionScreen());
+                    var selectScreen = (SelectionScreen)CurrentScreen;
+                    var activeScroll = selectScreen.ActiveScrollContainer.Value;
+                    var activePanel = selectScreen.ActiveLeftPanel.Value;
+                    CurrentScreen?.Exit(() => new SelectionScreen(activeScroll, activePanel));
                     break;
                 case QuaverScreenType.Download:
                     CurrentScreen?.Exit(() => new DownloadingScreen(CurrentScreen.Type));
