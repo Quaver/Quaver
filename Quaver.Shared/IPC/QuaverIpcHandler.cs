@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using Quaver.Server.Client.Helpers;
@@ -24,6 +25,21 @@ namespace Quaver.Shared.IPC
     public static class QuaverIpcHandler
     {
         private const string protocolUriStarter = "quaver://";
+        private static readonly string[] importableFileExtensions =
+        {
+            ".qp",
+            ".osz",
+            ".sm",
+            ".mcz",
+            ".mc",
+            ".qr",
+            ".qs",
+            ".mp3",
+            ".ogg",
+            ".db",
+            ".zip",
+            ".qpl"
+        };
 
         /// <summary>
         ///     Handles messages from IPC
@@ -35,11 +51,28 @@ namespace Quaver.Shared.IPC
 
             if (message.StartsWith(protocolUriStarter))
                 HandleProtocolMessage(message.Substring(protocolUriStarter.Length));
-            else
+            else if (IsImportableFileMessage(message))
             {
                 // Quaver was launched with a file path, try to import it.
                 MapsetImporter.ImportFile(message);
             }
+            else
+                Logger.Important($"Ignoring unsupported IPC Message: {message}", LogType.Runtime);
+        }
+
+        /// <summary>
+        ///     Checks if a raw IPC message is an actual file Quaver knows how to import.
+        /// </summary>
+        /// <param name="message"></param>
+        private static bool IsImportableFileMessage(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+                return false;
+
+            if (!File.Exists(message))
+                return false;
+
+            return importableFileExtensions.Contains(Path.GetExtension(message), StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>

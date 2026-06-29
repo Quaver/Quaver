@@ -25,9 +25,14 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 {
     public class OptionsItemCustomSkin : OptionsItemDropdown
     {
-        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin) : base(containerRect, name,
-            new Dropdown(GetOptions(), new ScalableVector2(300, 35), 22,
-            Colors.MainAccent, GetSelectedIndex(skin), 240, 700))
+        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin) : this(containerRect, name,
+            skin, SkinStore.GetSkins())
+        {
+        }
+
+        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin, List<string> skinOptions) : base(containerRect, name,
+            new Dropdown(skinOptions, new ScalableVector2(300, 35), 22,
+            Colors.MainAccent, GetSelectedIndex(skin, skinOptions), 240, 700))
         {
             Dropdown.ItemContainer.Scrollbar.Tint = Color.White;
             Dropdown.ItemContainer.Scrollbar.Width = 2;
@@ -88,17 +93,10 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetOptions()
-        {
-            return SkinStore.GetSkins();
-        }
-
-        private static int GetSelectedIndex(Bindable<string> skin)
+        private static int GetSelectedIndex(Bindable<string> skin, List<string> options)
         {
             if (skin == null)
                 return 0;
-
-            var options = GetOptions();
 
             if (ConfigManager.UseSteamWorkshopSkin != null)
             {
