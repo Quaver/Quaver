@@ -329,7 +329,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         ///     Closes the dropdown menu
         /// </summary>
-        public void Close(int time = 500)
+        public virtual void Close(int time = 500)
         {
             Opened = false;
             HidingItemsAfterClose = time > 0;
@@ -380,7 +380,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         ///     Restores the dropdown item list visibility after an external owner toggles the drawable tree.
         /// </summary>
-        public void ApplyItemVisibilityState() => SetItemVisibility(Opened);
+        public virtual void ApplyItemVisibilityState() => SetItemVisibility(Opened);
 
         /// <summary>
         /// </summary>

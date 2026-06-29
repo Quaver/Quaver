@@ -312,10 +312,6 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByDifficulty(mapsets, separateMapsets);
                 case OrderMapsetsBy.OnlineGrade:
                     return OrderMapsetsByOnlineGrade(mapsets, separateMapsets);
-                case OrderMapsetsBy.DateLastUpdated:
-                    return OrderMapsetsByDateLastUpdated(mapsets);
-                case OrderMapsetsBy.DateRanked:
-                    return OrderMapsetsByDateRanked(mapsets);
                 case OrderMapsetsBy.LongNotePercentage:
                     return OrderMapsetsByLongNotePercentage(mapsets, separateMapsets);
                 case OrderMapsetsBy.NotesPerSecond:
@@ -378,30 +374,6 @@ namespace Quaver.Shared.Database.Maps
                 newMapsets = mapsets;
 
             return newMapsets.OrderBy(x => x.Maps.First().LNPercentage).ToList();
-        }
-
-        /// <summary>
-        ///     Orders mapsets by the date they were last updated online
-        /// </summary>
-        /// <param name="mapsets"></param>
-        /// <returns></returns>
-        private static List<Mapset> OrderMapsetsByDateLastUpdated(List<Mapset> mapsets)
-        {
-            return mapsets.OrderByDescending(x => x.Maps.Max(y => y.DateLastUpdated)).ThenBy(x => x.Maps.First().Artist)
-                .ThenBy(x => x.Maps.First().Title).ToList();
-        }
-
-        /// <summary>
-        ///     Orders mapsets by the date they were ranked
-        /// </summary>
-        /// <param name="mapsets"></param>
-        /// <returns></returns>
-        private static List<Mapset> OrderMapsetsByDateRanked(List<Mapset> mapsets)
-        {
-            return mapsets.OrderByDescending(x => x.Maps.First().RankedStatus)
-                .ThenByDescending(x => x.Maps.Max(y => y.DateLastUpdated))
-                .ThenBy(x => x.Maps.First().Artist)
-                .ThenBy(x => x.Maps.First().Title).ToList();
         }
 
         /// <summary>

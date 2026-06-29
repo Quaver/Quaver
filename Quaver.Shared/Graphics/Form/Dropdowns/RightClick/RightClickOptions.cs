@@ -27,10 +27,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
         {
             Options = options;
 
-            Chevron.Visible = false;
-            SelectedText.Visible = false;
-            DividerLine.Visible = false;
-            HoverSprite.Visible = false;
+            HideDropdownChrome();
             Alpha = 0;
             IsClickable = false;
             DestroyIfParentIsNull = false;
@@ -54,6 +51,36 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
 
             SelectedIndex = -1;
             ItemSelected += (sender, args) => SelectedIndex = -1;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="time"></param>
+        public override void Close(int time = 500)
+        {
+            base.Close(0);
+            HideDropdownChrome();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void ApplyItemVisibilityState()
+        {
+            base.ApplyItemVisibilityState();
+            HideDropdownChrome();
+        }
+
+        /// <summary>
+        ///     Hides inherited dropdown header pieces that are not part of a context menu.
+        /// </summary>
+        private void HideDropdownChrome()
+        {
+            Chevron.Visible = false;
+            SelectedText.Visible = false;
+            DividerLine.Visible = false;
+            HoverSprite.Visible = false;
         }
     }
 }

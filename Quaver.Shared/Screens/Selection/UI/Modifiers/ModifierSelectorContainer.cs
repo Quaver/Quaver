@@ -106,12 +106,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                         }),
 
                     new ModifierSection(width, FontAwesome.Get(FontAwesomeIcon.fa_warning_sign_on_a_triangular_background), "Unranked",
-                            "Scores will not be submitted while using these", ColorHelper.HexToColor("#F2C94C"), new List<SelectableModifier>()
+                            "Scores may submit, but will not be ranked", ColorHelper.HexToColor("#F2C94C"), new List<SelectableModifier>()
                         {
                             new SelectableModifierBool(width, new ModAutoplay()),
                             new SelectableModifierBool(width, new ModCoop()),
                             new SelectableModifierBool(width, new ModNoFail()),
                             new SelectableModifierBool(width, new ModNoSliderVelocities()),
+                            new SelectableModifierBool(width, new ModNoMines()),
                             new SelectableModifierBool(width, new ModNoLongNotes()),
                             new SelectableModifierBool(width, new ModFullLN()),
                             new SelectableModifierBool(width, new ModInverse()),

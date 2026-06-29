@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
@@ -13,6 +14,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Selection.UI.Modifiers
@@ -21,11 +23,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
     {
         /// <summary>
         /// </summary>
+        private const int ButtonBackgroundHeight = 83;
+
+        /// <summary>
+        /// </summary>
         private List<ModifierSection> Sections { get; }
 
         /// <summary>
         /// </summary>
         private Bindable<SelectContainerPanel> ActiveLeftPanel { get; }
+
+        /// <summary>
+        /// </summary>
+        private Sprite ScrollbarBackground { get; set; }
 
         /// <summary>
         /// </summary>
@@ -54,9 +64,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         {
             ActiveLeftPanel = activeLeftPanel;
             Sections = sections;
+            AllowScrollbarDragging = true;
+            EasingType = Easing.OutQuint;
+            TimeToCompleteScroll = 1200;
+            ScrollSpeed = 220;
+            IsMinScrollYEnabled = true;
             Alpha = 0;
 
             AlignAndContainSections();
+            CreateScrollbar();
             CreateButtons();
         }
 
@@ -66,6 +82,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && DialogManager.Dialogs.Count == 0
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+            ScrollbarBackground.Visible = ContentContainer.Height > Height;
+
             HandleTooltipAnimation();
 
             base.Update(gameTime);
@@ -101,6 +123,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                     totalY += mod.Height;
                 }
             }
+
+            var contentHeight = totalY + ButtonBackgroundHeight;
+            ContentContainer.Height = contentHeight > Height ? contentHeight : Height;
+        }
+
+        /// <summary>
+        ///     Creates the scrollbar sprite and aligns it properly
+        /// </summary>
+        private void CreateScrollbar()
+        {
+            ScrollbarBackground = new Sprite
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = 30,
+                Size = new ScalableVector2(4, Height),
+                Tint = ColorHelper.HexToColor("#474747"),
+                Visible = ContentContainer.Height > Height
+            };
+
+            MinScrollBarY = -(int) ScrollbarBackground.Height - (int) Scrollbar.Height / 2;
+            Scrollbar.Width = ScrollbarBackground.Width;
+            Scrollbar.Parent = ScrollbarBackground;
+            Scrollbar.Alignment = Alignment.BotCenter;
+            Scrollbar.Tint = Color.White;
         }
 
         /// <summary>
@@ -111,7 +158,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(Width, 83),
+                Size = new ScalableVector2(Width, ButtonBackgroundHeight),
                 Tint = ColorHelper.HexToColor("#181818")
             };
 

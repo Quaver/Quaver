@@ -68,6 +68,9 @@ public static class MapsetInfoRetriever
     /// </summary>
     public static async Task Enqueue(Map map)
     {
+        if (map.MapId == -1)
+            return;
+
         await RequestChannel.Writer.WriteAsync(new MapsetInfoRequest(map));
         Logger.Debug($"Retrieving status for mapset {map.MapId}", LogType.Runtime);
 
@@ -138,7 +141,6 @@ public static class MapsetInfoRetriever
                 response.Map = map;
 
             response.Map.RankedStatus = response.MapsResponse.Map.RankedStatus;
-            response.Map.DateLastUpdated = response.MapsResponse.Map.DateLastUpdated;
             response.Map.OnlineOffset = response.MapsResponse.Map.OnlineOffset;
             MapDatabaseCache.UpdateMap(response.Map);
             Logger.Debug(
