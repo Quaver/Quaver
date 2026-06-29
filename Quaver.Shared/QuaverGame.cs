@@ -126,6 +126,83 @@ namespace Quaver.Shared
     public class QuaverGame : WobbleGame
 #endif
     {
+        #region Win32 multi-monitor P/Invoke
+
+        /// <summary>
+        ///     Win32 flag that returns the monitor nearest to the given point.
+        /// </summary>
+        private const int MONITOR_DEFAULTTONEAREST = 2;
+
+        /// <summary>
+        ///     Win32 POINT structure used for multi-monitor lookups.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        private struct POINT { public int X, Y; }
+
+        /// <summary>
+        ///     Win32 RECT structure representing a rectangle with left, top, right, and bottom edges.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT { public int Left, Top, Right, Bottom; }
+
+        /// <summary>
+        ///     Win32 MONITORINFO structure containing monitor geometry and work area bounds.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MONITORINFO
+        {
+            public int Size;
+            public RECT Monitor;
+            public RECT WorkArea;
+            public int Flags;
+        }
+
+        /// <summary>
+        ///     Retrieves a handle to the display monitor that contains or is nearest to the specified point.
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        private static extern IntPtr MonitorFromPoint(POINT pt, int flags);
+
+        /// <summary>
+        ///     Retrieves information about a display monitor.
+        /// </summary>
+        /// <param name="hMonitor"></param>
+        /// <param name="lpmi"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
+
+        #endregion
+
+        #region SDL2 multi-monitor P/Invoke
+
+        /// <summary>
+        ///     SDL2 rectangle structure used for display bounds queries.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SDL_Rect { public int x, y, w, h; }
+
+        /// <summary>
+        ///     Returns the number of available video displays.
+        /// </summary>
+        /// <returns></returns>
+        [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int SDL_GetNumVideoDisplays();
+
+        /// <summary>
+        ///     Gets the desktop area bounds of a display, with position relative to the primary monitor.
+        /// </summary>
+        /// <param name="displayIndex"></param>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int SDL_GetDisplayBounds(int displayIndex, out SDL_Rect rect);
+
+        #endregion
+
         /// <summary>
         ///     Scaling factor for skin values and scroll speed to convert them to the UI redesign coordinate system.
         /// </summary>
@@ -1058,6 +1135,10 @@ namespace Quaver.Shared
             var targetWidth = ConfigManager.WindowWidth.Value;
             var targetHeight = ConfigManager.WindowHeight.Value;
 
+            var oldPos = Window.Position;
+            var oldWidth = Graphics.PreferredBackBufferWidth;
+            var oldHeight = Graphics.PreferredBackBufferHeight;
+
             if (Graphics.PreferredBackBufferWidth != targetWidth ||
                 Graphics.PreferredBackBufferHeight != targetHeight)
             {
@@ -1073,10 +1154,7 @@ namespace Quaver.Shared
 
             Graphics.ApplyChanges();
 
-            var display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
-            var x = Math.Max(0, (display.Width - targetWidth) / 2);
-            var y = Math.Max(0, (display.Height - targetHeight) / 2);
-            Window.Position = new Point(x, y);
+            CenterWindowOnCurrentMonitor(oldPos, oldWidth, oldHeight, targetWidth, targetHeight);
 
             if (CurrentScreen == null)
                 return;
@@ -1113,6 +1191,65 @@ namespace Quaver.Shared
 
             VolumeController?.Destroy();
             VolumeController = new VolumeControl();
+        }
+
+        /// <summary>
+        ///     Centers the game window on the monitor it was previously on.
+        ///     On Windows, uses Win32 MonitorFromPoint to find the correct monitor.
+        ///     On macOS/Linux, uses SDL2 display bounds enumeration.
+        /// </summary>
+        /// <param name="oldPos">The window position before the resolution change.</param>
+        /// <param name="oldWidth">The window width before the resolution change.</param>
+        /// <param name="oldHeight">The window height before the resolution change.</param>
+        /// <param name="targetWidth">The new target window width.</param>
+        /// <param name="targetHeight">The new target window height.</param>
+        private void CenterWindowOnCurrentMonitor(Point oldPos, int oldWidth, int oldHeight, int targetWidth, int targetHeight)
+        {
+            var centerX = oldPos.X + oldWidth / 2;
+            var centerY = oldPos.Y + oldHeight / 2;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var monitor = MonitorFromPoint(new POINT { X = centerX, Y = centerY }, MONITOR_DEFAULTTONEAREST);
+                var info = new MONITORINFO { Size = Marshal.SizeOf<MONITORINFO>() };
+
+                if (GetMonitorInfo(monitor, ref info))
+                {
+                    var monitorWidth = info.Monitor.Right - info.Monitor.Left;
+                    var monitorHeight = info.Monitor.Bottom - info.Monitor.Top;
+                    var x = info.Monitor.Left + (monitorWidth - targetWidth) / 2;
+                    var y = info.Monitor.Top + (monitorHeight - targetHeight) / 2;
+                    Window.Position = new Point(x, y);
+                    return;
+                }
+            }
+            else
+            {
+                try
+                {
+                    var displayCount = SDL_GetNumVideoDisplays();
+
+                    for (var i = 0; i < displayCount; i++)
+                    {
+                        if (SDL_GetDisplayBounds(i, out var bounds) != 0)
+                            continue;
+
+                        if (centerX < bounds.x || centerX >= bounds.x + bounds.w ||
+                            centerY < bounds.y || centerY >= bounds.y + bounds.h)
+                            continue;
+
+                        var x = bounds.x + (bounds.w - targetWidth) / 2;
+                        var y = bounds.y + (bounds.h - targetHeight) / 2;
+                        Window.Position = new Point(x, y);
+                        return;
+                    }
+                }
+                catch (DllNotFoundException)
+                {
+                }
+            }
+
+            Window.Position = new Point(centerX - targetWidth / 2, centerY - targetHeight / 2);
         }
 
         private void OnClientSizeChanged(object sender, EventArgs e)
