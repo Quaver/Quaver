@@ -222,7 +222,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("sort_order", ReverseSort ^ invertSort ? "desc" : "asc");
                 request.AddQueryParameter("sort_by", SortBy switch
                 {
-                    DownloadSortBy.DateLastUpdated => "date_last_updated",
+                    DownloadSortBy.DateLastUpdated => Status == DownloadFilterRankedStatus.ClanRanked ? "date_clan_ranked" : "date_last_updated",
                     DownloadSortBy.DateSubmitted => "date_submitted",
                     DownloadSortBy.Length => "length",
                     DownloadSortBy.DifficultyRating => "difficulty_rating",
@@ -271,6 +271,12 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// </summary>
         private void SetStatusQueryParams(RestRequest request)
         {
+            if (Status == DownloadFilterRankedStatus.ClanRanked)
+            {
+                request.AddQueryParameter("is_clan_ranked", "true");
+                return;
+            }
+
             // Ranked Status Query Param
             if (Status == DownloadFilterRankedStatus.All)
             {

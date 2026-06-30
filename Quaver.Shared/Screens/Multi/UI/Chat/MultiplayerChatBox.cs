@@ -43,10 +43,11 @@ namespace Quaver.Shared.Screens.Multi.UI.Chat
 
         public override void Update(GameTime gameTime)
         {
-            Textbox.AlwaysFocused = DialogManager.Dialogs.Count == 0;
+            var hasOpenDialog = DialogManager.Dialogs.Count != 0;
 
-            if (DialogManager.Dialogs.Count == 0)
-                Textbox.Focused = false;
+            Textbox.AlwaysFocused = !hasOpenDialog;
+            Textbox.InputEnabled = !hasOpenDialog;
+            Textbox.Focused = false;
             
             base.Update(gameTime);
         }
