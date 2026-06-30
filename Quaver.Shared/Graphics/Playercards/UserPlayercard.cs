@@ -62,6 +62,10 @@ namespace Quaver.Shared.Graphics.Playercards
 
         /// <summary>
         /// </summary>
+        public IconButton ViewClanButton { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private TextKeyValue GlobalRanking { get; set; }
 
         /// <summary>
@@ -93,6 +97,7 @@ namespace Quaver.Shared.Graphics.Playercards
             CreateModeButton();
             CreateLogoutButton();
             CreateViewProfileButton();
+            CreateViewClanButton();
             CreateGlobalRanking();
             CreateOverallRating();
             CreateOverallAccuracy();
@@ -283,6 +288,23 @@ namespace Quaver.Shared.Graphics.Playercards
 
         /// <summary>
         /// </summary>
+        private void CreateViewClanButton()
+        {
+            ViewClanButton = new IconButton(UserInterface.ViewClanButtonPlayercard)
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                UsePreviousSpriteBatchOptions = true,
+                X = ViewProfileButton.X - ViewProfileButton.Width - 10,
+                Y = ModeButton.Y,
+                Size = new ScalableVector2(92, 25),
+            };
+
+            ViewClanButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{User?.OnlineUser?.ClanId}");
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreateGlobalRanking()
         {
             GlobalRanking = new TextKeyValue("Global Rank", "#1", 20, Color.White)
@@ -373,6 +395,8 @@ namespace Quaver.Shared.Graphics.Playercards
 
             Status.Text = GetStatusText();
             ModeButton.Image = GetModeImage();
+
+            ViewClanButton.Visible = !string.IsNullOrEmpty(User?.OnlineUser?.ClanId);
 
             if (User != null && User.Stats.ContainsKey(ActiveMode))
             {
