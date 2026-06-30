@@ -146,6 +146,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
 
             if (OnlineChat.Instance != null)
                 container.SetEventProcessingSuspended(OnlineChat.Instance.IsEventProcessingSuspended);
+
+            container.InitializeMessageHistory();
         }
 
         /// <summary>
