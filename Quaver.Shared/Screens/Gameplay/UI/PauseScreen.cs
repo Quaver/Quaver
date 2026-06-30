@@ -237,9 +237,23 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
                 if (button == Selected)
                 {
+                    if (dontPlayAudio)
+                    {
+                        button.X = GetActivePosX(button) + HOVER_X_OFFSET;
+                        button.Tint = Color.White;
+                        continue;
+                    }
+
                     button.FadeToColor(Color.White, Easing.OutQuint, ANIMATION_TIME);
                     button.MoveToX(GetActivePosX(button) + HOVER_X_OFFSET, Easing.OutQuint, ANIMATION_TIME);
 
+                    continue;
+                }
+
+                if (dontPlayAudio)
+                {
+                    button.X = GetActivePosX(button);
+                    button.Tint = TintColor;
                     continue;
                 }
 
