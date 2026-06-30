@@ -822,7 +822,7 @@ namespace Quaver.Shared
         /// <param name="fpsLimitType"></param>
         /// <returns></returns>
         private static bool IsFpsLimitTypeAvailable(FpsLimitType fpsLimitType) =>
-            !(fpsLimitType == FpsLimitType.WaylandVsync && RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
+            fpsLimitType != FpsLimitType.WaylandVsync || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         /// <summary>
         ///     Handles when the user holds either Control (CTRL) button and presses O

@@ -27,11 +27,27 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
 
         /// <summary>
         /// </summary>
+        private const string DefaultPlaceholderText = "Send a message...";
+
+        /// <summary>
+        /// </summary>
+        private long LastDisplayedMuteEndTime { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private int LastDisplayedMuteSecondsLeft { get; set; } = -1;
+
+        /// <summary>
+        /// </summary>
+        private bool? AlwaysFocusedBeforeMute { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="activeChatChannel"></param>
         /// <param name="size"></param>
         /// <param name="standalone"></param>
         public OnlineChatTextbox(Bindable<ChatChannel> activeChatChannel, ScalableVector2 size, bool standalone = false)
-            : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "", "Send a message...")
+            : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "", DefaultPlaceholderText)
         {
             ActiveChannel = activeChatChannel;
             Standalone = standalone;
@@ -84,6 +100,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
                     return;
                 }
 
+                if (IsMuted())
+                    return;
+
                 ActiveChannel.Value?.QueueMessage(message);
                 OnlineManager.Client?.SendMessage(ActiveChannel.Value.Name, message.Message);
             };
@@ -95,11 +114,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            var muted = IsMuted();
+            UpdateMutedState(muted);
+            
             if (Standalone && DialogManager.Dialogs.Count != 0)
             {
                 AlwaysFocused = false;
-                InputEnabled = false;
-                Focused = false;
+                InputEnabled = !muted;
+                Focused = !muted;
                 AllowSubmission = false;
             }
             else
@@ -111,8 +133,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
             {
                 if (OnlineChat.Instance.IsOpen && OnlineChat.Instance.IsHovered())
                 {
-                    InputEnabled = true;
-                    Focused = true;
+                    InputEnabled = !muted;
+                    Focused = !muted;
                 }
                 else if (!OnlineChat.Instance.IsOpen)
                 {
@@ -121,7 +143,90 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
                 }
             }
 
+            if (muted)
+            {
+                InputEnabled = false;
+                Focused = false;
+            }
+            else if (Standalone)
+                InputEnabled = true;
+
             base.Update(gameTime);
+
+            if (muted)
+                Cursor.Visible = false;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private static bool IsMuted() => OnlineManager.Self != null && OnlineManager.Self.IsMuted;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="muted"></param>
+        private void UpdateMutedState(bool muted)
+        {
+            if (!muted)
+            {
+                if (AlwaysFocusedBeforeMute != null)
+                {
+                    AlwaysFocused = AlwaysFocusedBeforeMute.Value;
+                    AlwaysFocusedBeforeMute = null;
+                }
+
+                if (PlaceholderText != DefaultPlaceholderText)
+                {
+                    PlaceholderText = DefaultPlaceholderText;
+
+                    if (string.IsNullOrEmpty(RawText))
+                        RawText = "";
+                }
+
+                LastDisplayedMuteEndTime = 0;
+                LastDisplayedMuteSecondsLeft = -1;
+                AllowSubmission = true;
+                return;
+            }
+
+            AllowSubmission = false;
+
+            if (AlwaysFocusedBeforeMute == null)
+                AlwaysFocusedBeforeMute = AlwaysFocused;
+
+            AlwaysFocused = false;
+            Cursor.Visible = false;
+
+            if (!string.IsNullOrEmpty(RawText))
+                RawText = "";
+
+            var muteEndTime = OnlineManager.Self.OnlineUser.MuteEndTime;
+            var secondsLeft = Math.Max(0, (int) Math.Ceiling((muteEndTime - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()) / 1000d));
+
+            if (muteEndTime == LastDisplayedMuteEndTime && secondsLeft == LastDisplayedMuteSecondsLeft)
+                return;
+
+            LastDisplayedMuteEndTime = muteEndTime;
+            LastDisplayedMuteSecondsLeft = secondsLeft;
+            PlaceholderText = $"You're muted. You can chat again in {FormatMuteTimeLeft(secondsLeft)}.";
+            RawText = "";
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        private static string FormatMuteTimeLeft(int seconds)
+        {
+            var timeLeft = TimeSpan.FromSeconds(seconds);
+
+            if (timeLeft.Days > 0)
+                return $"{timeLeft.Days}d {timeLeft.Hours:00}h {timeLeft.Minutes:00}m {timeLeft.Seconds:00}s";
+
+            if (timeLeft.Hours > 0)
+                return $"{timeLeft.Hours:00}h {timeLeft.Minutes:00}m {timeLeft.Seconds:00}s";
+
+            return $"{timeLeft.Minutes:00}m {timeLeft.Seconds:00}s";
         }
     }
 }
