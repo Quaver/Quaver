@@ -113,6 +113,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        private Animation? MineHitAnimation { get; set; }
+
+        /// <summary>
+        /// </summary>
         private bool FinalizedWindowsAfterAnimation { get; set; }
 
         /// <summary>
@@ -143,7 +147,16 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         public override void Update(GameTime gameTime)
         {
             if (CountAnimation != null && !CountAnimation.Done)
-                TextCount.Text = $"{(int) CountAnimation?.PerformInterpolation(gameTime):n0}";
+            {
+                var interpolatedCount = (int)(CountAnimation?.PerformInterpolation(gameTime) ?? 0);
+                var interpolatedMineHit = (int)(MineHitAnimation?.PerformInterpolation(gameTime) ?? 0);
+                TextCount.Text = Judgement switch
+                {
+                    Judgement.Miss when Processor.Value.CountMineHit > 0 =>
+                        $"{interpolatedCount:n0} + {interpolatedMineHit:n0} Mine{(interpolatedMineHit > 1 ? "s" : "")}",
+                    _ => $"{interpolatedCount:n0}"
+                };
+            }
 
             if (CountAnimation != null && CountAnimation.Done && !FinalizedWindowsAfterAnimation)
             {
@@ -173,7 +186,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         private void UpdateTextCount() => TextCount.Text = Judgement switch
         {
             Judgement.Miss when Processor.Value.CountMineHit > 0 => 
-                $"{Processor.Value.CurrentJudgements[Judgement.Miss] - Processor.Value.CountMineHit:n0} + {Processor.Value.CountMineHit:n0}",
+                $"{Processor.Value.CurrentJudgements[Judgement.Miss] - Processor.Value.CountMineHit:n0}" +
+                $" + {Processor.Value.CountMineHit:n0} Mine{(Processor.Value.CountMineHit > 1 ? "s" : "")}",
             _ => $"{Processor.Value.CurrentJudgements[Judgement]:n0}"
         };
 
@@ -243,8 +257,20 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             Percentage.Text = Processor.Value.CurrentJudgements[Judgement] == 0 ? $"(0.00%)" : $"({percent * 100:0.00}%)";
 
-            CountAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0,
-                Processor.Value.CurrentJudgements[Judgement], animTime);
+            switch (Judgement)
+            {
+                case Judgement.Miss when Processor.Value.CountMineHit > 0:
+                    CountAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0,
+                        Processor.Value.CurrentJudgements[Judgement] - Processor.Value.CountMineHit, animTime);
+
+                    MineHitAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0,
+                        Processor.Value.CountMineHit, animTime);
+                    break;
+                default:
+                    CountAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0,
+                        Processor.Value.CurrentJudgements[Judgement], animTime);
+                    break;
+            }
         }
 
         /// <summary>
