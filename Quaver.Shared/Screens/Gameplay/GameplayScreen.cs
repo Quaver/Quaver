@@ -813,6 +813,9 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (SpectatorClient != null)
                         OnlineManager.Client?.StopSpectating();
 
+                    if (!HasStarted)
+                        AudioEngine.Track?.Dispose();
+
                     Exit(() => new SelectionScreen());
 
                     return;
