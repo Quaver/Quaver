@@ -19,6 +19,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
     {
         private const string ViewProfile = "View Profile";
 
+        private const string ViewClan = "View Clan";
+
         private const string SteamProfile = "Steam Profile";
 
         private const string AddFriend = "Add Friend";
@@ -56,6 +58,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 {
                     case ViewProfile:
                         BrowserHelper.OpenURL($"https://quavergame.com/profile/{user.OnlineUser.Id}");
+                        break;
+                    case ViewClan:
+                        BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{user.OnlineUser.ClanId}");
                         break;
                     case SteamProfile:
                         BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{user.OnlineUser?.SteamId}");
@@ -117,6 +122,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 {ViewProfile, Color.White},
                 {SteamProfile, ColorHelper.HexToColor("#0787E3")},
             };
+
+            if (!string.IsNullOrEmpty(user.OnlineUser.ClanId))
+            {
+                options.Add(ViewClan, Color.Beige);
+            }
 
             // Don't add actions meant for other users
             if (OnlineManager.Self?.OnlineUser?.Id == user.OnlineUser.Id)

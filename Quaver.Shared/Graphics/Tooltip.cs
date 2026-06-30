@@ -20,6 +20,7 @@ namespace Quaver.Shared.Graphics
 
             DestroyIfParentIsNull = false;
             SetChildrenAlpha = true;
+            SetChildrenVisibility = true;
 
             Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20, cacheText)
             {
@@ -28,6 +29,7 @@ namespace Quaver.Shared.Graphics
             };
 
             ChangeText(text);
+            Hide();
         }
 
         public void ChangeText(string text)
@@ -36,6 +38,14 @@ namespace Quaver.Shared.Graphics
 
             const int padding = 16;
             Size = new ScalableVector2(Text.Width + padding, Text.Height + padding);
+        }
+
+        public void Show() => Visible = true;
+
+        public void Hide()
+        {
+            Visible = false;
+            Parent = null;
         }
     }
 }

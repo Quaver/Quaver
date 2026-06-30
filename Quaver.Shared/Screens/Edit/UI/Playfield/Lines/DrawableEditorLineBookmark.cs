@@ -40,6 +40,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             Tooltip.Text.DrawIfOffScreen = true;
             Tooltip.Border.DrawIfOffScreen = true;
+            Tooltip.Visible = !string.IsNullOrEmpty(Bookmark.Note);
+
             ImageButton = new DrawableEditorLineBookmarkButton(Playfield, Bookmark)
             {
                 Parent = this,
@@ -52,7 +54,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public override void Draw(GameTime gameTime)
         {
             if (Tooltip.Text.Text != Bookmark.Note)
+            {
                 Tooltip.ChangeText(Bookmark.Note);
+                Tooltip.Visible = !string.IsNullOrEmpty(Bookmark.Note);
+            }
+
             base.Draw(gameTime);
         }
 

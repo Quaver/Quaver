@@ -158,6 +158,9 @@ namespace Quaver.Shared.Modifiers
                     case ModIdentifier.NoLongNotes:
                         mods.Add(new ModNoLongNotes());
                         break;
+                    case ModIdentifier.NoMines:
+                        mods.Add(new ModNoMines());
+                        break;
                     case ModIdentifier.Randomize:
                         mods.Add(new ModRandomize());
                         break;

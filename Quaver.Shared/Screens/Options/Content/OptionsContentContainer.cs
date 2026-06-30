@@ -17,6 +17,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Managers;
+using RectangleF = MonoGame.Extended.RectangleF;
 
 namespace Quaver.Shared.Screens.Options.Content
 {
@@ -64,6 +65,8 @@ namespace Quaver.Shared.Screens.Options.Content
                            && !dropdownHovered;
 
             base.Update(gameTime);
+
+            ApplyHeaderVisibility();
         }
 
         /// <inheritdoc />
@@ -79,13 +82,45 @@ namespace Quaver.Shared.Screens.Options.Content
 
         public void ReInitialize()
         {
-            for (var i = Children.Count - 1; i >= 0; i--)
+            foreach (var category in Section.Subcategories)
+                category.ScrolledTo -= OnScrolledToCategory;
+
+            for (var i = ContentContainer.Children.Count - 1; i >= 0; i--)
             {
-                if (Children[i] is SpriteTextPlus text)
+                if (ContentContainer.Children[i] is SpriteTextPlus text)
                     text.Destroy();
             }
 
             Initialize();
+        }
+
+        public void ClearOptionItems()
+        {
+            foreach (var subcategory in Section.Subcategories)
+            {
+                foreach (var item in subcategory.Items)
+                {
+                    if (item.Parent != ContentContainer)
+                        continue;
+
+                    item.DestroyIfParentIsNull = false;
+                    RemoveContainedDrawable(item);
+                    item.DestroyIfParentIsNull = true;
+                }
+            }
+        }
+
+        public void ApplyVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(this, visible);
+
+            if (visible)
+            {
+                Scrollbar.Visible = true;
+
+                foreach (var dropdown in GetDropdowns(this))
+                    dropdown.ApplyItemVisibilityState();
+            }
         }
 
         /// <summary>
@@ -122,6 +157,7 @@ namespace Quaver.Shared.Screens.Options.Content
 
                     item.Alignment = Alignment.TopCenter;
                     item.Y = totalHeight;
+                    item.ApplyVisibility(true);
 
                     totalHeight += item.Height + spacing;
                 }
@@ -135,6 +171,35 @@ namespace Quaver.Shared.Screens.Options.Content
 
             foreach (var category in Section.Subcategories)
                 category.ScrolledTo += OnScrolledToCategory;
+        }
+
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+        }
+
+        private static IEnumerable<Dropdown> GetDropdowns(Drawable drawable)
+        {
+            if (drawable is Dropdown currentDropdown)
+                yield return currentDropdown;
+
+            foreach (var child in drawable.Children)
+            {
+                foreach (var dropdown in GetDropdowns(child))
+                    yield return dropdown;
+            }
+        }
+
+        private void ApplyHeaderVisibility()
+        {
+            foreach (var child in ContentContainer.Children)
+            {
+                if (child is SpriteTextPlus text)
+                    text.Visible = Visible && !RectangleF.Intersection(text.ScreenRectangle, ScreenRectangle).IsEmpty;
+            }
         }
 
         /// <summary>

@@ -343,7 +343,9 @@ namespace Quaver.Shared.Screens.Selection
         private void OnActiveLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
         {
             LeaderboardContainer.ClearAnimations();
+            MapPreviewContainer.ClearAnimations();
             ModifierSelector.ClearAnimations();
+            ProfileContainer.ClearAnimations();
 
             const int animTime = 400;
             const Easing easing = Easing.OutQuint;

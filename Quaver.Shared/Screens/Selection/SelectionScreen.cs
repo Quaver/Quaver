@@ -79,6 +79,16 @@ namespace Quaver.Shared.Screens.Selection
         private Random Rng { get; } = new Random();
 
         /// <summary>
+        ///     The panel that should be active when the screen is initialized.
+        /// </summary>
+        private SelectContainerPanel InitialActiveLeftPanel { get; }
+
+        /// <summary>
+        ///     The scroll container that should be active when the screen is initialized.
+        /// </summary>
+        private SelectScrollContainerType? InitialActiveScrollContainer { get; }
+
+        /// <summary>
         ///     Contains the currently history of the random maps
         /// </summary>
         public Stack<Map> RngHistory { get; set; } = new Stack<Map>();
@@ -100,9 +110,16 @@ namespace Quaver.Shared.Screens.Selection
 
         /// <summary>
         /// </summary>
-        public SelectionScreen()
+        public SelectionScreen(SelectScrollContainerType? activeScrollContainer = null,
+            SelectContainerPanel activeLeftPanel = SelectContainerPanel.Leaderboard)
         {
+            InitialActiveScrollContainer = activeScrollContainer;
+            InitialActiveLeftPanel = activeLeftPanel;
             IsMultiplayer = OnlineManager.CurrentGame != null;
+
+            // The paused modifier is gameplay-only state and should never persist into song select.
+            if (ModManager.IsActivated(ModIdentifier.Paused))
+                ModManager.RemoveMod(ModIdentifier.Paused);
 
             // Go to the import screen if we've imported a map not on the select screen
             if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
@@ -131,7 +148,10 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapDeleted += OnMapDeleted;
             MapManager.MapUpdated += OnMapUpdated;
             MapManager.SongRequestPlayed += OnSongRequestPlayed;
+            MapManager.Selected.ValueChanged += OnSelectedMapChangedForStreamerFiles;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
+
+            MapLoadingScreen.QueueStreamerFilesWrite(MapManager.Selected.Value);
 
             View = new SelectionScreenView(this);
         }
@@ -179,6 +199,7 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapDeleted -= OnMapDeleted;
             MapManager.MapUpdated -= OnMapUpdated;
             MapManager.SongRequestPlayed -= OnSongRequestPlayed;
+            MapManager.Selected.ValueChanged -= OnSelectedMapChangedForStreamerFiles;
             SkinManager.StopWatching();
 
             // ReSharper disable once DelegateSubtraction
@@ -206,7 +227,7 @@ namespace Quaver.Shared.Screens.Selection
         {
             ActiveLeftPanel = new Bindable<SelectContainerPanel>(SelectContainerPanel.Leaderboard)
             {
-                Value = SelectContainerPanel.Leaderboard
+                Value = InitialActiveLeftPanel
             };
         }
 
@@ -228,6 +249,9 @@ namespace Quaver.Shared.Screens.Selection
             if (PlaylistManager.Selected.Value != null && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists
                 && PlaylistManager.Selected.Value.Maps.Count > 0)
                 ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+
+            if (InitialActiveScrollContainer.HasValue)
+                ActiveScrollContainer.Value = InitialActiveScrollContainer.Value;
         }
 
         /// <summary>
@@ -971,6 +995,14 @@ namespace Quaver.Shared.Screens.Selection
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
             });
         }
+
+        /// <summary>
+        ///     Writes the streamer "Now Playing" files when the selected song changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedMapChangedForStreamerFiles(object sender, BindableValueChangedEventArgs<Map> e)
+            => MapLoadingScreen.QueueStreamerFilesWrite(e.Value, 250);
 
         /// <summary>
         /// </summary>

@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Theater
         private void CreateDragReplaysText()
         {
             DragReplaysText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "To begin, drag up to 4 replays into the window...", 26)
+                "To begin, drag up to 16 replays into the window...", 26)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,

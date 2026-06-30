@@ -45,6 +45,15 @@ namespace Quaver.Shared.Scripting
                 }
             );
 
+        public static int Count(DynValue value) =>
+            CoerceToVectorOrFloat(value) switch
+            {
+                float or Vector2 => 2,
+                Vector3 => 3,
+                Vector4 => 4,
+                _ => throw Unreachable(value),
+            };
+
         public static Vector3 Cross(DynValue first, DynValue second) =>
             0 switch
             {
@@ -92,14 +101,26 @@ namespace Quaver.Shared.Scripting
                 _ => throw Unreachable(first, second),
             };
 
-        public static int Length(DynValue value) =>
+        public static float Length(DynValue value) =>
             CoerceToVectorOrFloat(value) switch
             {
-                float or Vector2 => 2,
-                Vector3 => 3,
-                Vector4 => 4,
+                float f => f,
+                Vector2 v => v.Length(),
+                Vector3 v => v.Length(),
+                Vector4 v => v.Length(),
                 _ => throw Unreachable(value),
             };
+
+        public static float LengthSquared(DynValue value) =>
+            CoerceToVectorOrFloat(value) switch
+            {
+                float f => f,
+                Vector2 v => v.LengthSquared(),
+                Vector3 v => v.LengthSquared(),
+                Vector4 v => v.LengthSquared(),
+                _ => throw Unreachable(value),
+            };
+
 
         public static DynValue Lerp(DynValue first, DynValue second, DynValue third) =>
             Create(
@@ -359,12 +380,12 @@ namespace Quaver.Shared.Scripting
                     _ => null,
                 }) :
                 typeof(T) == typeof(Vector3) ? (T?)(object)(Vector3?)(val switch
-                    {
-                        float f => f.ToVector3(),
-                        Vector2 v => v.ToVector3(),
-                        Vector3 v => v,
-                        _ => null,
-                    }) :
+                {
+                    float f => f.ToVector3(),
+                    Vector2 v => v.ToVector3(),
+                    Vector3 v => v,
+                    _ => null,
+                }) :
                     typeof(T) == typeof(Vector4) ? (T?)(object)(Vector4?)(val switch
                     {
                         float f => f.ToVector4(),
@@ -385,7 +406,8 @@ namespace Quaver.Shared.Scripting
 
         private static IFormattable CoerceToVectorOrFloat(DynValue value) =>
             value is {
-                Type: DataType.UserData, UserData.Object: not Vector2 and not Vector3 and not Vector4,
+                Type: DataType.UserData,
+                UserData.Object: not Vector2 and not Vector3 and not Vector4,
             } or { Type: DataType.Nil }
                 ? 0
                 : value.TryCoerceToFloat() ??

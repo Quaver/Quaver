@@ -55,6 +55,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         /// <summary>
         /// </summary>
+        private ClanTag Clan { get; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextBitmap Wins { get; }
 
         /// <summary>
@@ -117,6 +121,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
+            Clan = new ClanTag(16)
+            {
+                Parent = Flag,
+                Alignment = Alignment.MidLeft,
+                X = Flag.Width + 6,
+                UsePreviousSpriteBatchOptions = true
+            };
+
             Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, string.IsNullOrEmpty(item.Username) ? $"Loading..." : item.Username)
             {
                 Parent = Flag,
@@ -125,6 +137,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 FontSize = 16,
                 UsePreviousSpriteBatchOptions = true
             };
+
+            UpdateClan(item);
 
             HostCrown = new Sprite
             {
@@ -265,6 +279,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 var stats = OnlineManager.OnlineUsers[Item.Id].Stats;
                 var rank = stats.ContainsKey((GameMode) OnlineManager.CurrentGame.GameMode) ? $" (#{stats[(GameMode) OnlineManager.CurrentGame.GameMode].Rank})" : "";
 
+                UpdateClan(item);
                 Username.Text = item.Username + rank;
                 HostCrown.X = Username.Width + 12;
 
@@ -313,8 +328,23 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Mods.Text = mods <= 0 ? "" : ModHelper.GetModsString(mods);
                 Flag.Y = mods <= 0 ? 0 : -8;
             }
+            else
+            {
+                Clan.Clear();
+                Username.X = Flag.Width + 6;
+            }
 
             HostCrown.Visible = OnlineManager.CurrentGame.HostId == Item.Id;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateClan(OnlineUser user)
+        {
+            Clan.UpdateFromUser(user);
+            Clan.X = Flag.Width + 6;
+
+            Username.X = Clan.Visible ? Clan.X + Clan.Width + 6 : Flag.Width + 6;
         }
 
         /// <inheritdoc />

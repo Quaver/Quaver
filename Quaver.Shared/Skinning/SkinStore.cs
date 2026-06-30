@@ -248,6 +248,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D ScoreboardBlueTeamOther { get; set; }
 
         /// <summary>
+        ///     The avatar mask for scoreboard avatars.
+        /// </summary>
+        internal Texture2D ScoreboardAvatarMask { get; private set; }
+
+        /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
         internal List<Texture2D> HealthBarBackground { get; private set; }
@@ -278,6 +283,16 @@ namespace Quaver.Shared.Skinning
         internal Texture2D BattleRoyaleWarning { get; private set; }
 
         /// <summary>
+        ///     Displayed on maps with potentially seizure-inducing visuals.
+        /// </summary>
+        internal Texture2D EpilepsyWarning { get; private set; }
+
+        /// <summary>
+        ///     Icon displayed on the epilepsy warning.
+        /// </summary>
+        internal Texture2D EpilepsyWarningIcon { get; private set; }
+
+        /// <summary>
         ///     Backgrounds for the skin. Only loaded if UseSkinBackgrounds is true.
         /// </summary>
         internal List<string> BackgroundPaths { get; private set; }
@@ -305,7 +320,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
         /// </summary>
-        internal SkinStore(string skin = null, bool editor = false)
+        internal SkinStore(string skin = null, bool editor = false, UniversalSkinElementsLoadFlags loadFlags = UniversalSkinElementsLoadFlags.All)
         {
             Stopwatch totalSW = new();
             Dictionary<GameMode, (Stopwatch sw, int cacheHits)> keyTimingInfo = new();
@@ -342,7 +357,7 @@ namespace Quaver.Shared.Skinning
                 Logger.Error(e, LogType.Runtime);
             }
 
-            LoadUniversalElements();
+            LoadUniversalElements(loadFlags);
 
             // Change cursor image.
             GameBase.Game.GlobalUserInterface.Cursor.Image = Cursor;
@@ -396,23 +411,23 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Loads universal skin elements used across every single game mode.
         /// </summary>
-        private void LoadUniversalElements()
+        private void LoadUniversalElements(UniversalSkinElementsLoadFlags loadFlags)
         {
             const string cursor = "main-cursor";
             Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", $"Quaver.Resources/Textures/Skins/Shared/Cursor/{cursor}.png");
 
-            LoadGradeElements();
-            LoadHitBubbleElements();
-            LoadJudgements();
-            LoadNumberDisplays();
-            LoadPause();
-            LoadScoreboard();
-            LoadHealthBar();
-            LoadSkip();
-            LoadComboAlert();
-            LoadMultiplayerElements();
-            LoadBackgrounds();
-            LoadSoundEffects();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Grade)) LoadGradeElements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.HitBubble)) LoadHitBubbleElements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Judgements)) LoadJudgements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.NumberDisplays)) LoadNumberDisplays();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Pause)) LoadPause();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Scoreboard)) LoadScoreboard();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.HealthBar)) LoadHealthBar();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Skip)) LoadSkip();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.ComboAlert)) LoadComboAlert();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.MultiplayerElements)) LoadMultiplayerElements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Backgrounds)) LoadBackgrounds();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.SoundEffects)) LoadSoundEffects();
         }
 
         private Texture2D GetTextureFromCacheOr(byte[] buffer, Func<byte[], Texture2D> func)
@@ -529,8 +544,11 @@ namespace Quaver.Shared.Skinning
                 if (resource == null)
                     return new List<Texture2D> { UserInterface.BlankBox };
 
-                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
-                    GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
+                var buffer = GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png");
+                if (buffer == null)
+                    return new List<Texture2D> { UserInterface.BlankBox };
+
+                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(buffer), rows, columns);
             }
             catch (Exception e)
             {
@@ -707,6 +725,9 @@ namespace Quaver.Shared.Skinning
 
             const string scoreboardBlueTeamOther = "scoreboard-blue-team-other";
             ScoreboardBlueTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeamOther}.png");
+
+            const string scoreboardAvatarMask = "scoreboard-avatar-mask";
+            ScoreboardAvatarMask = LoadSingleTexture($"{scoreboardFolder}/{scoreboardAvatarMask}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardAvatarMask}.png");
         }
 
         /// <summary>
@@ -765,6 +786,15 @@ namespace Quaver.Shared.Skinning
             const string battleRoyaleWarning = "warning";
             BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
                 , $"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
+
+            var warningFolder = $"{Dir}/Warnings/";
+            const string epilepsyWarning = "epilepsy-warning";
+            EpilepsyWarning = LoadSingleTexture($"{warningFolder}/{epilepsyWarning}"
+                , $"Quaver.Resources/Textures/UI/{epilepsyWarning}.png");
+
+            const string warningIcon = "warning-icon";
+            EpilepsyWarningIcon = LoadSingleTexture($"{warningFolder}/{warningIcon}"
+                , $"Quaver.Resources/Textures/UI/{warningIcon}.png");
         }
 
         private void LoadBackgrounds()
@@ -798,7 +828,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         public void LoadSoundEffects()
         {
-            var sfxFolder = $"{Dir}/SFX/";
+            var sfxFolder = Path.Combine(Dir, "SFX").Replace("\\", "/");
 
             const string soundHit = "sound-hit";
             SoundHit = LoadSoundEffect($"{sfxFolder}/{soundHit}", soundHit, "Gameplay");
@@ -947,8 +977,6 @@ namespace Quaver.Shared.Skinning
                         workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
                     }
                 }
-                else
-                    workshopList.Add($"({new DirectoryInfo(directory).Name})");
             }
 
             workshopList.Sort();
@@ -958,5 +986,31 @@ namespace Quaver.Shared.Skinning
             options.AddRange(skins);
             return options;
         }
+    }
+
+    /// <summary>
+    /// Which types of skin elements to load.
+    /// </summary>
+    [Flags]
+    public enum UniversalSkinElementsLoadFlags
+    {
+        // IMPORTANT:
+        // If adding a new flag remember to include it in 'All'
+        
+        Grade = 1 << 0,
+        HitBubble = 1 << 1,
+        Judgements = 1 << 2,
+        NumberDisplays = 1 << 3,
+        Pause = 1 << 4,
+        Scoreboard = 1 << 5,
+        HealthBar = 1 << 6,
+        Skip = 1 << 7,
+        ComboAlert = 1 << 8,
+        MultiplayerElements = 1 << 9,
+        Backgrounds = 1 << 10,
+        SoundEffects = 1 << 11,
+    
+        All = Grade | HitBubble | Judgements | NumberDisplays | Pause | Scoreboard | 
+              HealthBar | Skip | ComboAlert | MultiplayerElements | Backgrounds | SoundEffects
     }
 }

@@ -181,6 +181,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> PreferWayland { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> PreferCocoaEventLoop { get; private set; }
+
+        /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
         internal static Bindable<bool> FpsCounter { get; private set; }
@@ -510,6 +514,17 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static BindableInt HitErrorFadeTime { get; private set; }
 
+        /// <summary>
+        ///     If true, the hit error chevron changes color for early and late hits.
+        /// </summary>
+        internal static Bindable<bool> ColorHitErrorByTiming { get; private set; }
+        
+        /// <summary>
+        /// The amount of time in milliseconds a hit need to deviate from the expected hit time such that
+        /// the chevron will change its color to reflect if the hit is an early/late
+        /// </summary>
+        internal static BindableInt HitErrorEarlyLateWindow { get; private set; }
+
         /// <summary></summary>
         ///     If true, the user will skip the results screen after quitting the game.
         /// </summary>
@@ -769,6 +784,10 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayFailWarning { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayEpilepsyWarning { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1053,6 +1072,7 @@ namespace Quaver.Shared.Config
             WindowBorderless = ReadValue(@"WindowBorderless", false, data);
             PlayfieldScale = ReadInt(@"PlayfieldScale", 100, 25, 100, data);
             PreferWayland = ReadValue(@"PreferWayland", false, data);
+            PreferCocoaEventLoop = ReadValue(@"PreferCocoaEventLoop", true, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
@@ -1134,6 +1154,8 @@ namespace Quaver.Shared.Config
             DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             HitErrorFadeTime = ReadInt(@"HitErrorFadeTime", 1000, 100, 5000, data);
+            HitErrorEarlyLateWindow = ReadInt(@"HitErrorEarlyLateWindow", 10, 0, 100, data);
+            ColorHitErrorByTiming = ReadValue(@"ColorHitErrorByTiming", true, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             LockWinkeyDuringGameplay = ReadValue(@"LockWinkeyDuringGameplay", true, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
@@ -1210,6 +1232,7 @@ namespace Quaver.Shared.Config
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
             DisplayPauseWarning = ReadValue(@"DisplayPauseWarning", true, data);
             DisplayFailWarning = ReadValue(@"DisplayFailWarning", true, data);
+            DisplayEpilepsyWarning = ReadValue(@"DisplayEpilepsyWarning", true, data);
             TournamentPlayer2Skin = ReadValue(@"TournamentPlayer2Skin", "", data);
             ResultGraph = ReadValue(@"ResultGraph", ResultGraphs.Deviance, data);
             AudioOutputDevice = ReadValue(@"AudioOutputDevice", "Default", data);

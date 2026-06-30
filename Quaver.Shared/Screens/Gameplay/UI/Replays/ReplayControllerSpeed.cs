@@ -42,6 +42,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             CreateSlider();
         }
 
+        /// <inheritdoc />
+        public override void Update(GameTime gameTime)
+        {
+            Slider.IsClickable = Screen != null && AudioEngine.Track != null && AudioEngine.Track.Time != 0;
+
+            base.Update(gameTime);
+        }
+
         /// <summary>
         /// </summary>
         private void CreateRate()

@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -185,8 +186,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(laneSize, 0),
-                Position = new ScalableVector2(posX, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Position = new ScalableVector2(posX, 0)
             };
 
             // Create the Hold End
@@ -194,13 +194,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                Size = new ScalableVector2(laneSize, 0),
-                Parent = playfield.Stage.HitObjectContainer
+                Size = new ScalableVector2(laneSize, 0)
             };
 
-            // We set the parent of the HitObjectSprite **AFTER** we create the long note
-            // so that the body of the long note isn't drawn over the object.
-            HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
+            // Set long note end properties.
+            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
+            LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+            LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
             // Hits go above the hit object.
             PressHit = new DrawableReplayHit(Ruleset, HitObjectManager, lane);
@@ -296,6 +296,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Update Positions
             UpdateSpritePositions(manager.CurrentVisualAudioOffset);
+            var hitObjectContainer = GetHitObjectContainer(playfield);
+            LongNoteBodySprite.Parent = hitObjectContainer;
+            LongNoteEndSprite.Parent = hitObjectContainer;
+
+            // We set the parent of the HitObjectSprite **AFTER** we create the long note
+            // so that the body of the long note isn't drawn over the object.
+            HitObjectSprite.Parent = hitObjectContainer;
+        }
+
+        private Container GetHitObjectContainer(GameplayPlayfieldKeys playfield)
+        {
+            var editorLayer = Info.HitObjectInfo.EditorLayer;
+
+            if (editorLayer < 0 || editorLayer >= playfield.Stage.HitObjectContainers.Length)
+                return playfield.Stage.HitObjectContainers[0];
+
+            return playfield.Stage.HitObjectContainers[editorLayer];
         }
 
         /// <summary>
@@ -384,14 +401,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
+        ///     A constant reduction in size of the LN based on Percy amount
+        /// </summary>
+        private float PercyReduction =>
+            Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value *
+            AudioEngine.Track.Rate;
+
+        /// <summary>
         ///     Shrinks the height based on Percy amount
         /// </summary>
         /// <param name="height">Original unmodified height before applying Percy.</param>
         /// <returns>Shrunk height, minimum 0.</returns>
         private float PercyHeight(double height)
         {
-            return (float)Math.Max(0,
-                height - Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
+            return (float)Math.Max(0, height - PercyReduction);
         }
 
         /// <summary>
@@ -402,8 +425,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private float PercyPosition(double position)
         {
             if (ScrollDirection.Equals(ScrollDirection.Down))
-                return (float)(position + Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
-            return (float)(position - Info.TimingGroupController.ScrollSpeed * ConfigManager.PercyAmount.Value);
+                return (float)(position + PercyReduction);
+            return (float)(position - PercyReduction);
         }
 
         /// <summary>

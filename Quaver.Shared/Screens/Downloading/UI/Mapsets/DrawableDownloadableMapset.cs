@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Server.Client.Events.Download;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
@@ -92,6 +93,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private ImageButton DifficultyHoverInvisibleButton { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private MapsetDownload CurrentDownload { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -119,6 +124,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             CreateCreator();
 
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
+            MapsetDownloadManager.DownloadAdded += OnDownloadAdded;
         }
 
         /// <inheritdoc />
@@ -135,22 +141,15 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 return;
             }
 
+            if (Container is not DownloadableMapsetContainer downloadContainer || downloadContainer.ShouldLoadMapsetBanners)
+                Banner.LoadIfNeeded();
+
             Button.Size = ContentContainer.Size;
 
             if (Button.IsHovered)
                 Button.Alpha = 0.35f;
             else
                 Button.Alpha = 0;
-
-            DownloadProgressBar.Bindable.Value = 0;
-
-            for (var i = 0; i < MapsetDownloadManager.CurrentDownloads.Count; i++)
-            {
-                var download = MapsetDownloadManager.CurrentDownloads[i];
-
-                if (download.MapsetId == Item.Id)
-                    DownloadProgressBar.Bindable.Value = download?.Progress?.Value?.ProgressPercentage ?? 0;
-            }
 
             base.Update(gameTime);
         }
@@ -162,6 +161,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         {
             // ReSharper disable once DelegateSubtraction
             SelectedMapset.ValueChanged -= OnSelectedMapsetChanged;
+            MapsetDownloadManager.DownloadAdded -= OnDownloadAdded;
+            BindCurrentDownload(null);
             base.Destroy();
         }
 
@@ -178,6 +179,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             ScheduleUpdate(() =>
             {
                 Banner.UpdateMapset(Item);
+                BindCurrentDownload(FindCurrentDownload(Item.Id));
 
                 ArtistTitle.Text = $"{Item.Artist} - {Item.Title}";
                 ArtistTitle.TruncateWithEllipsis(450);
@@ -504,6 +506,72 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 s.ClearAnimations();
                 s.FadeTo(alpha, Easing.Linear, time);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="mapsetId"></param>
+        /// <returns></returns>
+        private static MapsetDownload FindCurrentDownload(int mapsetId) => MapsetDownloadManager.ManipulateCurrentDownloads(
+            downloads => downloads.FirstOrDefault(x => x.MapsetId == mapsetId));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="download"></param>
+        private void BindCurrentDownload(MapsetDownload download)
+        {
+            if (CurrentDownload == download)
+                return;
+
+            if (CurrentDownload != null)
+            {
+                CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
+                CurrentDownload.Removed -= OnDownloadRemoved;
+            }
+
+            CurrentDownload = download;
+
+            if (CurrentDownload != null)
+            {
+                CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
+                CurrentDownload.Removed += OnDownloadRemoved;
+            }
+
+            SetDownloadProgress(CurrentDownload?.Progress?.Value?.ProgressPercentage ?? 0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadAdded(object sender, MapsetDownloadAddedEventArgs e)
+        {
+            if (e.Download.MapsetId == Item.Id)
+                BindCurrentDownload(e.Download);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadRemoved(object sender, EventArgs e) => BindCurrentDownload(null);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
+            => SetDownloadProgress(e.Value?.ProgressPercentage ?? 0);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="progress"></param>
+        private void SetDownloadProgress(double progress)
+        {
+            if (Math.Abs(DownloadProgressBar.Bindable.Value - progress) <= double.Epsilon)
+                return;
+
+            DownloadProgressBar.Bindable.Value = progress;
         }
     }
 }

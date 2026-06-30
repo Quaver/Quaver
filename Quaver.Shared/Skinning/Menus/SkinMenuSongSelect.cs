@@ -58,6 +58,8 @@ namespace Quaver.Shared.Skinning.Menus
 
         public Texture2D SelectFilterPanelLeft { get; private set; }
 
+        public Texture2D MapsetBannerMask { get; private set; }
+
         public float? RankedStatusPosOffsetX { get; private set; }
 
         public float? GameModePosOffsetX { get; private set; }
@@ -79,6 +81,8 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D GameMode7K { get; private set; }
 
         public Texture2D GameMode4K7K { get; private set; }
+
+        public Texture2D GameModeOther { get; private set; }
 
         #endregion
 
@@ -200,6 +204,7 @@ namespace Quaver.Shared.Skinning.Menus
             GameMode4K = LoadSkinElement(folder, "game-mode-4k.png");
             GameMode7K = LoadSkinElement(folder, "game-mode-7k.png");
             GameMode4K7K = LoadSkinElement(folder, "game-mode-4k7k.png");
+            GameModeOther = LoadSkinElement(folder, "game-mode-other.png");
             StatusNotSubmitted = LoadSkinElement(folder, "status-notsubmitted.png");
             StatusUnranked = LoadSkinElement(folder, "status-unranked.png");
             StatusRanked = LoadSkinElement(folder, "status-ranked.png");
@@ -210,6 +215,7 @@ namespace Quaver.Shared.Skinning.Menus
             PersonalBestPanel = LoadSkinElement(folder, "personalbest-panel.png");
             SelectFilterPanelRight = LoadSkinElement(folder, "select-filter-panel-right.png");
             SelectFilterPanelLeft = LoadSkinElement(folder, "select-filter-panel-left.png");
+            MapsetBannerMask = LoadSkinElement(folder, "mapset-banner-mask.png");
         }
     }
 }

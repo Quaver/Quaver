@@ -65,6 +65,17 @@ namespace Quaver.Shared.Screens.Edit.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void Update(GameTime gameTime)
+        {
+            if (Opened)
+                SetVisibleCheck();
+
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             Track.RateChanged -= OnRateChanged;

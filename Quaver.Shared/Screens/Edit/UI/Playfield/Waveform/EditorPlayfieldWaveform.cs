@@ -106,6 +106,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             Slices = tempSlices;
             Bass.StreamFree(Stream);
+            TrackData = null;
         }
 
         /// <summary>
@@ -175,6 +176,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         public void DisposeWaveform()
         {
             DisposeSlices();
+            TrackData = null;
             base.Destroy();
         }
 

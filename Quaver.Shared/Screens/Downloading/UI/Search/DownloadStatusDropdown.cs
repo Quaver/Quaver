@@ -34,6 +34,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             "All",
             "Unranked",
             "Ranked",
+            "Clan Ranked",
         };
 
         /// <summary>
@@ -47,5 +48,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         All,
         Unranked,
         Ranked,
+        ClanRanked,
     }
 }

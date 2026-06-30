@@ -62,6 +62,11 @@ namespace Quaver.Shared.Screens.Downloading
         public Bindable<DownloadableMapset> SelectedMapset { get; } = new Bindable<DownloadableMapset>(null);
 
         /// <summary>
+        ///     The currently selected mapset
+        /// </summary>
+        public int SelectedMapsetIndex { get; set; } = 0;
+
+        /// <summary>
         ///     The user's current search query
         /// </summary>
         public Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") { Value = "" };
@@ -254,6 +259,8 @@ namespace Quaver.Shared.Screens.Downloading
             Page.ValueChanged += OnPageChanged;
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
             SortBy.ValueChanged += OnSortByChanged;
+
+            MapsetDownloadManager.DownloadAdded += OnMapDownloaded;
 
             ScreenExiting += OnScreenExiting;
 
@@ -492,6 +499,8 @@ namespace Quaver.Shared.Screens.Downloading
             MaxLastUpdateDate?.Dispose();
             MinCombo?.Dispose();
             MaxCombo?.Dispose();
+
+            MapsetDownloadManager.DownloadAdded -= OnMapDownloaded;
 
             // ReSharper disable twice DelegateSubtraction
             DisplayOwnedMapsets.ValueChanged -= OnDisplayOwnedMapsetsChanged;
@@ -759,12 +768,44 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectedMapsetChanged(object sender, BindableValueChangedEventArgs<DownloadableMapset> e)
-            => LoadAudioPreview();
+        {
+            SelectedMapsetIndex = Mapsets.Value.IndexOf(SelectedMapset.Value);
+            LoadAudioPreview();
+        }
 
-        /// <summary>
-        ///     Loads an plays the audio preview for the selected map
-        /// </summary>
-        private void LoadAudioPreview()
+        private void OnMapDownloaded(object sender, MapsetDownloadAddedEventArgs e)
+        {
+            e.Download.Removed += (o, args) =>
+            {
+                var currentIndex = Mapsets.Value.IndexOf(SelectedMapset.Value);
+
+                // If mapset is changed to unselected (because of download), we try to place the map selection to the next map
+                if (currentIndex == -1 && Mapsets.Value.Count > 0)
+                {
+                    // Try to scroll down
+                    if (SelectedMapsetIndex != Mapsets.Value.Count)
+                    {
+                        SelectedMapset.Value = Mapsets.Value[SelectedMapsetIndex];
+                    }
+                    // Try to scroll up
+                    else if (SelectedMapsetIndex != 0)
+                    {
+                        SelectedMapset.Value = Mapsets.Value[SelectedMapsetIndex-1];
+                    // Select first map from list
+                    } else
+                    {
+                        SelectedMapset.Value = Mapsets.Value[0];
+                    }
+                    currentIndex = Mapsets.Value.IndexOf(SelectedMapset.Value);
+                }
+                SelectedMapsetIndex = currentIndex;
+            };
+        }
+
+            /// <summary>
+            ///     Loads an plays the audio preview for the selected map
+            /// </summary>
+            private void LoadAudioPreview()
         {
             if (CurrentPreview != null && CurrentPreview.IsPlaying)
                 CurrentPreview?.Stop();

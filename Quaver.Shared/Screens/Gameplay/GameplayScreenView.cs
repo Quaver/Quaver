@@ -115,6 +115,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public Scoreboard ScoreboardRight { get; set; }
 
         /// <summary>
+        ///     The epilepsy warning
+        /// </summary>
+        public EpilepsyWarning EpilepsyWarning { get; set; }
+
+        /// <summary>
         ///     The display to skip the map.
         /// </summary>
         public SkipDisplay SkipDisplay { get; set; }
@@ -281,6 +286,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 };
             }
 
+            CreateEpilepsyWarning();
+
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
             {
@@ -402,13 +409,10 @@ namespace Quaver.Shared.Screens.Gameplay
         }
 
         /// <summary>
-        ///     Creates a mini progress bar if the user defined it in config.
+        ///     Creates a mini progress bar if the skin defines it.
         /// </summary>
         private void CreateMiniProgressBar()
         {
-            if (!ConfigManager.DisplaySongTimeProgress.Value)
-                return;
-
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width / SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayWidthFactor, SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayHeight), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
@@ -562,6 +566,15 @@ namespace Quaver.Shared.Screens.Gameplay
             ScoreboardRight?.Users.ForEach(x => x.SetImage());
         }
 
+        private void CreateEpilepsyWarning()
+        {
+            EpilepsyWarning = new EpilepsyWarning(Screen)
+            {
+                Parent = Container,
+                Size = new ScalableVector2(0, 0, 1, 1)
+            };
+        }
+
         /// <summary>
         ///     Updates the scoreboard for all the current users.
         /// </summary>
@@ -702,6 +715,9 @@ namespace Quaver.Shared.Screens.Gameplay
             // again.
             if (ProgressBar != null)
                 ProgressBar.Parent = Container;
+
+            if (EpilepsyWarning != null)
+                EpilepsyWarning.Parent = Container;
 
             Transitioner.Parent = Container;
 

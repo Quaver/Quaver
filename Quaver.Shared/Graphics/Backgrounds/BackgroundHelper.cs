@@ -50,6 +50,11 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static Texture2D RawTexture { get; private set; }
 
         /// <summary>
+        ///     The file path used to load <see cref="RawTexture"/>.
+        /// </summary>
+        private static string RawTexturePath { get; set; }
+
+        /// <summary>
         ///     The individual map this background is for.
         /// </summary>
         public static Map Map { get; private set; }
@@ -140,22 +145,17 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 token.ThrowIfCancellationRequested();
 
                 var oldRawTexture = RawTexture;
+                var path = GetLoadPath(map);
 
-                string path;
-                if (SkinManager.Skin != null && SkinManager.Skin.UseSkinBackgrounds && SkinManager.Skin.BackgroundPaths.Count != 0)
+                if (RawTexture != null && RawTexturePath == path && !RawTexture.IsDisposed)
                 {
-                    // string.GetHashCode() is not consistent across builds
-                    var hash = map.Md5Checksum.Aggregate(0, (hash, c) => (hash << 5) - hash + c);
-
-                    path = SkinManager.Skin.BackgroundPaths[Math.Abs(hash) % SkinManager.Skin.BackgroundPaths.Count];
-                }
-                else
-                {
-                    path = MapManager.GetBackgroundPath(map);
+                    Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, RawTexture));
+                    return;
                 }
 
                 var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackgroundRaw;
                 RawTexture = tex;
+                RawTexturePath = path;
 
                 token.ThrowIfCancellationRequested();
 
@@ -178,6 +178,25 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 Logger.Error(e, LogType.Runtime);
             }
         });
+
+        /// <summary>
+        ///     Gets the background path that <see cref="Load"/> will use for a map.
+        /// </summary>
+        public static string GetLoadPath(Map map)
+        {
+            if (map == null)
+                return "";
+
+            if (SkinManager.Skin != null && SkinManager.Skin.UseSkinBackgrounds && SkinManager.Skin.BackgroundPaths.Count != 0)
+            {
+                // string.GetHashCode() is not consistent across builds
+                var hash = map.Md5Checksum.Aggregate(0, (hash, c) => (hash << 5) - hash + c);
+
+                return SkinManager.Skin.BackgroundPaths[Math.Abs(hash) % SkinManager.Skin.BackgroundPaths.Count];
+            }
+
+            return MapManager.GetBackgroundPath(map);
+        }
 
         /// <summary>
         ///     Loads all banners that are currently queued

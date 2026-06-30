@@ -393,15 +393,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void OnLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
         {
             if (e.Value != SelectContainerPanel.MapPreview)
-                return;
+            {
+                if (LoadGameplayScreenTask.IsRunning)
+                    LoadGameplayScreenTask.Cancel();
 
+                return;
+            }
+
+            RunLoadTask();
             ShowTestPlayPrompt();
         }
 
         /// <summary>
         /// </summary>
-        protected void RunLoadTask()
+        protected void RunLoadTask(bool force = false)
         {
+            if (MapManager.Selected.Value == null)
+                return;
+
+            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview && (!force || LoadedGameplayScreen == null))
+                return;
+
+            if (!force && LoadedGameplayScreen != null && !LoadedGameplayScreen.IsDisposed &&
+                LoadedGameplayScreen.MapHash == MapManager.Selected.Value.Md5Checksum)
+                return;
+
             Wheel.ClearAnimations();
             Wheel.FadeTo(1, Easing.Linear, 150);
 
@@ -412,7 +428,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask(true);
 
         /// <summary>
         /// </summary>
@@ -433,10 +449,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            if (e.ChangedMods.HasFlag(ModIdentifier.None)) // why is ModIdentifier.None not 0
+            var changedModsIsNone = e.ChangedMods.HasFlag(ModIdentifier.None);
+
+            if (changedModsIsNone && e.Type != ModChangeType.RemoveSpeed) // why is ModIdentifier.None not 0
                 return;
 
-            if ((e.ChangedMods & ModIdentifier.SpeedMods) != 0)
+            if (e.Type == ModChangeType.RemoveSpeed || (e.ChangedMods & ModIdentifier.SpeedMods) != 0)
             {
                 ScheduleUpdate(() =>
                 {
@@ -444,14 +462,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 });
             }
 
-            var reloadTriggers = e.ChangedMods
-                                 & ~ModIdentifier.SpeedMods
-                                 & ~ModIdentifier.Autoplay
-                                 & ~ModIdentifier.Coop
-                                 & ~ModIdentifier.Randomize;
+            if (changedModsIsNone && e.Type != ModChangeType.RemoveSpeed)
+                return;
 
-            if (reloadTriggers != 0) //  once again why is ModIdentifier.None not 0
-                RunLoadTask();
+            if (LoadedGameplayScreen != null)
+                RunLoadTask(true);
         }
 
         /// <summary>

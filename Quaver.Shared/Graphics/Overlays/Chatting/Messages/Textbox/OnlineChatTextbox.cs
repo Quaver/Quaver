@@ -9,6 +9,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
@@ -69,8 +70,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
                     msg = msg.Replace(word, char.ConvertFromUtf32(EmojiHelper.Emojis[word]));
                 }
 
-                var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username, ActiveChannel.Value.Name,
-                    msg, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+                var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username,
+                    user.OnlineUser.ClanTag, user.OnlineUser.ClanAccentColor,
+                    ActiveChannel.Value.Name, msg, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                 {
                     Sender = user,
                     IsFromSelf = true
@@ -93,6 +95,18 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (Standalone && DialogManager.Dialogs.Count != 0)
+            {
+                AlwaysFocused = false;
+                InputEnabled = false;
+                Focused = false;
+                AllowSubmission = false;
+            }
+            else
+            {
+                AllowSubmission = true;
+            }
+
             if (!Standalone && OnlineChat.Instance != null)
             {
                 if (OnlineChat.Instance.IsOpen && OnlineChat.Instance.IsHovered())

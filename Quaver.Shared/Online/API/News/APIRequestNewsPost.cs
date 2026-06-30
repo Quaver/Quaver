@@ -20,18 +20,25 @@ namespace Quaver.Shared.Online.API.News
 
         public override APIResponseNewsFeed ExecuteRequest()
         {
-            var request = new RestRequest(URL, Method.GET);
-            var client = new RestClient("https://blog.quavergame.com") { UserAgent = "Quaver" };
+            try
+            {
+                var request = new RestRequest(URL, Method.GET);
+                var client = new RestClient("https://blog.quavergame.com") { UserAgent = "Quaver" };
 
-            var response = client.Execute(request);
+                var response = client.Execute(request);
 
-            var json = JObject.Parse(response.Content);
+                var json = JObject.Parse(response.Content);
 
-            var responseParsed = JsonConvert.DeserializeObject<APIResponseNewsFeed>(json.ToString());
+                var responseParsed = JsonConvert.DeserializeObject<APIResponseNewsFeed>(json.ToString());
 
-            LoadBanner(responseParsed);
+                LoadBanner(responseParsed);
 
-            return responseParsed;
+                return responseParsed;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>

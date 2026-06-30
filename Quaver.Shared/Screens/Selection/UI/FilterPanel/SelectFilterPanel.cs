@@ -339,10 +339,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 lock (Banner)
                 lock (Banner.Background.Image)
                 {
-                    // This has to be multi-threaded because MapManager.GetBackgroundPath
+                    // This has to be multi-threaded because BackgroundHelper.GetLoadPath
                     // parses osu! maps to get the path of BG. It doesn't exist in the osu!db
-                    if (MapManager.GetBackgroundPath(e.OldValue) == MapManager.GetBackgroundPath(e.Value))
+                    if (BackgroundHelper.GetLoadPath(e.OldValue) == BackgroundHelper.GetLoadPath(e.Value))
+                    {
+                        BackgroundHelper.Load(e.Value);
                         return;
+                    }
 
                     Banner.FadeToBlack();
                     BackgroundHelper.Load(e.Value);

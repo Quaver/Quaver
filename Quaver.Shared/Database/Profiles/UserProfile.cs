@@ -63,7 +63,7 @@ namespace Quaver.Shared.Database.Profiles
                             modeStats = stats.User.Keys7;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            continue;
                     }
 
                     var currentMode = Stats[mode];

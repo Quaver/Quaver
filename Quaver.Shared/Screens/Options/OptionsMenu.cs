@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -75,6 +76,7 @@ namespace Quaver.Shared.Screens.Options
             CreateContentContainers();
             CreateHeader();
 
+            HideAllSectionItems();
             SelectedSection.Value = Sections.Find(x => x.Name == LastOpenedSection) ?? Sections.First();
             SetActiveContentContainer();
             SelectedSection.ValueChanged += OnSectionChanged;
@@ -126,6 +128,7 @@ namespace Quaver.Shared.Screens.Options
         private void CreateSections()
         {
             var containerRect = Content.ScreenRectangle;
+            var skinOptions = SkinStore.GetSkins();
 
             Sections = new List<OptionsSection>
             {
@@ -232,8 +235,8 @@ namespace Quaver.Shared.Screens.Options
                 {
                     new OptionsSubcategory("Selection", new List<OptionsItem>()
                     {
-                        new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin),
-                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin),
+                        new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin, skinOptions),
+                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin, skinOptions),
                         new OptionsItemDefaultSkin(containerRect, "Default Skin", ConfigManager.DefaultSkin)
                     }),
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()
@@ -345,16 +348,7 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Advanced", FontAwesome.Get(FontAwesomeIcon.fa_open_folder), new List<OptionsSubcategory>
                 {
-                    new OptionsSubcategory("Video", new List<OptionsItem>()
-                    {
-                        new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
-                        new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority),
-                        new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
-                        {
-                            Tags = new List<string> {"linux"}
-                        },
-                        new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage)
-                    }),
+                    new OptionsSubcategory("Video", CreateAdvancedVideoOptions(containerRect)),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay),
@@ -367,6 +361,8 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
                         new OptionsItemCheckbox(containerRect, "Display Ranked Accuracy With Custom Judgements", ConfigManager.DisplayRankedAccuracy),
                         new OptionsSlider(containerRect, "Hit Error Fade Time", ConfigManager.HitErrorFadeTime, i => $"{i / 1000f:0.0} sec"),
+                        new OptionsItemCheckbox(containerRect, "Hit Error Early / Late Coloring", ConfigManager.ColorHitErrorByTiming),
+                        new OptionsSlider(containerRect, "Hit Error Early / Late Window", ConfigManager.HitErrorEarlyLateWindow, i => $"{i} ms"),
                         new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                         //new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Online Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
                         new OptionsItemCheckbox(containerRect, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay),
@@ -391,6 +387,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications),
                         new OptionsItemCheckbox(containerRect, "Display Warning For Pausing", ConfigManager.DisplayPauseWarning),
                         new OptionsItemCheckbox(containerRect, "Display Warning For Failing", ConfigManager.DisplayFailWarning),
+                        new OptionsItemCheckbox(containerRect, "Display Epilepsy Warning", ConfigManager.DisplayEpilepsyWarning),
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
                         new OptionsItemCheckbox(containerRect, "Delete Original File After Import", ConfigManager.DeleteOriginalFileAfterImport),
@@ -401,6 +398,49 @@ namespace Quaver.Shared.Screens.Options
             };
 
             SelectedSection = new Bindable<OptionsSection>(Sections.First()) { Value = Sections.First() };
+        }
+
+        private void HideAllSectionItems()
+        {
+            foreach (var section in Sections)
+            {
+                foreach (var subcategory in section.Subcategories)
+                {
+                    foreach (var item in subcategory.Items)
+                    {
+                        item.ApplyVisibility(false);
+                    }
+                }
+            }
+        }
+
+        private static List<OptionsItem> CreateAdvancedVideoOptions(RectangleF containerRect)
+        {
+            var options = new List<OptionsItem>
+            {
+                new OptionsItemCheckbox(containerRect, "Lower FPS On Inactive Window", ConfigManager.LowerFpsOnWindowInactive),
+                new OptionsItemCheckbox(containerRect, "Enable High Process Priority", ConfigManager.EnableHighProcessPriority)
+            };
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                options.Add(new OptionsItemCheckbox(containerRect, "Prefer Wayland", ConfigManager.PreferWayland)
+                {
+                    Tags = new List<string> {"linux"}
+                });
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                options.Add(new OptionsItemCheckbox(containerRect, "Prefer macOS Input Handling", ConfigManager.PreferCocoaEventLoop)
+                {
+                    Tags = new List<string> {"macos", "cocoa", "sdl", "input"}
+                });
+            }
+
+            options.Add(new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage));
+
+            return options;
         }
 
         private static OptionsSubcategory CreateGamemodeCategory(RectangleF containerRect, GameMode mode)
@@ -494,17 +534,22 @@ namespace Quaver.Shared.Screens.Options
         private void CreateContentContainers()
         {
             ContentContainers = new Dictionary<OptionsSection, OptionsContentContainer>();
-
-            foreach (var section in Sections)
-                ContentContainers.Add(section, new OptionsContentContainer(section, Content.Size));
         }
 
         /// <summary>
         /// </summary>
         private void SetActiveContentContainer()
         {
+            if (!ContentContainers.ContainsKey(SelectedSection.Value))
+                ContentContainers.Add(SelectedSection.Value, new OptionsContentContainer(SelectedSection.Value, Content.Size));
+
             foreach (var container in ContentContainers)
-                container.Value.Parent = SelectedSection.Value == container.Key ? Content : null;
+            {
+                var active = SelectedSection.Value == container.Key;
+
+                container.Value.ApplyVisibility(active);
+                container.Value.Parent = active ? Content : null;
+            }
         }
 
         /// <summary>
@@ -565,6 +610,7 @@ namespace Quaver.Shared.Screens.Options
             var container = ContentContainers[searchedSection];
 
             ContentContainers.Remove(searchedSection);
+            container.ClearOptionItems();
 
             foreach (var contentContainer in ContentContainers)
                 contentContainer.Value.ReInitialize();

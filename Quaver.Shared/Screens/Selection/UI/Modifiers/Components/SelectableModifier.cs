@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 if (Selector == null)
                     return;
 
-                Tooltip.Parent = null;
+                Selector.DeactivateTooltip();
             };
 
             Clicked += (sender, args) =>

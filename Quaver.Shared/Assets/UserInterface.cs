@@ -102,6 +102,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditPlayButton => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/edit-play-button.png");
         public static Texture2D StatusPanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/status-panel.png");
         public static Texture2D DefaultBanner => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/default-banner.png");
+        public static Texture2D MapsetBannerMask => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/mapset-banner-mask.png");
         public static Texture2D DifficultyBarBackground => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/difficultybar-bg.png");
         public static Texture2D DifficultyBarColor => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/difficultybar-colour.png");
         public static Texture2D LeaderboardScoresPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/leaderboard-scores-panel.png");
@@ -116,7 +117,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D ClosePanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/close-panel.png");
         public static Texture2D CreateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/create-button.png");
         public static Texture2D SureButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/sure-button.png");
+        public static Texture2D BlankButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/blank-button.png");
         public static Texture2D AcceptButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/accept-button.png");
+        public static Texture2D EpilepsyWarning => TextureManager.Load(@"Quaver.Resources/Textures/UI/epilepsy-warning.png");
         public static Texture2D SaveButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/save-button.png");
         public static Texture2D DeclineButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/decline-button.png");
         public static Texture2D LegalPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/legal-panel.png");

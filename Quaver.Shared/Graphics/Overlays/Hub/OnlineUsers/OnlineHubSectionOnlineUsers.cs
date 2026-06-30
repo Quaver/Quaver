@@ -70,6 +70,16 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="visible"></param>
+        public override void ApplyVisibility(bool visible)
+        {
+            base.ApplyVisibility(visible);
+            UserContainer.ApplyVisibility(visible);
+        }
+
         /// <summary>
         /// </summary>
         private void CreateFilterPanel()
