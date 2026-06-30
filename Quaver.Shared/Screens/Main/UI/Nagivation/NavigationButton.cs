@@ -88,7 +88,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 
         public void Select(bool instantWidth = false)
         {
-            ClearAnimations();
+            ClearWidthAnimations();
 
             var width = OriginalSize.X.Value + 20;
 
@@ -106,10 +106,29 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 
         public void Deselect()
         {
-            ClearAnimations();
+            ClearWidthAnimations();
             ChangeWidthTo((int) OriginalSize.X.Value, Easing.OutQuint, 450);
             Image = DeselectedButton;
             IsSelected = false;
+        }
+
+        /// <summary>
+        ///     Clears only the width-related animations, leaving other in-progress animations
+        ///     (such as the entrance slide-in MoveToX from <see cref="NavigationButtonContainer.AlignButtons"/>)
+        ///     untouched. Calling ClearAnimations() here would wipe that slide-in mid-flight if the
+        ///     user navigates with the arrow keys right as the main menu is entered, leaving the
+        ///     button stuck off-screen.
+        /// </summary>
+        private void ClearWidthAnimations()
+        {
+            lock (Animations)
+            {
+                for (var i = Animations.Count - 1; i >= 0; i--)
+                {
+                    if (Animations[i].Properties == AnimationProperty.Width)
+                        Animations.RemoveAt(i);
+                }
+            }
         }
 
         private void CreateHoverEffect() => HoverEffect = new Sprite()
