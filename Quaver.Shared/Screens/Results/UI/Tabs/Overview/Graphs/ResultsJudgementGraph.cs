@@ -59,8 +59,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                     new ScalableVector2(Width, 50)));
             }
 
-            Bars.Add(new ResultsJudgementGraphMineHitBar(Processor,
-                new ScalableVector2(Width, 50)));
+            if (Processor.Value.CountMineHit > 0)
+            {
+                Bars.Add(new ResultsJudgementGraphMineHitBar(Processor,
+                    new ScalableVector2(Width, 50)));
+            }
 
             var heightSum = Bars.First().Height * Bars.Count;
             var heightPer = (Height - heightSum) / (Bars.Count + 1);
