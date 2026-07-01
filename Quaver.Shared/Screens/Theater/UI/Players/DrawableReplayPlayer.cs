@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Players
             Accuracy.Y = PerformanceRating.Y + PerformanceRating.Height + space;
 
             Judgements.Text = $"Judgements: {Replay.CountMarv} / {Replay.CountPerf} / {Replay.CountGreat} / {Replay.CountGood} / " +
-                              $"{Replay.CountOkay} / {Replay.CountMiss} / {Replay.MaxCombo}x";
+                              $"{Replay.CountOkay} / {Replay.CountMiss} ({Replay.CountMineHit} mines) / {Replay.MaxCombo}x";
 
             Judgements.Y = Accuracy.Y + Accuracy.Height + space;
         }
