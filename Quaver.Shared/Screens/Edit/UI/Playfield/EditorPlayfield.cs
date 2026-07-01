@@ -34,6 +34,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Footer;
+using Quaver.Shared.Screens.Edit.UI.Menu;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram;
@@ -802,13 +803,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
+            var menuBarVirtualY = (int)(EditorFileMenuBar.CurrentHeight / WindowManager.ScreenScale.Y);
             SeekBar = new EditorDifficultySeekBar(ActionManager, Map, ModIdentifier.None,
-                new ScalableVector2(56, WindowManager.Height - EditorFooter.HEIGHT - 38), 200, 3, Track,
+                new ScalableVector2(56, WindowManager.Height - EditorFooter.HEIGHT - menuBarVirtualY), 200, 3, Track,
                 true, 0.85f)
             {
                 Parent = this,
                 Tint = ColorHelper.HexToColor("#181818"),
-                Y = 34
+                Y = menuBarVirtualY
             };
 
             SeekBar.X -= SeekBar.Width + 60;
