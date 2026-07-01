@@ -286,7 +286,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             switch (j)
             {
                 case Judgement.Marv:
-                    return new Color(251,255,182);
+                    return new Color(255,255,255);
                 case Judgement.Perf:
                     return new Color(255,231,107);
                 case Judgement.Great:
@@ -329,7 +329,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
     public class ResultsJudgementGraphMineHitBar : ResultsJudgementGraphNumberBar
     {
-        public static Color Color => new(154, 100, 93);
+        public static Color Color => new(179, 179, 179);
         private const string JudgementTextureDirectory = $"Quaver.Resources/Textures/UI/Results";
 
         /// <summary>
