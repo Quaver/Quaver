@@ -210,7 +210,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                     break;
 
                 data.Add(new ResultsTableColumnData(j.ToString(), $"{Processor.CurrentJudgements[j]:n0}",
-                    ResultsJudgementGraphBar.GetColor(j)));
+                    ResultsJudgementGraphJudgementBar.GetColor(j)));
             }
 
             CreateData(data);

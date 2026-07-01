@@ -67,6 +67,8 @@ public class MultiplayerMatchInformationResponseScore
 
     [JsonProperty("count_miss")] public int CountMiss { get; set; }
 
+    [JsonProperty("count_minehit")] public int CountMineHit { get; set; }
+
     [JsonProperty("battle_royale_rank")] public int? BattleRoyaleRank { get; set; }
 }
 
