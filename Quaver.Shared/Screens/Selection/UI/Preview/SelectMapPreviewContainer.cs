@@ -393,42 +393,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void OnLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
         {
             if (e.Value != SelectContainerPanel.MapPreview)
-            {
-                if (LoadGameplayScreenTask.IsRunning)
-                    LoadGameplayScreenTask.Cancel();
-
                 return;
-            }
 
-            RunLoadTask();
             ShowTestPlayPrompt();
         }
 
         /// <summary>
         /// </summary>
-        protected void RunLoadTask(bool force = false)
+        protected void RunLoadTask()
         {
-            if (MapManager.Selected.Value == null)
-                return;
+            var selectedMap = MapManager.Selected.Value;
 
-            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview && (!force || LoadedGameplayScreen == null))
-                return;
-
-            if (!force && LoadedGameplayScreen != null && !LoadedGameplayScreen.IsDisposed &&
-                LoadedGameplayScreen.MapHash == MapManager.Selected.Value.Md5Checksum)
+            if (selectedMap == null)
                 return;
 
             Wheel.ClearAnimations();
             Wheel.FadeTo(1, Easing.Linear, 150);
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, DelayTime);
+            LoadGameplayScreenTask.Run(selectedMap, DelayTime);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask(true);
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
 
         /// <summary>
         /// </summary>
@@ -466,7 +455,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 return;
 
             if (LoadedGameplayScreen != null)
-                RunLoadTask(true);
+                RunLoadTask();
         }
 
         /// <summary>
