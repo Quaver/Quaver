@@ -295,9 +295,10 @@ namespace Quaver.Shared.Graphics.Playercards
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 UsePreviousSpriteBatchOptions = true,
-                X = ViewProfileButton.X - ViewProfileButton.Width - 10,
+                X = ViewProfileButton.X - ViewProfileButton.Width - 8,
                 Y = ModeButton.Y,
                 Size = new ScalableVector2(92, 25),
+                Scale = new Vector2(0.92f, 0.92f),
             };
 
             ViewClanButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{User?.OnlineUser?.ClanId}");
