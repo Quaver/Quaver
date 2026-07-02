@@ -114,6 +114,11 @@ namespace Quaver.Shared.Database.Scores
         public int CountMiss { get; set; }
 
         /// <summary>
+        ///     The amount of mine hits the user got.
+        /// </summary>
+        public int CountMineHit { get; set; }
+
+        /// <summary>
         ///     Integer based seed used for shuffling the lanes when randomize mod is active.
         ///     Defaults to -1 if there is no seed.
         /// </summary>
@@ -280,6 +285,7 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = processor.CurrentJudgements[Judgement.Good],
                 CountOkay = processor.CurrentJudgements[Judgement.Okay],
                 CountMiss = processor.CurrentJudgements[Judgement.Miss],
+                CountMineHit = processor.CountMineHit,
                 Mods = (long)processor.Mods,
                 ScrollSpeed = scrollSpeed,
                 PauseCount = pauseCount,
@@ -329,6 +335,7 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = score.CountGood,
                 CountOkay = score.CountOkay,
                 CountMiss = score.CountMiss,
+                CountMineHit = score.CountMineHit,
                 Mods = (long)score.Mods,
                 Country = score.Country
             };
@@ -380,6 +387,7 @@ namespace Quaver.Shared.Database.Scores
             CountGood = CountGood,
             CountOkay = CountOkay,
             CountMiss = CountMiss,
+            CountMineHit = CountMineHit,
             RandomizeModifierSeed = RandomizeModifierSeed
         };
 

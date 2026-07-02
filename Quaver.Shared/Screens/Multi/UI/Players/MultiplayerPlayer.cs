@@ -49,6 +49,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
+        private ClanTag Clan { get; set; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus Username { get; set; }
 
         /// <summary>
@@ -80,6 +84,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             CreateButton();
             CreateAvatar();
             CreateFlag();
+            CreateClan();
             CreateUsername();
             CreateReadyIcon();
             CreateWinCount();
@@ -162,6 +167,8 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             // Update username & flag
             if (User.HasUserInfo)
             {
+                Clan.UpdateFromUser(User.OnlineUser);
+                Username.X = Clan.Visible ? Clan.X + Clan.Width + 6 : Flag.Width + 8;
                 Username.Text = User.OnlineUser.Username;
                 Flag.Image = Flags.Get(User.OnlineUser.CountryFlag ?? "XX");
             }
@@ -171,6 +178,8 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
                 OnlineManager.Client?.RequestUserInfo(new List<int>{ User.OnlineUser.Id });
                 OnlineManager.Client?.RequestUserStats(new List<int>{ User.OnlineUser.Id });
 
+                Clan.Clear();
+                Username.X = Flag.Width + 8;
                 Username.Text = "Loading...";
                 Flag.Image = Flags.Get("XX");
             }
@@ -299,6 +308,16 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             Y = 8,
             Image = Flags.Get("XX"),
             Size = new ScalableVector2(22, 22),
+            UsePreviousSpriteBatchOptions = true
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateClan() => Clan = new ClanTag(21)
+        {
+            Parent = Flag,
+            Alignment = Alignment.MidLeft,
+            X = Flag.Width + 8,
             UsePreviousSpriteBatchOptions = true
         };
 

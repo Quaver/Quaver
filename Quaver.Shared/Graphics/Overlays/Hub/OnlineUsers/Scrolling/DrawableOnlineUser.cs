@@ -39,6 +39,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         /// <summary>
         /// </summary>
+        private SpriteTextPlus Clan { get; set; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus Username { get; set; }
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             CreateButton();
             CreateAvatar();
             CreateFlag();
+            CreateClan();
             CreateUsername();
             CreateStatus();
             CreateOnlineStatusIcon();
@@ -163,15 +168,27 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 // Empty username is a valid way to check if we have user information
                 if (!Item.HasUserInfo)
                 {
+                    Clan.Visible = false;
+                    Clan.Text = "";
                     Username.Text = $"Loading (#{OnlineUser.Id})...";
                     Username.Tint = Color.White;
+                    Username.X = Flag.X + Flag.Width + 8;
                     Flag.Image = Flags.Get("XX");
                     Status.Text = "Idle";
                 }
                 else
                 {
+                    var clanTag = OnlineUser.ClanTag;
+                    var hasClan = !string.IsNullOrEmpty(clanTag);
+
+                    Clan.Visible = hasClan;
+                    Clan.Text = hasClan ? $"[{clanTag}] " : "";
+                    Clan.Tint = GetClanColor();
+                    Clan.X = Flag.X + Flag.Width + 8;
+
                     Username.Text = OnlineUser.Username;
                     Username.Tint = Colors.GetUserChatColor(OnlineUser.UserGroups);
+                    Username.X = hasClan ? Clan.X + Clan.Width : Flag.X + Flag.Width + 8;
                     Flag.Image = Flags.Get(OnlineUser.CountryFlag);
                     UpdateUserStatus();
                 }
@@ -229,6 +246,20 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 X = Avatar.X + Avatar.Width + 14,
                 Y = 8,
                 Image = Flags.Get("XX"),
+                UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateClan()
+        {
+            Clan = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                X = Flag.X + Flag.Width + 8,
+                Y = Flag.Y,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -358,6 +389,27 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             }
 
             Status.TruncateWithEllipsis(350);
+        }
+
+        /// <summary>
+        ///     Gets the clan accent color, falling back to the normal user color if the color is missing or invalid.
+        /// </summary>
+        private Color GetClanColor()
+        {
+            var fallback = Colors.GetUserChatColor(OnlineUser.UserGroups);
+            var color = OnlineUser.ClanAccentColor;
+
+            if (string.IsNullOrEmpty(color))
+                return fallback;
+
+            try
+            {
+                return ColorHelper.HexToColor(color);
+            }
+            catch
+            {
+                return fallback;
+            }
         }
     }
 }

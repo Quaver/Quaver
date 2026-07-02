@@ -580,29 +580,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.UpdateScoreboardUsers();
 
-                    // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Hit, KeyPressType.None, info.HitObjectInfo, info.StartTime,
-                        Judgement.Marv,
-                        0, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                    Ruleset.ScoreProcessor.Stats.Add(stat);
+                    // The mine is cleared. By design, no judgement is given. This prevents
+                    // messing up with Marvelous/Perfect ratio, as well as score rushing due to
+                    // excessive number of mines.
 
-                    var im = Ruleset.InputManager as KeysInputManager;
-
-                    if (im?.ReplayInputManager == null)
-                        ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(stat);
-
-                    var view = (GameplayScreenView)Ruleset.Screen.View;
-                    view.UpdateScoreAndAccuracyDisplays();
-
-                    // Perform Playfield animations
-                    var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-
-                    if (im?.ReplayInputManager == null)
-                    {
-                        playfield.Stage.ComboDisplay.MakeVisible();
-                        playfield.Stage.HitBubbles.AddJudgement(Judgement.Marv);
-                    }
-
+                    // Mark the mine as dead.
                     info.State = HitObjectState.Dead;
                 }
 
