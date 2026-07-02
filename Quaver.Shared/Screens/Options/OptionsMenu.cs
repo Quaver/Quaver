@@ -164,6 +164,10 @@ namespace Quaver.Shared.Screens.Options
                         {
                             Tags = new List<string> {"fx", "sfx"}
                         },
+                        new OptionsItemCheckbox(containerRect, "Mute Audio When Window Unfocused", ConfigManager.MuteAudioOnWindowInactive)
+                        {
+                            Tags = new List<string> {"focus", "background"}
+                        },
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
                     {

@@ -624,6 +624,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
 
         /// <summary>
+        ///     If true, audio will be muted when Quaver isn't the focused window
+        /// </summary>
+        internal static Bindable<bool> MuteAudioOnWindowInactive { get; private set; }
+
+        /// <summary>
         /// </summary>
         internal static Bindable<bool> DownloadDisplayOwnedMapsets { get; private set; }
 
@@ -1188,6 +1193,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
+            MuteAudioOnWindowInactive = ReadValue(@"MuteAudioOnWindowInactive", false, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
             DownloadDisplayExplicitMapsets = ReadValue(@"DownloadDisplayExplicitMapsets", false, data);
             DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);

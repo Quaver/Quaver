@@ -192,6 +192,11 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrame { get; set; }
 
         /// <summary>
+        ///     Used to detect when to mute/restore audio if the user's window isn't active.
+        /// </summary>
+        private bool WindowActiveInPreviousFrameForAudio { get; set; } = true;
+
+        /// <summary>
         ///     FPS to use when reducing rendering for an inactive visible window.
         /// </summary>
         private const int InactiveWindowFpsLimit = 30;
@@ -424,6 +429,7 @@ namespace Quaver.Shared
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
+            HandleMuteAudioOnWindowInactive();
             UpdateFpsCounterPosition();
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
@@ -481,16 +487,12 @@ namespace Quaver.Shared
             MapsetImporter.WatchForChanges();
 
             // Initially set the global volume.
-            AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeMusic.Value / 100f;
-            AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeEffect.Value / 100f;
+            UpdateGlobalVolume();
 
-            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
-            {
-                AudioTrack.GlobalVolume = e.Value * ConfigManager.VolumeMusic.Value / 100f;
-                AudioSample.GlobalVolume = e.Value * ConfigManager.VolumeEffect.Value / 100f;
-            };
-            ConfigManager.VolumeMusic.ValueChanged += (sender, e) => AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
-            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
+            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.VolumeMusic.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.MuteAudioOnWindowInactive.ValueChanged += (sender, e) => UpdateGlobalVolume();
 
             ConfigManager.Pitched.ValueChanged += (sender, e) =>
             {
@@ -968,6 +970,30 @@ namespace Quaver.Shared
                 Logger.Error(e, LogType.Runtime);
                 throw;
             }
+        }
+
+        /// <summary>
+        ///     Recalculates the global audio volume, muting it if the window is inactive
+        ///     and the user has enabled that option.
+        /// </summary>
+        private void UpdateGlobalVolume()
+        {
+            var muted = ConfigManager.MuteAudioOnWindowInactive.Value && !IsActive;
+
+            AudioTrack.GlobalVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeMusic.Value / 100f;
+            AudioSample.GlobalVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeEffect.Value / 100f;
+        }
+
+        /// <summary>
+        ///     Handles muting/restoring audio when the window's active state changes.
+        /// </summary>
+        private void HandleMuteAudioOnWindowInactive()
+        {
+            if (IsActive == WindowActiveInPreviousFrameForAudio)
+                return;
+
+            WindowActiveInPreviousFrameForAudio = IsActive;
+            UpdateGlobalVolume();
         }
 
         /// <summary>
