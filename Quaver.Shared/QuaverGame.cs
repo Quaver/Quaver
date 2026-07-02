@@ -612,6 +612,7 @@ namespace Quaver.Shared
                         CenterWindowOnMonitor(_fullScreenMonitorBounds.Value, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
                     _fullScreenMonitorBounds = null;
+                    Window.IsBorderless = ConfigManager.WindowBorderless.Value;
                 }
             };
             
