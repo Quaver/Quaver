@@ -197,6 +197,23 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrameForAudio { get; set; } = true;
 
         /// <summary>
+        ///     Used to detect when to switch between gameplay/menu music volume.
+        /// </summary>
+        private bool WasPlayingGameplayMusicInPreviousFrame { get; set; }
+
+        /// <summary>
+        ///     The music volume that <see cref="HandleMusicVolumeFade"/> is currently easing
+        ///     <see cref="AudioTrack.GlobalVolume"/> towards.
+        /// </summary>
+        private float TargetMusicVolume { get; set; }
+
+        /// <summary>
+        ///     How long in milliseconds it takes to fade between music volumes
+        ///     (e.g. when switching between gameplay/menu music volume or when muting).
+        /// </summary>
+        private const int MusicVolumeFadeTime = 400;
+
+        /// <summary>
         ///     FPS to use when reducing rendering for an inactive visible window.
         /// </summary>
         private const int InactiveWindowFpsLimit = 30;
@@ -430,6 +447,7 @@ namespace Quaver.Shared
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
             HandleMuteAudioOnWindowInactive();
+            HandleMusicVolumeFade(gameTime);
             UpdateFpsCounterPosition();
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
@@ -487,10 +505,11 @@ namespace Quaver.Shared
             MapsetImporter.WatchForChanges();
 
             // Initially set the global volume.
-            UpdateGlobalVolume();
+            UpdateGlobalVolume(true);
 
             ConfigManager.VolumeGlobal.ValueChanged += (sender, e) => UpdateGlobalVolume();
             ConfigManager.VolumeMusic.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.VolumeMenuMusic.ValueChanged += (sender, e) => UpdateGlobalVolume();
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => UpdateGlobalVolume();
             ConfigManager.MuteAudioOnWindowInactive.ValueChanged += (sender, e) => UpdateGlobalVolume();
 
@@ -973,26 +992,63 @@ namespace Quaver.Shared
         }
 
         /// <summary>
-        ///     Recalculates the global audio volume, muting it if the window is inactive
-        ///     and the user has enabled that option.
+        ///     If true the music track being played is the gameplay track of an actively played map,
+        ///     rather than menu/song-select/editor background music.
         /// </summary>
-        private void UpdateGlobalVolume()
+        private bool IsPlayingGameplayMusic => CurrentScreen?.Type == QuaverScreenType.Gameplay;
+
+        /// <summary>
+        ///     Recalculates the global audio volume muting it if the window is inactive
+        ///     and the user has enabled that option. Uses the gameplay music volume while
+        ///     a map is actively being played and the menu music volume everywhere else.
+        ///
+        ///     The music volume is eased towards its new value by <see cref="HandleMusicVolumeFade"/>
+        ///     every frame rather than being applied immediately so that switching between
+        ///     gameplay/menu music (or muting) doesn't result in a jarring instant volume jump.
+        /// </summary>
+        /// <param name="immediate">If true, skips the fade and applies the music volume instantly.</param>
+        private void UpdateGlobalVolume(bool immediate = false)
         {
             var muted = ConfigManager.MuteAudioOnWindowInactive.Value && !IsActive;
+            var musicVolume = IsPlayingGameplayMusic ? ConfigManager.VolumeMusic.Value : ConfigManager.VolumeMenuMusic.Value;
 
-            AudioTrack.GlobalVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeMusic.Value / 100f;
+            TargetMusicVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * musicVolume / 100f;
+
+            if (immediate)
+                AudioTrack.GlobalVolume = TargetMusicVolume;
+
             AudioSample.GlobalVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeEffect.Value / 100f;
         }
 
         /// <summary>
-        ///     Handles muting/restoring audio when the window's active state changes.
+        ///     Eases <see cref="AudioTrack.GlobalVolume"/> towards <see cref="TargetMusicVolume"/>
+        ///     over <see cref="MusicVolumeFadeTime"/>, so music volume changes fade smoothly
+        ///     instead of jumping instantly (e.g. when returning from gameplay to the menu).
+        /// </summary>
+        private void HandleMusicVolumeFade(GameTime gameTime)
+        {
+            var current = (float) AudioTrack.GlobalVolume;
+
+            if (Math.Abs(current - TargetMusicVolume) < 0.1f)
+                return;
+
+            var t = (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / MusicVolumeFadeTime, 1);
+            AudioTrack.GlobalVolume = Microsoft.Xna.Framework.MathHelper.Lerp(current, TargetMusicVolume, t);
+        }
+
+        /// <summary>
+        ///     Handles muting/restoring audio when the window's active state changes and
+        ///     switching between gameplay/menu music volume when entering or leaving gameplay.
         /// </summary>
         private void HandleMuteAudioOnWindowInactive()
         {
-            if (IsActive == WindowActiveInPreviousFrameForAudio)
+            var isPlayingGameplayMusic = IsPlayingGameplayMusic;
+
+            if (IsActive == WindowActiveInPreviousFrameForAudio && isPlayingGameplayMusic == WasPlayingGameplayMusicInPreviousFrame)
                 return;
 
             WindowActiveInPreviousFrameForAudio = IsActive;
+            WasPlayingGameplayMusicInPreviousFrame = isPlayingGameplayMusic;
             UpdateGlobalVolume();
         }
 

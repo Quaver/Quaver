@@ -159,12 +159,19 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Volume", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Master Volume", ConfigManager.VolumeGlobal),
-                        new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic),
+                        new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic)
+                        {
+                            Tags = new List<string> {"gameplay", "in-game", "song"}
+                        },
+                        new OptionsSlider(containerRect, "Menu Music Volume", ConfigManager.VolumeMenuMusic)
+                        {
+                            Tags = new List<string> {"menu", "jukebox"}
+                        },
                         new OptionsSlider(containerRect, "Effect Volume", ConfigManager.VolumeEffect)
                         {
                             Tags = new List<string> {"fx", "sfx"}
                         },
-                        new OptionsItemCheckbox(containerRect, "Mute Audio When Window Unfocused", ConfigManager.MuteAudioOnWindowInactive)
+                        new OptionsItemCheckbox(containerRect, "Mute Audio When Unfocused", ConfigManager.MuteAudioOnWindowInactive)
                         {
                             Tags = new List<string> {"focus", "background"}
                         },
