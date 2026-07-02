@@ -208,6 +208,14 @@ namespace Quaver.Shared
         /// </summary>
         public const float SkinScalingFactor = 1920f / 1366;
 
+        /// <summary>
+        ///     The bounds of the monitor the window was on right before entering full screen.
+        ///     <see cref="GameWindow.Position"/> always reports (0, 0) while actually in full screen mode,
+        ///     so this is captured beforehand (while still windowed) and used to restore the window to the
+        ///     correct monitor when full screen is turned back off.
+        /// </summary>
+        private MonitorBounds? _fullScreenMonitorBounds;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -587,9 +595,23 @@ namespace Quaver.Shared
                     
                     ConfigManager.WindowFullScreen.ChangeWithoutTrigger(false);
                 }
+                else if (e.Value)
+                {
+                    var centerX = Window.Position.X + Window.ClientBounds.Width / 2;
+                    var centerY = Window.Position.Y + Window.ClientBounds.Height / 2;
+                    _fullScreenMonitorBounds = GetMonitorBoundsAtPoint(centerX, centerY);
+
+                    Graphics.IsFullScreen = true;
+                }
                 else
                 {
-                    Graphics.IsFullScreen = e.Value;
+                    Graphics.IsFullScreen = false;
+                    Graphics.ApplyChanges();
+
+                    if (_fullScreenMonitorBounds.HasValue)
+                        CenterWindowOnMonitor(_fullScreenMonitorBounds.Value, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+
+                    _fullScreenMonitorBounds = null;
                 }
             };
             
@@ -1194,9 +1216,81 @@ namespace Quaver.Shared
         }
 
         /// <summary>
+        ///     The bounds of a monitor, in desktop coordinates.
+        /// </summary>
+        private struct MonitorBounds
+        {
+            public int Left, Top, Right, Bottom;
+            public int Width => Right - Left;
+            public int Height => Bottom - Top;
+        }
+
+        /// <summary>
+        ///     Finds the bounds of the monitor containing the given desktop point.
+        ///     On Windows, uses Win32 MonitorFromPoint. On macOS/Linux, uses SDL2 display bounds enumeration.
+        /// </summary>
+        private static MonitorBounds? GetMonitorBoundsAtPoint(int x, int y)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var monitor = MonitorFromPoint(new POINT { X = x, Y = y }, MONITOR_DEFAULTTONEAREST);
+                var info = new MONITORINFO { Size = Marshal.SizeOf<MONITORINFO>() };
+
+                if (GetMonitorInfo(monitor, ref info))
+                {
+                    return new MonitorBounds
+                    {
+                        Left = info.Monitor.Left,
+                        Top = info.Monitor.Top,
+                        Right = info.Monitor.Right,
+                        Bottom = info.Monitor.Bottom
+                    };
+                }
+
+                return null;
+            }
+
+            try
+            {
+                var displayCount = SDL_GetNumVideoDisplays();
+
+                for (var i = 0; i < displayCount; i++)
+                {
+                    if (SDL_GetDisplayBounds(i, out var bounds) != 0)
+                        continue;
+
+                    if (x < bounds.x || x >= bounds.x + bounds.w ||
+                        y < bounds.y || y >= bounds.y + bounds.h)
+                        continue;
+
+                    return new MonitorBounds
+                    {
+                        Left = bounds.x,
+                        Top = bounds.y,
+                        Right = bounds.x + bounds.w,
+                        Bottom = bounds.y + bounds.h
+                    };
+                }
+            }
+            catch (DllNotFoundException)
+            {
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Centers the game window within the given monitor bounds.
+        /// </summary>
+        private void CenterWindowOnMonitor(MonitorBounds bounds, int targetWidth, int targetHeight)
+        {
+            var x = bounds.Left + (bounds.Width - targetWidth) / 2;
+            var y = bounds.Top + (bounds.Height - targetHeight) / 2;
+            Window.Position = new Point(x, y);
+        }
+
+        /// <summary>
         ///     Centers the game window on the monitor it was previously on.
-        ///     On Windows, uses Win32 MonitorFromPoint to find the correct monitor.
-        ///     On macOS/Linux, uses SDL2 display bounds enumeration.
         /// </summary>
         /// <param name="oldPos">The window position before the resolution change.</param>
         /// <param name="oldWidth">The window width before the resolution change.</param>
@@ -1208,45 +1302,12 @@ namespace Quaver.Shared
             var centerX = oldPos.X + oldWidth / 2;
             var centerY = oldPos.Y + oldHeight / 2;
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            var bounds = GetMonitorBoundsAtPoint(centerX, centerY);
+
+            if (bounds.HasValue)
             {
-                var monitor = MonitorFromPoint(new POINT { X = centerX, Y = centerY }, MONITOR_DEFAULTTONEAREST);
-                var info = new MONITORINFO { Size = Marshal.SizeOf<MONITORINFO>() };
-
-                if (GetMonitorInfo(monitor, ref info))
-                {
-                    var monitorWidth = info.Monitor.Right - info.Monitor.Left;
-                    var monitorHeight = info.Monitor.Bottom - info.Monitor.Top;
-                    var x = info.Monitor.Left + (monitorWidth - targetWidth) / 2;
-                    var y = info.Monitor.Top + (monitorHeight - targetHeight) / 2;
-                    Window.Position = new Point(x, y);
-                    return;
-                }
-            }
-            else
-            {
-                try
-                {
-                    var displayCount = SDL_GetNumVideoDisplays();
-
-                    for (var i = 0; i < displayCount; i++)
-                    {
-                        if (SDL_GetDisplayBounds(i, out var bounds) != 0)
-                            continue;
-
-                        if (centerX < bounds.x || centerX >= bounds.x + bounds.w ||
-                            centerY < bounds.y || centerY >= bounds.y + bounds.h)
-                            continue;
-
-                        var x = bounds.x + (bounds.w - targetWidth) / 2;
-                        var y = bounds.y + (bounds.h - targetHeight) / 2;
-                        Window.Position = new Point(x, y);
-                        return;
-                    }
-                }
-                catch (DllNotFoundException)
-                {
-                }
+                CenterWindowOnMonitor(bounds.Value, targetWidth, targetHeight);
+                return;
             }
 
             Window.Position = new Point(centerX - targetWidth / 2, centerY - targetHeight / 2);
