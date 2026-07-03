@@ -1499,6 +1499,7 @@ namespace Quaver.Shared.Screens.Edit
                     ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
 
                 Map.DifficultyProcessorVersion = "Needs Update";
+                Map.DateAdded = DateTime.Now;
                 MapDatabaseCache.UpdateMap(Map);
 
                 if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
