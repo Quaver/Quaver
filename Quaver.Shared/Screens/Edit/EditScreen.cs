@@ -330,6 +330,14 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private FileSystemWatcher FileWatcher { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private object ManualChangesDialogLock { get; } = new object();
+
+        /// <summary>
+        /// </summary>
+        private bool ManualChangesDialogOpen { get; set; }
+
         private double LastSeekDistance;
 
         /// <summary>
@@ -1976,10 +1984,19 @@ namespace Quaver.Shared.Screens.Edit
 
             FileWatcher.Changed += (sender, args) =>
             {
-                if (DialogManager.Dialogs.Count != 0)
-                    return;
+                lock (ManualChangesDialogLock)
+                {
+                    if (ManualChangesDialogOpen || DialogManager.Dialogs.Count != 0)
+                        return;
 
-                DialogManager.Show(new EditorManualChangesDialog(this));
+                    ManualChangesDialogOpen = true;
+                }
+
+                DialogManager.Show(new EditorManualChangesDialog(this, () =>
+                {
+                    lock (ManualChangesDialogLock)
+                        ManualChangesDialogOpen = false;
+                }));
             };
 
             FileWatcher.EnableRaisingEvents = true;
