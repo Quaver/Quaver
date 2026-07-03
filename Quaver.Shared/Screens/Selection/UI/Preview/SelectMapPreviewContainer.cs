@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 Track.Seeked -= OnTrackSeeked;
 
             LoadGameplayScreenTask?.Dispose();
-            LoadedGameplayScreen?.Destroy();
+            DestroyLoadedGameplayScreen();
             TestPlayPrompt?.Destroy();
 
             base.Destroy();
@@ -180,10 +180,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (LoadedGameplayScreen == null)
                 return HandleLoadGameplayScreen(map, token);
 
-            TestPlayPrompt.Parent = null;
-            LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-            LoadedGameplayScreen.Destroy();
-            LoadedGameplayScreen = null;
+            DestroyLoadedGameplayScreen();
 
             return HandleLoadGameplayScreen(map, token);
         }
@@ -334,9 +331,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 if (e.OldValue != null)
                     e.OldValue.Qua = null;
 
-                TestPlayPrompt.Parent = null;
-                LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-                LoadedGameplayScreen?.Destroy();
+                DestroyLoadedGameplayScreen();
 
                 SeekBar?.Destroy();
             }
@@ -563,7 +558,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         protected void RefreshScreen()
         {
-            if (LoadedGameplayScreen == null)
+            if (LoadedGameplayScreen == null || LoadedGameplayScreen.IsDisposed)
                 return;
 
             if (LoadedGameplayScreen.InReplayMode)
@@ -573,6 +568,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 var hitobjectManager = (HitObjectManagerKeys)LoadedGameplayScreen.Ruleset.HitObjectManager;
                 hitobjectManager.HandleSkip();
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        protected void DestroyLoadedGameplayScreen()
+        {
+            var screen = LoadedGameplayScreen;
+
+            if (screen == null)
+                return;
+
+            LoadedGameplayScreen = null;
+            TestPlayPrompt.Parent = null;
+
+            if (screen.Ruleset?.Playfield?.Container != null)
+                screen.Ruleset.Playfield.Container.Parent = null;
+
+            screen.Destroy();
         }
 
         /// <summary>

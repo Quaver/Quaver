@@ -148,11 +148,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
 
         public void Refresh()
         {
-            if (LoadedGameplayScreen != null)
-            {
-                LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-                LoadedGameplayScreen.Destroy();
-            }
+            DestroyLoadedGameplayScreen();
 
             RunLoadTask();
         }
