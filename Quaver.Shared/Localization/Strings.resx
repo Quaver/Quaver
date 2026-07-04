@@ -156,4 +156,688 @@
   <data name="Screen_Main_Published" xml:space="preserve">
     <value>Published {0}</value>
   </data>
+  <data name="Screen_Options_Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Screen_Options_Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="Screen_Options_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Screen_Options_Gameplay" xml:space="preserve">
+    <value>Gameplay</value>
+  </data>
+  <data name="Screen_Options_Skin" xml:space="preserve">
+    <value>Skin</value>
+  </data>
+  <data name="Screen_Options_Input" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
+    <value>Game mode specific</value>
+  </data>
+  <data name="Screen_Options_Miscellaneous" xml:space="preserve">
+    <value>Miscellaneous</value>
+  </data>
+  <data name="Screen_Options_Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="Screen_Options_Window" xml:space="preserve">
+    <value>Window</value>
+  </data>
+  <data name="Screen_Options_FrameTime" xml:space="preserve">
+    <value>Frame Time</value>
+  </data>
+  <data name="Screen_Options_Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="Screen_Options_Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Screen_Options_Offset" xml:space="preserve">
+    <value>Offset</value>
+  </data>
+  <data name="Screen_Options_Effects" xml:space="preserve">
+    <value>Effects</value>
+  </data>
+  <data name="Screen_Options_Localization" xml:space="preserve">
+    <value>Localization</value>
+  </data>
+  <data name="Screen_Options_Background" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="Screen_Options_Visuals" xml:space="preserve">
+    <value>Visuals</value>
+  </data>
+  <data name="Screen_Options_Sound" xml:space="preserve">
+    <value>Sound</value>
+  </data>
+  <data name="Screen_Options_UserInterface" xml:space="preserve">
+    <value>User Interface</value>
+  </data>
+  <data name="Screen_Options_Scoreboard" xml:space="preserve">
+    <value>Scoreboard</value>
+  </data>
+  <data name="Screen_Options_ProgressBar" xml:space="preserve">
+    <value>Progress Bar</value>
+  </data>
+  <data name="Screen_Options_LaneCover" xml:space="preserve">
+    <value>Lane Cover</value>
+  </data>
+  <data name="Screen_Options_Selection" xml:space="preserve">
+    <value>Selection</value>
+  </data>
+  <data name="Screen_Options_Navigation" xml:space="preserve">
+    <value>Navigation</value>
+  </data>
+  <data name="Screen_Options_Sharing" xml:space="preserve">
+    <value>Sharing</value>
+  </data>
+  <data name="Screen_Options_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="Screen_Options_GameplayControls" xml:space="preserve">
+    <value>Gameplay Controls</value>
+  </data>
+  <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
+    <value>Gameplay User Interface</value>
+  </data>
+  <data name="Screen_Options_SongSelection" xml:space="preserve">
+    <value>Song Selection</value>
+  </data>
+  <data name="Screen_Options_Editor" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="Screen_Options_Misc" xml:space="preserve">
+    <value>Misc</value>
+  </data>
+  <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
+    <value>Navigation &amp; Maintenance</value>
+  </data>
+  <data name="Screen_Options_InstalledGames" xml:space="preserve">
+    <value>Installed Games</value>
+  </data>
+  <data name="Screen_Options_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Screen_Options_SongSelect" xml:space="preserve">
+    <value>Song Select</value>
+  </data>
+  <data name="Screen_Options_ScreenResolution" xml:space="preserve">
+    <value>Screen Resolution</value>
+  </data>
+  <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
+    <value>Enable Fullscreen</value>
+  </data>
+  <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
+    <value>Enable Borderless Window</value>
+  </data>
+  <data name="Screen_Options_FrameLimiter" xml:space="preserve">
+    <value>Frame Limiter</value>
+  </data>
+  <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
+    <value>Set Custom FPS</value>
+  </data>
+  <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
+    <value>Display FPS Counter</value>
+  </data>
+  <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
+    <value>Audio Output Device</value>
+  </data>
+  <data name="Screen_Options_MasterVolume" xml:space="preserve">
+    <value>Master Volume</value>
+  </data>
+  <data name="Screen_Options_MusicVolume" xml:space="preserve">
+    <value>Music Volume</value>
+  </data>
+  <data name="Screen_Options_EffectVolume" xml:space="preserve">
+    <value>Effect Volume</value>
+  </data>
+  <data name="Screen_Options_GlobalAudioOffset" xml:space="preserve">
+    <value>Global Audio Offset</value>
+  </data>
+  <data name="Screen_Options_VisualOffset" xml:space="preserve">
+    <value>Visual Offset</value>
+  </data>
+  <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
+    <value>Calibrate Offset</value>
+  </data>
+  <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
+    <value>Pitch Audio With Playback Rate</value>
+  </data>
+  <data name="Screen_Options_BackgroundBrightness" xml:space="preserve">
+    <value>Background Brightness</value>
+  </data>
+  <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
+    <value>Long Note Shrink Amount</value>
+  </data>
+  <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
+    <value>Enable Hitsounds</value>
+  </data>
+  <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
+    <value>Enable Long Note Release Hitsounds</value>
+  </data>
+  <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
+    <value>Enable Keysounds</value>
+  </data>
+  <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
+    <value>Enable Tap To Pause</value>
+  </data>
+  <data name="Screen_Options_EnableTapToRestart" xml:space="preserve">
+    <value>Enable Tap To Restart</value>
+  </data>
+  <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
+    <value>Skip Results Screen After Quitting</value>
+  </data>
+  <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
+    <value>Lock Windows Key during gameplay</value>
+  </data>
+  <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
+    <value>Display Timing Lines</value>
+  </data>
+  <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
+    <value>Display Hit Bubbles</value>
+  </data>
+  <data name="Screen_Options_DisplayJudgementCounter" xml:space="preserve">
+    <value>Display Judgement Counter</value>
+  </data>
+  <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
+    <value>Display Scoreboard</value>
+  </data>
+  <data name="Screen_Options_DisplaySongTimeProgressBar" xml:space="preserve">
+    <value>Display Song Time Progress Bar</value>
+  </data>
+  <data name="Screen_Options_DisplaySongTimeProgressBarTimeNumbers" xml:space="preserve">
+    <value>Display Song Time Progress Bar Time Numbers</value>
+  </data>
+  <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
+    <value>Enable Top Lane Cover</value>
+  </data>
+  <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
+    <value>Top Lane Cover Height</value>
+  </data>
+  <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
+    <value>Enable Bottom Lane Cover</value>
+  </data>
+  <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
+    <value>Bottom Lane Cover Height</value>
+  </data>
+  <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
+    <value>Display UI Elements Over Lane Covers</value>
+  </data>
+  <data name="Screen_Options_DisplayReceptorsOverLaneCovers" xml:space="preserve">
+    <value>Display Receptors Over Lane Covers</value>
+  </data>
+  <data name="Screen_Options_CustomSkin" xml:space="preserve">
+    <value>Custom Skin</value>
+  </data>
+  <data name="Screen_Options_CoopPlayer2Skin" xml:space="preserve">
+    <value>Co-op Player 2 Skin</value>
+  </data>
+  <data name="Screen_Options_DefaultSkin" xml:space="preserve">
+    <value>Default Skin</value>
+  </data>
+  <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
+    <value>Open Skin Folder</value>
+  </data>
+  <data name="Screen_Options_ExportSkin" xml:space="preserve">
+    <value>Export Skin</value>
+  </data>
+  <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
+    <value>Upload Skin To Steam Workshop</value>
+  </data>
+  <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
+    <value>Note &amp; Receptor Size Scale</value>
+  </data>
+  <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
+    <value>Playfield Scale</value>
+  </data>
+  <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
+    <value>Tint Hitlighting Based On Judgement Color</value>
+  </data>
+  <data name="Screen_Options_Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Screen_Options_QuickRestart" xml:space="preserve">
+    <value>Quick Restart</value>
+  </data>
+  <data name="Screen_Options_QuickExit" xml:space="preserve">
+    <value>Quick Exit</value>
+  </data>
+  <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
+    <value>Skip Song Intro</value>
+  </data>
+  <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
+    <value>Decrease Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
+    <value>Increase Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
+    <value>Decrease Map Offset</value>
+  </data>
+  <data name="Screen_Options_IncreaseMapOffset" xml:space="preserve">
+    <value>Increase Map Offset</value>
+  </data>
+  <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
+    <value>Reset Map Offset</value>
+  </data>
+  <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
+    <value>Toggle Scoreboard Visibility</value>
+  </data>
+  <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
+    <value>Toggle Chat Overlay</value>
+  </data>
+  <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
+    <value>Decrease Gameplay Rate</value>
+  </data>
+  <data name="Screen_Options_IncreaseGameplayRate" xml:space="preserve">
+    <value>Increase Gameplay Rate</value>
+  </data>
+  <data name="Screen_Options_ToggleMirrorMod" xml:space="preserve">
+    <value>Toggle Mirror Mod</value>
+  </data>
+  <data name="Screen_Options_TogglePitch" xml:space="preserve">
+    <value>Toggle Pitch</value>
+  </data>
+  <data name="Screen_Options_RemoveAllMods" xml:space="preserve">
+    <value>Remove All Mods</value>
+  </data>
+  <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
+    <value>Pause/Play Track</value>
+  </data>
+  <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
+    <value>Decrease Playback Rate</value>
+  </data>
+  <data name="Screen_Options_IncreasePlaybackRate" xml:space="preserve">
+    <value>Increase Playback Rate</value>
+  </data>
+  <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
+    <value>Take Screenshot</value>
+  </data>
+  <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
+    <value>Open Game Folder</value>
+  </data>
+  <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
+    <value>Update Map Ranked Statuses</value>
+  </data>
+  <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
+    <value>Update Map Online Offsets</value>
+  </data>
+  <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
+    <value>Load Songs From Other Installed Games</value>
+  </data>
+  <data name="Screen_Options_DetectSongsFromOtherInstalledGames" xml:space="preserve">
+    <value>Detect Songs From Other Installed Games</value>
+  </data>
+  <data name="Screen_Options_DisplayNotificationsFromBottomToTop" xml:space="preserve">
+    <value>Display Notifications From Bottom-To-Top</value>
+  </data>
+  <data name="Screen_Options_DisplayOnlineFriendNotifications" xml:space="preserve">
+    <value>Display Online Friend Notifications</value>
+  </data>
+  <data name="Screen_Options_PrioritizedGameMode" xml:space="preserve">
+    <value>Prioritized Game Mode</value>
+  </data>
+  <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
+    <value>Suggest Difficulty from Overall Rating</value>
+  </data>
+  <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
+    <value>Use Smooth Audio/Frame Timing During Gameplay</value>
+  </data>
+  <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
+    <value>Use Smooth Audio Start Timing During Gameplay</value>
+  </data>
+  <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
+    <value>Display Gameplay Overlay (Shift + F6)</value>
+  </data>
+  <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
+    <value>Display Notifications During Gameplay</value>
+  </data>
+  <data name="Screen_Options_ShowSpectators" xml:space="preserve">
+    <value>Show Spectators</value>
+  </data>
+  <data name="Screen_Options_DisplayRankedAccuracyWithCustomJudgements" xml:space="preserve">
+    <value>Display Ranked Accuracy With Custom Judgements</value>
+  </data>
+  <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
+    <value>Hit Error Fade Time</value>
+  </data>
+  <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
+    <value>Hit Error Early / Late Coloring</value>
+  </data>
+  <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
+    <value>Hit Error Early / Late Window</value>
+  </data>
+  <data name="Screen_Options_EnableComboAlerts" xml:space="preserve">
+    <value>Enable Combo Alerts</value>
+  </data>
+  <data name="Screen_Options_DisplayUnbeatableScores" xml:space="preserve">
+    <value>Display Unbeatable Scores</value>
+  </data>
+  <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
+    <value>Keep Playing Upon Failing</value>
+  </data>
+  <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
+    <value>Normalise Scroll Velocity By Rate Percentage</value>
+  </data>
+  <data name="Screen_Options_Display1v1TournamentOverlay" xml:space="preserve">
+    <value>Display 1v1 Tournament Overlay</value>
+  </data>
+  <data name="Screen_Options_Display1v1PlayfieldScores" xml:space="preserve">
+    <value>Display 1v1 Playfield Scores</value>
+  </data>
+  <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
+    <value>Reload Skin On Change</value>
+  </data>
+  <data name="Screen_Options_TogglePlaytestAutoplay" xml:space="preserve">
+    <value>Toggle Playtest Autoplay</value>
+  </data>
+  <data name="Screen_Options_InvertEditorScrolling" xml:space="preserve">
+    <value>Invert Editor Scrolling</value>
+  </data>
+  <data name="Screen_Options_InvertScrolling" xml:space="preserve">
+    <value>Invert Scrolling</value>
+  </data>
+  <data name="Screen_Options_AutomaticallyLogIntoTheServer" xml:space="preserve">
+    <value>Automatically Log Into The Server</value>
+  </data>
+  <data name="Screen_Options_DisplaySongRequestNotifications" xml:space="preserve">
+    <value>Display Song Request Notifications</value>
+  </data>
+  <data name="Screen_Options_DisplayWarningForPausing" xml:space="preserve">
+    <value>Display Warning For Pausing</value>
+  </data>
+  <data name="Screen_Options_DisplayWarningForFailing" xml:space="preserve">
+    <value>Display Warning For Failing</value>
+  </data>
+  <data name="Screen_Options_DisplayEpilepsyWarning" xml:space="preserve">
+    <value>Display Epilepsy Warning</value>
+  </data>
+  <data name="Screen_Options_DisplayMenuAudioVisualizer" xml:space="preserve">
+    <value>Display Menu Audio Visualizer</value>
+  </data>
+  <data name="Screen_Options_DisplayFailedLocalScores" xml:space="preserve">
+    <value>Display Failed Local Scores</value>
+  </data>
+  <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
+    <value>Delete Original File After Import</value>
+  </data>
+  <data name="Screen_Options_DiscordRichPresence" xml:space="preserve">
+    <value>Discord Rich Presence</value>
+  </data>
+  <data name="Screen_Options_DisplayRankedAccuracyForLocalLeaderboards" xml:space="preserve">
+    <value>Display Ranked Accuracy For Local Leaderboards</value>
+  </data>
+  <data name="Screen_Options_LowerFPSOnInactiveWindow" xml:space="preserve">
+    <value>Lower FPS On Inactive Window</value>
+  </data>
+  <data name="Screen_Options_EnableHighProcessPriority" xml:space="preserve">
+    <value>Enable High Process Priority</value>
+  </data>
+  <data name="Screen_Options_PreferWayland" xml:space="preserve">
+    <value>Prefer Wayland</value>
+  </data>
+  <data name="Screen_Options_PrefermacOSInputHandling" xml:space="preserve">
+    <value>Prefer macOS Input Handling</value>
+  </data>
+  <data name="Screen_Options_EditorImGuiScale" xml:space="preserve">
+    <value>Editor ImGui Scale</value>
+  </data>
+  <data name="Screen_Options_OPTIONSMENU" xml:space="preserve">
+    <value>OPTIONS MENU</value>
+  </data>
+  <data name="Screen_Options_Searchforoptions" xml:space="preserve">
+    <value>Search for options...</value>
+  </data>
+  <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
+    <value>1K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
+    <value>1K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
+    <value>1K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
+    <value>1K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 1K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
+    <value>1K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
+    <value>Prioritized 1K Difficulty</value>
+  </data>
+  <data name="Screen_Options_1Keys" xml:space="preserve">
+    <value>1 Keys</value>
+  </data>
+  <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
+    <value>2K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
+    <value>2K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
+    <value>2K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
+    <value>2K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 2K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
+    <value>2K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
+    <value>Prioritized 2K Difficulty</value>
+  </data>
+  <data name="Screen_Options_2Keys" xml:space="preserve">
+    <value>2 Keys</value>
+  </data>
+  <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
+    <value>3K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
+    <value>3K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
+    <value>3K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
+    <value>3K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 3K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
+    <value>3K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
+    <value>Prioritized 3K Difficulty</value>
+  </data>
+  <data name="Screen_Options_3Keys" xml:space="preserve">
+    <value>3 Keys</value>
+  </data>
+  <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
+    <value>4K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
+    <value>4K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
+    <value>4K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
+    <value>4K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 4K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
+    <value>4K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
+    <value>Prioritized 4K Difficulty</value>
+  </data>
+  <data name="Screen_Options_4Keys" xml:space="preserve">
+    <value>4 Keys</value>
+  </data>
+  <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
+    <value>5K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
+    <value>5K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
+    <value>5K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
+    <value>5K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 5K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
+    <value>5K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
+    <value>Prioritized 5K Difficulty</value>
+  </data>
+  <data name="Screen_Options_5Keys" xml:space="preserve">
+    <value>5 Keys</value>
+  </data>
+  <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
+    <value>6K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
+    <value>6K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
+    <value>6K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
+    <value>6K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 6K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
+    <value>6K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
+    <value>Prioritized 6K Difficulty</value>
+  </data>
+  <data name="Screen_Options_6Keys" xml:space="preserve">
+    <value>6 Keys</value>
+  </data>
+  <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
+    <value>7K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
+    <value>7K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
+    <value>7K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
+    <value>7K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 7K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
+    <value>7K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
+    <value>Prioritized 7K Difficulty</value>
+  </data>
+  <data name="Screen_Options_7Keys" xml:space="preserve">
+    <value>7 Keys</value>
+  </data>
+  <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
+    <value>8K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
+    <value>8K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
+    <value>8K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
+    <value>8K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 8K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
+    <value>8K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
+    <value>Prioritized 8K Difficulty</value>
+  </data>
+  <data name="Screen_Options_8Keys" xml:space="preserve">
+    <value>8 Keys</value>
+  </data>
+  <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
+    <value>9K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
+    <value>9K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
+    <value>9K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
+    <value>9K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 9K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
+    <value>9K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
+    <value>Prioritized 9K Difficulty</value>
+  </data>
+  <data name="Screen_Options_9Keys" xml:space="preserve">
+    <value>9 Keys</value>
+  </data>
+  <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
+    <value>10K Gameplay Layout</value>
+  </data>
+  <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
+    <value>10K Scroll Speed</value>
+  </data>
+  <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
+    <value>10K Scroll Direction</value>
+  </data>
+  <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
+    <value>10K Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
+    <value>Place 10K Scratch Lane On Left</value>
+  </data>
+  <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
+    <value>10K Co-op Layout</value>
+  </data>
+  <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
+    <value>Prioritized 10K Difficulty</value>
+  </data>
+  <data name="Screen_Options_10Keys" xml:space="preserve">
+    <value>10 Keys</value>
+  </data>
+  <data name="Screen_Options_SectionSettings" xml:space="preserve">
+    <value>{0} Settings</value>
+  </data>
+  <data name="Screen_Options_SearchResult" xml:space="preserve">
+    <value>{0} Search Result</value>
+  </data>
+  <data name="Screen_Options_SearchResults" xml:space="preserve">
+    <value>{0} Search Results</value>
+  </data>
 </root>

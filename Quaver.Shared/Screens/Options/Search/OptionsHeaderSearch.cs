@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Options.Search
         /// <param name="isOptionFocused"></param>
         public OptionsHeaderSearch(Bindable<string> currentSearchQuery, Bindable<bool> isOptionFocused)
             : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "",
-                "Search for options...")
+                OptionsLocalization.Get("Search for options..."))
         {
             CurrentSearchQuery = currentSearchQuery;
             IsOptionFocused = isOptionFocused;

@@ -585,10 +585,7 @@ namespace Quaver.Shared.Screens.Options
                 }
 
                 // Create a temporary section
-                var categoryName = $"{items.Count} Search Result";
-
-                if (items.Count > 1 || items.Count == 0)
-                    categoryName += "s";
+                var categoryName = OptionsLocalization.GetSearchResultCount(items.Count);
 
                 var newSection = new OptionsSection(string.Empty, FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
                     new List<OptionsSubcategory> { new OptionsSubcategory(categoryName, items) });
