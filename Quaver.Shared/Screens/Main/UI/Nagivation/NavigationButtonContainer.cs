@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
 {
     public class NavigationButtonContainer : Container
     {
-        private List<NavigationButton> Buttons { get; }
+        public IReadOnlyList<NavigationButton> Buttons { get; }
 
         private const int SPACING_Y = 16;
 

@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "MATCH DETAILS", 30)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), MultiplayerLobbyLocalization.Get("MatchDetails"), 30)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -68,7 +68,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateSubHeaderText()
         {
-            SubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "View information about a match".ToUpper(), 18)
+            SubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLobbyLocalization.Get("ViewInformationAboutMatch").ToUpper(), 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// </summary>
         private void CreateTextMatchesFound()
         {
-            TextMatchesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0 GAMES FOUND", 22)
+            TextMatchesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLobbyLocalization.Get("GamesFound"), 22)
             {
                 Parent = this,
                 X = TextCount.Width + TextSpacing
@@ -104,9 +104,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
             TextCount.Text = $"{count:n0}";
 
             if (count == 0 || count > 1)
-                TextMatchesFound.Text = "GAMES FOUND";
+                TextMatchesFound.Text = MultiplayerLobbyLocalization.Get("GamesFound");
             else
-                TextMatchesFound.Text = "GAME FOUND";
+                TextMatchesFound.Text = MultiplayerLobbyLocalization.Get("GameFound");
 
             TextMatchesFound.X = TextCount.Width + TextSpacing;
 

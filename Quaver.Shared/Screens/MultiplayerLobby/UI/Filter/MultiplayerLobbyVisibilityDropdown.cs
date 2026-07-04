@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
     {
         /// <summary>
         /// </summary>
-        public MultiplayerLobbyVisibilityDropdown() : base("ROOM VISIBILITY: ", 22, new Dropdown(GetDropdownItems(),
+        public MultiplayerLobbyVisibilityDropdown() : base(MultiplayerLobbyLocalization.Get("RoomVisibilityLabel"), 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(140, 38), 22, ColorHelper.HexToColor($"#eb4dfa"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
@@ -33,10 +33,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// <returns></returns>
         private static List<string> GetDropdownItems() => new List<string>
         {
-            "All",
-            "Open",
-            "Full",
-            "Password"
+            MultiplayerLobbyLocalization.Get("All"),
+            MultiplayerLobbyLocalization.Get("Open"),
+            MultiplayerLobbyLocalization.Get("Full"),
+            MultiplayerLobbyLocalization.Get("Password")
         };
 
         /// <summary>

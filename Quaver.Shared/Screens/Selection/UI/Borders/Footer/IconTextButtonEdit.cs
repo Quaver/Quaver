@@ -4,6 +4,7 @@ using System;
  using Quaver.Shared.Assets;
  using Quaver.Shared.Graphics.Menu.Border.Components;
  using Quaver.Shared.Graphics.Notifications;
+ using Quaver.Shared.Screens.Selection;
  using Quaver.Shared.Screens.Selection.UI.Mapsets;
  using Wobble.Graphics.Sprites.Text;
  using Wobble.Managers;
@@ -16,7 +17,7 @@ using System;
              FontManager.GetWobbleFont(Fonts.LatoBlack),"Edit", (sender, args) =>
              {
                  screen.ExitToEditor();
-             })
+             }, localizationKey: SelectionLocalization.GetKey("Edit"))
          {
          }
      }

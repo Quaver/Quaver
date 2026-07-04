@@ -6,6 +6,7 @@ using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -22,7 +23,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// <summary>
         /// </summary>
         /// <param name="profile"></param>
-        public ProfileSelectionDropdown(Bindable<UserProfile> profile) : base("SELECT: ", 24, new Dropdown(GetDropdownItems(),
+        public ProfileSelectionDropdown(Bindable<UserProfile> profile) : base(SelectionLocalization.Get("Select:"), 24, new Dropdown(GetDropdownItems(),
             new ScalableVector2(185, 30), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Profile = profile;
@@ -76,8 +77,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         {
             var options = new List<string>()
             {
-                "Local",
-                "Online",
+                SelectionLocalization.Get("Local"),
+                SelectionLocalization.Get("Online"),
             };
 
             if (UserProfileDatabaseCache.Profiles?.Value != null)
@@ -86,7 +87,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                     options.Add(profile.Username);
             }
 
-            options.Add("Create New");
+            options.Add(SelectionLocalization.Get("Create New"));
 
             return options;
         }

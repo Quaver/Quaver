@@ -13,17 +13,17 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         {
         }
 
-        public override string GetName() => "Allowed Game Modes";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("AllowedGameModes");
 
         public override string GetValue()
         {
             if (SelectedGame.Value.AllowedGameModes == null)
-                return "None";
+                return MultiplayerLobbyLocalization.Get("None");
 
             var modesList = SelectedGame.Value.AllowedGameModes.Select(x => ModeHelper.ToShortHand((GameMode) x)).ToList();
 
             if (modesList.Count == 0)
-                return "None";
+                return MultiplayerLobbyLocalization.Get("None");
 
             if (modesList.Count == 1)
                 return modesList.First();

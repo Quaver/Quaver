@@ -8,6 +8,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components
 {
@@ -43,6 +44,11 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// </summary>
         public bool SetTextTint { get; set; } = true;
 
+        /// <summary>
+        ///     The localization key to use for the displayed text.
+        /// </summary>
+        private string LocalizationKey { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -52,9 +58,12 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// <param name="onClick"></param>
         /// <param name="baseColor"></param>
         /// <param name="hoveredColor"></param>
-        public IconTextButton(Texture2D icon, WobbleFontStore font, string text, EventHandler onClick = null, Color? baseColor = null, Color? hoveredColor = null)
+        public IconTextButton(Texture2D icon, WobbleFontStore font, string text, EventHandler onClick = null, Color? baseColor = null, Color? hoveredColor = null,
+            string localizationKey = null)
             : base(WobbleAssets.WhiteBox, onClick)
         {
+            LocalizationKey = localizationKey;
+
             BaseColor = SkinManager.Skin?.MenuBorder?.ButtonTextColor ?? baseColor ?? Color.White;
             HoveredColor = SkinManager.Skin?.MenuBorder?.ButtonTextHoveredColor ?? hoveredColor ?? Colors.MainAccent;
 
@@ -67,7 +76,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
                 Tint = BaseColor
             };
 
-            Text = new SpriteTextPlus(font, text.ToUpper(), 20)
+            Text = new SpriteTextPlus(font, GetDisplayText(text).ToUpper(), 20)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,
@@ -124,5 +133,11 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private static void OnClicked(object sender, EventArgs e) => SkinManager.Skin?.SoundClick.CreateChannel().Play();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="fallback"></param>
+        /// <returns></returns>
+        private string GetDisplayText(string fallback) => LocalizationKey != null ? LocalizationManager.Get(LocalizationKey) : fallback;
     }
 }

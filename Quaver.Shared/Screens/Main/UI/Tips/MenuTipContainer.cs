@@ -34,21 +34,21 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
 
         /// <summary>\
         /// </summary>
-        private string[] Tips { get; } =
+        private string[] TipKeys { get; } =
         {
-            "Pressing CTRL+O will open the options menu.",
-            "Drag map files (.qp) into the game to import them.",
-            "Pressing F3 in song select displays a map preview.",
-            "Pausing in gameplay prevents score submission.",
-            "You can report a bug by opening a GitHub issue.",
-            "Request new features by opening GitHub issues!",
-            "Drag a .mp3 file in the game to create a new map!",
-            "Pressing F2 in song select chooses a random song.",
-            "Pressing F10 in the menu opens your playercard.",
-            "Pressing F3/F4 in gameplay changes scroll speed.",
-            "Your offset can be calibrated in the options menu.",
-            "Standard* is the default judgement window preset.",
-            "CTRL+ +/- changes the playback rate of the song."
+            "Screen_Main_TipOpenOptions",
+            "Screen_Main_TipImportMapFiles",
+            "Screen_Main_TipMapPreview",
+            "Screen_Main_TipPauseSubmission",
+            "Screen_Main_TipReportBug",
+            "Screen_Main_TipRequestFeatures",
+            "Screen_Main_TipCreateMap",
+            "Screen_Main_TipRandomSong",
+            "Screen_Main_TipPlayercard",
+            "Screen_Main_TipScrollSpeed",
+            "Screen_Main_TipCalibrateOffset",
+            "Screen_Main_TipDefaultJudgement",
+            "Screen_Main_TipPlaybackRate"
         };
 
         /// <summary>
@@ -91,7 +91,8 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
 
         /// <summary>
         /// </summary>
-        private void CreateLabel() => Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "TIP:", 20)
+        private void CreateLabel() => Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            GetTipLabel(), 20)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -103,15 +104,13 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         /// </summary>
         private void CreateScrollContainer()
         {
-            const int spacing = 8;
-
-            var size = new ScalableVector2(Width - Label.Width - Label.X - spacing - Label.X, Height);
+            var size = GetScrollingContainerSize();
 
             ScrollingContainer = new ScrollContainer(size, size)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Label.X + Label.Width + spacing,
+                X = GetScrollingContainerX(),
                 Alpha = 0
             };
         }
@@ -120,7 +119,8 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         /// </summary>
         private void CreateTextTip()
         {
-            TextTip = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Tips[12], Label.FontSize)
+            TextTip = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                LocalizationManager.Get(TipKeys[12]), Label.FontSize)
             {
                 Alignment = Alignment.MidLeft,
                 Tint = SkinManager.Skin?.MainMenu?.TipTextColor ?? Color.White
@@ -137,6 +137,23 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
             Alpha = 0
         };
 
-        private void PickRandomTip() => TextTip.Text = Tips[RNG.Next(0, Tips.Length)];
+        private void PickRandomTip()
+        {
+            TextTip.Text = LocalizationManager.Get(TipKeys[RNG.Next(0, TipKeys.Length)]);
+        }
+
+        private static string GetTipLabel() => LocalizationManager.Get("Screen_Main_TipLabel");
+
+        private float GetScrollingContainerX()
+        {
+            const int spacing = 8;
+            return Label.X + Label.Width + spacing;
+        }
+
+        private ScalableVector2 GetScrollingContainerSize()
+        {
+            const int spacing = 8;
+            return new ScalableVector2(Width - Label.Width - Label.X - spacing - Label.X, Height);
+        }
     }
 }

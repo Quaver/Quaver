@@ -55,14 +55,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Tint = Color.Black;
             Alpha = 0f;
 
-            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "(0/16) Players")
+            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("PlayersCount", 0, 16))
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 FontSize = 16,
             };
 
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Waiting to start")
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("WaitingToStart"))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -99,16 +99,16 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                         switch (Status.Text.Count(x => x == '.'))
                         {
                             case 0:
-                                Status.Text = "Waiting to start.";
+                                Status.Text = MultiplayerLocalization.Get("WaitingToStartOneDot");
                                 break;
                             case 1:
-                                Status.Text = "Waiting to start..";
+                                Status.Text = MultiplayerLocalization.Get("WaitingToStartTwoDots");
                                 break;
                             case 2:
-                                Status.Text = "Waiting to start...";
+                                Status.Text = MultiplayerLocalization.Get("WaitingToStartThreeDots");
                                 break;
                             case 3:
-                                Status.Text = "Waiting to start";
+                                Status.Text = MultiplayerLocalization.Get("WaitingToStart");
                                 break;
                         }
 
@@ -131,14 +131,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     }
 
                     LastNearestSecond = timeLeft;
-                    Status.Text = timeLeft > 0 ? $"Waiting for server" : $"Match is now starting: {Math.Abs(timeLeft) + 1}";
+                    Status.Text = timeLeft > 0 ? MultiplayerLocalization.Get("WaitingForServer") : MultiplayerLocalization.Get("MatchIsNowStarting", Math.Abs(timeLeft) + 1);
                 }
 
                 if (Game.PlayerIds.Count != LastPlayerCount || Game.MaxPlayers != LastMaxPlayerCount)
-                    Count.Text = $"({Game.PlayerIds.Count}/{Game.MaxPlayers}) Players";
+                    Count.Text = MultiplayerLocalization.Get("PlayersCount", Game.PlayerIds.Count, Game.MaxPlayers);
 
                 if (Game.InProgress)
-                    Status.Text = "Match in progress. Please wait until the next one!";
+                    Status.Text = MultiplayerLocalization.Get("MatchInProgress");
 
                 LastPlayerCount = Game.PlayerIds.Count;
                 LastMaxPlayerCount = Game.MaxPlayers;

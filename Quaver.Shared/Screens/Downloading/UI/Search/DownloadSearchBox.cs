@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <param name="size"></param>
         public DownloadSearchBox(Bindable<string> searchQuery, ScalableVector2 size)
             : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack), 21, "",
-            "Type to search...")
+            DownloadLocalization.Get("Type to search..."))
         {
             SearchQuery = searchQuery;
             AllowSubmission = false;

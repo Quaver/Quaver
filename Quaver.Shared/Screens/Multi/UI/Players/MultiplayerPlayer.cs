@@ -180,7 +180,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
                 Clan.Clear();
                 Username.X = Flag.Width + 8;
-                Username.Text = "Loading...";
+                Username.Text = MultiLocalization.Get("Loading");
                 Flag.Image = Flags.Get("XX");
             }
 
@@ -210,7 +210,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             else
                 wins = Game.Value.PlayerWins.Find(x => x.UserId == User.OnlineUser.Id)?.Wins ?? 0;
 
-            WinCount.Text = Game.Value.RefereeUserId == User.OnlineUser.Id ? "Referee" : $"{wins} W";
+            WinCount.Text = Game.Value.RefereeUserId == User.OnlineUser.Id ? MultiLocalization.Get("Referee") : MultiLocalization.Get("WinsAbbreviation", wins);
 
             // Referee Color
             if (Game.Value.RefereeUserId == User.OnlineUser.Id)
@@ -324,7 +324,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <summary>
         /// </summary>
         private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-            "Loading...", 21)
+            MultiLocalization.Get("Loading"), 21)
         {
             Parent = Flag,
             Alignment = Alignment.MidLeft,

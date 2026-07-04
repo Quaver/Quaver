@@ -10,7 +10,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Report Bugs", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://github.com/Quaver/Quaver/issues");
-            })
+            }, localizationKey: "Screen_Main_Menu_ReportBugs")
         {
         }
     }

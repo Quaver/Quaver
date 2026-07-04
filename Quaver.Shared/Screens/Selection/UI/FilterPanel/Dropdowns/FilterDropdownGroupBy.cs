@@ -10,6 +10,7 @@ using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -26,7 +27,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <summary>
         /// </summary>
         /// <param name="availableMapsets"></param>
-        public FilterDropdownGroupBy(Bindable<List<Mapset>> availableMapsets) : base("GROUP BY: ", 22, new Dropdown(GetDropdownItems(),
+        public FilterDropdownGroupBy(Bindable<List<Mapset>> availableMapsets) : base(SelectionLocalization.Get("Group By:"), 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(125, 38), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             AvailableMapsets = availableMapsets;
@@ -49,8 +50,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <returns></returns>
         private static List<string> GetDropdownItems() => new List<string>
         {
-            "None",
-            "Playlists",
+            SelectionLocalization.Get("None"),
+            SelectionLocalization.Get("Playlists"),
         };
 
         /// <summary>

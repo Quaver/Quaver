@@ -10,7 +10,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Twitter", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://twitter.com/QuaverGame");
-            })
+            }, localizationKey: "Screen_Main_Menu_Twitter")
         {
         }
     }

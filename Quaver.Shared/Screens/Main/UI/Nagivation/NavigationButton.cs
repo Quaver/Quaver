@@ -86,6 +86,8 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
             Tint = SkinManager.Skin?.MainMenu?.NavigationButtonTextColor ?? Color.White
         };
 
+        public void SetText(string text) => Name.Text = text.ToUpper();
+
         public void Select(bool instantWidth = false)
         {
             ClearWidthAnimations();

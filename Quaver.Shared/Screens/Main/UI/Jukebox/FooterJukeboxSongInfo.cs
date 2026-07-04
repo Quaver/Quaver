@@ -47,7 +47,8 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
 
             Alpha = 0;
 
-            NowPlaying = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Now Playing:", 20)
+            NowPlaying = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                LocalizationManager.Get("Screen_Main_NowPlaying"), 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

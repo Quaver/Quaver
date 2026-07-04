@@ -134,13 +134,13 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Match started, but we don't have the map!");
+                NotificationManager.Show(NotificationLevel.Warning, MultiplayerLocalization.Get("MatchStartedMissingMap"));
                 return;
             }
 
             if (OnlineManager.CurrentGame.RefereeUserId == OnlineManager.Self.OnlineUser.Id)
             {
-                NotificationManager.Show(NotificationLevel.Info, "Match started. Click to watch the match live on the web as a referee. ",
+                NotificationManager.Show(NotificationLevel.Info, MultiplayerLocalization.Get("MatchStartedReferee"),
                     (o, args) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}"));
 
                 return;

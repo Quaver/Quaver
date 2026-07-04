@@ -1,16 +1,33 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Main.UI.Panels
 {
     public class MenuPanelContainer : Sprite
     {
+        private static readonly string[] TitleKeys =
+        {
+            "Screen_Main_SinglePlayer",
+            "Screen_Main_Multiplayer",
+            "Screen_Main_Competitive",
+            "Screen_Main_MapEditor",
+            "Screen_Main_DownloadMaps"
+        };
+
+        private static readonly string[] SubtitleKeys =
+        {
+            "Screen_Main_SinglePlayerDescription",
+            "Screen_Main_MultiplayerDescription",
+            "Screen_Main_CompetitiveDescription",
+            "Screen_Main_MapEditorDescription",
+            "Screen_Main_DownloadMapsDescription"
+        };
+
         /// <summary>
         /// </summary>
         public List<MenuPanel> Panels { get; }
@@ -26,27 +43,27 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
             Panels = new List<MenuPanel>
             {
                 new MenuPanel(this, UserInterface.MenuBackgroundClear,
-                    "Single Player".ToUpper(), "Compete for leaderboard ranks".ToUpper(), menuScreen.ExitToSinglePlayer)
+                    GetPanelTitle(0), GetPanelSubtitle(0), menuScreen.ExitToSinglePlayer)
                 {
                     Background = { X = -450 }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Multiplayer".ToUpper(), "Play custom matches online with others".ToUpper(), menuScreen.ExitToMultiplayer)
+                    GetPanelTitle(1), GetPanelSubtitle(1), menuScreen.ExitToMultiplayer)
                 {
                     Background = { Tint = Color.Purple }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Competitive".ToUpper(), "Compete against players all over the world".ToUpper(), menuScreen.ExitToCompetitive)
+                    GetPanelTitle(2), GetPanelSubtitle(2), menuScreen.ExitToCompetitive)
                 {
                     Background = { Tint = Color.Green }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Map Editor".ToUpper(), "Create or edit a map to any song you'd like".ToUpper(), menuScreen.ExitToEditor)
+                    GetPanelTitle(3), GetPanelSubtitle(3), menuScreen.ExitToEditor)
                 {
                     Background = { Tint = Color.Orange }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Download Maps".ToUpper(), "Find new songs from the community to play".ToUpper(), menuScreen.ExitToDownload)
+                    GetPanelTitle(4), GetPanelSubtitle(4), menuScreen.ExitToDownload)
                 {
                     Background = { Tint = Color.PaleVioletRed }
                 }
@@ -119,5 +136,9 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 panel.X = Panels[i - 1].X + Panels[i - 1].Width;
             }
         }
+
+        private static string GetPanelTitle(int index) => LocalizationManager.Get(TitleKeys[index]).ToUpper();
+
+        private static string GetPanelSubtitle(int index) => LocalizationManager.Get(SubtitleKeys[index]).ToUpper();
     }
 }

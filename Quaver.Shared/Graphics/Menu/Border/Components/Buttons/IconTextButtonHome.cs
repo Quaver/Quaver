@@ -15,7 +15,8 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     {
         public override QuaverScreenType Screen { get; } = QuaverScreenType.Menu;
 
-        public IconTextButtonHome() : base(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.LatoBlack), "Home")
+        public IconTextButtonHome() : base(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.LatoBlack), "Home",
+            localizationKey: "Screen_Main_Menu_Home")
         {
         }
 

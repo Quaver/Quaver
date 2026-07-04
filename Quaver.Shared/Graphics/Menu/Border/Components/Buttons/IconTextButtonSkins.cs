@@ -11,7 +11,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Skins", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://steamcommunity.com/app/{SteamManager.ApplicationId}/workshop/");
-            })
+            }, localizationKey: "Screen_Main_Menu_Skins")
         {
         }
     }

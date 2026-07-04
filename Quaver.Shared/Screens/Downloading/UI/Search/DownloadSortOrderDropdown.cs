@@ -17,8 +17,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
 
         private static List<string> GetDropdownItems() => new List<string>()
         {
-            "Ascending",
-            "Descending"
+            DownloadLocalization.Get("Ascending"),
+            DownloadLocalization.Get("Descending")
         };
     }
 }

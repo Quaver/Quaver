@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 {
     public class GraphSelectionDropdown : LabelledDropdown
     {
-        public GraphSelectionDropdown() : base("GRAPH: ", 22, new Dropdown(GetDropdownItems(),
+        public GraphSelectionDropdown() : base(ResultsLocalization.Get("Graph:"), 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(150, 38), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
@@ -20,10 +20,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// <returns></returns>
         private static List<string> GetDropdownItems() => new List<string>
         {
-            "Deviance",
-            "Accuracy",
-            "Health",
-            "Rating"
+            ResultsLocalization.Get("Deviance"),
+            ResultsLocalization.Get("Accuracy"),
+            ResultsLocalization.Get("Health"),
+            ResultsLocalization.Get("Rating")
         };
 
         /// <summary>

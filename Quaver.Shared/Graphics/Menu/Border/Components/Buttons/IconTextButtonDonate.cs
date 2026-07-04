@@ -19,7 +19,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
                 NotificationManager.Show(NotificationLevel.Info, 
                     "Donating is currently unavailable from in-game and can only be done on the website.\n\n" +
                     "We are working on adding this back soon.");
-            })
+            }, localizationKey: "Screen_Main_Menu_Donate")
         {
         }
 

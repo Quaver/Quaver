@@ -12,7 +12,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             FontManager.GetWobbleFont(Fonts.LatoBlack),"GitHub", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://github.com/Quaver");
-            })
+            }, localizationKey: "Screen_Main_Menu_GitHub")
         {
         }
     }

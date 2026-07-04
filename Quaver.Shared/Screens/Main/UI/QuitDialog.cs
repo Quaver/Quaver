@@ -2,6 +2,7 @@ using System;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers.Input;
 using Wobble;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Main.UI
 {
@@ -14,7 +15,8 @@ namespace Quaver.Shared.Screens.Main.UI
         /// <summary>
         /// </summary>
         public QuitDialog()
-            : base("EXIT QUAVER", $"Are you sure you would like to quit the game?", () =>
+            : base(LocalizationManager.Get("Screen_Main_QuitDialogTitle"),
+                LocalizationManager.Get("Screen_Main_QuitDialogMessage"), () =>
             {
                 var game = (QuaverGame)GameBase.Game;
                 game.Exit();

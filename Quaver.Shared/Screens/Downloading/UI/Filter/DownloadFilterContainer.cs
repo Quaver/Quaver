@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateHeader()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "FILTER OPTIONS", 26)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), DownloadLocalization.Get("FILTER OPTIONS"), 26)
             {
                 Parent = this,
             };

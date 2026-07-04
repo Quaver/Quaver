@@ -10,7 +10,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Discord", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://discord.gg/quaver", true);
-            })
+            }, localizationKey: "Screen_Main_Menu_Discord")
         {
         }
     }

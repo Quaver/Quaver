@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <summary>
         /// </summary>
         /// <param name="mode"></param>
-        public DownloadModeDropdown(Bindable<GameMode> mode) : base("MODE: ", 22, new Dropdown(GetDropdownItems(),
+        public DownloadModeDropdown(Bindable<GameMode> mode) : base(DownloadLocalization.Get("MODE: "), 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(120, 38), 22, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
         {
             Mode = mode;
@@ -32,12 +32,12 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         private static List<string> GetDropdownItems()
         {
             var list = new List<string> {
-                "All"
+                DownloadLocalization.Get("All")
             };
 
             foreach (var mode in ModeHelper.AllModes)
             {
-                list.Add(ModeHelper.ToLongHand(mode));
+                list.Add(DownloadLocalization.Get(ModeHelper.ToLongHand(mode)));
             }
 
             return list;

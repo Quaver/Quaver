@@ -41,6 +41,7 @@ using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Localization;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
@@ -309,6 +310,7 @@ namespace Quaver.Shared
         {
             QuaverScreenManager.Initialize();
             WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
+            QuaverLocalization.Configure(ConfigManager.Language.Value);
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
 
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
@@ -496,6 +498,12 @@ namespace Quaver.Shared
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.PreferCocoaEventLoop.ValueChanged += (sender, e) => InitializeFpsLimiting();
+            ConfigManager.Language.ValueChanged += (sender, e) =>
+            {
+                QuaverLocalization.SetCurrentCulture(e.Value);
+                NotificationManager.Show(NotificationLevel.Info,
+                    LocalizationManager.Get("Notification_LanguageChangeRequiresScreenChange"));
+            };
             
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
             {

@@ -22,14 +22,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Footer
         /// <summary>
         /// </summary>
         public MultiplayerLobbyFooterQuickMatchButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_lightning_bolt_shadow),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), "Quick Match", (o, e) =>
+            FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLobbyLocalization.Get("QuickMatch"), (o, e) =>
             {
                 var openGames = OnlineManager.MultiplayerGames.Values.ToList()
                     .FindAll(x => !x.HasPassword && x.PlayerIds.Count < x.MaxPlayers);
 
                 if (openGames.Count == 0)
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "There are no available open games to join.");
+                    NotificationManager.Show(NotificationLevel.Warning, MultiplayerLobbyLocalization.Get("NoAvailableOpenGames"));
                     return;
                 }
 

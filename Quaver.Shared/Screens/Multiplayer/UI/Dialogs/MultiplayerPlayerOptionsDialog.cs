@@ -47,7 +47,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),$"Options for {User.Username ?? "Loading..."}")
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                MultiplayerLocalization.Get("OptionsFor", User.Username ?? MultiplayerLocalization.Get("Loading")))
             {
                 Parent = Options,
                 Y = -25,

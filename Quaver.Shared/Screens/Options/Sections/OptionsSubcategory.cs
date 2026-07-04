@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Options.Sections
         /// <param name="items"></param>
         public OptionsSubcategory(string name, List<OptionsItem> items = null)
         {
-            Name = name;
+            Name = OptionsLocalization.Get(name);
             Items = items;
 
             if (Items == null)

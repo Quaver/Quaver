@@ -79,11 +79,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         private void CreateReadyUpButton()
         {
             ReadyUp = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser ? "start match" : "ready up", 14, (o, e) =>
+                OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser ? MultiplayerLocalization.Get("StartMatch") : MultiplayerLocalization.Get("ReadyUp"), 14, (o, e) =>
                 {
                     if (OnlineManager.CurrentGame.InProgress)
                     {
-                        NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before performing this action.");
+                        NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("WaitUntilMatchFinishes"));
                         return;
                     }
 
@@ -106,12 +106,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     {
                         if (OnlineManager.CurrentGame.InProgress)
                         {
-                            NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before readying up.");
+                            NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("WaitUntilMatchFinishesBeforeReadying"));
                             return;
                         }
 
                         if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
-                            NotificationManager.Show(NotificationLevel.Error, "You cannot ready up if you do not have the map!");
+                            NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("CannotReadyWithoutMap"));
                         else
                             OnlineManager.Client?.MultiplayerGameIsReady();
                     }
@@ -129,17 +129,17 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateSelectMapButton()
         {
-            SelectMap = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "select map", 14, (o, e) =>
+            SelectMap = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("SelectMap"), 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.InProgress)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before selecting another map.");
+                    NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("WaitUntilMatchFinishesBeforeSelectingMap"));
                     return;
                 }
 
                 if (OnlineManager.CurrentGame.Host != OnlineManager.Self.OnlineUser)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "You cannot select the map if you aren't host!");
+                    NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("CannotSelectMapIfNotHost"));
                     return;
                 }
 
@@ -163,7 +163,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             if (e.UserId == OnlineManager.Self.OnlineUser.Id)
             {
-                ReadyUp.ChangeText("START MATCH");
+                ReadyUp.ChangeText(MultiplayerLocalization.Get("StartMatch"));
 
                 if (!RightAligned.Contains(SelectMap))
                     RightAligned.Add(SelectMap);
@@ -174,9 +174,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             else
             {
                 if (OnlineManager.CurrentGame.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
-                    ReadyUp.ChangeText("UNREADY");
+                    ReadyUp.ChangeText(MultiplayerLocalization.Get("Unready"));
                 else
-                    ReadyUp.ChangeText("READY");
+                    ReadyUp.ChangeText(MultiplayerLocalization.Get("Ready"));
 
                 RightAligned.Remove(SelectMap);
                 SelectMap.Parent = null;
@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (e.UserId != OnlineManager.Self.OnlineUser.Id || OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                 return;
 
-            ReadyUp.ChangeText("NOT READY");
+            ReadyUp.ChangeText(MultiplayerLocalization.Get("NotReady"));
             AlignRightItems(RightAligned);
         }
 
@@ -207,7 +207,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (e.UserId != OnlineManager.Self.OnlineUser.Id || OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                 return;
 
-            ReadyUp.ChangeText("READY UP");
+            ReadyUp.ChangeText(MultiplayerLocalization.Get("ReadyUp"));
             AlignRightItems(RightAligned);
         }
 
@@ -220,7 +220,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (OnlineManager.CurrentGame.Host != OnlineManager.Self.OnlineUser)
                 return;
 
-            ReadyUp.ChangeText("CANCEL MATCH START");
+            ReadyUp.ChangeText(MultiplayerLocalization.Get("CancelMatchStart"));
             AlignRightItems(RightAligned);
         }
 
@@ -233,7 +233,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (OnlineManager.CurrentGame.Host != OnlineManager.Self.OnlineUser)
                 return;
 
-            ReadyUp.ChangeText("START MATCH");
+            ReadyUp.ChangeText(MultiplayerLocalization.Get("StartMatch"));
             AlignRightItems(RightAligned);
         }
 
@@ -249,7 +249,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (OnlineManager.CurrentGame.Host != OnlineManager.Self.OnlineUser)
                 return;
 
-            ReadyUp.ChangeText("READY UP");
+            ReadyUp.ChangeText(MultiplayerLocalization.Get("ReadyUp"));
             AlignRightItems(RightAligned);
         }
 
@@ -304,11 +304,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateModifiersButton()
         {
-            SelectModifiers = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Modifiers", 14, (o, e) =>
+            SelectModifiers = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("Modifiers"), 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.InProgress)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before selecting mods.");
+                    NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("WaitUntilMatchFinishesBeforeSelectingMods"));
                     return;
                 }
 
@@ -324,17 +324,17 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         private void CreateChangeTeamButton()
         {
-            ChangeTeam = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Change Team", 14, (o, e) =>
+            ChangeTeam = new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("ChangeTeam"), 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "You must unready in order to switch teams!");
+                    NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("MustUnreadyToSwitchTeams"));
                     return;
                 }
 
                 if (OnlineManager.CurrentGame.CountdownStartTime != -1)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "You cannot switch teams when the countdown timer is active");
+                    NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("CannotSwitchTeamsDuringCountdown"));
                     return;
                 }
 

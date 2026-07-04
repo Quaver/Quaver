@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         /// <param name="selectedMapset"></param>
         public DownloadFilterMapCount(Bindable<DownloadableMapset> selectedMapset)
-            : base("Maps: ", "1", 20, ColorHelper.HexToColor($"#ffe76b"))
+            : base(DownloadLocalization.Get("Maps: "), "1", 20, ColorHelper.HexToColor($"#ffe76b"))
         {
             SelectedMapset = selectedMapset;
 

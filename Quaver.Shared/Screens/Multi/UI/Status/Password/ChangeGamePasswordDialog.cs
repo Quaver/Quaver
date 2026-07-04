@@ -13,10 +13,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Password
         {
             Textbox.OnSubmit = null;
 
-            Header.Text = $"CHANGE GAME PASSWORD";
-            Confirmation.Text = $"Enter a new password for the multiplayer game...";
+            Header.Text = MultiLocalization.Get("ChangeGamePasswordTitle");
+            Confirmation.Text = MultiLocalization.Get("ChangeGamePasswordMessage");
 
-            Textbox.PlaceholderText = "Enter a password...";
+            Textbox.PlaceholderText = MultiLocalization.Get("EnterPasswordPlaceholder");
             Textbox.RawText = "";
             Textbox.InputText.Text = "";
             Textbox.MaxCharacters = 50;

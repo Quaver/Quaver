@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
         /// <summary>
         /// </summary>
-        private void CreateCreator() => Creator = new TextKeyValue("Mapped by: ", Map.Creator, 23,
+        private void CreateCreator() => Creator = new TextKeyValue(ResultsLocalization.Get("Mapped by:"), Map.Creator, 23,
             ColorHelper.HexToColor("#CACACA"))
         {
             Parent = this,

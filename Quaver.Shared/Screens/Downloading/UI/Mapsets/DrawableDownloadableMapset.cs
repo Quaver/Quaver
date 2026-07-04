@@ -233,7 +233,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
                     if (MapsetDownloadManager.IsMapsetInQueue(SelectedMapset.Value.Id))
                     {
-                        NotificationManager.Show(NotificationLevel.Warning, $"This mapset is already downloading!");
+                        NotificationManager.Show(NotificationLevel.Warning, DownloadLocalization.Get("This mapset is already downloading!"));
                         return;
                     }
 
@@ -301,7 +301,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateByText()
         {
-            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "By:", 20)
+            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), DownloadLocalization.Get("By:"), 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -390,7 +390,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateDifficultyRange()
         {
-            DifficultyRange = new PlaylistDifficultyDisplay("Difficulty: ")
+            DifficultyRange = new PlaylistDifficultyDisplay(DownloadLocalization.Get("Difficulty: "))
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopRight,

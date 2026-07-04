@@ -6,6 +6,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -14,7 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
     public class LeaderboardTypeDropdown : LabelledDropdown
     {
-        public LeaderboardTypeDropdown() : base("RANKING: ", 24, new Dropdown(GetDropdownItems(),
+        public LeaderboardTypeDropdown() : base(SelectionLocalization.Get("Ranking:"), 24, new Dropdown(GetDropdownItems(),
             new ScalableVector2(125, 30), 22, SkinManager.Skin?.SongSelect?.LeaderboardDropdownColor ?? ColorHelper.HexToColor($"#10C8F6"),
             GetSelectedIndex()))
         {
@@ -37,7 +38,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetDropdownItems() => Enum.GetNames(typeof(LeaderboardType)).ToList();
+        private static List<string> GetDropdownItems() => Enum.GetNames(typeof(LeaderboardType)).Select(SelectionLocalization.Get).ToList();
 
         /// <summary>
         ///     Retrieves the index of the selected value
@@ -55,7 +56,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (ConfigManager.LeaderboardSection == null)
                 return;
 
-            ConfigManager.LeaderboardSection.Value = (LeaderboardType) Enum.Parse(typeof(LeaderboardType), e.Text);
+            ConfigManager.LeaderboardSection.Value = (LeaderboardType) e.Index;
         }
 
         /// <summary>

@@ -97,12 +97,14 @@ namespace Quaver.Shared.Screens.Options.Sidebar
         /// </summary>
         private void CreateIcon()
         {
+            var iconSize = Section.IconSize ?? new Vector2(Section.Icon.Width, Section.Icon.Height);
+
             Icon = new Sprite
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 20,
-                Size = new ScalableVector2(Section.Icon.Width, Section.Icon.Height),
+                Size = new ScalableVector2(iconSize.X, iconSize.Y),
                 Image = Section.Icon,
                 UsePreviousSpriteBatchOptions = true
             };

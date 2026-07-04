@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             AddContainedDrawable(DifficultyName);
 
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Mods: None")
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("ModsNone"))
             {
                 Parent = this,
                 X = Mode.X,
@@ -252,8 +252,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostSelectingMap)
             {
-                ArtistTitle.Text = "Host is currently selecting a map!";
-                Mode.Text = "Please wait...";
+                ArtistTitle.Text = MultiplayerLocalization.Get("HostSelectingMap");
+                Mode.Text = MultiplayerLocalization.Get("PleaseWait");
                 Creator.Text = "";
                 DifficultyName.Text = "";
                 DifficultyRating.Text = "";
@@ -285,8 +285,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostSelectingMap)
                     Creator.Text = "";
                 else
-                    Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} " +
-                                   $"| LNs: {(int) map.LNPercentage}%";
+                    Creator.Text = MultiplayerLocalization.Get("MapInfo", map.Creator, time,
+                        (int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods)), (int) map.LNPercentage);
 
                 // Inform the server that we now have the map if we didn't before.
                 if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
@@ -330,7 +330,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 ArtistTitle.Tint = Color.Red;
 
-                Creator.Text = Game.MapId != -1 ? "You don't have this map. Click to download!" : "You don't have this map. Download not available!";
+                Creator.Text = Game.MapId != -1 ? MultiplayerLocalization.Get("MapMissingClickToDownload") : MultiplayerLocalization.Get("MapMissingDownloadNotAvailable");
                 Creator.Tint = Colors.SecondaryAccent;
 
                 if (OnlineManager.CurrentGame != null && !OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
@@ -437,7 +437,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 if (CurrentDownload.MapsetId == Game.MapsetId)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "The mapset is already downloading. Slow down!");
+                    NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("MapsetAlreadyDownloading"));
                     return;
                 }
 
@@ -458,7 +458,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
         {
             if (CurrentDownload.MapsetId == Game.MapsetId)
-                Creator.Text = $"Downloading Map: {e.Value.ProgressPercentage}%";
+                Creator.Text = MultiplayerLocalization.Get("DownloadingMap", e.Value.ProgressPercentage);
         }
 
         private void OnDownloadStatusChanged(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
@@ -469,11 +469,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             CurrentDownload.Dispose();
 
             if (e.Value.Error != null)
-                NotificationManager.Show(NotificationLevel.Error, "Download Failed!");
+                NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("DownloadFailed"));
 
             if (CurrentDownload.MapsetId == Game.MapsetId)
             {
-                NotificationManager.Show(NotificationLevel.Success, "Download Complete!");
+                NotificationManager.Show(NotificationLevel.Success, MultiplayerLocalization.Get("DownloadComplete"));
 
                 var game = GameBase.Game as QuaverGame;
 

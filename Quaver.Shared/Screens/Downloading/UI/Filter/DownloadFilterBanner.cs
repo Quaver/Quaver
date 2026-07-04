@@ -143,7 +143,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateNoMapHeader()
         {
-            NoMapHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "No Song Selected", 24)
+            NoMapHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), DownloadLocalization.Get("No Song Selected"), 24)
             {
                 Parent = this,
                 Y = 32,
@@ -152,9 +152,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             };
 
             NoMapSubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "To begin downloading, double-click on a song.\n" +
-                "Clicking once will allow you to preview the audio.\n" +
-                "You can use the filters below to narrow down your search.", 20)
+                DownloadLocalization.Get("No Song Selected Description"), 20)
             {
                 Parent = this,
                 X = NoMapHeader.X,

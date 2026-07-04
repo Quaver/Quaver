@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
@@ -81,7 +82,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateTextMapsFound()
         {
-            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Maps Found", 21)
+            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), SelectionLocalization.Get("Maps Found"), 21)
             {
                 Parent = this,
                 X = TextCount.Width + TextSpacing
@@ -100,9 +101,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 TextCount.Text = $"{count:n0}";
 
                 if (count == 0 || count > 1)
-                    TextMapsFound.Text = MapsetsOnly ? $"RESULTS FOUND" : $"MAPS FOUND";
+                    TextMapsFound.Text = MapsetsOnly ? SelectionLocalization.Get("Results Found").ToUpper() : SelectionLocalization.Get("Maps Found").ToUpper();
                 else
-                    TextMapsFound.Text = MapsetsOnly ? "RESULT FOUND" : $"MAP FOUND";
+                    TextMapsFound.Text = MapsetsOnly ? SelectionLocalization.Get("Result Found").ToUpper() : SelectionLocalization.Get("Map Found").ToUpper();
 
                 TextMapsFound.X = TextCount.Width + TextSpacing;
 
