@@ -21,6 +21,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -28,6 +29,17 @@ namespace Quaver.Shared.Screens.Main
 {
     public class MainMenuScreenView : ScreenView
     {
+        private static readonly string[] NavigationButtonKeys =
+        {
+            "Screen_Main_SinglePlayer",
+            "Screen_Main_Multiplayer",
+            "Screen_Main_Editor",
+            "Screen_Main_DownloadSongs",
+            "Screen_Main_SteamWorkshop",
+            "Screen_Main_Options",
+            "Screen_Main_QuitGame"
+        };
+
         /// <summary>
         /// </summary>
         private BackgroundImage Background { get; set; }
@@ -178,19 +190,19 @@ namespace Quaver.Shared.Screens.Main
 
             NavigationButtonContainer = new NavigationButtonContainer(new List<NavigationButton>()
             {
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Single Player",
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), LocalizationManager.Get(NavigationButtonKeys[0]),
                     (o, e) => screen?.ExitToSinglePlayer()),
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), "Multiplayer",
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), LocalizationManager.Get(NavigationButtonKeys[1]),
                     (o, e) => screen?.ExitToMultiplayer()),
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Editor",
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil), LocalizationManager.Get(NavigationButtonKeys[2]),
                     (o, e) => screen?.ExitToEditor()),
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), "Download Songs",
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), LocalizationManager.Get(NavigationButtonKeys[3]),
                     (o, e) => screen?.ExitToDownload()),
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), "Steam Workshop",
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), LocalizationManager.Get(NavigationButtonKeys[4]),
                     (sender, args) => BrowserHelper.OpenURL($"https://steamcommunity.com/app/{SteamManager.ApplicationId}/workshop/")),
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), "Options",
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), LocalizationManager.Get(NavigationButtonKeys[5]),
                     (o, e) => DialogManager.Show(new OptionsDialog())),
-                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), "Quit Game",
+                new NavigationButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), LocalizationManager.Get(NavigationButtonKeys[6]),
                     (o, e) => DialogManager.Show(new QuitDialog()))
                 {
                     Icon = { Tint = SkinManager.Skin?.MainMenu?.NavigationQuitButtonTextColor ?? quitColor },

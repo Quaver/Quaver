@@ -179,6 +179,13 @@ namespace Quaver.Shared.Screens.Options
                         }
                     }),
                 }),
+                new OptionsSection("Language", FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), new List<OptionsSubcategory>
+                {
+                    new OptionsSubcategory("Localization", new List<OptionsItem>()
+                    {
+                        new OptionsItemLanguage(containerRect, "Language")
+                    })
+                }, new Vector2(24, 24)),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Background", new List<OptionsItem>()

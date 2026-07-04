@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language_Bulgarian" xml:space="preserve">
+    <value>Bulgarian</value>
+  </data>
+  <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
+    <value>Change screens to update the language.</value>
+  </data>
+  <data name="Screen_Main_Menu_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Screen_Main_Menu_Maps" xml:space="preserve">
+    <value>Maps</value>
+  </data>
+  <data name="Screen_Main_Menu_Clans" xml:space="preserve">
+    <value>Clans</value>
+  </data>
+  <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
+    <value>Jukebox</value>
+  </data>
+  <data name="Screen_Main_Menu_Skins" xml:space="preserve">
+    <value>Skins</value>
+  </data>
+  <data name="Screen_Main_Menu_Donate" xml:space="preserve">
+    <value>Donate</value>
+  </data>
+  <data name="Screen_Main_Menu_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Screen_Main_Menu_Wiki" xml:space="preserve">
+    <value>Wiki</value>
+  </data>
+  <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
+    <value>Report Bugs</value>
+  </data>
+  <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
+  <data name="Screen_Main_Menu_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="Screen_Main_Menu_Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="Screen_Main_SinglePlayer" xml:space="preserve">
+    <value>Single Player</value>
+  </data>
+  <data name="Screen_Main_Multiplayer" xml:space="preserve">
+    <value>Multiplayer</value>
+  </data>
+  <data name="Screen_Main_Editor" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="Screen_Main_Competitive" xml:space="preserve">
+    <value>Competitive</value>
+  </data>
+  <data name="Screen_Main_MapEditor" xml:space="preserve">
+    <value>Map Editor</value>
+  </data>
+  <data name="Screen_Main_DownloadMaps" xml:space="preserve">
+    <value>Download Maps</value>
+  </data>
+  <data name="Screen_Main_DownloadSongs" xml:space="preserve">
+    <value>Download Songs</value>
+  </data>
+  <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
+    <value>Steam Workshop</value>
+  </data>
+  <data name="Screen_Main_Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Screen_Main_QuitGame" xml:space="preserve">
+    <value>Quit Game</value>
+  </data>
+  <data name="Screen_Main_QuitDialogTitle" xml:space="preserve">
+    <value>EXIT QUAVER</value>
+  </data>
+  <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
+    <value>Are you sure you would like to quit the game?</value>
+  </data>
+  <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
+    <value>Compete for leaderboard ranks</value>
+  </data>
+  <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
+    <value>Play custom matches online with others</value>
+  </data>
+  <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
+    <value>Compete against players all over the world</value>
+  </data>
+  <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
+    <value>Create or edit a map to any song you'd like</value>
+  </data>
+  <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
+    <value>Find new songs from the community to play</value>
+  </data>
+  <data name="Screen_Main_TipLabel" xml:space="preserve">
+    <value>TIP:</value>
+  </data>
+  <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
+    <value>Pressing CTRL+O will open the options menu.</value>
+  </data>
+  <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
+    <value>Drag map files (.qp) into the game to import them.</value>
+  </data>
+  <data name="Screen_Main_TipMapPreview" xml:space="preserve">
+    <value>Pressing F3 in song select displays a map preview.</value>
+  </data>
+  <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
+    <value>Pausing in gameplay prevents score submission.</value>
+  </data>
+  <data name="Screen_Main_TipReportBug" xml:space="preserve">
+    <value>You can report a bug by opening a GitHub issue.</value>
+  </data>
+  <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
+    <value>Request new features by opening GitHub issues!</value>
+  </data>
+  <data name="Screen_Main_TipCreateMap" xml:space="preserve">
+    <value>Drag a .mp3 file in the game to create a new map!</value>
+  </data>
+  <data name="Screen_Main_TipRandomSong" xml:space="preserve">
+    <value>Pressing F2 in song select chooses a random song.</value>
+  </data>
+  <data name="Screen_Main_TipPlayercard" xml:space="preserve">
+    <value>Pressing F10 in the menu opens your playercard.</value>
+  </data>
+  <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
+    <value>Pressing F3/F4 in gameplay changes scroll speed.</value>
+  </data>
+  <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
+    <value>Your offset can be calibrated in the options menu.</value>
+  </data>
+  <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
+    <value>Standard* is the default judgement window preset.</value>
+  </data>
+  <data name="Screen_Main_TipPlaybackRate" xml:space="preserve">
+    <value>CTRL+ +/- changes the playback rate of the song.</value>
+  </data>
+  <data name="Screen_Main_NowPlaying" xml:space="preserve">
+    <value>Now Playing:</value>
+  </data>
+  <data name="Screen_Main_Published" xml:space="preserve">
+    <value>Published {0}</value>
+  </data>
+</root>

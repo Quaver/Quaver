@@ -10,7 +10,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Clans", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://two.quavergame.com/leaderboard/clans");
-            })
+            }, localizationKey: "Screen_Main_Menu_Clans")
         {
         }
     }

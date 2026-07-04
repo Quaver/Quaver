@@ -10,7 +10,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Website", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://quavergame.com");
-            })
+            }, localizationKey: "Screen_Main_Menu_Website")
         {
         }
     }

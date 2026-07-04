@@ -1,0 +1,98 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Language_Bulgarian" xml:space="preserve">
+        <value>Български</value>
+    </data>
+    <data name="Language_English" xml:space="preserve">
+        <value>Английски</value>
+    </data>
+    <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
+        <value>Сменете екрана, за да се обнови езикът.</value>
+    </data>
+    <data name="Screen_Main_Options" xml:space="preserve">
+        <value>Настройки</value>
+    </data>
+    <data name="Screen_Main_TipLabel" xml:space="preserve">
+        <value>Съвет:</value>
+    </data>
+    <data name="Screen_Main_Menu_Discord" xml:space="preserve">
+        <value>Discord</value>
+    </data>
+    <data name="Screen_Main_Menu_GitHub" xml:space="preserve">
+        <value>GitHub</value>
+    </data>
+    <data name="Screen_Main_Menu_Home" xml:space="preserve">
+        <value>Начало</value>
+    </data>
+    <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
+        <value>Музикален плейър</value>
+    </data>
+    <data name="Screen_Main_Menu_Maps" xml:space="preserve">
+        <value>Карти</value>
+    </data>
+    <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
+        <value>Докладване на проблеми</value>
+    </data>
+    <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
+        <value>X</value>
+    </data>
+    <data name="Screen_Main_Menu_Website" xml:space="preserve">
+        <value>Сайт</value>
+    </data>
+    <data name="Screen_Main_Menu_Wiki" xml:space="preserve">
+        <value>Документация</value>
+    </data>
+    <data name="Screen_Main_Multiplayer" xml:space="preserve">
+        <value>Мултиплейър</value>
+    </data>
+    <data name="Screen_Main_Menu_Clans" xml:space="preserve">
+        <value>Клан</value>
+    </data>
+    <data name="Screen_Main_MapEditor" xml:space="preserve">
+        <value>Редактиране на карта</value>
+    </data>
+    <data name="Screen_Main_Editor" xml:space="preserve">
+        <value>Редактор на карти</value>
+    </data>
+    <data name="Screen_Main_DownloadSongs" xml:space="preserve">
+        <value>Изтегли Песни</value>
+    </data>
+    <data name="Screen_Main_DownloadMaps" xml:space="preserve">
+        <value>Изтегли Песни</value>
+    </data>
+    <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
+        <value>Създай или редактирай карта на всяка песен, която ти харесва</value>
+    </data>
+    <data name="Screen_Main_Menu_Skins" xml:space="preserve">
+        <value>Скинове</value>
+    </data>
+    <data name="Screen_Main_NowPlaying" xml:space="preserve">
+        <value>Сега Звучи:</value>
+    </data>
+    <data name="Screen_Main_Published" xml:space="preserve">
+        <value>Публикувано {0}</value>
+    </data>
+    <data name="Screen_Main_QuitGame" xml:space="preserve">
+        <value>Изход от играта</value>
+    </data>
+    <data name="Screen_Main_QuitDialogTitle" xml:space="preserve">
+        <value>Изход от Quaver</value>
+    </data>
+    <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
+        <value>Сигурни ли сте, че искате да излезете от играта?</value>
+    </data>
+    <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
+        <value>Steam Workshop</value>
+    </data>
+</root>

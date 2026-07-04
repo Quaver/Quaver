@@ -179,7 +179,8 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private void CreateTimeAgo(NewsFeedItem item)
         {
-            TimeAgo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Published {item.DatePublished.TimeAgo()}",
+            TimeAgo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                LocalizationManager.Get("Screen_Main_Published", item.DatePublished.TimeAgo()),
                 20)
             {
                 Parent = Container,

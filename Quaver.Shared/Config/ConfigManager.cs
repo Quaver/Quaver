@@ -109,6 +109,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> Username { get; private set; }
 
         /// <summary>
+        ///     The culture code used for localized strings.
+        /// </summary>
+        internal static Bindable<string> Language { get; private set; }
+
+        /// <summary>
         ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
         /// </summary>
         internal static Bindable<string> Skin { get; private set; }
@@ -1056,6 +1061,7 @@ namespace Quaver.Shared.Config
             SteamWorkshopDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SteamWorkshopDirectory", _steamWorkshopDirectory, data);
             SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
             Username = ReadValue(@"Username", "Player", data);
+            Language = ReadValue(@"Language", "en", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);

@@ -102,6 +102,12 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
             };
         }
 
+        public void SetText(string title, string subtitle)
+        {
+            Title.Text = title;
+            Subtitle.Text = subtitle;
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
