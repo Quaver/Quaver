@@ -19,7 +19,6 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 using Wobble.Screens;
 using Wobble.Window;
@@ -62,10 +61,6 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        private LoadingWheel LoadingWheel { get; set; }
-
-        /// <summary>
-        /// </summary>
         private MenuAudioVisualizer VisualizerTop { get; set; }
 
         /// <summary>
@@ -84,7 +79,6 @@ namespace Quaver.Shared.Screens.Importing
             CreateDetailsText();
             CreateProgressBar();
             CreateStatusText();
-            CreateLoadingWheel();
             CreateVisualizers();
 
             MapsetImporter.ImportingMapset += OnImportingMapset;
@@ -181,7 +175,7 @@ namespace Quaver.Shared.Screens.Importing
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(WindowManager.Width + 4, 240),
+                Size = new ScalableVector2(WindowManager.Width + 4, 170),
                 Tint = ColorHelper.HexToColor($"#242424")
             };
 
@@ -233,27 +227,15 @@ namespace Quaver.Shared.Screens.Importing
         {
             var width = Math.Min(WindowManager.Width * 0.58f, 760);
 
-            ImportProgressBar = new ProgressBar(new Vector2(width, 36), 0, 100, 0, ColorHelper.HexToColor("#151515"), ColorHelper.HexToColor("#45D6F5"))
+            ImportProgressBar = new ProgressBar(new Vector2(width, 36), 0, 100, 0, ColorHelper.HexToColor("#151515"), ColorHelper.HexToColor("#128AA4"))
             {
                 Parent = Banner,
                 Alignment = Alignment.TopCenter,
                 Y = Details.Y + Details.Height + 14
             };
 
+            ImportProgressBar.ActiveBar.Alpha = 0.8f;
             ImportProgressBar.AddBorder(ColorHelper.HexToColor("#45D6F5"), 2);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateLoadingWheel()
-        {
-            LoadingWheel = new LoadingWheel
-            {
-                Parent = Banner,
-                Alignment = Alignment.TopCenter,
-                Y = ImportProgressBar.Y + ImportProgressBar.Height + 22,
-                Size = new ScalableVector2(42, 42)
-            };
         }
 
         /// <summary>

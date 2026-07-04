@@ -121,7 +121,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
                 if (LoggedOutPlayercard.Visible && LoggedOutPlayercard.LoginButton.IsHovered()
                     || UserPlayercard.Visible
                     && (UserPlayercard.ModeButton.IsHovered() || UserPlayercard.LogoutButton.IsHovered()
-                        || UserPlayercard.ViewProfileButton.IsHovered()))
+                        || UserPlayercard.ViewProfileButton.IsHovered() || UserPlayercard.ViewClanButton.IsHovered()))
                     Button.Depth = 1;
                 else
                     Button.Depth = 0;

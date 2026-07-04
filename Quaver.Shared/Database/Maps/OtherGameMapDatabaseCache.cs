@@ -388,7 +388,6 @@ namespace Quaver.Shared.Database.Maps
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Gameplay:
                 case QuaverScreenType.Loading:
-                case QuaverScreenType.Alpha:
                 case QuaverScreenType.Importing:
                     return false;
                 default:

@@ -8,6 +8,7 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -37,6 +38,10 @@ namespace Quaver.Shared.Graphics.Playercards
 
         /// <summary>
         /// </summary>
+        private ClanTag Clan { get; set; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus Username { get; set; }
 
         /// <summary>
@@ -54,6 +59,10 @@ namespace Quaver.Shared.Graphics.Playercards
         /// <summary>
         /// </summary>
         public IconButton ViewProfileButton { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public IconButton ViewClanButton { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -82,11 +91,13 @@ namespace Quaver.Shared.Graphics.Playercards
 
             CreateAvatar();
             CreateFlag();
+            CreateClan();
             CreateUsername();
             CreateStatus();
             CreateModeButton();
             CreateLogoutButton();
             CreateViewProfileButton();
+            CreateViewClanButton();
             CreateGlobalRanking();
             CreateOverallRating();
             CreateOverallAccuracy();
@@ -162,6 +173,19 @@ namespace Quaver.Shared.Graphics.Playercards
                 UsePreviousSpriteBatchOptions = true,
                 Size = new ScalableVector2(22, 22),
                 Position = new ScalableVector2(Avatar.X + Avatar.Width + 10, Avatar.Y - 2)
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateClan()
+        {
+            Clan = new ClanTag(22)
+            {
+                Parent = this,
+                UsePreviousSpriteBatchOptions = true,
+                X = Flag.X + Flag.Width + 6,
+                Y = Flag.Y
             };
         }
 
@@ -264,6 +288,24 @@ namespace Quaver.Shared.Graphics.Playercards
 
         /// <summary>
         /// </summary>
+        private void CreateViewClanButton()
+        {
+            ViewClanButton = new IconButton(UserInterface.ViewClanButtonPlayercard)
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                UsePreviousSpriteBatchOptions = true,
+                X = ViewProfileButton.X - ViewProfileButton.Width - 8,
+                Y = ModeButton.Y,
+                Size = new ScalableVector2(92, 25),
+                Scale = new Vector2(0.92f, 0.92f),
+            };
+
+            ViewClanButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{User?.OnlineUser?.ClanId}");
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreateGlobalRanking()
         {
             GlobalRanking = new TextKeyValue("Global Rank", "#1", 20, Color.White)
@@ -344,12 +386,18 @@ namespace Quaver.Shared.Graphics.Playercards
 
             Flag.Image = User != null ? Flags.Get(User?.OnlineUser?.CountryFlag) : Flags.Get("XX");
 
+            Clan.UpdateFromUser(User?.OnlineUser);
+            Clan.X = Flag.X + Flag.Width + 6;
+
             Username.Text = User?.OnlineUser?.Username ?? "Player";
             Username.Tint = Avatar.Border.Tint;
-            Username.TruncateWithEllipsis((int)Width - 30);
+            Username.X = Clan.Visible ? Clan.X + Clan.Width + 6 : Flag.X + Flag.Width + 6;
+            Username.TruncateWithEllipsis((int)(Width - Username.X - 30));
 
             Status.Text = GetStatusText();
             ModeButton.Image = GetModeImage();
+
+            ViewClanButton.Visible = !string.IsNullOrEmpty(User?.OnlineUser?.ClanId);
 
             if (User != null && User.Stats.ContainsKey(ActiveMode))
             {

@@ -268,6 +268,20 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         }
 
         /// <summary>
+        ///     Initializes this channel's message history before the chat overlay is shown.
+        /// </summary>
+        public void InitializeMessageHistory()
+        {
+            if (IsEventProcessingSuspended)
+            {
+                ShouldRefreshHistoryOnResume = true;
+                return;
+            }
+
+            RequestMessageHistoryIfNecessary();
+        }
+
+        /// <summary>
         ///     Requests the channel's message history.
         /// </summary>
         private void RequestMessageHistoryIfNecessary()
@@ -302,7 +316,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                         if (BlockedUsers.IsUserBlocked(message.User.Id))
                             continue;
 
-                        MessageHistoryQueue.Add(message.ToChatMessage(message.User.ToUser()));
+                        MessageHistoryQueue.Add(message.ToChatMessage(message.MakeUser()));
                     }
                 }
             }

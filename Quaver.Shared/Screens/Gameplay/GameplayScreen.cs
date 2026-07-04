@@ -275,6 +275,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public int LastJudgementIndexSentToServer { get; private set; } = -1;
 
         /// <summary>
+        ///     The number of mine hits last time the hit delta was sent to the server
+        /// </summary>
+        public int LastTotalMineHitCountForServer { get; private set; }
+
+        /// <summary>
         ///     The time that the judgements were last sent to the server
         /// </summary>
         private double TimeSinceLastJudgementsSentToServer { get; set; }
@@ -661,12 +666,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (AudioEngine.Track.IsPlaying)
                         AudioEngine.Track.Pause();
 
-                    if (IsTestPlayingInNewEditor)
-                        ExitToNewEditor(true);
-                    else
-                    {
-                        Exit(() => new EditorScreen(OriginalEditorMap));
-                    }
+                    ExitToNewEditor(true);
                 }
 
                 if (!IsSongSelectPreview)
@@ -728,10 +728,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 CustomAudioSampleCache.StopAll();
 
-                if (IsTestPlayingInNewEditor)
-                    ExitToNewEditor();
-                else
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+                ExitToNewEditor();
 
                 return;
             }
@@ -812,6 +809,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
                     if (SpectatorClient != null)
                         OnlineManager.Client?.StopSpectating();
+
+                    if (!HasStarted)
+                        AudioEngine.Track?.Dispose();
 
                     Exit(() => new SelectionScreen());
 
@@ -901,10 +901,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 CustomAudioSampleCache.StopAll();
 
-                if (IsTestPlayingInNewEditor)
-                    ExitToNewEditor();
-                else
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+                ExitToNewEditor();
 
                 return;
             }
@@ -1357,10 +1354,14 @@ namespace Quaver.Shared.Screens.Gameplay
             for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count; i++)
                 judgementsToGive.Add(Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats[i].Judgement);
 
+            var mineHitDelta = Ruleset.StandardizedReplayPlayer.ScoreProcessor.CountMineHit -
+                               LastTotalMineHitCountForServer;
+
             LastJudgementIndexSentToServer = Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count - 1;
+            LastTotalMineHitCountForServer = Ruleset.StandardizedReplayPlayer.ScoreProcessor.CountMineHit;
 
             if (OnlineManager.CurrentGame.InProgress)
-                OnlineManager.Client.SendGameJudgements(judgementsToGive);
+                OnlineManager.Client.SendGameJudgements(judgementsToGive, mineHitDelta);
         }
 
         public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen)

@@ -45,6 +45,8 @@ namespace Quaver.Shared.Skinning
 
         private SkinKeys? FallbackKeys { get; set; }
 
+        private static readonly string[] SnapSuffixes = { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
+
         public static string ModeShorthand(GameMode mode)
         {
             if (mode == 0)
@@ -821,6 +823,22 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     Pads a snap texture list to the expected snap count.
+        /// </summary>
+        private static List<Texture2D> PadSnapTextures(List<Texture2D> textures, int snapCount)
+        {
+            var paddedTextures = textures.ToList();
+
+            if (!paddedTextures.Any())
+                paddedTextures.Add(UserInterface.BlankBox);
+
+            while (paddedTextures.Count < snapCount)
+                paddedTextures.Add(paddedTextures.Last());
+
+            return paddedTextures;
+        }
+
+        /// <summary>
         ///     Loads the HitObjects w/ note snapping
         ///     Each hitobject lane, gets to have more images for each snap distance.
         ///
@@ -861,10 +879,8 @@ namespace Quaver.Shared.Skinning
             // For each snap we load the separate image for it.
             // It HAS to be loaded in an incremental fashion.
             // So you can't have 1/48, but not have 1/3, etc.
-            var snaps = new[] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
-
             // If it can find the appropriate files, load them.
-            objectsList.AddRange(snaps.Select((snap, snapIndex) => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", fallback?[fallbackIndicies[lane]]?[snapIndex + 1], false)));
+            objectsList.AddRange(SnapSuffixes.Select((snap, snapIndex) => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", fallback?[fallbackIndicies[lane]]?[snapIndex + 1], false)));
             hitObjects.Insert(lane, objectsList);
         }
 
@@ -902,20 +918,20 @@ namespace Quaver.Shared.Skinning
                     if (lane == 0 || UsePerLaneSpriteSheets)
                     {
 
-                        const int snapCount = 9;
+                        var snapCount = SnapSuffixes.Length + 1;
 
                         string hitObjectSheet = UsePerLaneSpriteSheets ? $"note-hitobject-sheet-{lane + 1}" : "note-hitobject-sheet";
                         string holdObjectSheet = UsePerLaneSpriteSheets ? $"note-holdobject-sheet-{lane + 1}" : "note-holdobject-sheet";
                         string mineSheet = UsePerLaneSpriteSheets ? $"note-mine-sheet-{lane + 1}" : "note-mine-sheet";
                         string mineStartSheet = UsePerLaneSpriteSheets ? $"note-minestart-sheet-{lane + 1}" : "note-minestart-sheet";
-                        var hitobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, hitObjectSheet, FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
-                        var holdobjects = LoadSpritesheet(SkinKeysFolder.HitObjects, holdObjectSheet, FallbackKeys?.NoteHoldHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1);
-                        var mines = LoadSpritesheet(SkinKeysFolder.HitObjects, mineSheet,
-                            FallbackKeys?.NoteMines?[MineFallbacks[lane]], false,
-                            snapCount, 1);
-                        var mineStarts = LoadSpritesheet(SkinKeysFolder.HitObjects, mineStartSheet,
-                            FallbackKeys?.NoteMineStarts?[MineFallbacks[lane]],
-                            false, snapCount, 1);
+                        var hitobjects = PadSnapTextures(LoadSpritesheet(SkinKeysFolder.HitObjects, hitObjectSheet,
+                            FallbackKeys?.NoteHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1), snapCount);
+                        var holdobjects = PadSnapTextures(LoadSpritesheet(SkinKeysFolder.HitObjects, holdObjectSheet,
+                            FallbackKeys?.NoteHoldHitObjects?[HitObjectFallbacks[lane]], false, snapCount, 1), snapCount);
+                        var mines = PadSnapTextures(LoadSpritesheet(SkinKeysFolder.HitObjects, mineSheet,
+                            FallbackKeys?.NoteMines?[MineFallbacks[lane]], false, snapCount, 1), snapCount);
+                        var mineStarts = PadSnapTextures(LoadSpritesheet(SkinKeysFolder.HitObjects, mineStartSheet,
+                            FallbackKeys?.NoteMineStarts?[MineFallbacks[lane]], false, snapCount, 1), snapCount);
                         NoteHitObjects.Add(hitobjects);
                         NoteMines.Add(mines);
 
@@ -930,18 +946,6 @@ namespace Quaver.Shared.Skinning
                             NoteMineStarts.Add(mineStarts);
                         else
                             NoteMineStarts.Add(mines);
-
-                        for (var j = 0; j < snapCount - NoteHitObjects[lane].Count; j++)
-                            NoteHitObjects[lane].Add(NoteHitObjects[lane].Last());
-
-                        for (var j = 0; j < snapCount - NoteHoldHitObjects[lane].Count; j++)
-                            NoteHoldHitObjects[lane].Add(NoteHoldHitObjects[lane].Last());
-
-                        for (var j = 0; j < snapCount - NoteMines[lane].Count; j++)
-                            NoteMines[lane].Add(NoteMines[lane].Last());
-
-                        for (var j = 0; j < snapCount - NoteMineStarts[lane].Count; j++)
-                            NoteMineStarts[lane].Add(NoteMineStarts[lane].Last());
                     }
                     else
                     {

@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 Track.Seeked -= OnTrackSeeked;
 
             LoadGameplayScreenTask?.Dispose();
-            LoadedGameplayScreen?.Destroy();
+            DestroyLoadedGameplayScreen();
             TestPlayPrompt?.Destroy();
 
             base.Destroy();
@@ -180,10 +180,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (LoadedGameplayScreen == null)
                 return HandleLoadGameplayScreen(map, token);
 
-            TestPlayPrompt.Parent = null;
-            LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-            LoadedGameplayScreen.Destroy();
-            LoadedGameplayScreen = null;
+            DestroyLoadedGameplayScreen();
 
             return HandleLoadGameplayScreen(map, token);
         }
@@ -334,9 +331,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 if (e.OldValue != null)
                     e.OldValue.Qua = null;
 
-                TestPlayPrompt.Parent = null;
-                LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-                LoadedGameplayScreen?.Destroy();
+                DestroyLoadedGameplayScreen();
 
                 SeekBar?.Destroy();
             }
@@ -393,39 +388,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void OnLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
         {
             if (e.Value != SelectContainerPanel.MapPreview)
-            {
-                if (LoadGameplayScreenTask.IsRunning)
-                    LoadGameplayScreenTask.Cancel();
-
                 return;
-            }
 
-            RunLoadTask();
             ShowTestPlayPrompt();
         }
 
         /// <summary>
         /// </summary>
-        protected void RunLoadTask(bool force = false)
+        protected void RunLoadTask()
         {
-            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview || MapManager.Selected.Value == null)
-                return;
+            var selectedMap = MapManager.Selected.Value;
 
-            if (!force && LoadedGameplayScreen != null && !LoadedGameplayScreen.IsDisposed &&
-                LoadedGameplayScreen.MapHash == MapManager.Selected.Value.Md5Checksum)
+            if (selectedMap == null)
                 return;
 
             Wheel.ClearAnimations();
             Wheel.FadeTo(1, Easing.Linear, 150);
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, DelayTime);
+            LoadGameplayScreenTask.Run(selectedMap, DelayTime);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask(true);
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
 
         /// <summary>
         /// </summary>
@@ -459,17 +446,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 });
             }
 
-            if (changedModsIsNone)
+            if (changedModsIsNone && e.Type != ModChangeType.RemoveSpeed)
                 return;
 
-            var reloadTriggers = e.ChangedMods
-                                 & ~ModIdentifier.SpeedMods
-                                 & ~ModIdentifier.Autoplay
-                                 & ~ModIdentifier.Coop
-                                 & ~ModIdentifier.Randomize;
-
-            if (reloadTriggers != 0) //  once again why is ModIdentifier.None not 0
-                RunLoadTask(true);
+            if (LoadedGameplayScreen != null)
+                RunLoadTask();
         }
 
         /// <summary>
@@ -577,7 +558,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         protected void RefreshScreen()
         {
-            if (LoadedGameplayScreen == null)
+            if (LoadedGameplayScreen == null || LoadedGameplayScreen.IsDisposed)
                 return;
 
             if (LoadedGameplayScreen.InReplayMode)
@@ -587,6 +568,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 var hitobjectManager = (HitObjectManagerKeys)LoadedGameplayScreen.Ruleset.HitObjectManager;
                 hitobjectManager.HandleSkip();
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        protected void DestroyLoadedGameplayScreen()
+        {
+            var screen = LoadedGameplayScreen;
+
+            if (screen == null)
+                return;
+
+            LoadedGameplayScreen = null;
+            TestPlayPrompt.Parent = null;
+
+            if (screen.Ruleset?.Playfield?.Container != null)
+                screen.Ruleset.Playfield.Container.Parent = null;
+
+            screen.Destroy();
         }
 
         /// <summary>

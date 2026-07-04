@@ -46,14 +46,11 @@ using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Beta;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Initialization;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
-using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
@@ -330,6 +327,7 @@ namespace Quaver.Shared
             Window.FileDropped += MapsetImporter.OnFileDropped;
             Window.ClientSizeChanged += OnClientSizeChanged;
             AudioManager.OutputDeviceChanged += OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = () => CurrentScreen?.Type == QuaverScreenType.Gameplay;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
@@ -366,6 +364,7 @@ namespace Quaver.Shared
         protected override void UnloadContent()
         {
             AudioManager.OutputDeviceChanged -= OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = null;
             ConfigManager.WriteConfigFileAsync().Wait();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
@@ -592,8 +591,7 @@ namespace Quaver.Shared
         /// <summary>
         ///     Shows the FPS counter based on the current config variable.
         /// </summary>
-        private void ShowFpsCounter(FpsCounter counter) =>
-            counter.Visible = ConfigManager.FpsCounter.Value && CurrentScreen?.Type != QuaverScreenType.Gameplay;
+        private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
 
         /// <summary>
         ///     Uses a custom fps config
@@ -819,7 +817,7 @@ namespace Quaver.Shared
         /// <param name="fpsLimitType"></param>
         /// <returns></returns>
         private static bool IsFpsLimitTypeAvailable(FpsLimitType fpsLimitType) =>
-            !(fpsLimitType == FpsLimitType.WaylandVsync && RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
+            fpsLimitType != FpsLimitType.WaylandVsync || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         /// <summary>
         ///     Handles when the user holds either Control (CTRL) button and presses O
@@ -1002,8 +1000,6 @@ namespace Quaver.Shared
         {
             if (Fps == null)
                 return;
-
-            ShowFpsCounter(Fps);
 
             Fps.Y = -MenuBorder.HEIGHT - 10;
 

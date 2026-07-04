@@ -250,6 +250,7 @@ namespace Quaver.Shared.Online
             Client.OnScoreSubmitted += OnScoreSubmitted;
             Client.OnUsersOnline += OnUsersOnline;
             Client.OnUserInfoReceived += OnUserInfoReceived;
+            Client.OnMuteEndTimeReceived += OnMuteEndTimeReceived;
             Client.OnUserStatusReceived += OnUserStatusReceived;
             Client.OnMultiplayerGameInfoReceived += OnMultiplayerGameInfoReceived;
             Client.OnJoinedMultiplayerGame += OnJoinedMultiplayerGame;
@@ -456,6 +457,19 @@ namespace Quaver.Shared.Online
 
             Trace.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+        }
+
+        /// <summary>
+        ///     Called when a user's mute end time changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnMuteEndTimeReceived(object sender, MuteEndTimeEventArgs e)
+        {
+            if (!OnlineUsers.ContainsKey(e.UserId))
+                return;
+
+            OnlineUsers[e.UserId].OnlineUser.MuteEndTime = e.EndTime;
         }
 
         /// <summary>

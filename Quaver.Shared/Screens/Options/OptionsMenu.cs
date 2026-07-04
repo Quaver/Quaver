@@ -76,6 +76,7 @@ namespace Quaver.Shared.Screens.Options
             CreateContentContainers();
             CreateHeader();
 
+            HideAllSectionItems();
             SelectedSection.Value = Sections.Find(x => x.Name == LastOpenedSection) ?? Sections.First();
             SetActiveContentContainer();
             SelectedSection.ValueChanged += OnSectionChanged;
@@ -127,6 +128,7 @@ namespace Quaver.Shared.Screens.Options
         private void CreateSections()
         {
             var containerRect = Content.ScreenRectangle;
+            var skinOptions = SkinStore.GetSkins();
 
             Sections = new List<OptionsSection>
             {
@@ -233,8 +235,8 @@ namespace Quaver.Shared.Screens.Options
                 {
                     new OptionsSubcategory("Selection", new List<OptionsItem>()
                     {
-                        new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin),
-                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin),
+                        new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin, skinOptions),
+                        new OptionsItemCustomSkin(containerRect, "Co-op Player 2 Skin", ConfigManager.TournamentPlayer2Skin, skinOptions),
                         new OptionsItemDefaultSkin(containerRect, "Default Skin", ConfigManager.DefaultSkin)
                     }),
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()
@@ -339,10 +341,6 @@ namespace Quaver.Shared.Screens.Options
                                 x.Value, i => $"{i / 10f:0.0}")
                             )
                     ).ToList()),
-                    // new OptionsSubcategory("Beta", new List<OptionsItem>()
-                    // {
-                    //     new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),
-                    // }),
                 }),
                 new OptionsSection("Advanced", FontAwesome.Get(FontAwesomeIcon.fa_open_folder), new List<OptionsSubcategory>
                 {
@@ -396,6 +394,20 @@ namespace Quaver.Shared.Screens.Options
             };
 
             SelectedSection = new Bindable<OptionsSection>(Sections.First()) { Value = Sections.First() };
+        }
+
+        private void HideAllSectionItems()
+        {
+            foreach (var section in Sections)
+            {
+                foreach (var subcategory in section.Subcategories)
+                {
+                    foreach (var item in subcategory.Items)
+                    {
+                        item.ApplyVisibility(false);
+                    }
+                }
+            }
         }
 
         private static List<OptionsItem> CreateAdvancedVideoOptions(RectangleF containerRect)
@@ -528,7 +540,12 @@ namespace Quaver.Shared.Screens.Options
                 ContentContainers.Add(SelectedSection.Value, new OptionsContentContainer(SelectedSection.Value, Content.Size));
 
             foreach (var container in ContentContainers)
-                container.Value.Parent = SelectedSection.Value == container.Key ? Content : null;
+            {
+                var active = SelectedSection.Value == container.Key;
+
+                container.Value.ApplyVisibility(active);
+                container.Value.Parent = active ? Content : null;
+            }
         }
 
         /// <summary>

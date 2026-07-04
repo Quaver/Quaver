@@ -201,7 +201,7 @@ namespace Quaver.Shared.Screens.Result.UI
                     {
                         Parent = this,
                         Alpha = 0.5f,
-                        Tint = ResultsJudgementGraphBar.GetColor(judgement),
+                        Tint = ResultsJudgementGraphJudgementBar.GetColor(judgement),
                         Alignment = Alignment.MidCenter,
                         Y = k * HitDifferenceToY(difference) - k * height,
                         Size = new ScalableVector2(Width, 2),
@@ -280,7 +280,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 {
                     Parent = this,
                     Alpha = 0.35f,
-                    Tint = ResultsJudgementGraphBar.GetColor(Judgement.Miss),
+                    Tint = ResultsJudgementGraphJudgementBar.GetColor(Judgement.Miss),
                     Alignment = Alignment.MidLeft,
                     X = TimeToX(miss.SongPosition),
                     Y = 0,
@@ -308,7 +308,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 new Sprite
                 {
                     Parent = this,
-                    Tint = ResultsJudgementGraphBar.GetColor(breakdown.Judgement),
+                    Tint = ResultsJudgementGraphJudgementBar.GetColor(breakdown.Judgement),
                     Size = new ScalableVector2(DotSize, DotSize),
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (DotSize / 2),
@@ -333,7 +333,11 @@ namespace Quaver.Shared.Screens.Result.UI
                 new Sprite
                 {
                     Parent = this,
-                    Tint = ResultsJudgementGraphBar.GetColor(breakdown.Judgement),
+                    Tint = breakdown.HitObject.Type switch
+                    {
+                        HitObjectType.Mine when breakdown.Type == HitStatType.Miss => ResultsJudgementGraphMineHitBar.Color,
+                        _ => ResultsJudgementGraphJudgementBar.GetColor(breakdown.Judgement),
+                    },
                     Size = new ScalableVector2(MissDotSize, MissDotSize),
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (MissDotSize / 2),

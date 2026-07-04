@@ -55,7 +55,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 if (judgement >= Judgement.Ghost)
                     continue;
 
-                Bars.Add(new ResultsJudgementGraphBar(judgement, Processor, new ScalableVector2(Width, 50)));
+                Bars.Add(new ResultsJudgementGraphJudgementBar(judgement, Processor,
+                    new ScalableVector2(Width, 50)));
+            }
+
+            if (Processor.Value.CountMineHit > 0)
+            {
+                Bars.Add(new ResultsJudgementGraphMineHitBar(Processor,
+                    new ScalableVector2(Width, 50)));
             }
 
             var heightSum = Bars.First().Height * Bars.Count;
@@ -77,15 +84,15 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         }
     }
 
-    public class ResultsJudgementGraphBar : Sprite
+    public class ResultsJudgementGraphNumberBar : Sprite
     {
-        /// <summary>
-        /// </summary>
-        private Judgement Judgement { get; }
+        private int Count { get; }
 
-        /// <summary>
-        /// </summary>
-        private Bindable<ScoreProcessor> Processor { get; }
+        private float Fraction { get; }
+
+        private Texture2D Texture { get; }
+
+        private Color Color { get; }
 
         /// <summary>
         /// </summary>
@@ -117,13 +124,17 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        /// <param name="judgement"></param>
-        /// <param name="processor"></param>
+        /// <param name="count"></param>
+        /// <param name="fraction"></param>
+        /// <param name="texture"></param>
         /// <param name="size"></param>
-        public ResultsJudgementGraphBar(Judgement judgement, Bindable<ScoreProcessor> processor, ScalableVector2 size)
+        /// <param name="color"></param>
+        protected ResultsJudgementGraphNumberBar(int count, float fraction, Texture2D texture, ScalableVector2 size, Color color)
         {
-            Judgement = judgement;
-            Processor = processor;
+            Count = count;
+            Fraction = fraction;
+            Texture = texture;
+            Color = color;
             Size = size;
             Alpha = 0f;
 
@@ -143,7 +154,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         public override void Update(GameTime gameTime)
         {
             if (CountAnimation != null && !CountAnimation.Done)
-                TextCount.Text = $"{(int) CountAnimation?.PerformInterpolation(gameTime):n0}";
+            {
+                var interpolatedCount = (int)(CountAnimation?.PerformInterpolation(gameTime) ?? 0);
+                TextCount.Text = $"{interpolatedCount:n0}";
+            }
 
             if (CountAnimation != null && CountAnimation.Done && !FinalizedWindowsAfterAnimation)
             {
@@ -162,7 +176,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Tint = GetColor(Judgement)
+                Tint = Color,
             };
 
             UpdateTextCount();
@@ -170,7 +184,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void UpdateTextCount() => TextCount.Text = $"{Processor.Value.CurrentJudgements[Judgement]:n0}";
+        private void UpdateTextCount() => TextCount.Text = $"{Count:n0}";
 
         /// <summary>
         /// </summary>
@@ -178,7 +192,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         {
             Parent = this,
             Size = new ScalableVector2(4, Height),
-            Tint = GetColor(Judgement)
+            Tint = Color
         };
 
         /// <summary>
@@ -189,7 +203,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             {
                 Parent = this,
                 Size = new ScalableVector2(0, Height),
-                Tint = GetColor(Judgement),
+                Tint = Color,
                 Image = UserInterface.OptionsSidebarButtonBackground,
                 X = FlagMarker.Width,
             };
@@ -200,15 +214,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         private void CreateJudgementSprite()
         {
             var height = Height;
-            var tex = GetJudgementTexture();
 
             JudgementSprite = new Sprite()
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = FlagMarker.X + FlagMarker.Width + 4,
-                Image = tex,
-                Size = new ScalableVector2((float) tex.Width / tex.Height * height, height)
+                Image = Texture,
+                Size = new ScalableVector2((float) Texture.Width / Texture.Height * height, height)
             };
         }
 
@@ -220,7 +233,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             Parent = this,
             Alignment = Alignment.MidLeft,
             X = JudgementSprite.X + JudgementSprite.Width + 10,
-            Tint = GetColor(Judgement)
+            Tint = Color,
         };
 
         /// <summary>
@@ -230,17 +243,42 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             Bar.ClearAnimations();
             Bar.Width = 0;
 
-            var percent = (float) Processor.Value.CurrentJudgements[Judgement] / Processor.Value.TotalJudgementCount;
-
             const int animTime = 1000;
 
-            Bar.ChangeWidthTo((int) (Width * percent), Easing.OutQuint, animTime);
+            Bar.ChangeWidthTo((int) (Width * Fraction), Easing.OutQuint, animTime);
 
-            Percentage.Text = Processor.Value.CurrentJudgements[Judgement] == 0 ? $"(0.00%)" : $"({percent * 100:0.00}%)";
+            Percentage.Text = $"({Fraction * 100:0.00}%)";
 
-            CountAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0,
-                Processor.Value.CurrentJudgements[Judgement], animTime);
+            CountAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0, Count, animTime);
         }
+    }
+
+    public class ResultsJudgementGraphJudgementBar : ResultsJudgementGraphNumberBar
+    {
+        private const string JudgementTextureDirectory = $"Quaver.Resources/Textures/UI/Results";
+
+        /// <summary>
+        /// </summary>
+        /// <param name="judgement"></param>
+        /// <param name="processor"></param>
+        /// <param name="size"></param>
+        public ResultsJudgementGraphJudgementBar(Judgement judgement, Bindable<ScoreProcessor> processor,
+            ScalableVector2 size)
+            : base(GetCount(judgement, processor), GetFraction(judgement, processor), GetJudgementTexture(judgement), size, GetColor(judgement))
+        {
+            
+        }
+
+        private static int GetCount(Judgement judgement, Bindable<ScoreProcessor> processor) =>
+            judgement switch
+            {
+                Judgement.Miss => processor.Value.CurrentJudgements[judgement] -
+                                  processor.Value.CountMineHit,
+                _ => processor.Value.CurrentJudgements[judgement],
+            };
+
+        private static float GetFraction(Judgement judgement, Bindable<ScoreProcessor> processor) =>
+            (float)GetCount(judgement, processor) / processor.Value.TotalJudgementCount;
 
         /// <summary>
         /// </summary>
@@ -251,7 +289,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             switch (j)
             {
                 case Judgement.Marv:
-                    return new Color(251,255,182);
+                    return new Color(255,255,255);
                 case Judgement.Perf:
                     return new Color(255,231,107);
                 case Judgement.Great:
@@ -270,27 +308,45 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetJudgementTexture()
+        private static Texture2D GetJudgementTexture(Judgement judgement)
         {
-            var dir = $"Quaver.Resources/Textures/UI/Results";
-
-            switch (Judgement)
+            switch (judgement)
             {
                 case Judgement.Marv:
-                    return TextureManager.Load($"{dir}/judge-marv.png");
+                    return TextureManager.Load($"{JudgementTextureDirectory}/judge-marv.png");
                 case Judgement.Perf:
-                    return TextureManager.Load($"{dir}/judge-perf.png");
+                    return TextureManager.Load($"{JudgementTextureDirectory}/judge-perf.png");
                 case Judgement.Great:
-                    return TextureManager.Load($"{dir}/judge-great.png");
+                    return TextureManager.Load($"{JudgementTextureDirectory}/judge-great.png");
                 case Judgement.Good:
-                    return TextureManager.Load($"{dir}/judge-good.png");
+                    return TextureManager.Load($"{JudgementTextureDirectory}/judge-good.png");
                 case Judgement.Okay:
-                    return TextureManager.Load($"{dir}/judge-okay.png");
+                    return TextureManager.Load($"{JudgementTextureDirectory}/judge-okay.png");
                 case Judgement.Miss:
-                    return TextureManager.Load($"{dir}/judge-miss.png");
+                    return TextureManager.Load($"{JudgementTextureDirectory}/judge-miss.png");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+    }
+
+    public class ResultsJudgementGraphMineHitBar : ResultsJudgementGraphNumberBar
+    {
+        public static Color Color => new(179, 179, 179);
+        private const string JudgementTextureDirectory = $"Quaver.Resources/Textures/UI/Results";
+
+        /// <summary>
+        /// </summary>
+        /// <param name="processor"></param>
+        /// <param name="size"></param>
+        public ResultsJudgementGraphMineHitBar(Bindable<ScoreProcessor> processor,
+            ScalableVector2 size)
+            : base(processor.Value.CountMineHit,
+                (float)processor.Value.CountMineHit / processor.Value.TotalJudgementCount,
+                TextureManager.Load($"{JudgementTextureDirectory}/judge-mines.png"),
+                size,
+                Color)
+        {
         }
     }
 }
