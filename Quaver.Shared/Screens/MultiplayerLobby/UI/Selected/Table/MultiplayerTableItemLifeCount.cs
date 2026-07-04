@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 OnlineManager.Client.OnGameLivesChanged += OnLifeCountChanged;
         }
 
-        public override string GetName() => "Life Count";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("LifeCount");
 
         public override string GetValue() => SelectedGame.Value.Lives.ToString();
 

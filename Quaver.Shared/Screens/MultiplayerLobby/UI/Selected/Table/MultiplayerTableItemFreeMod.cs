@@ -22,14 +22,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override string GetName() => "Free Mod";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("FreeMod");
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
         public override string GetValue()
-            => SelectedGame.Value.FreeModType.HasFlag(MultiplayerFreeModType.Regular) ? "Yes" : "No";
+            => SelectedGame.Value.FreeModType.HasFlag(MultiplayerFreeModType.Regular) ? MultiplayerLobbyLocalization.Get("Yes") : MultiplayerLobbyLocalization.Get("No");
     }
 
     public class MultiplayerFreeModCheckbox : QuaverCheckbox

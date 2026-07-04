@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 {
     public class MultiplayerLobbyMapDropdown : LabelledDropdown
     {
-        public MultiplayerLobbyMapDropdown() : base("MAP STATUS: ", 22, new Dropdown(GetDropdownItems(),
+        public MultiplayerLobbyMapDropdown() : base(MultiplayerLobbyLocalization.Get("MapStatusLabel"), 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(168, 38), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
@@ -31,10 +31,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// <returns></returns>
         private static List<string> GetDropdownItems() => new List<string>()
         {
-            "All",
-            "Imported",
-            "Uploaded",
-            "Unsubmitted"
+            MultiplayerLobbyLocalization.Get("All"),
+            MultiplayerLobbyLocalization.Get("Imported"),
+            MultiplayerLobbyLocalization.Get("Uploaded"),
+            MultiplayerLobbyLocalization.Get("Unsubmitted")
         };
 
         /// <summary>

@@ -21,9 +21,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         public override string GetName()
         {
             if (IsMultiplayer)
-                return "Max Players";
+                return MultiplayerLobbyLocalization.Get("MaxPlayers");
 
-            return "Players";
+            return MultiplayerLobbyLocalization.Get("Players");
         }
 
         public override string GetValue() => $"{SelectedGame.Value.PlayerIds.Count}/{SelectedGame.Value.MaxPlayers}";

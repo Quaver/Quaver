@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
     {
         /// <summary>
         /// </summary>
-        public MultiplayerLobbyModeDropdown() : base("MODE: ", 22, new Dropdown(GetDropdownItems(),
+        public MultiplayerLobbyModeDropdown() : base(MultiplayerLobbyLocalization.Get("ModeLabel"), 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(120, 38), 22, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
@@ -33,9 +33,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// <returns></returns>
         private static List<string> GetDropdownItems() => new List<string>()
         {
-            "All",
-            "4 Keys",
-            "7 Keys"
+            MultiplayerLobbyLocalization.Get("All"),
+            MultiplayerLobbyLocalization.Get("4Keys"),
+            MultiplayerLobbyLocalization.Get("7Keys")
         };
 
         /// <summary>

@@ -47,8 +47,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         {
             var options = new List<IMenuDialogOption>
             {
-                new MenuDialogOption("View Profile", () => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User.Id}")),
-                new MenuDialogOption("Steam Profile", () => BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{User.SteamId}")),
+                new MenuDialogOption(MultiplayerLocalization.Get("ViewProfile"), () => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User.Id}")),
+                new MenuDialogOption(MultiplayerLocalization.Get("SteamProfile"), () => BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{User.SteamId}")),
             };
 
             // Other Player Actions
@@ -59,8 +59,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
                 {
                     options = options.Concat(new List<IMenuDialogOption>
                     {
-                        new MenuDialogOption("Kick Player", () => OnlineManager.Client.KickMultiplayerGamePlayer(User.Id), Color.Crimson),
-                        new MenuDialogOption("Give Host", () => OnlineManager.Client.TransferMultiplayerGameHost(User.Id), Color.Lime),
+                        new MenuDialogOption(MultiplayerLocalization.Get("KickPlayer"), () => OnlineManager.Client.KickMultiplayerGamePlayer(User.Id), Color.Crimson),
+                        new MenuDialogOption(MultiplayerLocalization.Get("GiveHost"), () => OnlineManager.Client.TransferMultiplayerGameHost(User.Id), Color.Lime),
                     }).ToList();
 
                     if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
@@ -80,12 +80,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
                         }
 
                         var color = team == MultiplayerTeam.Red ? Color.Crimson : new Color(25, 104, 249);
-                        options.Add(new MenuDialogOption($"Change Team ({team})", () =>  OnlineManager.Client.ChangeOtherPlayerTeam(User.Id, team), color));
+                        options.Add(new MenuDialogOption(MultiplayerLocalization.Get("ChangeTeamWithTeam", team), () =>  OnlineManager.Client.ChangeOtherPlayerTeam(User.Id, team), color));
                     }
                 }
             }
 
-            options.Add(new MenuDialogOption("Close", () => DialogManager.Dismiss(Dialog)));
+            options.Add(new MenuDialogOption(MultiplayerLocalization.Get("Close"), () => DialogManager.Dismiss(Dialog)));
 
             Container = new MultiplayerPlayerOptionsContainer(Dialog, options)
             {

@@ -73,9 +73,9 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
         private void UpdateReadyText()
         {
             if (Game.Value.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
-                UpdateText("Not Ready");
+                UpdateText(MultiLocalization.Get("NotReady"));
             else
-                UpdateText("Ready Up");
+                UpdateText(MultiLocalization.Get("ReadyUp"));
         }
 
         /// <summary>

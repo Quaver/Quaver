@@ -10,10 +10,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Name
         {
             Textbox.OnSubmit = null;
 
-            Header.Text = $"CHANGE GAME NAME";
-            Confirmation.Text = $"Enter a new name for the multiplayer game...";
+            Header.Text = MultiLocalization.Get("ChangeGameNameTitle");
+            Confirmation.Text = MultiLocalization.Get("ChangeGameNameMessage");
 
-            Textbox.PlaceholderText = "Enter a name...";
+            Textbox.PlaceholderText = MultiLocalization.Get("EnterNamePlaceholder");
             Textbox.MaxCharacters = 50;
 
             HandleEnterPress = false;

@@ -26,8 +26,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public JoinPasswordGameDialog(MultiplayerGame game, bool spectating = false, string initialText = "") : base("ENTER GAME PASSWORD",
-            "Enter the password to join the multiplayer game...")
+        public JoinPasswordGameDialog(MultiplayerGame game, bool spectating = false, string initialText = "") : base(MultiplayerLobbyLocalization.Get("EnterGamePasswordTitle"),
+            MultiplayerLobbyLocalization.Get("EnterGamePasswordMessage"))
         {
             Game = game;
             IsSpectating = spectating;
@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         private void CreateTextbox(string initialText)
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
-                20, initialText, "Enter password...", s =>
+                20, initialText, MultiplayerLobbyLocalization.Get("EnterPasswordPlaceholder"), s =>
                 {
                     DialogManager.Show(new JoinGameDialog(Game, s, false, IsSpectating));
                 })

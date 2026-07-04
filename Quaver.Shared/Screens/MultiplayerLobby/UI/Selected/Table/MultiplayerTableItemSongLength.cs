@@ -15,12 +15,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 OnlineManager.Client.OnMaxSongLengthChanged += OnSongLengthChanged;
         }
 
-        public override string GetName() => "Maximum Song Length";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("MaximumSongLength");
 
         public override string GetValue()
         {
             if (SelectedGame.Value.MaximumSongLength == 999999999)
-                return "Any";
+                return MultiplayerLobbyLocalization.Get("Any");
 
             var t = TimeSpan.FromSeconds(SelectedGame.Value.MaximumSongLength);
 
