@@ -274,7 +274,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 case QuaverScreenType.Results:
                 case QuaverScreenType.Select:
                 case QuaverScreenType.Importing:
-                case QuaverScreenType.Alpha:
                 case QuaverScreenType.Download:
                     OnlineManager.Client?.StopSpectating();
                     OnlineManager.Client?.SpectatePlayer(user.OnlineUser.Id);

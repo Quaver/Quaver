@@ -416,11 +416,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
 
         /// <summary>
-        ///	    If enabled, automatically skip the beta splash screen.
-        /// </summary>
-        internal static Bindable<bool> SkipSplashScreen { get; private set; }
-
-        /// <summary>
         /// </summary>
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
 
@@ -1226,7 +1221,6 @@ namespace Quaver.Shared.Config
             ReloadSkinOnChange = ReadValue(@"ReloadSkinOnChange", false, data);
             //EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
-            SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
             DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
             EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);

@@ -666,12 +666,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (AudioEngine.Track.IsPlaying)
                         AudioEngine.Track.Pause();
 
-                    if (IsTestPlayingInNewEditor)
-                        ExitToNewEditor(true);
-                    else
-                    {
-                        Exit(() => new EditorScreen(OriginalEditorMap));
-                    }
+                    ExitToNewEditor(true);
                 }
 
                 if (!IsSongSelectPreview)
@@ -733,10 +728,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 CustomAudioSampleCache.StopAll();
 
-                if (IsTestPlayingInNewEditor)
-                    ExitToNewEditor();
-                else
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+                ExitToNewEditor();
 
                 return;
             }
@@ -909,10 +901,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 CustomAudioSampleCache.StopAll();
 
-                if (IsTestPlayingInNewEditor)
-                    ExitToNewEditor();
-                else
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+                ExitToNewEditor();
 
                 return;
             }
