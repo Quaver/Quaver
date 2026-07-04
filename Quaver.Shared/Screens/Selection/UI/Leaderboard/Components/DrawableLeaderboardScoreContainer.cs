@@ -66,6 +66,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private SpriteTextPlus Username { get; set; }
 
         /// <summary>
+        ///     Displays the user's clan tag before the username
+        /// </summary>
+        private ClanTag Clan { get; set; }
+
+        /// <summary>
         ///     Displays the performance rating of the score
         /// </summary>
         private SpriteTextPlus PerformanceRating { get; set; }
@@ -170,6 +175,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 CreateRankText();
 
             CreateFlag();
+            CreateClan();
             CreateUsername();
             CreatePerformanceRating();
             CreateAccuracyMaxCombo();
@@ -220,7 +226,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 if (!Score.IsPersonalBest)
                     Rank.Text = $"{Score.Index + 1}.";
 
-                Username.Text = $"{score.Item.Name}";
+                UpdateClanAndUsername(score.Item);
 
                 if (score.Item.Name == ConfigManager.Username.Value)
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameSelfColor ?? Colors.MainAccent;
@@ -378,6 +384,30 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 UsePreviousSpriteBatchOptions = true
             };
             
+        }
+
+        /// <summary>
+        ///     Creates <see cref="Clan"/>
+        /// </summary>
+        private void CreateClan()
+        {
+            Clan = new ClanTag(24)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Position = new ScalableVector2(Flag.X + Flag.Width + PaddingLeft / 4f, UsernameY + 4),
+                UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        private void UpdateClanAndUsername(Quaver.Shared.Database.Scores.Score score)
+        {
+            Clan.UpdateFromClan(score.ClanTag, score.ClanAccentColor,
+                SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6"));
+
+            Clan.X = Flag.X + Flag.Width + PaddingLeft / 4f;
+            Username.X = Clan.HasClan ? Clan.X + Clan.Width + 6 : Clan.X;
+            Username.Text = $"{score.Name}";
         }
 
         /// <summary>
@@ -826,6 +856,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (!Score.Item.IsEmptyScore)
             {
                 Username.Alpha = 0;
+                Clan.Alpha = 0;
                 Grade.Alpha = 0;
                 Time.Alpha = 0;
                 Clock.Alpha = 0;
@@ -840,6 +871,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (!Score.Item.IsEmptyScore)
             {
                 Username.FadeTo(targetAlpha, easing, time);
+                Clan.FadeTo(targetAlpha, easing, time);
                 Grade.FadeTo(targetAlpha, easing, time);
                 Time.FadeTo(targetAlpha, easing, time);
                 Clock.FadeTo(targetAlpha, easing, time);
@@ -888,6 +920,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             Avatar.Visible = visible;
             Flag.Visible = visible;
             Username.Visible = visible;
+            Clan.Visible = visible && Clan.HasClan;
             PerformanceRating.Visible = visible;
             AccuracyMaxCombo.Visible = visible;
             Mods.Visible = visible;
