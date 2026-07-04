@@ -300,7 +300,7 @@ namespace Quaver.Shared.Screens.Results
 
             if (replay == null)
             {
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while retrieving the replay for this score!");
+                NotificationManager.Show(NotificationLevel.Error, ResultsLocalization.Get("There was an issue while retrieving the replay for this score!"));
                 return;
             }
 
@@ -316,7 +316,7 @@ namespace Quaver.Shared.Screens.Results
 
             if (onlineReplay == null)
             {
-                NotificationManager.Show(NotificationLevel.Error, "The replay for this score could not be downloaded.");
+                NotificationManager.Show(NotificationLevel.Error, ResultsLocalization.Get("The replay for this score could not be downloaded."));
                 return null;
             }
 
@@ -328,7 +328,7 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void WatchOnlineReplay()
         {
-            DialogManager.Show(new LoadingDialog("FETCHING REPLAY", "Downloading replay! Please wait...",
+            DialogManager.Show(new LoadingDialog(ResultsLocalization.Get("Fetching Replay"), ResultsLocalization.Get("Downloading replay! Please wait..."),
                 DownloadAndWatchOnlineReplay));
         }
 
@@ -360,11 +360,11 @@ namespace Quaver.Shared.Screens.Results
 
             if (replay == null)
             {
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while retrieving the replay for this score!");
+                NotificationManager.Show(NotificationLevel.Error, ResultsLocalization.Get("There was an issue while retrieving the replay for this score!"));
                 return;
             }
 
-            NotificationManager.Show(NotificationLevel.Info, "Please wait while your replay is being exported...");
+            NotificationManager.Show(NotificationLevel.Info, ResultsLocalization.Get("Please wait while your replay is being exported..."));
             ExportAndHighlightReplay(replay);
         }
 
@@ -387,7 +387,7 @@ namespace Quaver.Shared.Screens.Results
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "An error occured while exporting the replay!");
+                    NotificationManager.Show(NotificationLevel.Error, ResultsLocalization.Get("An error occured while exporting the replay!"));
                 }
             });
         }
@@ -397,7 +397,7 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void ExportOnlineReplay()
         {
-            DialogManager.Show(new LoadingDialog("FETCHING REPLAY", "Downloading replay! Please wait...",
+            DialogManager.Show(new LoadingDialog(ResultsLocalization.Get("Fetching Replay"), ResultsLocalization.Get("Downloading replay! Please wait..."),
                 DownloadAndExportOnlineReplay));
         }
 
@@ -419,13 +419,13 @@ namespace Quaver.Shared.Screens.Results
         {
             if (FixedLocalOffset)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You have already fixed your local offset for this map! There's no need to do it again.");
+                NotificationManager.Show(NotificationLevel.Warning, ResultsLocalization.Get("You have already fixed your local offset for this map! There's no need to do it again."));
                 return;
             }
 
             if (Processor.Value.Stats == null || Processor.Value.Stats.Count == 0)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "There is no data to be able to fix your local offset!");
+                NotificationManager.Show(NotificationLevel.Warning, ResultsLocalization.Get("There is no data to be able to fix your local offset!"));
                 return;
             }
 
@@ -436,12 +436,12 @@ namespace Quaver.Shared.Screens.Results
             var change = stats.Mean * ModHelper.GetRateFromMods(Processor.Value.Mods);
             var newOffset = (int)Math.Round(Map.LocalOffset - change);
 
-            var dialog = new YesNoDialog("FIX LOCAL OFFSET",
-                $"Your local offset for this map will be changed from {Map.LocalOffset} ms to {newOffset} ms.", () =>
+            var dialog = new YesNoDialog(ResultsLocalization.Get("Fix Local Offset"),
+                ResultsLocalization.Get("Local offset change confirmation", Map.LocalOffset, newOffset), () =>
                 {
                     Map.LocalOffset = newOffset;
                     MapDatabaseCache.UpdateMap(Map);
-                    NotificationManager.Show(NotificationLevel.Success, $"Local offset for this map was set to {Map.LocalOffset} ms.");
+                    NotificationManager.Show(NotificationLevel.Success, ResultsLocalization.Get("Local offset set", Map.LocalOffset));
                     FixedLocalOffset = true;
                 });
 
@@ -738,7 +738,7 @@ namespace Quaver.Shared.Screens.Results
             }
             catch (Exception e)
             {
-                NotificationManager.Show(NotificationLevel.Error, $"Failed to save local score to the database. Please check the logs!");
+                NotificationManager.Show(NotificationLevel.Error, ResultsLocalization.Get("Failed to save local score to the database. Please check the logs!"));
                 Logger.Error(e, LogType.Runtime);
             }
 
@@ -754,7 +754,7 @@ namespace Quaver.Shared.Screens.Results
             }
             catch (Exception e)
             {
-                NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
+                NotificationManager.Show(NotificationLevel.Error, ResultsLocalization.Get("There was an error when saving your replay. Check Runtime.log for more details."));
                 Logger.Error(e, LogType.Runtime);
             }
         }
@@ -909,7 +909,7 @@ namespace Quaver.Shared.Screens.Results
         {
             if (Replay == null)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "There is no replay data available to convert this score!");
+                NotificationManager.Show(NotificationLevel.Warning, ResultsLocalization.Get("There is no replay data available to convert this score!"));
                 return;
             }
 

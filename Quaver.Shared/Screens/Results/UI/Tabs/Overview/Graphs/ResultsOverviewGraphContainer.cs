@@ -210,7 +210,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateMean()
         {
-            Mean = new TextKeyValue("Mean:", $"{-Statistics.Mean:0.00} ms", 22, Color.White)
+            Mean = new TextKeyValue(ResultsLocalization.Get("Mean:"), $"{-Statistics.Mean:0.00} ms", 22, Color.White)
             {
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
@@ -227,7 +227,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateStandardDeviation()
         {
-            StandardDeviation = new TextKeyValue("Std. Dev:", $"{Statistics.StandardDeviation:0.00} ms",
+            StandardDeviation = new TextKeyValue(ResultsLocalization.Get("Std. Dev:"), $"{Statistics.StandardDeviation:0.00} ms",
                 Mean.Key.FontSize, Color.White)
             {
                 Parent = RightContainer,
@@ -253,7 +253,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             else
                 ratio = $"{(float) judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
 
-            Ratio = new TextKeyValue("Ratio:", ratio, Mean.Key.FontSize, Color.White)
+            Ratio = new TextKeyValue(ResultsLocalization.Get("Ratio:"), ratio, Mean.Key.FontSize, Color.White)
             {
                 Parent = RightContainer,
                 X = StandardDeviation.X + StandardDeviation.Width + STATISTICS_SPACING_X,
@@ -297,7 +297,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 return;
             }
 
-            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Statistics Not Available", 22)
+            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ResultsLocalization.Get("Statistics Not Available"), 22)
             {
                 Parent = GraphContainer,
                 Alignment = Alignment.MidCenter

@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
         /// <param name="type"></param>
         /// <param name="selectorHeight"></param>
         public ResultsTabItem(Bindable<ResultsScreenTabType> activeTab, ResultsScreenTabType type, float selectorHeight)
-            : base(FontManager.GetWobbleFont(Fonts.LatoBlack), type.ToString(), 22)
+            : base(FontManager.GetWobbleFont(Fonts.LatoBlack), ResultsLocalization.Get(type.ToString()), 22)
         {
             ActiveTab = activeTab;
             Type = type;

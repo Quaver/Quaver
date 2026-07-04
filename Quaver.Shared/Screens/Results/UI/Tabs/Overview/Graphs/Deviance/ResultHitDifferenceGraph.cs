@@ -15,6 +15,7 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using TagLib.Matroska;
@@ -223,7 +224,8 @@ namespace Quaver.Shared.Screens.Result.UI
             var y = 6;
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Late (+{unscaledLargestHitWindow} ms)", 18, false)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                ResultsLocalization.Get("Late hit window", unscaledLargestHitWindow), 18, false)
             {
                 Parent = this,
                 X = x,
@@ -231,7 +233,8 @@ namespace Quaver.Shared.Screens.Result.UI
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Early (-{unscaledLargestHitWindow} ms)", 20, false)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                ResultsLocalization.Get("Early hit window", unscaledLargestHitWindow), 20, false)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,

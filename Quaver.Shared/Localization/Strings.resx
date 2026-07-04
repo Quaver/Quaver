@@ -516,6 +516,206 @@
   <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
     <value>Effect</value>
   </data>
+  <data name="Screen_Results_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Screen_Results_RetryMap" xml:space="preserve">
+    <value>Retry Map</value>
+  </data>
+  <data name="Screen_Results_WatchReplay" xml:space="preserve">
+    <value>Watch Replay</value>
+  </data>
+  <data name="Screen_Results_ExportReplay" xml:space="preserve">
+    <value>Export Replay</value>
+  </data>
+  <data name="Screen_Results_FixOffset" xml:space="preserve">
+    <value>Fix Offset</value>
+  </data>
+  <data name="Screen_Results_ConvertScore" xml:space="preserve">
+    <value>Convert Score</value>
+  </data>
+  <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
+    <value>Please wait! Your score is already being converted!</value>
+  </data>
+  <data name="Screen_Results_Overview" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="Screen_Results_Multiplayer" xml:space="preserve">
+    <value>Multiplayer</value>
+  </data>
+  <data name="Screen_Results_Mappedby" xml:space="preserve">
+    <value>Mapped by:</value>
+  </data>
+  <data name="Screen_Results_Playedby" xml:space="preserve">
+    <value>Played by</value>
+  </data>
+  <data name="Screen_Results_Playedon" xml:space="preserve">
+    <value>on {0} @ {1}</value>
+  </data>
+  <data name="Screen_Results_JudgementPreset" xml:space="preserve">
+    <value>Judgement Preset:</value>
+  </data>
+  <data name="Screen_Results_Graph" xml:space="preserve">
+    <value>GRAPH:</value>
+  </data>
+  <data name="Screen_Results_Deviance" xml:space="preserve">
+    <value>Deviance</value>
+  </data>
+  <data name="Screen_Results_Accuracy" xml:space="preserve">
+    <value>Accuracy</value>
+  </data>
+  <data name="Screen_Results_Health" xml:space="preserve">
+    <value>Health</value>
+  </data>
+  <data name="Screen_Results_Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="Screen_Results_Mean" xml:space="preserve">
+    <value>Mean:</value>
+  </data>
+  <data name="Screen_Results_StdDev" xml:space="preserve">
+    <value>Std. Dev:</value>
+  </data>
+  <data name="Screen_Results_Ratio" xml:space="preserve">
+    <value>Ratio:</value>
+  </data>
+  <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
+    <value>Statistics Not Available</value>
+  </data>
+  <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
+    <value>This displays the course of accuracy throughout the score.
+
+If the map was not completed, then it will additionally
+show the accuracy if all subsequent hits had been
+Marvelous instead.</value>
+  </data>
+  <data name="Screen_Results_Latehitwindow" xml:space="preserve">
+    <value>Late (+{0} ms)</value>
+  </data>
+  <data name="Screen_Results_Earlyhitwindow" xml:space="preserve">
+    <value>Early (-{0} ms)</value>
+  </data>
+  <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
+    <value>This displays the course of performance throughout the score.
+
+If the map was not completed, then it will additionally
+show the performance if all subsequent hits had been
+Marvelous instead.</value>
+  </data>
+  <data name="Screen_Results_SubmittingScore" xml:space="preserve">
+    <value>SUBMITTING SCORE...</value>
+  </data>
+  <data name="Screen_Results_GlobalRank" xml:space="preserve">
+    <value>GLOBAL RANK</value>
+  </data>
+  <data name="Screen_Results_CountryRank" xml:space="preserve">
+    <value>COUNTRY RANK</value>
+  </data>
+  <data name="Screen_Results_OverallRating" xml:space="preserve">
+    <value>OVERALL RATING</value>
+  </data>
+  <data name="Screen_Results_OverallAccuracy" xml:space="preserve">
+    <value>OVERALL ACCURACY</value>
+  </data>
+  <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
+    <value>UNRANKED GAMEMODE</value>
+  </data>
+  <data name="Screen_Results_Matchplayedon" xml:space="preserve">
+    <value>Match played on {0} @ {1}</value>
+  </data>
+  <data name="Screen_Results_FreeForAll" xml:space="preserve">
+    <value>Free For All</value>
+  </data>
+  <data name="Screen_Results_BattleRoyale" xml:space="preserve">
+    <value>Battle Royale</value>
+  </data>
+  <data name="Screen_Results_Team" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="Screen_Results_BlueTeam" xml:space="preserve">
+    <value>Blue Team</value>
+  </data>
+  <data name="Screen_Results_RedTeam" xml:space="preserve">
+    <value>Red Team</value>
+  </data>
+  <data name="Screen_Results_haswonthematch" xml:space="preserve">
+    <value>has won the match!</value>
+  </data>
+  <data name="Screen_Results_Grade" xml:space="preserve">
+    <value>Grade</value>
+  </data>
+  <data name="Screen_Results_MaxCombo" xml:space="preserve">
+    <value>Max Combo</value>
+  </data>
+  <data name="Screen_Results_Marv" xml:space="preserve">
+    <value>Marv</value>
+  </data>
+  <data name="Screen_Results_Perf" xml:space="preserve">
+    <value>Perf</value>
+  </data>
+  <data name="Screen_Results_Great" xml:space="preserve">
+    <value>Great</value>
+  </data>
+  <data name="Screen_Results_Good" xml:space="preserve">
+    <value>Good</value>
+  </data>
+  <data name="Screen_Results_Okay" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+  <data name="Screen_Results_Miss" xml:space="preserve">
+    <value>Miss</value>
+  </data>
+  <data name="Screen_Results_Mods" xml:space="preserve">
+    <value>Mods</value>
+  </data>
+  <data name="Screen_Results_Loadingresults" xml:space="preserve">
+    <value>Loading results</value>
+  </data>
+  <data name="Screen_Results_Failedtoretrieveplayersscores" xml:space="preserve">
+    <value>Failed to retrieve players' scores!</value>
+  </data>
+  <data name="Screen_Results_Therewasanissuewhileretrievingthereplayforthisscore" xml:space="preserve">
+    <value>There was an issue while retrieving the replay for this score!</value>
+  </data>
+  <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
+    <value>The replay for this score could not be downloaded.</value>
+  </data>
+  <data name="Screen_Results_FetchingReplay" xml:space="preserve">
+    <value>FETCHING REPLAY</value>
+  </data>
+  <data name="Screen_Results_DownloadingreplayPleasewait" xml:space="preserve">
+    <value>Downloading replay! Please wait...</value>
+  </data>
+  <data name="Screen_Results_Pleasewaitwhileyourreplayisbeingexported" xml:space="preserve">
+    <value>Please wait while your replay is being exported...</value>
+  </data>
+  <data name="Screen_Results_Anerroroccuredwhileexportingthereplay" xml:space="preserve">
+    <value>An error occured while exporting the replay!</value>
+  </data>
+  <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
+    <value>You have already fixed your local offset for this map! There's no need to do it again.</value>
+  </data>
+  <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
+    <value>There is no data to be able to fix your local offset!</value>
+  </data>
+  <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
+    <value>FIX LOCAL OFFSET</value>
+  </data>
+  <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
+    <value>Your local offset for this map will be changed from {0} ms to {1} ms.</value>
+  </data>
+  <data name="Screen_Results_Localoffsetset" xml:space="preserve">
+    <value>Local offset for this map was set to {0} ms.</value>
+  </data>
+  <data name="Screen_Results_FailedtosavelocalscoretothedatabasePleasecheckthelogs" xml:space="preserve">
+    <value>Failed to save local score to the database. Please check the logs!</value>
+  </data>
+  <data name="Screen_Results_TherewasanerrorwhensavingyourreplayCheckRuntimelogformoredetails" xml:space="preserve">
+    <value>There was an error when saving your replay. Check Runtime.log for more details.</value>
+  </data>
+  <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
+    <value>There is no replay data available to convert this score!</value>
+  </data>
   <data name="Screen_Options_GlobalAudioOffset" xml:space="preserve">
     <value>Global Audio Offset</value>
   </data>
