@@ -341,10 +341,6 @@ namespace Quaver.Shared.Screens.Options
                                 x.Value, i => $"{i / 10f:0.0}")
                             )
                     ).ToList()),
-                    // new OptionsSubcategory("Beta", new List<OptionsItem>()
-                    // {
-                    //     new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),
-                    // }),
                 }),
                 new OptionsSection("Advanced", FontAwesome.Get(FontAwesomeIcon.fa_open_folder), new List<OptionsSubcategory>
                 {

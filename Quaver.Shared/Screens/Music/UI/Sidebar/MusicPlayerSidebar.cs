@@ -9,7 +9,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Downloading;
-using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Music.UI.Sidebar.Playlists;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
@@ -248,7 +248,8 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
                     }
 
                     var game = (QuaverGame) GameBase.Game;
-                    game.CurrentScreen.Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
+                    game.CurrentScreen.Exit(() => new EditScreen(MapManager.Selected.Value,
+                        AudioEngine.LoadMapAudioTrack(MapManager.Selected.Value)));
                 })
             {
                 Parent = ExploreContainer,

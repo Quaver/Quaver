@@ -25,7 +25,6 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
@@ -789,10 +788,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
                     }
 
-                    if (Screen.IsTestPlayingInNewEditor)
-                        Screen.ExitToNewEditor();
-                    else
-                        Screen.Exit(() => new EditorScreen(Screen.OriginalEditorMap));
+                    Screen.ExitToNewEditor();
 
                     ResultsScreenLoadInitiated = true;
                     return;
