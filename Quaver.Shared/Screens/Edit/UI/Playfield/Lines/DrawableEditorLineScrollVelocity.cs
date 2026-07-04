@@ -15,7 +15,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         {
             ScrollVelocity = sv;
             TimingGroup = timingGroup;
-            IsClickable = false;
         }
 
         public override Color GetColor() =>

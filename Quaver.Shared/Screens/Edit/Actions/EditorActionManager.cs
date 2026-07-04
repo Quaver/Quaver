@@ -29,6 +29,7 @@ using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.Layers.MoveLayer;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
@@ -63,7 +64,9 @@ using Quaver.Shared.Screens.Edit.Actions.TimingGroups.MoveObjectsToTimingGroup;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
 using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Scripting;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -177,6 +180,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a layer has been renamed
         /// </summary>
         public event EventHandler<EditorLayerRenamedEventArgs> LayerRenamed;
+
+        /// <summary>
+        ///     Event invoked when a layer has been moved
+        /// </summary>
+        public event EventHandler<EditorLayerMovedEventArgs> LayerMoved;
 
         /// <summary>
         ///     Event invoked when a timing group has been created
@@ -383,11 +391,31 @@ namespace Quaver.Shared.Screens.Edit.Actions
         }
 
         /// <summary>
+        ///     Performs an action without adding it to the action history.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="fromLua"></param>
+        public void PerformSilently(IEditorAction action, bool fromLua = false)
+        {
+            action.Perform();
+
+            LuaImGui.Inform(action, HistoryType.Silent, fromLua);
+        }
+
+        /// <summary>
         ///     Performs a list of actions as a single action.
         /// </summary>
         /// <param name="actions"></param>
         public void PerformBatch(List<IEditorAction> actions, bool fromLua = false) =>
             Perform(new EditorActionBatch(this, actions), fromLua);
+
+        /// <summary>
+        ///     Performs a list of actions as a single action without adding to the action history.
+        /// </summary>
+        /// <param name="actions"></param>
+        /// <param name="fromLua"></param>
+        public void PerformBatchSilently(List<IEditorAction> actions, bool fromLua = false) =>
+            PerformSilently(new EditorActionBatch(this, actions), fromLua);
 
         /// <summary>
         ///     Undoes the first action in the stack
@@ -433,7 +461,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="hitsounds"></param>
         /// <param name="timingGroupId"></param>
         /// <param name="fromLua"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0, string timingGroupId = Qua.DefaultScrollGroupId, bool fromLua = false)
+        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitObjectType type = HitObjectType.Normal, HitSounds hitsounds = 0, string timingGroupId = Qua.DefaultScrollGroupId, bool fromLua = false)
         {
             var hitObject = new HitObjectInfo
             {
@@ -442,6 +470,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 EndTime = endTime,
                 EditorLayer = layer,
                 HitSound = hitsounds,
+                Type = type,
                 TimingGroup = timingGroupId
             };
 
@@ -518,26 +547,26 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Places an sf down in the map
         /// </summary>
         /// <param name="sf"></param>
-        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf, scrollGroup));
+        public void PlaceScrollSpeedFactor(ScrollSpeedFactorInfo sf, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollSpeedFactor(this, WorkingMap, sf, scrollGroup), fromLua);
 
         /// <summary>
         ///     Places a batch of scroll speed factors into the map
         /// </summary>
         /// <param name="sfs"></param>
-        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+        public void PlaceScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionAddScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Removes a batch of scroll speed factors from the map
         /// </summary>
         /// <param name="sfs"></param>
-        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup));
+        public void RemoveScrollSpeedFactorBatch(List<ScrollSpeedFactorInfo> sfs, ScrollGroup scrollGroup, bool fromLua = false) => Perform(new EditorActionRemoveScrollSpeedFactorBatch(this, WorkingMap, sfs, scrollGroup), fromLua);
 
         /// <summary>
         ///     Changes the offset of a batch of scroll speed factors
         /// </summary>
         /// <param name="sfs"></param>
         /// <param name="offset"></param>
-        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset));
+        public void ChangeScrollSpeedFactorOffsetBatch(List<ScrollSpeedFactorInfo> sfs, float offset, bool fromLua = false) => Perform(new EditorActionChangeScrollSpeedFactorOffsetBatch(this, WorkingMap, sfs, offset), fromLua);
 
         /// <summary>
         ///     Changes the multiplier of a batch of scroll speed factors
@@ -658,6 +687,27 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="layer"></param>
         /// <param name="hitObjects"></param>
         public void MoveHitObjectsToLayer(EditorLayerInfo layer, List<HitObjectInfo> hitObjects, bool fromLua = false) => Perform(new EditorActionMoveObjectsToLayer(this, WorkingMap, layer, hitObjects), fromLua);
+
+        /// <summary>
+        ///     Moves a layer to a new index
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="toIndex">the layer number. index of the layer in the list + 1</param>
+        /// <param name="fromLua"></param>
+        /// <returns>Whether the operation succeeded</returns>
+        public bool MoveLayer(EditorLayerInfo layer, int toIndex, bool fromLua = false)
+        {
+            // originalIndex and toIndex are all one-indexed
+            var originalIndex = WorkingMap.EditorLayers.IndexOf(layer) + 1;
+            if (originalIndex < 1 || originalIndex > WorkingMap.EditorLayers.Count
+                                  || toIndex < 1 || toIndex > WorkingMap.EditorLayers.Count)
+                return false;
+            // EditorActionMoveLayer takes zero-indexed indices
+            Perform(
+                new EditorActionMoveLayer(this, WorkingMap, layer,
+                    originalIndex - 1, toIndex - 1), fromLua);
+            return true;
+        }
 
         /// <summary>
         ///     Changes the color of a non-default editor layer
@@ -828,6 +878,15 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void ChangeBookmarkBatchOffset(List<BookmarkInfo> bookmarks, int offset, bool fromLua = false) => Perform(new EditorActionChangeBookmarkOffsetBatch(this, WorkingMap, bookmarks, offset), fromLua);
 
         /// <summary>
+        ///     Sets the hit object coloring mode of the editor
+        /// </summary>
+        /// <param name="type"></param>
+        public void SetViewColoring(HitObjectColoring hitObjectColoringType)
+        {
+            EditScreen.ObjectColoring.Value = hitObjectColoringType;
+        }
+
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -874,6 +933,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                     break;
                 case EditorActionType.RenameLayer:
                     LayerRenamed?.Invoke(this, (EditorLayerRenamedEventArgs)args);
+                    break;
+                case EditorActionType.MoveLayer:
+                    LayerMoved?.Invoke(this, (EditorLayerMovedEventArgs)args);
                     break;
                 case EditorActionType.ColorLayer:
                     LayerColorChanged?.Invoke(this, (EditorLayerColorChangedEventArgs)args);
@@ -1012,6 +1074,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             LayerCreated = null;
             LayerDeleted = null;
             LayerRenamed = null;
+            LayerMoved = null;
             LayerColorChanged = null;
             ScrollVelocityAdded = null;
             ScrollVelocityRemoved = null;
@@ -1045,6 +1108,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             BookmarkBatchAdded = null;
             BookmarkBatchRemoved = null;
             BookmarkBatchOffsetChanged = null;
+            PluginActionManager.Destroy();
         }
     }
 }

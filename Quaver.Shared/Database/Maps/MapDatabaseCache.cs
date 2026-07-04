@@ -63,20 +63,22 @@ namespace Quaver.Shared.Database.Maps
         ///     Loads all of the maps in the database and groups them into mapsets to use
         ///     for gameplay
         /// </summary>
-        public static void Load(bool fullSync)
+        public static void Load(bool fullSync, Action<ImportProgressEventArgs>? progress = null)
         {
             CreateTable();
 
             // Fetch all of the .qua files inside of the song directory
             var quaFiles = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories).ToList();
             Logger.Important($"Found {quaFiles.Count} .qua files inside the song directory", LogType.Runtime);
+            ImportProgressEventArgs.Report(progress, "Scanning Song Folder", $"Found {quaFiles.Count} .qua files inside the song directory", quaFiles.Count, quaFiles.Count, false);
 
             if (fullSync)
             {
-                SyncMissingOrUpdatedFiles(quaFiles);
-                AddNonCachedFiles(quaFiles);
+                SyncMissingOrUpdatedFiles(quaFiles, progress);
+                AddNonCachedFiles(quaFiles, progress);
             }
 
+            ImportProgressEventArgs.Report(progress, "Finalizing Map Library", "Ordering mapsets and loading playlists", 0, 0, false);
             OrderAndSetMapsets();
 
             if (MapManager.Mapsets.Count == 0)
@@ -104,18 +106,20 @@ namespace Quaver.Shared.Database.Maps
         ///     Checks the maps in the database vs. the amount of .qua files on disk.
         ///     If there's a mismatch, it will add any missing ones
         /// </summary>
-        private static void SyncMissingOrUpdatedFiles(IReadOnlyCollection<string> files)
+        private static void SyncMissingOrUpdatedFiles(IReadOnlyCollection<string> files, Action<ImportProgressEventArgs>? progress = null)
         {
             var maps = FetchAll();
 
-            var fileHashSet = files.ToHashSet();
+            var fileHashSet = files.ToHashSet().Select(BackslashToForward);
 
-            foreach (var map in maps)
+            ImportProgressEventArgs.Report(progress, "Checking Cached Maps", $"Checking {maps.Count} cached maps for missing or changed files", 0, maps.Count, false);
+
+            for (var i = 0; i < maps.Count; i++)
             {
+                var map = maps[i];
                 var filePath = BackslashToForward($"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}");
-
                 // Check if the file actually exists.
-                if (fileHashSet.Contains(BackslashToForward(filePath)))
+                if (fileHashSet.Contains(filePath))
                 {
                     // Check if the file was updated. In this case, we check if the last write times are different
                     // BEFORE checking Md5 checksum of the file since it's faster to check if we even need to
@@ -123,7 +127,10 @@ namespace Quaver.Shared.Database.Maps
                     if (map.LastFileWrite != File.GetLastWriteTimeUtc(filePath))
                     {
                         if (map.Md5Checksum == MapsetHelper.GetMd5Checksum(filePath))
+                        {
+                            ImportProgressEventArgs.Report(progress, "Checking Cached Maps", $"Skipping {Path.GetFileName(map.Path)}", i + 1, maps.Count);
                             continue;
+                        }
 
                         Map newMap;
 
@@ -136,7 +143,8 @@ namespace Quaver.Shared.Database.Maps
                             Logger.Error(e, LogType.Runtime);
                             File.Delete(filePath);
                             DatabaseManager.Connection.Delete(map);
-                            Logger.Important($"Removed {filePath} from the cache, as the file could not be parsed.", LogType.Runtime);
+                            Logger.Important($"Removed {filePath} from the cache, as the file could not be parsed", LogType.Runtime);
+                            ImportProgressEventArgs.Report(progress, "Checking Cached Maps", $"Removed {Path.GetFileName(map.Path)} from the cache, as the file could not be parsed", i + 1, maps.Count);
                             continue;
                         }
 
@@ -148,12 +156,14 @@ namespace Quaver.Shared.Database.Maps
                         Logger.Important($"Updated cached map: {newMap.Id}, as the file was updated.", LogType.Runtime);
                     }
 
+                    ImportProgressEventArgs.Report(progress, "Checking Cached Maps", $"Checked {Path.GetFileName(map.Path)}", i + 1, maps.Count);
                     continue;
                 }
 
                 // The file doesn't exist, so we can safely delete it from the cache.
                 DatabaseManager.Connection.Delete(map);
                 Logger.Important($"Removed {filePath} from the cache, as the file no longer exists", LogType.Runtime);
+                ImportProgressEventArgs.Report(progress, "Checking Cached Maps", $"Removed {Path.GetFileName(map.Path)} from the cache as the file no longer exists", i + 1, maps.Count);
             }
         }
 
@@ -162,17 +172,25 @@ namespace Quaver.Shared.Database.Maps
         ///     Used if the user adds a file to the folder.
         /// </summary>
         /// <param name="files"></param>
-        private static void AddNonCachedFiles(List<string> files)
+        private static void AddNonCachedFiles(List<string> files, Action<ImportProgressEventArgs>? progress = null)
         {
             var maps = FetchAll();
 
             var hashset = new HashSet<string>();
             maps.ForEach(x => hashset.Add(BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")));
 
-            foreach (var file in files)
+            ImportProgressEventArgs.Report(progress, "Importing New Maps", $"Checking {files.Count} files for uncached maps", 0, files.Count, false);
+
+            for (var i = 0; i < files.Count; i++)
             {
+                var file = files[i];
+
                 if (hashset.Contains(BackslashToForward(file)))
+                {
+                    ImportProgressEventArgs.Report(progress, "Importing New Maps", $"Skipping {Path.GetFileName(file)}", i + 1, files.Count);
+
                     continue;
+                }
 
                 // Found map that isn't cached in the database yet.
                 try
@@ -187,6 +205,8 @@ namespace Quaver.Shared.Database.Maps
                 {
                     Logger.Error(e, LogType.Runtime);
                 }
+
+                ImportProgressEventArgs.Report(progress, "Importing New Maps", $"Importing {Path.GetFileName(file)}", i + 1, files.Count);
             }
         }
 
@@ -321,7 +341,7 @@ namespace Quaver.Shared.Database.Maps
                 foreach (var map in mapset.Maps)
                 {
                     // The difficulty calculator only calculates for maps with >= 2 hitobjects
-                    if (map.RegularNoteCount + map.LongNoteCount >= 2)
+                    if (map.RegularNoteCount + map.LongNoteCount + map.MineCount >= 2)
                     {
                         // ReSharper disable once CompareOfFloatsByEqualityOperator
                         if (map.Difficulty105X == 0f && !OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Add].Contains(map))
@@ -336,16 +356,23 @@ namespace Quaver.Shared.Database.Maps
 
         /// <summary>
         /// </summary>
-        public static void ForceUpdateMaps(bool createNewMaps = true)
+        public static void ForceUpdateMaps(bool createNewMaps = true, Action<ImportProgressEventArgs>? progress = null)
         {
-            for (var i = 0; i < MapsToUpdate.Count; i++)
+            var total = MapsToUpdate.Count;
+            ImportProgressEventArgs.Report(progress, "Updating Modified Maps", $"Updating {total} modified maps", 0, total, false);
+
+            for (var i = 0; i < total; i++)
             {
                 try
                 {
                     var path = $"{ConfigManager.SongDirectory}/{MapsToUpdate[i].Directory}/{MapsToUpdate[i].Path}";
 
                     if (!File.Exists(path))
+                    {
+                        ImportProgressEventArgs.Report(progress, "Updating Modified Maps", $"Skipped missing file: {MapsToUpdate[i].Artist} - {MapsToUpdate[i].Title}", i + 1, total);
+
                         continue;
+                    }
 
                     Map map;
 
@@ -358,6 +385,7 @@ namespace Quaver.Shared.Database.Maps
                     map.Id = MapsToUpdate[i].Id;
                     map.Directory = MapsToUpdate[i].Directory;
                     map.Mapset = MapsToUpdate[i].Mapset;
+                    map.DateAdded = MapsToUpdate[i].DateAdded;
 
                     if (map.Id == 0)
                     {
@@ -378,6 +406,8 @@ namespace Quaver.Shared.Database.Maps
                 {
                     Logger.Error(e, LogType.Runtime);
                 }
+
+                ImportProgressEventArgs.Report(progress, "Updating Modified Maps", $"Updated {MapsToUpdate[i].Artist} - {MapsToUpdate[i].Title}", i + 1, total);
             }
 
             MapsToUpdate.Clear();

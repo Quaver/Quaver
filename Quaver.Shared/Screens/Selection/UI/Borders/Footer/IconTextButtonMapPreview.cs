@@ -1,5 +1,7 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Managers;
@@ -25,7 +27,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
                             activeLeftPanel.Value = SelectContainerPanel.Leaderboard;
                     }
                     else
-                        activeLeftPanel.Value = SelectContainerPanel.MapPreview;
+                    {
+                        if (OnlineManager.CurrentGame is { EnablePreview: false, HostId: var host } &&
+                            host != OnlineManager.Self.OnlineUser.Id)
+                            NotificationManager.Show(NotificationLevel.Warning, "Preview is disabled in this game!");
+                        else
+                            activeLeftPanel.Value = SelectContainerPanel.MapPreview;
+                    }
                 })
         {
         }

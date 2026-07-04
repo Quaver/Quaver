@@ -7,7 +7,6 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Judgements;
-using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
@@ -92,7 +91,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
         /// <summary>
         /// </summary>
-        private JudgementWindowComboBreakDropdown ComboBreak { get; set; }
+        private JudgementWindowDropdown ComboBreak { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private JudgementWindowDropdown LNMiss { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -125,7 +128,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             CreateJudgementWindowScrollContainer();
             CreateNameTextbox();
             CreateSliders();
-            CreateComboBreakDropdown();
+            CreateDropdowns();
 
             HandleButtonVisibility();
         }
@@ -200,7 +203,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(1308, 704),
+                Size = new ScalableVector2(1308, 724),
                 Image = UserInterface.JudgementWindowPanel
             };
         }
@@ -399,8 +402,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             NameTextbox.Textbox.Alignment = Alignment.MidLeft;
         }
 
-        private void CreateComboBreakDropdown()
+        private void CreateDropdowns()
         {
+            LNMiss = new JudgementWindowLNMissDropdown(JudgementWindowsDatabaseCache.Selected)
+            {
+                Parent = ContentBackground,
+                Alignment = Alignment.TopRight,
+                X = -22
+            };
+
             ComboBreak = new JudgementWindowComboBreakDropdown(JudgementWindowsDatabaseCache.Selected)
             {
                 Parent = ContentBackground,
@@ -408,6 +418,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 Y = NameTextbox.Y - 10,
                 X = -22
             };
+
+            LNMiss.Y = NameTextbox.Y + ComboBreak.Height;
         }
 
         /// <summary>
@@ -507,7 +519,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 {
                     Parent = ContentBackground,
                     X = JudgementWindowScrollContainer.Width + 22,
-                    Y = NameTextbox.Textbox.Y + NameTextbox.Textbox.Height + 70 + 80 * (int) judgement
+                    Y = NameTextbox.Textbox.Y + NameTextbox.Textbox.Height + 90 + 80 * (int) judgement
                 };
 
                 Sliders.Add(judgement, slider);

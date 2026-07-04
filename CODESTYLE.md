@@ -23,11 +23,11 @@ Open Braces should **always** be on a new line. Furthermore, **one-liners** do n
 ```cs
 if (someExpression)
 {
-   DoSomething();
-   DoAnotherThing();
+    DoSomething();
+    DoAnotherThing();
 }
 else
-   DoSomethingElse();
+    DoSomethingElse();
 ```
 
 #### Switches ####
@@ -38,13 +38,13 @@ else
 ```cs
 switch (someExpression) 
 {
-   case 0:
-      DoSomething();
-      break;
+    case 0:
+        DoSomething();
+        break;
 
-   case 1:
-      DoSomethingElse();
-      break;
+    case 1:
+        DoSomethingElse();
+        break;
 }
 ```
 
@@ -67,7 +67,7 @@ Single line property statements can have braces that begin and end on the same l
 ```cs
 internal class Foo
 {
-   internal int Bar { get; set; } = 10;
+    internal int Bar { get; set; } = 10;
 }
 ```
 
@@ -79,11 +79,11 @@ Multi-line property statements must have braces on new lines.
 ```cs
 internal class Foo
 {
-   internal int Bar
-   {
-      get => Bar * 2
-      set { bar = value; }
-   }
+    internal int Bar
+    {
+        get => Bar * 2
+        set { bar = value; }
+    }
 }
 ```
 
@@ -145,36 +145,43 @@ Spaces improve readability by decreasing code density. Here are some guidelines 
 Console.In.Read(myChar, 0, 1);  // Right
 Console.In.Read(myChar,0,1);    // Wrong
 ```
+
 * Do not use a space after the parenthesis and function arguments
 ```cs
 CreateFoo(myChar, 0, 1)         // Right
 CreateFoo( myChar, 0, 1 )       // Wrong
 ```
+
 * Do not use spaces between a function name and parenthesis.
 ```cs
 CreateFoo()                     // Right
 CreateFoo ()                    // Wrong
 ```
+
 * Do not use spaces inside brackets.
 ```cs
 x = dataArray[index];           // Right
 x = dataArray[ index ];         // Wrong
 ```
+
 * Do use a single space before flow control statements
 ```cs
 while (x == y)                  // Right
 while(x==y)                     // Wrong
 ```
+
 * Do use a single space before and after binary operators
 ```cs
 if (x == y)                     // Right
 if (x==y)                       // Wrong
 ```
+
 * Do not use a space between a unary operator and the operand
 ```cs
 ++i;                            // Right
 ++ i;                           // Wrong
 ```
+
 * Do not use a space before a semi-colon. Do use a space after a semi-colon if there is more on the same line
 ```cs
 for (int i = 0; i < 100; ++i)   // Right

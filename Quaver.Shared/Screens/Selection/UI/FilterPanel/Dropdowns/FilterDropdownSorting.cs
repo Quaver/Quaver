@@ -20,6 +20,25 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// </summary>
         private Bindable<List<Mapset>> AvailableMapsets { get; }
 
+        private static List<(string Name, OrderMapsetsBy Value)> DropdownItems { get; } = new List<(string, OrderMapsetsBy)>()
+        {
+            ("Artist", OrderMapsetsBy.Artist),
+            ("Title", OrderMapsetsBy.Title),
+            ("Creator", OrderMapsetsBy.Creator),
+            ("Date Added", OrderMapsetsBy.DateAdded),
+            ("Ranked Status", OrderMapsetsBy.Status),
+            ("BPM", OrderMapsetsBy.BPM),
+            ("Times Played", OrderMapsetsBy.TimesPlayed),
+            ("Recently Played", OrderMapsetsBy.RecentlyPlayed),
+            ("Game", OrderMapsetsBy.Game),
+            ("Length", OrderMapsetsBy.Length),
+            ("Source", OrderMapsetsBy.Source),
+            ("Difficulty", OrderMapsetsBy.Difficulty),
+            ("Online Grade", OrderMapsetsBy.OnlineGrade),
+            ("Long Note %", OrderMapsetsBy.LongNotePercentage),
+            ("Notes Per Sec.", OrderMapsetsBy.NotesPerSecond)
+        };
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -37,27 +56,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         ///     TODO: Localize this
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetDropdownItems() => new List<string>
-        {
-            "Artist",
-            "Title",
-            "Creator",
-            "Date Added",
-            "Ranked Status",
-            "BPM",
-            "Times Played",
-            "Recently Played",
-            "Genre",
-            "Game",
-            "Length",
-            "Source",
-            "Difficulty",
-            "Online Grade",
-            "Last Updated",
-            "Date Ranked",
-            "Long Note %",
-            "Notes Per Sec."
-        };
+        private static List<string> GetDropdownItems() => DropdownItems.Select(x => x.Name).ToList();
 
         /// <summary>
         ///     Retrieves the index of the selected value
@@ -68,7 +67,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             if (ConfigManager.SelectOrderMapsetsBy == null)
                 return 0;
 
-            return (int) ConfigManager.SelectOrderMapsetsBy.Value;
+            var index = DropdownItems.FindIndex(x => x.Value == ConfigManager.SelectOrderMapsetsBy.Value);
+
+            return index == -1 ? 0 : index;
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             if (ConfigManager.SelectOrderMapsetsBy == null)
                 return;
 
-            ConfigManager.SelectOrderMapsetsBy.Value = (OrderMapsetsBy) e.Index;
+            ConfigManager.SelectOrderMapsetsBy.Value = DropdownItems[e.Index].Value;
         }
     }
 }

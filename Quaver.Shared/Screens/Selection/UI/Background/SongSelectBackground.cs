@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Background
                 return;
             }
 
-            if (MapManager.GetBackgroundPath(e.Value) == MapManager.GetBackgroundPath(e.OldValue))
+            if (e.Value == e.OldValue)
                 return;
 
             BrightnessSprite.ClearAnimations();

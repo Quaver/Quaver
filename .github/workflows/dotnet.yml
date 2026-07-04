@@ -5,9 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "ui-redesign" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "ui-redesign" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
@@ -19,12 +19,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
     - name: Checkout submodules
-      run: git submodule update --init --recursive
-    - name: Restore dependencies
-      run: dotnet restore
+      run: git -c submodule."Quaver.Server.Client".update=none submodule update --init --recursive
     - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: |
+        cd Quaver
+        dotnet build

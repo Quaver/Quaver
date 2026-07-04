@@ -4,6 +4,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Server.Client;
 using Quaver.Shared.Screens.Downloading.UI.Search;
 using RestSharp;
@@ -20,7 +21,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         /// <summary>
         /// </summary>
-        private DownloadFilterMode Mode { get; }
+        private GameMode Mode { get; }
 
         /// <summary>
         /// </summary>
@@ -104,6 +105,10 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         /// <summary>
         /// </summary>
+        public bool ShowExplicit { get; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="query"></param>
         /// <param name="mode"></param>
         /// <param name="status"></param>
@@ -126,13 +131,14 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// <param name="reverseSort"></param>
         /// <param name="sortBy"></param>
         /// <param name="page"></param>
-        public APIRequestMapsetSearch(string query, DownloadFilterMode mode, DownloadFilterRankedStatus status,
+        /// <param name="showExplicit"></param>
+        public APIRequestMapsetSearch(string query, GameMode mode, DownloadFilterRankedStatus status,
             float minDiff,
             float maxDiff, float minBpm, float maxBpm, int minLength, int maxLength, int minln, int maxln,
             int minPlayCount,
             int maxPlayCount, string startUploadDate, string endUploadDate, string startUpdateDate,
             string endUpdateDate,
-            int minCombo, int maxCombo, bool reverseSort, DownloadSortBy sortBy, int page)
+            int minCombo, int maxCombo, bool reverseSort, DownloadSortBy sortBy, int page, bool showExplicit)
         {
             Query = query;
             Mode = mode;
@@ -152,6 +158,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             ReverseSort = reverseSort;
             SortBy = sortBy;
             Page = page;
+            ShowExplicit = showExplicit;
 
             // Upload Date
             if (string.IsNullOrEmpty(startUploadDate))
@@ -215,7 +222,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("sort_order", ReverseSort ^ invertSort ? "desc" : "asc");
                 request.AddQueryParameter("sort_by", SortBy switch
                 {
-                    DownloadSortBy.DateLastUpdated => "date_last_updated",
+                    DownloadSortBy.DateLastUpdated => Status == DownloadFilterRankedStatus.ClanRanked ? "date_clan_ranked" : "date_last_updated",
                     DownloadSortBy.DateSubmitted => "date_submitted",
                     DownloadSortBy.Length => "length",
                     DownloadSortBy.DifficultyRating => "difficulty_rating",
@@ -225,6 +232,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                     DownloadSortBy.PlayCount => "play_count",
                     _ => throw new ArgumentOutOfRangeException()
                 });
+                request.AddQueryParameter("show_explicit", ShowExplicit ? "true" : "false");
 
                 var response = client.Execute(request);
                 var json = JObject.Parse(response.Content);
@@ -248,13 +256,10 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         private void SetModeQueryParams(RestRequest request)
         {
             // Game Mode Query Param
-            if (Mode == DownloadFilterMode.All)
+            if (Mode == 0)
             {
-                foreach (DownloadFilterMode mode in Enum.GetValues(typeof(DownloadFilterMode)))
+                foreach (GameMode mode in ModeHelper.AllModes)
                 {
-                    if (mode == DownloadFilterMode.All)
-                        continue;
-
                     request.AddQueryParameter("mode", ((int) mode).ToString());
                 }
             }
@@ -266,6 +271,12 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// </summary>
         private void SetStatusQueryParams(RestRequest request)
         {
+            if (Status == DownloadFilterRankedStatus.ClanRanked)
+            {
+                request.AddQueryParameter("is_clan_ranked", "true");
+                return;
+            }
+
             // Ranked Status Query Param
             if (Status == DownloadFilterRankedStatus.All)
             {

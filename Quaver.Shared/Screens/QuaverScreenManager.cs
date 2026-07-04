@@ -109,7 +109,12 @@ namespace Quaver.Shared.Screens
 
             OtherGameMapDatabaseCache.RunThread();
             GC.Collect();
-            Transitioner.FadeOut();
+
+            if (switchImmediately)
+                Transitioner.FadeOut();
+            else
+                game.ScheduledRenderTargetDraws.Add(Transitioner.FadeOut);
+
             Logger.Important($"Screen has been switched to type: `{screen.Type}`", LogType.Runtime);
             Button.IsGloballyClickable = true;
         }

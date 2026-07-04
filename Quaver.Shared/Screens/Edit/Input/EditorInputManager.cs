@@ -19,8 +19,8 @@ namespace Quaver.Shared.Screens.Edit.Input
     public class EditorInputManager
     {
         public EditorInputConfig InputConfig { get; }
-        public EditScreen Screen { get; }
-        private EditScreenView View { get; }
+        private EditScreen Screen { get; set; }
+        private EditScreenView View { get; set; }
 
         private Dictionary<Keybind, HashSet<KeybindActions>> keybindDictionary;
         private GenericKeyState previousKeyState;
@@ -97,47 +97,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private HashSet<GenericKey> GetTestPlayKeys()
         {
-            return Screen.WorkingMap.GetKeyCount() switch
-            {
-                4 => new HashSet<GenericKey>
-                {
-                    ConfigManager.KeyMania4K1.Value,
-                    ConfigManager.KeyMania4K2.Value,
-                    ConfigManager.KeyMania4K3.Value,
-                    ConfigManager.KeyMania4K4.Value
-                },
-                5 => new HashSet<GenericKey>()
-                {
-                    ConfigManager.KeyLayout4KScratch1.Value,
-                    ConfigManager.KeyLayout4KScratch2.Value,
-                    ConfigManager.KeyLayout4KScratch3.Value,
-                    ConfigManager.KeyLayout4KScratch4.Value,
-                    ConfigManager.KeyLayout4KScratch5.Value
-                },
-                7 => new HashSet<GenericKey>()
-                {
-                    ConfigManager.KeyMania7K1.Value,
-                    ConfigManager.KeyMania7K2.Value,
-                    ConfigManager.KeyMania7K3.Value,
-                    ConfigManager.KeyMania7K4.Value,
-                    ConfigManager.KeyMania7K5.Value,
-                    ConfigManager.KeyMania7K6.Value,
-                    ConfigManager.KeyMania7K7.Value
-                },
-                8 => new HashSet<GenericKey>()
-                {
-                    ConfigManager.KeyLayout7KScratch1.Value,
-                    ConfigManager.KeyLayout7KScratch2.Value,
-                    ConfigManager.KeyLayout7KScratch3.Value,
-                    ConfigManager.KeyLayout7KScratch4.Value,
-                    ConfigManager.KeyLayout7KScratch5.Value,
-                    ConfigManager.KeyLayout7KScratch6.Value,
-                    ConfigManager.KeyLayout7KScratch7.Value,
-                    ConfigManager.KeyLayout7KScratch8.Value,
-                    ConfigManager.KeyLayout7KScratch9.Value
-                },
-                _ => new HashSet<GenericKey>()
-            };
+            return (Screen.WorkingMap.HasScratchKey ? ConfigManager.ScratchKeyLayouts : ConfigManager.KeyLayouts)[Screen.WorkingMap.Mode].Select(x => x.Value).ToHashSet();
         }
 
         private void ConstructInvertScrollingActions()
@@ -197,7 +157,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 
             var keyState = new GenericKeyState(pressedKeys);
             var uniqueKeyPresses = keyState.UniqueKeyPresses(previousKeyState);
-            
+
             var allMatchedActions = new Dictionary<Keybind, HashSet<KeybindActions>>();
             foreach (var pressedKeybind in keyState.PressedKeybinds())
             {
@@ -432,6 +392,9 @@ namespace Quaver.Shared.Screens.Edit.Input
                     break;
                 case KeybindActions.ChangeToolToLongNote:
                     Screen.ChangeToolTo(EditorCompositionTool.LongNote);
+                    break;
+                case KeybindActions.ChangeToolToMine:
+                    Screen.ChangeToolTo(EditorCompositionTool.Mine);
                     break;
                 case KeybindActions.IncreaseSnap:
                     Screen.ChangeBeatSnap(Direction.Forward);
@@ -716,8 +679,10 @@ namespace Quaver.Shared.Screens.Edit.Input
             lastActionTime[action] = GameBase.Game.TimeRunning;
         }
 
-        ~EditorInputManager()
+        public void Destroy()
         {
+            Screen = null;
+            View = null;
             ConfigManager.InvertEditorScrolling.ValueChanged -= InvertScrollingValueChanged;
             if (Screen?.InvertBeatSnapScroll != null)
                 Screen.InvertBeatSnapScroll.ValueChanged -= InvertScrollingValueChanged;

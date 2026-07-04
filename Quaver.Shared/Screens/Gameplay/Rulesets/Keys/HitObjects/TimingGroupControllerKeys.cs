@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -18,10 +21,34 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 /// </summary>
 public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjectInfo, NoteControllerKeys>
 {
+    private readonly BindableInt bindableGlobalScrollSpeed = ConfigManager.ScrollSpeeds[
+        MapManager.Selected.Value.Qua != null ? MapManager.Selected.Value.Qua.Mode : GameMode.Keys4];
+
+    private readonly float rateScaling = 1 + (ModHelper.GetRateFromMods(ModManager.Mods) - 1) *
+        ConfigManager.NormaliseScrollVelocityByRatePercentage.Value / 100f;
+
     /// <summary>
     /// </summary>
     public HitObjectManagerKeys Manager { get; }
 
+    /// <summary>
+    ///     This is the perceived scroll speed to the player.
+    ///     This is adjusted by <see cref="ConfigManager.NormaliseScrollVelocityByRatePercentage"/>
+    /// </summary>
+    public virtual float AdjustedScrollSpeed
+    {
+        get
+        {
+            var scrollSpeed = MapManager.CustomScrollSpeed ?? bindableGlobalScrollSpeed.Value;
+
+            if (!Manager.HasSignificantSVs)
+                return scrollSpeed;
+
+            // Cap the speed
+            var adjustedScrollSpeed = Math.Clamp(scrollSpeed * rateScaling, 50, 1000);
+            return adjustedScrollSpeed;
+        }
+    }
 
     /// <summary>
     ///     The speed at which objects travel across the screen.
@@ -30,13 +57,6 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     {
         get
         {
-            var speed = ConfigManager.ScrollSpeed4K;
-
-            if (MapManager.Selected.Value.Qua != null)
-                speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4
-                    ? ConfigManager.ScrollSpeed4K
-                    : ConfigManager.ScrollSpeed7K;
-
             var scalingFactor = QuaverGame.SkinScalingFactor;
 
             var game = GameBase.Game as QuaverGame;
@@ -44,7 +64,7 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
             if (game?.CurrentScreen is IHasLeftPanel)
                 scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH) / 1366f;
 
-            var scrollSpeed = (speed.Value / 10f) / (20f * AudioEngine.Track.Rate) * scalingFactor *
+            var scrollSpeed = (AdjustedScrollSpeed / 10f) / (20f * AudioEngine.Track.Rate) * scalingFactor *
                               WindowManager.BaseToVirtualRatio;
 
             return scrollSpeed;

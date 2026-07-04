@@ -13,10 +13,13 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using System;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Window;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
@@ -47,6 +50,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The foreground of the playfield.
         /// </summary>
         public Container ForegroundContainer { get; private set; }
+
+        /// <summary>
+        ///     The mask of the playfield. Used to hide notes outside of the playfield.
+        /// </summary>
+        public Sprite PlayfieldMask { get; private set; }
 
         /// <summary>
         ///     The stage of the playfield.
@@ -113,9 +121,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 // Use skin's ColumnSize if it fits inside the preview, otherwise scale down.
                 var previewWidth = PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
-                
+
                 var columnWidth = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;
-                
+
                 if (Screen.IsSongSelectPreview && previewWidth < columnWidth)
                     return previewWidth;
 
@@ -150,17 +158,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     HitObject Target Position from the relative top of the screen.
         /// </summary>
-        internal float[] HitPositionY { get; private set; }
+        internal float[,] HitPositionY { get; private set; }
 
         /// <summary>
         ///     HeldHitObject Target Position relative from the top of the screen.
         /// </summary>
-        internal float[] HoldHitPositionY { get; private set; }
+        internal float[,] HoldHitPositionY { get; private set; }
 
         /// <summary>
         ///     LN end Target Position relative from the top of the screen.
         /// </summary>
-        internal float[] HoldEndHitPositionY { get; private set; }
+        internal float[,] HoldEndHitPositionY { get; private set; }
 
         /// <summary>
         ///     Position for each Timing Line relative from the top of the screen.
@@ -170,7 +178,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Size Adjustment for each LongNote in specific lane so the LN EndTime snaps with StartTime.
         /// </summary>
-        internal float[] LongNoteSizeAdjustment { get; private set; }
+        internal float[,] LongNoteSizeAdjustment { get; private set; }
 
         /// <summary>
         ///     Determines the scroll direction of each lane
@@ -186,10 +194,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Screen = screen;
             Ruleset = ruleset;
-            Container = new Container();
+            Container = new Container
+            {
+                Pivot = new Vector2(0.5f, 0.5f)
+            };
             SetLaneScrollDirections();
             SetReferencePositions();
             CreateElementContainers();
+            if (!Screen.IsSongSelectPreview)
+                Container.Scale = Vector2.One * (ConfigManager.PlayfieldScale.Value / 100f);
         }
 
 
@@ -216,6 +229,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
             };
 
+            PlayfieldMask = new Sprite
+            {
+                Parent = Container,
+                Image = UserInterface.PlayfieldMask,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(WindowManager.Width * 4, WindowManager.Height * 4),
+                Visible = ConfigManager.PlayfieldScale.Value < 100 && !Screen.IsSongSelectPreview,
+                SpriteBatchOptions = new SpriteBatchOptions
+                {
+                    SamplerState = new SamplerState
+                    {
+                        Filter = TextureFilter.Point
+                    }
+                }
+            };
+
             Stage = new GameplayPlayfieldKeysStage(Screen, this);
         }
 
@@ -229,18 +258,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             var keys = Ruleset.Screen.Map?.GetKeyCount() ?? 4;
 
-            ScrollDirection direction;
-            switch (Ruleset.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    direction = ConfigManager.ScrollDirection4K.Value;
-                    break;
-                case GameMode.Keys7:
-                    direction = ConfigManager.ScrollDirection7K.Value;
-                    break;
-                default:
-                    throw new Exception("Map Mode does not exist.");
-            }
+            var direction = ConfigManager.ScrollDirections[Ruleset.Map.Mode].Value;
 
             // Case: Config = Split Scroll
             if (direction.Equals(ScrollDirection.Split))
@@ -269,11 +287,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             ReceptorPositionY = new float[ScrollDirections.Length];
             ColumnLightingPositionY = new float[ScrollDirections.Length];
-            HitPositionY = new float[ScrollDirections.Length];
-            HoldHitPositionY = new float[ScrollDirections.Length];
-            HoldEndHitPositionY = new float[ScrollDirections.Length];
+            HitPositionY = new float[2, ScrollDirections.Length];
+            HoldHitPositionY = new float[2, ScrollDirections.Length];
+            HoldEndHitPositionY = new float[2, ScrollDirections.Length];
             TimingLinePositionY = new float[ScrollDirections.Length];
-            LongNoteSizeAdjustment = new float[ScrollDirections.Length];
+            LongNoteSizeAdjustment = new float[2, ScrollDirections.Length];
 
             var defaultLaneSize = skin.WidthForNoteHeightScale > 0 ? skin.WidthForNoteHeightScale : LaneSize;
 
@@ -284,10 +302,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var holdEndOffset = LaneSize * skin.NoteHoldEnds[i].Height / skin.NoteHoldEnds[i].Width;
                 var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
 
+                var mineOffset = defaultLaneSize * skin.NoteMines[i][0].Height / skin.NoteMines[i][0].Width;
+                var mineStartOffset =
+                    defaultLaneSize * skin.NoteMineStarts[i][0].Height / skin.NoteMineStarts[i][0].Width;
+                var mineEndOffset = LaneSize * skin.NoteMineEnds[i].Height / skin.NoteMineEnds[i].Width;
+
                 if (SkinManager.Skin.Keys[Screen.Map.Mode].DrawLongNoteEnd)
-                    LongNoteSizeAdjustment[i] = (holdHitObOffset - holdEndOffset) / 2;
+                {
+                    LongNoteSizeAdjustment[(int)HitObjectType.Normal, i] = (holdHitObOffset - holdEndOffset) / 2;
+                    LongNoteSizeAdjustment[(int)HitObjectType.Mine, i] = (mineStartOffset - mineEndOffset) / 2;
+                }
                 else
-                    LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
+                {
+                    LongNoteSizeAdjustment[(int)HitObjectType.Normal, i] = holdHitObOffset / 2;
+                    LongNoteSizeAdjustment[(int)HitObjectType.Mine, i] = mineStartOffset / 2;
+                }
 
                 var oldHitpos = skin.HitPosOffsetY;
 
@@ -301,18 +330,42 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     case ScrollDirection.Down:
                         ReceptorPositionY[i] = WindowManager.Height - skin.ReceptorPosOffsetY - receptorOffset;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.ColumnLightingOffsetY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;
-                        HitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
-                        HoldEndHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdEndOffset;
+
+                        HitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
+                        HoldHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - holdEndOffset;
+
+                        HitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - mineOffset;
+                        HoldHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - mineStartOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] + skin.HitPosOffsetY - mineEndOffset;
+
                         TimingLinePositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
                         break;
                     case ScrollDirection.Up:
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
-                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
-                        HoldEndHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+
+                        HitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Normal, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+
+                        HitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldEndHitPositionY[(int)HitObjectType.Mine, i] =
+                            ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.ColumnLightingOffsetY;
-                        TimingLinePositionY[i] = HitPositionY[i];
+                        TimingLinePositionY[i] = HitPositionY[(int)HitObjectType.Normal, i];
                         break;
                     default:
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");
@@ -329,7 +382,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public void Update(GameTime gameTime)
         {
             Stage.Update(gameTime);
-            Container?.Update(gameTime);
+
+            // In Song Select Preview, the Container is parented to SelectMapPreviewContainer,
+            // so it gets updated via the scene graph. Updating it here would cause a double update (2x speed).
+            if (!Screen.IsSongSelectPreview)
+                Container?.Update(gameTime);
         }
 
         /// <inheritdoc />

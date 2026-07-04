@@ -9,6 +9,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -22,7 +23,7 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
-    public class DrawableBanner : Sprite
+    public class DrawableBanner : SpriteAlphaMaskBlend
     {
         /// <summary>
         /// </summary>
@@ -52,6 +53,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         /// </summary>
         public static float DeselectedAlpha { get; } = 0.75f;
+
+        /// <summary>
+        ///     The original unmasked texture.
+        /// </summary>
+        private Texture2D OriginalTexture { get; set; }
 
         /// <summary>
         /// </summary>
@@ -185,16 +191,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private void HandleFade(Texture2D tex)
         {
             var selected = Type == DrawableBannerType.Mapsets ? Mapset.IsSelected : PlaylistManager.Selected.Value == Playlist;
+            var mask = SkinManager.Skin?.SongSelect?.MapsetBannerMask ?? UserInterface.MapsetBannerMask;
 
-            if (Image != tex)
+            if (OriginalTexture != tex)
             {
-                Image = tex;
+                OriginalTexture = tex;
+
+                AddScheduledUpdate(() => GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+                {
+                    if (IsDisposed || tex == null || tex.IsDisposed || mask == null || mask.IsDisposed)
+                        return;
+
+                    Image = PerformBlend(tex, mask);
+                }));
+
                 FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
             }
             else
             {
-                Image = tex;
-
                 ClearAnimations();
                 FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
             }

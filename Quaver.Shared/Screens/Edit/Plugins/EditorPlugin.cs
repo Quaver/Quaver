@@ -4,8 +4,10 @@ using System.Numerics;
 using ImGuiNET;
 using MoonSharp.Interpreter;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -15,6 +17,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         static readonly DynValue s_actionType = DefineEnum<EditorActionType>();
 
         static readonly DynValue s_hitSounds = DefineEnum<HitSounds>();
+
+        static readonly DynValue s_hitObjectType = DefineEnum<HitObjectType>();
+
+        static readonly DynValue s_hitObjectColoring = DefineEnum<HitObjectColoring>();
 
         static readonly DynValue s_gameMode = DefineEnum<GameMode>();
 
@@ -79,8 +85,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             IsBuiltIn = isResource;
             Directory = directory;
             IsWorkshop = isWorkshop;
-            EditorPluginUtils.EditScreen = editScreen;
             EditorPluginMap = new EditorPluginMap();
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.String,
+                typeof(ScrollGroup),
+                x => EditorPluginMap.GetTimingGroup(x.String)
+            );
         }
 
         /// <inheritdoc />
@@ -101,10 +111,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 globals["utils"] = typeof(EditorPluginUtils);
                 globals["game_mode"] = s_gameMode;
                 globals["hitsounds"] = s_hitSounds;
+                globals["hitobject_type"] = s_hitObjectType;
                 globals["time_signature"] = s_timeSignature;
                 globals["action_type"] = s_actionType;
                 globals["actions"] = Editor.ActionManager.PluginActionManager;
                 globals["map"] = EditorPluginMap;
+                globals["coloring_type"] = s_hitObjectColoring;
             }
 
             base.SetFrameState();

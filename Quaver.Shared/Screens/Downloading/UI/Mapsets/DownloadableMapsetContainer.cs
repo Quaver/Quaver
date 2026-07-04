@@ -20,6 +20,24 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 {
     public class DownloadableMapsetContainer : SongSelectContainer<DownloadableMapset>
     {
+        /// <summary>
+        ///     Keeps enough rows alive to cover the viewport plus a small buffer while scrolling quickly.
+        /// </summary>
+        private const int VisiblePoolSize = 14;
+
+        /// <summary>
+        ///     Prevents banner load bursts while middle-mouse fast scrolling is still settling.
+        /// </summary>
+        private const int BannerLoadResumeDelay = 200;
+
+        /// <summary>
+        /// </summary>
+        public bool ShouldLoadMapsetBanners { get; private set; } = true;
+
+        /// <summary>
+        /// </summary>
+        private double TimeSinceFastScrollEnded { get; set; } = BannerLoadResumeDelay;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -58,7 +76,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="searchTask"></param>
         public DownloadableMapsetContainer(BindableList<DownloadableMapset> mapsets,
             Bindable<DownloadableMapset> selectedMapset, Bindable<int> page, Bindable<bool> reachedEnd, TaskHandler<int, int> searchTask)
-            : base(mapsets.Value, int.MaxValue)
+            : base(mapsets.Value, VisiblePoolSize)
         {
             AvailableMapsets = mapsets;
             SelectedMapset = selectedMapset;
@@ -81,6 +99,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            UpdateBannerLoadState(gameTime);
+
             // Handle infinite scrolling
             if (ContentContainer.Height - Math.Abs(ContentContainer.Y) - Height < 500 && !SearchTask.IsRunning
                 && !ReachedEnd.Value)
@@ -96,11 +116,32 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void UpdateBannerLoadState(GameTime gameTime)
+        {
+            var middleMouseScrollingDown = IsMiddleMouseDragging && TargetY < ContentContainer.Y;
+
+            if (middleMouseScrollingDown)
+            {
+                TimeSinceFastScrollEnded = 0;
+                ShouldLoadMapsetBanners = false;
+                return;
+            }
+
+            TimeSinceFastScrollEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
+            ShouldLoadMapsetBanners = TimeSinceFastScrollEnded >= BannerLoadResumeDelay;
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override void Destroy()
         {
+            AvailableMapsets.ItemRemoved -= OnAvailableItemRemoved;
+            AvailableMapsets.ValueChanged -= OnAvailableMapsetChanged;
+            AvailableMapsets.MultipleItemsAdded -= OnMultipleItemsAdded;
             MapsetDownloadManager.DownloadAdded -= OnDowloadAdded;
             // ReSharper disable once DelegateSubtraction
             SelectedMapset.ValueChanged -= OnSelectedMapsetChanged;
@@ -230,21 +271,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             {
                 var item = Pool.Find(x => x.Item.Id == e.Item.Id);
 
-                if (item == null)
-                    return;
-
-                Pool.Remove(item);
-                item.Destroy();
-
-                for (var i = 0; i < Pool.Count; i++)
+                if (item != null)
                 {
-                    Pool[i].Index = i;
-
-                    Pool[i].ClearAnimations();
-                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT + PaddingTop, Easing.OutQuint, 7500);
+                    Pool.Remove(item);
+                    RemoveContainedDrawable(item);
+                    item.Destroy();
                 }
 
-                RecalculateContainerHeight();
+                RefreshPoolAfterItemsChanged();
             });
         }
 
@@ -255,19 +289,68 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         private void OnMultipleItemsAdded(object sender, BindableListMultipleItemsAddedEventArgs<DownloadableMapset> e)
         {
             AddScheduledUpdate(() =>
+                RefreshPoolAfterItemsChanged());
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateMissingPoolItems()
+        {
+            while (Pool.Count < PoolSize && PoolStartingIndex + Pool.Count < AvailableItems.Count)
             {
-                foreach (var item in e.Items)
+                var index = PoolStartingIndex + Pool.Count;
+                AddContainedDrawable(AddObject(index));
+            }
+        }
+
+        /// <summary>
+        ///     Reconciles the bounded drawable pool after the backing mapset list changes in-place.
+        /// </summary>
+        private void RefreshPoolAfterItemsChanged()
+        {
+            if (AvailableItems == null)
+                return;
+
+            var selectedIndex = AvailableItems.IndexOf(SelectedMapset.Value);
+
+            if (selectedIndex != -1)
+                SelectedIndex.Value = selectedIndex;
+
+            var middleObjectIndex = (int)((-ContentContainer.Y + Height / 2f - PaddingTop) / DrawableMapset.MapsetHeight);
+
+            if (selectedIndex != -1)
+                middleObjectIndex = selectedIndex;
+
+            PoolStartingIndex = DesiredPoolStartingIndex(Math.Max(middleObjectIndex, 0));
+
+            if (Pool.Count > AvailableItems.Count)
+            {
+                for (var i = Pool.Count - 1; i >= AvailableItems.Count; i--)
                 {
-                    var mapset = new DrawableDownloadableMapset(this, item, Pool.Count, SelectedMapset);
-                    mapset.UpdateContent(mapset.Item, mapset.Index);
-
-                    Pool.Add(mapset);
-                    AddContainedDrawable(mapset);
-                    mapset.Y = (PoolStartingIndex + mapset.Index) * Pool[mapset.Index].HEIGHT + PaddingTop;
+                    var drawable = Pool[i];
+                    Pool.RemoveAt(i);
+                    RemoveContainedDrawable(drawable);
+                    drawable.Destroy();
                 }
+            }
 
-                RecalculateContainerHeight();
-            });
+            CreateMissingPoolItems();
+
+            for (var i = 0; i < Pool.Count; i++)
+            {
+                var itemIndex = PoolStartingIndex + i;
+
+                if (itemIndex >= AvailableItems.Count)
+                    break;
+
+                Pool[i].ClearAnimations();
+                Pool[i].Y = itemIndex * Pool[i].HEIGHT + PaddingTop;
+                Pool[i].UpdateContent(AvailableItems[itemIndex], itemIndex);
+                AddContainedDrawable(Pool[i]);
+            }
+
+            RecalculateContainerHeight();
+            HandlePoolShifting();
         }
 
         /// <summary>

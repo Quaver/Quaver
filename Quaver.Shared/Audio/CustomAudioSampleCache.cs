@@ -103,6 +103,9 @@ namespace Quaver.Shared.Audio
         /// <param name="volume">Volume between 0 and 100.</param>
         public static void Play(int index, int volume = 100)
         {
+            if (index < 0 || index >= Samples.Count)
+                return;
+
             var sample = Samples[index];
             var channel = sample.Sample.CreateChannel(
                 ConfigManager.Pitched.Value, sample.UnaffectedByRate ? 1f : AudioEngine.Track.Rate);

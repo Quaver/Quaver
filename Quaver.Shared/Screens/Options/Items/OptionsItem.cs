@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -45,6 +46,7 @@ namespace Quaver.Shared.Screens.Options.Items
             Size = new ScalableVector2(containerRect.Width * 0.96f, 54);
 
             Tint = ColorHelper.HexToColor("#242424");
+            SetChildrenVisibility = true;
 
             CreateName(name);
 
@@ -64,12 +66,47 @@ namespace Quaver.Shared.Screens.Options.Items
 
             // Set visibility based on if the options item is visible inside of the container.
             // Helps to raise FPS by not drawing unnecessary items
+            bool visible;
+
             if (Parent is Drawable contentContainer && contentContainer.Parent is ScrollContainer container)
-                Visible = !RectangleF.Intersection(ScreenRectangle, container.ScreenRectangle).IsEmpty;
+                visible = container.Visible && !RectangleF.Intersection(ScreenRectangle, container.ScreenRectangle).IsEmpty;
             else
-                Visible = true;
+                visible = Parent != null;
+
+            ApplyVisibility(visible);
 
             base.Update(gameTime);
+        }
+
+        public void ApplyVisibility(bool visible)
+        {
+            SetDrawableTreeVisible(this, visible);
+
+            if (visible)
+            {
+                foreach (var dropdown in GetDropdowns(this))
+                    dropdown.ApplyItemVisibilityState();
+            }
+        }
+
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+        }
+
+        private static IEnumerable<Dropdown> GetDropdowns(Drawable drawable)
+        {
+            if (drawable is Dropdown currentDropdown)
+                yield return currentDropdown;
+
+            foreach (var child in drawable.Children)
+            {
+                foreach (var dropdown in GetDropdowns(child))
+                    yield return dropdown;
+            }
         }
 
         /// <summary>

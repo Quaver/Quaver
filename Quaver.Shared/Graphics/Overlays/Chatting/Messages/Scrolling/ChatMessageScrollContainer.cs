@@ -10,6 +10,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
@@ -59,14 +60,59 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private List<ChatMessage> MessageQueue { get; } = new List<ChatMessage>();
 
         /// <summary>
+        ///     The maximum amount of messages to create in a single update.
+        /// </summary>
+        private const int MaxMessagesFlushedPerUpdate = 8;
+
+        /// <summary>
+        ///     Extra pixels above and below the viewport to keep message drawables active while scrolling.
+        /// </summary>
+        private const int VisibleMessageBuffer = 300;
+
+        /// <summary>
         ///     The total height of all messages
         /// </summary>
         private float TotalMessageHeight { get; set; }
 
         /// <summary>
+        ///     If message drawables need to have their positions recalculated.
+        /// </summary>
+        private bool NeedsReflow { get; set; }
+
+        /// <summary>
+        ///     If the container should scroll to the bottom after the next reflow.
+        /// </summary>
+        private bool NeedsScrollToBottom { get; set; }
+
+        /// <summary>
+        ///     If the next bottom scroll should ignore the user's current scroll position.
+        /// </summary>
+        private bool ForceScrollToBottom { get; set; }
+
+        /// <summary>
         ///     The currently active right click options for the screen
         /// </summary>
         public RightClickOptions ActiveRightClickOptions { get; private set; }
+
+        /// <summary>
+        ///     If this container is subscribed to online chat message events.
+        /// </summary>
+        private bool IsSubscribedToChatEvents { get; set; }
+
+        /// <summary>
+        ///     If chat message event processing is currently suspended.
+        /// </summary>
+        private bool IsEventProcessingSuspended { get; set; }
+
+        /// <summary>
+        ///     If message history should be refreshed when chat processing resumes.
+        /// </summary>
+        private bool ShouldRefreshHistoryOnResume { get; set; }
+
+        /// <summary>
+        ///     Last visibility state applied by the chat overlay.
+        /// </summary>
+        private bool? AppliedVisibility { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -102,7 +148,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 OnlineManager.Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
 
                 if (OnlineManager.Connected)
-                    OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+                    SubscribeToEvents();
             }
         }
 
@@ -123,15 +169,84 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             FlushMessageHistoryQueue();
             FlushMessageQueue();
 
+            if (NeedsReflow)
+            {
+                ReflowMessageDrawables();
+
+                if (NeedsScrollToBottom)
+                    ScrollToBottomIfNecessary(ForceScrollToBottom);
+
+                NeedsScrollToBottom = false;
+                ForceScrollToBottom = false;
+            }
+
             base.Update(gameTime);
+            UpdateVisibleMessageDrawables();
         }
 
         /// <summary>
         /// </summary>
         public override void Destroy()
         {
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnConnectionStatusChanged -= OnConnectionStatusChanged;
+
             UnsubscribeFromEvents();
             base.Destroy();
+        }
+
+        /// <summary>
+        ///     Suspends or resumes chat message event processing for this channel.
+        /// </summary>
+        /// <param name="suspended"></param>
+        public void SetEventProcessingSuspended(bool suspended)
+        {
+            if (IsEventProcessingSuspended == suspended)
+                return;
+
+            IsEventProcessingSuspended = suspended;
+
+            if (suspended)
+            {
+                ShouldRefreshHistoryOnResume = true;
+                UnsubscribeFromEvents();
+            }
+            else if (OnlineManager.Connected)
+            {
+                if (ShouldRefreshHistoryOnResume)
+                {
+                    HasRequestedMessageHistory = false;
+                    ShouldRefreshHistoryOnResume = false;
+                }
+
+                SubscribeToEvents();
+            }
+        }
+
+        /// <summary>
+        ///     Applies the chat overlay visibility state while preserving this container's viewport culling.
+        /// </summary>
+        /// <param name="visible"></param>
+        public void ApplyVisibility(bool visible)
+        {
+            if (AppliedVisibility == visible && !visible)
+                return;
+
+            AppliedVisibility = visible;
+            SetDrawableTreeVisible(this, visible);
+
+            if (Pool == null)
+                return;
+
+            if (!visible)
+            {
+                foreach (var drawable in Pool.OfType<DrawableChatMessage>())
+                    drawable.SetScrollVisibility(false);
+
+                return;
+            }
+
+            UpdateVisibleMessageDrawables();
         }
 
         /// <inheritdoc />
@@ -150,6 +265,20 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         {
             Height = size.Y.Value - HeaderHeight - TextboxHeight;
             UpdateContentContainerSize();
+        }
+
+        /// <summary>
+        ///     Initializes this channel's message history before the chat overlay is shown.
+        /// </summary>
+        public void InitializeMessageHistory()
+        {
+            if (IsEventProcessingSuspended)
+            {
+                ShouldRefreshHistoryOnResume = true;
+                return;
+            }
+
+            RequestMessageHistoryIfNecessary();
         }
 
         /// <summary>
@@ -187,7 +316,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                         if (BlockedUsers.IsUserBlocked(message.User.Id))
                             continue;
 
-                        MessageHistoryQueue.Add(message.ToChatMessage(message.User.ToUser()));
+                        MessageHistoryQueue.Add(message.ToChatMessage(message.MakeUser()));
                     }
                 }
             }
@@ -218,14 +347,24 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 if (!HasRequestedMessageHistory || MessageHistoryQueue.Count == 0)
                     return;
 
-                foreach (var message in MessageHistoryQueue)
-                    AddMessage(message);
+                var count = Math.Min(MessageHistoryQueue.Count, MaxMessagesFlushedPerUpdate);
 
-                Logger.Important($"Flushed {MessageHistoryQueue.Count} messages from the `{Channel.Name}` message history queue.", LogType.Runtime);
-                MessageHistoryQueue.Clear();
+                for (var i = 0; i < count; i++)
+                    AddMessage(MessageHistoryQueue[i]);
+
+                MessageHistoryQueue.RemoveRange(0, count);
+
+                Logger.Important($"Flushed {count} messages from the `{Channel.Name}` message history queue. {MessageHistoryQueue.Count} messages remaining.", LogType.Runtime);
             }
 
-            ScrollToBottomIfNecessary(true);
+            lock (MessageHistoryQueue)
+            {
+                if (MessageHistoryQueue.Count == 0)
+                {
+                    NeedsScrollToBottom = true;
+                    ForceScrollToBottom = true;
+                }
+            }
         }
 
         /// <summary>
@@ -235,15 +374,27 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         {
             lock (MessageQueue)
             {
-                if (!HasRequestedMessageHistory || MessageQueue.Count == 0 || RequestHistoryTask.IsRunning)
+                if (!HasRequestedMessageHistory || MessageQueue.Count == 0 || RequestHistoryTask.IsRunning || HasPendingHistoryMessages())
                     return;
 
-                foreach (var message in MessageQueue)
-                    AddMessage(message);
+                var count = Math.Min(MessageQueue.Count, MaxMessagesFlushedPerUpdate);
 
-                Logger.Important($"Flushed {MessageQueue.Count} messages from the `{Channel.Name}` message queue.", LogType.Runtime);
-                MessageQueue.Clear();
+                for (var i = 0; i < count; i++)
+                    AddMessage(MessageQueue[i]);
+
+                MessageQueue.RemoveRange(0, count);
+
+                Logger.Important($"Flushed {count} messages from the `{Channel.Name}` message queue. {MessageQueue.Count} messages remaining", LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private bool HasPendingHistoryMessages()
+        {
+            lock (MessageHistoryQueue)
+                return MessageHistoryQueue.Count != 0;
         }
 
         /// <summary>
@@ -255,23 +406,100 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             lock (AvailableItems)
             lock (Pool)
             {
-                if (!Channel.Messages.Contains(message))
+                if (ContainsMessage(AvailableItems, message))
+                    return;
+
+                if (!ContainsMessage(Channel.Messages, message))
                     Channel.Messages.Add(message);
 
-                if (!AvailableItems.Contains(message))
-                    AvailableItems.Add(message);
+                AvailableItems.Add(message);
 
                 var drawable = AddObject(AvailableItems.Count - 1);
 
-                if (Pool.Count < PoolSize)
-                    AddContainedDrawable(drawable);
+                if (ShouldScrollToBottom(message))
+                    NeedsScrollToBottom = true;
 
-                drawable.Y = TotalMessageHeight;
-                TotalMessageHeight += drawable.Height;
-
-                UpdateContentContainerSize();
-                ScrollToBottomIfNecessary();
+                NeedsReflow = true;
             }
+        }
+
+        /// <summary>
+        ///     Positions each message after the previous message's actual rendered height.
+        ///     This keeps multiline or late-resized messages from overlapping rows below them.
+        /// </summary>
+        private void ReflowMessageDrawables()
+        {
+            lock (Pool)
+            {
+                var y = 0f;
+
+                foreach (var drawable in Pool)
+                {
+                    drawable.Y = y;
+                    y += drawable.Height;
+                }
+
+                TotalMessageHeight = y;
+                NeedsReflow = false;
+                UpdateContentContainerSize();
+            }
+        }
+
+        /// <summary>
+        ///     Keeps only visible or near-visible messages parented to the content container.
+        ///     Detached messages keep their layout data, but they do not update or draw while offscreen.
+        /// </summary>
+        private void UpdateVisibleMessageDrawables()
+        {
+            lock (Pool)
+            {
+                var visibleTop = -ContentContainer.Y - VisibleMessageBuffer;
+                var visibleBottom = -ContentContainer.Y + Height + VisibleMessageBuffer;
+
+                foreach (var drawable in Pool)
+                {
+                    var isVisible = drawable.Y + drawable.Height >= visibleTop && drawable.Y <= visibleBottom;
+
+                    if (isVisible && drawable.Parent != ContentContainer)
+                        AddContainedDrawable(drawable);
+                    else if (!isVisible && drawable.Parent == ContentContainer)
+                        RemoveContainedDrawable(drawable);
+
+                    if (drawable is DrawableChatMessage message)
+                        message.SetScrollVisibility(isVisible);
+                }
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="visible"></param>
+        private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
+        {
+            drawable.Visible = visible;
+
+            foreach (var child in drawable.Children)
+                SetDrawableTreeVisible(child, visible);
+
+            if (drawable is Dropdown dropdown)
+                dropdown.ApplyItemVisibilityState();
+        }
+
+        /// <summary>
+        ///     Checks whether a message has already been added. Messages can be re-created as separate
+        ///     objects when coming from history or queue paths, so compare stable message fields too.
+        /// </summary>
+        /// <param name="messages"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private static bool ContainsMessage(List<ChatMessage> messages, ChatMessage message)
+        {
+            return messages.Any(x => ReferenceEquals(x, message)
+                                     || x.SenderId == message.SenderId
+                                     && x.Channel == message.Channel
+                                     && x.Message == message.Message
+                                     && x.Time == message.Time);
         }
 
         /// <summary>
@@ -282,11 +510,24 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void ScrollToBottomIfNecessary(bool force = false)
         {
-            if (TotalMessageHeight - Height - Math.Abs(ContentContainer.Y) >= 600 && !AvailableItems.Last().IsFromSelf && !force)
+            if (AvailableItems.Count == 0)
+                return;
+
+            if (!ShouldScrollToBottom(AvailableItems.Last(), force))
                 return;
 
             ClearAnimations();
             ScrollTo(-TotalMessageHeight, 600);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="latestMessage"></param>
+        /// <param name="force"></param>
+        /// <returns></returns>
+        private bool ShouldScrollToBottom(ChatMessage latestMessage, bool force = false)
+        {
+            return force || TotalMessageHeight - Height - Math.Abs(ContentContainer.Y) < 600 || latestMessage.IsFromSelf;
         }
 
         /// <summary>
@@ -326,9 +567,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         {
             if (ActiveRightClickOptions != null)
             {
-                ActiveRightClickOptions.Visible = false;
-                ActiveRightClickOptions.Parent = null;
-                ActiveRightClickOptions.Destroy();
+                DismissActiveRightClickOptions();
             }
 
             ActiveRightClickOptions = rco;
@@ -349,6 +588,20 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
         /// <summary>
         /// </summary>
+        public void DismissActiveRightClickOptions()
+        {
+            if (ActiveRightClickOptions == null)
+                return;
+
+            ActiveRightClickOptions.Close(0);
+            ActiveRightClickOptions.Visible = false;
+            ActiveRightClickOptions.Parent = null;
+            ActiveRightClickOptions.Destroy();
+            ActiveRightClickOptions = null;
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
@@ -360,6 +613,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Pool.ForEach(x => x.Destroy());
                 Pool.Clear();
                 TotalMessageHeight = 0;
+                NeedsReflow = false;
+                NeedsScrollToBottom = false;
+                ForceScrollToBottom = false;
                 UpdateContentContainerSize();
             });
 
@@ -379,15 +635,22 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void SubscribeToEvents()
         {
+            if (IsSubscribedToChatEvents || IsEventProcessingSuspended || OnlineManager.Client == null)
+                return;
+
             OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+            IsSubscribedToChatEvents = true;
         }
 
         /// <summary>
         /// </summary>
         private void UnsubscribeFromEvents()
         {
-            if (OnlineManager.Client != null)
-                OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            if (!IsSubscribedToChatEvents || OnlineManager.Client == null)
+                return;
+
+            OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            IsSubscribedToChatEvents = false;
         }
 
         /// <summary>
@@ -424,7 +687,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             e.Message.Sender = OnlineManager.OnlineUsers[e.Message.SenderId];
 
             // Don't display messages from self.
-            if (e.Message.Sender == OnlineManager.Self)
+            if (OnlineManager.Self != null && e.Message.SenderId == OnlineManager.Self.OnlineUser.Id)
                 return;
 
             Channel.QueueMessage(e.Message);

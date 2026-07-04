@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
 {
     public class EditorDifficultySeekBar : DifficultySeekBar
     {
-        private EditorActionManager ActionManager { get; }
+        private EditorActionManager ActionManager { get; set; }
 
         public EditorDifficultySeekBar(EditorActionManager actionManager, Qua map, ModIdentifier mods, ScalableVector2 size,
             int maxBars = 120, int barSize = 3, IAudioTrack track = null, bool alignRightToLeft = false, float barWidthScale = 1)
@@ -53,6 +53,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.LongNoteResized -= OnLongNoteResized;
             base.Destroy();
+            ActionManager = null;
         }
 
         public void Refresh() => ScheduleCreateBars();

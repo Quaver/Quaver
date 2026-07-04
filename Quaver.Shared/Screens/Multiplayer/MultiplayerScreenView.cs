@@ -236,6 +236,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             new MultiplayerSettingsAutoHostRotation("Auto Host Rotation", MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.HostRotation)),
             new MultiplayerSettingsFreeModType("Free Mod", MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Regular), MultiplayerFreeModType.Regular),
             new MultiplayerSettingsFreeModType("Free Rate", MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Rate), MultiplayerFreeModType.Rate),
+            new MultiplayerSettingsEnablePreview("Enable Preview", MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.EnablePreview)),
             new MultiplayerSettingsHealthType("Health Type", ((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType).ToString().Replace("_", " ")),
             new MultiplayerSettingsLives("Lives", OnlineManager.CurrentGame.Lives.ToString()),
             new MultiplayerSettingsAllowedGameModes("Allowed Game Modes", MultiplayerSettingsAllowedGameModes.AllowedModesToString(OnlineManager.CurrentGame.AllowedGameModes)),

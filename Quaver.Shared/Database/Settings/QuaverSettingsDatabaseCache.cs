@@ -79,10 +79,14 @@ namespace Quaver.Shared.Database.Settings
         /// <summary>
         ///     Does a recalculation for the difficulties on outdated maps.
         /// </summary>
-        public static void RecalculateDifficultiesForOutdatedMaps()
+        public static void RecalculateDifficultiesForOutdatedMaps(Action<ImportProgressEventArgs>? progress = null)
         {
-            foreach (var map in OutdatedMaps)
+            var total = OutdatedMaps.Count;
+            ImportProgressEventArgs.Report(progress, "Calculating Difficulties", $"Recalculating difficulty ratings for {total} outdated maps", 0, total, false);
+
+            for (var i = 0; i < total; i++)
             {
+                var map = OutdatedMaps[i];
                 map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
 
                 try
@@ -94,6 +98,8 @@ namespace Quaver.Shared.Database.Settings
                 {
                     DatabaseManager.Connection.Delete(map);
                 }
+
+                ImportProgressEventArgs.Report(progress, "Calculating Difficulties", $"Calculated {map.Artist} - {map.Title}", i + 1, total);
             }
 
             OutdatedMaps.Clear();

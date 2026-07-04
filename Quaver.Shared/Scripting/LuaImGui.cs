@@ -32,6 +32,11 @@ namespace Quaver.Shared.Scripting
 {
     public class LuaImGui : SpriteImGui
     {
+        /// <summary>Wrapper to prevent lua scripts from accessing the list.</summary>
+        /// <typeparam name="T">The type of list to encapsulate and protect.</typeparam>
+        /// <param name="List">The list to encapsulate and protect.</param>
+        sealed record InaccessibleList<T>([field: MoonSharpHidden] [property: MoonSharpHidden] List<T> List);
+
         public const int RecursionLimit = 10;
 
         private const int IterationLimit = 10;
@@ -200,6 +205,16 @@ namespace Quaver.Shared.Scripting
             RegisterWithConversion<Vector2>();
             RegisterWithConversion<Vector3>();
             RegisterWithConversion<Vector4>();
+            RegisterList<CustomAudioSampleInfo>();
+            RegisterList<ScrollSpeedFactorInfo>();
+            RegisterList<SliderVelocityInfo>();
+            RegisterList<TimingPointInfo>();
+            RegisterList<EditorLayerInfo>();
+            RegisterList<SoundEffectInfo>();
+            RegisterList<HitObjectInfo>();
+            RegisterList<BookmarkInfo>();
+            RegisterList<KeySoundInfo>();
+            RegisterList<string>();
             UserData.RegisterType<nuint>();
             UserData.RegisterType<nint>();
         }
@@ -368,8 +383,8 @@ namespace Quaver.Shared.Scripting
             var values = Enum.GetValues<T>();
 
             DynValue Inext(ScriptExecutionContext context, CallbackArguments args) =>
-                (int)args[1].Number + 1 is var x && x < values.Length
-                    ? DynValue.NewTuple(DynValue.NewNumber(x), DynValue.FromObject(context.OwnerScript, values[x]))
+                (int)args[1].Number + 1 is var x && x <= values.Length
+                    ? DynValue.NewTuple(DynValue.NewNumber(x), DynValue.FromObject(context.OwnerScript, values[x - 1]))
                     : DynValue.Nil;
 
             DynValue Next(ScriptExecutionContext context, CallbackArguments args)
@@ -423,6 +438,81 @@ namespace Quaver.Shared.Scripting
                     table[key] = value;
 
             return DynValue.NewTable(table).AsReadOnly();
+        }
+
+        private static void RegisterList<T>()
+        {
+            static DynValue ListNewIndex(ScriptExecutionContext _, CallbackArguments args) =>
+                throw new InvalidOperationException(
+                    "For performance reasons, this table must be immutable. Consider performing a deep copy to a new table to mutate instead."
+                );
+
+            static T ToGeneric(DynValue dyn) =>
+                typeof(T) == typeof(string) ? (T)(object)dyn.String : (T)dyn.UserData?.Object;
+
+            UserData.RegisterType<InaccessibleList<T>>();
+
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
+                DataType.Table,
+                typeof(List<T>),
+                x =>
+                {
+                    if (x.Table?.MetaTable?.Get("__quaver_list")?.UserData?.Object is InaccessibleList<T> fromQuaver)
+                        return fromQuaver.List;
+
+                    List<T> ret = new();
+
+                    if (x.Table?.MetaTable?.Get("__ipairs")?.Function is { } function)
+                        for (var i = 1; function.Call(i)?.Tuple is { Length: >= 2 } array; i = (int)array[0].Number)
+                            ret.Add(ToGeneric(array[1]));
+                    else
+                        for (var i = 1; ToGeneric(x.Table?.Get(i)) is { } t; i++)
+                            ret.Add(t);
+
+                    return ret;
+                }
+            );
+
+            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<List<T>>(
+                (_, list) =>
+                {
+                    DynValue ListIndex(ScriptExecutionContext s, CallbackArguments args) =>
+                        DynValue.FromObject(
+                            null,
+                            args.RawGet(1, false) is { Type: DataType.Number, Number: >= 1 and var x } &&
+                            x % 1 is 0 &&
+                            x <= list.Count
+                                ? list[(int)x - 1]
+                                : DynValue.Nil
+                        );
+
+                    DynValue ListLen(ScriptExecutionContext _, CallbackArguments __) => DynValue.NewNumber(list.Count);
+
+                    DynValue ListNext(ScriptExecutionContext context, CallbackArguments args) =>
+                        (int)args[1].Number + 1 is var x && x <= list.Count
+                            ? DynValue.NewTuple(DynValue.NewNumber(x), DynValue.FromObject(null, list[x - 1]))
+                            : DynValue.Nil;
+
+                    var next = DynValue.NewCallback(ListNext);
+
+                    DynValue ListPairs(ScriptExecutionContext context, CallbackArguments args) => next;
+
+                    return DynValue.NewTable(
+                        new Table(null)
+                        {
+                            MetaTable = new(null)
+                            {
+                                ["__len"] = ListLen,
+                                ["__pairs"] = ListPairs,
+                                ["__ipairs"] = ListPairs,
+                                ["__index"] = ListIndex,
+                                ["__newindex"] = ListNewIndex,
+                                ["__quaver_list"] = new InaccessibleList<T>(list),
+                            },
+                        }
+                    );
+                }
+            );
         }
 
         /// <summary>

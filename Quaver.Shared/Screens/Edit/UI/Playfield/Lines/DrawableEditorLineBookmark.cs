@@ -7,6 +7,7 @@ using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Managers;
@@ -21,35 +22,44 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
         private Tooltip Tooltip { get; }
 
+        private ImageButton ImageButton { get; }
+
         public DrawableEditorLineBookmark(EditorPlayfield playfield, BookmarkInfo bookmark) : base(playfield)
         {
             Playfield = playfield;
             Bookmark = bookmark;
+            DrawIfOffScreen = true;
 
             Tooltip = new Tooltip(Bookmark.Note, Color.Yellow, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Width + 4
+                X = Width + 4,
+                DrawIfOffScreen = true
             };
 
+            Tooltip.Text.DrawIfOffScreen = true;
+            Tooltip.Border.DrawIfOffScreen = true;
+            Tooltip.Visible = !string.IsNullOrEmpty(Bookmark.Note);
+
+            ImageButton = new DrawableEditorLineBookmarkButton(Playfield, Bookmark)
+            {
+                Parent = this,
+                Size = new ScalableVector2(0, 0, 1, 1),
+                X = Width / 2
+            };
             Image = UserInterface.BlankBox;
-            Clicked += OnClicked;
-            RightClicked += OnRightClicked;
         }
-        
+
         public override void Draw(GameTime gameTime)
         {
-            Update(gameTime);
-            DrawToSpriteBatch();
+            if (Tooltip.Text.Text != Bookmark.Note)
+            {
+                Tooltip.ChangeText(Bookmark.Note);
+                Tooltip.Visible = !string.IsNullOrEmpty(Bookmark.Note);
+            }
 
-            if (string.IsNullOrEmpty(Bookmark.Note)) 
-                return;
-            
-            Tooltip.Draw(gameTime);
-            Tooltip.Border.Draw(gameTime);
-            Tooltip.ChangeText(Bookmark.Note);
-            Tooltip.Text.Draw(gameTime);
+            base.Draw(gameTime);
         }
 
         public override Color GetColor() => Color.Yellow;
@@ -67,10 +77,5 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 Height = height;
         }
 
-        protected override bool IsMouseInClickArea() => ScreenRectangle.Contains(Playfield.GetRelativeMousePosition());
-        
-        private void OnClicked(object sender, EventArgs e) => DialogManager.Show(new EditorBookmarkDialog(Playfield.ActionManager, Playfield.Track, Bookmark));
-
-        private void OnRightClicked(object sender, EventArgs e) => Playfield.ActionManager.RemoveBookmark(Bookmark);
     }
 }

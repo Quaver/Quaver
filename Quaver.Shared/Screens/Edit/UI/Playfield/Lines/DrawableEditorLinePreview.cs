@@ -10,7 +10,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public DrawableEditorLinePreview(EditorPlayfield playfield, int time) : base(playfield)
         {
             Time = time;
-            IsClickable = false;
         }
 
         public override Color GetColor() => Colors.SecondaryAccent;

@@ -80,6 +80,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> DisplayExplicitMapsets { get; }
+
+        /// <summary>
+        /// </summary>
         private BindableInt MinCombo { get; }
 
         /// <summary>
@@ -112,7 +116,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             BindableInt minLength, BindableInt maxLength, BindableInt minlns, BindableInt maxlns, BindableInt minPlayCount,
             BindableInt maxPlayCount, Bindable<string> minUploadDate, Bindable<string> maxUploadDate,
             Bindable<DownloadableMapset> selectedMapset, Bindable<bool> displayOwnedMapsets,
-            Bindable<string> minLastUpdateDate, Bindable<string> maxLastUpdateDate, BindableInt minCombo, BindableInt maxCombo)
+            Bindable<string> minLastUpdateDate, Bindable<string> maxLastUpdateDate, BindableInt minCombo, BindableInt maxCombo, Bindable<bool> displayExplicitMapsets)
         {
             SelectedMapset = selectedMapset;
             MinDifficulty = minDiff;
@@ -132,6 +136,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             MaxLastUpdateDate = maxLastUpdateDate;
             MinCombo = minCombo;
             MaxCombo = maxCombo;
+            DisplayExplicitMapsets = displayExplicitMapsets;
 
             Alpha = 0f;
             Size = new ScalableVector2(564, 838);
@@ -191,6 +196,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             TableItems = new List<DownloadFilterTableItem>()
             {
                 new DownloadFilterTableItemCheckbox(tableWidth, "Display Owned Mapsets", DisplayOwnedMapsets),
+                new DownloadFilterTableItemCheckbox(tableWidth, "Display Explicit Mapsets", DisplayExplicitMapsets),
                 new DownloadFilterTableItemDifficulty(tableWidth, MinDifficulty, MaxDifficulty),
                 new DownloadFilterTableItemBpm(tableWidth, MinBpm, MaxBpm),
                 new DownloadFilterTableLength(tableWidth, MinLength, MaxLength),

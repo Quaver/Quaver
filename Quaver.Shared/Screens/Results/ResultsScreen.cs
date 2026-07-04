@@ -31,6 +31,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
@@ -166,6 +167,10 @@ namespace Quaver.Shared.Screens.Results
 
             SetDiscordRichPresence();
             View = new ResultsScreenView(this);
+
+            // Remove paused modifier if enabled.
+            if (ModManager.IsActivated(ModIdentifier.Paused))
+                ModManager.RemoveMod(ModIdentifier.Paused);
         }
 
         /// <summary>
@@ -708,7 +713,7 @@ namespace Quaver.Shared.Screens.Results
             var profileName = UserProfileDatabaseCache.Selected.Value.Username;
             var username = !string.IsNullOrEmpty(profileName) ? profileName : ConfigManager.Username.Value;
 
-            var scrollSpeed = Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+            var scrollSpeed = ConfigManager.ScrollSpeeds[Map.Mode].Value;
             var rankedAccuracy = screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy;
 
             var score = Score.FromScoreProcessor(processor, screen.MapHash, username, scrollSpeed,
@@ -762,6 +767,8 @@ namespace Quaver.Shared.Screens.Results
         private bool SubmitOnlineScore(GameplayScreen screen, Replay replay)
         {
             const string skipping = "Skipping online score submission due to:";
+
+            GameMode mode = screen.Map.Mode;
 
             // Don't submit scores if disconnected from the server completely.
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
@@ -871,10 +878,10 @@ namespace Quaver.Shared.Screens.Results
                 }
             }
 
-            var scrollSpeed = Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+            var scrollSpeed = ((HitObjectManagerKeys)screen.Ruleset.HitObjectManager).DefaultGroupController.AdjustedScrollSpeed;
 
             // Submit score to the server...
-            OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, replay, processor, scrollSpeed,
+            OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, replay, processor, (int)scrollSpeed,
                 ModHelper.GetRateFromMods(ModManager.Mods), Gameplay.TimePlayEnd, OnlineManager.CurrentGame));
 
             return true;

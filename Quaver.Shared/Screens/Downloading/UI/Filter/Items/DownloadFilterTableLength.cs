@@ -60,7 +60,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
                 else
                 {
                     var value = float.Parse(s);
-                    bindable.Value = (int) value;
+                    bindable.Value = (int) (value * 1000);
                 }
             };
         }

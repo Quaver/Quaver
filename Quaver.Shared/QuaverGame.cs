@@ -105,8 +105,6 @@ using Wobble.Audio;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
-using Wobble.Discord;
-using Wobble.Discord.RPC;
 using Wobble.Extended.HotReload;
 using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
@@ -115,6 +113,7 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Platform;
 using Wobble.Window;
 using Version = YamlDotNet.Core.Version;
@@ -193,6 +192,24 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrame { get; set; }
 
         /// <summary>
+        ///     FPS to use when reducing rendering for an inactive visible window.
+        /// </summary>
+        private const int InactiveWindowFpsLimit = 30;
+
+        /// <summary>
+        ///     Keeps SDL's Cocoa event pump from being throttled by fixed timestep sleeps on macOS.
+        /// </summary>
+        private bool MacOsCocoaEventLoopDrawLimiter { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private double MacOsCocoaEventLoopDrawLimiterTicks { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private long MacOsCocoaEventLoopLastDrawTicks { get; set; }
+
+        /// <summary>
         ///     Sometimes we'd like to perform actions on the first update, such as
         ///     creating <see cref="OnlineHub"/>
         /// </summary>
@@ -251,9 +268,9 @@ namespace Quaver.Shared
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 
-        public QuaverGame(HotLoader hl) : base(hl, ConfigManager.PreferWayland.Value)
+        public QuaverGame(HotLoader hl) : base(hl, ConfigureSdlVideoBackend())
 #else
-        public QuaverGame() : base(ConfigManager.PreferWayland.Value)
+        public QuaverGame() : base(ConfigureSdlVideoBackend())
 #endif
         {
             Content.RootDirectory = "Content";
@@ -261,6 +278,28 @@ namespace Quaver.Shared
             if (Environment.GetEnvironmentVariable("QUAVER_LOGLEVEL") is null)
                 Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
         }
+
+        /// <summary>
+        ///     Applies SDL video backend preferences before MonoGame initializes SDL.
+        /// </summary>
+        /// <returns></returns>
+        private static bool ConfigureSdlVideoBackend()
+        {
+            if (PreferCocoaEventLoop() &&
+                string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SDL_VIDEODRIVER")))
+            {
+                Environment.SetEnvironmentVariable("SDL_VIDEODRIVER", "cocoa");
+            }
+
+            return ConfigManager.PreferWayland.Value;
+        }
+
+        /// <summary>
+        ///     Whether to use the macOS Cocoa SDL event loop behavior.
+        /// </summary>
+        /// <returns></returns>
+        private static bool PreferCocoaEventLoop() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && ConfigManager.PreferCocoaEventLoop.Value;
 
         /// <inheritdoc />
         /// <summary>
@@ -290,6 +329,8 @@ namespace Quaver.Shared
             // Handle file dropped event.
             Window.FileDropped += MapsetImporter.OnFileDropped;
             Window.ClientSizeChanged += OnClientSizeChanged;
+            AudioManager.OutputDeviceChanged += OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = () => CurrentScreen?.Type == QuaverScreenType.Gameplay;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
@@ -328,6 +369,8 @@ namespace Quaver.Shared
         /// </summary>
         protected override void UnloadContent()
         {
+            AudioManager.OutputDeviceChanged -= OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = null;
             ConfigManager.WriteConfigFileAsync().Wait();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
@@ -368,6 +411,7 @@ namespace Quaver.Shared
 
             BackgroundHelper.Update(gameTime);
             DialogManager.Update(gameTime);
+            OnlineChat?.UpdateEventProcessingSuspension();
 
             HandleGlobalInput(gameTime);
             HandleOnlineHubInput();
@@ -386,6 +430,12 @@ namespace Quaver.Shared
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Determines whether the game should draw this update.
+        /// </summary>
+        protected override bool BeginDraw() => base.BeginDraw() && ShouldRunMacOsDraw();
 
         /// <inheritdoc />
         /// <summary>
@@ -417,7 +467,7 @@ namespace Quaver.Shared
         {
             DeleteTemporaryFiles();
 
-            SetAudioDevice();
+            SetAudioDevice(true);
             DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
@@ -452,7 +502,22 @@ namespace Quaver.Shared
 
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
-            ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
+            ConfigManager.PreferCocoaEventLoop.ValueChanged += (sender, e) => InitializeFpsLimiting();
+            
+            ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    NotificationManager.Show(NotificationLevel.Info, "Full screen is not supported on macOS. Use the borderless window mode instead.");
+                    
+                    ConfigManager.WindowFullScreen.ChangeWithoutTrigger(false);
+                }
+                else
+                {
+                    Graphics.IsFullScreen = e.Value;
+                }
+            };
+            
             ConfigManager.WindowBorderless.ValueChanged += (sender, e) => Window.IsBorderless = e.Value;
             ConfigManager.SelectedGameMode.ValueChanged += (sender, args) =>
             {
@@ -487,7 +552,7 @@ namespace Quaver.Shared
                 MapManager.RecentlyPlayed.Add(args.Value);
             };
 
-            InactiveSleepTime = ConfigManager.LowerFpsOnWindowInactive.Value ? TimeSpan.FromSeconds(1d / 30) : TimeSpan.Zero;
+            InactiveSleepTime = GetInactiveSleepTime();
         }
 
         /// <summary>
@@ -517,7 +582,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
@@ -543,6 +608,7 @@ namespace Quaver.Shared
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
+            MacOsCocoaEventLoopDrawLimiter = false;
 
             switch (fpsLimitType)
             {
@@ -553,8 +619,13 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Limited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    IsFixedTimeStep = true;
-                    TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    if (PreferCocoaEventLoop())
+                        SetMacOsCocoaEventLoopDrawLimiter(240);
+                    else
+                    {
+                        IsFixedTimeStep = true;
+                        TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    }
                     WaylandVsync = false;
                     break;
                 case FpsLimitType.Vsync:
@@ -568,15 +639,82 @@ namespace Quaver.Shared
                     WaylandVsync = true;
                     break;
                 case FpsLimitType.Custom:
+                    if (customFpsLimit <= 0)
+                        throw new ArgumentOutOfRangeException(nameof(customFpsLimit), customFpsLimit,
+                            "Custom FPS limit must be greater than zero.");
+
                     Graphics.SynchronizeWithVerticalRetrace = false;
-                    TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
-                    IsFixedTimeStep = true;
+                    if (PreferCocoaEventLoop())
+                        SetMacOsCocoaEventLoopDrawLimiter(customFpsLimit);
+                    else
+                    {
+                        TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
+                        IsFixedTimeStep = true;
+                    }
                     WaylandVsync = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             Graphics.ApplyChanges();
+        }
+
+        /// <summary>
+        ///     Limits rendered frames on macOS without using MonoGame's fixed timestep sleep.
+        /// </summary>
+        /// <param name="fps"></param>
+        private void SetMacOsCocoaEventLoopDrawLimiter(int fps)
+        {
+            IsFixedTimeStep = false;
+            MacOsCocoaEventLoopDrawLimiter = true;
+            MacOsCocoaEventLoopDrawLimiterTicks = Stopwatch.Frequency / (double)fps;
+            MacOsCocoaEventLoopLastDrawTicks = 0;
+        }
+
+        /// <summary>
+        ///     Allows draws only when the selected macOS FPS interval elapses, while updates still pump SDL events.
+        /// </summary>
+        /// <returns></returns>
+        private bool ShouldRunMacOsDraw()
+        {
+            var limitInactiveDraws = ShouldLimitMacOsInactiveDraws();
+
+            if (!MacOsCocoaEventLoopDrawLimiter && !limitInactiveDraws)
+                return true;
+
+            var now = Stopwatch.GetTimestamp();
+            var limiterTicks = limitInactiveDraws
+                ? Stopwatch.Frequency / (double)InactiveWindowFpsLimit
+                : MacOsCocoaEventLoopDrawLimiterTicks;
+
+            if (MacOsCocoaEventLoopLastDrawTicks != 0 &&
+                now - MacOsCocoaEventLoopLastDrawTicks < limiterTicks)
+                return false;
+
+            MacOsCocoaEventLoopLastDrawTicks = now;
+            return true;
+        }
+
+        /// <summary>
+        ///     Whether to throttle macOS inactive-window rendering without sleeping the Cocoa event loop.
+        /// </summary>
+        /// <returns></returns>
+        private bool ShouldLimitMacOsInactiveDraws() => PreferCocoaEventLoop() &&
+                                                        ConfigManager.LowerFpsOnWindowInactive.Value &&
+                                                        !IsActive &&
+                                                        OtherGameMapDatabaseCache.OnSyncableScreen() &&
+                                                        !(CurrentScreen != null && CurrentScreen.Exiting);
+
+        /// <summary>
+        ///     Gets the sleep time used when the inactive-window limiter is allowed to throttle the full game loop.
+        /// </summary>
+        /// <returns></returns>
+        private static TimeSpan GetInactiveSleepTime()
+        {
+            if (!ConfigManager.LowerFpsOnWindowInactive.Value || PreferCocoaEventLoop())
+                return TimeSpan.Zero;
+
+            return TimeSpan.FromSeconds(1d / InactiveWindowFpsLimit);
         }
 
         /// <summary>
@@ -613,7 +751,7 @@ namespace Quaver.Shared
                     break;
                 default:
                     // Pause/Unpause music
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     {
                         if (AudioEngine.Track.IsPaused)
                         {
@@ -640,10 +778,11 @@ namespace Quaver.Shared
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F7))
                 return;
 
-            var index = (int)ConfigManager.FpsLimiterType.Value;
+            var availableFpsLimitTypes = GetAvailableFpsLimitTypes();
+            var index = availableFpsLimitTypes.IndexOf(ConfigManager.FpsLimiterType.Value);
 
-            if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
-                ConfigManager.FpsLimiterType.Value = (FpsLimitType)index + 1;
+            if (index + 1 < availableFpsLimitTypes.Count)
+                ConfigManager.FpsLimiterType.Value = availableFpsLimitTypes[index + 1];
             else
                 ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
 
@@ -670,6 +809,22 @@ namespace Quaver.Shared
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private static List<FpsLimitType> GetAvailableFpsLimitTypes() =>
+            Enum.GetValues(typeof(FpsLimitType))
+                .Cast<FpsLimitType>()
+                .Where(IsFpsLimitTypeAvailable)
+                .ToList();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="fpsLimitType"></param>
+        /// <returns></returns>
+        private static bool IsFpsLimitTypeAvailable(FpsLimitType fpsLimitType) =>
+            fpsLimitType != FpsLimitType.WaylandVsync || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         /// <summary>
         ///     Handles when the user holds either Control (CTRL) button and presses O
@@ -825,10 +980,17 @@ namespace Quaver.Shared
             if (!ConfigManager.LowerFpsOnWindowInactive.Value || CurrentScreen != null && CurrentScreen.Exiting)
                 return;
 
+            if (PreferCocoaEventLoop())
+            {
+                InactiveSleepTime = TimeSpan.Zero;
+                WindowActiveInPreviousFrame = IsActive;
+                return;
+            }
+
             if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen() ||
                 OtherGameMapDatabaseCache.OnSyncableScreen() && !IsActive && !WindowActiveInPreviousFrame)
             {
-                InactiveSleepTime = TimeSpan.FromSeconds(1d / 30);
+                InactiveSleepTime = TimeSpan.FromSeconds(1d / InactiveWindowFpsLimit);
             }
             // Restore user's settings
             else if (!WindowActiveInPreviousFrame && (IsActive || !OtherGameMapDatabaseCache.OnSyncableScreen()))
@@ -942,6 +1104,12 @@ namespace Quaver.Shared
             ChangeResolution();
         }
 
+        private static void OnAudioOutputDeviceChanged(string deviceName)
+        {
+            if (ConfigManager.AudioOutputDevice.Value != deviceName)
+                ConfigManager.AudioOutputDevice.Value = deviceName;
+        }
+
         public void SetProcessPriority()
         {
             var priority = ProcessPriorityClass.Normal;
@@ -971,7 +1139,7 @@ namespace Quaver.Shared
             if (!reloadResources)
                 return;
 
-            AudioEngine.Track.Stop();
+            AudioEngine.Track?.Stop();
             CustomAudioSampleCache.Dispose();
             SkinManager.Skin.LoadSoundEffects();
         }

@@ -275,6 +275,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public int LastJudgementIndexSentToServer { get; private set; } = -1;
 
         /// <summary>
+        ///     The number of mine hits last time the hit delta was sent to the server
+        /// </summary>
+        public int LastTotalMineHitCountForServer { get; private set; }
+
+        /// <summary>
         ///     The time that the judgements were last sent to the server
         /// </summary>
         private double TimeSinceLastJudgementsSentToServer { get; set; }
@@ -343,6 +348,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool UseExistingAudioTime { get; }
 
         /// <summary>
+        ///     If true, show epilepsy warning. On retry, this should be false.
+        /// </summary>
+        public bool ShouldShowEpilepsyWarning { get; }
+
+        /// <summary>
         ///     Used to reset the input manager when toggling autoplay on/off.
         ///     Prevents having to virtually play all replay frames again
         /// </summary>
@@ -386,9 +396,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="isSongSelectPreview"></param>
         /// <param name="isTestPlayingInNewEditor"></param>
         /// <param name="useExistingAudioTime"></param>
+        /// <param name="shouldShowEpilepsyWarning"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
-            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false)
+            bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false, bool shouldShowEpilepsyWarning = true)
         {
             if (isPlayTesting && !isSongSelectPreview)
             {
@@ -414,6 +425,7 @@ namespace Quaver.Shared.Screens.Gameplay
             TournamentOptions = options;
             IsSongSelectPreview = isSongSelectPreview;
             UseExistingAudioTime = useExistingAudioTime;
+            ShouldShowEpilepsyWarning = shouldShowEpilepsyWarning;
 
             if (TournamentOptions != null && !(this is TournamentGameplayScreen))
                 throw new InvalidOperationException("Cannot provide tournament options for a non-tournament gameplay screen");
@@ -508,6 +520,12 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 SkinManager.StartWatching();
                 ScreenExiting += (_, _) => SkinManager.StopWatching();
+            }
+
+            if (!IsSongSelectPreview && MapManager.CustomScrollSpeed != null)
+            {
+                NotificationManager.Show(NotificationLevel.Info,
+                    $"Scroll speed (local) is set to: {MapManager.CustomScrollSpeed / 10f:0.0}", forceShow: true);
             }
 
             base.OnFirstUpdate();
@@ -672,15 +690,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void SetRuleset()
         {
-            switch (Map.Mode)
-            {
-                case GameMode.Keys4:
-                case GameMode.Keys7:
-                    Ruleset = new GameplayRulesetKeys(this, Map);
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
+            if (ModeHelper.IsKeyMode(Map.Mode))
+                Ruleset = new GameplayRulesetKeys(this, Map);
+            else
+                throw new InvalidEnumArgumentException();
         }
 
         /// <summary>
@@ -709,27 +722,30 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
             }
 
+            // Go back to editor if we're currently play testing.
+            if (IsPlayTesting)
+            {
+                if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
+
+                CustomAudioSampleCache.StopAll();
+
+                if (IsTestPlayingInNewEditor)
+                    ExitToNewEditor();
+                else
+                    Exit(() => new EditorScreen(OriginalEditorMap));
+
+                return;
+            }
+
             // If the pause key was just pressed...
             if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
             {
-                // Go back to editor if we're currently play testing.
-                if (IsPlayTesting)
-                {
-                    if (AudioEngine.Track.IsPlaying)
-                    {
-                        AudioEngine.Track.Pause();
-                        AudioEngine.Track.Seek(PlayTestAudioTime);
-                    }
-
-                    CustomAudioSampleCache.StopAll();
-
-                    if (IsTestPlayingInNewEditor)
-                        ExitToNewEditor();
-                    else
-                        Exit(() => new EditorScreen(OriginalEditorMap));
-                }
                 // Exit the offset calibration.
-                else if (IsCalibratingOffset)
+                if (IsCalibratingOffset)
                 {
                     OffsetConfirmDialog.Exit(this);
                 }
@@ -801,6 +817,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
                     if (SpectatorClient != null)
                         OnlineManager.Client?.StopSpectating();
+
+                    if (!HasStarted)
+                        AudioEngine.Track?.Dispose();
 
                     Exit(() => new SelectionScreen());
 
@@ -894,6 +913,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     ExitToNewEditor();
                 else
                     Exit(() => new EditorScreen(OriginalEditorMap));
+
+                return;
             }
 
             TimesRequestedToPause++;
@@ -1102,11 +1123,32 @@ namespace Quaver.Shared.Screens.Gameplay
             CustomAudioSampleCache.StopAll();
 
             if (IsPlayTesting)
-                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor), true);
+                QuaverScreenManager.ScheduleScreenChange(
+                    () => new GameplayScreen(OriginalEditorMap,
+                        MapHash,
+                        LocalScores,
+                        replay: null,
+                        isPlayTesting: true,
+                        playTestTime: PlayTestAudioTime,
+                        isCalibratingOffset: false,
+                        spectatorClient: null,
+                        options: null,
+                        isSongSelectPreview: false,
+                        isTestPlayingInNewEditor: IsTestPlayingInNewEditor,
+                        shouldShowEpilepsyWarning: false), true);
             else if (InReplayMode)
-                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay), true);
+                QuaverScreenManager.ScheduleScreenChange(
+                    () => new GameplayScreen(Map,
+                        MapHash,
+                        LocalScores,
+                        LoadedReplay,
+                        shouldShowEpilepsyWarning: false), true);
             else
-                QuaverScreenManager.ScheduleScreenChange(() => new GameplayScreen(Map, MapHash, LocalScores), true);
+                QuaverScreenManager.ScheduleScreenChange(
+                    () => new GameplayScreen(Map,
+                        MapHash,
+                        LocalScores,
+                        shouldShowEpilepsyWarning: false), true);
         }
 
         /// <summary>
@@ -1323,10 +1365,14 @@ namespace Quaver.Shared.Screens.Gameplay
             for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count; i++)
                 judgementsToGive.Add(Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats[i].Judgement);
 
+            var mineHitDelta = Ruleset.StandardizedReplayPlayer.ScoreProcessor.CountMineHit -
+                               LastTotalMineHitCountForServer;
+
             LastJudgementIndexSentToServer = Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count - 1;
+            LastTotalMineHitCountForServer = Ruleset.StandardizedReplayPlayer.ScoreProcessor.CountMineHit;
 
             if (OnlineManager.CurrentGame.InProgress)
-                OnlineManager.Client.SendGameJudgements(judgementsToGive);
+                OnlineManager.Client.SendGameJudgements(judgementsToGive, mineHitDelta);
         }
 
         public float SpectatorTargetSyncTime => (this is TournamentGameplayScreen && ((QuaverGame)GameBase.Game).CurrentScreen is TournamentScreen tournamentScreen)
@@ -1521,8 +1567,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 AudioEngine.Track.Seek(time);
             }
 
-            Timing.Time = AudioEngine.Track.Time;
-            Timing.Update(new GameTime());
             HasStarted = true;
 
             hitobjectManager.HandleSkip();
@@ -1569,7 +1613,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void HandleAutoplayTabInput(GameTime gameTime)
         {
             // Handle play test autoplay input.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
+            if (IsPlayTesting && !ModManager.IsActivated(ModIdentifier.Autoplay) && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
             {
                 var inputManager = (KeysInputManager)Ruleset.InputManager;
 
@@ -1663,6 +1707,25 @@ namespace Quaver.Shared.Screens.Gameplay
                         MapManager.Selected.Value.LocalOffset -= change;
                         NotificationManager.Show(NotificationLevel.Success,
                             $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+
+                        ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
+                    }
+                }
+                
+                // Handle reset offset to 0
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyResetMapOffset.Value))
+                {
+                    if (KeyboardManager.IsAltDown())
+                    {
+                        ConfigManager.VisualOffset.Value = 0;
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Visual offset has been reset to: {ConfigManager.VisualOffset.Value} ms", null, true);
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value.LocalOffset = 0;
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"Local map audio offset has been reset to: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }

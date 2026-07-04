@@ -343,7 +343,9 @@ namespace Quaver.Shared.Screens.Selection
         private void OnActiveLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
         {
             LeaderboardContainer.ClearAnimations();
+            MapPreviewContainer.ClearAnimations();
             ModifierSelector.ClearAnimations();
+            ProfileContainer.ClearAnimations();
 
             const int animTime = 400;
             const Easing easing = Easing.OutQuint;
@@ -428,8 +430,7 @@ namespace Quaver.Shared.Screens.Selection
                     PlaylistContainer.MoveToX(inactivePosition, easing, animTime);
                     break;
                 case SelectScrollContainerType.Playlists:
-                    if (PlaylistManager.Playlists.Count != 0)
-                        PlaylistContainer.MoveToX(activePosition, easing, animTime);
+                    PlaylistContainer.MoveToX(activePosition, easing, animTime);
 
                     MapsetContainer.MoveToX(inactivePosition, easing, animTime);
                     MapContainer.MoveToX(inactivePosition, easing, animTime);

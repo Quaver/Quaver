@@ -17,6 +17,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         RemoveLayer,
         RenameLayer,
         MoveToLayer,
+        MoveLayer,
         ColorLayer,
         ToggleLayerVisibility,
         AddScrollVelocity,

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online;
@@ -55,6 +56,10 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
         /// <summary>
         /// </summary>
+        private ClanTag Clan { get; set; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus Username { get; set; }
 
         /// <summary>
@@ -79,6 +84,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
             CreateButton();
             CreateAvatar();
+            CreateClan();
             CreateUsername();
             CreateCaret();
             UpdateSize();
@@ -101,6 +107,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             var color = Button.IsHovered ? hoveredColor : unhoveredColor;
             Caret.FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
             Username.Tint = Caret.Tint;
+            Clan.Alpha = Username.Alpha;
 
             Button.Size = Size;
 
@@ -189,13 +196,25 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
         /// <summary>
         /// </summary>
+        private void CreateClan()
+        {
+            Clan = new ClanTag(21)
+            {
+                Parent = Avatar,
+                Alignment = Alignment.MidLeft,
+                X = Avatar.Width + 10
+            };
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreateUsername()
         {
             Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Login", 21)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,
-                X =  Avatar.Width + 10,
+                X = Avatar.Width + 10,
             };
 
             UpdateText();
@@ -220,6 +239,15 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         private void UpdateText() => ScheduleUpdate(() =>
         {
             Avatar.AvatarSprite.Image = GetAvatar();
+
+            if (OnlineManager.Connected)
+                Clan.UpdateFromUser(OnlineManager.Self?.OnlineUser);
+            else
+                Clan.Clear();
+
+            Clan.X = Avatar.Width + 10;
+
+            Username.X = Clan.Visible ? Clan.X + Clan.Width + 6 : Avatar.Width + 10;
             Username.Text = OnlineManager.Connected ? ConfigManager.Username?.Value : "Login";
 
             UpdateSize();
@@ -229,7 +257,15 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
         /// <summary>
         /// </summary>
-        private void UpdateSize() => Size = new ScalableVector2(Username.Width + Avatar.Width + 36, Avatar.Height);
+        private void UpdateSize()
+        {
+            var textWidth = Username.Width;
+
+            if (Clan.Visible)
+                textWidth += Clan.Width + 6;
+
+            Size = new ScalableVector2(textWidth + Avatar.Width + 36, Avatar.Height);
+        }
 
         /// <summary>
         /// </summary>
@@ -241,10 +277,10 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// </summary>
         public void AnimateCaret()
         {
-            var rotation = IsOpen ? 180 : 0;
+            var rotation = IsOpen ? MathF.PI : 0;
 
             Caret.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear,
-                MathHelper.ToDegrees(Caret.Rotation), rotation, 200));
+                Caret.Rotation, rotation, 200));
         }
 
         /// <summary>

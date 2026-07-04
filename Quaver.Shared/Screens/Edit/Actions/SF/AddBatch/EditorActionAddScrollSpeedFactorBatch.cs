@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.SF.AddBatch
 
         private Qua WorkingMap { get; }
 
-        private List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; }
+        public List<ScrollSpeedFactorInfo> ScrollSpeedFactors { get; }
 
         public ScrollGroup ScrollGroup { get; }
 

@@ -32,7 +32,12 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The time that the user has requested their skin be reloaded.
         /// </summary>
+        /// 
         public static long TimeSkinReloadRequested { get; set; }
+        /// <summary>
+        ///     The time that the user has requested their skin be reloaded.
+        /// </summary>
+        public static long TimeEditorSkinReloadRequested { get; set; }
 
         /// <summary>
         ///     If non-null, we require a skin reload.
@@ -50,6 +55,11 @@ namespace Quaver.Shared.Skinning
         public static SkinStore Skin { get; set; }
 
         /// <summary>
+        ///     The currently selected Editor skin
+        /// </summary>
+        public static SkinStore EditorSkin { get; set; }
+
+        /// <summary>
         ///     The skin for player 2 in the tournament screen
         /// </summary>
         public static SkinStore TournamentPlayer2Skin { get; set; }
@@ -62,18 +72,40 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Loads the currently selected skin
         /// </summary>
-        public static void Load()
+        public static void Load(UniversalSkinElementsLoadFlags loadFlags = UniversalSkinElementsLoadFlags.All)
         {
-            Skin = new SkinStore();
+            Skin = new SkinStore(loadFlags: loadFlags);
 
             if (ConfigManager.TournamentPlayer2Skin.Value == null ||
                 ConfigManager.TournamentPlayer2Skin.Value == ConfigManager.Skin.Value)
             {
                 TournamentPlayer2Skin = Skin;
-                return;
             }
+            else
+            {
+                TournamentPlayer2Skin = new SkinStore(ConfigManager.TournamentPlayer2Skin.Value);
+            }
+            
+            LoadEditorSkin();
+        }
 
-            TournamentPlayer2Skin = new SkinStore(ConfigManager.TournamentPlayer2Skin.Value);
+        public static void LoadEditorSkin()
+        {
+            var isSameDefaultSkin = ConfigManager.DefaultSkin.Value == ConfigManager.DefaultEditorSkin.Value;
+            
+            if (isSameDefaultSkin && (ConfigManager.EditorNoteSkin.Value == null ||
+                ConfigManager.EditorNoteSkin.Value == ConfigManager.Skin.Value))
+            {
+                EditorSkin = Skin;
+            }
+            else if (isSameDefaultSkin && ConfigManager.EditorNoteSkin.Value == ConfigManager.TournamentPlayer2Skin.Value)
+            {
+                EditorSkin = TournamentPlayer2Skin;
+            }
+            else
+            {
+                EditorSkin = new SkinStore(ConfigManager.EditorNoteSkin.Value, true);
+            }
         }
 
         /// <summary>
@@ -135,16 +167,32 @@ namespace Quaver.Shared.Skinning
         public static event EventHandler<SkinReloadedEventArgs> SkinLoaded;
 
         /// <summary>
+        ///     Event raised when the user's skin has reloaded.
+        /// </summary>
+        public static event EventHandler<SkinReloadedEventArgs> EditorSkinLoaded;
+
+        /// <summary>
         ///     Called every frame. Waits for a skin reload to be queued up.
         /// </summary>
         public static void HandleSkinReloading()
         {
+            if (TimeEditorSkinReloadRequested != 0 && GameBase.Game.TimeRunning - TimeEditorSkinReloadRequested >= 400)
+            {
+                LoadEditorSkin();
+                TimeEditorSkinReloadRequested = 0;
+                EditorSkinLoaded?.Invoke(typeof(SkinManager), new SkinReloadedEventArgs());
+                
+                ThreadScheduler.RunAfter(Transitioner.FadeOut, 300);
+                return;
+            }
+
             // Reload skin when applicable
             if (TimeSkinReloadRequested != 0 && GameBase.Game.TimeRunning - TimeSkinReloadRequested >= 400)
             {
                 Load();
                 TimeSkinReloadRequested = 0;
                 SkinLoaded?.Invoke(typeof(SkinManager), new SkinReloadedEventArgs());
+                EditorSkinLoaded?.Invoke(typeof(SkinManager), new SkinReloadedEventArgs());
                 var showLoadedNotification = true;
 
                 var game = (QuaverGame)GameBase.Game;
@@ -155,7 +203,16 @@ namespace Quaver.Shared.Skinning
                         game.CurrentScreen.Exit(() => new MainMenuScreen());
                         break;
                     case QuaverScreenType.Select:
-                        game.CurrentScreen.Exit(() => new SelectionScreen());
+                        if (game.CurrentScreen is SelectionScreen selectionScreen)
+                        {
+                            var activeScrollContainer = selectionScreen.ActiveScrollContainer.Value;
+                            var activeLeftPanel = selectionScreen.ActiveLeftPanel.Value;
+                            game.CurrentScreen.Exit(() => new SelectionScreen(activeScrollContainer, activeLeftPanel));
+                        }
+                        else
+                        {
+                            game.CurrentScreen.Exit(() => new SelectionScreen());
+                        }
                         break;
                     case QuaverScreenType.Gameplay when
                         game.CurrentScreen is GameplayScreen gameplayScreen and not TournamentGameplayScreen

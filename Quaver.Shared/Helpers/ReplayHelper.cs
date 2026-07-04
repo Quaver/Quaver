@@ -7,6 +7,7 @@
 
 using System;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Replays;
 using Quaver.Shared.Modifiers;
@@ -24,15 +25,10 @@ namespace Quaver.Shared.Helpers
         {
             var replay = new Replay(map.Mode, "Autoplay", ModManager.Mods, md5);
 
-            switch (map.Mode)
-            {
-                case GameMode.Keys4:
-                case GameMode.Keys7:
-                    replay = Replay.GeneratePerfectReplayKeys(replay, map);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (ModeHelper.IsKeyMode(map.Mode))
+                replay = Replay.GeneratePerfectReplayKeys(replay, map);
+            else
+                throw new ArgumentOutOfRangeException();
 
             return replay;
         }

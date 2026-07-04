@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Replays;
@@ -28,12 +29,33 @@ using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
+using Wobble.Scheduling;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Loading
 {
     public class MapLoadingScreen : QuaverScreen
     {
+        private static TaskHandler<StreamerFilesWriteRequest, bool> StreamerFilesWriteTask { get; } =
+            new TaskHandler<StreamerFilesWriteRequest, bool>(WriteStreamerFiles);
+
+        private static object StreamerFilesWriteLock { get; } = new object();
+
+        private static Dictionary<string, string> LastStreamerValues { get; } = new Dictionary<string, string>();
+
+        private sealed class StreamerFilesWriteRequest
+        {
+            public Map Map { get; }
+
+            public ModIdentifier Mods { get; }
+
+            public StreamerFilesWriteRequest(Map map, ModIdentifier mods)
+            {
+                Map = map;
+                Mods = mods;
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -85,7 +107,7 @@ namespace Quaver.Shared.Screens.Loading
                 try
                 {
                     ParseAndLoadMap();
-                    WriteStreamerFiles();
+                    QueueStreamerFilesWrite(MapManager.Selected.Value);
                     LoadGameplayScreen();
                 }
                 catch (Exception e)
@@ -158,27 +180,134 @@ namespace Quaver.Shared.Screens.Loading
         /// <summary>
         ///    Asynchronously writes files for livestreamers
         /// </summary>
-        private static void WriteStreamerFiles()
+        /// <param name="map"></param>
+        /// <param name="delay"></param>
+        public static void QueueStreamerFilesWrite(Map map, int delay = 0)
+            => StreamerFilesWriteTask.Run(new StreamerFilesWriteRequest(map, ModManager.Mods), delay);
+
+        /// <summary>
+        ///    Queues files for livestreamers to be written.
+        /// </summary>
+        /// <param name="map"></param>
+        public static void WriteStreamerFiles(Map map) => QueueStreamerFilesWrite(map);
+
+        /// <summary>
+        ///    Writes files for livestreamers.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="token"></param>
+        private static bool WriteStreamerFiles(StreamerFilesWriteRequest request, CancellationToken token)
         {
+            var map = request.Map;
+            var mods = request.Mods;
+
+            if (map == null)
+                return false;
+
             var streamerValues = new[]
             {
-                ("difficulty", $"{MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods):0.00}"),
-                ("map", MapManager.Selected.Value.Qua + " "),
-                ("mods", ModHelper.GetModsString(ModManager.Mods)),
-                ("mapid", MapManager.Selected.Value.MapId.ToString())
+                ("difficulty", $"{map.DifficultyFromMods(mods):0.00}"),
+                ("map", $"{(map.Qua != null ? map.Qua.ToString() : map.ToString())} "),
+                ("mods", ModHelper.GetModsString(mods)),
+                ("mapid", map.MapId.ToString())
             };
 
-            foreach (var (fileName, value) in streamerValues)
+            lock (StreamerFilesWriteLock)
             {
+                token.ThrowIfCancellationRequested();
+
+                var nowPlayingDirectory = $"{ConfigManager.TempDirectory}/Now Playing";
+
                 try
                 {
-                    using (var writer = File.CreateText($"{ConfigManager.TempDirectory}/Now Playing/{fileName}.txt"))
-                        writer.Write(value);
+                    Directory.CreateDirectory(nowPlayingDirectory);
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
+                    return false;
                 }
+
+                if (!NeedsStreamerFilesWrite(nowPlayingDirectory, streamerValues))
+                    return true;
+
+                foreach (var (fileName, value) in streamerValues)
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    if (LastStreamerValues.TryGetValue(fileName, out var lastValue) && lastValue == value &&
+                        File.Exists($"{nowPlayingDirectory}/{fileName}.txt"))
+                        continue;
+
+                    if (!WriteStreamerFile($"{nowPlayingDirectory}/{fileName}.txt", value))
+                        continue;
+
+                    LastStreamerValues[fileName] = value;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Checks if any streamer file value changed or target file is missing.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="streamerValues"></param>
+        /// <returns></returns>
+        private static bool NeedsStreamerFilesWrite(string directory, (string FileName, string Value)[] streamerValues)
+        {
+            foreach (var (fileName, value) in streamerValues)
+            {
+                if (!LastStreamerValues.TryGetValue(fileName, out var lastValue))
+                    return true;
+
+                if (lastValue != value)
+                    return true;
+
+                if (!File.Exists($"{directory}/{fileName}.txt"))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Writes a streamer file through a temp file before replacing the target.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static bool WriteStreamerFile(string path, string value)
+        {
+            var tempPath = $"{path}.{Guid.NewGuid():N}.tmp";
+
+            try
+            {
+                File.WriteAllText(tempPath, value);
+
+                if (File.Exists(path))
+                    File.Replace(tempPath, path, null);
+                else
+                    File.Move(tempPath, path);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+
+                try
+                {
+                    if (File.Exists(tempPath))
+                        File.Delete(tempPath);
+                }
+                catch (Exception deleteException)
+                {
+                    Logger.Error(deleteException, LogType.Runtime);
+                }
+
+                return false;
             }
         }
 

@@ -168,7 +168,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 if (Pool.Count == 0) 
                     return;
 
-                var y = 0;
+                var y = PaddingTop;
                 // Reset the pool item index
                 for (var i = 0; i < Pool.Count; i++)
                 {

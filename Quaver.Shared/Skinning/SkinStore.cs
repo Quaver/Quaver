@@ -7,17 +7,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using IniFileParser;
+using IniFileParser.Exceptions;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using MoreLinq.Extensions;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Skinning.Menus;
 using Wobble;
 using Wobble.Assets;
@@ -50,6 +55,10 @@ namespace Quaver.Shared.Skinning
                 return $"{ConfigManager.SteamWorkshopDirectory.Value}/{Skin}";
             }
         }
+
+        // byte[].GetHashCode() is unreliable so we use int instead
+        private readonly Dictionary<int, Texture2D> _textureCache = new();
+        private int _cacheCount = 0;
 
         /// <summary>
         ///     The skin.ini file.
@@ -239,6 +248,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D ScoreboardBlueTeamOther { get; set; }
 
         /// <summary>
+        ///     The avatar mask for scoreboard avatars.
+        /// </summary>
+        internal Texture2D ScoreboardAvatarMask { get; private set; }
+
+        /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
         internal List<Texture2D> HealthBarBackground { get; private set; }
@@ -269,6 +283,16 @@ namespace Quaver.Shared.Skinning
         internal Texture2D BattleRoyaleWarning { get; private set; }
 
         /// <summary>
+        ///     Displayed on maps with potentially seizure-inducing visuals.
+        /// </summary>
+        internal Texture2D EpilepsyWarning { get; private set; }
+
+        /// <summary>
+        ///     Icon displayed on the epilepsy warning.
+        /// </summary>
+        internal Texture2D EpilepsyWarningIcon { get; private set; }
+
+        /// <summary>
         ///     Backgrounds for the skin. Only loaded if UseSkinBackgrounds is true.
         /// </summary>
         internal List<string> BackgroundPaths { get; private set; }
@@ -281,9 +305,11 @@ namespace Quaver.Shared.Skinning
         internal AudioSample SoundHitWhistle { get; private set; }
         internal AudioSample SoundHitFinish { get; private set; }
         internal AudioSample SoundComboBreak { get; private set; }
+        internal AudioSample SoundMineExplode { get; private set; }
         internal AudioSample SoundApplause { get; private set; }
         internal AudioSample SoundScreenshot { get; private set; }
         internal AudioSample SoundClick { get; private set; }
+        internal AudioSample SoundSelect { get; private set; }
         internal AudioSample SoundBack { get; private set; }
         internal AudioSample SoundHover { get; private set; }
         internal AudioSample SoundFailure { get; private set; }
@@ -294,18 +320,30 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
         /// </summary>
-        internal SkinStore(string skin = null)
+        internal SkinStore(string skin = null, bool editor = false, UniversalSkinElementsLoadFlags loadFlags = UniversalSkinElementsLoadFlags.All)
         {
+            Stopwatch totalSW = new();
+            Dictionary<GameMode, (Stopwatch sw, int cacheHits)> keyTimingInfo = new();
+            totalSW.Restart();
+
             Skin = string.IsNullOrEmpty(skin) ? ConfigManager.Skin?.Value : skin;
             LoadConfig();
 
             // Load up Keys game mode skins.
-            Keys = new Dictionary<GameMode, SkinKeys>
+            Keys = new Dictionary<GameMode, SkinKeys>();
+            // keyCount 0 is the shared keys folder
+            for (var keyCount = 0; keyCount <= ModeHelper.MaxKeyCount; keyCount++)
             {
-                {GameMode.Keys4, new SkinKeys(this, GameMode.Keys4)},
-                {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}
-            };
+                int cacheCountStart = _cacheCount;
+                Stopwatch sw = new();
+                sw.Restart();
 
+                var mode = keyCount == 0 ? 0 : ModeHelper.FromKeyCount(keyCount);
+                Keys.Add(mode, new SkinKeys(this, mode, keyCount == 0 ? null : Keys[0], editor ? ConfigManager.DefaultEditorSkin.Value?.ToString() : null));
+
+                sw.Stop();
+                keyTimingInfo.Add(mode, (sw, _cacheCount - cacheCountStart));
+            }
 
             try
             {
@@ -319,11 +357,28 @@ namespace Quaver.Shared.Skinning
                 Logger.Error(e, LogType.Runtime);
             }
 
-            LoadUniversalElements();
+            LoadUniversalElements(loadFlags);
 
             // Change cursor image.
             GameBase.Game.GlobalUserInterface.Cursor.Image = Cursor;
             GameBase.Game.GlobalUserInterface.Cursor.Center = CenterCursor;
+
+            totalSW.Stop();
+
+            string keyTimeString = "";
+            foreach ((GameMode mode, (Stopwatch sw, int cacheHits)) in keyTimingInfo)
+            {
+                if (!string.IsNullOrEmpty(keyTimeString))
+                {
+                    keyTimeString += ", ";
+                }
+                keyTimeString += $"{SkinKeys.ModeShorthand(mode)}:{(double)sw.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00}[{cacheHits}]";
+            }
+
+            Logger.Important($"skin loading times:\n" +
+                $"total: {(double)totalSW.ElapsedTicks / Stopwatch.Frequency * 1000d:0.00} [{_cacheCount}]\n" + keyTimeString,
+                LogType.Runtime
+            );
         }
 
         /// <summary>
@@ -356,23 +411,42 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Loads universal skin elements used across every single game mode.
         /// </summary>
-        private void LoadUniversalElements()
+        private void LoadUniversalElements(UniversalSkinElementsLoadFlags loadFlags)
         {
             const string cursor = "main-cursor";
             Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", $"Quaver.Resources/Textures/Skins/Shared/Cursor/{cursor}.png");
 
-            LoadGradeElements();
-            LoadHitBubbleElements();
-            LoadJudgements();
-            LoadNumberDisplays();
-            LoadPause();
-            LoadScoreboard();
-            LoadHealthBar();
-            LoadSkip();
-            LoadComboAlert();
-            LoadMultiplayerElements();
-            LoadBackgrounds();
-            LoadSoundEffects();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Grade)) LoadGradeElements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.HitBubble)) LoadHitBubbleElements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Judgements)) LoadJudgements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.NumberDisplays)) LoadNumberDisplays();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Pause)) LoadPause();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Scoreboard)) LoadScoreboard();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.HealthBar)) LoadHealthBar();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Skip)) LoadSkip();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.ComboAlert)) LoadComboAlert();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.MultiplayerElements)) LoadMultiplayerElements();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.Backgrounds)) LoadBackgrounds();
+            if (loadFlags.HasFlag(UniversalSkinElementsLoadFlags.SoundEffects)) LoadSoundEffects();
+        }
+
+        private Texture2D GetTextureFromCacheOr(byte[] buffer, Func<byte[], Texture2D> func)
+        {
+            var md5 = MD5.HashData(buffer);
+
+            var hash = new HashCode();
+            hash.AddBytes(md5);
+            int hc = hash.ToHashCode();
+
+            if (_textureCache.ContainsKey(hc))
+            {
+                _cacheCount++;
+                return _textureCache[hc];
+            }
+
+            Texture2D texture = func(buffer);
+            _textureCache.Add(hc, texture);
+            return texture;
         }
 
         /// <summary>
@@ -381,15 +455,30 @@ namespace Quaver.Shared.Skinning
         /// <param name="path"></param>
         /// <param name="resource"></param>
         /// <param name="extension"></param>
-        internal static Texture2D LoadSingleTexture(string path, string resource, string extension = ".png")
+        internal Texture2D LoadSingleTexture(string path, string resource, Texture2D? fallback = null, string extension = ".png")
         {
             path += extension;
 
             try
             {
-                return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) :
-                    GameBase.Game.Resources.Get(resource) is { } buffer ? AssetLoader.LoadTexture2D(buffer) :
-                    UserInterface.BlankBox;
+                byte[] buffer;
+                if (File.Exists(path))
+                {
+                    buffer = File.ReadAllBytes(path);
+                }
+                else
+                {
+                    if (fallback != null)
+                    {
+                        return fallback;
+                    }
+                    buffer = GameBase.Game.Resources.Get(resource);
+                    if (buffer == null)
+                    {
+                        return UserInterface.BlankBox;
+                    }
+                }
+                return GetTextureFromCacheOr(buffer, AssetLoader.LoadTexture2D);
             }
             catch (Exception)
             {
@@ -408,8 +497,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns,
-            string extension = ".png")
+        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, List<Texture2D>? fallback = null)
         {
             try
             {
@@ -427,8 +515,10 @@ namespace Quaver.Shared.Skinning
                         // See if the file matches the regex.
                         if (match.Success)
                         {
+                            byte[] file = File.ReadAllBytes(f);
+
                             // Load it up if so.
-                            var texture = AssetLoader.LoadTexture2DFromFile(f);
+                            var texture = GetTextureFromCacheOr(file, AssetLoader.LoadTexture2D);
 
                             return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value),
                                 int.Parse(match.Groups[2].Value));
@@ -441,13 +531,24 @@ namespace Quaver.Shared.Skinning
                     }
                 }
 
+                if (fallback != null)
+                {
+                    return fallback;
+                }
+
                 // If we end up getting down here, that means we need to load the spritesheet from our resources.
                 // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
                 if (rows == 0 && columns == 0)
-                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png") };
+                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png", null) };
 
-                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
-                    GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
+                if (resource == null)
+                    return new List<Texture2D> { UserInterface.BlankBox };
+
+                var buffer = GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png");
+                if (buffer == null)
+                    return new List<Texture2D> { UserInterface.BlankBox };
+
+                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(buffer), rows, columns);
             }
             catch (Exception e)
             {
@@ -504,7 +605,7 @@ namespace Quaver.Shared.Skinning
         {
             // Load Grades
             HitBubbles = LoadSingleTexture($"{Dir}/HitBubbles/bubble", $"Quaver.Resources/Textures/Skins/Shared/HitBubbles/bubble.png");
-            
+
             var hitBubblesFolder = $"/HitBubbles/";
 
             const string bubblesBackground = "bubbles-background";
@@ -624,6 +725,9 @@ namespace Quaver.Shared.Skinning
 
             const string scoreboardBlueTeamOther = "scoreboard-blue-team-other";
             ScoreboardBlueTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeamOther}.png");
+
+            const string scoreboardAvatarMask = "scoreboard-avatar-mask";
+            ScoreboardAvatarMask = LoadSingleTexture($"{scoreboardFolder}/{scoreboardAvatarMask}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardAvatarMask}.png");
         }
 
         /// <summary>
@@ -682,6 +786,15 @@ namespace Quaver.Shared.Skinning
             const string battleRoyaleWarning = "warning";
             BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
                 , $"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
+
+            var warningFolder = $"{Dir}/Warnings/";
+            const string epilepsyWarning = "epilepsy-warning";
+            EpilepsyWarning = LoadSingleTexture($"{warningFolder}/{epilepsyWarning}"
+                , $"Quaver.Resources/Textures/UI/{epilepsyWarning}.png");
+
+            const string warningIcon = "warning-icon";
+            EpilepsyWarningIcon = LoadSingleTexture($"{warningFolder}/{warningIcon}"
+                , $"Quaver.Resources/Textures/UI/{warningIcon}.png");
         }
 
         private void LoadBackgrounds()
@@ -715,7 +828,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         public void LoadSoundEffects()
         {
-            var sfxFolder = $"{Dir}/SFX/";
+            var sfxFolder = Path.Combine(Dir, "SFX").Replace("\\", "/");
 
             const string soundHit = "sound-hit";
             SoundHit = LoadSoundEffect($"{sfxFolder}/{soundHit}", soundHit, "Gameplay");
@@ -731,6 +844,9 @@ namespace Quaver.Shared.Skinning
 
             const string soundComboBreak = "sound-combobreak";
             SoundComboBreak = LoadSoundEffect($"{sfxFolder}/{soundComboBreak}", soundComboBreak, "Gameplay");
+
+            const string soundMineExplode = "sound-mineexplode";
+            SoundMineExplode = LoadSoundEffect($"{sfxFolder}/{soundMineExplode}", soundMineExplode, "Gameplay");
 
             const string soundFailure = "sound-failure";
             SoundFailure = LoadSoundEffect($"{sfxFolder}/{soundFailure}", soundFailure, "Gameplay");
@@ -752,6 +868,10 @@ namespace Quaver.Shared.Skinning
 
             const string soundHover = "sound-hover";
             SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover, "Menu");
+
+            const string soundSelect = "sound-select";
+            if (File.Exists($"{sfxFolder}/{soundSelect}.wav"))
+                SoundSelect = LoadSoundEffect($"{sfxFolder}/{soundSelect}", soundSelect, "Menu");
 
             const string soundComboAlert = "sound-combo-alert";
             SoundComboAlerts = new List<AudioSample>();
@@ -818,5 +938,79 @@ namespace Quaver.Shared.Skinning
                 }
             }
         }
+
+        public static List<string> GetSkins()
+        {
+
+            var options = new List<string> { "Default Skin" };
+
+            if (ConfigManager.SkinDirectory == null)
+                return options;
+
+            var skins = new List<string>();
+
+            var skinDirectories = Directory.GetDirectories(ConfigManager.SkinDirectory.Value);
+
+            var dirs = skinDirectories.Select(dir => new DirectoryInfo(dir).Name);
+            skins.AddRange(dirs.ToList());
+
+            var workshopDirectories = Directory.GetDirectories(ConfigManager.SteamWorkshopDirectory.Value);
+
+            var workshopList = new List<string>();
+
+            foreach (var directory in workshopDirectories)
+            {
+                if (File.Exists($"{directory}/skin.ini"))
+                {
+                    try
+                    {
+                        var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                            .ReadFile($"{directory}/skin.ini")["General"];
+                        if (data["Name"] != null)
+                            workshopList.Add($"{data["Name"]} <{new DirectoryInfo(directory).Name}>");
+                    }
+                    catch (ParsingException e)
+                    {
+                        Logger.Error($"Workshop skin at {directory} has an invalid skin.ini: {e}", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error,
+                            $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
+                        workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
+                    }
+                }
+            }
+
+            workshopList.Sort();
+            skins.AddRange(workshopList);
+
+            skins.Sort();
+            options.AddRange(skins);
+            return options;
+        }
+    }
+
+    /// <summary>
+    /// Which types of skin elements to load.
+    /// </summary>
+    [Flags]
+    public enum UniversalSkinElementsLoadFlags
+    {
+        // IMPORTANT:
+        // If adding a new flag remember to include it in 'All'
+        
+        Grade = 1 << 0,
+        HitBubble = 1 << 1,
+        Judgements = 1 << 2,
+        NumberDisplays = 1 << 3,
+        Pause = 1 << 4,
+        Scoreboard = 1 << 5,
+        HealthBar = 1 << 6,
+        Skip = 1 << 7,
+        ComboAlert = 1 << 8,
+        MultiplayerElements = 1 << 9,
+        Backgrounds = 1 << 10,
+        SoundEffects = 1 << 11,
+    
+        All = Grade | HitBubble | Judgements | NumberDisplays | Pause | Scoreboard | 
+              HealthBar | Skip | ComboAlert | MultiplayerElements | Backgrounds | SoundEffects
     }
 }

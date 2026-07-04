@@ -81,6 +81,16 @@ namespace Quaver.Shared.Online
         }
 
         /// <summary>
+        ///     Keeps Steam achievement call results rooted until Steam dispatches the pending API callback.
+        /// </summary>
+        private static List<SteamAchievements> PendingSteamAchievements { get; } = new List<SteamAchievements>();
+
+        /// <summary>
+        ///     Lock used for pending Steam achievement call result lifetime management.
+        /// </summary>
+        private static object PendingSteamAchievementsLock { get; } = new object();
+
+        /// <summary>
         ///     The current online connection status.
         /// </summary>
         public static Bindable<ConnectionStatus> Status { get; } = new Bindable<ConnectionStatus>(ConnectionStatus.Disconnected);
@@ -155,11 +165,11 @@ namespace Quaver.Shared.Online
         public static List<int> FriendsList { get; private set; }
 
         /// <summary>
-        ///     Returns if the user is currently wanting to fetch the realtime leaderboards
+        ///     Returns if the user is currently wanting to fetch the realtime leaderboards (currently unused)
         /// </summary>
-        public static bool ShouldFetchRealtimeLeaderboard => ConfigManager.EnableRealtimeOnlineScoreboard.Value
-                                                             && ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value
-                                                             && CurrentGame == null;
+        //public static bool ShouldFetchRealtimeLeaderboard => ConfigManager.EnableRealtimeOnlineScoreboard.Value
+        //                                                     && ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value
+        //                                                     && CurrentGame == null;
 
         /// <summary>
         ///     Event invoked when the user's friends list has changed
@@ -240,6 +250,7 @@ namespace Quaver.Shared.Online
             Client.OnScoreSubmitted += OnScoreSubmitted;
             Client.OnUsersOnline += OnUsersOnline;
             Client.OnUserInfoReceived += OnUserInfoReceived;
+            Client.OnMuteEndTimeReceived += OnMuteEndTimeReceived;
             Client.OnUserStatusReceived += OnUserStatusReceived;
             Client.OnMultiplayerGameInfoReceived += OnMultiplayerGameInfoReceived;
             Client.OnJoinedMultiplayerGame += OnJoinedMultiplayerGame;
@@ -258,6 +269,7 @@ namespace Quaver.Shared.Online
             Client.OnGameHealthTypeChanged += OnGameHealthTypeChanged;
             Client.OnGameLivesChanged += OnGameLivesChanged;
             Client.OnGameHostRotationChanged += OnGameHostRotationChanged;
+            Client.OnGameEnablePreviewChanged += OnGameEnablePreviewChanged;
             Client.OnGamePlayerTeamChanged += OnGamePlayerTeamChanged;
             Client.OnGameRulesetChanged += OnGameRulesetChanged;
             Client.OnGameLongNotePercentageChanged += OnGameLongNotePercentageChanged;
@@ -448,6 +460,19 @@ namespace Quaver.Shared.Online
         }
 
         /// <summary>
+        ///     Called when a user's mute end time changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnMuteEndTimeReceived(object sender, MuteEndTimeEventArgs e)
+        {
+            if (!OnlineUsers.ContainsKey(e.UserId))
+                return;
+
+            OnlineUsers[e.UserId].OnlineUser.MuteEndTime = e.EndTime;
+        }
+
+        /// <summary>
         ///     Called when a user disconnects from the server.
         /// </summary>
         /// <param name="sender"></param>
@@ -580,7 +605,7 @@ namespace Quaver.Shared.Online
 
             // Unlock any achievements
             if (e.Response.Achievements != null && e.Response.Achievements.Count > 0)
-                new SteamAchievements(e.Response.Achievements).Unlock();
+                UnlockSteamAchievements(e.Response.Achievements);
 
             try
             {
@@ -592,6 +617,30 @@ namespace Quaver.Shared.Online
             {
                 Logger.Error(ex, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Unlocks achievements through Steam while holding onto the call result wrapper until it completes.
+        /// </summary>
+        /// <param name="achievements"></param>
+        private static void UnlockSteamAchievements(List<ScoreSubmissionResponseAchievement> achievements)
+        {
+            var steamAchievements = new SteamAchievements(achievements, OnSteamAchievementsCompleted);
+
+            lock (PendingSteamAchievementsLock)
+                PendingSteamAchievements.Add(steamAchievements);
+
+            steamAchievements.Unlock();
+        }
+
+        /// <summary>
+        ///     Removes completed Steam achievement calls from the rooted pending list.
+        /// </summary>
+        /// <param name="steamAchievements"></param>
+        private static void OnSteamAchievementsCompleted(SteamAchievements steamAchievements)
+        {
+            lock (PendingSteamAchievementsLock)
+                PendingSteamAchievements.Remove(steamAchievements);
         }
 
         /// <summary>
@@ -1029,6 +1078,18 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.HostRotation = e.HostRotation;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameEnablePreviewChanged(object sender, EnablePreviewChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.EnablePreview = e.EnablePreview;
         }
 
         /// <summary>

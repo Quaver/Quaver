@@ -28,7 +28,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     Current scroll group id we're working on
         /// </summary>
-        public string SelectedScrollGroupId => EditorPluginUtils.EditScreen.SelectedScrollGroupId;
+        public string SelectedScrollGroupId
+        {
+            get => EditorPluginUtils.EditScreen.SelectedScrollGroupId;
+            set => EditorPluginUtils.EditScreen.SelectedScrollGroupId = value;
+        }
 
         /// <summary>
         ///     Current scroll group we're working on

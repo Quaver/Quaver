@@ -493,7 +493,7 @@ namespace Quaver.Shared.Screens.Tournament
         private void SetRichPresenceForTournamentViewer()
         {
             DiscordHelper.Presence.PartySize = GameplayScreens.Count;
-            DiscordHelper.Presence.PartyMax = 4;
+            DiscordHelper.Presence.PartyMax = 16;
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();

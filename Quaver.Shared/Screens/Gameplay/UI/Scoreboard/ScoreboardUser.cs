@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Multiplayer;
@@ -24,6 +25,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Steamworks;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -76,7 +78,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     The avatar for the user.
         /// </summary>
-        internal Sprite Avatar { get; }
+        internal SpriteAlphaMaskBlend Avatar { get; }
 
         /// <summary>
         ///     Text that displays the username of the player.
@@ -146,9 +148,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             LocalScore = score;
             Judgements = judgements;
             UsernameRaw = username;
-            RatingProcessor = (RatingProcessorKeys) score?.RatingProcessor ?? processor ?? new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
+            RatingProcessor = (RatingProcessorKeys)score?.RatingProcessor ?? processor ?? new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
             Type = type;
             Size = new ScalableVector2(299, 58);
+            var hasLiveScoreText = Type == ScoreboardUserType.Self || Judgements?.Count > 0;
+            var cacheStaticText = !screen.IsMultiplayerGame;
 
             // Set position initially to offscreen
             X = -Width - 10;
@@ -172,24 +176,19 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     throw new ArgumentOutOfRangeException();
             }
 
-            switch (Screen.Map.Mode)
-            {
-                case GameMode.Keys4:
-                case GameMode.Keys7:
-                    if (screen.IsMultiplayerGame && Type == ScoreboardUserType.Other)
-                    {
-                        var mp = new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives);
-                        Processor = new ScoreProcessorKeys(Screen.Map, mods, mp);
-                    }
-                    else
-                        Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods): Screen.Ruleset.ScoreProcessor;
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
+            if (ModeHelper.IsKeyMode(screen.Map.Mode))
+                if (screen.IsMultiplayerGame && Type == ScoreboardUserType.Other)
+                {
+                    var mp = new ScoreProcessorMultiplayer((MultiplayerHealthType)OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives);
+                    Processor = new ScoreProcessorKeys(Screen.Map, mods, mp);
+                }
+                else
+                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods) : Screen.Ruleset.ScoreProcessor;
+            else
+                throw new InvalidEnumArgumentException();
 
             // Create avatar
-            Avatar = new Sprite()
+            Avatar = new SpriteAlphaMaskBlend()
             {
                 Parent = this,
                 Size = new ScalableVector2(Height, Height),
@@ -197,7 +196,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Image = avatar,
             };
 
-            RankText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "?.", 20, false)
+            RankText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "?.", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -230,8 +229,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 }
             }
 
+            ScheduleAvatarMaskBlend(Avatar.Image);
+
             // Create username text.
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21, cacheStaticText && Type != ScoreboardUserType.Self)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -241,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, false)
+            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, cacheStaticText && !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -251,7 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Processor.Combo:N0}x", 18, false)
+            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Processor.Combo:N0}x", 18, cacheStaticText && !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -306,7 +307,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 return;
 
             var processor = (ScoreProcessorKeys) Processor;
-            processor.CalculateScore(Judgements[CurrentJudgement]);
+            // FIXME It's not right to assume all judgements are not LN releases and not mines
+            processor.CalculateScore(Judgements[CurrentJudgement], false, false);
 
             if (setScoreboardValues)
             {
@@ -374,9 +376,27 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (e.SteamId != (ulong)LocalScore.SteamId)
                 return;
 
-            Avatar.Image = e.Texture;
-            Avatar.ClearAnimations();
-            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
+            AddScheduledUpdate(() =>
+            {
+                if (IsDisposed)
+                    return;
+
+                Avatar.Image = e.Texture;
+                ScheduleAvatarMaskBlend(e.Texture);
+                Avatar.ClearAnimations();
+                Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
+            });
+        }
+
+        private void ScheduleAvatarMaskBlend(Texture2D avatar)
+        {
+            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            {
+                if (IsDisposed || avatar == null || avatar.IsDisposed || SkinManager.Skin?.ScoreboardAvatarMask == null)
+                    return;
+
+                Avatar.Image = Avatar.PerformBlend(avatar, SkinManager.Skin.ScoreboardAvatarMask);
+            });
         }
 
         /// <summary>

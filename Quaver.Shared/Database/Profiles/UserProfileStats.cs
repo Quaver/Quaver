@@ -63,12 +63,18 @@ namespace Quaver.Shared.Database.Profiles
 
         /// <summary>
         /// </summary>
+        public int CountMineHit { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="profile"></param>
         /// <param name="mode"></param>
         public UserProfileStats(UserProfile profile, GameMode mode)
         {
             Profile = profile;
             Mode = mode;
+            Scores = new List<Score>();
+            JudgementCounts = GetEmptyJudgementCounts();
 
             FetchStats();
         }
@@ -143,15 +149,7 @@ namespace Quaver.Shared.Database.Profiles
         /// </summary>
         private void CalculateJudgementsMaxComboAndTotalScore()
         {
-            JudgementCounts = new Dictionary<Judgement, int>();
-
-            foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
-            {
-                if (j == Judgement.Ghost)
-                    continue;
-
-                JudgementCounts.Add(j, 0);
-            }
+            JudgementCounts = GetEmptyJudgementCounts();
 
             TotalScore = 0;
             PauseCount = 0;
@@ -168,7 +166,26 @@ namespace Quaver.Shared.Database.Profiles
                 JudgementCounts[Judgement.Good] += score.CountGood;
                 JudgementCounts[Judgement.Okay] += score.CountOkay;
                 JudgementCounts[Judgement.Miss] += score.CountMiss;
+                CountMineHit += score.CountMineHit;
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<Judgement, int> GetEmptyJudgementCounts()
+        {
+            var judgements = new Dictionary<Judgement, int>();
+
+            foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
+            {
+                if (j == Judgement.Ghost)
+                    continue;
+
+                judgements.Add(j, 0);
+            }
+
+            return judgements;
         }
 
         /// <summary>

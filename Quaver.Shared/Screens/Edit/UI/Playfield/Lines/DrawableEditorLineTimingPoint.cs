@@ -12,7 +12,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public DrawableEditorLineTimingPoint(EditorPlayfield playfield, TimingPointInfo timingPoint) : base(playfield)
         {
             TimingPoint = timingPoint;
-            IsClickable = false;
         }
 
         public override Color GetColor() => ColorHelper.HexToColor("#FE5656");

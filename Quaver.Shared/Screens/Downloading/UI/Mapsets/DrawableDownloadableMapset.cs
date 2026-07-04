@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Server.Client.Events.Download;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
@@ -78,6 +79,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private Sprite GameModeIcon { get; set; }
 
+        private SpriteTextPlus GameModeText { get; set; }
+
         /// <summary>
         /// </summary>
         private PlaylistDifficultyDisplay DifficultyRange { get; set; }
@@ -89,6 +92,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <summary>
         /// </summary>
         private ImageButton DifficultyHoverInvisibleButton { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private MapsetDownload CurrentDownload { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -117,6 +124,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             CreateCreator();
 
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
+            MapsetDownloadManager.DownloadAdded += OnDownloadAdded;
         }
 
         /// <inheritdoc />
@@ -133,22 +141,15 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 return;
             }
 
+            if (Container is not DownloadableMapsetContainer downloadContainer || downloadContainer.ShouldLoadMapsetBanners)
+                Banner.LoadIfNeeded();
+
             Button.Size = ContentContainer.Size;
 
             if (Button.IsHovered)
                 Button.Alpha = 0.35f;
             else
                 Button.Alpha = 0;
-
-            DownloadProgressBar.Bindable.Value = 0;
-
-            for (var i = 0; i < MapsetDownloadManager.CurrentDownloads.Count; i++)
-            {
-                var download = MapsetDownloadManager.CurrentDownloads[i];
-
-                if (download.MapsetId == Item.Id)
-                    DownloadProgressBar.Bindable.Value = download?.Progress?.Value?.ProgressPercentage ?? 0;
-            }
 
             base.Update(gameTime);
         }
@@ -160,6 +161,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         {
             // ReSharper disable once DelegateSubtraction
             SelectedMapset.ValueChanged -= OnSelectedMapsetChanged;
+            MapsetDownloadManager.DownloadAdded -= OnDownloadAdded;
+            BindCurrentDownload(null);
             base.Destroy();
         }
 
@@ -176,6 +179,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             ScheduleUpdate(() =>
             {
                 Banner.UpdateMapset(Item);
+                BindCurrentDownload(FindCurrentDownload(Item.Id));
 
                 ArtistTitle.Text = $"{Item.Artist} - {Item.Title}";
                 ArtistTitle.TruncateWithEllipsis(450);
@@ -184,7 +188,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 Creator.Text = Item.CreatorUsername;
 
                 RankedStatusIcon.Image = GetRankedStatusTexture(Item);
-                GameModeIcon.Image = GetModeIcon(Item);
+                GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.GameMode), GameModeIcon, GameModeText);
 
                 DifficultyRange.ChangeValue(Item.Maps.Min(x => x.DifficultyRating),
                     Item.Maps.Max(x => x.DifficultyRating));
@@ -339,16 +343,27 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        private void CreateGameModeIcon() => GameModeIcon = new Sprite
+        private void CreateGameModeIcon()
         {
-            Parent = ContentContainer,
-            Alignment = Alignment.TopRight,
-            Y = RankedStatusIcon.Y,
-            X = RankedStatusIcon.X - RankedStatusIcon.Width - 12,
-            Alpha = 0.85f,
-            Size = new ScalableVector2(61, 24),
-            UsePreviousSpriteBatchOptions = true
-        };
+            GameModeIcon = new Sprite
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.TopRight,
+                Y = RankedStatusIcon.Y,
+                X = RankedStatusIcon.X - RankedStatusIcon.Width - 12,
+                Alpha = 0.85f,
+                Size = new ScalableVector2(61, 24),
+                UsePreviousSpriteBatchOptions = true
+            };
+
+            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 16)
+            {
+                Parent = GameModeIcon,
+                Alignment = Alignment.MidCenter,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Color.White,
+            };
+        }
 
         /// <summary>
         /// </summary>
@@ -369,26 +384,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public static Texture2D GetModeIcon(DownloadableMapset item)
-        {
-            var has4K = item.Maps.Any(x => x.GameMode == GameMode.Keys4);
-            var has7K = item.Maps.Any(x => x.GameMode == GameMode.Keys7);
-            
-            if (has4K && has7K)
-                return UserInterface.Mode4K7KSmall;
-
-            if (has4K)
-                return UserInterface.Mode4KSmall;
-
-            if (has7K)
-                return UserInterface.Mode7KSmall;
-
-            throw new ArgumentException();
         }
 
         /// <summary>
@@ -511,6 +506,72 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 s.ClearAnimations();
                 s.FadeTo(alpha, Easing.Linear, time);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="mapsetId"></param>
+        /// <returns></returns>
+        private static MapsetDownload FindCurrentDownload(int mapsetId) => MapsetDownloadManager.ManipulateCurrentDownloads(
+            downloads => downloads.FirstOrDefault(x => x.MapsetId == mapsetId));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="download"></param>
+        private void BindCurrentDownload(MapsetDownload download)
+        {
+            if (CurrentDownload == download)
+                return;
+
+            if (CurrentDownload != null)
+            {
+                CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
+                CurrentDownload.Removed -= OnDownloadRemoved;
+            }
+
+            CurrentDownload = download;
+
+            if (CurrentDownload != null)
+            {
+                CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
+                CurrentDownload.Removed += OnDownloadRemoved;
+            }
+
+            SetDownloadProgress(CurrentDownload?.Progress?.Value?.ProgressPercentage ?? 0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadAdded(object sender, MapsetDownloadAddedEventArgs e)
+        {
+            if (e.Download.MapsetId == Item.Id)
+                BindCurrentDownload(e.Download);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadRemoved(object sender, EventArgs e) => BindCurrentDownload(null);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
+            => SetDownloadProgress(e.Value?.ProgressPercentage ?? 0);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="progress"></param>
+        private void SetDownloadProgress(double progress)
+        {
+            if (Math.Abs(DownloadProgressBar.Bindable.Value - progress) <= double.Epsilon)
+                return;
+
+            DownloadProgressBar.Bindable.Value = progress;
         }
     }
 }

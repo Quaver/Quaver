@@ -259,16 +259,16 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void CreateSongName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Name", 16)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Name", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
                 X = 18,
-                Y = Title.RelativeRectangle.Bottom + 12,
+                Y = Title.RelativeRectangle.Bottom + 10,
                 UsePreviousSpriteBatchOptions = true,
                 Tint = Colors.MainBlue
             };
-            By = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), " by ", 16)
+            By = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), " by ", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -276,7 +276,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Y = Name.Y,
                 UsePreviousSpriteBatchOptions = true
             };
-            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Artist", 16)
+            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Artist", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -289,7 +289,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 18)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 22)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -325,13 +325,13 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void CreateProgressPercentage()
         {
-            ProgressPercentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "0%", 16)
+            ProgressPercentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "0%", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopRight,
                 TextAlignment = TextAlignment.Right,
                 X = -18,
-                Y = Name.RelativeRectangle.Bottom + 12,
+                Y = Name.RelativeRectangle.Bottom + 10,
                 UsePreviousSpriteBatchOptions = true
             };
         }

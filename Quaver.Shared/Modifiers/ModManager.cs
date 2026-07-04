@@ -158,6 +158,9 @@ namespace Quaver.Shared.Modifiers
                     case ModIdentifier.NoLongNotes:
                         mods.Add(new ModNoLongNotes());
                         break;
+                    case ModIdentifier.NoMines:
+                        mods.Add(new ModNoMines());
+                        break;
                     case ModIdentifier.Randomize:
                         mods.Add(new ModRandomize());
                         break;
@@ -228,11 +231,13 @@ namespace Quaver.Shared.Modifiers
         /// </summary>
         public static void RemoveAllMods(bool invokeEvent = true)
         {
+            var oldMods = (Mods == 0) ? ModIdentifier.None : Mods; // Why does ModIdentifier.None = -1L and not 0
+
             CurrentModifiersList.Clear();
             CheckModInconsistencies();
             UpdateMultiplayerMods();
 
-            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.RemoveAll, Mods, ModIdentifier.None));
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.RemoveAll, Mods, oldMods));
 
             Logger.Debug("Removed all modifiers", LogType.Runtime, false);
         }

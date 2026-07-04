@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -19,6 +18,7 @@ using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -64,6 +64,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         ///     Displays the username of the player
         /// </summary>
         private SpriteTextPlus Username { get; set; }
+
+        /// <summary>
+        ///     Displays the user's clan tag before the username
+        /// </summary>
+        private ClanTag Clan { get; set; }
 
         /// <summary>
         ///     Displays the performance rating of the score
@@ -145,6 +150,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private Texture2D BlankImage { get; set; }
 
+        private bool IsScrollVisible { get; set; } = true;
+
+        private bool CantBeatAlertShouldBeVisible { get; set; }
+
+        private bool RequiredAccuracyAlertShouldBeVisible { get; set; }
+
         /// <summary>
         /// </summary>
         /// <param name="score"></param>
@@ -164,6 +175,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 CreateRankText();
 
             CreateFlag();
+            CreateClan();
             CreateUsername();
             CreatePerformanceRating();
             CreateAccuracyMaxCombo();
@@ -174,6 +186,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
             ModManager.ModsChanged += OnModsChanged;
+            ConfigManager.LeaderboardRankedAccuracy.ValueChanged += OnAccuracyDisplayChanged;
         }
 
         /// <inheritdoc />
@@ -182,6 +195,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!IsScrollVisible)
+                return;
+
             PerformHoverAnimation(gameTime);
             ContainAlertIconClickableStatus();
 
@@ -210,7 +226,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 if (!Score.IsPersonalBest)
                     Rank.Text = $"{Score.Index + 1}.";
 
-                Username.Text = $"{score.Item.Name}";
+                UpdateClanAndUsername(score.Item);
 
                 if (score.Item.Name == ConfigManager.Username.Value)
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameSelfColor ?? Colors.MainAccent;
@@ -218,15 +234,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6");
 
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
-                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float) score.Item.Accuracy)}";
-
-                if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
-                    AccuracyMaxCombo.Text = $"{StringHelper.AccuracyToString((float)score.Item.Accuracy)}";
                 
-                var grade = score.Item.Grade == API.Enums.Grade.F
-                    ? API.Enums.Grade.F
-                    : GradeHelper.GetGradeFromAccuracy((float) score.Item.Accuracy);
-                Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
+                UpdateAccuracyMode(score);
 
                 UpdateTime();
                 UpdateModifiers();
@@ -248,6 +257,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             // ReSharper disable once DelegateSubtraction
             SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
             ModManager.ModsChanged -= OnModsChanged;
+            ConfigManager.LeaderboardRankedAccuracy.ValueChanged -= OnAccuracyDisplayChanged;
 
             base.Destroy();
         }
@@ -374,6 +384,30 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 UsePreviousSpriteBatchOptions = true
             };
             
+        }
+
+        /// <summary>
+        ///     Creates <see cref="Clan"/>
+        /// </summary>
+        private void CreateClan()
+        {
+            Clan = new ClanTag(24)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Position = new ScalableVector2(Flag.X + Flag.Width + PaddingLeft / 4f, UsernameY + 4),
+                UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        private void UpdateClanAndUsername(Quaver.Shared.Database.Scores.Score score)
+        {
+            Clan.UpdateFromClan(score.ClanTag, score.ClanAccentColor,
+                SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6"));
+
+            Clan.X = Flag.X + Flag.Width + PaddingLeft / 4f;
+            Username.X = Clan.HasClan ? Clan.X + Clan.Width + 6 : Clan.X;
+            Username.Text = $"{score.Name}";
         }
 
         /// <summary>
@@ -673,12 +707,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods)).CalculateRating(100) >=
                 Score.Item.PerformanceRating)
             {
-                CantBeatAlert.Visible = false;
+                CantBeatAlertShouldBeVisible = false;
+                ApplyAlertVisibility();
             }
             else
             {
                 CantBeatAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
-                CantBeatAlert.Visible = true;
+                CantBeatAlertShouldBeVisible = true;
+                ApplyAlertVisibility();
             }
         }
 
@@ -686,16 +722,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void UpdateRequiredAccuracyAlert()
         {
-            if (CantBeatAlert.Visible ||
+            if (CantBeatAlertShouldBeVisible ||
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 ModHelper.GetRateFromMods(ModManager.Mods) == ModHelper.GetRateFromMods((ModIdentifier) Score.Item.Mods))
             {
-                RequiredAccuracyAlert.Visible = false;
+                RequiredAccuracyAlertShouldBeVisible = false;
+                ApplyAlertVisibility();
                 return;
             }
 
-            RequiredAccuracyAlert.Visible = true;
+            RequiredAccuracyAlertShouldBeVisible = true;
             RequiredAccuracyAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
+            ApplyAlertVisibility();
         }
 
         /// <summary>
@@ -760,6 +798,35 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         /// <summary>
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAccuracyDisplayChanged(object sender, BindableValueChangedEventArgs<bool> e) =>
+            AddScheduledUpdate(() => UpdateAccuracyMode(Score));
+
+        /// <summary>
+        /// Called when <see cref="AccuracyMaxCombo"/> and <see cref="Grade"> might need to be updated
+        /// </summary>
+        /// <param name="score"></param>
+        private void UpdateAccuracyMode(DrawableLeaderboardScore score)
+        {
+            var acc = (float)(ConfigManager.LeaderboardSection.Value == LeaderboardType.Local &&
+                ConfigManager.LeaderboardRankedAccuracy.Value
+                    ? score.Item.RankedAccuracy
+                    : score.Item.Accuracy);
+
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
+                AccuracyMaxCombo.Text = $"{StringHelper.AccuracyToString(acc)}";
+            else
+                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString(acc)}";
+
+            var grade = score.Item.Grade == API.Enums.Grade.F
+                ? API.Enums.Grade.F
+                : GradeHelper.GetGradeFromAccuracy(acc);
+            Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
+        }
+
+        /// <summary>
+        /// </summary>
         private void ActivateRequiredAccuracyTooltip()
         {
             var game = (QuaverGame) GameBase.Game;
@@ -789,6 +856,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (!Score.Item.IsEmptyScore)
             {
                 Username.Alpha = 0;
+                Clan.Alpha = 0;
                 Grade.Alpha = 0;
                 Time.Alpha = 0;
                 Clock.Alpha = 0;
@@ -803,6 +871,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (!Score.Item.IsEmptyScore)
             {
                 Username.FadeTo(targetAlpha, easing, time);
+                Clan.FadeTo(targetAlpha, easing, time);
                 Grade.FadeTo(targetAlpha, easing, time);
                 Time.FadeTo(targetAlpha, easing, time);
                 Clock.FadeTo(targetAlpha, easing, time);
@@ -828,8 +897,53 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (Score.IsPersonalBest || Score.Item.IsEmptyScore)
                 return;
 
-            CantBeatAlert.IsClickable = CantBeatAlert.ScreenRectangle.Intersects(Score.Container.ScreenRectangle);
+            CantBeatAlert.IsClickable = IsScrollVisible && CantBeatAlert.ScreenRectangle.Intersects(Score.Container.ScreenRectangle);
             RequiredAccuracyAlert.IsClickable = CantBeatAlert.IsClickable;
+        }
+
+        public void SetScrollVisibility(bool visible)
+        {
+            if (IsScrollVisible == visible)
+                return;
+
+            IsScrollVisible = visible;
+            Visible = visible;
+
+            if (Score.Item.IsEmptyScore)
+                return;
+
+            if (!Score.IsPersonalBest)
+                Rank.Visible = visible;
+
+            Button.Visible = visible;
+            Grade.Visible = visible;
+            Avatar.Visible = visible;
+            Flag.Visible = visible;
+            Username.Visible = visible;
+            Clan.Visible = visible && Clan.HasClan;
+            PerformanceRating.Visible = visible;
+            AccuracyMaxCombo.Visible = visible;
+            Mods.Visible = visible;
+            Clock.Visible = visible;
+            Time.Visible = visible;
+            Modifiers?.ForEach(x => x.Visible = visible);
+
+            ApplyAlertVisibility();
+
+            if (!visible)
+            {
+                CantBeatAlert.IsClickable = false;
+                RequiredAccuracyAlert.IsClickable = false;
+            }
+        }
+
+        private void ApplyAlertVisibility()
+        {
+            if (CantBeatAlert == null || RequiredAccuracyAlert == null)
+                return;
+
+            CantBeatAlert.Visible = IsScrollVisible && CantBeatAlertShouldBeVisible;
+            RequiredAccuracyAlert.Visible = IsScrollVisible && RequiredAccuracyAlertShouldBeVisible;
         }
     }
 }

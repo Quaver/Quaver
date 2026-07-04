@@ -9,7 +9,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 {
-    public class EditorPlayfieldTimelineTick : Sprite
+    public class EditorPlayfieldTimelineTick : Sprite, IStartTime
     {
         /// <summary>
         /// </summary>
@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <summary>
         ///     The time in the song the line is located.
         /// </summary>
-        public float Time { get; }
+        public float StartTime { get; set; }
 
         /// <summary>
         ///     The index of the timing point this snap line is.
@@ -43,15 +43,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="playfield"></param>
         /// <param name="tp"></param>
         /// <param name="beatSnap"></param>
-        /// <param name="time"></param>
+        /// <param name="startTimearam>
         /// <param name="index"></param>
         /// <param name="measureCount"></param>
-        public EditorPlayfieldTimelineTick(EditorPlayfield playfield, TimingPointInfo tp, float time, int index, int measureCount, bool isMeasureLine)
+        public EditorPlayfieldTimelineTick(EditorPlayfield playfield, TimingPointInfo tp, float startTime, int index, int measureCount, bool isMeasureLine)
         {
             Playfield = playfield;
             TimingPoint = tp;
             Index = index;
-            Time = time;
+            StartTime = startTime;
             IsMeasureLine = isMeasureLine;
 
             if (!IsMeasureLine)
@@ -91,15 +91,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         ///     Checks if the timing line is on-screen.
         /// </summary>
         /// <returns></returns>
-        public bool IsOnScreen() => Time * Playfield.TrackSpeed >= Playfield.TrackPositionY - Playfield.Height &&
-                                         Time * Playfield.TrackSpeed <= Playfield.TrackPositionY + Playfield.Height;
+        public bool IsOnScreen() => StartTime * Playfield.TrackSpeed >= Playfield.TrackPositionY - Playfield.Height &&
+                                         StartTime * Playfield.TrackSpeed <= Playfield.TrackPositionY + Playfield.Height;
 
         /// <summary>
         /// </summary>
         public void SetPosition()
         {
             var x = Playfield.AbsolutePosition.X + 2;
-            var y = Playfield.HitPositionY - Time * Playfield.TrackSpeed - Height;
+            var y = Playfield.HitPositionY - StartTime * Playfield.TrackSpeed - Height;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (X != x || Y != y)

@@ -43,7 +43,7 @@ namespace Quaver.Shared.Audio
         /// <summary>
         ///     The length of time when the audio time is 0 after we first play the audio
         /// </summary>
-        public static double MeasuredAudioStartDelay { get; private set; }
+        public static double MeasuredAudioStartDelay { get; internal set; }
 
         /// <summary>
         ///     Loads the track for the currently selected map.

@@ -25,9 +25,14 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 {
     public class OptionsItemCustomSkin : OptionsItemDropdown
     {
-        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin) : base(containerRect, name,
-            new Dropdown(GetOptions(), new ScalableVector2(300, 35), 22,
-            Colors.MainAccent, GetSelectedIndex(skin), 240, 700))
+        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin) : this(containerRect, name,
+            skin, SkinStore.GetSkins())
+        {
+        }
+
+        public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin, List<string> skinOptions) : base(containerRect, name,
+            new Dropdown(skinOptions, new ScalableVector2(300, 35), 22,
+            Colors.MainAccent, GetSelectedIndex(skin, skinOptions), 240, 700))
         {
             Dropdown.ItemContainer.Scrollbar.Tint = Color.White;
             Dropdown.ItemContainer.Scrollbar.Width = 2;
@@ -88,61 +93,10 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetOptions()
-        {
-            var options = new List<string> { "Default Skin" };
-
-            if (ConfigManager.SkinDirectory == null)
-                return options;
-
-            var skins = new List<string>();
-
-            var skinDirectories = Directory.GetDirectories(ConfigManager.SkinDirectory.Value);
-
-            var dirs = skinDirectories.Select(dir => new DirectoryInfo(dir).Name);
-            skins.AddRange(dirs.ToList());
-
-            var workshopDirectories = Directory.GetDirectories(ConfigManager.SteamWorkshopDirectory.Value);
-
-            var workshopList = new List<string>();
-
-            foreach (var directory in workshopDirectories)
-            {
-                if (File.Exists($"{directory}/skin.ini"))
-                {
-                    try
-                    {
-                        var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
-                            .ReadFile($"{directory}/skin.ini")["General"];
-                        if (data["Name"] != null)
-                            workshopList.Add($"{data["Name"]} <{new DirectoryInfo(directory).Name}>");
-                    }
-                    catch (ParsingException e)
-                    {
-                        Logger.Error($"Workshop skin at {directory} has an invalid skin.ini: {e}", LogType.Runtime);
-                        NotificationManager.Show(NotificationLevel.Error,
-                            $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
-                        workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
-                    }
-                }
-                else
-                    workshopList.Add($"({new DirectoryInfo(directory).Name})");
-            }
-
-            workshopList.Sort();
-            skins.AddRange(workshopList);
-
-            skins.Sort();
-            options.AddRange(skins);
-            return options;
-        }
-
-        private static int GetSelectedIndex(Bindable<string> skin)
+        private static int GetSelectedIndex(Bindable<string> skin, List<string> options)
         {
             if (skin == null)
                 return 0;
-
-            var options = GetOptions();
 
             if (ConfigManager.UseSteamWorkshopSkin != null)
             {

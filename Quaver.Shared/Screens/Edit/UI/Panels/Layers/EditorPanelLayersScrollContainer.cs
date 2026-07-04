@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.MoveLayer;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -63,6 +64,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             ActionManager.LayerCreated += OnLayerCreated;
             ActionManager.LayerDeleted += OnLayerDeleted;
+            ActionManager.LayerMoved += OnLayerMoved;
         }
 
         /// <inheritdoc />
@@ -82,6 +84,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         public override void Destroy()
         {
             ActionManager.LayerCreated -= OnLayerCreated;
+            ActionManager.LayerDeleted -= OnLayerDeleted;
+            ActionManager.LayerMoved -= OnLayerMoved;
             base.Destroy();
         }
 
@@ -184,6 +188,40 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
                 if (index - 1 >= 0)
                     SelectedLayer.Value = AvailableItems[index - 1];
+            });
+        }
+
+        private void OnLayerMoved(object sender, EditorLayerMovedEventArgs e)
+        {
+            var index = AvailableItems.IndexOf(e.Layer);
+            AvailableItems.Remove(e.Layer);
+
+            var oldItem = Pool.Find(x => x.Item == e.Layer) as DrawableEditorLayer;
+
+            AddScheduledUpdate(() =>
+            {
+                // Remove the item if it exists in the pool.
+                if (oldItem != null)
+                {
+                    oldItem.Destroy();
+                    RemoveContainedDrawable(oldItem);
+                    Pool.Remove(oldItem);
+                }
+
+                AddObjectAtIndex(e.TargetIndex + 1, e.Layer, true);
+                var newItem = Pool[e.TargetIndex + 1] as DrawableEditorLayer;
+                SelectedLayer.Value = newItem?.Item;
+
+                RecalculateContainerHeight();
+
+                // Reset the pool item index
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    Pool[i].Index = i;
+                    Pool[i].Y = (PoolStartingIndex + i) * Pool[i].HEIGHT;
+                    Pool[i].UpdateContent(Pool[i].Item, i);
+                }
+
             });
         }
     }

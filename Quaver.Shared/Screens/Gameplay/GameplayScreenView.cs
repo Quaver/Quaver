@@ -115,6 +115,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public Scoreboard ScoreboardRight { get; set; }
 
         /// <summary>
+        ///     The epilepsy warning
+        /// </summary>
+        public EpilepsyWarning EpilepsyWarning { get; set; }
+
+        /// <summary>
         ///     The display to skip the map.
         /// </summary>
         public SkipDisplay SkipDisplay { get; set; }
@@ -221,6 +226,10 @@ namespace Quaver.Shared.Screens.Gameplay
                 CreateScoreboards();
 
             CreateProgressBar();
+
+            if (SkinManager.Skin.Keys[Screen.Map.Mode].ShowMiniSongBar)
+                CreateMiniProgressBar();
+                
             CreateScoreDisplay();
             CreateRatingDisplay();
             CreateAccuracyDisplay();
@@ -276,6 +285,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     Position = new ScalableVector2(-12, -110)
                 };
             }
+
+            CreateEpilepsyWarning();
 
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
@@ -393,6 +404,24 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 Parent = Container,
                 Alignment = skin.SongTimeProgressPositionAtTop ? Alignment.TopLeft : Alignment.BotLeft,
+                DestroyIfParentIsNull = false
+            };
+        }
+
+        /// <summary>
+        ///     Creates a mini progress bar if the skin defines it.
+        /// </summary>
+        private void CreateMiniProgressBar()
+        {
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
+            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width / SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayWidthFactor, SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayHeight), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
+                skin.SongTimeProgressInactiveColor, skin.SongTimeProgressActiveColor, true)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayPosX,
+                Y = SkinManager.Skin.Keys[Screen.Map.Mode].MiniSongBarDisplayPosY,
                 DestroyIfParentIsNull = false
             };
         }
@@ -537,6 +566,15 @@ namespace Quaver.Shared.Screens.Gameplay
             ScoreboardRight?.Users.ForEach(x => x.SetImage());
         }
 
+        private void CreateEpilepsyWarning()
+        {
+            EpilepsyWarning = new EpilepsyWarning(Screen)
+            {
+                Parent = Container,
+                Size = new ScalableVector2(0, 0, 1, 1)
+            };
+        }
+
         /// <summary>
         ///     Updates the scoreboard for all the current users.
         /// </summary>
@@ -582,7 +620,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     var judgements = mapScores[i].OnlineJudgements;
 
-                    if (!ConfigManager.EnableRealtimeOnlineScoreboard.Value || judgements == null || !OnlineManager.IsDonator)
+                    if (/* !ConfigManager.EnableRealtimeOnlineScoreboard.Value || */ judgements == null || !OnlineManager.IsDonator)
                         judgements = new List<Judgement>();
 
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
@@ -654,7 +692,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < judgements.Count; j++)
                     {
                         var processor = user.Processor as ScoreProcessorKeys;
-                        processor?.CalculateScore(judgements[i]);
+                        // FIXME It's not right to assume all judgements are not LN releases and not mines
+                        processor?.CalculateScore(judgements[i], false, false);
                     }
                 }
 
@@ -676,6 +715,9 @@ namespace Quaver.Shared.Screens.Gameplay
             // again.
             if (ProgressBar != null)
                 ProgressBar.Parent = Container;
+
+            if (EpilepsyWarning != null)
+                EpilepsyWarning.Parent = Container;
 
             Transitioner.Parent = Container;
 

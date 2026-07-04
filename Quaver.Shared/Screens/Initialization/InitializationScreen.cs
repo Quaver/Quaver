@@ -38,7 +38,8 @@ namespace Quaver.Shared.Screens.Initialization
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
             Logger.Important($"Loading skin...", LogType.Runtime);
-            SkinManager.Load();
+            // Avoid loading SoundEffects before Audio Device hasn't been set yet which leads to sound effects not working. 
+            SkinManager.Load(UniversalSkinElementsLoadFlags.All & ~UniversalSkinElementsLoadFlags.SoundEffects);
 
             Logger.Important($"Loading fonts...", LogType.Runtime);
             Fonts.LoadWobbleFonts();

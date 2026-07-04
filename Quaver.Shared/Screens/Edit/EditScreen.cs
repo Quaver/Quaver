@@ -16,6 +16,7 @@ using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Objects;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Bindables;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -71,7 +72,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override QuaverScreenType Type { get; } = QuaverScreenType.Editor;
 
-        public Timer BackupScheduler { get; }
+        public Timer BackupScheduler { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -114,9 +115,14 @@ namespace Quaver.Shared.Screens.Edit
         public EditorVisualTestBackground BackgroundStore { get; }
 
         /// <summary>
-        ///     The currently active skin
+        ///     The currently active skin (for gameplay preview)
         /// </summary>
         public Bindable<SkinStore> Skin { get; private set; }
+
+        /// <summary>
+        ///     The currently active skin (for editor previw)
+        /// </summary>
+        public Bindable<SkinStore> EditorSkin { get; private set; }
 
         /// <summary>
         ///     The index of the hitobjects in which hitsounds are being played
@@ -277,12 +283,12 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public EditorActionManager ActionManager { get; }
+        public EditorActionManager ActionManager { get; private set; }
 
         /// <summary>
         /// </summary>
         public BindableList<HitObjectInfo> SelectedHitObjects { get; set; } =
-            new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
+            new BindableSortedList<HitObjectInfo>(new List<HitObjectInfo>());
 
         /// <summary>
         /// </summary>
@@ -324,6 +330,14 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private FileSystemWatcher FileWatcher { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private object ManualChangesDialogLock { get; } = new object();
+
+        /// <summary>
+        /// </summary>
+        private bool ManualChangesDialogOpen { get; set; }
+
         private double LastSeekDistance;
 
         /// <summary>
@@ -355,9 +369,15 @@ namespace Quaver.Shared.Screens.Edit
                 : WorkingMap.DefaultScrollGroup;
 
         /// <summary>
+        ///     Color Generator for colored things
+        /// </summary>
+        private PaulToulColorGenerator ColorGenerator { get; } = new();
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
+            EditorPluginUtils.EditScreen = this;
             Map = map;
             BackgroundStore = visualTestBackground;
 
@@ -388,6 +408,7 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             LoadSkin();
+            LoadEditorSkin();
             SetHitSoundObjectIndex();
             LoadPlugins();
 
@@ -395,6 +416,7 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.Pitched.ValueChanged += OnPitchedChanged;
 
             SkinManager.SkinLoaded += OnSkinLoaded;
+            SkinManager.EditorSkinLoaded += OnEditorSkinLoaded;
             GameBase.Game.Window.FileDropped += OnFileDropped;
             ActionManager.TimingGroupRenamed += ActionManagerOnTimingGroupRenamed;
             ActionManager.TimingGroupDeleted += ActionManagerOnTimingGroupDeleted;
@@ -411,6 +433,7 @@ namespace Quaver.Shared.Screens.Edit
 
         public void ResetInputManager()
         {
+            InputManager?.Destroy();
             InputManager = new EditorInputManager(this);
         }
 
@@ -484,11 +507,14 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.Window.FileDropped -= OnFileDropped;
             ActionManager.TimingGroupRenamed -= ActionManagerOnTimingGroupRenamed;
             ActionManager.TimingGroupDeleted -= ActionManagerOnTimingGroupDeleted;
+            ReferenceDifficultyIndex.ValueChanged -= LoadReferenceDifficulty;
 
             BackupScheduler?.Dispose();
             Track?.Dispose();
             Skin?.Value?.Dispose();
             Skin?.Dispose();
+            EditorSkin?.Value?.Dispose();
+            EditorSkin?.Dispose();
             UneditableMap?.Dispose();
             BeatSnap?.Dispose();
             BackgroundStore?.Dispose();
@@ -549,10 +575,21 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
 
             SkinManager.SkinLoaded -= OnSkinLoaded;
-
-            Plugins.ForEach(x => x.Destroy());
+            SkinManager.EditorSkinLoaded -= OnEditorSkinLoaded;
+            
+            InputManager?.Destroy();
 
             base.Destroy();
+
+            Plugins.ForEach(x => x.Destroy());
+            Plugins.Clear();
+            BuiltInPlugins.Clear();
+
+            View = null;
+            ActionManager = null;
+            BackupScheduler = null;
+            if (EditorPluginUtils.EditScreen == this)
+                EditorPluginUtils.EditScreen = null;
         }
 
         /// <summary>
@@ -596,6 +633,18 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             Skin.Value = new SkinStore();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void LoadEditorSkin()
+        {
+            EditorSkin = new Bindable<SkinStore>(SkinManager.EditorSkin) { Value = SkinManager.EditorSkin };
+
+            if (EditorSkin.Value != null)
+                return;
+
+            EditorSkin.Value = new SkinStore(null, true);
         }
 
         /// <summary>
@@ -646,7 +695,8 @@ namespace Quaver.Shared.Screens.Edit
                         // ignore and play
                     }
 
-                    HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
+                    if (obj.Type != HitObjectType.Mine)
+                        HitObjectManager.PlayObjectHitSounds(obj, EditorSkin.Value, HitsoundVolume.Value);
                     HitsoundObjectIndex = i + 1;
                 }
                 else
@@ -739,14 +789,17 @@ namespace Quaver.Shared.Screens.Edit
 
         public void SeekToStart(bool enableSelection = false)
         {
-            if (WorkingMap.HitObjects.Count == 0) SeekTo(0, enableSelection: enableSelection);
-            SeekTo(WorkingMap.HitObjects.Min(h => h.StartTime), enableSelection: enableSelection);
+            SeekTo(WorkingMap.HitObjects.Count == 0 ? 0 : WorkingMap.HitObjects.Min(h => h.StartTime),
+                enableSelection: enableSelection);
         }
 
         public void SeekToEnd(bool enableSelection = false)
         {
-            if (WorkingMap.HitObjects.Count == 0) SeekTo(Track.Length, enableSelection: enableSelection);
-            SeekTo(WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)), enableSelection: enableSelection);
+            SeekTo(
+                WorkingMap.HitObjects.Count == 0
+                    ? Track.Length
+                    : WorkingMap.HitObjects.Max(h => Math.Max(h.StartTime, h.EndTime)),
+                enableSelection: enableSelection);
         }
 
         public void SeekToStartOfSelection(bool enableSelection = false)
@@ -852,15 +905,17 @@ namespace Quaver.Shared.Screens.Edit
         {
             var newGroupId = EditorPluginUtils.GenerateTimingGroupId();
 
-            var rgb = new byte[3];
-            Random.Shared.NextBytes(rgb);
+            var rgb = ColorGenerator.NextColor(
+                WorkingMap.TimingGroups.Select(t => 
+                    ColorHelper.ToXnaColor(t.Value.GetColor())
+                    ).ToHashSet());
 
             var timingGroup = new ScrollGroup
             {
                 InitialScrollVelocity = 1,
                 ScrollVelocities =
                     new List<SliderVelocityInfo> { new() { Multiplier = 1, StartTime = 0 } },
-                ColorRgb = $"{rgb[0]},{rgb[1]},{rgb[2]}"
+                ColorRgb = $"{rgb.R},{rgb.G},{rgb.B}"
             };
 
             ActionManager.CreateTimingGroup(newGroupId, timingGroup, SelectedHitObjects.Value);                
@@ -1050,6 +1105,7 @@ namespace Quaver.Shared.Screens.Edit
                     EditorLayer = h.EditorLayer,
                     HitSound = h.HitSound,
                     Lane = h.Lane,
+                    Type = h.Type,
                     TimingGroup = WorkingMap.TimingGroups.ContainsKey(h.TimingGroup)
                         ? h.TimingGroup
                         : Qua.DefaultScrollGroupId
@@ -1262,7 +1318,10 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     // Remove any long notes that this note would reside in before placing
                     ActionManager.RemoveHitObjectBatch(lnsAtTime);
-                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer);
+                    var type = CompositionTool.Value is EditorCompositionTool.Mine
+                        ? HitObjectType.Mine
+                        : HitObjectType.Normal;
+                    heldLivemapHitObjectInfos[lane] = ActionManager.PlaceHitObject(lane, time, 0, layer, type, timingGroupId: SelectedScrollGroupId);
                 }
             }
         }
@@ -1440,6 +1499,7 @@ namespace Quaver.Shared.Screens.Edit
                     ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
 
                 Map.DifficultyProcessorVersion = "Needs Update";
+                Map.DateAdded = DateTime.Now;
                 MapDatabaseCache.UpdateMap(Map);
 
                 if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
@@ -1753,6 +1813,12 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
+            if (Map.Mapset.Maps.Any(x => x.Mode != GameMode.Keys4 && x.Mode != GameMode.Keys7))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Only 4K and 7K are allowed for ranking.");
+                return;
+            }
+
             DialogManager.Show(new EditorSubmitForRankConfirmationDialog(this));
         }
 
@@ -1838,7 +1904,22 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => Skin.Value = SkinManager.Skin;
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e)
+        {
+            if (EditorSkin.Value != SkinManager.EditorSkin)
+                EditorSkin.Value = SkinManager.EditorSkin;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnEditorSkinLoaded(object sender, SkinReloadedEventArgs e)
+        {
+            if (EditorSkin.Value != SkinManager.EditorSkin)
+                EditorSkin.Value = SkinManager.EditorSkin;
+        }
 
         /// <summary>
         ///     Dragging backgrounds into the window
@@ -1904,10 +1985,19 @@ namespace Quaver.Shared.Screens.Edit
 
             FileWatcher.Changed += (sender, args) =>
             {
-                if (DialogManager.Dialogs.Count != 0)
-                    return;
+                lock (ManualChangesDialogLock)
+                {
+                    if (ManualChangesDialogOpen || DialogManager.Dialogs.Count != 0)
+                        return;
 
-                DialogManager.Show(new EditorManualChangesDialog(this));
+                    ManualChangesDialogOpen = true;
+                }
+
+                DialogManager.Show(new EditorManualChangesDialog(this, () =>
+                {
+                    lock (ManualChangesDialogLock)
+                        ManualChangesDialogOpen = false;
+                }));
             };
 
             FileWatcher.EnableRaisingEvents = true;

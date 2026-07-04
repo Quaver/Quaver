@@ -67,12 +67,19 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
             TextboxContainer.Width = Width;
 
             // Make sure the correct channel is displayed
-            foreach (var container in MessageScrollContainers.Values)
+            foreach (var container in MessageScrollContainers.Values.ToList())
             {
-                if (ActiveChannel.Value == container.Channel && container.Parent != this)
+                if (container.IsDisposed)
+                    continue;
+
+                var isActiveChannel = ActiveChannel.Value == container.Channel;
+
+                if (isActiveChannel && container.Parent != this)
                     container.Parent = this;
-                else if (ActiveChannel.Value != container.Channel && container.Parent != null)
+                else if (!isActiveChannel && container.Parent != null)
                     container.Parent = null;
+
+                container.ApplyVisibility(isActiveChannel && OnlineChat.Instance?.IsOpen == true);
 
                 container.Width = Width;
                 container.ContentContainer.Width = Width;
@@ -108,8 +115,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
                     c.ChangeSize(size);
             }
 
-            foreach (var channel in MessageScrollContainers)
-                channel.Value.ChangeSize(size);
+            foreach (var container in MessageScrollContainers.Values.ToList())
+                container.ChangeSize(size);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void DismissActiveRightClickOptions()
+        {
+            foreach (var container in MessageScrollContainers.Values.ToList())
+                container.DismissActiveRightClickOptions();
         }
 
         /// <summary>
@@ -128,6 +143,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
             };
 
             MessageScrollContainers.Add(chan, container);
+
+            if (OnlineChat.Instance != null)
+                container.SetEventProcessingSuspended(OnlineChat.Instance.IsEventProcessingSuspended);
+
+            container.InitializeMessageHistory();
         }
 
         /// <summary>

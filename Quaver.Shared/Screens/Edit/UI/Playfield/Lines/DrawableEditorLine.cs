@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -10,13 +11,13 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 {
-    public abstract class DrawableEditorLine : ImageButton, IStartTime
+    public abstract class DrawableEditorLine : FilledRectangleSprite, IStartTime
     {
         protected EditorPlayfield Playfield { get; }
 
         protected static ScalableVector2 DefaultSize { get; } = new ScalableVector2(40, 2);
         
-        public DrawableEditorLine(EditorPlayfield playfield) : base(UserInterface.BlankBox)
+        public DrawableEditorLine(EditorPlayfield playfield)
         {
             Playfield = playfield;
             Size = DefaultSize;
@@ -30,7 +31,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// </summary>
         public virtual void SetPosition()
         {
-            var x = Playfield.AbsolutePosition.X + Playfield.Width + 2;
+            var x = Playfield.AbsolutePosition.X + Playfield.Width + 2 - Width / 2;
             var y = Playfield.HitPositionY - StartTime * Playfield.TrackSpeed - Height;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -44,6 +45,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <returns></returns>
         public bool IsOnScreen() => StartTime * Playfield.TrackSpeed >= Playfield.TrackPositionY - Playfield.Height &&
                                     StartTime * Playfield.TrackSpeed <= Playfield.TrackPositionY + Playfield.Height;
+
+        public bool IsInPool { get; set; }
         
         /// <summary>
         ///     Returns the color of the tick

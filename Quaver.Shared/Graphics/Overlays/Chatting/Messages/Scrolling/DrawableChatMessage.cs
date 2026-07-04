@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling;
 using Quaver.Shared.Helpers;
@@ -32,6 +33,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private Sprite Icon { get; set; }
 
         /// <summary>
+        ///     The clan tag of the user
+        /// </summary>
+        private ClanTag Clan { get; set; }
+
+        /// <summary>
         ///     The username of the user
         /// </summary>
         private SpriteTextPlus Username { get; set; }
@@ -50,6 +56,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private const int PADDING_X = 16;
 
+        private bool IsScrollVisible { get; set; } = true;
+
+        private bool IconShouldBeVisible { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -64,6 +74,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             CreateTime();
             CreateIcon();
+            CreateClan();
             CreateUsername();
             CreateUsernameButton();
             CreateMessage();
@@ -74,9 +85,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!IsScrollVisible)
+                return;
+
             var color = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
-            Username.Tint = UsernameButton.IsHovered ? new Color(color.R / 2, color.G / 2, color.B / 2) : color;
+            Username.Tint = UsernameButton.IsHovered ? Darken(color) : color;
             Icon.Tint = Username.Tint;
+
+            Clan.Tint = UsernameButton.IsHovered ? Darken(Clan.BaseColor) : Clan.BaseColor;
 
             var container = (ChatMessageScrollContainer) Container;
 
@@ -97,27 +113,46 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             Time.Text = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";
             var icon = GetIcon(Item.Sender.OnlineUser.UserGroups);
+            var labelStartX = Time.X + Time.Width + PADDING_X / 2f;
 
             if (icon != null)
             {
                 Icon.Image = icon;
                 Icon.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
-                Icon.X = Time.X + Time.Width + PADDING_X / 2f;
+                Icon.X = labelStartX;
 
-                Username.X = Icon.X + Icon.Width + PADDING_X / 2f;
+                labelStartX = Icon.X + Icon.Width + PADDING_X / 2f;
             }
-            else
-                Username.X = Time.X + Time.Width + PADDING_X / 2f;
 
-            Icon.Visible = icon != null;
+            IconShouldBeVisible = icon != null;
+            Icon.Visible = IsScrollVisible && IconShouldBeVisible;
 
+            Clan.UpdateFromClan(GetClanTag(), GetClanAccentColor(), Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups));
+            Clan.X = labelStartX;
+
+            Username.X = Clan.HasClan ? Clan.X + Clan.Width + PADDING_X / 4f : labelStartX;
             Username.Text = $"{Item.SenderName}:";
             Username.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
 
-            Message.X = Username.X + Username.Width + PADDING_X / 2f;
+            var clickableStartX = IconShouldBeVisible ? Icon.X : Clan.HasClan ? Clan.X : Username.X;
+            var clickableWidth = Username.X + Username.Width - clickableStartX;
+
+            Message.X = clickableStartX + clickableWidth + PADDING_X / 2f;
             Message.Text = Item.Message;
 
-            Message.MaxWidth = Container.Width - PADDING_X * 4 - Time.Width - Username.Width;
+            Message.MaxWidth = Container.Width - Message.X - PADDING_X;
+
+            Time.Alignment = Alignment.MidLeft;
+            Time.Y = 0;
+
+            Icon.Alignment = Time.Alignment;
+            Icon.Y = 0;
+
+            Clan.Alignment = Time.Alignment;
+            Clan.Y = 0;
+
+            Username.Alignment = Time.Alignment;
+            Username.Y = 0;
 
             // Message spans across multiple lines, so make sure the username is moved upwards
             if (Message.Children.Count > 1)
@@ -128,16 +163,20 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Icon.Alignment = Time.Alignment;
                 Icon.Y = Time.Y + 2;
 
+                Clan.Alignment = Time.Alignment;
+                Clan.Y = Time.Y;
+
                 Username.Alignment = Time.Alignment;
                 Username.Y = Time.Y;
             }
 
             // Make sure the button is properly aligned with the sender's username
             UsernameButton.Alignment = Username.Alignment;
-            UsernameButton.Position = Icon.Visible ? Icon.Position : Username.Position;
-            UsernameButton.Size = new ScalableVector2(Username.Width + (Icon.Visible ? Icon.Width : 0) + PADDING_X / 2f, Username.Height);
+            UsernameButton.Position = new ScalableVector2(clickableStartX, Username.Y);
+            UsernameButton.Size = new ScalableVector2(clickableWidth, Username.Height);
 
             Height = Message.Height + 16;
+            ApplyScrollVisibility();
         }
 
         /// <summary>
@@ -166,6 +205,19 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(16, 16)
+            };
+        }
+
+        /// <summary>
+        ///     Creates <see cref="Clan"/>
+        /// </summary>
+        private void CreateClan()
+        {
+            Clan = new ClanTag(Time.FontSize)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -247,5 +299,42 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             return null;
         }
+
+        public void SetScrollVisibility(bool visible)
+        {
+            IsScrollVisible = visible;
+            ApplyScrollVisibility();
+        }
+
+        private void ApplyScrollVisibility()
+        {
+            Visible = IsScrollVisible;
+            Time.Visible = IsScrollVisible;
+            Icon.Visible = IsScrollVisible && IconShouldBeVisible;
+            Clan.Visible = IsScrollVisible && Clan.HasClan;
+            Username.Visible = IsScrollVisible;
+            UsernameButton.Visible = IsScrollVisible;
+            UsernameButton.IsClickable = IsScrollVisible;
+            Message.Visible = IsScrollVisible;
+        }
+
+        /// <summary>
+        ///     Gets the sender's clan tag from the chat payload, falling back to the sender's online user info.
+        /// </summary>
+        private string? GetClanTag() => !string.IsNullOrEmpty(Item.SenderClanTag)
+            ? Item.SenderClanTag
+            : Item.Sender?.OnlineUser?.ClanTag;
+
+        /// <summary>
+        ///     Gets the sender's clan accent color from the chat payload, falling back to the sender's online user info.
+        /// </summary>
+        private string? GetClanAccentColor() => !string.IsNullOrEmpty(Item.SenderClanAccentColor)
+            ? Item.SenderClanAccentColor
+            : Item.Sender?.OnlineUser?.ClanAccentColor;
+
+        /// <summary>
+        ///     Darkens a color for hover state.
+        /// </summary>
+        private static Color Darken(Color color) => new Color(color.R / 2, color.G / 2, color.B / 2);
     }
 }

@@ -119,6 +119,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                                                       LoadingWheel.Alpha < 0.1f;
 
             base.Update(gameTime);
+            ApplyPoolVisibility();
         }
 
         /// <summary>
@@ -323,8 +324,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private bool RequiresDonator() => RequiresOnline()
                                           && (ConfigManager.LeaderboardSection.Value == LeaderboardType.Country
                                           || ConfigManager.LeaderboardSection.Value == LeaderboardType.Friends
-                                          || ConfigManager.LeaderboardSection.Value == LeaderboardType.All 
-                                          || ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan);
+                                          || ConfigManager.LeaderboardSection.Value == LeaderboardType.All);
 
         /// <summary>
         ///     Creates <see cref="StatusText"/>
@@ -335,6 +335,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
+                Visible = false,
                 Tint = SkinManager.Skin?.SongSelect?.LeaderboardStatusTextColor ?? Color.White
             };
         }
@@ -363,6 +364,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         private void FadeStatusTextIn()
         {
+            StatusText.Visible = true;
             StatusText.ClearAnimations();
             StatusText.FadeTo(1, Easing.Linear, 250);
         }
@@ -370,6 +372,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private void FadeStatusTextOut()
         {
             StatusText.ClearAnimations();
+            StatusText.Visible = false;
             StatusText.FadeTo(0, Easing.Linear, 250);
         }
 
@@ -446,6 +449,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 // ignored
             }
+        }
+
+        private void ApplyPoolVisibility()
+        {
+            if (Pool == null)
+                return;
+
+            foreach (var score in Pool.OfType<DrawableLeaderboardScore>())
+                score.SetScrollVisibility(score.ScreenRectangle.Intersects(ScreenRectangle));
         }
     }
 }

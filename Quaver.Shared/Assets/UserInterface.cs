@@ -13,6 +13,7 @@ namespace Quaver.Shared.Assets
     public static class UserInterface
     {
         public static Texture2D BlankBox => TextureManager.Load($"Quaver.Resources/Textures/UI/blank-box.png");
+        public static Texture2D PlayfieldMask => TextureManager.Load($"Quaver.Resources/Textures/UI/playfield-mask.png");
         public static Texture2D UnknownAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/unknown-avatar.png");
         public static Texture2D YouAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/you-avatar.png");
         public static Texture2D MenuBackground => TextureManager.Load($"Quaver.Resources/Textures/UI/Menu/menu-background.jpg");
@@ -94,12 +95,14 @@ namespace Quaver.Shared.Assets
         public static Texture2D SearchBox => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/search-box.png");
         public static Texture2D Keys4Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys4.png");
         public static Texture2D Keys7Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys7.png");
+        public static Texture2D Keys47Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys4-7-panel.png");
         public static Texture2D KeysNonePanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys-none.png");
         public static Texture2D BothModesPanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/both-modes-panel.png");
         public static Texture2D ModePanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/mode-panel.png");
         public static Texture2D EditPlayButton => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/edit-play-button.png");
         public static Texture2D StatusPanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/status-panel.png");
         public static Texture2D DefaultBanner => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/default-banner.png");
+        public static Texture2D MapsetBannerMask => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/mapset-banner-mask.png");
         public static Texture2D DifficultyBarBackground => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/difficultybar-bg.png");
         public static Texture2D DifficultyBarColor => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/difficultybar-colour.png");
         public static Texture2D LeaderboardScoresPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/leaderboard-scores-panel.png");
@@ -114,7 +117,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D ClosePanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/close-panel.png");
         public static Texture2D CreateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/create-button.png");
         public static Texture2D SureButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/sure-button.png");
+        public static Texture2D BlankButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/blank-button.png");
         public static Texture2D AcceptButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/accept-button.png");
+        public static Texture2D EpilepsyWarning => TextureManager.Load(@"Quaver.Resources/Textures/UI/epilepsy-warning.png");
         public static Texture2D SaveButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/save-button.png");
         public static Texture2D DeclineButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/decline-button.png");
         public static Texture2D LegalPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/legal-panel.png");
@@ -184,6 +189,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D LoginButtonPlayercard => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/login-button.png");
         public static Texture2D LogoutButtonPlayercard => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/logout-button.png");
         public static Texture2D ViewProfileButtonPlayercard => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/view-profile-button.png");
+        public static Texture2D ViewClanButtonPlayercard => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/view-clan-button.png");
         public static Texture2D UserPlayercardPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/user-playercard-panel.png");
         public static Texture2D Mode4KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-4k-on.png");
         public static Texture2D Mode7KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-7k-on.png");
@@ -227,6 +233,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorIconSelect => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-select.png");
         public static Texture2D EditorIconNote => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-note.png");
         public static Texture2D EditorIconLongNote => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-long-note.png");
+        public static Texture2D EditorIconMine => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-mine.png");
         public static Texture2D EditorIconWhistle => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-whistle.png");
         public static Texture2D EditorIconFinish => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-finish.png");
         public static Texture2D EditorIconClap => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-clap.png");
