@@ -212,7 +212,9 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float JudgementBurstPosY { get; private set; }
 
-        internal bool DisplayJudgementsInEachColumn { get; private set; }
+        internal JudgementsInEachColumn DisplayJudgementsInEachColumn { get; private set; } = JudgementsInEachColumn.False;
+
+        internal bool DisplayJudgementHitBursts { get; private set; } = true;
 
         internal bool RotateJudgements { get; private set; }
 
@@ -653,7 +655,8 @@ namespace Quaver.Shared.Skinning
             ComboPosX = ConfigHelper.ReadInt32((int)ComboPosX, ini["ComboPosX"]);
             ComboPosY = ConfigHelper.ReadInt32((int)ComboPosY, ini["ComboPosY"]);
             JudgementBurstPosY = ConfigHelper.ReadInt32((int)JudgementBurstPosY, ini["JudgementBurstPosY"]);
-            DisplayJudgementsInEachColumn = ConfigHelper.ReadBool(DisplayJudgementsInEachColumn, ini["DisplayJudgementsInEachColumn"]);
+            DisplayJudgementsInEachColumn = ReadJudgementsInEachColumn(DisplayJudgementsInEachColumn, ini["DisplayJudgementsInEachColumn"]);
+            DisplayJudgementHitBursts = ConfigHelper.ReadBool(DisplayJudgementHitBursts, ini["DisplayJudgementHitBursts"]);
             RotateJudgements = ConfigHelper.ReadBool(RotateJudgements, ini["RotateJudgements"]);
             HealthBarType = ConfigHelper.ReadEnum(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadEnum(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
@@ -837,6 +840,16 @@ namespace Quaver.Shared.Skinning
 
             return paddedTextures;
         }
+
+        /// <summary>
+        ///     Reads the value for <see cref="DisplayJudgementsInEachColumn"/>, keeping "True" as a
+        ///     backwards-compatible alias for <see cref="JudgementsInEachColumn.All"/>, since it used
+        ///     to be a boolean skin.ini key.
+        /// </summary>
+        private static JudgementsInEachColumn ReadJudgementsInEachColumn(JudgementsInEachColumn defaultVal, string newVal) =>
+            string.Equals(newVal, "true", StringComparison.OrdinalIgnoreCase)
+                ? JudgementsInEachColumn.All
+                : ConfigHelper.ReadEnum(defaultVal, newVal);
 
         /// <summary>
         ///     Loads the HitObjects w/ note snapping
