@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DownloadDifficultyDropdown() : base("DIFFICULTY: ", 22,
+        public DownloadDifficultyDropdown() : base(DownloadLocalization.Get("DIFFICULTY: "), 22,
             new Dropdown(GetDropdownItems(), new ScalableVector2(150, 38), 22, ColorHelper.HexToColor("#ffe76b")))
         {
         }
@@ -22,13 +22,13 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <returns></returns>
         private static List<string> GetDropdownItems() => new List<string>
         {
-            "None",
-            "Beginner",
-            "Easy",
-            "Normal",
-            "Hard",
-            "Insane",
-            "Expert"
+            DownloadLocalization.Get("None"),
+            DownloadLocalization.Get("Beginner"),
+            DownloadLocalization.Get("Easy"),
+            DownloadLocalization.Get("Normal"),
+            DownloadLocalization.Get("Hard"),
+            DownloadLocalization.Get("Insane"),
+            DownloadLocalization.Get("Expert")
         };
     }
 }

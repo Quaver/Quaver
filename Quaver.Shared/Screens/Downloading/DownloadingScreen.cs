@@ -349,7 +349,9 @@ namespace Quaver.Shared.Screens.Downloading
 
             Logger.Important($"Playing preview audio: {ShouldPreviewPlay}", LogType.Runtime);
 
-            NotificationManager.Show(NotificationLevel.Info, !ShouldPreviewPlay ? $"Music is currently paused!" : $"Music is now playing!");
+            NotificationManager.Show(NotificationLevel.Info, !ShouldPreviewPlay
+                ? DownloadLocalization.Get("Music is currently paused!")
+                : DownloadLocalization.Get("Music is now playing!"));
 
             if (CurrentPreview.IsDisposed)
                 return;
@@ -395,7 +397,7 @@ namespace Quaver.Shared.Screens.Downloading
 
             if (MapsetDownloadManager.IsMapsetInQueue(SelectedMapset.Value.Id))
             {
-                NotificationManager.Show(NotificationLevel.Warning, $"This mapset is already downloading!");
+                NotificationManager.Show(NotificationLevel.Warning, DownloadLocalization.Get("This mapset is already downloading!"));
                 return;
             }
 
@@ -895,8 +897,8 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         public void ShowRecommendedDifficultyDialog()
         {
-            DialogManager.Show(new YesNoDialog("RECOMMEND DIFFICULTY",
-                "Would you like to find recommended maps around your skill level\nfor the selected game mode?", () =>
+            DialogManager.Show(new YesNoDialog(DownloadLocalization.Get("RECOMMEND DIFFICULTY"),
+                DownloadLocalization.Get("Recommend Difficulty Description"), () =>
                 {
                     if (!OnlineManager.Connected || OnlineManager.Self == null)
                     {

@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Footer.Items
     public class DownloadRecommendDifficultyButton : IconTextButton
     {
         public DownloadRecommendDifficultyButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_star),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Recommend Difficulty", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.LatoBlack), DownloadLocalization.Get("Recommend Difficulty"), (sender, args) =>
             {
                 var game = GameBase.Game as QuaverGame;
                 var screen = game?.CurrentScreen as DownloadingScreen;

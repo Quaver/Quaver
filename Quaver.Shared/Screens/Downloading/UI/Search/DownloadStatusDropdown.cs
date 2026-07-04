@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <summary>
         /// </summary>
         /// <param name="status"></param>
-        public DownloadStatusDropdown(Bindable<DownloadFilterRankedStatus> status) : base("STATUS: ", 22,
+        public DownloadStatusDropdown(Bindable<DownloadFilterRankedStatus> status) : base(DownloadLocalization.Get("STATUS: "), 22,
             new Dropdown(GetDropdownItems(), new ScalableVector2(150, 38), 22, Colors.MainAccent, GetSelectedIndex()))
         {
             Status = status;
@@ -31,10 +31,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <returns></returns>
         private static List<string> GetDropdownItems() => new List<string>
         {
-            "All",
-            "Unranked",
-            "Ranked",
-            "Clan Ranked",
+            DownloadLocalization.Get("All"),
+            DownloadLocalization.Get("Unranked"),
+            DownloadLocalization.Get("Ranked"),
+            DownloadLocalization.Get("Clan Ranked"),
         };
 
         /// <summary>

@@ -840,4 +840,244 @@
   <data name="Screen_Options_SearchResults" xml:space="preserve">
     <value>{0} Search Results</value>
   </data>
+  <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
+    <value>Music is currently paused!</value>
+  </data>
+  <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
+    <value>Music is now playing!</value>
+  </data>
+  <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
+    <value>This mapset is already downloading!</value>
+  </data>
+  <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
+    <value>RECOMMEND DIFFICULTY</value>
+  </data>
+  <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
+    <value>Would you like to find recommended maps around your skill level
+for the selected game mode?</value>
+  </data>
+  <data name="Screen_Download_Typetosearch" xml:space="preserve">
+    <value>Type to search...</value>
+  </data>
+  <data name="Screen_Download_MAPSETSFOUND" xml:space="preserve">
+    <value>MAPSETS FOUND</value>
+  </data>
+  <data name="Screen_Download_MAPSETFOUND" xml:space="preserve">
+    <value>MAPSET FOUND</value>
+  </data>
+  <data name="Screen_Download_STATUS" xml:space="preserve">
+    <value>STATUS: </value>
+  </data>
+  <data name="Screen_Download_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Screen_Download_Unranked" xml:space="preserve">
+    <value>Unranked</value>
+  </data>
+  <data name="Screen_Download_Ranked" xml:space="preserve">
+    <value>Ranked</value>
+  </data>
+  <data name="Screen_Download_ClanRanked" xml:space="preserve">
+    <value>Clan Ranked</value>
+  </data>
+  <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
+    <value>DIFFICULTY: </value>
+  </data>
+  <data name="Screen_Download_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Screen_Download_Beginner" xml:space="preserve">
+    <value>Beginner</value>
+  </data>
+  <data name="Screen_Download_Easy" xml:space="preserve">
+    <value>Easy</value>
+  </data>
+  <data name="Screen_Download_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Screen_Download_Hard" xml:space="preserve">
+    <value>Hard</value>
+  </data>
+  <data name="Screen_Download_Insane" xml:space="preserve">
+    <value>Insane</value>
+  </data>
+  <data name="Screen_Download_Expert" xml:space="preserve">
+    <value>Expert</value>
+  </data>
+  <data name="Screen_Download_MODE" xml:space="preserve">
+    <value>MODE: </value>
+  </data>
+  <data name="Screen_Download_SORTBY" xml:space="preserve">
+    <value>SORT BY: </value>
+  </data>
+  <data name="Screen_Download_Newest" xml:space="preserve">
+    <value>Newest</value>
+  </data>
+  <data name="Screen_Download_DateSubmitted" xml:space="preserve">
+    <value>Date Submitted</value>
+  </data>
+  <data name="Screen_Download_Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="Screen_Download_Difficulty" xml:space="preserve">
+    <value>Difficulty</value>
+  </data>
+  <data name="Screen_Download_MaxCombo" xml:space="preserve">
+    <value>Max Combo</value>
+  </data>
+  <data name="Screen_Download_BPM" xml:space="preserve">
+    <value>BPM</value>
+  </data>
+  <data name="Screen_Download_LN" xml:space="preserve">
+    <value>LN %</value>
+  </data>
+  <data name="Screen_Download_PlayCount" xml:space="preserve">
+    <value>Play Count</value>
+  </data>
+  <data name="Screen_Download_Ascending" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
+  <data name="Screen_Download_Descending" xml:space="preserve">
+    <value>Descending</value>
+  </data>
+  <data name="Screen_Download_DownloadMaps" xml:space="preserve">
+    <value>Download Maps</value>
+  </data>
+  <data name="Screen_Download_Findnewsongstoplayfromthecommunity" xml:space="preserve">
+    <value>Find new songs to play from the community</value>
+  </data>
+  <data name="Screen_Download_Finisheddownloading01" xml:space="preserve">
+    <value>Finished downloading: {0} - {1}!</value>
+  </data>
+  <data name="Screen_Download_By" xml:space="preserve">
+    <value>By:</value>
+  </data>
+  <data name="Screen_Download_LNs" xml:space="preserve">
+    <value>LNs: </value>
+  </data>
+  <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
+    <value>FILTER OPTIONS</value>
+  </data>
+  <data name="Screen_Download_UploadDate" xml:space="preserve">
+    <value>Upload Date</value>
+  </data>
+  <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
+    <value>Last Update Date</value>
+  </data>
+  <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
+    <value>Display Owned Mapsets</value>
+  </data>
+  <data name="Screen_Download_DisplayExplicitMapsets" xml:space="preserve">
+    <value>Display Explicit Mapsets</value>
+  </data>
+  <data name="Screen_Download_Maps" xml:space="preserve">
+    <value>Maps: </value>
+  </data>
+  <data name="Screen_Download_NoSongSelected" xml:space="preserve">
+    <value>No Song Selected</value>
+  </data>
+  <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
+    <value>To begin downloading, double-click on a song.
+Clicking once will allow you to preview the audio.
+You can use the filters below to narrow down your search.</value>
+  </data>
+  <data name="Screen_Download_EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Screen_Download_StartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="Screen_Download_DifficultyRating" xml:space="preserve">
+    <value>Difficulty Rating</value>
+  </data>
+  <data name="Screen_Download_MaxRating" xml:space="preserve">
+    <value>Max Rating</value>
+  </data>
+  <data name="Screen_Download_MinRating" xml:space="preserve">
+    <value>Min Rating</value>
+  </data>
+  <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
+    <value>Ranked Play Count</value>
+  </data>
+  <data name="Screen_Download_MaxPlays" xml:space="preserve">
+    <value>Max Plays</value>
+  </data>
+  <data name="Screen_Download_MinPlays" xml:space="preserve">
+    <value>Min Plays</value>
+  </data>
+  <data name="Screen_Download_LongNote" xml:space="preserve">
+    <value>Long Note %</value>
+  </data>
+  <data name="Screen_Download_MaxLN" xml:space="preserve">
+    <value>Max LN%</value>
+  </data>
+  <data name="Screen_Download_MinLN" xml:space="preserve">
+    <value>Min LN%</value>
+  </data>
+  <data name="Screen_Download_LengthSeconds" xml:space="preserve">
+    <value>Length (Seconds)</value>
+  </data>
+  <data name="Screen_Download_MaxLength" xml:space="preserve">
+    <value>Max Length</value>
+  </data>
+  <data name="Screen_Download_MinLength" xml:space="preserve">
+    <value>Min Length</value>
+  </data>
+  <data name="Screen_Download_SkillLevel" xml:space="preserve">
+    <value>Skill Level</value>
+  </data>
+  <data name="Screen_Download_MinCombo" xml:space="preserve">
+    <value>Min Combo</value>
+  </data>
+  <data name="Screen_Download_MaxBPM" xml:space="preserve">
+    <value>Max BPM</value>
+  </data>
+  <data name="Screen_Download_MinBPM" xml:space="preserve">
+    <value>Min BPM</value>
+  </data>
+  <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
+    <value>Recommend Difficulty</value>
+  </data>
+  <data name="Screen_Download_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Screen_Download_Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Screen_Download_Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Screen_Download_OnlineListing" xml:space="preserve">
+    <value>Online Listing</value>
+  </data>
+  <data name="Screen_Download_1Keys" xml:space="preserve">
+    <value>1 Keys</value>
+  </data>
+  <data name="Screen_Download_2Keys" xml:space="preserve">
+    <value>2 Keys</value>
+  </data>
+  <data name="Screen_Download_3Keys" xml:space="preserve">
+    <value>3 Keys</value>
+  </data>
+  <data name="Screen_Download_4Keys" xml:space="preserve">
+    <value>4 Keys</value>
+  </data>
+  <data name="Screen_Download_5Keys" xml:space="preserve">
+    <value>5 Keys</value>
+  </data>
+  <data name="Screen_Download_6Keys" xml:space="preserve">
+    <value>6 Keys</value>
+  </data>
+  <data name="Screen_Download_7Keys" xml:space="preserve">
+    <value>7 Keys</value>
+  </data>
+  <data name="Screen_Download_8Keys" xml:space="preserve">
+    <value>8 Keys</value>
+  </data>
+  <data name="Screen_Download_9Keys" xml:space="preserve">
+    <value>9 Keys</value>
+  </data>
+  <data name="Screen_Download_10Keys" xml:space="preserve">
+    <value>10 Keys</value>
+  </data>
 </root>
