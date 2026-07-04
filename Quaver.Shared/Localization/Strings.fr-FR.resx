@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Language_English" xml:space="preserve">
-    <value>English</value>
+    <value>Anglais</value>
   </data>
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Bulgarian</value>
@@ -22,10 +22,10 @@
     <value>Change screens to update the language.</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Menu principal</value>
   </data>
   <data name="Screen_Main_Menu_Maps" xml:space="preserve">
-    <value>Maps</value>
+    <value>Map</value>
   </data>
   <data name="Screen_Main_Menu_Clans" xml:space="preserve">
     <value>Clans</value>
@@ -46,7 +46,7 @@
     <value>Wiki</value>
   </data>
   <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
-    <value>Report Bugs</value>
+    <value>Reporter des bugs</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
     <value>Twitter</value>
@@ -70,13 +70,13 @@
     <value>Competitive</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
-    <value>Map Editor</value>
+    <value>Éditeur de map</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
     <value>Download Maps</value>
   </data>
   <data name="Screen_Main_DownloadSongs" xml:space="preserve">
-    <value>Download Songs</value>
+    <value>Télécharger des chansons</value>
   </data>
   <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
     <value>Steam Workshop</value>
@@ -85,25 +85,25 @@
     <value>Options</value>
   </data>
   <data name="Screen_Main_QuitGame" xml:space="preserve">
-    <value>Quit Game</value>
+    <value>Quitter le jeu</value>
   </data>
   <data name="Screen_Main_QuitDialogTitle" xml:space="preserve">
-    <value>EXIT QUAVER</value>
+    <value>QUITTER QUAVER</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
     <value>Are you sure you would like to quit the game?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
-    <value>Compete for leaderboard ranks</value>
+    <value>Concourez pour une place au classement</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
-    <value>Play custom matches online with others</value>
+    <value>Jouez des parties personnalisées en ligne avec d'autres joueurs</value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
-    <value>Compete against players all over the world</value>
+    <value>Affrontez des joueurs des quatre coins du monde</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
-    <value>Create or edit a map to any song you'd like</value>
+    <value></value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
     <value>Find new songs from the community to play</value>
@@ -112,7 +112,7 @@
     <value>TIP:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing CTRL+O will open the options menu.</value>
+    <value>Appuyez sur Ctrl+O pour ouvrir les options.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Drag map files (.qp) into the game to import them.</value>
@@ -142,7 +142,7 @@
     <value>Pressing F3/F4 in gameplay changes scroll speed.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
-    <value>Your offset can be calibrated in the options menu.</value>
+    <value>Vous pouvez calibrer votre décalage dans les options.</value>
   </data>
   <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
     <value>Standard* is the default judgement window preset.</value>
@@ -160,10 +160,10 @@
     <value>All</value>
   </data>
   <data name="Screen_Selection_Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Artiste</value>
   </data>
   <data name="Screen_Selection_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Retour</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -172,7 +172,7 @@
     <value>Clan</value>
   </data>
   <data name="Screen_Selection_Country" xml:space="preserve">
-    <value>Country</value>
+    <value>Pays</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
     <value>Country Rank</value>
@@ -316,7 +316,7 @@
     <value>Recently Played</value>
   </data>
   <data name="Screen_Selection_ResultFound" xml:space="preserve">
-    <value>Result Found</value>
+    <value>Résultat Trouvé</value>
   </data>
   <data name="Screen_Selection_ResultsFound" xml:space="preserve">
     <value>Results Found</value>
@@ -370,13 +370,13 @@
     <value>Your map is outdated. Please update it!</value>
   </data>
   <data name="Screen_Options_Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Vidéo</value>
   </data>
   <data name="Screen_Options_Audio" xml:space="preserve">
     <value>Audio</value>
   </data>
   <data name="Screen_Options_Language" xml:space="preserve">
-    <value>Language</value>
+    <value>Langue</value>
   </data>
   <data name="Screen_Options_Gameplay" xml:space="preserve">
     <value>Gameplay</value>
@@ -517,13 +517,13 @@
     <value>Effect</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Retour</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Retry Map</value>
+    <value>Réesayer la map</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
-    <value>Watch Replay</value>
+    <value>Regarder la Reprise</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
     <value>Export Replay</value>
@@ -535,10 +535,10 @@
     <value>Convert Score</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Please wait! Your score is already being converted!</value>
+    <value>S'il vous plaît, veuillez patienter! Votre score est déjà en cours de conversion!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
-    <value>Overview</value>
+    <value></value>
   </data>
   <data name="Screen_Results_Multiplayer" xml:space="preserve">
     <value>Multiplayer</value>
@@ -1263,13 +1263,13 @@ Marvelous instead.</value>
     <value>{0} Search Results</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
-    <value>Music is currently paused!</value>
+    <value>Musique en pause!</value>
   </data>
   <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
     <value>Music is now playing!</value>
   </data>
   <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
-    <value>This mapset is already downloading!</value>
+    <value>Déjà en cours de téléchargement!</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
     <value>RECOMMEND DIFFICULTY</value>
@@ -1540,7 +1540,7 @@ sure you would like to start without all players ready?</value>
     <value>Not Ready</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
-    <value>Ready Up</value>
+    <value>Préparez vous</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
     <value>CHANGE GAME NAME</value>
