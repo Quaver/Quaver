@@ -8,7 +8,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Wobble;
-using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
@@ -40,27 +39,6 @@ namespace Quaver.Shared.Assets
         public static string LatoBlack { get; } = "Lato-Black";
 
         #endregion
-
-        /// <summary>
-        ///     Loads all bitmap fonts.
-        /// </summary>
-        public static void LoadGdiFonts()
-        {
-            BitmapFontFactory.AddFont(Exo2Bold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-bold.ttf"));
-            BitmapFontFactory.AddFont(Exo2BoldItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-bolditalic.ttf"));
-            BitmapFontFactory.AddFont(Exo2Italic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-italic.ttf"));
-            BitmapFontFactory.AddFont(Exo2Light, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-light.ttf"));
-            BitmapFontFactory.AddFont(Exo2Medium, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-medium.ttf"));
-            BitmapFontFactory.AddFont(Exo2MediumItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-mediumitalic.ttf"));
-            BitmapFontFactory.AddFont(Exo2Regular, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-regular.ttf"));
-            BitmapFontFactory.AddFont(Exo2SemiBold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-semibold.ttf"));
-            BitmapFontFactory.AddFont(Exo2SemiBoldItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-semibolditalic.ttf"));
-            BitmapFontFactory.AddFont(Exo2Thin, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-thin.ttf"));
-            BitmapFontFactory.AddFont(Exo2ThinItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-thinitalic.ttf"));
-            BitmapFontFactory.AddFont(SourceSansProRegular, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/SourceSansPro/sspro-regular.ttf"));
-            BitmapFontFactory.AddFont(SourceSansProBold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/SourceSansPro/sspro-bold.ttf"));
-            BitmapFontFactory.AddFont(SourceSansProSemiBold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/SourceSansPro/sspro-semibold.ttf"));
-        }
 
         /// <summary>
         /// </summary>

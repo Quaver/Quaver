@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -17,15 +19,15 @@ namespace Quaver.Shared.Graphics.Menu
 
         /// <summary>
         /// </summary>
-        public SpriteTextBitmap Title { get; }
+        public SpriteTextPlus Title { get; }
 
         /// <summary>
         /// </summary>
-        public SpriteTextBitmap Title2 { get; }
+        public SpriteTextPlus Title2 { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Subtitle { get; }
+        private SpriteTextPlus Subtitle { get; }
 
         /// <summary>
         /// </summary>
@@ -56,7 +58,7 @@ namespace Quaver.Shared.Graphics.Menu
                 X = 20
             };
 
-            Title = new SpriteTextBitmap(FontsBitmap.GothamRegular, title.ToUpper())
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title.ToUpper())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -64,7 +66,7 @@ namespace Quaver.Shared.Graphics.Menu
                 FontSize = 16
             };
 
-            Title2 = new SpriteTextBitmap(FontsBitmap.GothamRegular, title2.ToUpper())
+            Title2 = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title2.ToUpper())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -74,7 +76,7 @@ namespace Quaver.Shared.Graphics.Menu
                 Tint = colorTheme
             };
 
-            Subtitle = new SpriteTextBitmap(FontsBitmap.GothamRegular, subtitle.ToUpper())
+            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subtitle.ToUpper())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

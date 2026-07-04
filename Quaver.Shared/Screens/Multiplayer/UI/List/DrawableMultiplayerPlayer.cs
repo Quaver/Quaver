@@ -8,6 +8,8 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Online;
@@ -35,7 +37,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Username { get; }
+        private SpriteTextPlus Username { get; }
 
         /// <summary>
         /// </summary>
@@ -59,15 +61,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Wins { get; }
+        private SpriteTextPlus Wins { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Mods { get; }
+        private SpriteTextPlus Mods { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Referee { get; }
+        private SpriteTextPlus Referee { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -129,7 +131,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, string.IsNullOrEmpty(item.Username) ? $"Loading..." : item.Username)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), string.IsNullOrEmpty(item.Username) ? $"Loading..." : item.Username)
             {
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
@@ -165,7 +167,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Wins = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0 Wins")
+            Wins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0 Wins")
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -176,7 +178,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, "")
+            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -187,7 +189,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Tint = Colors.MainAccent
             };
 
-            Referee = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Referee")
+            Referee = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Referee")
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

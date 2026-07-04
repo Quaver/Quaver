@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics.Containers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -22,7 +24,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Name { get; }
+        private SpriteTextPlus Name { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -48,7 +50,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
                 Alpha = 0
             };
 
-            Name = new SpriteTextBitmap(FontsBitmap.GothamRegular, Item.Name)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Item.Name)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

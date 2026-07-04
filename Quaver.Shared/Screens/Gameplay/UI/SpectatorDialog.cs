@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -16,7 +18,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
         private Sprite LoadingWheel { get; }
 
-        private SpriteTextBitmap Text { get; }
+        private SpriteTextPlus Text { get; }
 
         private SpectatorClient SpectatorClient { get; }
 
@@ -39,7 +41,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            Text = new SpriteTextBitmap(FontsBitmap.AllerRegular, "Waiting for host!")
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Waiting for host!")
             {
                 Parent = this,
                 FontSize = 20,

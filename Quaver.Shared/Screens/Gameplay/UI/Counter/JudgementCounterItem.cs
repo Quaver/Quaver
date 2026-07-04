@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Skinning;
@@ -57,7 +59,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// <summary>
         ///     The sprite text for this given judgement.
         /// </summary>
-        public SpriteTextBitmap SpriteText { get; }
+        public SpriteTextPlus SpriteText { get; }
 
         /// <summary>
         ///     The inactive color for this.
@@ -84,7 +86,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             var skin = SkinManager.Skin.Keys[parentDisplay.Screen.Map.Mode];
 
-            SpriteText = new SpriteTextBitmap(FontsBitmap.AllerRegular, JudgementHelper.JudgementToShortName(j), false)
+            SpriteText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), JudgementHelper.JudgementToShortName(j), 0, false)
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,

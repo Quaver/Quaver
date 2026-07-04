@@ -6,6 +6,8 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Menu;
@@ -195,10 +197,10 @@ namespace Quaver.Shared.Screens.Multiplayer
         {
             Footer = new MenuFooterMultiplayer(new List<ButtonText>
             {
-                new ButtonText(FontsBitmap.GothamRegular, "leave", 14, (o, e) => MultiplayerScreen.LeaveGame()),
-                new ButtonText(FontsBitmap.GothamRegular, "options", 14, (o, e) => DialogManager.Show(new OptionsDialog())),
-                new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
-                new ButtonText(FontsBitmap.GothamRegular, "commands", 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/wiki/Multiplayer/Commands"))
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "leave", 14, (o, e) => MultiplayerScreen.LeaveGame()),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "options", 14, (o, e) => DialogManager.Show(new OptionsDialog())),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "match history", 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "commands", 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/wiki/Multiplayer/Commands"))
             }, new List<ButtonText>
             {
             }, Colors.MainAccent)

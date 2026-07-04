@@ -76,7 +76,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
 
         /// <summary>
         /// </summary>
-        private void CreateName()  => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+        private void CreateName()  => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 22)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
 
         /// <summary>
         /// </summary>
-        private void CreateDescription() => Description = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+        private void CreateDescription() => Description = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 20)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,

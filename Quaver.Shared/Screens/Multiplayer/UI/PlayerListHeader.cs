@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
@@ -18,11 +20,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Count { get; }
+        private SpriteTextPlus Count { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Status { get; }
+        private SpriteTextPlus Status { get; }
 
         /// <summary>
         /// </summary>
@@ -53,14 +55,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Tint = Color.Black;
             Alpha = 0f;
 
-            Count = new SpriteTextBitmap(FontsBitmap.GothamRegular, "(0/16) Players")
+            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "(0/16) Players")
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 FontSize = 16,
             };
 
-            Status = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Waiting to start")
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Waiting to start")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

@@ -47,7 +47,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
         /// <param name="size"></param>
         /// <param name="standalone"></param>
         public OnlineChatTextbox(Bindable<ChatChannel> activeChatChannel, ScalableVector2 size, bool standalone = false)
-            : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "", DefaultPlaceholderText)
+            : base(size, FontManager.GetWobbleFont(Fonts.LatoBold), 20, "", DefaultPlaceholderText)
         {
             ActiveChannel = activeChatChannel;
             Standalone = standalone;
