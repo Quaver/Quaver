@@ -156,6 +156,219 @@
   <data name="Screen_Main_Published" xml:space="preserve">
     <value>Published {0}</value>
   </data>
+  <data name="Screen_Selection_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Screen_Selection_Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="Screen_Selection_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Screen_Selection_BPM" xml:space="preserve">
+    <value>BPM</value>
+  </data>
+  <data name="Screen_Selection_Clan" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="Screen_Selection_Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Screen_Selection_CountryRank" xml:space="preserve">
+    <value>Country Rank</value>
+  </data>
+  <data name="Screen_Selection_CreateNew" xml:space="preserve">
+    <value>Create New</value>
+  </data>
+  <data name="Screen_Selection_CreatePlaylist" xml:space="preserve">
+    <value>Create Playlist</value>
+  </data>
+  <data name="Screen_Selection_Creator" xml:space="preserve">
+    <value>Creator</value>
+  </data>
+  <data name="Screen_Selection_DateAdded" xml:space="preserve">
+    <value>Date Added</value>
+  </data>
+  <data name="Screen_Selection_Difficulty" xml:space="preserve">
+    <value>Difficulty</value>
+  </data>
+  <data name="Screen_Selection_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Screen_Selection_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Screen_Selection_Friends" xml:space="preserve">
+    <value>Friends</value>
+  </data>
+  <data name="Screen_Selection_Game" xml:space="preserve">
+    <value>Game</value>
+  </data>
+  <data name="Screen_Selection_Global" xml:space="preserve">
+    <value>Global</value>
+  </data>
+  <data name="Screen_Selection_GlobalRank" xml:space="preserve">
+    <value>Global Rank</value>
+  </data>
+  <data name="Screen_Selection_GroupBy" xml:space="preserve">
+    <value>GROUP BY:</value>
+  </data>
+  <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
+    <value>Highest Rated Score</value>
+  </data>
+  <data name="Screen_Selection_Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="Screen_Selection_Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Screen_Selection_LocalProfile" xml:space="preserve">
+    <value>Local Profile</value>
+  </data>
+  <data name="Screen_Selection_LongNote" xml:space="preserve">
+    <value>Long Note %</value>
+  </data>
+  <data name="Screen_Selection_MapFound" xml:space="preserve">
+    <value>Map Found</value>
+  </data>
+  <data name="Screen_Selection_MapsFound" xml:space="preserve">
+    <value>Maps Found</value>
+  </data>
+  <data name="Screen_Selection_MarvelousPerfectRatio" xml:space="preserve">
+    <value>Marvelous/Perfect Ratio</value>
+  </data>
+  <data name="Screen_Selection_MaxCombo" xml:space="preserve">
+    <value>Max Combo</value>
+  </data>
+  <data name="Screen_Selection_Mode" xml:space="preserve">
+    <value>MODE:</value>
+  </data>
+  <data name="Screen_Selection_Modifiers" xml:space="preserve">
+    <value>Modifiers</value>
+  </data>
+  <data name="Screen_Selection_Mods" xml:space="preserve">
+    <value>Mods</value>
+  </data>
+  <data name="Screen_Selection_NeverPlayed" xml:space="preserve">
+    <value>Never Played</value>
+  </data>
+  <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
+    <value>No scores available. Be the first!</value>
+  </data>
+  <data name="Screen_Selection_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
+    <value>Notes Per Sec.</value>
+  </data>
+  <data name="Screen_Selection_Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
+    <value>Online Grade</value>
+  </data>
+  <data name="Screen_Selection_OnlineListing" xml:space="preserve">
+    <value>Online Listing</value>
+  </data>
+  <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
+    <value>Online Profile</value>
+  </data>
+  <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
+    <value>Overall Accuracy</value>
+  </data>
+  <data name="Screen_Selection_OverallRating" xml:space="preserve">
+    <value>Overall Rating</value>
+  </data>
+  <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
+    <value>Pass/Failure Count</value>
+  </data>
+  <data name="Screen_Selection_Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="Screen_Selection_PlayCount" xml:space="preserve">
+    <value>Play Count</value>
+  </data>
+  <data name="Screen_Selection_Player" xml:space="preserve">
+    <value>Player</value>
+  </data>
+  <data name="Screen_Selection_Playlists" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
+    <value>Preview is disabled in this game!</value>
+  </data>
+  <data name="Screen_Selection_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Screen_Selection_Random" xml:space="preserve">
+    <value>Random</value>
+  </data>
+  <data name="Screen_Selection_RankedStatus" xml:space="preserve">
+    <value>Ranked Status</value>
+  </data>
+  <data name="Screen_Selection_Ranking" xml:space="preserve">
+    <value>RANKING:</value>
+  </data>
+  <data name="Screen_Selection_Rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
+    <value>Recently Played</value>
+  </data>
+  <data name="Screen_Selection_ResultFound" xml:space="preserve">
+    <value>Result Found</value>
+  </data>
+  <data name="Screen_Selection_ResultsFound" xml:space="preserve">
+    <value>Results Found</value>
+  </data>
+  <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
+    <value>Scores on this map will be unranked!</value>
+  </data>
+  <data name="Screen_Selection_Select" xml:space="preserve">
+    <value>SELECT:</value>
+  </data>
+  <data name="Screen_Selection_SortBy" xml:space="preserve">
+    <value>SORT BY:</value>
+  </data>
+  <data name="Screen_Selection_Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
+    <value>There is currently no map selected!</value>
+  </data>
+  <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
+    <value>This map is not ranked!</value>
+  </data>
+  <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
+    <value>This map is not submitted online!</value>
+  </data>
+  <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
+    <value>Times Played</value>
+  </data>
+  <data name="Screen_Selection_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Screen_Selection_TotalHits" xml:space="preserve">
+    <value>Total Hits</value>
+  </data>
+  <data name="Screen_Selection_TotalPauses" xml:space="preserve">
+    <value>Total Pauses</value>
+  </data>
+  <data name="Screen_Selection_TotalScore" xml:space="preserve">
+    <value>Total Score</value>
+  </data>
+  <data name="Screen_Selection_ViewMap" xml:space="preserve">
+    <value>View Map</value>
+  </data>
+  <data name="Screen_Selection_Youmustbeadonatortoaccessthisleaderboard" xml:space="preserve">
+    <value>You must be a donator to access this leaderboard!</value>
+  </data>
+  <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
+    <value>You must be online to access this leaderboard!</value>
+  </data>
+  <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
+    <value>Your map is outdated. Please update it!</value>
+  </data>
   <data name="Screen_Options_Video" xml:space="preserve">
     <value>Video</value>
   </data>

@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -53,28 +54,28 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
 
             if (Profile.Value.IsOnline)
             {
-                Items.Add(new LocalProfileTableItem("Global Rank", GetRankString(stats.GlobalRank)));
-                Items.Add(new LocalProfileTableItem("Country Rank", GetRankString(stats.CountryRank)));
+                Items.Add(new LocalProfileTableItem(SelectionLocalization.Get("Global Rank"), GetRankString(stats.GlobalRank)));
+                Items.Add(new LocalProfileTableItem(SelectionLocalization.Get("Country Rank"), GetRankString(stats.CountryRank)));
             }
 
             if (!Profile.Value.IsOnline)
             {
-                Items.Add(new LocalProfileTableItem("Highest Rated Score",
-                    $"{(topScore != null ? StringHelper.RatingToString(topScore.PerformanceRating) : "Never Played")}"));
+                Items.Add(new LocalProfileTableItem(SelectionLocalization.Get("Highest Rated Score"),
+                    $"{(topScore != null ? StringHelper.RatingToString(topScore.PerformanceRating) : SelectionLocalization.Get("Never Played"))}"));
 
-                Items.Add(new LocalProfileTableItem("Total Pauses", $"{stats.PauseCount:n0}"));
+                Items.Add(new LocalProfileTableItem(SelectionLocalization.Get("Total Pauses"), $"{stats.PauseCount:n0}"));
             }
 
             Items.AddRange(new []
             {
-                new LocalProfileTableItem("Overall Rating", StringHelper.RatingToString(stats.OverallRating)),
-                new LocalProfileTableItem("Overall Accuracy", StringHelper.AccuracyToString((float) stats.OverallAccuracy)),
-                new LocalProfileTableItem("Total Score", $"{stats.TotalScore:n0}"),
-                new LocalProfileTableItem("Total Hits", $"{stats.JudgementCounts.Values.Sum() - stats.JudgementCounts[Judgement.Miss]:n0}"),
-                new LocalProfileTableItem($"Play Count", $"{stats.PlayCount:n0}"),
-                new LocalProfileTableItem("Pass/Failure Count", $"{stats.PlayCount - stats.FailCount:n0}/{stats.FailCount:n0}"),
-                new LocalProfileTableItem("Max Combo", $"{stats.MaxCombo:n0}x"),
-                new LocalProfileTableItem("Marvelous/Perfect Ratio", $"{ratio:0.00}"),
+                new LocalProfileTableItem(SelectionLocalization.Get("Overall Rating"), StringHelper.RatingToString(stats.OverallRating)),
+                new LocalProfileTableItem(SelectionLocalization.Get("Overall Accuracy"), StringHelper.AccuracyToString((float) stats.OverallAccuracy)),
+                new LocalProfileTableItem(SelectionLocalization.Get("Total Score"), $"{stats.TotalScore:n0}"),
+                new LocalProfileTableItem(SelectionLocalization.Get("Total Hits"), $"{stats.JudgementCounts.Values.Sum() - stats.JudgementCounts[Judgement.Miss]:n0}"),
+                new LocalProfileTableItem(SelectionLocalization.Get("Play Count"), $"{stats.PlayCount:n0}"),
+                new LocalProfileTableItem(SelectionLocalization.Get("Pass/Failure Count"), $"{stats.PlayCount - stats.FailCount:n0}/{stats.FailCount:n0}"),
+                new LocalProfileTableItem(SelectionLocalization.Get("Max Combo"), $"{stats.MaxCombo:n0}x"),
+                new LocalProfileTableItem(SelectionLocalization.Get("Marvelous/Perfect Ratio"), $"{ratio:0.00}"),
             });
 
             for (var i = 0; i < Items.Count; i++)
@@ -95,7 +96,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         private string GetRankString(int rank)
         {
             if (rank == -1)
-                return "Never Played";
+                return SelectionLocalization.Get("Never Played");
 
             return $"#{rank:n0}";
         }

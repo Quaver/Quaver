@@ -1,5 +1,6 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Managers;
 
@@ -18,7 +19,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
                         activeLeftPanel.Value = SelectContainerPanel.Leaderboard;
                     else
                         activeLeftPanel.Value = SelectContainerPanel.UserProfile;
-                })
+                }, localizationKey: SelectionLocalization.GetKey("Profile"))
         {
         }
     }

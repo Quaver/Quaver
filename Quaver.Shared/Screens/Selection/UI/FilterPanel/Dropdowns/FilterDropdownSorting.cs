@@ -8,6 +8,7 @@ using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -43,7 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <summary>
         /// </summary>
         /// <param name="availableMapsets"></param>
-        public FilterDropdownSorting(Bindable<List<Mapset>> availableMapsets) : base("SORT BY: ", 22, new Dropdown(GetDropdownItems(),
+        public FilterDropdownSorting(Bindable<List<Mapset>> availableMapsets) : base(SelectionLocalization.Get("Sort By:"), 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(188, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
             AvailableMapsets = availableMapsets;
@@ -56,7 +57,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         ///     TODO: Localize this
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetDropdownItems() => DropdownItems.Select(x => x.Name).ToList();
+        private static List<string> GetDropdownItems() => DropdownItems.Select(x => SelectionLocalization.Get(x.Name)).ToList();
 
         /// <summary>
         ///     Retrieves the index of the selected value

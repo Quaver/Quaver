@@ -12,6 +12,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Skinning;
@@ -213,7 +214,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             if (map == null)
             {
-                StatusText.Text = "There is currently no map selected!".ToUpper();
+                StatusText.Text = SelectionLocalization.Get("There is currently no map selected!").ToUpper();
                 FadeStatusTextIn();
                 return;
             }
@@ -227,7 +228,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             // User isn't online
             if (RequiresOnline() && !isConnected)
             {
-                StatusText.Text = "You must be online to access this leaderboard!".ToUpper();
+                StatusText.Text = SelectionLocalization.Get("You must be online to access this leaderboard!").ToUpper();
                 FadeStatusTextIn();
                 return;
             }
@@ -235,7 +236,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             // User isn't a donator
             if (RequiresOnline() && RequiresDonator() && !isDonator)
             {
-                StatusText.Text = "You must be a donator to access this leaderboard!".ToUpper();
+                StatusText.Text = SelectionLocalization.Get("You must be a donator to access this leaderboard!").ToUpper();
                 FadeStatusTextIn();
                 return;
             }
@@ -246,7 +247,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 // The user's map is not up-to-date, so prompt them of this.
                 if (map.NeedsOnlineUpdate)
                 {
-                    StatusText.Text = "Your map is outdated. Please update it!".ToUpper();
+                    StatusText.Text = SelectionLocalization.Get("Your map is outdated. Please update it!").ToUpper();
                     UpdateButton.ClearAnimations();
                     UpdateButton.IsClickable = true;
                     UpdateButton.FadeTo(1, Easing.Linear, 250);
@@ -259,19 +260,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
                     // The map isn't ranked, but the user is a donator, so they can access leaderboards on all maps
                     if (map.RankedStatus != RankedStatus.Ranked && isDonator && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
-                        StatusText.Text = "Scores on this map will be unranked!".ToUpper();
+                        StatusText.Text = SelectionLocalization.Get("Scores on this map will be unranked!").ToUpper();
                     else if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
                     {
                         switch (map.RankedStatus)
                         {
                             case RankedStatus.NotSubmitted:
-                                StatusText.Text = "This map is not submitted online!".ToUpper();
+                                StatusText.Text = SelectionLocalization.Get("This map is not submitted online!").ToUpper();
                                 break;
                             case RankedStatus.Unranked:
-                                StatusText.Text = "This map is not ranked!".ToUpper();
+                                StatusText.Text = SelectionLocalization.Get("This map is not ranked!").ToUpper();
                                 break;
                             case RankedStatus.Ranked:
-                                StatusText.Text = "No scores available. Be the first!".ToUpper();
+                                StatusText.Text = SelectionLocalization.Get("No scores available. Be the first!").ToUpper();
                                 break;
                             case RankedStatus.DanCourse:
                                 break;
@@ -280,7 +281,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                         }
                     }
                     else
-                        StatusText.Text = "No scores available. Be the first!".ToUpper();
+                        StatusText.Text = SelectionLocalization.Get("No scores available. Be the first!").ToUpper();
                 }
 
                 FadeStatusTextIn();
