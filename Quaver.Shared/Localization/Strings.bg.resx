@@ -41,9 +41,6 @@
     <data name="Screen_Results_ExportReplay" xml:space="preserve">
         <value>Експортирай повторение</value>
     </data>
-    <data name="Screen_Results_FixOffset" xml:space="preserve">
-        <value>Поправи offset</value>
-    </data>
     <data name="Screen_Results_ConvertScore" xml:space="preserve">
         <value>Конвертирай резултат</value>
     </data>
@@ -57,7 +54,7 @@
         <value>Карта от:</value>
     </data>
     <data name="Screen_Results_Playedby" xml:space="preserve">
-        <value>Играна от</value>
+        <value>Игран/а от</value>
     </data>
     <data name="Screen_Results_Playedon" xml:space="preserve">
         <value>на {0} @ {1}</value>
@@ -112,9 +109,6 @@
     </data>
     <data name="Screen_Results_OverallAccuracy" xml:space="preserve">
         <value>ОБЩА ТОЧНОСТ</value>
-    </data>
-    <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
-        <value>НЕРАНКНАТ РЕЖИМ</value>
     </data>
     <data name="Screen_Results_Matchplayedon" xml:space="preserve">
         <value>Мачът е игран на {0} @ {1}</value>
