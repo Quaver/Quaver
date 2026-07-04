@@ -13,11 +13,14 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Volume
 {
     public class VolumeControl : ImageButton
     {
+        private const string LocalizationPrefix = "Screen_Overlay_VolumeControl_";
+
         /// <summary>
         /// </summary>
         private static int WIDTH { get; } = 512;
@@ -44,13 +47,13 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
         public List<VolumeControlSlider> Sliders { get; } = new List<VolumeControlSlider>
         {
             new VolumeControlSlider(WIDTH * SliderScale, UserInterface.MasterVolumeIcon,
-                "Master", ConfigManager.VolumeGlobal),
+                LocalizationManager.Get($"{LocalizationPrefix}Master"), ConfigManager.VolumeGlobal),
 
             new VolumeControlSlider(WIDTH * SliderScale, UserInterface.MusicVolumeIcon,
-                "Music", ConfigManager.VolumeMusic),
+                LocalizationManager.Get($"{LocalizationPrefix}Music"), ConfigManager.VolumeMusic),
 
             new VolumeControlSlider(WIDTH * SliderScale, UserInterface.EffectVolumeIcon,
-                "Effect", ConfigManager.VolumeEffect),
+                LocalizationManager.Get($"{LocalizationPrefix}Effect"), ConfigManager.VolumeEffect),
         };
 
         /// <summary>

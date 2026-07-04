@@ -20,6 +20,15 @@
     <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
         <value>Сменете екрана, за да се обнови езикът.</value>
     </data>
+    <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
+        <value>Главна</value>
+    </data>
+    <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
+        <value>Музика</value>
+    </data>
+    <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
+        <value>Ефекти</value>
+    </data>
     <data name="Screen_Main_Options" xml:space="preserve">
         <value>Настройки</value>
     </data>
