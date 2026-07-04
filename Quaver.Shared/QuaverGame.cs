@@ -330,6 +330,7 @@ namespace Quaver.Shared
             Window.FileDropped += MapsetImporter.OnFileDropped;
             Window.ClientSizeChanged += OnClientSizeChanged;
             AudioManager.OutputDeviceChanged += OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = () => CurrentScreen?.Type == QuaverScreenType.Gameplay;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
@@ -369,6 +370,7 @@ namespace Quaver.Shared
         protected override void UnloadContent()
         {
             AudioManager.OutputDeviceChanged -= OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = null;
             ConfigManager.WriteConfigFileAsync().Wait();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
