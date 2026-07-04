@@ -22,7 +22,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter
         /// </summary>
         /// <param name="bindable"></param>
         /// <param name="size"></param>
-        public OnlineHubOnlineUserSearchBox(Bindable<string> bindable, ScalableVector2 size) : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack),
+        public OnlineHubOnlineUserSearchBox(Bindable<string> bindable, ScalableVector2 size) : base(size, FontManager.GetWobbleFont(Fonts.LatoBold),
             20, "", "Search for users...")
         {
             Tint = ColorHelper.HexToColor("#131313");

@@ -183,7 +183,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
         /// </summary>
         private void CreateNoRequestsText()
         {
-            NoRequests = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            NoRequests = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

@@ -131,7 +131,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
