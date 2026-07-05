@@ -190,7 +190,7 @@
     <value>Drag a .mp3 file in the game to create a new map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing F2 in song select chooses a random song.</value>
+    <value>กดปุ่ม F2 ในหน้าเลือกเพลงจะสุ่มเลือกเพลง</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
     <value>Pressing F10 in the menu opens your playercard.</value>
@@ -214,13 +214,13 @@
     <value>Published {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
-    <value>All</value>
+    <value>ทั้งหมด</value>
   </data>
   <data name="Screen_Selection_Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>ศิลปิน</value>
   </data>
   <data name="Screen_Selection_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>กลับ</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
     <value>By:</value>
@@ -229,19 +229,19 @@
     <value>BPM</value>
   </data>
   <data name="Screen_Selection_Clan" xml:space="preserve">
-    <value>Clan</value>
+    <value>แคลน</value>
   </data>
   <data name="Screen_Selection_Country" xml:space="preserve">
-    <value>Country</value>
+    <value>ประเทศ</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Country Rank</value>
+    <value>อันดับในประเทศ</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Create New</value>
   </data>
   <data name="Screen_Selection_CreatePlaylist" xml:space="preserve">
-    <value>Create Playlist</value>
+    <value>สร้างเพลย์ลิสต์</value>
   </data>
   <data name="Screen_Selection_Creator" xml:space="preserve">
     <value>Creator</value>
@@ -250,28 +250,28 @@
     <value>Date Added</value>
   </data>
   <data name="Screen_Selection_Difficulty" xml:space="preserve">
-    <value>Difficulty</value>
+    <value>ระดับความยาก</value>
   </data>
   <data name="Screen_Selection_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>แก้ไข</value>
   </data>
   <data name="Screen_Selection_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>ส่งออก</value>
   </data>
   <data name="Screen_Selection_Friends" xml:space="preserve">
-    <value>Friends</value>
+    <value>เพื่อน</value>
   </data>
   <data name="Screen_Selection_Game" xml:space="preserve">
-    <value>Game</value>
+    <value>เกม</value>
   </data>
   <data name="Screen_Selection_Global" xml:space="preserve">
-    <value>Global</value>
+    <value>ทั่วโลก</value>
   </data>
   <data name="Screen_Selection_GlobalRank" xml:space="preserve">
-    <value>Global Rank</value>
+    <value>อันดับทั่วโลก</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
-    <value>GROUP BY:</value>
+    <value>จัดกลุ่มตาม:</value>
   </data>
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
     <value>Highest Rated Score</value>
@@ -280,10 +280,10 @@
     <value>LEADERBOARD</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
-    <value>Length</value>
+    <value>ความยาว</value>
   </data>
   <data name="Screen_Selection_LengthLabel" xml:space="preserve">
-    <value>Length:</value>
+    <value>ความยาว:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>Local</value>
