@@ -18,65 +18,11 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>บัลแกเรีย</value>
   </data>
-  <data name="Language_Danish" xml:space="preserve">
-    <value>Danish</value>
-  </data>
-  <data name="Language_German" xml:space="preserve">
-    <value>German</value>
-  </data>
-  <data name="Language_Spanish" xml:space="preserve">
-    <value>Spanish</value>
-  </data>
-  <data name="Language_French" xml:space="preserve">
-    <value>French</value>
-  </data>
-  <data name="Language_Indonesian" xml:space="preserve">
-    <value>Indonesian</value>
-  </data>
-  <data name="Language_Italian" xml:space="preserve">
-    <value>Italian</value>
-  </data>
-  <data name="Language_Japanese" xml:space="preserve">
-    <value>Japanese</value>
-  </data>
-  <data name="Language_Korean" xml:space="preserve">
-    <value>Korean</value>
-  </data>
-  <data name="Language_Dutch" xml:space="preserve">
-    <value>Dutch</value>
-  </data>
-  <data name="Language_Norwegian" xml:space="preserve">
-    <value>Norwegian</value>
-  </data>
-  <data name="Language_Polish" xml:space="preserve">
-    <value>Polish</value>
-  </data>
-  <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portuguese (Brazil)</value>
-  </data>
-  <data name="Language_Russian" xml:space="preserve">
-    <value>Russian</value>
-  </data>
-  <data name="Language_Swedish" xml:space="preserve">
-    <value>Swedish</value>
-  </data>
-  <data name="Language_Thai" xml:space="preserve">
-    <value>Thai</value>
-  </data>
-  <data name="Language_Ukrainian" xml:space="preserve">
-    <value>Ukrainian</value>
-  </data>
-  <data name="Language_ChineseSimplified" xml:space="preserve">
-    <value>Chinese (Simplified)</value>
-  </data>
-  <data name="Language_ChineseTraditional" xml:space="preserve">
-    <value>Chinese (Traditional)</value>
-  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
-    <value>Change screens to update the language.</value>
+    <value>เปลี่ยนหน้าเพื่ออัปเดตภาษา</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
-    <value>Home</value>
+    <value>หน้าแรก</value>
   </data>
   <data name="Screen_Main_Menu_Maps" xml:space="preserve">
     <value>แมพ</value>
@@ -100,7 +46,7 @@
     <value>วิกิ</value>
   </data>
   <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
-    <value>Report Bugs</value>
+    <value>รายงานปัญหา</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
     <value>Twitter</value>
@@ -109,13 +55,13 @@
     <value>Discord</value>
   </data>
   <data name="Screen_Main_Menu_Website" xml:space="preserve">
-    <value>Website</value>
+    <value>เว็บไซต์</value>
   </data>
   <data name="Screen_Main_SinglePlayer" xml:space="preserve">
-    <value>Single Player</value>
+    <value>ผู้เล่นคนเดียว</value>
   </data>
   <data name="Screen_Main_Multiplayer" xml:space="preserve">
-    <value>Multiplayer</value>
+    <value>ผู้เล่นหลายคน</value>
   </data>
   <data name="Screen_Main_Editor" xml:space="preserve">
     <value>Editor</value>
@@ -127,10 +73,10 @@
     <value>Map Editor</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
-    <value>Download Maps</value>
+    <value>ดาวน์โหลดแมพ</value>
   </data>
   <data name="Screen_Main_DownloadSongs" xml:space="preserve">
-    <value>Download Songs</value>
+    <value>ดาวน์โหลดเพลง</value>
   </data>
   <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
     <value>Steam Workshop</value>
@@ -139,13 +85,13 @@
     <value>Options</value>
   </data>
   <data name="Screen_Main_QuitGame" xml:space="preserve">
-    <value>Quit Game</value>
+    <value>ปิดเกม</value>
   </data>
   <data name="Screen_Main_QuitDialogTitle" xml:space="preserve">
-    <value>EXIT QUAVER</value>
+    <value>ออกจาก Quaver</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Are you sure you would like to quit the game?</value>
+    <value>แน่ใจหรือไม่ว่าจะปิดเกม?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>Compete for leaderboard ranks</value>
