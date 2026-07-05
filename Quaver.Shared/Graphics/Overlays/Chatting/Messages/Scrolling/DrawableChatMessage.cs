@@ -1,4 +1,5 @@
 using System;
+using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Structures;
@@ -111,7 +112,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) item.Time).ToLocalTime();
 
-            Time.Text = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";
+            Time.Text = dateTime.Humanize(culture: LocalizationManager.CurrentCulture);
             var icon = GetIcon(Item.Sender.OnlineUser.UserGroups);
             var labelStartX = Time.X + Time.Width + PADDING_X / 2f;
 
