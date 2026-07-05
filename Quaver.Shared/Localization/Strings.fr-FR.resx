@@ -1088,16 +1088,16 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Rechercher des options...</value>
   </data>
   <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>Disposition de jeu 1K</value>
+    <value>Disposition de jeu 1T</value>
   </data>
   <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>Vitesse de défilement 1K</value>
+    <value>Vitesse de défilement 1T</value>
   </data>
   <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>Direction de défilement 1K</value>
+    <value>Direction de défilement 1T</value>
   </data>
   <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>Disposition Scratch 1K</value>
+    <value>Disposition Scratch 1T</value>
   </data>
   <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
     <value>Placer la Colonne Scratch 1T à Gauche</value>
@@ -1331,7 +1331,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Paramètres {0}</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
-    <value>{0} Résultat(s) trouvé(s)</value>
+    <value>{0} Résultat de recherche</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
     <value>{0} Résultats de recherche</value>
@@ -1340,10 +1340,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>La Musique est actuellement en pause !</value>
   </data>
   <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
-    <value>La musique est en cours de lecture !</value>
+    <value>La Musique est en cours de lecture !</value>
   </data>
   <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
-    <value>La collection est déjà en cours de téléchargement !</value>
+    <value>La collection de map est déjà en cours de téléchargement !</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
     <value>DIFFICULTÉ RECOMMANDÉE</value>
@@ -1355,28 +1355,28 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Tapez pour rechercher...</value>
   </data>
   <data name="Screen_Download_MAPSETSFOUND" xml:space="preserve">
-    <value>COLLECTIONS TROUVÉS</value>
+    <value>COLLECTIONS DE MAP TROUVÉS</value>
   </data>
   <data name="Screen_Download_MAPSETFOUND" xml:space="preserve">
-    <value>COLLECTION TROUVÉ</value>
+    <value>COLLECTION DE MAP TROUVÉ</value>
   </data>
   <data name="Screen_Download_STATUS" xml:space="preserve">
-    <value>STATUS :</value>
+    <value>STATUS : </value>
   </data>
   <data name="Screen_Download_All" xml:space="preserve">
     <value>Tout</value>
   </data>
   <data name="Screen_Download_Unranked" xml:space="preserve">
-    <value>Unranked</value>
+    <value>Non-classé</value>
   </data>
   <data name="Screen_Download_Ranked" xml:space="preserve">
-    <value>Ranked</value>
+    <value>Classé</value>
   </data>
   <data name="Screen_Download_ClanRanked" xml:space="preserve">
-    <value>Clan Ranked</value>
+    <value>Classé de Clan</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>DIFFICULTÉ :</value>
+    <value>DIFFICULTÉ : </value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
     <value>Aucun</value>
@@ -1409,10 +1409,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Nouveauté</value>
   </data>
   <data name="Screen_Download_DateSubmitted" xml:space="preserve">
-    <value>Date de Sortie</value>
+    <value>Date de Soumission</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
-    <value>Longueur</value>
+    <value>Durée</value>
   </data>
   <data name="Screen_Download_Difficulty" xml:space="preserve">
     <value>Difficulté</value>
@@ -1460,10 +1460,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Date de la Dernière Publication</value>
   </data>
   <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
-    <value>Afficher les Collections Possédés</value>
+    <value>Afficher les Collections de map Possédés</value>
   </data>
   <data name="Screen_Download_DisplayExplicitMapsets" xml:space="preserve">
-    <value>Afficher les Collections Explicites</value>
+    <value>Afficher les Collections de map Explicites</value>
   </data>
   <data name="Screen_Download_Maps" xml:space="preserve">
     <value>Maps : </value>
@@ -1483,22 +1483,22 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Date de Début</value>
   </data>
   <data name="Screen_Download_DifficultyRating" xml:space="preserve">
-    <value>Difficulté</value>
+    <value>Note de difficulté</value>
   </data>
   <data name="Screen_Download_MaxRating" xml:space="preserve">
-    <value>Max Diff</value>
+    <value>Difficulté Max</value>
   </data>
   <data name="Screen_Download_MinRating" xml:space="preserve">
     <value>Difficulté Min</value>
   </data>
   <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
-    <value>Nombre de Parties Ranked</value>
+    <value>Nombre de Parties Classé</value>
   </data>
   <data name="Screen_Download_MaxPlays" xml:space="preserve">
-    <value>Max Plays</value>
+    <value>Max Nb. de partie</value>
   </data>
   <data name="Screen_Download_MinPlays" xml:space="preserve">
-    <value>Min Plays</value>
+    <value>Min Nb. de partie</value>
   </data>
   <data name="Screen_Download_LongNote" xml:space="preserve">
     <value>% Longue Note</value>
@@ -1510,13 +1510,13 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Min % LN</value>
   </data>
   <data name="Screen_Download_LengthSeconds" xml:space="preserve">
-    <value>Longueur (Secondes)</value>
+    <value>Durée (Secondes)</value>
   </data>
   <data name="Screen_Download_MaxLength" xml:space="preserve">
-    <value>Longueur Max</value>
+    <value>Durée Max</value>
   </data>
   <data name="Screen_Download_MinLength" xml:space="preserve">
-    <value>Longueur Min</value>
+    <value>Durée Min</value>
   </data>
   <data name="Screen_Download_SkillLevel" xml:space="preserve">
     <value>Niveau de Compétence</value>
@@ -1582,13 +1582,13 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>CONFIRMER PRÊT</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyMessage" xml:space="preserve">
-    <value>Mettre prêt en tant qu'hôte commencera la partie, êtes-vous certain(e) de vouloir commencer sans que tous les joueurs(ses) soient prêts ?</value>
+    <value>Mettre prêt en tant qu’hôte commencera la partie. Êtes-vous certain·e de vouloir commencer sans que tous les joueurs et joueuses soient prêt·es ?</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyTitle" xml:space="preserve">
     <value>QUITTER LE LOBBY</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
-    <value>Êtes-vous sûr(e) de vouloir quitter le lobby ?</value>
+    <value>Êtes-vous sûr·e de vouloir quitter le lobby ?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
     <value>Quitter</value>
@@ -1639,13 +1639,13 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Entrez un mot de passe...</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>PUBLIER UN MAPSET UNSUBMITTED</value>
+    <value>PUBLIER UNE COLLECTION DE MAP NON SOUMISE</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetConfirmMessage" xml:space="preserve">
-    <value>Voulez-vous temporairement publier la collection de map actuelle pour que les autres la télécharge ?</value>
+    <value>Voulez-vous temporairement publier la collection de map actuelle pour que d'autre joueur puisse la télécharger ?</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>EN TRAIN DE PUBLIER LE MAPSET</value>
+    <value>EN TRAIN DE PUBLIER LA COLLECTION DE MAP</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetMessage" xml:space="preserve">
     <value>Veuillez patienter durant la publication de la collection de map...</value>
@@ -1813,7 +1813,7 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>En attente du démarrage.</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartTwoDots" xml:space="preserve">
-    <value>En attente du démarrage.</value>
+    <value>En attente du démarrage..</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartThreeDots" xml:space="preserve">
     <value>En attente du démarrage...</value>
@@ -1900,7 +1900,7 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Publié</value>
   </data>
   <data name="Screen_MultiplayerLobby_Unsubmitted" xml:space="preserve">
-    <value>Unsubmitted</value>
+    <value>Non soumise</value>
   </data>
   <data name="Screen_MultiplayerLobby_RoomVisibilityLabel" xml:space="preserve">
     <value>VISIBILITÉ DU LOBBY : </value>
@@ -1984,7 +1984,7 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Étendue de difficulté</value>
   </data>
   <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
-    <value>Tout</value>
+    <value>N'importe lequel</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
     <value>Étendue du % de Longue Note</value>
@@ -2020,6 +2020,6 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Nombre de vies</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaximumSongLength" xml:space="preserve">
-    <value>Longueur maximale de la musique</value>
+    <value>Durée maximale de la musique</value>
   </data>
 </root>
