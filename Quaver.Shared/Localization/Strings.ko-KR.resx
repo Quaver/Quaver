@@ -18,8 +18,65 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Bulgarian</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>Danish</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>Indonesian</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>Korean</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>Norwegian</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>Polish</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>Portuguese (Brazil)</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Russian</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>Thai</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>Ukrainian</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>Chinese (Simplified)</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>Chinese (Traditional)</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Change screens to update the language.</value>
+  </data>
+  <data name="Chat_SendAMessage" xml:space="preserve">
+    <value>Send a message...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>Home</value>
@@ -165,6 +222,9 @@
   <data name="Screen_Selection_Back" xml:space="preserve">
     <value>Back</value>
   </data>
+  <data name="Screen_Selection_By" xml:space="preserve">
+    <value>By:</value>
+  </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
   </data>
@@ -216,8 +276,14 @@
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
     <value>Highest Rated Score</value>
   </data>
+  <data name="Screen_Selection_Leaderboard" xml:space="preserve">
+    <value>LEADERBOARD</value>
+  </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
     <value>Length</value>
+  </data>
+  <data name="Screen_Selection_LengthLabel" xml:space="preserve">
+    <value>Length:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>Local</value>
@@ -255,6 +321,9 @@
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
     <value>No scores available. Be the first!</value>
   </data>
+  <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
+    <value>NO PERSONAL BEST SET</value>
+  </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>None</value>
   </data>
@@ -273,6 +342,9 @@
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
     <value>Online Profile</value>
   </data>
+  <data name="Screen_Selection_Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>Overall Accuracy</value>
   </data>
@@ -281,6 +353,9 @@
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
     <value>Pass/Failure Count</value>
+  </data>
+  <data name="Screen_Selection_PersonalBest" xml:space="preserve">
+    <value>PERSONAL BEST</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Play</value>
@@ -365,6 +440,9 @@
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>You must be online to access this leaderboard!</value>
+  </data>
+  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+    <value>You cannot beat this score with your currently activated modifiers!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>Your map is outdated. Please update it!</value>
@@ -1460,6 +1538,9 @@ You can use the filters below to narrow down your search.</value>
   <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
     <value>Recommend Difficulty</value>
   </data>
+  <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
+    <value>Recommended difficulty</value>
+  </data>
   <data name="Screen_Download_Back" xml:space="preserve">
     <value>Back</value>
   </data>
@@ -1541,6 +1622,9 @@ sure you would like to start without all players ready?</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
     <value>Ready Up</value>
+  </data>
+  <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
+    <value>Waiting for the host to start</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
     <value>CHANGE GAME NAME</value>
