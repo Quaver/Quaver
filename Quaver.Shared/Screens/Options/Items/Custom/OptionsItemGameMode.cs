@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     public class OptionsItemGameMode : OptionsItemDropdown
     {
         public OptionsItemGameMode(RectangleF containerRect, string name, Bindable<GameMode> mode, string? noModeString = null) : base(containerRect, name,
-            new Dropdown(GetOptions(noModeString), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex(mode)))
+            new Dropdown(GetOptions(noModeString), new ScalableVector2(180, 35), 20, Colors.MainAccent, GetSelectedIndex(mode)))
         {
             Dropdown.ItemSelected += (sender, args) =>
             {

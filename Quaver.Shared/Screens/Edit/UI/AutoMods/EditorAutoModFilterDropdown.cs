@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
     {
 
         public EditorAutoModFilterDropdown(Bindable<AutoModIssueCategory> category) : base("FILTER:", 22,
-            new Dropdown(GetOptions(), new ScalableVector2(190, 32), 22, ColorHelper.HexToColor("#45D6F5")))
+            new Dropdown(GetOptions(), new ScalableVector2(190, 32), 20, ColorHelper.HexToColor("#45D6F5")))
         {
             Dropdown.ItemSelected += (o, e) => category.Value = (AutoModIssueCategory) e.Index;
             Dropdown.Depth = -1;

@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
                 DownloadLocalization.Get("Hard"),
                 DownloadLocalization.Get("Insane"),
                 DownloadLocalization.Get("Expert")
-            }, new ScalableVector2(160, 34), 22, Colors.MainAccent)
+            }, new ScalableVector2(160, 34), 20, Colors.MainAccent)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
