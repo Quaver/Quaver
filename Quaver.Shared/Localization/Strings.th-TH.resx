@@ -88,7 +88,7 @@
     <value>แคลน</value>
   </data>
   <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
-    <value>Jukebox</value>
+    <value>ตู้เพลง</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
     <value>สกิน</value>
@@ -121,13 +121,13 @@
     <value>ผู้เล่นหลายคน</value>
   </data>
   <data name="Screen_Main_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>เครื่องมือแก้ไข</value>
   </data>
   <data name="Screen_Main_Competitive" xml:space="preserve">
     <value>Competitive</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
-    <value>Map Editor</value>
+    <value>เครื่องมือแก้ไขแมพ</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
     <value>ดาวน์โหลดแมพ</value>
@@ -136,10 +136,10 @@
     <value>ดาวน์โหลดเพลง</value>
   </data>
   <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
-    <value>Steam Workshop</value>
+    <value>เวิร์กชอป Steam</value>
   </data>
   <data name="Screen_Main_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>การตั้งค่า</value>
   </data>
   <data name="Screen_Main_QuitGame" xml:space="preserve">
     <value>ปิดเกม</value>
@@ -151,31 +151,31 @@
     <value>แน่ใจหรือไม่ว่าจะปิดเกม?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
-    <value>Compete for leaderboard ranks</value>
+    <value>แข่งขันชิงอันดับในกระดานจัดอันดับ</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
-    <value>Play custom matches online with others</value>
+    <value>เล่นแมตช์แบบกำหนดเองออนไลน์กับผู้เล่นคนอื่น</value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
-    <value>Compete against players all over the world</value>
+    <value>แข่งขันกับผู้เล่นทั่วโลก</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
-    <value>Create or edit a map to any song you'd like</value>
+    <value>สร้างหรือแก้ไขแมพของเพลงใดก็ได้ตามที่ต้องการ</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
     <value>หาเพลงใหม่ ๆ จากชุมชน</value>
   </data>
   <data name="Screen_Main_TipLabel" xml:space="preserve">
-    <value>TIP:</value>
+    <value>เคล็ดลับ:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing CTRL+O will open the options menu.</value>
+    <value>การกดปุ่ม Ctrl+O จะเปิดเมนูการตั้งค่า</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
-    <value>Drag map files (.qp) into the game to import them.</value>
+    <value>ลากไฟล์แมพ (.qp) เข้าไปในเกมเพื่อนำเข้า</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing F3 in song select displays a map preview.</value>
+    <value>การกดปุ่ม F3 ในหน้าเลือกเพลงจะแสดงตัวอย่างแมพ</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Pausing in gameplay prevents score submission.</value>
@@ -187,10 +187,10 @@
     <value>Request new features by opening GitHub issues!</value>
   </data>
   <data name="Screen_Main_TipCreateMap" xml:space="preserve">
-    <value>Drag a .mp3 file in the game to create a new map!</value>
+    <value>ลากไฟล์ .mp3 เข้ามาในเกมเพื่อสร้างแมพใหม่!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>กดปุ่ม F2 ในหน้าเลือกเพลงจะสุ่มเลือกเพลง</value>
+    <value>การกดปุ่ม F2 ในหน้าเลือกเพลงจะสุ่มเลือกเพลง</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
     <value>Pressing F10 in the menu opens your playercard.</value>
@@ -208,10 +208,10 @@
     <value>CTRL+ +/- changes the playback rate of the song.</value>
   </data>
   <data name="Screen_Main_NowPlaying" xml:space="preserve">
-    <value>Now Playing:</value>
+    <value>กำลังเล่น:</value>
   </data>
   <data name="Screen_Main_Published" xml:space="preserve">
-    <value>Published {0}</value>
+    <value>เผยแพร่เมื่อ {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>ทั้งหมด</value>
@@ -223,7 +223,7 @@
     <value>กลับ</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
-    <value>By:</value>
+    <value>โดย:</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -238,16 +238,16 @@
     <value>อันดับในประเทศ</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
-    <value>Create New</value>
+    <value>สร้างใหม่</value>
   </data>
   <data name="Screen_Selection_CreatePlaylist" xml:space="preserve">
     <value>สร้างเพลย์ลิสต์</value>
   </data>
   <data name="Screen_Selection_Creator" xml:space="preserve">
-    <value>Creator</value>
+    <value>ผู้สร้าง</value>
   </data>
   <data name="Screen_Selection_DateAdded" xml:space="preserve">
-    <value>Date Added</value>
+    <value>วันที่เพิ่ม</value>
   </data>
   <data name="Screen_Selection_Difficulty" xml:space="preserve">
     <value>ระดับความยาก</value>
@@ -277,7 +277,7 @@
     <value>Highest Rated Score</value>
   </data>
   <data name="Screen_Selection_Leaderboard" xml:space="preserve">
-    <value>LEADERBOARD</value>
+    <value>กระดานจัดอันดับ</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
     <value>ความยาว</value>
@@ -310,10 +310,10 @@
     <value>โหมด:</value>
   </data>
   <data name="Screen_Selection_Modifiers" xml:space="preserve">
-    <value>Modifiers</value>
+    <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Selection_Mods" xml:space="preserve">
-    <value>Mods</value>
+    <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Selection_NeverPlayed" xml:space="preserve">
     <value>Never Played</value>
@@ -325,7 +325,7 @@
     <value>NO PERSONAL BEST SET</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
-    <value>None</value>
+    <value>ไม่มี</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
     <value>โน้ตต่อวินาที</value>
@@ -343,7 +343,7 @@
     <value>โปรไฟล์ออนไลน์</value>
   </data>
   <data name="Screen_Selection_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>การตั้งค่า</value>
   </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>ความแม่นยำโดยรวม</value>
@@ -370,7 +370,7 @@
     <value>เพลย์ลิสต์</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
-    <value>Preview is disabled in this game!</value>
+    <value>ตัวอย่างถูกปิดใช้งานในเกมนี้!</value>
   </data>
   <data name="Screen_Selection_Profile" xml:space="preserve">
     <value>โปรไฟล์</value>
@@ -379,7 +379,7 @@
     <value>สุ่ม</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked Status</value>
+    <value>สถานะการจัดอันดับ</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
     <value>RANKING:</value>
@@ -403,34 +403,34 @@
     <value>SELECT:</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
-    <value>SORT BY:</value>
+    <value>เรียงตาม:</value>
   </data>
   <data name="Screen_Selection_Source" xml:space="preserve">
-    <value>Source</value>
+    <value>แหล่งที่มา</value>
   </data>
   <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
     <value>There is currently no map selected!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>This map is not ranked!</value>
+    <value>แมพนี้ไม่จัดอันดับ!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
     <value>This map is not submitted online!</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
-    <value>Times Played</value>
+    <value>จำนวนครั้งที่เล่น</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
-    <value>Title</value>
+    <value>ชื่อเพลง</value>
   </data>
   <data name="Screen_Selection_TotalHits" xml:space="preserve">
-    <value>Total Hits</value>
+    <value>จำนวนการกดทั้งหมด</value>
   </data>
   <data name="Screen_Selection_TotalPauses" xml:space="preserve">
     <value>Total Pauses</value>
   </data>
   <data name="Screen_Selection_TotalScore" xml:space="preserve">
-    <value>Total Score</value>
+    <value>คะแนนรวม</value>
   </data>
   <data name="Screen_Selection_ViewMap" xml:space="preserve">
     <value>View Map</value>
@@ -490,13 +490,13 @@
     <value>Offset</value>
   </data>
   <data name="Screen_Options_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>เอฟเฟกต์</value>
   </data>
   <data name="Screen_Options_Localization" xml:space="preserve">
     <value>Localization</value>
   </data>
   <data name="Screen_Options_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>พื้นหลัง</value>
   </data>
   <data name="Screen_Options_Visuals" xml:space="preserve">
     <value>Visuals</value>
@@ -945,7 +945,7 @@ Marvelous instead.</value>
     <value>Remove All Mods</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
-    <value>Pause/Play Track</value>
+    <value>หยุด/เล่นเพลง</value>
   </data>
   <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
     <value>Decrease Playback Rate</value>
@@ -1341,7 +1341,7 @@ Marvelous instead.</value>
     <value>{0} Search Results</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
-    <value>Music is currently paused!</value>
+    <value>ดนตรีถูกหยุดอยู่!</value>
   </data>
   <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
     <value>Music is now playing!</value>
