@@ -14,7 +14,7 @@ using System;
      public class IconTextButtonEdit : IconTextButton
      {
          public IconTextButtonEdit(SelectionScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
-             FontManager.GetWobbleFont(Fonts.LatoBlack),"Edit", (sender, args) =>
+             FontManager.GetWobbleFont(Fonts.InterBold),"Edit", (sender, args) =>
              {
                  screen.ExitToEditor();
              }, localizationKey: SelectionLocalization.GetKey("Edit"))

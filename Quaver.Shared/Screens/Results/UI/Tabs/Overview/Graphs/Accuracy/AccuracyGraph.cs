@@ -233,7 +233,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                     Size = new ScalableVector2(ContentContainer.Width, thickness),
                 };
 
-                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{acc:f2}%", 20,
+                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{acc:f2}%", 20,
                     false)
                 {
                     Parent = line,

@@ -107,6 +107,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private int PerformanceRatingX { get; } = -12;
 
         /// <summary>
+        ///     The original score username
+        /// </summary>
+        private string ScoreUsername { get; set; }
+
+        /// <summary>
         ///     Returns the background color of the table
         /// </summary>
         private Color BackgroundColor
@@ -226,14 +231,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 if (!Score.IsPersonalBest)
                     Rank.Text = $"{Score.Index + 1}.";
 
-                UpdateClanAndUsername(score.Item);
-
                 if (score.Item.Name == ConfigManager.Username.Value)
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameSelfColor ?? Colors.MainAccent;
                 else
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6");
 
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
+
+                UpdateClanAndUsername(score.Item);
                 
                 UpdateAccuracyMode(score);
 
@@ -304,7 +309,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateRankText()
         {
-            Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "10.", 22)
+            Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "10.", 22)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -376,7 +381,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Player", 24)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Player", 22)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -391,7 +396,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateClan()
         {
-            Clan = new ClanTag(24)
+            Clan = new ClanTag(22)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -407,7 +412,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             Clan.X = Flag.X + Flag.Width + PaddingLeft / 4f;
             Username.X = Clan.HasClan ? Clan.X + Clan.Width + 6 : Clan.X;
-            Username.Text = $"{score.Name}";
+            var changed = ScoreUsername != score.Name;
+            if (changed)
+            {
+                ScoreUsername = score.Name;
+                Username.Text = score.Name;
+                var maxWidth = (int)(Width + PerformanceRating.X - PerformanceRating.Width - Clan.X - Clan.Width - Time.Width - CantBeatAlert.Width - 70);
+                if (Username.Width > maxWidth)
+                {
+                    Username.TruncateWithEllipsis(maxWidth);
+                }
+            }
         }
 
         /// <summary>
@@ -415,11 +430,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreatePerformanceRating()
         {
-            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00.00", 28)
+            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00", 26)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Y = 6,
+                Y = 8,
                 X = PerformanceRatingX,
                 Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreRatingColor ?? ColorHelper.HexToColor("#E9B736"),
                 UsePreviousSpriteBatchOptions = true
@@ -431,7 +446,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateAccuracyMaxCombo()
         {
-            AccuracyMaxCombo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00.00% | 0,000x", 21)
+            AccuracyMaxCombo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00% | 0,000x", 21)
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
@@ -447,7 +462,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateMods()
         {
-            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 18)
+            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -468,7 +483,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(20, 20),
                 UsePreviousSpriteBatchOptions = true,
-                Y = PerformanceRating.Y + 5,
+                Y = PerformanceRating.Y + 3,
                 X = PerformanceRatingX,
                 Alpha = 0
             };
@@ -505,7 +520,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(18, 18),
                 UsePreviousSpriteBatchOptions = true,
-                Y = PerformanceRating.Y + 5,
+                Y = PerformanceRating.Y + 3,
                 X = PerformanceRatingX,
                 Alpha = 0,
                 Tint = ColorHelper.HexToColor("#5dc7f9")
@@ -537,7 +552,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Size = new ScalableVector2(12, 12),
             };
 
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 18)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = Clock,
                 Alignment = Alignment.MidLeft,
@@ -712,7 +727,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             }
             else
             {
-                CantBeatAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
+                CantBeatAlert.X = PerformanceRating.X - PerformanceRating.Width - 5;
                 CantBeatAlertShouldBeVisible = true;
                 ApplyAlertVisibility();
             }
@@ -732,7 +747,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             }
 
             RequiredAccuracyAlertShouldBeVisible = true;
-            RequiredAccuracyAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
+            RequiredAccuracyAlert.X = PerformanceRating.X - PerformanceRating.Width - 5;
             ApplyAlertVisibility();
         }
 

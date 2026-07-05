@@ -55,14 +55,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Tint = Color.Black;
             Alpha = 0f;
 
-            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("PlayersCount", 0, 16))
+            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("PlayersCount", 0, 16))
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 FontSize = 16,
             };
 
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("WaitingToStart"))
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("WaitingToStart"))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

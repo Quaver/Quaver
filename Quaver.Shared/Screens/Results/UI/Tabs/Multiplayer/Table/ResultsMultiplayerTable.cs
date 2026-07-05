@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private void CreateRulesetText()
         {
-            Ruleset = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Ruleset = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 GetRulesetText(),
                 22)
             {
@@ -185,7 +185,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             for (var i = headers.Count - 1; i >= 0; i--)
             {
                 // ReSharper disable once ObjectCreationAsStatement
-                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), headers[i], 22)
+                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), headers[i], 22)
                 {
                     Parent = HeaderContainer,
                     Alignment = Alignment.MidRight,

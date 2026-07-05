@@ -86,14 +86,14 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 Alpha = 0.60f,
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title, 30)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), title, 30)
             {
                 Parent = Button,
                 Alignment = Alignment.BotCenter,
                 Y = -150
             };
 
-            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subtitle, 22)
+            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), subtitle, 22)
             {
                 Parent = Button,
                 Alignment = Alignment.BotCenter,

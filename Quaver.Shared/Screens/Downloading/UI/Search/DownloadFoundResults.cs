@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// </summary>
         private void CreateTextCount()
         {
-            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0", 21)
+            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0", 21)
             {
                 Parent = this,
                 Tint = Colors.MainAccent
@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// </summary>
         private void CreateTextMapsFound()
         {
-            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 DownloadLocalization.Get("MAPSETS FOUND"), 21)
             {
                 Parent = this,

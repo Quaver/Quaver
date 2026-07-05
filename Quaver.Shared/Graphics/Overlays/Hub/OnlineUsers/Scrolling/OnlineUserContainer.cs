@@ -388,7 +388,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// </summary>
         private void CreateOfflineNotice()
         {
-            OfflineNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            OfflineNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer
         {
             var time = $"{Processor.Value.Date:hh:mm:ss tt}";
 
-            MatchPlayedDate = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            MatchPlayedDate = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 ResultsLocalization.Get("Match played on", Processor.Value.Date.ToShortDateString(), time), 22)
             {
                 Parent = ContentContainer,

@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// </summary>
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
-        public DownloadFilterItemBpmTextbox(string placeholder, BindableFloat bindable) : base(FontManager.GetWobbleFont(Fonts.LatoBlack),
+        public DownloadFilterItemBpmTextbox(string placeholder, BindableFloat bindable) : base(FontManager.GetWobbleFont(Fonts.InterBold),
             22, "", placeholder)
         {
             AllowedCharacters = new Regex(@"^(?!.*\..*\.)[.\d]+$");

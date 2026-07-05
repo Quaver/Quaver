@@ -792,7 +792,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 if (input.ReplayInputManager != null)
                     continue;
 
-                var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                     input.BindingStore[i].Key.Value.GetName(), 32)
                 {
                     Parent = Playfield.ForegroundContainer,

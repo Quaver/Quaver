@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
     {
         public IconTextButtonMultiplayerCommands() : base(
             FontAwesome.Get(FontAwesomeIcon.fa_speech_bubbles_comment_option),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), MultiLocalization.Get("Commands"),
+            FontManager.GetWobbleFont(Fonts.InterBold), MultiLocalization.Get("Commands"),
             (sender, args) => { BrowserHelper.OpenURL($"https://quavergame.com/wiki/Multiplayer/Commands"); })
         {
         }

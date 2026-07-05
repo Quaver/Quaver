@@ -159,7 +159,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         {
             var header = Dialog.Playlist != null ? "Edit Playlist" : "Create New Playlist";
 
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), header.ToUpper(), 26)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), header.ToUpper(), 26)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft
@@ -207,7 +207,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            DragAndDropText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Drag an image into the window...", 24)
+            DragAndDropText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "Drag an image into the window...", 24)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter

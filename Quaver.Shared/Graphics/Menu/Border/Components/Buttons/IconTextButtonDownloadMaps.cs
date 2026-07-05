@@ -12,7 +12,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public override QuaverScreenType Screen { get; } = QuaverScreenType.Download;
 
         public IconTextButtonDownloadMaps() : base(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), "Maps", localizationKey: "Screen_Main_Menu_Maps")
+            FontManager.GetWobbleFont(Fonts.InterBold), "Maps", localizationKey: "Screen_Main_Menu_Maps")
         {
         }
 

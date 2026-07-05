@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
         /// </summary>
         /// <param name="game"></param>
         public DrawableMultiplayerGameStatus(Bindable<MultiplayerGame> game)
-            : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            : base(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
         {
             Game = game;
             UpdateText();

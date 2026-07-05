@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonCreatePlaylist : IconTextButton
     {
         public IconTextButtonCreatePlaylist() : base(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Create Playlist", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Create Playlist", (sender, args) =>
             {
                 DialogManager.Show(new CreatePlaylistDialog());
             }, localizationKey: SelectionLocalization.GetKey("Create Playlist"))

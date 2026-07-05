@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
             Y = -2;
 
-            Measure = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), measureCount.ToString(), 24, false)
+            Measure = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), measureCount.ToString(), 24, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

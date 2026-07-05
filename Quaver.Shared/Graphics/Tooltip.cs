@@ -22,7 +22,7 @@ namespace Quaver.Shared.Graphics
             SetChildrenAlpha = true;
             SetChildrenVisibility = true;
 
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20, cacheText)
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20, cacheText)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

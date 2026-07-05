@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
     public class IconTextButtonLeaveMultiplayerGame : IconTextButton
     {
         public IconTextButtonLeaveMultiplayerGame(MultiplayerGameScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), MultiLocalization.Get("Leave"), (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold), MultiLocalization.Get("Leave"), (sender, args) =>
             {
                 DialogManager.Show(new ConfirmExitToLobby(screen));
             })

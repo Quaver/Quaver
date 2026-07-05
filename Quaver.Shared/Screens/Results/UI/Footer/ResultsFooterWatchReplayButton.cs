@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
     public class ResultsFooterWatchReplayButton : IconTextButton
     {
         public ResultsFooterWatchReplayButton(ResultsScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_photo_camera),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), ResultsLocalization.Get("Watch Replay"), (sender, args) => screen.WatchReplay())
+            FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Watch Replay"), (sender, args) => screen.WatchReplay())
         {
         }
     }

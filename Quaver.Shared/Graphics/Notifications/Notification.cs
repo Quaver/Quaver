@@ -100,7 +100,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Image = image
             };
 
-            Content = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), text)
+            Content = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), text)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

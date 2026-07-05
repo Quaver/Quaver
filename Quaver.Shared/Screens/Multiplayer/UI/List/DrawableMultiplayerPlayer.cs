@@ -131,7 +131,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), string.IsNullOrEmpty(item.Username) ? MultiplayerLocalization.Get("Loading") : item.Username)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), string.IsNullOrEmpty(item.Username) ? MultiplayerLocalization.Get("Loading") : item.Username)
             {
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
@@ -167,7 +167,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Wins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("Wins", 0))
+            Wins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Wins", 0))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -178,7 +178,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "")
+            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -189,7 +189,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Tint = Colors.MainAccent
             };
 
-            Referee = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("Referee"))
+            Referee = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Referee"))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 Tint = BackgroundColor
             };
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.Name, 24)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Name, 24)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

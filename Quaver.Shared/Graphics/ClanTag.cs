@@ -13,7 +13,7 @@ namespace Quaver.Shared.Graphics
 
         public Color BaseColor { get; private set; } = Color.Beige;
 
-        public ClanTag(int fontSize) : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "", fontSize)
+        public ClanTag(int fontSize) : base(FontManager.GetWobbleFont(Fonts.InterBold), "", fontSize)
         {
             Visible = false;
         }

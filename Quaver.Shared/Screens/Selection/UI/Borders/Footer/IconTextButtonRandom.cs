@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonRandom : IconTextButton
     {
         public IconTextButtonRandom(SelectionScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_exchange_arrows),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Random", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Random", (sender, args) =>
             {
                 screen.SelectRandomMap();
             }, localizationKey: SelectionLocalization.GetKey("Random"))

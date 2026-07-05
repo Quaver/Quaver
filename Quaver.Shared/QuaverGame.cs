@@ -501,6 +501,7 @@ namespace Quaver.Shared
             ConfigManager.Language.ValueChanged += (sender, e) =>
             {
                 QuaverLocalization.SetCurrentCulture(e.Value);
+                Fonts.ReloadCjkFontFace(e.Value);
                 NotificationManager.Show(NotificationLevel.Info,
                     LocalizationManager.Get("Notification_LanguageChangeRequiresScreenChange"));
             };
@@ -583,7 +584,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.InterBold), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,

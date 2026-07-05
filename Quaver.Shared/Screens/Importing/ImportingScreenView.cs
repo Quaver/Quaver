@@ -186,7 +186,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private void CreatePleaseWaitText()
         {
-            PleaseWaitText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            PleaseWaitText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 "Please wait while your maps are being processed!".ToUpper(), 26)
             {
                 Parent = Banner,
@@ -200,7 +200,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private void CreateStatusText()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), CurrentAction.ToUpper(), 22, false)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), CurrentAction.ToUpper(), 22, false)
             {
                 Parent = ImportProgressBar,
                 Alignment = Alignment.MidCenter,
@@ -212,7 +212,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private void CreateDetailsText()
         {
-            Details = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), CurrentDetails, 21, false)
+            Details = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), CurrentDetails, 21, false)
             {
                 Parent = Banner,
                 Alignment = Alignment.TopCenter,

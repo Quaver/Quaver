@@ -306,7 +306,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 IsClickable = canSyncMetadata
             };
 
-            SyncMetadataText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SYNC METADATA", 18)
+            SyncMetadataText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SYNC METADATA", 18)
             {
                 Parent = SyncMetadataButton,
                 Alignment = Alignment.MidCenter,

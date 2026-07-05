@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             if (AudioEngine.Track != null)
                 value = (int) (AudioEngine.Track.Rate * 100);
 
-            Rate = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{value / 100f:0.00}x", 20)
+            Rate = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{value / 100f:0.00}x", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

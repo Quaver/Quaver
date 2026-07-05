@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Waiting for host!")
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Waiting for host!")
             {
                 Parent = this,
                 FontSize = 20,

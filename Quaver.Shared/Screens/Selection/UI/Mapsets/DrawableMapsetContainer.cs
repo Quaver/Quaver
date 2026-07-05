@@ -279,7 +279,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 26)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),

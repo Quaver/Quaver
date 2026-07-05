@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
     {
         public IconTextButtonMultiplayerModifiers(MultiplayerGameScreen screen)
             : base(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette),
-                FontManager.GetWobbleFont(Fonts.LatoBlack), MultiLocalization.Get("Modifiers"), (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterBold), MultiLocalization.Get("Modifiers"), (sender, args) =>
                 {
                     if (screen.ActiveLeftPanel.Value == SelectContainerPanel.Modifiers)
                         screen.ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
