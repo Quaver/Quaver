@@ -222,7 +222,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateHeader()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), HeaderText.ToUpper(), 26)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), HeaderText.ToUpper(), 22)
             {
                 Parent = Panel,
                 Alignment = Alignment.TopLeft,
@@ -235,7 +235,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateConfirmation()
         {
-            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfirmationText, 26)
+            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfirmationText, 22)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter,

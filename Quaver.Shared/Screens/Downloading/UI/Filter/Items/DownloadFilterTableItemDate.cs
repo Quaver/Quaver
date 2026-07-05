@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
         public DownloadFilterItemDateTextbox(string placeholder, Bindable<string> bindable)
-            : base(FontManager.GetWobbleFont(Fonts.InterBold), 22, "", placeholder)
+            : base(FontManager.GetWobbleFont(Fonts.InterSemiBold), 20, "", placeholder)
         {
             OnStoppedTyping += s =>
             {

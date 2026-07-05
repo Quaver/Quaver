@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
     public class DownloadSortByDropdown : LabelledDropdown
     {
         public DownloadSortByDropdown(Bindable<DownloadSortBy> sortBy) : base(DownloadLocalization.Get("SORT BY: "), 20, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(180, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
+            new ScalableVector2(180, 38), 20, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += (sender, args) => sortBy.Value = (DownloadSortBy) args.Index;
         }

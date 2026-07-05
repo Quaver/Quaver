@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// </summary>
         /// <param name="mode"></param>
         public DownloadModeDropdown(Bindable<GameMode> mode) : base(DownloadLocalization.Get("MODE: "), 20, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(120, 38), 22, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
+            new ScalableVector2(120, 38), 20, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
         {
             Mode = mode;
             Dropdown.ItemSelected += (sender, args) => Mode.Value = (GameMode)args.Index;
