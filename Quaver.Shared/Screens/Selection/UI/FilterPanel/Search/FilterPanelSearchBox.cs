@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
         /// <param name="placeHolderText"></param>
         public FilterPanelSearchBox(Bindable<string> currentSearchQuery, Bindable<List<Mapset>> availableMapsets,
             Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel, string placeHolderText)
-            : base(new ScalableVector2(280, 40), FontManager.GetWobbleFont(Fonts.InterBold),22, PreviousSearchTerm, placeHolderText)
+            : base(new ScalableVector2(280, 40), FontManager.GetWobbleFont(Fonts.InterBold),20, PreviousSearchTerm, placeHolderText)
         {
             CurrentSearchQuery = currentSearchQuery;
             AvailableMapsets = availableMapsets;

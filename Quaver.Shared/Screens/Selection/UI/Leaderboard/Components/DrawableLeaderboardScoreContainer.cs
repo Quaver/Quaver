@@ -309,7 +309,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateRankText()
         {
-            Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "10.", 22)
+            Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "10.", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -381,7 +381,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Player", 22)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Player", 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -430,7 +430,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreatePerformanceRating()
         {
-            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00", 26)
+            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00", 22)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -446,7 +446,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateAccuracyMaxCombo()
         {
-            AccuracyMaxCombo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00% | 0,000x", 21)
+            AccuracyMaxCombo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00% | 0,000x", 18)
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
@@ -552,7 +552,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Size = new ScalableVector2(12, 12),
             };
 
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
             {
                 Parent = Clock,
                 Alignment = Alignment.MidLeft,

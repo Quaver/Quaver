@@ -15,8 +15,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
     public class LeaderboardTypeDropdown : LabelledDropdown
     {
-        public LeaderboardTypeDropdown() : base(SelectionLocalization.Get("Ranking:"), 24, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(125, 30), 20, SkinManager.Skin?.SongSelect?.LeaderboardDropdownColor ?? ColorHelper.HexToColor($"#10C8F6"),
+        public LeaderboardTypeDropdown() : base(SelectionLocalization.Get("Ranking:"), 20, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(125, 30), 18, SkinManager.Skin?.SongSelect?.LeaderboardDropdownColor ?? ColorHelper.HexToColor($"#10C8F6"),
             GetSelectedIndex()))
         {
             Label.Tint = SkinManager.Skin.SongSelect?.LeaderboardRankingTitleColor ?? Color.White;
