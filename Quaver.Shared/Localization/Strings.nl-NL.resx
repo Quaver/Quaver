@@ -19,64 +19,64 @@
     <value>Bulgaars</value>
   </data>
   <data name="Language_Danish" xml:space="preserve">
-    <value>Danish</value>
+    <value>Deens</value>
   </data>
   <data name="Language_German" xml:space="preserve">
-    <value>German</value>
+    <value>Duits</value>
   </data>
   <data name="Language_Spanish" xml:space="preserve">
-    <value>Spanish</value>
+    <value>Spaans</value>
   </data>
   <data name="Language_French" xml:space="preserve">
-    <value>French</value>
+    <value>Frans</value>
   </data>
   <data name="Language_Indonesian" xml:space="preserve">
-    <value>Indonesian</value>
+    <value>Indonesisch</value>
   </data>
   <data name="Language_Italian" xml:space="preserve">
-    <value>Italian</value>
+    <value>Italiaans</value>
   </data>
   <data name="Language_Japanese" xml:space="preserve">
-    <value>Japanese</value>
+    <value>Japans</value>
   </data>
   <data name="Language_Korean" xml:space="preserve">
-    <value>Korean</value>
+    <value>Koreaans</value>
   </data>
   <data name="Language_Dutch" xml:space="preserve">
-    <value>Dutch</value>
+    <value>Nederlands</value>
   </data>
   <data name="Language_Norwegian" xml:space="preserve">
-    <value>Norwegian</value>
+    <value>Noors</value>
   </data>
   <data name="Language_Polish" xml:space="preserve">
-    <value>Polish</value>
+    <value>Pools</value>
   </data>
   <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portuguese (Brazil)</value>
+    <value>Portugees (Brazilië)</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
-    <value>Russian</value>
+    <value>Russisch</value>
   </data>
   <data name="Language_Swedish" xml:space="preserve">
-    <value>Swedish</value>
+    <value>Zweeds</value>
   </data>
   <data name="Language_Thai" xml:space="preserve">
-    <value>Thai</value>
+    <value>Thais</value>
   </data>
   <data name="Language_Ukrainian" xml:space="preserve">
-    <value>Ukrainian</value>
+    <value>Oekraïens</value>
   </data>
   <data name="Language_ChineseSimplified" xml:space="preserve">
-    <value>Chinese (Simplified)</value>
+    <value>Chinees (Vereenvoudigd)</value>
   </data>
   <data name="Language_ChineseTraditional" xml:space="preserve">
-    <value>Chinese (Traditional)</value>
+    <value>Chinees (Traditioneel)</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Verander van scherm om de taal te wijzigen.</value>
   </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
-    <value>Send a message...</value>
+    <value>Stuur een bericht...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>Startscherm</value>
@@ -223,7 +223,7 @@
     <value>Terug</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
-    <value>By:</value>
+    <value>Door:</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -283,7 +283,7 @@
     <value>Lengte</value>
   </data>
   <data name="Screen_Selection_LengthLabel" xml:space="preserve">
-    <value>Length:</value>
+    <value>Lengte:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>Lokaal</value>
@@ -322,7 +322,7 @@
     <value>Geen scores beschikbaar. Wees de eerste!</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
-    <value>NO PERSONAL BEST SET</value>
+    <value>GEEN BESTE SCORE GEZET</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>Geen</value>
@@ -343,7 +343,7 @@
     <value>Online Profiel</value>
   </data>
   <data name="Screen_Selection_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Opties</value>
   </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>Totale Nauwkeurigheid</value>
@@ -355,7 +355,7 @@
     <value>Aantal Pass/Failures</value>
   </data>
   <data name="Screen_Selection_PersonalBest" xml:space="preserve">
-    <value>PERSONAL BEST</value>
+    <value>PERSOONLIJKE BESTE</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Spelen</value>
@@ -442,7 +442,7 @@
     <value>Je moet online zijn om deze rangschikking te bekijken!</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
-    <value>You cannot beat this score with your currently activated modifiers!</value>
+    <value>Je kan deze score niet overtreffen met je huidig gekozen modificaties!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>Je map is verouderd. Update het alsjeblieft!</value>
@@ -475,7 +475,7 @@
     <value>Geavanceerd</value>
   </data>
   <data name="Screen_Options_Window" xml:space="preserve">
-    <value>Window</value>
+    <value>Scherm</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
     <value></value>
@@ -487,222 +487,222 @@
     <value>Volume</value>
   </data>
   <data name="Screen_Options_Offset" xml:space="preserve">
-    <value>Offset</value>
+    <value>Afwijking</value>
   </data>
   <data name="Screen_Options_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>Effecten</value>
   </data>
   <data name="Screen_Options_Localization" xml:space="preserve">
-    <value>Localization</value>
+    <value>Lokalisatie</value>
   </data>
   <data name="Screen_Options_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>Achtergrond</value>
   </data>
   <data name="Screen_Options_Visuals" xml:space="preserve">
     <value>Visuals</value>
   </data>
   <data name="Screen_Options_Sound" xml:space="preserve">
-    <value>Sound</value>
+    <value>Geluid</value>
   </data>
   <data name="Screen_Options_UserInterface" xml:space="preserve">
-    <value>User Interface</value>
+    <value>Gebruikersinterface</value>
   </data>
   <data name="Screen_Options_Scoreboard" xml:space="preserve">
-    <value>Scoreboard</value>
+    <value>Scorebord</value>
   </data>
   <data name="Screen_Options_ProgressBar" xml:space="preserve">
-    <value>Progress Bar</value>
+    <value>Voortgangsbalk</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
-    <value>Lane Cover</value>
+    <value>Kolomdekking</value>
   </data>
   <data name="Screen_Options_Selection" xml:space="preserve">
-    <value>Selection</value>
+    <value>Selectie</value>
   </data>
   <data name="Screen_Options_Navigation" xml:space="preserve">
-    <value>Navigation</value>
+    <value>Navigatie</value>
   </data>
   <data name="Screen_Options_Sharing" xml:space="preserve">
-    <value>Sharing</value>
+    <value>Delen</value>
   </data>
   <data name="Screen_Options_Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>Configuratie</value>
   </data>
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
-    <value>Gameplay Controls</value>
+    <value>Gameplay Besturing</value>
   </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
-    <value>Gameplay User Interface</value>
+    <value>Gameplay Gebruikersinterface</value>
   </data>
   <data name="Screen_Options_SongSelection" xml:space="preserve">
-    <value>Song Selection</value>
+    <value>Nummer Selectie</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
     <value>Editor</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
-    <value>Misc</value>
+    <value>Overig</value>
   </data>
   <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
-    <value>Navigation &amp; Maintenance</value>
+    <value>Navigatie &amp; Onderhoud</value>
   </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
-    <value>Installed Games</value>
+    <value>Geïnstalleerde Spellen</value>
   </data>
   <data name="Screen_Options_Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Notificaties</value>
   </data>
   <data name="Screen_Options_SongSelect" xml:space="preserve">
-    <value>Song Select</value>
+    <value>Nummer Selectie</value>
   </data>
   <data name="Screen_Options_ScreenResolution" xml:space="preserve">
-    <value>Screen Resolution</value>
+    <value>Schermresolutie</value>
   </data>
   <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
-    <value>Enable Fullscreen</value>
+    <value>Volledig Scherm Inschakelen</value>
   </data>
   <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
-    <value>Enable Borderless Window</value>
+    <value>Grensloos Venster Inschakelen</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
-    <value>Frame Limiter</value>
+    <value>Frame Begrenzer</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
-    <value>Set Custom FPS</value>
+    <value>Aangepaste FPS instellen</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
-    <value>Display FPS Counter</value>
+    <value>Toon FPS-teller</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
-    <value>Audio Output Device</value>
+    <value>Audio Uitvoerapparaat</value>
   </data>
   <data name="Screen_Options_MasterVolume" xml:space="preserve">
-    <value>Master Volume</value>
+    <value>Algemeen Volume</value>
   </data>
   <data name="Screen_Options_MusicVolume" xml:space="preserve">
-    <value>Music Volume</value>
+    <value>Muziek Volume</value>
   </data>
   <data name="Screen_Options_EffectVolume" xml:space="preserve">
     <value>Effect Volume</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
-    <value>Master</value>
+    <value>Algemeen</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Muziek</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
     <value>Effect</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Terug</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Retry Map</value>
+    <value>Probeer Map Opnieuw</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
-    <value>Watch Replay</value>
+    <value>Herhaling Bekijken</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
-    <value>Export Replay</value>
+    <value>Herhaling Exporteren</value>
   </data>
   <data name="Screen_Results_FixOffset" xml:space="preserve">
-    <value>Fix Offset</value>
+    <value>Afwijking Aanpassen</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
-    <value>Convert Score</value>
+    <value>Score Omzetten</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Please wait! Your score is already being converted!</value>
+    <value>Wacht even! Je score wordt al omgezet!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
-    <value>Overview</value>
+    <value>Overzicht</value>
   </data>
   <data name="Screen_Results_Multiplayer" xml:space="preserve">
     <value>Multiplayer</value>
   </data>
   <data name="Screen_Results_Mappedby" xml:space="preserve">
-    <value>Mapped by:</value>
+    <value>Gemaakt door:</value>
   </data>
   <data name="Screen_Results_Playedby" xml:space="preserve">
-    <value>Played by</value>
+    <value>Gespeeld door</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
-    <value>on {0} @ {1}</value>
+    <value>op {0} @ {1}</value>
   </data>
   <data name="Screen_Results_JudgementPreset" xml:space="preserve">
-    <value>Judgement Preset:</value>
+    <value>Beoordelings Preset:</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
-    <value>GRAPH:</value>
+    <value>GRAFIEK:</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
-    <value>Deviance</value>
+    <value>Afwijking</value>
   </data>
   <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Accuracy</value>
+    <value>Nauwkeurigheid</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
-    <value>Health</value>
+    <value>Levens</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
-    <value>Rating</value>
+    <value>Beoordeling</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Mean:</value>
+    <value>Gemiddelde:</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
-    <value>Std. Dev:</value>
+    <value>Std. Afw:</value>
   </data>
   <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Ratio:</value>
+    <value>Verhouding:</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
-    <value>Statistics Not Available</value>
+    <value>Statistieken Niet Beschikbaar</value>
   </data>
   <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
-    <value>This displays the course of accuracy throughout the score.
+    <value>Dit laat de nauwkeurigheid zien in het verloop van de score.
 
-If the map was not completed, then it will additionally
-show the accuracy if all subsequent hits had been
-Marvelous instead.</value>
+Als de map niet is afgemaakt, laat het de
+nauwkeurigheid zien alsof alle volgende
+noten als Uitstekend werden geraakt.</value>
   </data>
   <data name="Screen_Results_Latehitwindow" xml:space="preserve">
-    <value>Late (+{0} ms)</value>
+    <value>Laat (+{0} ms)</value>
   </data>
   <data name="Screen_Results_Earlyhitwindow" xml:space="preserve">
-    <value>Early (-{0} ms)</value>
+    <value>Vroeg (-{0} ms)</value>
   </data>
   <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
-    <value>This displays the course of performance throughout the score.
+    <value>Dit laat de prestatie zien in het verloop van de score.
 
-If the map was not completed, then it will additionally
-show the performance if all subsequent hits had been
-Marvelous instead.</value>
+Als de map niet is afgemaakt, laat het de
+prestatie zien alsof alle volgende noten
+als Uitstekend werden geraakt.</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
-    <value>SUBMITTING SCORE...</value>
+    <value>SCORE AAN HET UPLOADEN...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
-    <value>GLOBAL RANK</value>
+    <value>GLOBALE RANG</value>
   </data>
   <data name="Screen_Results_CountryRank" xml:space="preserve">
-    <value>COUNTRY RANK</value>
+    <value>NATIONALE RANG</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
-    <value>OVERALL RATING</value>
+    <value>ALGEMENE RATING</value>
   </data>
   <data name="Screen_Results_OverallAccuracy" xml:space="preserve">
-    <value>OVERALL ACCURACY</value>
+    <value>ALGEMENE NAUWKEURIGHEID</value>
   </data>
   <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
-    <value>UNRANKED GAMEMODE</value>
+    <value>ONGERANGSCHIKTE GAMEMODE</value>
   </data>
   <data name="Screen_Results_Matchplayedon" xml:space="preserve">
-    <value>Match played on {0} @ {1}</value>
+    <value>Gespeeld op {0} @ {1}</value>
   </data>
   <data name="Screen_Results_FreeForAll" xml:space="preserve">
-    <value>Free For All</value>
+    <value>Ieder Voor Zich</value>
   </data>
   <data name="Screen_Results_BattleRoyale" xml:space="preserve">
     <value>Battle Royale</value>
@@ -711,16 +711,16 @@ Marvelous instead.</value>
     <value>Team</value>
   </data>
   <data name="Screen_Results_BlueTeam" xml:space="preserve">
-    <value>Blue Team</value>
+    <value>Team Blauw</value>
   </data>
   <data name="Screen_Results_RedTeam" xml:space="preserve">
-    <value>Red Team</value>
+    <value>Team Rood</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
-    <value>has won the match!</value>
+    <value>heeft de wedstrijd gewonnen!</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
-    <value>Grade</value>
+    <value>Beoordelingsgraad</value>
   </data>
   <data name="Screen_Results_MaxCombo" xml:space="preserve">
     <value>Max Combo</value>
@@ -876,154 +876,154 @@ Marvelous instead.</value>
     <value>Co-op Player 2 Skin</value>
   </data>
   <data name="Screen_Options_DefaultSkin" xml:space="preserve">
-    <value>Default Skin</value>
+    <value>Standaard Skin</value>
   </data>
   <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
-    <value>Open Skin Folder</value>
+    <value>Map Voor Skin Openen</value>
   </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
-    <value>Export Skin</value>
+    <value>Exporteer Skin</value>
   </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
-    <value>Upload Skin To Steam Workshop</value>
+    <value>Upload Skin Naar Steam Workshop</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
-    <value>Note &amp; Receptor Size Scale</value>
+    <value>Schaalgrootte Noot &amp; Receptor</value>
   </data>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
-    <value>Playfield Scale</value>
+    <value>Schaal Speelveld</value>
   </data>
   <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
-    <value>Tint Hitlighting Based On Judgement Color</value>
+    <value>Tint Highlighten Gebaseerd Op Kleur Van Beoordeling</value>
   </data>
   <data name="Screen_Options_Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Pauzeer</value>
   </data>
   <data name="Screen_Options_QuickRestart" xml:space="preserve">
-    <value>Quick Restart</value>
+    <value>Snelle Herstart</value>
   </data>
   <data name="Screen_Options_QuickExit" xml:space="preserve">
-    <value>Quick Exit</value>
+    <value>Snel Afsluiten</value>
   </data>
   <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
-    <value>Skip Song Intro</value>
+    <value>Sla Intro Over</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
-    <value>Decrease Scroll Speed</value>
+    <value>Verlaag Scrolsnelheid</value>
   </data>
   <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
-    <value>Increase Scroll Speed</value>
+    <value>Verhoog Scrolsnelheid</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
-    <value>Decrease Map Offset</value>
+    <value>Verlaag Afwijking Map</value>
   </data>
   <data name="Screen_Options_IncreaseMapOffset" xml:space="preserve">
-    <value>Increase Map Offset</value>
+    <value>Verhoog Afwijking Map</value>
   </data>
   <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
-    <value>Reset Map Offset</value>
+    <value>Reset Afwijking Map</value>
   </data>
   <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
-    <value>Toggle Scoreboard Visibility</value>
+    <value>Zichtbaarheid Scorebord in-/uitschakelen</value>
   </data>
   <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
-    <value>Toggle Chat Overlay</value>
+    <value>Chat Overlay in-/uitschakelen</value>
   </data>
   <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
-    <value>Decrease Gameplay Rate</value>
+    <value>Verlaag Spelsnelheid</value>
   </data>
   <data name="Screen_Options_IncreaseGameplayRate" xml:space="preserve">
-    <value>Increase Gameplay Rate</value>
+    <value>Verhoog Spelsnelheid</value>
   </data>
   <data name="Screen_Options_ToggleMirrorMod" xml:space="preserve">
-    <value>Toggle Mirror Mod</value>
+    <value>Spiegelmodus in-/uitschakelen</value>
   </data>
   <data name="Screen_Options_TogglePitch" xml:space="preserve">
-    <value>Toggle Pitch</value>
+    <value>Pitch aan-/uitzetten</value>
   </data>
   <data name="Screen_Options_RemoveAllMods" xml:space="preserve">
-    <value>Remove All Mods</value>
+    <value>Alle Modificaties Uitschakelen</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
-    <value>Pause/Play Track</value>
+    <value>Pauzeer/Speel Track</value>
   </data>
   <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
-    <value>Decrease Playback Rate</value>
+    <value>Verlaag Afspeelsnelheid</value>
   </data>
   <data name="Screen_Options_IncreasePlaybackRate" xml:space="preserve">
-    <value>Increase Playback Rate</value>
+    <value>Verhoog Afspeelsnelheid</value>
   </data>
   <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
-    <value>Take Screenshot</value>
+    <value>Maak Screenshot</value>
   </data>
   <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
-    <value>Open Game Folder</value>
+    <value>Open Spelmap</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
-    <value>Update Map Ranked Statuses</value>
+    <value>Update Rangschikkingsstatus Map</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
-    <value>Update Map Online Offsets</value>
+    <value>Update Online Afwijkingen Van Map</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Load Songs From Other Installed Games</value>
+    <value>Laad Nummers Van Andere Geïnstalleerde Spellen</value>
   </data>
   <data name="Screen_Options_DetectSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Detect Songs From Other Installed Games</value>
+    <value>Detecteer Nummers Van Andere Geïnstalleerde Spellen</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsFromBottomToTop" xml:space="preserve">
-    <value>Display Notifications From Bottom-To-Top</value>
+    <value>Toon Notificaties Van Onder Naar Boven</value>
   </data>
   <data name="Screen_Options_DisplayOnlineFriendNotifications" xml:space="preserve">
-    <value>Display Online Friend Notifications</value>
+    <value>Toon Meldingen Voor Online Vrienden</value>
   </data>
   <data name="Screen_Options_PrioritizedGameMode" xml:space="preserve">
-    <value>Prioritized Game Mode</value>
+    <value>Geprioriteerde Gamemode</value>
   </data>
   <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
-    <value>Suggest Difficulty from Overall Rating</value>
+    <value>Suggereer Moeilijkheidsgraad Vanuit Algemene Rating</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio/Frame Timing During Gameplay</value>
+    <value>Gebruik Smooth Audio/Frame Timing Tijdens Gameplay</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio Start Timing During Gameplay</value>
+    <value>Gebruik Smooth Audio Start Timing Tijdens Gameplay</value>
   </data>
   <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Display Gameplay Overlay (Shift + F6)</value>
+    <value>Toon Gameplay Overlay (Shift + F6)</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
-    <value>Display Notifications During Gameplay</value>
+    <value>Toon Notificaties Tijdens Gameplay</value>
   </data>
   <data name="Screen_Options_ShowSpectators" xml:space="preserve">
-    <value>Show Spectators</value>
+    <value>Toon Toeschouwers</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyWithCustomJudgements" xml:space="preserve">
-    <value>Display Ranked Accuracy With Custom Judgements</value>
+    <value>Toon Ranked Nauwkeurigheid Met Eigengemaakte Beoordelingsschaal</value>
   </data>
   <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
-    <value>Hit Error Fade Time</value>
+    <value>Hit Error Vervagingstijd</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
-    <value>Hit Error Early / Late Coloring</value>
+    <value>Hit Error Vroeg- / Laat-Kleuring</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
-    <value>Hit Error Early / Late Window</value>
+    <value>Hit Error Vroeg / Laat Scherm</value>
   </data>
   <data name="Screen_Options_EnableComboAlerts" xml:space="preserve">
-    <value>Enable Combo Alerts</value>
+    <value>Schakel Combo Alerts In</value>
   </data>
   <data name="Screen_Options_DisplayUnbeatableScores" xml:space="preserve">
-    <value>Display Unbeatable Scores</value>
+    <value>Toon Onverslaanbare Scores</value>
   </data>
   <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
-    <value>Keep Playing Upon Failing</value>
+    <value>Blijf Spelen Wanneer Gefaald</value>
   </data>
   <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
-    <value>Normalise Scroll Velocity By Rate Percentage</value>
+    <value>Normaliseer Scrolsnelheid In Verhouding Met Snelheidspercentage</value>
   </data>
   <data name="Screen_Options_Display1v1TournamentOverlay" xml:space="preserve">
-    <value>Display 1v1 Tournament Overlay</value>
+    <value>Toon 1vs1 Toernooi Overlay</value>
   </data>
   <data name="Screen_Options_Display1v1PlayfieldScores" xml:space="preserve">
     <value>Display 1v1 Playfield Scores</value>
@@ -1176,13 +1176,13 @@ Marvelous instead.</value>
     <value>4K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 4K Scratch Lane On Left</value>
+    <value>Plaats 4K Scratch Lane Aan De Linkerkant</value>
   </data>
   <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>4K Co-op Layout</value>
+    <value>4K Cooperatief Layout</value>
   </data>
   <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Prioritized 4K Difficulty</value>
+    <value>Geprioriteerde Moeilijkheid 4K</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
     <value>4 Keys</value>
