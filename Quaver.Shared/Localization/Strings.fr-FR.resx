@@ -1337,10 +1337,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>{0} Résultats de recherche</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
-    <value>La Musique est actuellement en pause !</value>
+    <value>La musique est actuellement en pause !</value>
   </data>
   <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
-    <value>La Musique est en cours de lecture !</value>
+    <value>La musique est en cours de lecture !</value>
   </data>
   <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
     <value>La collection de map est déjà en cours de téléchargement !</value>
