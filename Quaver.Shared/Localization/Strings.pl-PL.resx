@@ -307,7 +307,7 @@
     <value>Maksymalne Combo</value>
   </data>
   <data name="Screen_Selection_Mode" xml:space="preserve">
-    <value>MODE:</value>
+    <value>TRYB:</value>
   </data>
   <data name="Screen_Selection_Modifiers" xml:space="preserve">
     <value>Modyfikatory</value>
@@ -322,13 +322,13 @@
     <value>Brak wyników. Bądź pierwszy!</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
-    <value>NO PERSONAL BEST SET</value>
+    <value>BRAK WYNIKU</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>None</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
-    <value>Notes Per Sec.</value>
+    <value>Notki Na Sek.</value>
   </data>
   <data name="Screen_Selection_Online" xml:space="preserve">
     <value>Online</value>
@@ -340,7 +340,7 @@
     <value>Lista Online</value>
   </data>
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
-    <value>Online Profile</value>
+    <value>Profil Online</value>
   </data>
   <data name="Screen_Selection_Options" xml:space="preserve">
     <value>Ustawienia</value>
@@ -355,19 +355,19 @@
     <value>Pass/Failure Count</value>
   </data>
   <data name="Screen_Selection_PersonalBest" xml:space="preserve">
-    <value>PERSONALNY </value>
+    <value>PERSONALNY WYNIK</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Graj</value>
   </data>
   <data name="Screen_Selection_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>Liczba Zagrań</value>
   </data>
   <data name="Screen_Selection_Player" xml:space="preserve">
-    <value>Player</value>
+    <value>Gracz</value>
   </data>
   <data name="Screen_Selection_Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Playlisty</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
     <value>Podgląd jest wyłączony w tej grze!</value>
@@ -400,7 +400,7 @@
     <value>Wyniki na tej mapie nie będą rankingowe!</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
-    <value>SELECT:</value>
+    <value>WYBIERZ:</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
     <value>SORTUJ WG:</value>
@@ -415,7 +415,7 @@
     <value>Ta mapa nie jest rankingowa!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
-    <value>This map is not submitted online!</value>
+    <value>Ta mapa nie jest przesłana online!</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
     <value>Times Played</value>
@@ -481,7 +481,7 @@
     <value>Frame Time</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
-    <value>Output</value>
+    <value>Wyjście</value>
   </data>
   <data name="Screen_Options_Volume" xml:space="preserve">
     <value>Głośność</value>
@@ -529,7 +529,7 @@
     <value>Configuration</value>
   </data>
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
-    <value>Gameplay Controls</value>
+    <value>Rozgrywka</value>
   </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
     <value>Interfejs Użytkownika Gry</value>
@@ -574,46 +574,46 @@
     <value>Wyświetl Licznik FPS</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
-    <value>Audio Output Device</value>
+    <value>Urządzenie Wyjściowe Audio</value>
   </data>
   <data name="Screen_Options_MasterVolume" xml:space="preserve">
-    <value>Master Volume</value>
+    <value>Głośność Ogólna</value>
   </data>
   <data name="Screen_Options_MusicVolume" xml:space="preserve">
-    <value>Music Volume</value>
+    <value>Głośność Muzyki</value>
   </data>
   <data name="Screen_Options_EffectVolume" xml:space="preserve">
-    <value>Effect Volume</value>
+    <value>Głośność Efektów</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
-    <value>Master</value>
+    <value>Ogólna</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Muzyka</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>Efekty</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Wstecz</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Retry Map</value>
+    <value>Powtórz Mapę</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
-    <value>Watch Replay</value>
+    <value>Obejrzyj Powtórkę</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
-    <value>Export Replay</value>
+    <value>Eksportuj Powtórkę</value>
   </data>
   <data name="Screen_Results_FixOffset" xml:space="preserve">
     <value>Fix Offset</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
-    <value>Convert Score</value>
+    <value>Konwertuj Wynik</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Please wait! Your score is already being converted!</value>
+    <value>Proszę czekać! Twój wynik jest już konwertowany!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
     <value>Overview</value>
@@ -622,10 +622,10 @@
     <value>Multiplayer</value>
   </data>
   <data name="Screen_Results_Mappedby" xml:space="preserve">
-    <value>Mapped by:</value>
+    <value>Zmapowane przez:</value>
   </data>
   <data name="Screen_Results_Playedby" xml:space="preserve">
-    <value>Played by</value>
+    <value>Zagrane przez:</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
     <value>on {0} @ {1}</value>
@@ -831,7 +831,7 @@ Marvelous instead.</value>
     <value>Skip Results Screen After Quitting</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
-    <value>Lock Windows Key during gameplay</value>
+    <value>Zablokuj klawisz Windows podczas gry</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
     <value>Display Timing Lines</value>
@@ -1308,7 +1308,7 @@ Marvelous instead.</value>
     <value>9 Keys</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>10K Gameplay Layout</value>
+    <value>Układ Klawiszy dla 10K</value>
   </data>
   <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
     <value>10K Scroll Speed</value>
