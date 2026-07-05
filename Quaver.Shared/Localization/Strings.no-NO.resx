@@ -148,10 +148,10 @@
     <value>EXIT QUAVER</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Are you sure you would like to quit the game?</value>
+    <value>Er du sikker på at du vil avslutte spillet?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
-    <value>Compete for leaderboard ranks</value>
+    <value>Konkurrere mot andre</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
     <value>Play custom matches online with others</value>
@@ -160,7 +160,7 @@
     <value>Compete against players all over the world</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
-    <value>Create or edit a map to any song you'd like</value>
+    <value>Opprett eller rediger et map til hvilken som helst sang du ønsker</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
     <value>Find new songs from the community to play</value>
@@ -169,16 +169,16 @@
     <value>TIP:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing CTRL+O will open the options menu.</value>
+    <value>Ved å trykke på CTRL+O vil åpne innstillinger-menyen.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Drag map files (.qp) into the game to import them.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing F3 in song select displays a map preview.</value>
+    <value>Ved å trykke på F3 i sang-velgeren for å forhåndsvise et map.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
-    <value>Pausing in gameplay prevents score submission.</value>
+    <value>Pauser mens du spiller hindrer poeng-submisjon.</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
     <value>You can report a bug by opening a GitHub issue.</value>
@@ -190,7 +190,7 @@
     <value>Drag a .mp3 file in the game to create a new map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing F2 in song select chooses a random song.</value>
+    <value>Ved å trykke på F2 i sang-velgeren velger du en tilfeldig sang.</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
     <value>Pressing F10 in the menu opens your playercard.</value>
@@ -292,7 +292,7 @@
     <value>Local Profile</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
-    <value>Long Note %</value>
+    <value>Lang Noter %</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
     <value>Map Found</value>
@@ -319,7 +319,7 @@
     <value>Never Played</value>
   </data>
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
-    <value>No scores available. Be the first!</value>
+    <value>Ingen scores tilgjengelig. Vær den første!</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
     <value>NO PERSONAL BEST SET</value>
@@ -334,7 +334,7 @@
     <value>Online</value>
   </data>
   <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
-    <value>Online Grade</value>
+    <value>Online karakter</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
     <value>Online Listing</value>
@@ -343,7 +343,7 @@
     <value>Online Profile</value>
   </data>
   <data name="Screen_Selection_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Innstillinger</value>
   </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>Overall Accuracy</value>
