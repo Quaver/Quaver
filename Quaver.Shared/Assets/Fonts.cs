@@ -17,7 +17,7 @@ namespace Quaver.Shared.Assets
 {
     public static class Fonts
     {
-        private const int NotoCjkWeight = 600;
+        private const int NotoCjkWeight = FontWeight.SemiBold;
 
         public static string Exo2Bold { get; } = "exo2-bold";
         public static string Exo2BoldItalic { get; } = "exo2-bolditalic";
