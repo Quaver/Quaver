@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
         public SelectMenuFooter(SelectionScreen screen) : base(MenuBorderType.Footer, new List<Drawable>
         {
             new IconTextButtonSelectBack(screen),
-            new IconTextButtonOptions(),
+            new IconTextButtonOptions(SelectionLocalization.GetKey("Options")),
             new IconTextButtonModifiers(screen.ActiveLeftPanel),
             new IconTextButtonMapPreview(screen.ActiveLeftPanel),
             new IconTextButtonProfile(screen.ActiveLeftPanel),

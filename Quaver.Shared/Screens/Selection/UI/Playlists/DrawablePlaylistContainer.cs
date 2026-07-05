@@ -287,7 +287,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new PlaylistKeyValueDisplay("By:", "Me",
+            Creator = new PlaylistKeyValueDisplay(SelectionLocalization.Get("By:"), "Me",
                 SkinManager.Skin?.SongSelect?.MapsetPanelCreatorColor ?? ColorHelper.HexToColor("#0587E5"))
             {
                 Parent = this,

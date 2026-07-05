@@ -292,7 +292,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         private void CreateCreator()
         {
-            ByText = new SpriteTextPlus(Name.Font, "By:", 20)
+            ByText = new SpriteTextPlus(Name.Font, SelectionLocalization.Get("By:"), 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(Name.X, Name.Y + Name.Height + 5),

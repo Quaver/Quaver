@@ -46,7 +46,7 @@
     <value>Wiki</value>
   </data>
   <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
-    <value>Reporter un bug</value>
+    <value>Signaler un bug</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
     <value>Twitter</value>
@@ -100,7 +100,7 @@
     <value>Jouez des parties personnalisées en ligne avec d'autres joueurs</value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
-    <value>Affrontez des joueurs des quatre coins du monde</value>
+    <value>Concourir contre des joueurs du monde entier</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
     <value>Créez ou modifiez une map pour la musique de votre choix</value>
@@ -124,7 +124,7 @@
     <value>Mettre le jeu en pause empêche la soumission du score.</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
-    <value>Vous pouvez signaler un bug en ouvrant une issue sur GitHub.</value>
+    <value>Vous pouvez signaler un bug en ouvrant un ticket sur GitHub.</value>
   </data>
   <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
     <value>Demandez de nouvelles fonctionnalités en ouvrant des tickets sur GitHub !</value>
@@ -217,7 +217,7 @@
     <value>Meilleur Score Classé</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
-    <value>Longueur</value>
+    <value>Durée</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>Local</value>
@@ -226,7 +226,7 @@
     <value>Profil local</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
-    <value>% LN</value>
+    <value>% Note Longue</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
     <value>Map trouvée</value>
@@ -259,7 +259,7 @@
     <value>Aucun</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
-    <value>NPS.</value>
+    <value>Notes Par Sec.</value>
   </data>
   <data name="Screen_Selection_Online" xml:space="preserve">
     <value>En ligne</value>
@@ -268,7 +268,7 @@
     <value>Grade en ligne</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
-    <value>Voir en Ligne</value>
+    <value>Voir en ligne</value>
   </data>
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
     <value>Profil en ligne</value>
@@ -280,7 +280,7 @@
     <value>Performance Global</value>
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
-    <value>Réussites/Échecs</value>
+    <value>Nombre de réussites/échecs</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Jouer</value>
@@ -304,10 +304,10 @@
     <value>Aléatoire</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked Status</value>
+    <value>Status Classé</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
-    <value>CLASSEMENT:</value>
+    <value>CLASSEMENT :</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
     <value>Rate</value>

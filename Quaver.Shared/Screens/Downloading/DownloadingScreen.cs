@@ -897,7 +897,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         public void ShowRecommendedDifficultyDialog()
         {
-            DialogManager.Show(new YesNoDialog(DownloadLocalization.Get("RECOMMEND DIFFICULTY"),
+            DialogManager.Show(new YesNoDialog(DownloadLocalization.Get("Recommended difficulty"),
                 DownloadLocalization.Get("Recommend Difficulty Description"), () =>
                 {
                     if (!OnlineManager.Connected || OnlineManager.Self == null)
