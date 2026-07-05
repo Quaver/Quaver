@@ -121,7 +121,7 @@
     <value>Pressing F3 in song select displays a map preview.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
-    <value>Pausing in gameplay prevents score submission.</value>
+    <value>遊戲暫停會防止成績上傳。</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
     <value>You can report a bug by opening a GitHub issue.</value>
@@ -172,7 +172,7 @@
     <value>Clan</value>
   </data>
   <data name="Screen_Selection_Country" xml:space="preserve">
-    <value>Country</value>
+    <value>國家</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
     <value>Country Rank</value>
