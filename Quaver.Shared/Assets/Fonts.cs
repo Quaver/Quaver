@@ -19,18 +19,9 @@ namespace Quaver.Shared.Assets
     {
         public static string Exo2Bold { get; } = "exo2-bold";
         public static string Exo2BoldItalic { get; } = "exo2-bolditalic";
-        public static string Exo2Italic { get; } = "exo2-italic";
-        public static string Exo2Light { get; } = "exo2-light";
         public static string Exo2Medium { get; } = "exo2-medium";
-        public static string Exo2MediumItalic { get; } = "exo2-mediumitalic";
         public static string Exo2Regular { get; } = "exo2-regular";
         public static string Exo2SemiBold { get; } = "exo2-semibold";
-        public static string Exo2SemiBoldItalic { get; } = "exo2-semibolditalic";
-        public static string Exo2Thin { get; } = "exo2-thin";
-        public static string Exo2ThinItalic { get; } = "exo2-thinitalic";
-        public static string SourceSansProRegular { get; } = "sspro-regular";
-        public static string SourceSansProBold { get; } = "sspro-bold";
-        public static string SourceSansProSemiBold { get; } = "sspro-semibold";
 
         #region NEW_FONTS
         public static string LatoRegular { get; } = "Lato-Regular";
