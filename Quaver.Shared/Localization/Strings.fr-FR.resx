@@ -187,7 +187,7 @@
     <value>Créateur</value>
   </data>
   <data name="Screen_Selection_DateAdded" xml:space="preserve">
-    <value>Date d'ajout</value>
+    <value>Date d'Ajout</value>
   </data>
   <data name="Screen_Selection_Difficulty" xml:space="preserve">
     <value>Difficulté</value>
@@ -881,7 +881,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Mettre à Jour le Statut des Maps Ranked</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
-    <value>Mettre à jour le décalage de la map à l'aide du site web</value>
+    <value>Mettre à jour le décalage des maps à l'aide du site web</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
     <value>Charger les Musiques Provenant d'Autres Jeux Installés</value>
@@ -947,7 +947,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher les scores à l'écran en 1v1</value>
   </data>
   <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
-    <value>Recharge le skin lorsqu'un changement est détecté</value>
+    <value>Recharger le skin lorsqu'un changement est détecté</value>
   </data>
   <data name="Screen_Options_TogglePlaytestAutoplay" xml:space="preserve">
     <value>Activer/Désactiver la lecture automatique</value>
