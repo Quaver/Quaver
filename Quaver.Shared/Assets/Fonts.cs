@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
+ */
 
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +26,7 @@ namespace Quaver.Shared.Assets
         public static string Exo2SemiBold { get; } = "exo2-semibold";
 
         #region NEW_FONTS
+
         public static string LatoRegular { get; } = "Lato-Regular";
         public static string LatoSemiBold { get; } = "Lato-Semibold";
         public static string LatoBold { get; } = "Lato-Bold";
@@ -45,26 +46,30 @@ namespace Quaver.Shared.Assets
 
             // Load fallback fonts or fonts that are used across multiple WobbleFonts
             const string emojiString = "Emoji";
-            var emojiFont = GameBase.Game.Resources.Get($@"{folder}/NotoColorEmoji/NotoColorEmoji.ttf");
+            var emojiFont =
+                GameBase.Game.Resources.Get($@"{folder}/NotoColorEmoji/NotoColorEmoji.ttf");
 
             const string cjkString = "CJK";
             var notoCjkFont = new WobbleFontFace(
                 GameBase.Game.Resources.Get($@"{folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"),
-                QuaverLocalization.GetNotoCjkFaceIndex(ConfigManager.Language.Value),
-                NotoCjkWeight);
+                index: QuaverLocalization.GetNotoCjkFaceIndex(ConfigManager.Language.Value),
+                weight: NotoCjkWeight);
 
             var interFont = GameBase.Game.Resources.Get($"{folder}/Inter/{Inter}.ttf");
 
-            Dictionary<string, WobbleFontFace> CreateFallbacks() => new Dictionary<string, WobbleFontFace>
+            Dictionary<string, WobbleFontFace> CreateFallbacks() =>
+                new Dictionary<string, WobbleFontFace>
                 {
-                    {emojiString, new WobbleFontFace(emojiFont)},
-                    {cjkString, notoCjkFont}
+                    { emojiString, new WobbleFontFace(emojiFont) },
+                    { cjkString, notoCjkFont }
                 };
 
             void CacheInterFont(string name, int weight)
             {
                 FontManager.CacheWobbleFont(name, new WobbleFontStore(20,
-                    new WobbleFontFace(interFont, weight: weight), CreateFallbacks()));
+                    new WobbleFontFace(interFont, weight: weight),
+                    implicitFontSizeReduction: 4,
+                    addedFonts: CreateFallbacks()));
             }
 
             CacheInterFont(LatoRegular, FontWeight.Regular);
