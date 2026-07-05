@@ -97,7 +97,7 @@
     <value>Compete for leaderboard ranks</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
-    <value>Play custom matches online with others</value>
+    <value></value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
     <value>Compete against players all over the world</value>
@@ -454,7 +454,7 @@
     <value>Gameplay Controls</value>
   </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
-    <value>Gameplay User Interface</value>
+    <value></value>
   </data>
   <data name="Screen_Options_SongSelection" xml:space="preserve">
     <value>Song Selection</value>
