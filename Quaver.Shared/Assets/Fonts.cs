@@ -18,6 +18,12 @@ namespace Quaver.Shared.Assets
     public static class Fonts
     {
         private const int NotoCjkWeight = FontWeight.SemiBold;
+        private const int InterImplicitFontSizeReduction = 4;
+        private const int InterDefaultSize = 20;
+        private const string Folder = "Quaver.Resources/Fonts";
+        private const string Emoji = "Emoji";
+        private const string Cjk = "CJK";
+        private const string Inter = "Inter";
 
         public static string Exo2Bold { get; } = "exo2-bold";
         public static string Exo2BoldItalic { get; } = "exo2-bolditalic";
@@ -36,39 +42,33 @@ namespace Quaver.Shared.Assets
 
         #endregion
 
-        private const string Inter = "Inter";
-
         /// <summary>
         /// </summary>
         public static void LoadWobbleFonts()
         {
-            const string folder = "Quaver.Resources/Fonts";
-
             // Load fallback fonts or fonts that are used across multiple WobbleFonts
-            const string emojiString = "Emoji";
             var emojiFont =
-                GameBase.Game.Resources.Get($@"{folder}/NotoColorEmoji/NotoColorEmoji.ttf");
+                GameBase.Game.Resources.Get($@"{Folder}/NotoColorEmoji/NotoColorEmoji.ttf");
 
-            const string cjkString = "CJK";
             var notoCjkFont = new WobbleFontFace(
-                GameBase.Game.Resources.Get($@"{folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"),
+                GameBase.Game.Resources.Get($@"{Folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"),
                 index: QuaverLocalization.GetNotoCjkFaceIndex(ConfigManager.Language.Value),
                 weight: NotoCjkWeight);
 
-            var interFont = GameBase.Game.Resources.Get($"{folder}/Inter/{Inter}.ttf");
+            var interFont = GameBase.Game.Resources.Get($"{Folder}/Inter/{Inter}.ttf");
 
             Dictionary<string, WobbleFontFace> CreateFallbacks() =>
                 new Dictionary<string, WobbleFontFace>
                 {
-                    { emojiString, new WobbleFontFace(emojiFont) },
-                    { cjkString, notoCjkFont }
+                    { Emoji, new WobbleFontFace(emojiFont) },
+                    { Cjk, notoCjkFont }
                 };
 
             void CacheInterFont(string name, int weight)
             {
-                FontManager.CacheWobbleFont(name, new WobbleFontStore(20,
+                FontManager.CacheWobbleFont(name, new WobbleFontStore(InterDefaultSize,
                     new WobbleFontFace(interFont, weight: weight),
-                    implicitFontSizeReduction: 4,
+                    implicitFontSizeReduction: InterImplicitFontSizeReduction,
                     addedFonts: CreateFallbacks()));
             }
 
@@ -85,6 +85,45 @@ namespace Quaver.Shared.Assets
             // Copy over
             File.WriteAllBytes($"{dir}/inter.ttf", interFont);
             File.WriteAllBytes($"{dir}/lato-black.ttf", interFont);
+        }
+
+        public static void ReloadCjkFontFace(string cultureName)
+        {
+            var interFont = GameBase.Game.Resources.Get($"{Folder}/Inter/{Inter}.ttf");
+            var fallbacks = CreateFallbacks(cultureName);
+
+            ReloadInterFont(InterRegular, FontWeight.Regular, interFont, fallbacks);
+            ReloadInterFont(InterSemiBold, FontWeight.SemiBold, interFont, fallbacks);
+            ReloadInterFont(InterBold, FontWeight.Bold, interFont, fallbacks);
+            ReloadInterFont(InterLight, FontWeight.Light, interFont, fallbacks);
+            ReloadInterFont(InterHeavy, FontWeight.ExtraBold, interFont, fallbacks);
+            ReloadInterFont(InterBlack, FontWeight.Black, interFont, fallbacks);
+        }
+
+        private static void ReloadInterFont(string name, int weight, byte[] interFont,
+            Dictionary<string, WobbleFontFace> fallbacks)
+        {
+            if (!FontManager.WobbleFonts.TryGetValue(name, out var font))
+                return;
+
+            font.Reload(new WobbleFontFace(interFont, weight: weight),
+                InterImplicitFontSizeReduction,
+                fallbacks);
+        }
+
+        private static Dictionary<string, WobbleFontFace> CreateFallbacks(string cultureName)
+        {
+            var emojiFont = GameBase.Game.Resources.Get($@"{Folder}/NotoColorEmoji/NotoColorEmoji.ttf");
+            var notoCjkFont = new WobbleFontFace(
+                GameBase.Game.Resources.Get($@"{Folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"),
+                index: QuaverLocalization.GetNotoCjkFaceIndex(cultureName),
+                weight: NotoCjkWeight);
+
+            return new Dictionary<string, WobbleFontFace>
+            {
+                { Emoji, new WobbleFontFace(emojiFont) },
+                { Cjk, notoCjkFont }
+            };
         }
     }
 }

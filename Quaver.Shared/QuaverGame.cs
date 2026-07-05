@@ -501,6 +501,7 @@ namespace Quaver.Shared
             ConfigManager.Language.ValueChanged += (sender, e) =>
             {
                 QuaverLocalization.SetCurrentCulture(e.Value);
+                Fonts.ReloadCjkFontFace(e.Value);
                 NotificationManager.Show(NotificationLevel.Info,
                     LocalizationManager.Get("Notification_LanguageChangeRequiresScreenChange"));
             };
