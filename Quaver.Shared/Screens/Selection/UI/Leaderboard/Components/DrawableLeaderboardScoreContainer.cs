@@ -107,6 +107,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private int PerformanceRatingX { get; } = -12;
 
         /// <summary>
+        ///     The original score username
+        /// </summary>
+        private string ScoreUsername { get; set; }
+
+        /// <summary>
         ///     Returns the background color of the table
         /// </summary>
         private Color BackgroundColor
@@ -226,14 +231,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 if (!Score.IsPersonalBest)
                     Rank.Text = $"{Score.Index + 1}.";
 
-                UpdateClanAndUsername(score.Item);
-
                 if (score.Item.Name == ConfigManager.Username.Value)
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameSelfColor ?? Colors.MainAccent;
                 else
                     Username.Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6");
 
                 PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
+
+                UpdateClanAndUsername(score.Item);
                 
                 UpdateAccuracyMode(score);
 
@@ -407,7 +412,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             Clan.X = Flag.X + Flag.Width + PaddingLeft / 4f;
             Username.X = Clan.HasClan ? Clan.X + Clan.Width + 6 : Clan.X;
-            Username.Text = $"{score.Name}";
+            var changed = ScoreUsername != score.Name;
+            if (changed)
+            {
+                ScoreUsername = score.Name;
+                Username.Text = score.Name;
+                var maxWidth = (int)(Width + PerformanceRating.X - PerformanceRating.Width - Clan.X - Clan.Width - Time.Width - CantBeatAlert.Width - 70);
+                if (Username.Width > maxWidth)
+                {
+                    Username.TruncateWithEllipsis(maxWidth);
+                }
+            }
         }
 
         /// <summary>
