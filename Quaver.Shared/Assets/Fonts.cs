@@ -17,6 +17,8 @@ namespace Quaver.Shared.Assets
 {
     public static class Fonts
     {
+        private const int NotoCjkWeight = 600;
+
         public static string Exo2Bold { get; } = "exo2-bold";
         public static string Exo2BoldItalic { get; } = "exo2-bolditalic";
         public static string Exo2Medium { get; } = "exo2-medium";
@@ -46,7 +48,8 @@ namespace Quaver.Shared.Assets
             const string cjkString = "CJK";
             var notoCjkFont = new WobbleFontFace(
                 GameBase.Game.Resources.Get($@"{folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"),
-                QuaverLocalization.GetNotoCjkFaceIndex(ConfigManager.Language.Value));
+                QuaverLocalization.GetNotoCjkFaceIndex(ConfigManager.Language.Value),
+                NotoCjkWeight);
 
             // Lato-Regular
             FontManager.CacheWobbleFont(LatoRegular, new WobbleFontStore(20,
