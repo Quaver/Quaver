@@ -106,7 +106,7 @@
     <value>Rapporteer bugs</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
-    <value>Twitter</value>
+    <value>X</value>
   </data>
   <data name="Screen_Main_Menu_Discord" xml:space="preserve">
     <value>Discord</value>
@@ -1624,7 +1624,7 @@ gereed is?</value>
     <value>Niet Gereed</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
-    <value>Gereedstellen</value>
+    <value>Zet Jezelf Klaar</value>
   </data>
   <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
     <value>Wachten op de host om te starten</value>
@@ -1835,7 +1835,7 @@ om andere spelers het te laten downloaden?</value>
     <value>Wedstrijd is nu aan het starten: {0}</value>
   </data>
   <data name="Screen_Multiplayer_MatchInProgress" xml:space="preserve">
-    <value>Wedstrijd is bezig. Wacht op de volgende!</value>
+    <value>Er is nu een pot bezig. Wacht op de volgende!</value>
   </data>
   <data name="Screen_Multiplayer_ModsNone" xml:space="preserve">
     <value>Modificaties: Geen</value>
@@ -1868,16 +1868,16 @@ om andere spelers het te laten downloaden?</value>
     <value>Download Voltooid!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedMissingMap" xml:space="preserve">
-    <value>Wedstrijd gestart, maar we hebben de map niet!</value>
+    <value>Het potje is gestart, maar we hebben de map niet!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
-    <value>Wedstrijd gestart. Klik hier om de wedstrijd live op het web als scheidsrechter te bekijken. </value>
+    <value>Pot gestart. Klik hier om de wedstrijd live op het web als scheidsrechter te bekijken. </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
-    <value>DETAILS VAN WEDSTRIJD</value>
+    <value>DETAILS VAN HET POTJE</value>
   </data>
   <data name="Screen_MultiplayerLobby_ViewInformationAboutMatch" xml:space="preserve">
-    <value>Bekijk informatie over een wedstrijd</value>
+    <value>Bekijk informatie over een pot</value>
   </data>
   <data name="Screen_MultiplayerLobby_RulesetLabel" xml:space="preserve">
     <value>REGELSET: </value>
@@ -1925,13 +1925,13 @@ om andere spelers het te laten downloaden?</value>
     <value>Wachtwoord</value>
   </data>
   <data name="Screen_MultiplayerLobby_GamesFound" xml:space="preserve">
-    <value>WEDSTRIJDEN GEVONDEN</value>
+    <value>LOBBIES GEVONDEN</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameFound" xml:space="preserve">
-    <value>WEDSTRIJD GEVONDEN</value>
+    <value>LOBBY GEVONDEN</value>
   </data>
   <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
-    <value>Zoek naar wedstrijden...</value>
+    <value>Zoek naar potjes...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateGame" xml:space="preserve">
     <value>MAAK SPEL</value>
