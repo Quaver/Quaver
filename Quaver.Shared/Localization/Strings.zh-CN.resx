@@ -923,7 +923,7 @@
     <value>偏移条偏移滞留时长</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
-    <value>以</value>
+    <value>过早/过晚时给偏移条上色</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
     <value>打击过早/过晚判定窗口</value>
@@ -944,7 +944,7 @@
     <value>显示1v1竞赛HUD</value>
   </data>
   <data name="Screen_Options_Display1v1PlayfieldScores" xml:space="preserve">
-    <value>显示1v1</value>
+    <value>显示1v1分数</value>
   </data>
   <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
     <value>改变皮肤时自动重载</value>
