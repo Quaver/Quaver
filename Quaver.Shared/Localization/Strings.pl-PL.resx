@@ -343,7 +343,7 @@
     <value>Online Profile</value>
   </data>
   <data name="Screen_Selection_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Ustawienia</value>
   </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>Overall Accuracy</value>
@@ -355,10 +355,10 @@
     <value>Pass/Failure Count</value>
   </data>
   <data name="Screen_Selection_PersonalBest" xml:space="preserve">
-    <value>PERSONAL BEST</value>
+    <value>PERSONALNY </value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
-    <value>Play</value>
+    <value>Graj</value>
   </data>
   <data name="Screen_Selection_PlayCount" xml:space="preserve">
     <value>Play Count</value>
@@ -370,16 +370,16 @@
     <value>Playlists</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
-    <value>Preview is disabled in this game!</value>
+    <value>Podgląd jest wyłączony w tej grze!</value>
   </data>
   <data name="Screen_Selection_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
   </data>
   <data name="Screen_Selection_Random" xml:space="preserve">
-    <value>Random</value>
+    <value>Losowa Mapa</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked Status</value>
+    <value>Status Rankingu</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
     <value>RANKING:</value>
@@ -388,31 +388,31 @@
     <value>Rate</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
-    <value>Recently Played</value>
+    <value>Ostatnio Grane</value>
   </data>
   <data name="Screen_Selection_ResultFound" xml:space="preserve">
-    <value>Result Found</value>
+    <value>Znaleziony Wynik</value>
   </data>
   <data name="Screen_Selection_ResultsFound" xml:space="preserve">
-    <value>Results Found</value>
+    <value>Znalezionych Wyników</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
-    <value>Scores on this map will be unranked!</value>
+    <value>Wyniki na tej mapie nie będą rankingowe!</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
     <value>SELECT:</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
-    <value>SORT BY:</value>
+    <value>SORTUJ WG:</value>
   </data>
   <data name="Screen_Selection_Source" xml:space="preserve">
-    <value>Source</value>
+    <value>Źródło</value>
   </data>
   <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
-    <value>There is currently no map selected!</value>
+    <value>Nie wybrano żadnej mapy!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>This map is not ranked!</value>
+    <value>Ta mapa nie jest rankingowa!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
     <value>This map is not submitted online!</value>
@@ -421,7 +421,7 @@
     <value>Times Played</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
-    <value>Title</value>
+    <value>Tytuł</value>
   </data>
   <data name="Screen_Selection_TotalHits" xml:space="preserve">
     <value>Total Hits</value>
@@ -430,52 +430,52 @@
     <value>Total Pauses</value>
   </data>
   <data name="Screen_Selection_TotalScore" xml:space="preserve">
-    <value>Total Score</value>
+    <value>Całkowity Wynik</value>
   </data>
   <data name="Screen_Selection_ViewMap" xml:space="preserve">
-    <value>View Map</value>
+    <value>Podgląd Mapy</value>
   </data>
   <data name="Screen_Selection_Youmustbeadonatortoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be a donator to access this leaderboard!</value>
+    <value>Musisz być donatorem, aby mieć dostęp do tej tablicy wyników!</value>
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be online to access this leaderboard!</value>
+    <value>Musisz być online, aby uzyskać dostęp do tej tablicy wyników!</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
-    <value>You cannot beat this score with your currently activated modifiers!</value>
+    <value>Nie możesz zrobić lepszego wyniku z obecnie aktywnymi modyfikatorami!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
-    <value>Your map is outdated. Please update it!</value>
+    <value>Twoja mapa jest nieaktualna. Zaktualizuj ją!</value>
   </data>
   <data name="Screen_Options_Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Wideo</value>
   </data>
   <data name="Screen_Options_Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>Dźwięk</value>
   </data>
   <data name="Screen_Options_Language" xml:space="preserve">
-    <value>Language</value>
+    <value>Język</value>
   </data>
   <data name="Screen_Options_Gameplay" xml:space="preserve">
-    <value>Gameplay</value>
+    <value>Rozgrywka</value>
   </data>
   <data name="Screen_Options_Skin" xml:space="preserve">
-    <value>Skin</value>
+    <value>Skórka</value>
   </data>
   <data name="Screen_Options_Input" xml:space="preserve">
-    <value>Input</value>
+    <value>Skróty Klawiszowe</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
     <value>Game mode specific</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
-    <value>Miscellaneous</value>
+    <value>Różne</value>
   </data>
   <data name="Screen_Options_Advanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Zaawansowane</value>
   </data>
   <data name="Screen_Options_Window" xml:space="preserve">
-    <value>Window</value>
+    <value>Okno</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
     <value>Frame Time</value>
@@ -484,34 +484,34 @@
     <value>Output</value>
   </data>
   <data name="Screen_Options_Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>Głośność</value>
   </data>
   <data name="Screen_Options_Offset" xml:space="preserve">
     <value>Offset</value>
   </data>
   <data name="Screen_Options_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>Efekty</value>
   </data>
   <data name="Screen_Options_Localization" xml:space="preserve">
     <value>Localization</value>
   </data>
   <data name="Screen_Options_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>Tło</value>
   </data>
   <data name="Screen_Options_Visuals" xml:space="preserve">
     <value>Visuals</value>
   </data>
   <data name="Screen_Options_Sound" xml:space="preserve">
-    <value>Sound</value>
+    <value>Dźwięk</value>
   </data>
   <data name="Screen_Options_UserInterface" xml:space="preserve">
-    <value>User Interface</value>
+    <value>Interfejs Użytkownika</value>
   </data>
   <data name="Screen_Options_Scoreboard" xml:space="preserve">
-    <value>Scoreboard</value>
+    <value>Tablica Wyników</value>
   </data>
   <data name="Screen_Options_ProgressBar" xml:space="preserve">
-    <value>Progress Bar</value>
+    <value>Pasek postępu</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
     <value>Lane Cover</value>
@@ -523,7 +523,7 @@
     <value>Navigation</value>
   </data>
   <data name="Screen_Options_Sharing" xml:space="preserve">
-    <value>Sharing</value>
+    <value>Udostępnianie</value>
   </data>
   <data name="Screen_Options_Configuration" xml:space="preserve">
     <value>Configuration</value>
@@ -532,46 +532,46 @@
     <value>Gameplay Controls</value>
   </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
-    <value>Gameplay User Interface</value>
+    <value>Interfejs Użytkownika Gry</value>
   </data>
   <data name="Screen_Options_SongSelection" xml:space="preserve">
     <value>Song Selection</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>Edytor</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
-    <value>Misc</value>
+    <value>Różne</value>
   </data>
   <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
-    <value>Navigation &amp; Maintenance</value>
+    <value>Nawigacja i Konserwacja</value>
   </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
-    <value>Installed Games</value>
+    <value>Zainstalowane gry</value>
   </data>
   <data name="Screen_Options_Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Powiadomienia</value>
   </data>
   <data name="Screen_Options_SongSelect" xml:space="preserve">
     <value>Song Select</value>
   </data>
   <data name="Screen_Options_ScreenResolution" xml:space="preserve">
-    <value>Screen Resolution</value>
+    <value>Rozdzielczość Ekranu</value>
   </data>
   <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
-    <value>Enable Fullscreen</value>
+    <value>Włącz Pełny Ekran</value>
   </data>
   <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
-    <value>Enable Borderless Window</value>
+    <value>Włącz Okno Bez Ramek</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
-    <value>Frame Limiter</value>
+    <value>Limit Klatek</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
-    <value>Set Custom FPS</value>
+    <value>Ustaw Własny FPS</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
-    <value>Display FPS Counter</value>
+    <value>Wyświetl Licznik FPS</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
     <value>Audio Output Device</value>
