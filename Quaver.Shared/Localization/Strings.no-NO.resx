@@ -178,7 +178,7 @@
     <value>Ved å trykke på F3 i sang-velgeren for å forhåndsvise et map.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
-    <value>Pauser mens du spiller hindrer poeng-submisjon.</value>
+    <value>Pauser mens du spiller hindrer score-submisjon.</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
     <value>Du kan rapportere feil ved å åpne et GitHub-Problem.</value>
@@ -274,7 +274,7 @@
     <value>GRUPPERT AV:</value>
   </data>
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
-    <value>Høyes Rangerte Poengsum</value>
+    <value>Høyes Rangerte Score</value>
   </data>
   <data name="Screen_Selection_Leaderboard" xml:space="preserve">
     <value>Plasseringsliste</value>
@@ -397,7 +397,7 @@
     <value>Resultater funnet</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
-    <value>Skårer</value>
+    <value>Scores på denne mappet vil ikke bli rangert!</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
     <value>VELG:</value>
@@ -442,7 +442,7 @@
     <value>Du må være tilkoblet til nett for å få tilgang til denne plasseringsliste!</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
-    <value>Du kan ikke slå denne skåren med de aktiverte modifikatorene dine!</value>
+    <value>Du kan ikke slå denne scoren med de aktiverte modifikatorene dine!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>Mappet ditt er utdatert. Vennligst oppdater det!</value>
@@ -613,7 +613,7 @@
     <value>Konverter score</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Vennligst vent! Poengsummen din blir allerede konvertert!</value>
+    <value>Vennligst vent! Scoren din venter på å bli konvertert!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
     <value>Oversikt</value>
@@ -649,7 +649,7 @@
     <value>Vurdering</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Mean:</value>
+    <value></value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>Std. Avvik:</value>
@@ -809,118 +809,118 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Lang Noter Krympmengde</value>
   </data>
   <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
-    <value>Enable Hitsounds</value>
+    <value>Aktiver Hitsounds</value>
   </data>
   <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
-    <value>Enable Long Note Release Hitsounds</value>
+    <value>Aktiver Lang Note Hitsounds Fall</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
-    <value>Enable Keysounds</value>
+    <value>Aktiver Keysounds</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
-    <value>Enable Tap To Pause</value>
+    <value>Aktiver trykk for å pause</value>
   </data>
   <data name="Screen_Options_EnableTapToRestart" xml:space="preserve">
-    <value>Enable Tap To Restart</value>
+    <value>Aktiver trykk for å starte på nytt</value>
   </data>
   <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
-    <value>Skip Results Screen After Quitting</value>
+    <value>Hopp over resultater etter avslutning</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
-    <value>Lock Windows Key during gameplay</value>
+    <value>Lås Windows Key under spilling</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
-    <value>Display Timing Lines</value>
+    <value>Vis tidslinjer</value>
   </data>
   <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
-    <value>Display Hit Bubbles</value>
+    <value>Vis Hit Bobbler</value>
   </data>
   <data name="Screen_Options_DisplayJudgementCounter" xml:space="preserve">
-    <value>Display Judgement Counter</value>
+    <value>Vis dommer teller</value>
   </data>
   <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
-    <value>Display Scoreboard</value>
+    <value>Vis Rangeringsliste</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBar" xml:space="preserve">
-    <value>Display Song Time Progress Bar</value>
+    <value>Vis sang tid på fremdriftslinje</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBarTimeNumbers" xml:space="preserve">
-    <value>Display Song Time Progress Bar Time Numbers</value>
+    <value>Vis tidstaller sang tid på fremdriftslinje</value>
   </data>
   <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
-    <value>Enable Top Lane Cover</value>
+    <value>Aktiver Toppbane Trekk</value>
   </data>
   <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
-    <value>Top Lane Cover Height</value>
+    <value>Toppbane Trekk Høyde</value>
   </data>
   <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
-    <value>Enable Bottom Lane Cover</value>
+    <value>Aktiver Bunnbane Trekk</value>
   </data>
   <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
-    <value>Bottom Lane Cover Height</value>
+    <value>Bunnbane Trekk Høyde</value>
   </data>
   <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
-    <value>Display UI Elements Over Lane Covers</value>
+    <value>Vis brukergrensesnitt-elementer over bane-trekk</value>
   </data>
   <data name="Screen_Options_DisplayReceptorsOverLaneCovers" xml:space="preserve">
-    <value>Display Receptors Over Lane Covers</value>
+    <value>Vis Reseptorer Over Bane-Trekk</value>
   </data>
   <data name="Screen_Options_CustomSkin" xml:space="preserve">
-    <value>Custom Skin</value>
+    <value>Egendefinert skinn</value>
   </data>
   <data name="Screen_Options_CoopPlayer2Skin" xml:space="preserve">
-    <value>Co-op Player 2 Skin</value>
+    <value>Co-op 2-spiller skinn</value>
   </data>
   <data name="Screen_Options_DefaultSkin" xml:space="preserve">
-    <value>Default Skin</value>
+    <value>Standard Skinn</value>
   </data>
   <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
-    <value>Open Skin Folder</value>
+    <value>Åpne Skinn Mappe</value>
   </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
-    <value>Export Skin</value>
+    <value>Eksporter Skinn</value>
   </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
-    <value>Upload Skin To Steam Workshop</value>
+    <value>Last opp Skinn til Steam Workshop</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
-    <value>Note &amp; Receptor Size Scale</value>
+    <value>Note &amp; Reseptor Størrelse Skala</value>
   </data>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
-    <value>Playfield Scale</value>
+    <value>Spillefelt Skala</value>
   </data>
   <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
-    <value>Tint Hitlighting Based On Judgement Color</value>
+    <value>Tips Hitlighting basert på dom-farge</value>
   </data>
   <data name="Screen_Options_Pause" xml:space="preserve">
     <value>Pause</value>
   </data>
   <data name="Screen_Options_QuickRestart" xml:space="preserve">
-    <value>Quick Restart</value>
+    <value>Rask omstart</value>
   </data>
   <data name="Screen_Options_QuickExit" xml:space="preserve">
-    <value>Quick Exit</value>
+    <value>Rask avslutning</value>
   </data>
   <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
-    <value>Skip Song Intro</value>
+    <value>Hopp over Sang Intro</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
-    <value>Decrease Scroll Speed</value>
+    <value>Reduser rullehastighet</value>
   </data>
   <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
-    <value>Increase Scroll Speed</value>
+    <value>Øk rullehastighet</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
-    <value>Decrease Map Offset</value>
+    <value>Senk map-offset</value>
   </data>
   <data name="Screen_Options_IncreaseMapOffset" xml:space="preserve">
-    <value>Increase Map Offset</value>
+    <value>Øk map-offset</value>
   </data>
   <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
-    <value>Reset Map Offset</value>
+    <value>Nullstill map-offset</value>
   </data>
   <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
-    <value>Toggle Scoreboard Visibility</value>
+    <value>Vis/Skjul Rangeringsliste synlighet</value>
   </data>
   <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
     <value>Toggle Chat Overlay</value>
@@ -1010,7 +1010,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Enable Combo Alerts</value>
   </data>
   <data name="Screen_Options_DisplayUnbeatableScores" xml:space="preserve">
-    <value>Display Unbeatable Scores</value>
+    <value>Vis uslåelige skårer</value>
   </data>
   <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
     <value>Keep Playing Upon Failing</value>
