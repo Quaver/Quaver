@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics.Sprites.Text;
@@ -76,7 +77,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
                 Text = $"The match is starting in {Math.Abs(LastNearestCountdownSecond) + 1} seconds. Get Ready!";
             }
             else
-                Text = "Waiting for the host to start";
+                Text = MultiLocalization.Get("WaitingForHostToStart");
 
             if (!resetEllipsis)
                 return;

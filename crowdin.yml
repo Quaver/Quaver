@@ -1,0 +1,5 @@
+files:
+  - source: /Quaver.Shared/Localization/*.resx
+    ignore:
+      - /Quaver.Shared/Localization/*.*.resx
+    translation: /Quaver.Shared/Localization/%file_name%.%locale%.resx

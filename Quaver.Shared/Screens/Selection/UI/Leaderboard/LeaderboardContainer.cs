@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "LEADERBOARD", 30)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), SelectionLocalization.Get("Leaderboard"), 30)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -199,7 +199,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         private void CreatePersonalBestHeader()
         {
-            PersonalBestHeader = new SpriteTextPlus(Header.Font, "PERSONAL BEST", Header.FontSize)
+            PersonalBestHeader = new SpriteTextPlus(Header.Font, SelectionLocalization.Get("Personal Best"), Header.FontSize)
             {
                 Parent = this,
                 Y = ScoresContainerBackground.Y + ScoresContainerBackground.Height + 28,
