@@ -45,6 +45,11 @@ namespace Quaver.Shared.Graphics.Notifications
         private static List<DrawableNotification> NotificationsToClear { get; set; } = new List<DrawableNotification>();
 
         /// <summary>
+        ///     Notifications that should be reused while they're queued or active.
+        /// </summary>
+        private static Dictionary<string, DrawableNotification> KeyedNotifications { get; } = new Dictionary<string, DrawableNotification>();
+
+        /// <summary>
         ///     Event invoked when a notification has been missed by the user
         /// </summary>
         public static event EventHandler<NotificationMissedEventArgs> NotificationMissed;
@@ -86,6 +91,50 @@ namespace Quaver.Shared.Graphics.Notifications
             lock (QueuedNotifications)
             {
                 QueuedNotifications.Add(notification);
+            }
+        }
+
+        /// <summary>
+        ///     Shows a notification, or updates the existing notification with the same key while it's visible.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="level"></param>
+        /// <param name="text"></param>
+        /// <param name="onClick"></param>
+        /// <param name="forceShow"></param>
+        internal static void ShowOrUpdate(string key, NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                Show(level, text, onClick, forceShow);
+                return;
+            }
+
+            var info = new NotificationInfo(level, text, true, onClick, forceShow);
+
+            lock (QueuedNotifications)
+            {
+                if (KeyedNotifications.TryGetValue(key, out var existing))
+                {
+                    if (QueuedNotifications.Contains(existing))
+                    {
+                        existing.UpdateContent(info, existing.Index);
+                        return;
+                    }
+
+                    if (ActiveNotifications.Contains(existing))
+                    {
+                        existing.Refresh(info);
+                        return;
+                    }
+
+                    KeyedNotifications.Remove(key);
+                }
+
+                var notification = new DrawableNotification(null, info, -1) { Alignment = Alignment.TopRight };
+
+                QueuedNotifications.Add(notification);
+                KeyedNotifications.Add(key, notification);
             }
         }
 
@@ -162,6 +211,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
                 notification.Destroy();
                 ActiveNotifications.Remove(notification);
+                RemoveKeyedNotification(notification);
 
                 if (notification.Item.WasClicked)
                     continue;
@@ -179,6 +229,19 @@ namespace Quaver.Shared.Graphics.Notifications
 
                 NotificationMissed?.Invoke(typeof(NotificationManager), new NotificationMissedEventArgs(info));
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="notification"></param>
+        private static void RemoveKeyedNotification(DrawableNotification notification)
+        {
+            var keyedNotification = KeyedNotifications.FirstOrDefault(x => x.Value == notification);
+
+            if (keyedNotification.Key == null)
+                return;
+
+            KeyedNotifications.Remove(keyedNotification.Key);
         }
     }
 }
