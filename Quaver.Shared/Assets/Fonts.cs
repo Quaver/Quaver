@@ -27,12 +27,12 @@ namespace Quaver.Shared.Assets
 
         #region NEW_FONTS
 
-        public static string LatoRegular { get; } = "Lato-Regular";
-        public static string LatoSemiBold { get; } = "Lato-Semibold";
-        public static string LatoBold { get; } = "Lato-Bold";
-        public static string LatoLight { get; } = "Lato-Light";
-        public static string LatoHeavy { get; } = "Lato-Heavy";
-        public static string LatoBlack { get; } = "Lato-Black";
+        public static string InterRegular { get; } = "Inter-Regular";
+        public static string InterSemiBold { get; } = "Inter-Semibold";
+        public static string InterBold { get; } = "Inter-Bold";
+        public static string InterLight { get; } = "Inter-Light";
+        public static string InterHeavy { get; } = "Inter-Heavy";
+        public static string InterBlack { get; } = "Inter-Black";
 
         #endregion
 
@@ -72,12 +72,12 @@ namespace Quaver.Shared.Assets
                     addedFonts: CreateFallbacks()));
             }
 
-            CacheInterFont(LatoRegular, FontWeight.Regular);
-            CacheInterFont(LatoSemiBold, FontWeight.SemiBold);
-            CacheInterFont(LatoBold, FontWeight.Bold);
-            CacheInterFont(LatoLight, FontWeight.Light);
-            CacheInterFont(LatoHeavy, FontWeight.ExtraBold);
-            CacheInterFont(LatoBlack, FontWeight.Bold);
+            CacheInterFont(InterRegular, FontWeight.Regular);
+            CacheInterFont(InterSemiBold, FontWeight.SemiBold);
+            CacheInterFont(InterBold, FontWeight.Bold);
+            CacheInterFont(InterLight, FontWeight.Light);
+            CacheInterFont(InterHeavy, FontWeight.ExtraBold);
+            CacheInterFont(InterBlack, FontWeight.Black);
 
             var dir = $"{WobbleGame.WorkingDirectory}/Fonts";
             Directory.CreateDirectory(dir);

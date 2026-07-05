@@ -62,7 +62,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 21)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 21)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

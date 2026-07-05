@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, ConfigManager.EditorLiveMapOffset.Value.ToString(), "Enter an offset for live-mapping...", OnSubmit)
             {
                 Parent = Panel,

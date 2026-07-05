@@ -86,7 +86,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             var skin = SkinManager.Skin.Keys[parentDisplay.Screen.Map.Mode];
 
-            SpriteText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), JudgementHelper.JudgementToShortName(j), 0, false)
+            SpriteText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), JudgementHelper.JudgementToShortName(j), 0, false)
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,

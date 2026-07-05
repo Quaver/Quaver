@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         /// </summary>
         private void CreateKey(string key)
         {
-            Key = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), key, FontSize)
+            Key = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), key, FontSize)
             {
                 Parent = this,
             };
@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         /// </summary>
         private void CreateValue(string value)
         {
-            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), value, FontSize)
+            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), value, FontSize)
             {
                 Parent = this,
                 X = Key.Width  + 6,

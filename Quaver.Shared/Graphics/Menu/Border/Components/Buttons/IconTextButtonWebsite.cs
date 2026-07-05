@@ -7,7 +7,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     public class IconTextButtonWebsite : IconTextButton
     {
         public IconTextButtonWebsite() : base(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Website", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Website", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://quavergame.com");
             }, localizationKey: "Screen_Main_Menu_Website")

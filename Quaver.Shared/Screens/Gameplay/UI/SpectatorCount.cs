@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 SetChildrenVisibility = true
             };
 
-            SpectatorsText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $" ", 0, false)
+            SpectatorsText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $" ", 0, false)
             {
                 Parent = this,
                 FontSize = 16,

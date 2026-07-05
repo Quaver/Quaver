@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoSemiBold), SelectionLocalization.Get("Leaderboard"), 30)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), SelectionLocalization.Get("Leaderboard"), 30)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

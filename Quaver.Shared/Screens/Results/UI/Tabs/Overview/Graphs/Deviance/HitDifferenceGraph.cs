@@ -68,7 +68,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
 
                 var window = -line.Deviance / ModHelper.GetRateFromMods(Processor.Value.Mods);
 
-                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{(int) window}", 20,
+                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{(int) window}", 20,
                     false)
                 {
                     Parent = line.Line,
@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
                 text.X -= text.Width + 10;
             }
 
-            var zero = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"0", 20,
+            var zero = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"0", 20,
                 false)
             {
                 Parent = Graph.MiddleLine,

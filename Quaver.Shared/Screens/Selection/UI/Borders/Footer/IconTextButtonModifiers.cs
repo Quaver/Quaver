@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonModifiers : IconTextButton
     {
         public IconTextButtonModifiers(Bindable<SelectContainerPanel> activeLeftPanel)
-            : base(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            : base(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), FontManager.GetWobbleFont(Fonts.InterBold),
             "Modifiers", (sender, args) =>
             {
                 if (activeLeftPanel == null)

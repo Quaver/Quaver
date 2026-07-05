@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 
         public LoadingWheelText(int fontSize, string text)
         {
-            TextSubmitting = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            TextSubmitting = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 text, fontSize)
             {
                 Parent = this

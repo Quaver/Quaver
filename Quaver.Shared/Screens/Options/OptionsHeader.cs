@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateTextOptionsMenu()
         {
-            TextOptionsMenu = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            TextOptionsMenu = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 OptionsLocalization.Get("OPTIONS MENU"), 24)
             {
                 Parent = this,
@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateActiveSectionText()
         {
-            ActiveSectionText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            ActiveSectionText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

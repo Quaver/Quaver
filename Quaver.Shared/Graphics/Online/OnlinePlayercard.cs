@@ -103,7 +103,7 @@ namespace Quaver.Shared.Graphics.Online
                 Image = Flags.Get("XX")
             };
 
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ConfigManager.Username.Value)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfigManager.Username.Value)
             {
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
@@ -111,7 +111,7 @@ namespace Quaver.Shared.Graphics.Online
                 FontSize = 20
             };
 
-            GameMode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value))
+            GameMode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value))
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Graphics.Online
                 Tint = Colors.SecondaryAccent,
             };
 
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Offline")
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Offline")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

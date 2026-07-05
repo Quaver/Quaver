@@ -193,7 +193,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -206,7 +206,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateStatus()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,

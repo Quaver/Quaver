@@ -143,7 +143,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateNoMapHeader()
         {
-            NoMapHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), DownloadLocalization.Get("No Song Selected"), 24)
+            NoMapHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("No Song Selected"), 24)
             {
                 Parent = this,
                 Y = 32,
@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 Tint = ColorHelper.HexToColor("#F9645D")
             };
 
-            NoMapSubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            NoMapSubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 DownloadLocalization.Get("No Song Selected Description"), 20)
             {
                 Parent = this,
@@ -191,7 +191,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 Visible = false
             };
 
-            ModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 16)
+            ModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
             {
                 Parent = Mode,
                 Alignment = Alignment.MidCenter,
@@ -237,7 +237,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 21)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 21)
             {
                 Parent = this,
                 Y = Title.Y + Title.Height + 14,
@@ -307,7 +307,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 Y = DifficultyRange.Y + DifficultyRange.Height + 20,

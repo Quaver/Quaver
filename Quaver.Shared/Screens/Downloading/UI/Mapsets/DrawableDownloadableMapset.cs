@@ -288,7 +288,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateArtistTitle()
         {
-            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = ContentContainer,
                 Position = new ScalableVector2(22, 18),
@@ -301,7 +301,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateByText()
         {
-            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), DownloadLocalization.Get("By:"), 20)
+            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("By:"), 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -317,7 +317,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -356,7 +356,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 16)
+            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
             {
                 Parent = GameModeIcon,
                 Alignment = Alignment.MidCenter,

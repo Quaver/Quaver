@@ -19,12 +19,12 @@ namespace Quaver.Shared.Screens.Tests.Footer
         {
             var footer = new MenuFooter(new List<ButtonText>
             {
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Back", 16, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Back", 16, null),
             }, new List<ButtonText>()
             {
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Test Button 6", 10, null),
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Test Button 7", 10, null),
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), "Test Button 8", 10, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Test Button 6", 10, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Test Button 7", 10, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Test Button 8", 10, null),
             }, Colors.MainAccent)
             {
                 Parent = Container,

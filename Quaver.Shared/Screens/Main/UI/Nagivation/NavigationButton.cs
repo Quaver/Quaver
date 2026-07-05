@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
             Tint = SkinManager.Skin?.MainMenu?.NavigationButtonTextColor ?? Color.White
         };
 
-        private void CreateName(string name) => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+        private void CreateName(string name) => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
             name.ToUpper(), 22)
         {
             Parent = this,

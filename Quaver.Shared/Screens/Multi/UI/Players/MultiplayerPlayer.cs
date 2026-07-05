@@ -323,7 +323,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
-        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
             MultiLocalization.Get("Loading"), 21)
         {
             Parent = Flag,
@@ -346,7 +346,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
-        private void CreateWinCount() => WinCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+        private void CreateWinCount() => WinCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
             "", 20)
         {
             Parent = this,

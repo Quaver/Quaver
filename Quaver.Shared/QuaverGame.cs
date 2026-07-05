@@ -583,7 +583,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.InterBold), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,

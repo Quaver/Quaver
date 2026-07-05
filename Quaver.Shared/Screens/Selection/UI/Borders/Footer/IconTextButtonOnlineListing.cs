@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonOnlineListing : IconTextButton
     {
         public IconTextButtonOnlineListing() : base(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Online Listing", (sender, args) => MapManager.ViewOnlineListing(),
+            FontManager.GetWobbleFont(Fonts.InterBold),"Online Listing", (sender, args) => MapManager.ViewOnlineListing(),
             localizationKey: SelectionLocalization.GetKey("Online Listing"))
         {
         }

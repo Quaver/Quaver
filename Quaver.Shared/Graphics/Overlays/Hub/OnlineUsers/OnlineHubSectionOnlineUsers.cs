@@ -107,7 +107,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers
         /// </summary>
         private void CreateUserCount()
         {
-            UserCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0 USERS ONLINE", 20)
+            UserCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0 USERS ONLINE", 20)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,

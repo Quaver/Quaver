@@ -69,7 +69,7 @@ public class EpilepsyWarning : Sprite
     };
 
     private void CreateTitle() =>
-        new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "WARNING!", 28)
+        new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "WARNING!", 28)
         {
             Parent = this,
             Alignment = Alignment.MidCenter,
@@ -79,7 +79,7 @@ public class EpilepsyWarning : Sprite
         };
 
     private void CreateBody() =>
-        new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), WarningBody, 22)
+        new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), WarningBody, 22)
         {
             Parent = this,
             Alignment = Alignment.MidCenter,

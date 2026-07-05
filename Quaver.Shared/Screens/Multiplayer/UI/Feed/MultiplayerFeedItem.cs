@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
 {
     public class MultiplayerFeedItem : SpriteTextPlus
     {
-        public MultiplayerFeedItem(Color color, string text) : base(FontManager.GetWobbleFont(Fonts.LatoBlack), text)
+        public MultiplayerFeedItem(Color color, string text) : base(FontManager.GetWobbleFont(Fonts.InterBold), text)
         {
             FontSize = 15;
             Text = $"[{DateTime.Now.ToLocalTime().ToShortTimeString()}]";

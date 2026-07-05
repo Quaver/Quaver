@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="name"></param>
         private void CreateName(string name)
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), OptionsLocalization.Get(name), 21)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), OptionsLocalization.Get(name), 21)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

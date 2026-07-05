@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     public class IconTextButtonPlaybackSpeed : IconTextButton
     {
         public IconTextButtonPlaybackSpeed(EditScreen screen, IAudioTrack track) : base(FontAwesome.Get(FontAwesomeIcon.fa_time),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Playback Speed", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Playback Speed", (sender, args) =>
             {
                 screen?.ActivateRightClickOptions(new PlaybackSpeedRightClickOptions(track));
             })

@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 Text.Tint = Colors.MainAccent;
             };
 
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = Button,
                 UsePreviousSpriteBatchOptions = true,

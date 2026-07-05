@@ -306,7 +306,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Creates the text that says "Now Playing"
         /// </summary>
-        private void CreateNowPlayingText() => NowPlayingText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Now Playing")
+        private void CreateNowPlayingText() => NowPlayingText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Now Playing")
         {
             Parent = TitleBackground,
             Alignment = Alignment.MidCenter,
@@ -327,7 +327,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 Alpha = 0
             };
 
-            SongTitleText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), " ")
+            SongTitleText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " ")
             {
                 Y = 2,
                 Alignment = Alignment.MidLeft,

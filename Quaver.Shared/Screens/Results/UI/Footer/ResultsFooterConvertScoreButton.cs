@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
     public class ResultsFooterConvertScoreButton : IconTextButton
     {
         public ResultsFooterConvertScoreButton(ResultsScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_refresh_arrow),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), ResultsLocalization.Get("Convert Score"), (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Convert Score"), (sender, args) =>
             {
                 if (screen.IsConvertingScore)
                 {

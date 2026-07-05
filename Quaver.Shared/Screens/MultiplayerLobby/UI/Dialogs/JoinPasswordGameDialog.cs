@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         /// </summary>
         private void CreateTextbox(string initialText)
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, initialText, MultiplayerLobbyLocalization.Get("EnterPasswordPlaceholder"), s =>
                 {
                     DialogManager.Show(new JoinGameDialog(Game, s, false, IsSpectating));
