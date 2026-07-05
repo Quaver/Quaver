@@ -12,7 +12,6 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
-using TimeAgo;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;

@@ -13,7 +13,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Quaver.API/Quaver.API/Quaver.API.csproj" />
-    <ProjectReference Include="../Quaver.Dependencies/TimeAgo/TimeAgo/TimeAgo.csproj" />
     <ProjectReference Include="../Quaver.Resources/Quaver.Resources.csproj" />
     <ProjectReference Include="../Wobble/Wobble.Extended/Wobble.Extended.csproj" />
     <ProjectReference Include="../Wobble/Wobble.Resources/Wobble.Resources.csproj" />
@@ -51,6 +50,7 @@
   <ItemGroup>
     <PackageReference Include="Emik.Rubbish" Version="1.1.0" />
     <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
+    <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="3.2.0" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
