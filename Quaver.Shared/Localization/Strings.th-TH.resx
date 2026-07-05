@@ -13,10 +13,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Language_English" xml:space="preserve">
-    <value>English</value>
+    <value>อังกฤษ</value>
   </data>
   <data name="Language_Bulgarian" xml:space="preserve">
-    <value>Bulgarian</value>
+    <value>บัลแกเรีย</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Change screens to update the language.</value>
@@ -25,25 +25,25 @@
     <value>Home</value>
   </data>
   <data name="Screen_Main_Menu_Maps" xml:space="preserve">
-    <value>Maps</value>
+    <value>แมพ</value>
   </data>
   <data name="Screen_Main_Menu_Clans" xml:space="preserve">
-    <value>Clans</value>
+    <value>แคลน</value>
   </data>
   <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
     <value>Jukebox</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
-    <value>Skins</value>
+    <value>สกิน</value>
   </data>
   <data name="Screen_Main_Menu_Donate" xml:space="preserve">
-    <value>Donate</value>
+    <value>บริจาค</value>
   </data>
   <data name="Screen_Main_Menu_GitHub" xml:space="preserve">
     <value>GitHub</value>
   </data>
   <data name="Screen_Main_Menu_Wiki" xml:space="preserve">
-    <value>Wiki</value>
+    <value>วิกิ</value>
   </data>
   <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
     <value>Report Bugs</value>
