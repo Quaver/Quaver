@@ -16,10 +16,10 @@
     <value>Anglais</value>
   </data>
   <data name="Language_Bulgarian" xml:space="preserve">
-    <value>Bulgarian</value>
+    <value>Bulgare</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
-    <value>Change screens to update the language.</value>
+    <value>Changez d'écran pour mettre la langue à jour.</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>Menu Principal</value>
@@ -265,10 +265,10 @@
     <value>En ligne</value>
   </data>
   <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
-    <value>Online Grade</value>
+    <value>Grade en ligne</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
-    <value>Online Listing</value>
+    <value>Voir en Ligne</value>
   </data>
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
     <value>Profile en ligne</value>
@@ -277,10 +277,10 @@
     <value>Précision Générale</value>
   </data>
   <data name="Screen_Selection_OverallRating" xml:space="preserve">
-    <value>Overall Rating</value>
+    <value>Rating Global</value>
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
-    <value>Pass/Failure Count</value>
+    <value>Nombre de réussites/échecs</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Jouer</value>
@@ -295,7 +295,7 @@
     <value>Playlists</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
-    <value>Preview is disabled in this game!</value>
+    <value>L'aperçu est désactivé dans ce mode de jeu !</value>
   </data>
   <data name="Screen_Selection_Profile" xml:space="preserve">
     <value>Profile</value>
@@ -307,10 +307,10 @@
     <value>Ranked Status</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
-    <value>RANKING:</value>
+    <value>CLASSEMENT:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Rate</value>
+    <value>Vitesse</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
     <value>Joués récemment</value>
@@ -322,7 +322,7 @@
     <value>Résultats trouvés</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
-    <value>Scores on this map will be unranked!</value>
+    <value>Les scores obtenus sur cette map ne seront pas pris en compte dans le classement !</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
     <value>SÉLECTIONNER:</value>
@@ -337,19 +337,19 @@
     <value>Aucune map n'est sélectionnée!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>Cette map n'est pas ranked!</value>
+    <value>Cette map n'est pas classé!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
-    <value>This map is not submitted online!</value>
+    <value>Cette map n'est pas soumise en ligne !</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
-    <value>Times Played</value>
+    <value>Nombre de fois joué</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
     <value>Titre</value>
   </data>
   <data name="Screen_Selection_TotalHits" xml:space="preserve">
-    <value>Total Hits</value>
+    <value>Nombre total de clics</value>
   </data>
   <data name="Screen_Selection_TotalPauses" xml:space="preserve">
     <value>Pauses Totales</value>
@@ -400,7 +400,7 @@
     <value>Fenêtre</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
-    <value>Frame Time</value>
+    <value>Temps de Trame</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
     <value>Sortie</value>
@@ -436,7 +436,7 @@
     <value>Barre de Progression</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
-    <value>Masque des colonnes</value>
+    <value>Masque de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_Selection" xml:space="preserve">
     <value>Sélection</value>
@@ -508,19 +508,19 @@
     <value>Volume des Effets</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
-    <value>Master</value>
+    <value>Volume principal</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Musique</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>Effets</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
     <value>Retour</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Réesayer la map</value>
+    <value>Réessayer la Map</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
     <value>Regarder la Reprise</value>
@@ -568,7 +568,7 @@
     <value>Vie</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
-    <value>Cote</value>
+    <value>Rating</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
     <value>Moyenne</value>
@@ -614,7 +614,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>PRÉCISION GLOBAL</value>
   </data>
   <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
-    <value>MODE NON-CLASSÉ</value>
+    <value>MODE UNRANKED</value>
   </data>
   <data name="Screen_Results_Matchplayedon" xml:space="preserve">
     <value>Match joué le {0} @ {1}</value>
@@ -701,16 +701,16 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Votre décalage local pour cette map sera modifié de {0} ms à {1} ms.</value>
   </data>
   <data name="Screen_Results_Localoffsetset" xml:space="preserve">
-    <value>Local offset for this map was set to {0} ms.</value>
+    <value>Le décalage local de cette map a été réglé à {0} ms.</value>
   </data>
   <data name="Screen_Results_FailedtosavelocalscoretothedatabasePleasecheckthelogs" xml:space="preserve">
-    <value>Failed to save local score to the database. Please check the logs!</value>
+    <value>Échec de l'enregistrement du score local dans la base de données. Veuillez consulter les logs pour plus de détails !</value>
   </data>
   <data name="Screen_Results_TherewasanerrorwhensavingyourreplayCheckRuntimelogformoredetails" xml:space="preserve">
-    <value>There was an error when saving your replay. Check Runtime.log for more details.</value>
+    <value>Une erreur est survenue lors de la sauvegarde de votre replay. Consultez le fichier Runtime.log pour plus de détails.</value>
   </data>
   <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
-    <value>There is no replay data available to convert this score!</value>
+    <value>Il n'y a aucune donnée de disponible pour convertir ce score !</value>
   </data>
   <data name="Screen_Options_GlobalAudioOffset" xml:space="preserve">
     <value>Décalage Audio</value>
@@ -770,22 +770,22 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher le temps restant sur la barre de progression de la musique</value>
   </data>
   <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
-    <value>Activer/Désactiver le masque supérieur des colonnes</value>
+    <value>Activer/Désactiver le masque supérieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
-    <value>Top Lane Cover Height</value>
+    <value>Hauteur du masque supérieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
-    <value>Enable Bottom Lane Cover</value>
+    <value>Activer/Désactiver le masque inférieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
-    <value>Bottom Lane Cover Height</value>
+    <value>Hauteur du masque inférieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
-    <value>Display UI Elements Over Lane Covers</value>
+    <value>Afficher l'interface par-dessus le masque de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_DisplayReceptorsOverLaneCovers" xml:space="preserve">
-    <value>Display Receptors Over Lane Covers</value>
+    <value>Afficher les récepteurs par-dessus le masque de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_CustomSkin" xml:space="preserve">
     <value>Skin Personnalisé</value>
@@ -806,13 +806,13 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Publier le Skin vers le Steam Workshop</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
-    <value>Note &amp; Receptor Size Scale</value>
+    <value>Taille des notes et des récepteurs</value>
   </data>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
-    <value>Playfield Scale</value>
+    <value>Taille de la zone de jeu</value>
   </data>
   <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
-    <value>Tint Hitlighting Based On Judgement Color</value>
+    <value>Activer/Désactiver Effet de teinte des notes selon le jugement</value>
   </data>
   <data name="Screen_Options_Pause" xml:space="preserve">
     <value>Pause</value>
@@ -845,7 +845,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Activer/Désactiver la Visibilité du Classement</value>
   </data>
   <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
-    <value>Activer/Désactiver </value>
+    <value>Activer/Désactiver l'aperçu du chat</value>
   </data>
   <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
     <value>Diminuer la Vitesse de la Map</value>
@@ -863,13 +863,13 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Enlever Tout les Modes</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
-    <value>Pause/Play Track</value>
+    <value>Mettre en pause/Lire la piste</value>
   </data>
   <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
-    <value>Decrease Playback Rate</value>
+    <value>Réduire la vitesse de lecture</value>
   </data>
   <data name="Screen_Options_IncreasePlaybackRate" xml:space="preserve">
-    <value>Increase Playback Rate</value>
+    <value>Augmenter la vitesse de lecture</value>
   </data>
   <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
     <value>Prendre une Capture d'Écran</value>
@@ -899,7 +899,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Mode de Jeu Priorisé</value>
   </data>
   <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
-    <value>Suggest Difficulty from Overall Rating</value>
+    <value>Suggérer une difficulté à partir du rating global</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
     <value>Use Smooth Audio/Frame Timing During Gameplay</value>
@@ -908,7 +908,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Use Smooth Audio Start Timing During Gameplay</value>
   </data>
   <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Display Gameplay Overlay (Shift + F6)</value>
+    <value>Afficher l'aperçu de jeu (Maj + F6)</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
     <value>Afficher les Notifications Pendant le Gameplay</value>
@@ -920,13 +920,13 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher la Précision Ranked avec un Jugement Personnalisé</value>
   </data>
   <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
-    <value>Hit Error Fade Time</value>
+    <value>Temps de disparition des barres de jugement</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
-    <value>Hit Error Early / Late Coloring</value>
+    <value>Coloration du curseur selon l’écart de timing</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
-    <value>Hit Error Early / Late Window</value>
+    <value>Timing de la fenêtre d'écart du curseur</value>
   </data>
   <data name="Screen_Options_EnableComboAlerts" xml:space="preserve">
     <value>Activer les Alertes de Combo</value>
@@ -941,10 +941,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Normaliser l'Effet de Défilement par le Pourcentage de Vitesse</value>
   </data>
   <data name="Screen_Options_Display1v1TournamentOverlay" xml:space="preserve">
-    <value>Display 1v1 Tournament Overlay</value>
+    <value>Afficher l'aperçu du tournoi 1v1</value>
   </data>
   <data name="Screen_Options_Display1v1PlayfieldScores" xml:space="preserve">
-    <value>Display 1v1 Playfield Scores</value>
+    <value>Afficher les scores à l'écran en 1v1</value>
   </data>
   <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
     <value>Recharge le skin lorsqu'un changement est détecté</value>
@@ -1010,253 +1010,253 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Rechercher des options...</value>
   </data>
   <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>1K Gameplay Layout</value>
+    <value>Disposition de jeu 1T</value>
   </data>
   <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>1K Scroll Speed</value>
+    <value>Vitesse de défilement 1T</value>
   </data>
   <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>1K Scroll Direction</value>
+    <value>Direction de défilement 1T</value>
   </data>
   <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>1K Scratch Layout</value>
+    <value>Disposition Scratch 1K</value>
   </data>
   <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 1K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 1T à gauche</value>
   </data>
   <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
-    <value>1K Co-op Layout</value>
+    <value>Disposition Co-op 1T</value>
   </data>
   <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
-    <value>Prioritized 1K Difficulty</value>
+    <value>Priorisé la difficulté 1T</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1 Touche</value>
   </data>
   <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
-    <value>2K Gameplay Layout</value>
+    <value>Disposition de jeu 2T</value>
   </data>
   <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>2K Scroll Speed</value>
+    <value>Vitesse de défilement 2T</value>
   </data>
   <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2K Scroll Direction</value>
+    <value>Direction de défilement 2T</value>
   </data>
   <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
-    <value>2K Scratch Layout</value>
+    <value>Disposition Scratch 2T</value>
   </data>
   <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 2K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 2T à gauche</value>
   </data>
   <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
-    <value>2K Co-op Layout</value>
+    <value>Disposition Co-op 2T</value>
   </data>
   <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Prioritized 2K Difficulty</value>
+    <value>Priorisé la difficulté 2T</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2 Touches</value>
   </data>
   <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
-    <value>3K Gameplay Layout</value>
+    <value>Disposition de jeu 3T</value>
   </data>
   <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>3K Scroll Speed</value>
+    <value>Vitesse de défilement 3T</value>
   </data>
   <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>3K Scroll Direction</value>
+    <value>Direction de défilement 3T</value>
   </data>
   <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
-    <value>3K Scratch Layout</value>
+    <value>Disposition Scratch 3T</value>
   </data>
   <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 3K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 3T à gauche</value>
   </data>
   <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
-    <value>3K Co-op Layout</value>
+    <value>Disposition Co-op 3T</value>
   </data>
   <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
-    <value>Privilégier la difficulté 3K</value>
+    <value>Priorisé la difficulté 3T</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3 Touches</value>
   </data>
   <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
-    <value>4K Gameplay Layout</value>
+    <value>Disposition de jeu 4T</value>
   </data>
   <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>4K Scroll Speed</value>
+    <value>Vitesse de défilement 4T</value>
   </data>
   <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>4K Scroll Direction</value>
+    <value>Direction de défilement 4T</value>
   </data>
   <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
-    <value>4K Scratch Layout</value>
+    <value>Disposition Scratch 4T</value>
   </data>
   <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 4K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 4T à gauche</value>
   </data>
   <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>4K Co-op Layout</value>
+    <value>Disposition Co-op 4T</value>
   </data>
   <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Prioritized 4K Difficulty</value>
+    <value>Priorisé la difficulté 4T</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 Touches</value>
   </data>
   <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
-    <value>5K Gameplay Layout</value>
+    <value>Disposition de jeu 5T</value>
   </data>
   <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>5K Scroll Speed</value>
+    <value>Vitesse de défilement 5T</value>
   </data>
   <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>5K Scroll Direction</value>
+    <value>Direction de défilement 5T</value>
   </data>
   <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
-    <value>5K Scratch Layout</value>
+    <value>Disposition Scratch 5T</value>
   </data>
   <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 5K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 5T à gauche</value>
   </data>
   <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
-    <value>5K Co-op Layout</value>
+    <value>Disposition Co-op 5T</value>
   </data>
   <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
-    <value>Prioritized 5K Difficulty</value>
+    <value>Priorisé la difficulté 5T</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5 Touches</value>
   </data>
   <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
-    <value>6K Gameplay Layout</value>
+    <value>Disposition de jeu 6T</value>
   </data>
   <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>6K Scroll Speed</value>
+    <value>Vitesse de défilement 6T</value>
   </data>
   <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>6K Scroll Direction</value>
+    <value>Direction de défilement 6T</value>
   </data>
   <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
-    <value>6K Scratch Layout</value>
+    <value>Disposition Scratch 6T</value>
   </data>
   <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 6K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 6T à gauche</value>
   </data>
   <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
-    <value>6K Co-op Layout</value>
+    <value>Disposition Co-op 6T</value>
   </data>
   <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
-    <value>Prioritized 6K Difficulty</value>
+    <value>Priorisé la difficulté 6T</value>
   </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6 Touches</value>
   </data>
   <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
-    <value>7K Gameplay Layout</value>
+    <value>Disposition de jeu 7T</value>
   </data>
   <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>7K Scroll Speed</value>
+    <value>Vitesse de défilement 7T</value>
   </data>
   <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>7K Scroll Direction</value>
+    <value>Direction de défilement 7T</value>
   </data>
   <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
-    <value>7K Scratch Layout</value>
+    <value>Disposition Scratch 7T</value>
   </data>
   <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 7K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 7T à gauche</value>
   </data>
   <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
-    <value>7K Co-op Layout</value>
+    <value>Disposition Co-op 7T</value>
   </data>
   <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
-    <value>Prioritized 7K Difficulty</value>
+    <value>Priorisé la difficulté 7T</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 Touches</value>
   </data>
   <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
-    <value>8K Gameplay Layout</value>
+    <value>Disposition de jeu 8T</value>
   </data>
   <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>8K Scroll Speed</value>
+    <value>Vitesse de défilement 8T</value>
   </data>
   <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>8K Scroll Direction</value>
+    <value>Direction de défilement 8T</value>
   </data>
   <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
-    <value>8K Scratch Layout</value>
+    <value>Disposition Scratch 8T</value>
   </data>
   <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 8K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 8T à gauche</value>
   </data>
   <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
-    <value>8K Co-op Layout</value>
+    <value>Disposition Co-op 8T</value>
   </data>
   <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
-    <value>Prioritized 8K Difficulty</value>
+    <value>Priorisé la difficulté 8T</value>
   </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8 Touches</value>
   </data>
   <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
-    <value>9K Gameplay Layout</value>
+    <value>Disposition de jeu 9T</value>
   </data>
   <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>9K Scroll Speed</value>
+    <value>Vitesse de défilement 9T</value>
   </data>
   <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>9K Scroll Direction</value>
+    <value>Direction de défilement 9T</value>
   </data>
   <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
-    <value>9K Scratch Layout</value>
+    <value>Disposition Scratch 9T</value>
   </data>
   <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 9K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 9T à gauche</value>
   </data>
   <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
-    <value>9K Co-op Layout</value>
+    <value>Disposition Co-op 9T</value>
   </data>
   <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
-    <value>Prioritized 9K Difficulty</value>
+    <value>Priorisé la difficulté 9T</value>
   </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9 Touches</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>10K Gameplay Layout</value>
+    <value>Disposition de jeu 10T</value>
   </data>
   <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>10K Scroll Speed</value>
+    <value>Vitesse de défilement 10T</value>
   </data>
   <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>10K Scroll Direction</value>
+    <value>Direction de défilement 10T</value>
   </data>
   <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
-    <value>10K Scratch Layout</value>
+    <value>Disposition Scratch 10T</value>
   </data>
   <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 10K Scratch Lane On Left</value>
+    <value>Placer la colonne Scratch 10T à gauche</value>
   </data>
   <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
-    <value>10K Co-op Layout</value>
+    <value>Disposition Co-op 10T</value>
   </data>
   <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
-    <value>Prioritized 10K Difficulty</value>
+    <value>Priorisé la difficulté 10T</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10 Touches</value>
   </data>
   <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Settings</value>
+    <value>{0} Paramètres</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
-    <value>{0} Search Result</value>
+    <value>{0} Résultat de recherche</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
-    <value>{0} Search Results</value>
+    <value>{0} Résultats de recherche</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
     <value>La Musique est actuellement en pause !</value>
@@ -1367,7 +1367,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Téléchargement terminé : {0} - {1} !</value>
   </data>
   <data name="Screen_Download_By" xml:space="preserve">
-    <value>Par :</value>
+    <value>Par : </value>
   </data>
   <data name="Screen_Download_LNs" xml:space="preserve">
     <value>LNs : </value>
