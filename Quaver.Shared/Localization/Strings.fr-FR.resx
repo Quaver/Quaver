@@ -151,7 +151,7 @@
     <value>Êtes-vous sûr de vouloir quitter le jeu ?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
-    <value>Affrontez les autres pour gravir le classement</value>
+    <value>Concourez pour une place au classement</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
     <value>Jouez des parties personnalisées en ligne avec d'autres joueurs</value>
@@ -292,7 +292,7 @@
     <value>Profil local</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
-    <value>% Note Longue</value>
+    <value>% Longue Note</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
     <value>Map trouvée</value>
@@ -466,7 +466,7 @@
     <value>Contrôles</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
-    <value>Par mode de jeu</value>
+    <value>Spécifique au mode de jeu</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
     <value>Divers</value>
@@ -478,7 +478,7 @@
     <value>Fenêtre</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
-    <value>Temps de Trame</value>
+    <value>Temps d'image</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
     <value>Sortie</value>
@@ -601,10 +601,10 @@
     <value>Réessayer la Map</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
-    <value>Regarder la Reprise</value>
+    <value>Regarder le Replay</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
-    <value>Exporter la Reprise</value>
+    <value>Exporter le Replay</value>
   </data>
   <data name="Screen_Results_FixOffset" xml:space="preserve">
     <value>Corriger le décalage</value>
@@ -634,7 +634,7 @@
     <value>Profil de Jugement :</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
-    <value>GRAPH:</value>
+    <value>GRAPH :</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>Écart-Type</value>
@@ -658,7 +658,7 @@
     <value>Ratio :</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
-    <value>Statistiques non disponibles.</value>
+    <value>Statistiques non disponibles</value>
   </data>
   <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
     <value>Affiche l'évolution de la précision au fil de la partie. 
@@ -692,7 +692,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>PRÉCISION GLOBAL</value>
   </data>
   <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
-    <value>MODE UNRANKED</value>
+    <value>MODE NON-CLASSÉ</value>
   </data>
   <data name="Screen_Results_Matchplayedon" xml:space="preserve">
     <value>Match joué le {0} @ {1}</value>
@@ -713,7 +713,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Équipe rouge</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
-    <value>A gagné la partie  !</value>
+    <value>a gagné la partie  !</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Note</value>
@@ -764,7 +764,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Veuillez patienter votre replay est en exportation...</value>
   </data>
   <data name="Screen_Results_Anerroroccuredwhileexportingthereplay" xml:space="preserve">
-    <value>Une erreur c'est produite lors de l'exportation du replay !</value>
+    <value>Une erreur s'est produite lors de l'exportation du replay !</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
     <value>Vous avez déjà ajusté votre décalage local pour cette map ! Il n'est pas nécessaire de le refaire.</value>
@@ -773,7 +773,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Aucune donnée n'est disponible pour corriger votre décalage local !</value>
   </data>
   <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
-    <value>CORRIGER LE DÉCALAGE</value>
+    <value>CORRIGER LE DÉCALAGE LOCAL</value>
   </data>
   <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
     <value>Votre décalage local pour cette map sera modifié de {0} ms à {1} ms.</value>
@@ -812,10 +812,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Activer les sons de notes</value>
   </data>
   <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
-    <value>Activer les Sons de Notes pour les Longues Notes</value>
+    <value>Activer les sons de notes pour les Longues Notes</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
-    <value>Activer/Désactiver les Sons des Touches</value>
+    <value>Activer/Désactiver les sons des touches</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
     <value>Activer la pause instantanée</value>
@@ -824,7 +824,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Activer la Relance Rapide</value>
   </data>
   <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
-    <value>Ignorer l'Écran de Résultats Après avoir Terminé une Map</value>
+    <value>Ignorer l'Écran de Résultats après avoir quitté une Map</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
     <value>Bloquer la Touche Windows durant le Gameplay</value>
@@ -848,22 +848,22 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher le temps restant sur la barre de progression de la musique</value>
   </data>
   <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
-    <value>Activer/Désactiver Le Masque Supérieur de l'Aire de Jeu</value>
+    <value>Activer/Désactiver le masque supérieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
-    <value>Hauteur du Masque Supérieur de l'Aire de Jeu</value>
+    <value>Hauteur du masque supérieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
-    <value>Activer/Désactiver Le Masque Inférieur de l'Aire de Jeu</value>
+    <value>Activer/Désactiver le masque inférieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
-    <value>Hauteur du Masque Inférieur de l'Aire de Jeu</value>
+    <value>Hauteur du masque inférieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
-    <value>Afficher l'Interface par-dessus le Masque de l'Aire de Jeu</value>
+    <value>Afficher l'interface par-dessus le masque de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_DisplayReceptorsOverLaneCovers" xml:space="preserve">
-    <value>Afficher les Récepteurs par-dessus le Masque de l'Aire de Jeu</value>
+    <value>Afficher les récepteurs par-dessus le masque de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_CustomSkin" xml:space="preserve">
     <value>Skin Personnalisé</value>
@@ -887,7 +887,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Taille des Notes et des Récepteurs</value>
   </data>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
-    <value>Taille de la zone de jeu</value>
+    <value>Taille de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
     <value>Activer/Désactiver l'Effet de Teinte des Notes selon le Jugement</value>
@@ -1079,7 +1079,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Privilégier la Gestion des Entrées de macOS</value>
   </data>
   <data name="Screen_Options_EditorImGuiScale" xml:space="preserve">
-    <value>Taille de l'éditeur ImGui</value>
+    <value>Échelle ImGui de l'Éditeur</value>
   </data>
   <data name="Screen_Options_OPTIONSMENU" xml:space="preserve">
     <value>MENU DES OPTIONS</value>
@@ -1088,13 +1088,13 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Rechercher des options...</value>
   </data>
   <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>Disposition de jeu 1T</value>
+    <value>Disposition de jeu 1K</value>
   </data>
   <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>Vitesse de défilement 1T</value>
+    <value>Vitesse de défilement 1K</value>
   </data>
   <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>Direction de défilement 1T</value>
+    <value>Direction de défilement 1K</value>
   </data>
   <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
     <value>Disposition Scratch 1K</value>
@@ -1501,7 +1501,7 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Min Plays</value>
   </data>
   <data name="Screen_Download_LongNote" xml:space="preserve">
-    <value>% LN</value>
+    <value>% Longue Note</value>
   </data>
   <data name="Screen_Download_MaxLN" xml:space="preserve">
     <value>Max % LN</value>
