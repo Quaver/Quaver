@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple
 
             if (MapManager.Mapsets?.Count == 0)
             {
-                new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy),
+                new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy),
                     "You need to have mapsets imported in order to view this test", 22)
                 {
                     Parent = Container,

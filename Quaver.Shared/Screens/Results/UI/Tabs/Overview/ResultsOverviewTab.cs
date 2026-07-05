@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         {
             var time = $"{Processor.Value.Date:hh:mm:ss tt}";
 
-            DateAndTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            DateAndTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 ResultsLocalization.Get("Played on", Processor.Value.Date.ToShortDateString(), time), 22)
             {
                 Parent = ContentContainer,

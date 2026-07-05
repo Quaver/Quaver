@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Footer
     public class TheaterFooterPlayButton : IconTextButton
     {
         public TheaterFooterPlayButton(TheaterScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_play_sign),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Play", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Play", (sender, args) =>
             {
                 if (screen.Replays.Count < 2)
                 {

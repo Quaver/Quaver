@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
         {
             Screen = screen;
 
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), " ", 0, false)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " ", 0, false)
             {
                 Parent = this,
                 Tint = Color.Crimson,
@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
                 Alpha = 0
             };
 
-            Eliminated = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), " has been eliminated!", 0, false)
+            Eliminated = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " has been eliminated!", 0, false)
             {
                 Parent = this,
                 FontSize = 20,

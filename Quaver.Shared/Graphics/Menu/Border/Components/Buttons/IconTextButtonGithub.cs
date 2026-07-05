@@ -9,7 +9,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     public class IconTextButtonGithub : IconTextButton
     {
         public IconTextButtonGithub() : base(FontAwesome.Get(FontAwesomeIcon.fa_github_logo),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"GitHub", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"GitHub", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://github.com/Quaver");
             }, localizationKey: "Screen_Main_Menu_GitHub")

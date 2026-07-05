@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Tests.Dropdowns
                 RightClickOptions.Open();
             };
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Right-Click Me", 22)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "Right-Click Me", 22)
             {
                 Parent = btn,
                 Alignment = Alignment.MidCenter

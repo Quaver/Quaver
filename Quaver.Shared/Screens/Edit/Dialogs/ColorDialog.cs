@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             var color = NewColor;
             var val = $"{color.R},{color.G},{color.B}";
 
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.86f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.86f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, val, "Enter RGB color (ex: 255,255,255)...", OnSubmit)
             {
                 Parent = Panel,

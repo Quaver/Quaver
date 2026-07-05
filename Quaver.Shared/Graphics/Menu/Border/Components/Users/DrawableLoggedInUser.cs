@@ -210,7 +210,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Login", 21)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Login", 21)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,

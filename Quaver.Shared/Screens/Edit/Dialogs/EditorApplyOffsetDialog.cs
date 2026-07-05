@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, "", "Enter an offset to apply to your map...", OnSubmit)
             {
                 Parent = Panel,

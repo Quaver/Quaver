@@ -23,7 +23,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
 
             var text = request.ExecuteRequest();
 
-            var legalText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), text, 22, true)
+            var legalText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), text, 22, true)
             {
                 MaxWidth = Container.Width - 20,
                 Alignment = Alignment.TopCenter

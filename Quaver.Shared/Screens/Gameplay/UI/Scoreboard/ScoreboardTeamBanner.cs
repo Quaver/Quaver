@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             pointsContainer.X = Scoreboard.Team == MultiplayerTeam.Blue ? Width - 1 - pointsContainer.Width : 0;
 
-            Points = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0")
+            Points = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0")
             {
                 Parent = pointsContainer,
                 Alignment = Alignment.MidCenter,
@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             ratingContainer.X = Scoreboard.Team == MultiplayerTeam.Blue ? -Width + 1 + ratingContainer.Width : 0;
 
-            TeamRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00", 0, false)
+            TeamRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0.00", 0, false)
             {
                 Parent = ratingContainer,
                 Alignment = Alignment.MidCenter,

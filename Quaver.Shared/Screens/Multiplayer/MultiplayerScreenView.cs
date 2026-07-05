@@ -197,10 +197,10 @@ namespace Quaver.Shared.Screens.Multiplayer
         {
             Footer = new MenuFooterMultiplayer(new List<ButtonText>
             {
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("Leave"), 14, (o, e) => MultiplayerScreen.LeaveGame()),
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("Options"), 14, (o, e) => DialogManager.Show(new OptionsDialog())),
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("MatchHistory"), 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
-                new ButtonText(FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLocalization.Get("Commands"), 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/wiki/Multiplayer/Commands"))
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Leave"), 14, (o, e) => MultiplayerScreen.LeaveGame()),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Options"), 14, (o, e) => DialogManager.Show(new OptionsDialog())),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("MatchHistory"), 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Commands"), 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/wiki/Multiplayer/Commands"))
             }, new List<ButtonText>
             {
             }, Colors.MainAccent)

@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         private void CreateDifficultyName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "DIFFICULTY", 26)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "DIFFICULTY", 26)
             {
                 Parent = this,
                 Position = new ScalableVector2(PaddingX, 18),

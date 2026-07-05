@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             var depth = game?.CurrentScreen?.Type == QuaverScreenType.Editor ? -1 : 0;
 
             RateChanger = new HorizontalSelector(Speeds, new ScalableVector2(100, 32),
-                FontManager.GetWobbleFont(Fonts.LatoBlack), 22,
+                FontManager.GetWobbleFont(Fonts.InterBold), 22,
                 FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron), new ScalableVector2(20, 20), 0, OnSelected, GetSelectedIndex())
             {

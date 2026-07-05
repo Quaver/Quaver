@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Footer
         /// <summary>
         /// </summary>
         public MultiplayerLobbyFooterQuickMatchButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_lightning_bolt_shadow),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), MultiplayerLobbyLocalization.Get("QuickMatch"), (o, e) =>
+            FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLobbyLocalization.Get("QuickMatch"), (o, e) =>
             {
                 var openGames = OnlineManager.MultiplayerGames.Values.ToList()
                     .FindAll(x => !x.HasPassword && x.PlayerIds.Count < x.MaxPlayers);

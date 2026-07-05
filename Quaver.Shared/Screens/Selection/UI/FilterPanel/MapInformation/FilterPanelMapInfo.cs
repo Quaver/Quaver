@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// </summary>
         private void CreateArtistTitleText()
         {
-            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Artist - Title", 20);
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Artist - Title", 20);
 
             AddContainedDrawable(ArtistTitle);
         }
@@ -100,7 +100,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// </summary>
         private void CreateDifficultyModsText()
         {
-            DifficultyMods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "[Difficulty] + Mods", 20)
+            DifficultyMods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "[Difficulty] + Mods", 20)
             {
                 Y = ArtistTitle.Height + 8,
             };

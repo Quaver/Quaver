@@ -58,7 +58,7 @@ namespace Quaver.Shared.Graphics.Menu
                 X = 20
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title.ToUpper())
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), title.ToUpper())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -66,7 +66,7 @@ namespace Quaver.Shared.Graphics.Menu
                 FontSize = 16
             };
 
-            Title2 = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title2.ToUpper())
+            Title2 = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), title2.ToUpper())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Graphics.Menu
                 Tint = colorTheme
             };
 
-            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subtitle.ToUpper())
+            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), subtitle.ToUpper())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

@@ -34,7 +34,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             Size = new ScalableVector2(260, 34);
             Image = UserInterface.BattleRoyalePanel;
 
-            PlayersLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Scoreboard.BattleRoyalePlayersLeft + " Left")
+            PlayersLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Scoreboard.BattleRoyalePlayersLeft + " Left")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -42,7 +42,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 X = 52
             };
 
-            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "-00:00", 0, false)
+            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "-00:00", 0, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

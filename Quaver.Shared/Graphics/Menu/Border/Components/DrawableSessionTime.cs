@@ -61,7 +61,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
 
             Clock = TimeSpan.FromMilliseconds(GameBase.Game.TimeRunning);
 
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 19)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 19)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

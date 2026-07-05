@@ -41,7 +41,7 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// </summary>
         private void CreateTextbox(string initialText, string placeHolderText)
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, initialText, placeHolderText, s =>
                 {
                     SubmitAction?.Invoke(s);

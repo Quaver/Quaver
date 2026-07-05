@@ -34,13 +34,13 @@ namespace Quaver.Shared.Graphics.Form
             Size = new ScalableVector2(width, 62);
             Alpha = 0;
 
-            Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), label)
+            Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), label)
             {
                 Parent = this,
                 FontSize = labelSize
             };
 
-            Textbox = new Textbox(new ScalableVector2(width, textboxHeight), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(width, textboxHeight), FontManager.GetWobbleFont(Fonts.InterBold),
                 textboxFontSize, initialText, textboxPlaceholder)
             {
                 Parent = this,

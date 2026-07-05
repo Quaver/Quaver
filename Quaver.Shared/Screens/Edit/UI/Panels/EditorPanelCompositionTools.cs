@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 Icon.Size = new ScalableVector2(12, 20);
             }
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), name, 21)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), name, 21)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

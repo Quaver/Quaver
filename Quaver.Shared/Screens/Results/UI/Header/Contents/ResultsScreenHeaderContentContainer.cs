@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
         /// <summary>
         /// </summary>
-        private void CreateSongTitle() => SongTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+        private void CreateSongTitle() => SongTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
             $"{Map.Artist} - {Map.Title}", 32)
         {
             Parent = this,
@@ -140,7 +140,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
             var rateStr = rate != 1.0f ? $" {rate}x" : "";
 
-            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 $"[{Map.DifficultyName}{rateStr}] ({StringHelper.RatingToString(difficulty)})", 26)
             {
                 Parent = this,

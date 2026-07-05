@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                 Alpha = 0
             };
 
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title, 20)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), title, 20)
             {
                 Parent = Container,
                 X = 36,

@@ -24,7 +24,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.Custom
         /// <param name="dropdown"></param>
         public LabelledDropdown(string label, int fontSize, Dropdown dropdown)
         {
-            Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), label, fontSize)
+            Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), label, fontSize)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

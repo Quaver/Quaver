@@ -27,7 +27,7 @@ namespace Quaver.Shared.Graphics.Form
         /// <param name="checkbox"></param>
         public LabelledCheckbox(string label, int fontSize, Checkbox checkbox)
         {
-            Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), label, fontSize)
+            Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), label, fontSize)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

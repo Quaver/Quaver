@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
     public class ResultsFooterRetryButton : IconTextButton
     {
         public ResultsFooterRetryButton(ResultsScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), ResultsLocalization.Get("Retry Map"), (sender, args) => screen.RetryMap())
+            FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Retry Map"), (sender, args) => screen.RetryMap())
         {
         }
     }

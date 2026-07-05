@@ -18,8 +18,65 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>保加利亚语</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>丹麦语</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>德语</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>西班牙语</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>法语</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>印度尼西亚语</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>意大利语</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>韩语</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>荷兰语</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>挪威语</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>波兰语</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>葡萄牙语（巴西）</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>俄语</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>瑞典语</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>泰语</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>乌克兰语</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>退出当前界面以更新语言。</value>
+  </data>
+  <data name="Chat_SendAMessage" xml:space="preserve">
+    <value>发送消息……</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>主页</value>
@@ -165,6 +222,9 @@
   <data name="Screen_Selection_Back" xml:space="preserve">
     <value>返回</value>
   </data>
+  <data name="Screen_Selection_By" xml:space="preserve">
+    <value>谱师：</value>
+  </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
   </data>
@@ -216,8 +276,14 @@
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
     <value>最高分数</value>
   </data>
+  <data name="Screen_Selection_Leaderboard" xml:space="preserve">
+    <value>排行榜</value>
+  </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
     <value>长度</value>
+  </data>
+  <data name="Screen_Selection_LengthLabel" xml:space="preserve">
+    <value>长度：</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>本地</value>
@@ -255,6 +321,9 @@
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
     <value>还没有成绩。来抢第一！</value>
   </data>
+  <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
+    <value>没有个人最佳成绩</value>
+  </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>无</value>
   </data>
@@ -273,6 +342,9 @@
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
     <value>在线个人资料</value>
   </data>
+  <data name="Screen_Selection_Options" xml:space="preserve">
+    <value>选项</value>
+  </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>总体准度</value>
   </data>
@@ -281,6 +353,9 @@
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
     <value>通过/失败计数</value>
+  </data>
+  <data name="Screen_Selection_PersonalBest" xml:space="preserve">
+    <value>个人最佳</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>游玩</value>
@@ -365,6 +440,9 @@
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>您当前没有在线，无法查看此排行榜！</value>
+  </data>
+  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+    <value>当前激活的模组下不可能超过此成绩！</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>您的谱面需要更新！</value>
@@ -1455,6 +1533,9 @@
   <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
     <value>推荐难度</value>
   </data>
+  <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
+    <value>推荐难度</value>
+  </data>
   <data name="Screen_Download_Back" xml:space="preserve">
     <value>返回</value>
   </data>
@@ -1535,6 +1616,9 @@
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
     <value>准备</value>
+  </data>
+  <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
+    <value>正在等待房主开始游戏</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
     <value>更改房间名称</value>

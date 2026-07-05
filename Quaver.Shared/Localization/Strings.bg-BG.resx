@@ -18,8 +18,65 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Български</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>Danish</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>Indonesian</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>Korean</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>Norwegian</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>Polish</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>Portuguese (Brazil)</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Russian</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>Thai</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>Ukrainian</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>Chinese (Simplified)</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>Chinese (Traditional)</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Сменете екрана, за да се актуализира езика.</value>
+  </data>
+  <data name="Chat_SendAMessage" xml:space="preserve">
+    <value>Send a message...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>Начало</value>
@@ -31,7 +88,7 @@
     <value>Кланове</value>
   </data>
   <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
-    <value>Джубокс</value>
+    <value>Джукбокс</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
     <value>Скинове</value>
@@ -49,7 +106,7 @@
     <value>Докладвай проблем</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
-    <value>Twitter</value>
+    <value>X</value>
   </data>
   <data name="Screen_Main_Menu_Discord" xml:space="preserve">
     <value>Discord</value>
@@ -157,13 +214,16 @@
     <value>Published {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
-    <value>All</value>
+    <value>Всички</value>
   </data>
   <data name="Screen_Selection_Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Изпълнител</value>
   </data>
   <data name="Screen_Selection_Back" xml:space="preserve">
     <value>Назад</value>
+  </data>
+  <data name="Screen_Selection_By" xml:space="preserve">
+    <value>От:</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -175,7 +235,7 @@
     <value>Държава</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Country Rank</value>
+    <value>Държавен ранг</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Създай нов</value>
@@ -202,13 +262,13 @@
     <value>Приятели</value>
   </data>
   <data name="Screen_Selection_Game" xml:space="preserve">
-    <value>Game</value>
+    <value>Игра</value>
   </data>
   <data name="Screen_Selection_Global" xml:space="preserve">
-    <value>Global</value>
+    <value>Глобален</value>
   </data>
   <data name="Screen_Selection_GlobalRank" xml:space="preserve">
-    <value>Global Rank</value>
+    <value>Глобален ранг</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
     <value>Групирай по:</value>
@@ -216,8 +276,14 @@
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
     <value>Highest Rated Score</value>
   </data>
+  <data name="Screen_Selection_Leaderboard" xml:space="preserve">
+    <value>LEADERBOARD</value>
+  </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
-    <value>Length</value>
+    <value>Дължина</value>
+  </data>
+  <data name="Screen_Selection_LengthLabel" xml:space="preserve">
+    <value>Дължина:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>Локални</value>
@@ -255,6 +321,9 @@
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
     <value>No scores available. Be the first!</value>
   </data>
+  <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
+    <value>NO PERSONAL BEST SET</value>
+  </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>None</value>
   </data>
@@ -273,6 +342,9 @@
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
     <value>Online Profile</value>
   </data>
+  <data name="Screen_Selection_Options" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>Overall Accuracy</value>
   </data>
@@ -281,6 +353,9 @@
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
     <value>Pass/Failure Count</value>
+  </data>
+  <data name="Screen_Selection_PersonalBest" xml:space="preserve">
+    <value>PERSONAL BEST</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Играй</value>
@@ -366,6 +441,9 @@
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>Трябва да си онлайн за да имаш достъп до класацията!</value>
   </data>
+  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+    <value>You cannot beat this score with your currently activated modifiers!</value>
+  </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>Картата е остаряла. Моля актуализирайте я!</value>
   </data>
@@ -445,10 +523,10 @@
     <value>Навигация</value>
   </data>
   <data name="Screen_Options_Sharing" xml:space="preserve">
-    <value>Sharing</value>
+    <value>Споделяне</value>
   </data>
   <data name="Screen_Options_Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>Конгифурация</value>
   </data>
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
     <value>Gameplay Controls</value>
@@ -1460,6 +1538,9 @@ You can use the filters below to narrow down your search.</value>
   <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
     <value>Recommend Difficulty</value>
   </data>
+  <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
+    <value>Recommended difficulty</value>
+  </data>
   <data name="Screen_Download_Back" xml:space="preserve">
     <value>Back</value>
   </data>
@@ -1541,6 +1622,9 @@ sure you would like to start without all players ready?</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
     <value>Ready Up</value>
+  </data>
+  <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
+    <value>Waiting for the host to start</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
     <value>CHANGE GAME NAME</value>

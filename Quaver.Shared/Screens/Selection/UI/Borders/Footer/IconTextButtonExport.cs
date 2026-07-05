@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonExport: IconTextButton
     {
         public IconTextButtonExport(SelectionScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_archive_black_box),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Export", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Export", (sender, args) =>
             {
                 screen.ExportSelectedMapset();
             }, localizationKey: SelectionLocalization.GetKey("Export"))
