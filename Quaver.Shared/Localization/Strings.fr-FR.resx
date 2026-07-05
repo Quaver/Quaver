@@ -18,60 +18,6 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Bulgare</value>
   </data>
-  <data name="Language_Danish" xml:space="preserve">
-    <value>Danois</value>
-  </data>
-  <data name="Language_German" xml:space="preserve">
-    <value>Allemand</value>
-  </data>
-  <data name="Language_Spanish" xml:space="preserve">
-    <value>Espagnol</value>
-  </data>
-  <data name="Language_French" xml:space="preserve">
-    <value>Français</value>
-  </data>
-  <data name="Language_Indonesian" xml:space="preserve">
-    <value>Indonésien</value>
-  </data>
-  <data name="Language_Italian" xml:space="preserve">
-    <value>Italien</value>
-  </data>
-  <data name="Language_Japanese" xml:space="preserve">
-    <value>Japonais</value>
-  </data>
-  <data name="Language_Korean" xml:space="preserve">
-    <value>Coréen</value>
-  </data>
-  <data name="Language_Dutch" xml:space="preserve">
-    <value>Néerlandais</value>
-  </data>
-  <data name="Language_Norwegian" xml:space="preserve">
-    <value>Norvégien</value>
-  </data>
-  <data name="Language_Polish" xml:space="preserve">
-    <value>Polonais</value>
-  </data>
-  <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portugais (Brésil)</value>
-  </data>
-  <data name="Language_Russian" xml:space="preserve">
-    <value>Russe</value>
-  </data>
-  <data name="Language_Swedish" xml:space="preserve">
-    <value>Suédois</value>
-  </data>
-  <data name="Language_Thai" xml:space="preserve">
-    <value>Thaï</value>
-  </data>
-  <data name="Language_Ukrainian" xml:space="preserve">
-    <value>Ukrainien</value>
-  </data>
-  <data name="Language_ChineseSimplified" xml:space="preserve">
-    <value>Chinois (simplifié)</value>
-  </data>
-  <data name="Language_ChineseTraditional" xml:space="preserve">
-    <value>Chinois (traditionnel)</value>
-  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Changez d'écran pour mettre à jour la langue sélectionnée.</value>
   </data>
@@ -313,7 +259,7 @@
     <value>Aucun</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
-    <value>NPS.</value>
+    <value>Notes Par Sec.</value>
   </data>
   <data name="Screen_Selection_Online" xml:space="preserve">
     <value>En ligne</value>
@@ -322,7 +268,7 @@
     <value>Grade en ligne</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
-    <value>Voir en Ligne</value>
+    <value>Voir en ligne</value>
   </data>
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
     <value>Profil en ligne</value>
@@ -334,7 +280,7 @@
     <value>Performance Global</value>
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
-    <value>Réussites/Échecs</value>
+    <value>Nombre de réussites/échecs</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Jouer</value>
@@ -358,10 +304,10 @@
     <value>Aléatoire</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked Status</value>
+    <value>Status Classé</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
-    <value>CLASSEMENT:</value>
+    <value>CLASSEMENT :</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
     <value>Rate</value>
