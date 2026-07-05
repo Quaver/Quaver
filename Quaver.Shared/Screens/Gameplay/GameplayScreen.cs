@@ -379,6 +379,14 @@ namespace Quaver.Shared.Screens.Gameplay
 
         /// <summary>
         /// </summary>
+        private const string VISUAL_OFFSET_NOTIFICATION_KEY = "gameplay-visual-offset";
+
+        /// <summary>
+        /// </summary>
+        private const string LOCAL_MAP_OFFSET_NOTIFICATION_KEY = "gameplay-local-map-offset";
+
+        /// <summary>
+        /// </summary>
         public int FailFadeTime => HasQuit ? QUIT_FADE_TIME : FAILURE_FADE_TIME;
 
         /// <summary>
@@ -1669,13 +1677,13 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value += change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset += change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
@@ -1688,13 +1696,13 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value -= change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset -= change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
@@ -1707,13 +1715,13 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value = 0;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Visual offset has been reset to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset = 0;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Local map audio offset has been reset to: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));

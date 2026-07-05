@@ -472,7 +472,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     // Reset to global if the target speed is the same as global
                     MapManager.CustomScrollSpeed = null;
 
-                    NotificationManager.Show(NotificationLevel.Info,
+                    NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
                         $"Scroll speed (local) has been reset to global: {scrollSpeed.Value / 10f:0.0}",
                         null, true);
                 }
@@ -481,7 +481,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     // Set custom local scroll speed
                     MapManager.CustomScrollSpeed = targetScrollSpeed;
 
-                    NotificationManager.Show(NotificationLevel.Info,
+                    NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
                         $"Scroll speed (local) has been changed to: {targetScrollSpeed / 10f:0.0}",
                         null, true);
                 }
@@ -497,7 +497,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
                     scrollSpeed.Value -= speedIncrease;
 
-                NotificationManager.Show(NotificationLevel.Info,
+                NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
                     $"Scroll speed (global) has been changed to: {scrollSpeed.Value / 10f:0.0}",
                     null, true);
             }
