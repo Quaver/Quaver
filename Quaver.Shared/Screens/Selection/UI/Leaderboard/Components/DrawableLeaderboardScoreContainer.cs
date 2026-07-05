@@ -376,7 +376,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Player", 24)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Player", 22)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -391,7 +391,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateClan()
         {
-            Clan = new ClanTag(24)
+            Clan = new ClanTag(22)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -415,11 +415,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreatePerformanceRating()
         {
-            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00.00", 28)
+            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00.00", 26)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Y = 6,
+                Y = 8,
                 X = PerformanceRatingX,
                 Tint = SkinManager.Skin?.SongSelect?.LeaderboardScoreRatingColor ?? ColorHelper.HexToColor("#E9B736"),
                 UsePreviousSpriteBatchOptions = true
@@ -468,7 +468,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(20, 20),
                 UsePreviousSpriteBatchOptions = true,
-                Y = PerformanceRating.Y + 5,
+                Y = PerformanceRating.Y + 3,
                 X = PerformanceRatingX,
                 Alpha = 0
             };
@@ -505,7 +505,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(18, 18),
                 UsePreviousSpriteBatchOptions = true,
-                Y = PerformanceRating.Y + 5,
+                Y = PerformanceRating.Y + 3,
                 X = PerformanceRatingX,
                 Alpha = 0,
                 Tint = ColorHelper.HexToColor("#5dc7f9")
@@ -712,7 +712,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             }
             else
             {
-                CantBeatAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
+                CantBeatAlert.X = PerformanceRating.X - PerformanceRating.Width - 5;
                 CantBeatAlertShouldBeVisible = true;
                 ApplyAlertVisibility();
             }
@@ -732,7 +732,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             }
 
             RequiredAccuracyAlertShouldBeVisible = true;
-            RequiredAccuracyAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
+            RequiredAccuracyAlert.X = PerformanceRating.X - PerformanceRating.Width - 5;
             ApplyAlertVisibility();
         }
 
