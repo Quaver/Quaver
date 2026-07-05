@@ -22,7 +22,7 @@
     <value>덴마크어</value>
   </data>
   <data name="Language_German" xml:space="preserve">
-    <value>German</value>
+    <value>독일어</value>
   </data>
   <data name="Language_Spanish" xml:space="preserve">
     <value>스페인어</value>
@@ -31,28 +31,28 @@
     <value>프랑스어</value>
   </data>
   <data name="Language_Indonesian" xml:space="preserve">
-    <value>Indonesian</value>
+    <value>인도네시아어</value>
   </data>
   <data name="Language_Italian" xml:space="preserve">
     <value>이탈리아어</value>
   </data>
   <data name="Language_Japanese" xml:space="preserve">
-    <value>Japanese</value>
+    <value>일본어</value>
   </data>
   <data name="Language_Korean" xml:space="preserve">
     <value>한국어</value>
   </data>
   <data name="Language_Dutch" xml:space="preserve">
-    <value>Dutch</value>
+    <value>네덜란드어</value>
   </data>
   <data name="Language_Norwegian" xml:space="preserve">
-    <value>Norwegian</value>
+    <value>노르웨이어</value>
   </data>
   <data name="Language_Polish" xml:space="preserve">
-    <value>Polish</value>
+    <value>폴란드어</value>
   </data>
   <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portuguese (Brazil)</value>
+    <value>폴란드어 (브라질)</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
     <value>러시아어</value>
@@ -76,7 +76,7 @@
     <value>언어를 변경 중 입니다.</value>
   </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
-    <value>Send a message...</value>
+    <value>메세지를 보내는 중...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>메인</value>
@@ -151,25 +151,25 @@
     <value>게임을 종료 하시겠습니까?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
-    <value>Compete for leaderboard ranks</value>
+    <value>리더보드 랭크를 위해 경쟁합니다.</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
     <value>다른 사람들과 온라인에서 커스텀 매치를 플레이할 수 있습니다.</value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
-    <value>Compete against players all over the world</value>
+    <value>전 세계 플레이어들과 경쟁합니다.</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
-    <value>Create or edit a map to any song you'd like</value>
+    <value>좋아하는 곡으로 맵을 만들거나 수정합니다.</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
-    <value>Find new songs from the community to play</value>
+    <value>커뮤니티에서 새로운 노래를 검색합니다.</value>
   </data>
   <data name="Screen_Main_TipLabel" xml:space="preserve">
     <value>팁:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing CTRL+O will open the options menu.</value>
+    <value>Ctrl+O를 눌러 설정 화면을 엽니다.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>맵 파일(.qp)을 드래그하여 게임에 추가하세요.</value>
