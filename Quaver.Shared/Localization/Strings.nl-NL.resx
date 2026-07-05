@@ -18,6 +18,60 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Bulgaars</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>Deens</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>Duits</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Spaans</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>Frans</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>Indonesisch</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>Italiaans</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>Japans</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>Koreaans</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>Nederlands</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>Noors</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>Pools</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>Portugees (Brazilië)</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Russisch</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>Zweeds</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>Thais</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>Oekraïens</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>Chinees (vereenvoudigd)</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>Chinees (traditioneel)</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Verander van scherm om de taal te wijzigen.</value>
   </data>

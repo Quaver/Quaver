@@ -18,6 +18,60 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Bulgarian</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>Danish</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>Indonesian</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>Korean</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>Norwegian</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>Polish</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>Portuguese (Brazil)</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Russian</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>Thai</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>Ukrainian</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>Chinese (Simplified)</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>Chinese (Traditional)</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Change screens to update the language.</value>
   </data>

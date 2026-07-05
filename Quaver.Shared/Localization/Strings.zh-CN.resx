@@ -18,6 +18,60 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>保加利亚语</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>丹麦语</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>德语</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>西班牙语</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>法语</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>印度尼西亚语</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>意大利语</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>韩语</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>荷兰语</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>挪威语</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>波兰语</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>葡萄牙语（巴西）</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>俄语</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>瑞典语</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>泰语</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>乌克兰语</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>退出当前界面以更新语言。</value>
   </data>

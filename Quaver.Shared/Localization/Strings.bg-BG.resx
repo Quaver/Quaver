@@ -18,6 +18,60 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Български</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>Датски</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>Немски</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Испански</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>Френски</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>Индонезийски</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>Италиански</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>Японски</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>Корейски</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>Нидерландски</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>Норвежки</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>Полски</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>Португалски (Бразилия)</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Руски</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>Шведски</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>Тайски</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>Украински</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>Опростен китайски</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>Традиционен китайски</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Сменете екрана, за да се актуализира езика.</value>
   </data>
