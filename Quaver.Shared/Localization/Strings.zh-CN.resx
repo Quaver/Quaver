@@ -43,7 +43,7 @@
     <value>GitHub</value>
   </data>
   <data name="Screen_Main_Menu_Wiki" xml:space="preserve">
-    <value>Wiki</value>
+    <value>维基百科</value>
   </data>
   <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
     <value>反馈问题</value>
@@ -67,7 +67,7 @@
     <value>编辑器</value>
   </data>
   <data name="Screen_Main_Competitive" xml:space="preserve">
-    <value>竞技</value>
+    <value>排位模式</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
     <value>谱面编辑器</value>
@@ -79,7 +79,7 @@
     <value>下载谱面</value>
   </data>
   <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
-    <value>创意工坊</value>
+    <value>Steam 创意工坊</value>
   </data>
   <data name="Screen_Main_Options" xml:space="preserve">
     <value>选项</value>
@@ -91,7 +91,7 @@
     <value>退出 Quaver</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>确认退出游戏吗？</value>
+    <value>你确定要退出游戏吗？</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>参与排行榜竞争</value>
@@ -118,7 +118,7 @@
     <value>将谱面文件（.qp）拖入游戏窗口即可导入。</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>在选歌界面按下 F3 显示谱面预览。</value>
+    <value>在选歌界面按下 F3 键可以显示谱面预览。</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>如果在游玩时暂停，成绩将不会上传。</value>
@@ -133,13 +133,13 @@
     <value>如需创建谱面，请将 .mp3 文件拖入游戏窗口！</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>在选歌界面按下 F2 时，会切换至一个随机歌曲。</value>
+    <value>在选歌界面按下 F2 键会随机选择一首歌曲。</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
-    <value>在菜单栏按下 F10 会调起您的玩家信息。</value>
+    <value>在菜单栏按下 F10 键可以打开你的玩家信息。</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>在游玩时按下 F3/F4 可以更改下落速度。</value>
+    <value>在游玩时按下 F3/F4 键可以更改物件移动速度。</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>在选项菜单可以校正您的延迟。</value>
@@ -259,7 +259,7 @@
     <value>无</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
-    <value>音符每秒</value>
+    <value>每秒物件数</value>
   </data>
   <data name="Screen_Selection_Online" xml:space="preserve">
     <value>在线</value>
@@ -346,7 +346,7 @@
     <value>次游玩</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
-    <value>名称</value>
+    <value>标题</value>
   </data>
   <data name="Screen_Selection_TotalHits" xml:space="preserve">
     <value>总击打数</value>
@@ -577,7 +577,7 @@
     <value>标准差：</value>
   </data>
   <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>黄彩比：</value>
+    <value>彩黄比：</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>数据不可用</value>
@@ -588,10 +588,10 @@
 如果中途失败，将假设之后判定全部为Marvelous，显示对应的变化过程。</value>
   </data>
   <data name="Screen_Results_Latehitwindow" xml:space="preserve">
-    <value>过晚（+{0} 毫秒）</value>
+    <value>过晚（+{0} ms）</value>
   </data>
   <data name="Screen_Results_Earlyhitwindow" xml:space="preserve">
-    <value>过早（-{0} 毫秒）</value>
+    <value>过早（-{0} ms）</value>
   </data>
   <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
     <value>此图记录Rating变化过程。
@@ -602,10 +602,10 @@
     <value>正在上传成绩……</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
-    <value>全球排行</value>
+    <value>全球排名</value>
   </data>
   <data name="Screen_Results_CountryRank" xml:space="preserve">
-    <value>国家/地区排行</value>
+    <value>国家/地区排名</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
     <value>总体 Rating</value>
@@ -698,10 +698,10 @@
     <value>调整谱面延迟</value>
   </data>
   <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
-    <value>谱面延迟已从 {0} 毫秒调整至 {1} 毫秒。</value>
+    <value>谱面延迟已从 {0} ms 调整至 {1} ms。</value>
   </data>
   <data name="Screen_Results_Localoffsetset" xml:space="preserve">
-    <value>当前谱面延迟为 {0} 毫秒。</value>
+    <value>当前谱面延迟为 {0} ms。</value>
   </data>
   <data name="Screen_Results_FailedtosavelocalscoretothedatabasePleasecheckthelogs" xml:space="preserve">
     <value>无法将本地成绩存入数据库。请查看日志！</value>
@@ -746,7 +746,7 @@
     <value>短按重试</value>
   </data>
   <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
-    <value>推出游戏不显示结算界面</value>
+    <value>退出游戏不显示结算界面</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
     <value>游玩时禁用Win按键</value>
@@ -845,7 +845,7 @@
     <value>开关计分板</value>
   </data>
   <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
-    <value>开关</value>
+    <value>开关聊天栏</value>
   </data>
   <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
     <value>减慢音频速度</value>
@@ -1651,7 +1651,7 @@
     <value>请在当前游戏结束后再准备。</value>
   </data>
   <data name="Screen_Multiplayer_CannotReadyWithoutMap" xml:space="preserve">
-    <value>你需要下载谱面才能准备！</value>
+    <value>您需要下载谱面才能准备！</value>
   </data>
   <data name="Screen_Multiplayer_SelectMap" xml:space="preserve">
     <value>选择谱面</value>
@@ -1825,7 +1825,7 @@
     <value>开放</value>
   </data>
   <data name="Screen_MultiplayerLobby_Full" xml:space="preserve">
-    <value>满yuan</value>
+    <value>满员</value>
   </data>
   <data name="Screen_MultiplayerLobby_Password" xml:space="preserve">
     <value>密码</value>
