@@ -19,64 +19,64 @@
     <value>Bulgare</value>
   </data>
   <data name="Language_Danish" xml:space="preserve">
-    <value>Danish</value>
+    <value>Danois</value>
   </data>
   <data name="Language_German" xml:space="preserve">
-    <value>German</value>
+    <value>Allemand</value>
   </data>
   <data name="Language_Spanish" xml:space="preserve">
-    <value>Spanish</value>
+    <value>Espagnol</value>
   </data>
   <data name="Language_French" xml:space="preserve">
-    <value>French</value>
+    <value>Français</value>
   </data>
   <data name="Language_Indonesian" xml:space="preserve">
-    <value>Indonesian</value>
+    <value>Indonésien</value>
   </data>
   <data name="Language_Italian" xml:space="preserve">
-    <value>Italian</value>
+    <value>Italien</value>
   </data>
   <data name="Language_Japanese" xml:space="preserve">
-    <value>Japanese</value>
+    <value>Japonais</value>
   </data>
   <data name="Language_Korean" xml:space="preserve">
-    <value>Korean</value>
+    <value>Coréen</value>
   </data>
   <data name="Language_Dutch" xml:space="preserve">
-    <value>Dutch</value>
+    <value>Néerlandais</value>
   </data>
   <data name="Language_Norwegian" xml:space="preserve">
-    <value>Norwegian</value>
+    <value>Norvégien</value>
   </data>
   <data name="Language_Polish" xml:space="preserve">
-    <value>Polish</value>
+    <value>Polonais</value>
   </data>
   <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portuguese (Brazil)</value>
+    <value>Portugais (Brésil)</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
-    <value>Russian</value>
+    <value>Russe</value>
   </data>
   <data name="Language_Swedish" xml:space="preserve">
-    <value>Swedish</value>
+    <value>Suédois</value>
   </data>
   <data name="Language_Thai" xml:space="preserve">
-    <value>Thai</value>
+    <value>Thaï</value>
   </data>
   <data name="Language_Ukrainian" xml:space="preserve">
-    <value>Ukrainian</value>
+    <value>Ukrainien</value>
   </data>
   <data name="Language_ChineseSimplified" xml:space="preserve">
-    <value>Chinese (Simplified)</value>
+    <value>Chinois (Simplifié)</value>
   </data>
   <data name="Language_ChineseTraditional" xml:space="preserve">
-    <value>Chinese (Traditional)</value>
+    <value>Chinois (Traditionnel)</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Changez d'écran pour mettre à jour la langue sélectionnée.</value>
   </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
-    <value>Send a message...</value>
+    <value>Envoyer un message...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>Menu Principal</value>
@@ -223,7 +223,7 @@
     <value>Retour</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
-    <value>By:</value>
+    <value>Par :</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -277,13 +277,13 @@
     <value>Meilleur Score Classé</value>
   </data>
   <data name="Screen_Selection_Leaderboard" xml:space="preserve">
-    <value>LEADERBOARD</value>
+    <value>CLASSEMENT</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
     <value>Durée</value>
   </data>
   <data name="Screen_Selection_LengthLabel" xml:space="preserve">
-    <value>Length:</value>
+    <value>Durée :</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>Local</value>
@@ -322,7 +322,7 @@
     <value>Aucun score disponible. Sois le premier !</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
-    <value>NO PERSONAL BEST SET</value>
+    <value>PAS DE RECORD PERSONNEL</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>Aucun</value>
@@ -334,7 +334,7 @@
     <value>En ligne</value>
   </data>
   <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
-    <value>Grade en ligne</value>
+    <value>Note en ligne</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
     <value>Voir en ligne</value>
@@ -355,7 +355,7 @@
     <value>Nombre de réussites/échecs</value>
   </data>
   <data name="Screen_Selection_PersonalBest" xml:space="preserve">
-    <value>PERSONAL BEST</value>
+    <value>RECORD PERSONNEL</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>Jouer</value>
@@ -439,10 +439,10 @@
     <value>Vous devez être un donateur pour accéder au classement !</value>
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
-    <value>Tu dois être connecté pour accéder à ce classement!</value>
+    <value>Tu dois être connecté pour accéder à ce classement !</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
-    <value>You cannot beat this score with your currently activated modifiers!</value>
+    <value>Vous ne pouvez pas battre ce score avec vos modificateurs actuellement activés !</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>Ta map n'est plus à jour. Mets-la à jour !</value>
@@ -716,7 +716,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>A gagné la partie  !</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
-    <value>Grade</value>
+    <value>Note</value>
   </data>
   <data name="Screen_Results_MaxCombo" xml:space="preserve">
     <value>Combo Max</value>
@@ -1534,7 +1534,7 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Difficulté Recommandée</value>
   </data>
   <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
-    <value>Recommended difficulty</value>
+    <value>Difficulté recommandée</value>
   </data>
   <data name="Screen_Download_Back" xml:space="preserve">
     <value>Retour</value>
@@ -1618,7 +1618,7 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Prêt</value>
   </data>
   <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
-    <value>Waiting for the host to start</value>
+    <value>En attente du démarrage de l'hôte</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
     <value>CHANGER LE NOM DU LOBBY</value>
