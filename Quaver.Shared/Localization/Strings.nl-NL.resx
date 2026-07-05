@@ -1104,7 +1104,7 @@ als Uitstekend werden geraakt.</value>
     <value>1K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 1K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 1K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
     <value>1K Cooperatief Layout</value>
@@ -1128,7 +1128,7 @@ als Uitstekend werden geraakt.</value>
     <value>2K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 2K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 2K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
     <value>2K Cooperatief Layout</value>
@@ -1152,7 +1152,7 @@ als Uitstekend werden geraakt.</value>
     <value>3K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 3K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 3K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
     <value>3K Cooperatief Layout</value>
@@ -1176,7 +1176,7 @@ als Uitstekend werden geraakt.</value>
     <value>4K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 4K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 4K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
     <value>4K Cooperatief Layout</value>
@@ -1200,7 +1200,7 @@ als Uitstekend werden geraakt.</value>
     <value>5K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 5K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 5K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
     <value>5K Cooperatief Layout</value>
@@ -1224,7 +1224,7 @@ als Uitstekend werden geraakt.</value>
     <value>6K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 6K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 6K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
     <value>6K Cooperatief Layout</value>
@@ -1248,7 +1248,7 @@ als Uitstekend werden geraakt.</value>
     <value>7K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 7K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 7K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
     <value>7K Cooperatief Layout</value>
@@ -1272,7 +1272,7 @@ als Uitstekend werden geraakt.</value>
     <value>8K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 8K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 8K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
     <value>8K Cooperatief Layout</value>
@@ -1296,7 +1296,7 @@ als Uitstekend werden geraakt.</value>
     <value>9K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 9K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 9K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
     <value>9K Cooperatief Layout</value>
@@ -1320,7 +1320,7 @@ als Uitstekend werden geraakt.</value>
     <value>10K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plaats 10K Scratch Lane Aan De Linkerkant</value>
+    <value>Plaats 10K Scratch Lane Links</value>
   </data>
   <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
     <value>10K Cooperatief Layout</value>
