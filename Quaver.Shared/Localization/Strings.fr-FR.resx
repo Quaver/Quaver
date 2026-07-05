@@ -19,7 +19,7 @@
     <value>Bulgare</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
-    <value>Changez d'écran pour mettre la langue à jour.</value>
+    <value>Changez d'écran pour mettre à jour la langue sélectionnée</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>Menu Principal</value>
@@ -55,7 +55,7 @@
     <value>Discord</value>
   </data>
   <data name="Screen_Main_Menu_Website" xml:space="preserve">
-    <value>Site web</value>
+    <value>Site Internet</value>
   </data>
   <data name="Screen_Main_SinglePlayer" xml:space="preserve">
     <value>Solo</value>
@@ -73,13 +73,13 @@
     <value>Éditeur de map</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
-    <value>Télécharger des Maps</value>
+    <value>Télécharger des maps</value>
   </data>
   <data name="Screen_Main_DownloadSongs" xml:space="preserve">
     <value>Télécharger des chansons</value>
   </data>
   <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
-    <value>Steam Workshop</value>
+    <value>L'atelier Steam</value>
   </data>
   <data name="Screen_Main_Options" xml:space="preserve">
     <value>Options</value>
@@ -103,7 +103,7 @@
     <value>Affrontez des joueurs des quatre coins du monde</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
-    <value></value>
+    <value>Créez ou modifiez une map pour la musique de votre choix</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
     <value>Découvrez de nouvelles maps de la communauté à jouer</value>
@@ -151,13 +151,13 @@
     <value>CTRL + +/- permet de modifier la vitesse de lecture de la musique.</value>
   </data>
   <data name="Screen_Main_NowPlaying" xml:space="preserve">
-    <value>Lecture en Cours:</value>
+    <value>Lecture en Cours :</value>
   </data>
   <data name="Screen_Main_Published" xml:space="preserve">
     <value>Publié le {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
-    <value>TOUT</value>
+    <value>Tout</value>
   </data>
   <data name="Screen_Selection_Artist" xml:space="preserve">
     <value>Artiste</value>
@@ -211,10 +211,10 @@
     <value>Rang global</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
-    <value>GROUPER PAR:</value>
+    <value>GROUPER PAR :</value>
   </data>
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
-    <value>Score le plus élevé</value>
+    <value>Meilleur score classé</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
     <value>Longueur</value>
@@ -223,7 +223,7 @@
     <value>Local</value>
   </data>
   <data name="Screen_Selection_LocalProfile" xml:space="preserve">
-    <value>Profile local</value>
+    <value>Profil local</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
     <value>% longue note</value>
@@ -241,7 +241,7 @@
     <value>Combo Max</value>
   </data>
   <data name="Screen_Selection_Mode" xml:space="preserve">
-    <value>MODE:</value>
+    <value>MODE :</value>
   </data>
   <data name="Screen_Selection_Modifiers" xml:space="preserve">
     <value>Modificateurs</value>
@@ -253,7 +253,7 @@
     <value>Jamais jouées</value>
   </data>
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
-    <value>Aucun score disponible. Sois le premier!</value>
+    <value>Aucun score disponible. Sois le premier !</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>Aucun</value>
@@ -271,7 +271,7 @@
     <value>Voir en Ligne</value>
   </data>
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
-    <value>Profile en ligne</value>
+    <value>Profil en ligne</value>
   </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>Précision Générale</value>
@@ -298,7 +298,7 @@
     <value>L'aperçu est désactivé dans ce mode de jeu !</value>
   </data>
   <data name="Screen_Selection_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
   </data>
   <data name="Screen_Selection_Random" xml:space="preserve">
     <value>Aléatoire</value>
@@ -319,25 +319,25 @@
     <value>Résultat Trouvé</value>
   </data>
   <data name="Screen_Selection_ResultsFound" xml:space="preserve">
-    <value>Résultats trouvés</value>
+    <value>Résultats Trouvés</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
     <value>Les scores obtenus sur cette map ne seront pas pris en compte dans le classement !</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
-    <value>SÉLECTIONNER:</value>
+    <value>SÉLECTIONNER :</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
-    <value>TRIER PAR:</value>
+    <value>TRIER PAR :</value>
   </data>
   <data name="Screen_Selection_Source" xml:space="preserve">
     <value>Source</value>
   </data>
   <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
-    <value>Aucune map n'est sélectionnée!</value>
+    <value>Aucune map n'est sélectionnée !</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>Cette map n'est pas classé!</value>
+    <value>Cette map n'est pas classé !</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
     <value>Cette map n'est pas soumise en ligne !</value>
@@ -367,7 +367,7 @@
     <value>Tu dois être connecté pour accéder à ce classement!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
-    <value>Ta map n'est plus à jour. Mets-la à jour!</value>
+    <value>Ta map n'est plus à jour. Mets-la à jour !</value>
   </data>
   <data name="Screen_Options_Video" xml:space="preserve">
     <value>Vidéo</value>
@@ -490,7 +490,7 @@
     <value>Limiteur de FPS</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
-    <value>Définir un Nombre d'FPS Personnalisé</value>
+    <value>Définir un Nombre de FPS Personnalisé</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
     <value>Afficher le Compteur de FPS</value>
@@ -535,10 +535,10 @@
     <value>Convertir le Score</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>S'il vous plaît, veuillez patienter! Votre score est déjà en cours de conversion!</value>
+    <value>S'il vous plaît, veuillez patienter ! Votre score est déjà en cours de conversion !</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
-    <value></value>
+    <value>Vue d'ensemble</value>
   </data>
   <data name="Screen_Results_Multiplayer" xml:space="preserve">
     <value>Multijoueur</value>
@@ -550,10 +550,10 @@
     <value>Joué par</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
-    <value>Le {0} @ {1}</value>
+    <value>le {0} @ {1}</value>
   </data>
   <data name="Screen_Results_JudgementPreset" xml:space="preserve">
-    <value>Profil de Jugements</value>
+    <value>Profil de Jugement :</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
     <value>GRAPH:</value>
@@ -571,7 +571,7 @@
     <value>Rating</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Moyenne</value>
+    <value>Moyenne :</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>Écart. Type :</value>
@@ -599,7 +599,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
  Si la map n'a pas été terminée, le graphique affiche également la performance qui aurait été obtenue si toutes les notes restantes avaient été jugées comme étant Marvelous.</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
-    <value></value>
+    <value>SOUMISSION DU SCORE...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
     <value>RANG GLOBAL</value>
@@ -635,7 +635,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Équipe rouge</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
-    <value>A gagné la partie !</value>
+    <value>A gagné la partie  !</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Grade</value>
@@ -674,7 +674,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Il y a eu un problème lors de la récupération du replay pour ce score !</value>
   </data>
   <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
-    <value>Le replay de ce score n'a pas pu être téléchargé</value>
+    <value>Le replay de ce score n'a pas pu être téléchargé.</value>
   </data>
   <data name="Screen_Results_FetchingReplay" xml:space="preserve">
     <value>RÉCUPÉRATION DU REPLAY</value>
@@ -722,25 +722,25 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Calibrer le Décalage Audio</value>
   </data>
   <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
-    <value>Pitcher l'Audio avec la Vitesse de Lecture</value>
+    <value>Modifier le pitch en fonction de la vitesse de la musique</value>
   </data>
   <data name="Screen_Options_BackgroundBrightness" xml:space="preserve">
-    <value>Éclairage de l'Arrière-Plan</value>
+    <value>Éclairage de l'arrière-plan</value>
   </data>
   <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
     <value>Taux de réduction des longues notes</value>
   </data>
   <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
-    <value>Activer les Sons de Notes</value>
+    <value>Activer les sons de notes</value>
   </data>
   <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
-    <value>Activer les Sons de Notes pour les Longue Note</value>
+    <value>Activer les sons de Notes pour les longues notes</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
     <value>Activer/Désactiver les sons des touches</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
-    <value>Activer la Pause Instantanée</value>
+    <value>Activer la pause instantanée</value>
   </data>
   <data name="Screen_Options_EnableTapToRestart" xml:space="preserve">
     <value>Activer le clic pour recommencer</value>
@@ -749,34 +749,34 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Ignorer l'écran de résultats après avoir quitté</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
-    <value>Bloquer la Touche Windows pendant le Gameplay</value>
+    <value>Bloquer la touche Windows pendant le gameplay</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
-    <value>Afficher les Lignes de Tempo</value>
+    <value>Afficher les lignes de tempo</value>
   </data>
   <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
-    <value>Afficher les Bulles de Jugements</value>
+    <value>Afficher les bulles de jugements</value>
   </data>
   <data name="Screen_Options_DisplayJudgementCounter" xml:space="preserve">
     <value>Afficher le compteur de jugements</value>
   </data>
   <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
-    <value>Afficher le Classement</value>
+    <value>Afficher le classement</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBar" xml:space="preserve">
-    <value>Afficher la Barre de Progression de la Musique</value>
+    <value>Afficher la barre de progression de la musique</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBarTimeNumbers" xml:space="preserve">
     <value>Afficher le temps restant sur la barre de progression de la musique</value>
   </data>
   <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
-    <value>Activer/Désactiver le masque supérieur de l'aire de jeu</value>
+    <value>Activer/Désactiver Le masque supérieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
     <value>Hauteur du masque supérieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
-    <value>Activer/Désactiver le masque inférieur de l'aire de jeu</value>
+    <value>Activer/Désactiver Le masque inférieur de l'aire de jeu</value>
   </data>
   <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
     <value>Hauteur du masque inférieur de l'aire de jeu</value>
@@ -860,7 +860,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Activer/Désactiver le Pitch</value>
   </data>
   <data name="Screen_Options_RemoveAllMods" xml:space="preserve">
-    <value>Enlever Tout les Modes</value>
+    <value>Enlever tous les mods</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
     <value>Mettre en pause/Lire la piste</value>
@@ -878,10 +878,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Ouvrir le Dossier du Jeu</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
-    <value>Mettre à Jour les Statuts des Maps Ranked</value>
+    <value>Mettre à Jour le Statut des Maps Ranked</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
-    <value>Mettre à Jour </value>
+    <value>Mettre à jour le décalage de la map à l'aide du site web</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
     <value>Charger les Musiques Provenant d'Autres Jeux Installés</value>
@@ -902,10 +902,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Suggérer une difficulté à partir du rating global</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio/Frame Timing During Gameplay</value>
+    <value>Stabiliser le timing audio/image en jeu</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio Start Timing During Gameplay</value>
+    <value>Stabiliser le démarrage audio en jeu</value>
   </data>
   <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
     <value>Afficher l'aperçu de jeu (Maj + F6)</value>
@@ -956,19 +956,19 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Inverser le sens du défilement de l'éditeur</value>
   </data>
   <data name="Screen_Options_InvertScrolling" xml:space="preserve">
-    <value>Inverser le Défilement</value>
+    <value>Inverser le sens du défilement</value>
   </data>
   <data name="Screen_Options_AutomaticallyLogIntoTheServer" xml:space="preserve">
-    <value>Se Connecter Automatiquement au Serveur</value>
+    <value>Se connecter automatiquement au serveur</value>
   </data>
   <data name="Screen_Options_DisplaySongRequestNotifications" xml:space="preserve">
     <value>Afficher les notifications des demandes de maps</value>
   </data>
   <data name="Screen_Options_DisplayWarningForPausing" xml:space="preserve">
-    <value>Afficher l'Avertissement en Cas de Pause</value>
+    <value>Afficher un avertissement lors de la mise en pause</value>
   </data>
   <data name="Screen_Options_DisplayWarningForFailing" xml:space="preserve">
-    <value>Afficher l'Avertissement en Cas d'Échec</value>
+    <value>Afficher un avertissement lors d'un échec</value>
   </data>
   <data name="Screen_Options_DisplayEpilepsyWarning" xml:space="preserve">
     <value>Afficher l'avertissement d'épilepsie</value>
@@ -977,10 +977,10 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher le visualiseur audio du menu</value>
   </data>
   <data name="Screen_Options_DisplayFailedLocalScores" xml:space="preserve">
-    <value>Afficher les Scores Locaux Échoués</value>
+    <value>Afficher les scores des échecs locaux</value>
   </data>
   <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
-    <value>Supprimer le Fichier Original Après L'importation</value>
+    <value>Supprimer le fichier d'origine après l'importation</value>
   </data>
   <data name="Screen_Options_DiscordRichPresence" xml:space="preserve">
     <value>Discord Rich Presence</value>
@@ -989,7 +989,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher la précision classée des classements locaux</value>
   </data>
   <data name="Screen_Options_LowerFPSOnInactiveWindow" xml:space="preserve">
-    <value>FPS Réduits lorsque la Fenêtre est Inactive</value>
+    <value>Réduire les FPS en cas d'inactivité</value>
   </data>
   <data name="Screen_Options_EnableHighProcessPriority" xml:space="preserve">
     <value>Activer la priorité de processus élevée</value>
@@ -1253,7 +1253,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>{0} Paramètres</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
-    <value>{0} Résultat de recherche</value>
+    <value>{0} Résultat(s) trouvé(s)</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
     <value>{0} Résultats de recherche</value>
@@ -1286,7 +1286,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>STATUS : </value>
   </data>
   <data name="Screen_Download_All" xml:space="preserve">
-    <value>TOUT</value>
+    <value>Tout</value>
   </data>
   <data name="Screen_Download_Unranked" xml:space="preserve">
     <value>Unranked</value>
@@ -1298,7 +1298,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Clan Ranked</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>DIFFICULTÉ : </value>
+    <value>DIFFICULTÉ :</value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
     <value>Aucun</value>
@@ -1361,7 +1361,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Télécharger des Maps</value>
   </data>
   <data name="Screen_Download_Findnewsongstoplayfromthecommunity" xml:space="preserve">
-    <value>Découvrez de nouvelles maps issus de la communauté</value>
+    <value>Découvrez de nouvelles maps de la communauté</value>
   </data>
   <data name="Screen_Download_Finisheddownloading01" xml:space="preserve">
     <value>Téléchargement terminé : {0} - {1} !</value>
@@ -1396,7 +1396,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
     <value>Pour lancer le téléchargement, double-cliquez sur une musique.
 Un clic vous permettra d'écouter un extrait audio.
-Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value>
+Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
     <value>Date de Fin</value>
@@ -1555,7 +1555,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Entrez un mot de passe...</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>PUBLIER UNSUBMITTED MAPSET </value>
+    <value>PUBLIER UN MAPSET UNSUBMITTED</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetConfirmMessage" xml:space="preserve">
     <value>Voulez-vous temporairement publier la collection de map actuelle pour que les autres la télécharge ?</value>
@@ -1597,7 +1597,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>options</value>
   </data>
   <data name="Screen_Multiplayer_MatchHistory" xml:space="preserve">
-    <value>Historique des matchs</value>
+    <value>historique des matchs</value>
   </data>
   <data name="Screen_Multiplayer_Commands" xml:space="preserve">
     <value>commandes</value>
@@ -1654,7 +1654,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Vous ne pouvez pas mettre prêt si vous n'avez pas la map !</value>
   </data>
   <data name="Screen_Multiplayer_SelectMap" xml:space="preserve">
-    <value>sélectionner la map</value>
+    <value>Sélectionner la map</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMap" xml:space="preserve">
     <value>Veuillez patienter jusqu'à ce que le match se termine de choisir une autre map.</value>
@@ -1714,7 +1714,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Chargement...</value>
   </data>
   <data name="Screen_Multiplayer_Wins" xml:space="preserve">
-    <value>{0} Victoires </value>
+    <value>{0} Victoires</value>
   </data>
   <data name="Screen_Multiplayer_Referee" xml:space="preserve">
     <value>Arbitre</value>
@@ -1753,7 +1753,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Veuillez patienter...</value>
   </data>
   <data name="Screen_Multiplayer_MapInfo" xml:space="preserve">
-    <value>Par: {0} | Durée : {1} | BPM: {2} | LNs: {3}%</value>
+    <value>Par : {0} | Durée : {1} | BPM: {2} | LNs : {3}%</value>
   </data>
   <data name="Screen_Multiplayer_MapMissingClickToDownload" xml:space="preserve">
     <value>Vous n'avez pas cette map. Cliquez pour télécharger !</value>
@@ -1777,7 +1777,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Le match a commencé, mais nous n'avons pas la map !</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
-    <value>Le match a commencé. Cliquez pour regarder le match en direct sur le Web en tant qu'arbitre.</value>
+    <value>Le match a commencé. Cliquez pour regarder le match en direct sur le Web en tant qu'arbitre. </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
     <value>DÉTAILS DU MATCH</value>
@@ -1786,10 +1786,10 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Voir les informations d'un match</value>
   </data>
   <data name="Screen_MultiplayerLobby_RulesetLabel" xml:space="preserve">
-    <value>TYPE DE LOBBY: </value>
+    <value>TYPE DE LOBBY : </value>
   </data>
   <data name="Screen_MultiplayerLobby_All" xml:space="preserve">
-    <value>All</value>
+    <value>Tout</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeForAll" xml:space="preserve">
     <value>Free-For-All</value>
@@ -1798,7 +1798,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Équipe</value>
   </data>
   <data name="Screen_MultiplayerLobby_ModeLabel" xml:space="preserve">
-    <value>MODE: </value>
+    <value>MODE : </value>
   </data>
   <data name="Screen_MultiplayerLobby_4Keys" xml:space="preserve">
     <value>4 Touches</value>
@@ -1807,7 +1807,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>7 Touches</value>
   </data>
   <data name="Screen_MultiplayerLobby_MapStatusLabel" xml:space="preserve">
-    <value>STATUS DE LA MAP: </value>
+    <value>STATUS DE LA MAP : </value>
   </data>
   <data name="Screen_MultiplayerLobby_Imported" xml:space="preserve">
     <value>Importé</value>
@@ -1819,7 +1819,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Unsubmitted</value>
   </data>
   <data name="Screen_MultiplayerLobby_RoomVisibilityLabel" xml:space="preserve">
-    <value></value>
+    <value>VISIBILITÉ DU LOBBY : </value>
   </data>
   <data name="Screen_MultiplayerLobby_Open" xml:space="preserve">
     <value>Libre</value>
@@ -1879,7 +1879,7 @@ Vous pouvez utiliser les filtres ci-dessous pour affiner votre recherche.</value
     <value>Vous ne pouvez pas créer une partie sans avoir sélectionné une map !</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayersLabel" xml:space="preserve">
-    <value>JOUEURS(SES) MAX: </value>
+    <value>JOUEURS(SES) MAX : </value>
   </data>
   <data name="Screen_MultiplayerLobby_LoseALifeUponFailing" xml:space="preserve">
     <value>Perdre une vie en cas d'échec</value>
