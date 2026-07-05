@@ -88,7 +88,7 @@
     <value>Кланове</value>
   </data>
   <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
-    <value>Джубокс</value>
+    <value>Джукбокс</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
     <value>Скинове</value>
@@ -106,7 +106,7 @@
     <value>Докладвай проблем</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
-    <value>Twitter</value>
+    <value>X</value>
   </data>
   <data name="Screen_Main_Menu_Discord" xml:space="preserve">
     <value>Discord</value>
@@ -214,16 +214,16 @@
     <value>Published {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
-    <value>All</value>
+    <value>Всички</value>
   </data>
   <data name="Screen_Selection_Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Изпълнител</value>
   </data>
   <data name="Screen_Selection_Back" xml:space="preserve">
     <value>Назад</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
-    <value>By:</value>
+    <value>От:</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -235,7 +235,7 @@
     <value>Държава</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Country Rank</value>
+    <value>Държавен ранг</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Създай нов</value>
@@ -262,13 +262,13 @@
     <value>Приятели</value>
   </data>
   <data name="Screen_Selection_Game" xml:space="preserve">
-    <value>Game</value>
+    <value>Игра</value>
   </data>
   <data name="Screen_Selection_Global" xml:space="preserve">
-    <value>Global</value>
+    <value>Глобален</value>
   </data>
   <data name="Screen_Selection_GlobalRank" xml:space="preserve">
-    <value>Global Rank</value>
+    <value>Глобален ранг</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
     <value>Групирай по:</value>
@@ -280,10 +280,10 @@
     <value>LEADERBOARD</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
-    <value>Length</value>
+    <value>Дължина</value>
   </data>
   <data name="Screen_Selection_LengthLabel" xml:space="preserve">
-    <value>Length:</value>
+    <value>Дължина:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
     <value>Локални</value>
@@ -343,7 +343,7 @@
     <value>Online Profile</value>
   </data>
   <data name="Screen_Selection_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Настройки</value>
   </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
     <value>Overall Accuracy</value>
@@ -523,10 +523,10 @@
     <value>Навигация</value>
   </data>
   <data name="Screen_Options_Sharing" xml:space="preserve">
-    <value>Sharing</value>
+    <value>Споделяне</value>
   </data>
   <data name="Screen_Options_Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>Конгифурация</value>
   </data>
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
     <value>Gameplay Controls</value>
