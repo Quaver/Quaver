@@ -18,6 +18,60 @@
   <data name="Language_Bulgarian" xml:space="preserve">
     <value>Bulgare</value>
   </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>Danois</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>Allemand</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Espagnol</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>Français</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>Indonésien</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>Italien</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>Japonais</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>Coréen</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>Néerlandais</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>Norvégien</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>Polonais</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>Portugais (Brésil)</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Russe</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>Suédois</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>Thaï</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>Ukrainien</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>Chinois (simplifié)</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>Chinois (traditionnel)</value>
+  </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Changez d'écran pour mettre à jour la langue sélectionnée.</value>
   </data>
