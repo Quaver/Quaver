@@ -79,7 +79,7 @@
     <value>Nachricht senden...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
-    <value>Startseite</value>
+    <value>Start</value>
   </data>
   <data name="Screen_Main_Menu_Maps" xml:space="preserve">
     <value>Maps</value>
@@ -88,7 +88,7 @@
     <value>Clans</value>
   </data>
   <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
-    <value>Musikbox</value>
+    <value>Jukebox</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
     <value>Skins</value>
@@ -148,13 +148,13 @@
     <value>QUAVER BEENDEN</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Bist du sicher, dass du das Spiel beenden möchtest?</value>
+    <value>Bist du dir sicher, dass du das Spiel beenden möchtest?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>Nehme an Ranglisten teil</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
-    <value>Spiele mit anderen benutzerdefinierte Matches online</value>
+    <value>Spiele benutzerdefinierte Spiele online mit anderen</value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
     <value>Konkurriere gegen Spieler auf der ganzen Welt</value>
@@ -235,7 +235,7 @@
     <value>Land</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Länderrang</value>
+    <value>Land Rang</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Create New</value>
@@ -361,31 +361,31 @@
     <value>Spielen</value>
   </data>
   <data name="Screen_Selection_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>Spiel Anzahl</value>
   </data>
   <data name="Screen_Selection_Player" xml:space="preserve">
-    <value>Player</value>
+    <value>Spieler</value>
   </data>
   <data name="Screen_Selection_Playlists" xml:space="preserve">
     <value>Playlists</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
-    <value>Preview is disabled in this game!</value>
+    <value>Vorschau ist in diesem Spiel deaktiviert!</value>
   </data>
   <data name="Screen_Selection_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
   </data>
   <data name="Screen_Selection_Random" xml:space="preserve">
-    <value>Random</value>
+    <value>Zufällig</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked Status</value>
+    <value>Ranglisten Status</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
     <value>RANKING:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Rate</value>
+    <value>Geschwindigkeit</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
     <value>Recently Played</value>
