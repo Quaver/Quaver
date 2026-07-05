@@ -473,7 +473,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alpha = 0
             };
 
-            UnbeatableTooltip = new Tooltip("You cannot beat this score with your currently activated modifiers!",
+            UnbeatableTooltip = new Tooltip(SelectionLocalization.Get("You cannot beat this score with your currently activated modifiers!"),
                 Color.Crimson)
             {
                 DestroyIfParentIsNull = false
