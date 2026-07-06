@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Quaver.Shared.Screens.Options.Sections;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Options
@@ -23,8 +24,8 @@ namespace Quaver.Shared.Screens.Options
             }
         }
 
-        public static string GetSectionSettings(string sectionName) =>
-            LocalizationManager.Get($"{Prefix}SectionSettings", sectionName).ToUpper();
+        public static string GetSectionSettings(OptionsSection section) =>
+            Get($"{section.LocalizationLabel} Settings").ToUpper();
 
         public static string GetSearchResultCount(int count) =>
             LocalizationManager.Get($"{Prefix}SearchResult{(count == 1 ? "" : "s")}", count);
