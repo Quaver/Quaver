@@ -124,7 +124,7 @@
     <value>เครื่องมือแก้ไข</value>
   </data>
   <data name="Screen_Main_Competitive" xml:space="preserve">
-    <value>Competitive</value>
+    <value>แข่งขัน</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
     <value>เครื่องมือแก้ไขแมพ</value>
@@ -178,13 +178,13 @@
     <value>การกดปุ่ม F3 ในหน้าเลือกเพลงจะแสดงตัวอย่างแมพ</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
-    <value>Pausing in gameplay prevents score submission.</value>
+    <value>การหยุดระหว่างเล่นจะทำให้คะแนนไม่นับ</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
-    <value>You can report a bug by opening a GitHub issue.</value>
+    <value>คุณสามารถรายงานปัญหาได้โดยการเปิดประเด็นปัญหาใน GitHub</value>
   </data>
   <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
-    <value>Request new features by opening GitHub issues!</value>
+    <value>ขอฟีเจอร์ใหม่ ๆ ได้โดยการเปิดประเด็นปัญหาใน GitHub!</value>
   </data>
   <data name="Screen_Main_TipCreateMap" xml:space="preserve">
     <value>ลากไฟล์ .mp3 เข้ามาในเกมเพื่อสร้างแมพใหม่!</value>
@@ -193,10 +193,10 @@
     <value>การกดปุ่ม F2 ในหน้าเลือกเพลงจะสุ่มเลือกเพลง</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
-    <value>Pressing F10 in the menu opens your playercard.</value>
+    <value>การกดปุ่ม F10 ในเมนูจะเปิดการ์ดผู้เล่นของคุณ</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing F3/F4 in gameplay changes scroll speed.</value>
+    <value>การกดปุ่ม F3/F4 ในระหว่างเกมการเล่นจะเปลี่ยนอัตราเร็วในการเลื่อน</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Your offset can be calibrated in the options menu.</value>
@@ -205,7 +205,7 @@
     <value>Standard* is the default judgement window preset.</value>
   </data>
   <data name="Screen_Main_TipPlaybackRate" xml:space="preserve">
-    <value>CTRL+ +/- changes the playback rate of the song.</value>
+    <value>Ctrl + +/- จะเปลี่ยนความเร็วของเพลง</value>
   </data>
   <data name="Screen_Main_NowPlaying" xml:space="preserve">
     <value>กำลังเล่น:</value>
@@ -286,19 +286,19 @@
     <value>ความยาว:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
-    <value>Local</value>
+    <value>ในเครื่อง</value>
   </data>
   <data name="Screen_Selection_LocalProfile" xml:space="preserve">
-    <value>Local Profile</value>
+    <value>โปรไฟล์ในเครื่อง</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
     <value>% โน้ตยาว</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
-    <value>Map Found</value>
+    <value>แมพที่พบ</value>
   </data>
   <data name="Screen_Selection_MapsFound" xml:space="preserve">
-    <value>Maps Found</value>
+    <value>แมพที่พบ</value>
   </data>
   <data name="Screen_Selection_MarvelousPerfectRatio" xml:space="preserve">
     <value>Marvelous/Perfect Ratio</value>
@@ -316,13 +316,13 @@
     <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Selection_NeverPlayed" xml:space="preserve">
-    <value>Never Played</value>
+    <value>ไม่เคยเล่น</value>
   </data>
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
     <value>ไม่มีคะแนน เป็นคนแรกสิ!</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
-    <value>NO PERSONAL BEST SET</value>
+    <value>ไม่มีสถิติส่วนตัวที่ดีที่สุด</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>ไม่มี</value>
@@ -334,10 +334,10 @@
     <value>ออนไลน์</value>
   </data>
   <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
-    <value>Online Grade</value>
+    <value>ระดับออนไลน์</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
-    <value>Online Listing</value>
+    <value>รายการออนไลน์</value>
   </data>
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
     <value>โปรไฟล์ออนไลน์</value>
@@ -349,13 +349,13 @@
     <value>ความแม่นยำโดยรวม</value>
   </data>
   <data name="Screen_Selection_OverallRating" xml:space="preserve">
-    <value>Overall Rating</value>
+    <value>คะแนนโดยรวม</value>
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
     <value>จำนวนการผ่าน/ล้มเหลว</value>
   </data>
   <data name="Screen_Selection_PersonalBest" xml:space="preserve">
-    <value>PERSONAL BEST</value>
+    <value>สถิติส่วนตัวที่ดีที่สุด</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
     <value>เล่น</value>
@@ -382,7 +382,7 @@
     <value>สถานะการจัดอันดับ</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
-    <value>RANKING:</value>
+    <value>การจัดอันดับ:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
     <value>Rate</value>
@@ -409,7 +409,7 @@
     <value>แหล่งที่มา</value>
   </data>
   <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
-    <value>There is currently no map selected!</value>
+    <value>ยังไม่ได้เลือกแมพ!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
     <value>แมพนี้ไม่จัดอันดับ!</value>
@@ -427,22 +427,22 @@
     <value>จำนวนการกดทั้งหมด</value>
   </data>
   <data name="Screen_Selection_TotalPauses" xml:space="preserve">
-    <value>Total Pauses</value>
+    <value>จำนวนการหยุดเกมทั้งหมด</value>
   </data>
   <data name="Screen_Selection_TotalScore" xml:space="preserve">
     <value>คะแนนรวม</value>
   </data>
   <data name="Screen_Selection_ViewMap" xml:space="preserve">
-    <value>View Map</value>
+    <value>ดูแมพ</value>
   </data>
   <data name="Screen_Selection_Youmustbeadonatortoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be a donator to access this leaderboard!</value>
+    <value>คุณต้องเป็นผู้บริจาคเพื่อเข้าถึงกระดานจัดอันดับนี้!</value>
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be online to access this leaderboard!</value>
+    <value>คุณต้องออนไลน์เพื่อเข้าถึงกระดานจัดอันดับนี้!</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
-    <value>You cannot beat this score with your currently activated modifiers!</value>
+    <value>คุณไม่สามารถทำคะแนนให้ดีกว่านี้ด้วยตัวดัดแปลงที่ใช้อยู่ได้!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>Your map is outdated. Please update it!</value>
@@ -451,28 +451,28 @@
     <value>Video</value>
   </data>
   <data name="Screen_Options_Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>เสียง</value>
   </data>
   <data name="Screen_Options_Language" xml:space="preserve">
-    <value>Language</value>
+    <value>ภาษา</value>
   </data>
   <data name="Screen_Options_Gameplay" xml:space="preserve">
-    <value>Gameplay</value>
+    <value>เกมเพลย์</value>
   </data>
   <data name="Screen_Options_Skin" xml:space="preserve">
-    <value>Skin</value>
+    <value>สกิน</value>
   </data>
   <data name="Screen_Options_Input" xml:space="preserve">
     <value>Input</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
-    <value>Game mode specific</value>
+    <value>เฉพาะเกมโหมด</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
-    <value>Miscellaneous</value>
+    <value>อื่น ๆ</value>
   </data>
   <data name="Screen_Options_Advanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>ขั้นสูง</value>
   </data>
   <data name="Screen_Options_Window" xml:space="preserve">
     <value>Window</value>
@@ -538,7 +538,7 @@
     <value>Song Selection</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>เครื่องมือแก้ไข</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
     <value>อื่น ๆ</value>
@@ -568,7 +568,7 @@
     <value>Frame Limiter</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
-    <value>Set Custom FPS</value>
+    <value>ตั้งค่า FPS แบบกำหนดเอง</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
     <value>Display FPS Counter</value>
@@ -628,7 +628,7 @@
     <value>เล่นโดย</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
-    <value>on {0} @ {1}</value>
+    <value>เมื่อวันที่ {0} เวลา {1}</value>
   </data>
   <data name="Screen_Results_JudgementPreset" xml:space="preserve">
     <value>Judgement Preset:</value>
@@ -646,13 +646,13 @@
     <value>Health</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
-    <value>Rating</value>
+    <value>คะแนน</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Mean:</value>
+    <value>ค่าเฉลี่ย:</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
-    <value>Std. Dev:</value>
+    <value>ส่วนเบี่ยงเบนมาตรฐาน:</value>
   </data>
   <data name="Screen_Results_Ratio" xml:space="preserve">
     <value>Ratio:</value>
@@ -681,16 +681,16 @@ show the performance if all subsequent hits had been
 Marvelous instead.</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
-    <value>SUBMITTING SCORE...</value>
+    <value>กำลังส่งคะแนน...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
-    <value>GLOBAL RANK</value>
+    <value>อันดับทั่วโลก</value>
   </data>
   <data name="Screen_Results_CountryRank" xml:space="preserve">
     <value>อันดับในประเทศ</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
-    <value>OVERALL RATING</value>
+    <value>คะแนนโดยรวม</value>
   </data>
   <data name="Screen_Results_OverallAccuracy" xml:space="preserve">
     <value>ความแม่นยำโดยรวม</value>
@@ -699,13 +699,13 @@ Marvelous instead.</value>
     <value>เกมโหมดไม่จัดอันดับ</value>
   </data>
   <data name="Screen_Results_Matchplayedon" xml:space="preserve">
-    <value>Match played on {0} @ {1}</value>
+    <value>เล่นแมตช์เมื่อวันที่ {0} เวลา {1}</value>
   </data>
   <data name="Screen_Results_FreeForAll" xml:space="preserve">
     <value>Free For All</value>
   </data>
   <data name="Screen_Results_BattleRoyale" xml:space="preserve">
-    <value>Battle Royale</value>
+    <value>แบตเทิลรอยัล</value>
   </data>
   <data name="Screen_Results_Team" xml:space="preserve">
     <value>ทีม</value>
@@ -717,10 +717,10 @@ Marvelous instead.</value>
     <value>ทีมแดง</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
-    <value>has won the match!</value>
+    <value>ชนะแมตช์นี้!</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
-    <value>Grade</value>
+    <value>ระดับ</value>
   </data>
   <data name="Screen_Results_MaxCombo" xml:space="preserve">
     <value>คอมโบสูงสุด</value>
@@ -744,7 +744,7 @@ Marvelous instead.</value>
     <value>Miss</value>
   </data>
   <data name="Screen_Results_Mods" xml:space="preserve">
-    <value>Mods</value>
+    <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Results_Loadingresults" xml:space="preserve">
     <value>Loading results</value>
@@ -768,7 +768,7 @@ Marvelous instead.</value>
     <value>Please wait while your replay is being exported...</value>
   </data>
   <data name="Screen_Results_Anerroroccuredwhileexportingthereplay" xml:space="preserve">
-    <value>An error occured while exporting the replay!</value>
+    <value>เกิดปัญหาระหว่างส่งออกรีเพลย์!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
     <value>You have already fixed your local offset for this map! There's no need to do it again.</value>
@@ -909,10 +909,10 @@ Marvelous instead.</value>
     <value>Skip Song Intro</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
-    <value>Decrease Scroll Speed</value>
+    <value>ลดอัตราเร็วในการเลื่อน</value>
   </data>
   <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
-    <value>Increase Scroll Speed</value>
+    <value>เพิ่มอัตราเร็วในการเลื่อน</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
     <value>Decrease Map Offset</value>

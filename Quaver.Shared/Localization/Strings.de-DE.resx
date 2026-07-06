@@ -175,34 +175,34 @@
     <value>Ziehe Map Dateien (.qp) in das Spiel um sie zu importieren.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing F3 in song select displays a map preview.</value>
+    <value>Drücke F3 in der Songauswahl um die Map Vorschau anzuzeigen.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
-    <value>Pausing in gameplay prevents score submission.</value>
+    <value>Pausieren im Gameplay verhindert die Einreichung vom Score.</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
-    <value>You can report a bug by opening a GitHub issue.</value>
+    <value>Du kannst einen Bug melden, indem du ein GitHub Problem öffnest.</value>
   </data>
   <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
-    <value>Request new features by opening GitHub issues!</value>
+    <value>Schlage neue Funktionen vor, indem du ein Github Problem öffnest!</value>
   </data>
   <data name="Screen_Main_TipCreateMap" xml:space="preserve">
-    <value>Drag a .mp3 file in the game to create a new map!</value>
+    <value>Ziehe eine .mp3 Datei in das Spiel, um eine neue Map zu erstellen!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing F2 in song select chooses a random song.</value>
+    <value>Drücke F2 in der Songauswahl um einen zufälligen Song auszuwählen.</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
-    <value>Pressing F10 in the menu opens your playercard.</value>
+    <value>Drücke F10 im Menü um deine Profilkarte zu öffnen.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing F3/F4 in gameplay changes scroll speed.</value>
+    <value>Drücke F3/F4 im Gameplay um die Scrollgeschwindigkeit zu ändern.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
-    <value>Your offset can be calibrated in the options menu.</value>
+    <value>Dein Offset kann in den Optionen kalibriert werden.</value>
   </data>
   <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
-    <value>Standard* is the default judgement window preset.</value>
+    <value>Standard* ist die standardmäßige Timingfenster Einstellung.</value>
   </data>
   <data name="Screen_Main_TipPlaybackRate" xml:space="preserve">
     <value>CTRL+ +/- changes the playback rate of the song.</value>
@@ -235,7 +235,7 @@
     <value>Land</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Land Rang</value>
+    <value>Nationaler Rang</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Create New</value>
@@ -247,7 +247,7 @@
     <value>Ersteller</value>
   </data>
   <data name="Screen_Selection_DateAdded" xml:space="preserve">
-    <value>Date Added</value>
+    <value>Importdatum</value>
   </data>
   <data name="Screen_Selection_Difficulty" xml:space="preserve">
     <value>Schwierigkeit</value>
@@ -388,64 +388,64 @@
     <value>Geschwindigkeit</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
-    <value>Recently Played</value>
+    <value>Zuletzt gespielt</value>
   </data>
   <data name="Screen_Selection_ResultFound" xml:space="preserve">
-    <value>Result Found</value>
+    <value>Ergebnis gefunden</value>
   </data>
   <data name="Screen_Selection_ResultsFound" xml:space="preserve">
-    <value>Results Found</value>
+    <value>Ergebnisse gefunden</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
-    <value>Scores on this map will be unranked!</value>
+    <value>Scores auf dieser Map werden nicht gewertet!</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
-    <value>SELECT:</value>
+    <value>AUSWÄHLEN:</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
-    <value>SORT BY:</value>
+    <value>SORTIEREN NACH:</value>
   </data>
   <data name="Screen_Selection_Source" xml:space="preserve">
-    <value>Source</value>
+    <value>Quelle</value>
   </data>
   <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
-    <value>There is currently no map selected!</value>
+    <value>Derzeit ist keine Map ausgewählt!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>This map is not ranked!</value>
+    <value>Diese Map ist nicht ranked!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
-    <value>This map is not submitted online!</value>
+    <value>Diese Map ist nicht online eingereicht!</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
-    <value>Times Played</value>
+    <value>Anzahl der Spiele</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
-    <value>Title</value>
+    <value>Titel</value>
   </data>
   <data name="Screen_Selection_TotalHits" xml:space="preserve">
-    <value>Total Hits</value>
+    <value>Gesamte Treffer</value>
   </data>
   <data name="Screen_Selection_TotalPauses" xml:space="preserve">
-    <value>Total Pauses</value>
+    <value>Gesamte Pausen</value>
   </data>
   <data name="Screen_Selection_TotalScore" xml:space="preserve">
-    <value>Total Score</value>
+    <value>Gesamtpunktzahl</value>
   </data>
   <data name="Screen_Selection_ViewMap" xml:space="preserve">
-    <value>View Map</value>
+    <value>Map anzeigen</value>
   </data>
   <data name="Screen_Selection_Youmustbeadonatortoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be a donator to access this leaderboard!</value>
+    <value>Du musst ein Supporter sein, um auf diese Rangliste zugreifen zu können!</value>
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be online to access this leaderboard!</value>
+    <value>Du musst online sein, um auf diese Rangliste zugreifen zu können!</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
-    <value>You cannot beat this score with your currently activated modifiers!</value>
+    <value>Du kannst diesen Score mit deinen derzeit aktivierten Modifikatoren nicht schlagen!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
-    <value>Your map is outdated. Please update it!</value>
+    <value>Deine Map ist veraltet. Bitte aktualisiere sie!</value>
   </data>
   <data name="Screen_Options_Video" xml:space="preserve">
     <value>Video</value>
@@ -454,7 +454,7 @@
     <value>Audio</value>
   </data>
   <data name="Screen_Options_Language" xml:space="preserve">
-    <value>Language</value>
+    <value>Sprache</value>
   </data>
   <data name="Screen_Options_Gameplay" xml:space="preserve">
     <value>Gameplay</value>
@@ -463,10 +463,10 @@
     <value>Skin</value>
   </data>
   <data name="Screen_Options_Input" xml:space="preserve">
-    <value>Input</value>
+    <value>Tastenbelegungen</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
-    <value>Game mode specific</value>
+    <value>Spielmodus spezifisch</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
     <value>Sonstiges</value>
@@ -475,10 +475,10 @@
     <value>Erweitert</value>
   </data>
   <data name="Screen_Options_Window" xml:space="preserve">
-    <value>Window</value>
+    <value>Fenster</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
-    <value>Frame Time</value>
+    <value>Frame Zeit</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
     <value>Ausgabe</value>
@@ -514,7 +514,7 @@
     <value>Statusleiste</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
-    <value>Lane Cover</value>
+    <value>Lane Abdeckung</value>
   </data>
   <data name="Screen_Options_Selection" xml:space="preserve">
     <value>Auswahl</value>
@@ -610,25 +610,25 @@
     <value>Fix Offset</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
-    <value>Convert Score</value>
+    <value>Score konvertieren</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Please wait! Your score is already being converted!</value>
+    <value>Bitte warten! Dein Score wird bereits konvertiert!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
     <value>Übersicht</value>
   </data>
   <data name="Screen_Results_Multiplayer" xml:space="preserve">
-    <value>Multiplayer</value>
+    <value>Mehrspieler</value>
   </data>
   <data name="Screen_Results_Mappedby" xml:space="preserve">
-    <value>Mapped by:</value>
+    <value>Erstellt von:</value>
   </data>
   <data name="Screen_Results_Playedby" xml:space="preserve">
-    <value>Played by</value>
+    <value>Gespielt von</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
-    <value>on {0} @ {1}</value>
+    <value>am {0} @ {1}</value>
   </data>
   <data name="Screen_Results_JudgementPreset" xml:space="preserve">
     <value>Judgement Preset:</value>
@@ -637,25 +637,25 @@
     <value>GRAPH:</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
-    <value>Deviance</value>
+    <value>Abweichung</value>
   </data>
   <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Accuracy</value>
+    <value>Genauigkeit</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
-    <value>Health</value>
+    <value>Leben</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
-    <value>Rating</value>
+    <value>Bewertung</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Mean:</value>
+    <value>Mittelwert:</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
-    <value>Std. Dev:</value>
+    <value>Std. Abw:</value>
   </data>
   <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Ratio:</value>
+    <value>Verhältnis:</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistics Not Available</value>
@@ -801,25 +801,25 @@ Marvelous instead.</value>
     <value>Visual Offset</value>
   </data>
   <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
-    <value>Calibrate Offset</value>
+    <value>Offset Kalibrieren</value>
   </data>
   <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
-    <value>Pitch Audio With Playback Rate</value>
+    <value>Tonhöhe mit Wiedergabegeschwindigkeit</value>
   </data>
   <data name="Screen_Options_BackgroundBrightness" xml:space="preserve">
-    <value>Background Brightness</value>
+    <value>Hintergrundhelligkeit</value>
   </data>
   <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
     <value>Long Note Shrink Amount</value>
   </data>
   <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
-    <value>Enable Hitsounds</value>
+    <value>Hitsound Aktivieren</value>
   </data>
   <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
     <value>Enable Long Note Release Hitsounds</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
-    <value>Enable Keysounds</value>
+    <value>Keysounds Aktivieren</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
     <value>Enable Tap To Pause</value>
