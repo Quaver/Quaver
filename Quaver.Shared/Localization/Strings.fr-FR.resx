@@ -502,7 +502,7 @@
     <value>Visuels</value>
   </data>
   <data name="Screen_Options_Sound" xml:space="preserve">
-    <value>Son</value>
+    <value>Sons</value>
   </data>
   <data name="Screen_Options_UserInterface" xml:space="preserve">
     <value>Interface Utilisateur</value>
@@ -514,7 +514,7 @@
     <value>Barre de Progression</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
-    <value>Masque de Piste</value>
+    <value>Masques de Piste</value>
   </data>
   <data name="Screen_Options_Selection" xml:space="preserve">
     <value>Sélection</value>
@@ -562,7 +562,7 @@
     <value>Activer le Mode Plein Écran</value>
   </data>
   <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
-    <value>Activer le Mode Fenêtré sans Bordure</value>
+    <value>Activer le Mode Fenêtré Sans Bordure</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
     <value>Limiteur de FPS</value>
@@ -827,7 +827,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Ignorer l'Écran de Résultats Après avoir Quitté une Map</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
-    <value>Bloquer la Touche Windows durant le gameplay</value>
+    <value>Bloquer la Touche Windows Durant le Gameplay</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
     <value>Afficher les Lignes de Tempo</value>
@@ -959,7 +959,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Mettre à Jour le Statut des Maps Ranked</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
-    <value>Mettre à Jour le Décalage des Maps à l'aide du site web</value>
+    <value>Mettre à Jour le Décalage des Maps à l'aide du Site Web</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
     <value>Charger les Musiques Provenant d'Autres Jeux Installés</value>
@@ -1067,7 +1067,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher la Précision Classée des Classements Locaux</value>
   </data>
   <data name="Screen_Options_LowerFPSOnInactiveWindow" xml:space="preserve">
-    <value>Réduire les FPS en cas d'Inactivité</value>
+    <value>Réduire les FPS Lorsque la Fenêtre est Inactive</value>
   </data>
   <data name="Screen_Options_EnableHighProcessPriority" xml:space="preserve">
     <value>Activer la Priorité de Processus Élevée</value>
@@ -1327,8 +1327,32 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Touches</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>Paramètres {0}</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Video Settings</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Audio Settings</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Language Settings</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Gameplay Settings</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Skin Settings</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Input Settings</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Game Mode Specific Settings</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Miscellaneous Settings</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} Résultat de recherche</value>
@@ -1983,8 +2007,14 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Étendue de difficulté</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
-    <value>N'importe lequel</value>
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
+    <value>Any</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
     <value>Étendue du % de Longue Note</value>
