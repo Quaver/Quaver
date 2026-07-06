@@ -157,10 +157,10 @@
     <value>Spil custom matches online med andre</value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
-    <value>Konkurrer mod spiller i hele verden</value>
+    <value>Konkurrer mod spillere i hele verden</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
-    <value>Lav eller rediger en sang til en hvilken som helst sang du ønsker</value>
+    <value>Lav eller rediger et map til den sang du ønsker</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
     <value>Find nye sange at spille fra fællesskabet</value>
@@ -175,7 +175,7 @@
     <value>Træk mapfiler (.qp) ind i spilvinduet for at importere dem.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Tryk F3 i song select for at se en forhåndsvisning af et map.</value>
+    <value>Tryk F3 under sangvalg for at se en forhåndsvisning af et map.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>At pause i gameplay forhindrer dig i at indsende din score.</value>
@@ -190,7 +190,7 @@
     <value>Træk en .mp3-fil ind i spillet for at lave et nyt map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Tryk F2 i song select for at vælge en tilfældig sang.</value>
+    <value>Tryk F2 under sangvalg for at vælge en tilfældig sang.</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
     <value>Tryk F10 i menuen for at åbne dit playercard.</value>
@@ -202,7 +202,7 @@
     <value>Dit offset kan kalibreres i indstillingerne.</value>
   </data>
   <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
-    <value>Standard* er det forudindstillede judgement vindue.</value>
+    <value>Standard* er standardindstillingen for bedømmelsesvinduet.</value>
   </data>
   <data name="Screen_Main_TipPlaybackRate" xml:space="preserve">
     <value>CTRL+ +/- ændrer sangens hastighed.</value>
@@ -211,7 +211,7 @@
     <value>Spiller nu:</value>
   </data>
   <data name="Screen_Main_Published" xml:space="preserve">
-    <value>Offentliggjort</value>
+    <value>Offentliggjort {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>Alle</value>
@@ -235,7 +235,7 @@
     <value>Land</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Land Rank</value>
+    <value>Landsrang</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Lav ny</value>
@@ -268,13 +268,13 @@
     <value>Global</value>
   </data>
   <data name="Screen_Selection_GlobalRank" xml:space="preserve">
-    <value>Global Rang</value>
+    <value>Global rang</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
     <value>GRUPPER EFTER:</value>
   </data>
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
-    <value>Højeste vurderede score</value>
+    <value>Højest vurderede score</value>
   </data>
   <data name="Screen_Selection_Leaderboard" xml:space="preserve">
     <value>RANGLISTE</value>
@@ -325,7 +325,7 @@
     <value>INGEN PERSONLIG REKORD SAT</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
-    <value>Ingen</value>
+    <value>Intet</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
     <value>Noder i sekundet</value>
@@ -334,7 +334,7 @@
     <value>Online</value>
   </data>
   <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
-    <value>Online Karakter</value>
+    <value>Online karakter</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
     <value>Online oversigt</value>
@@ -379,7 +379,7 @@
     <value>Tilfældig</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked status</value>
+    <value>Rangeringsstatus</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
     <value>RANGORDNING:</value>
@@ -388,7 +388,7 @@
     <value>Hastighed</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
-    <value>Spillet for nyligt</value>
+    <value>Nyligt spillet</value>
   </data>
   <data name="Screen_Selection_ResultFound" xml:space="preserve">
     <value>Resultat fundet</value>
@@ -412,13 +412,13 @@
     <value>Der er intet map valgt!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>Dette map er ikke ranked!</value>
+    <value>Dette map er ikke rangeret!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
     <value>Dette map er ikke uploadet online!</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
-    <value>Antal gange spillet</value>
+    <value>Antal spilninger</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
     <value>Titel</value>
@@ -466,7 +466,7 @@
     <value>Input</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
-    <value>Spilletilstands specifik </value>
+    <value>Gamemode-specifik</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
     <value>Andet</value>
@@ -511,7 +511,7 @@
     <value>Pointtavle</value>
   </data>
   <data name="Screen_Options_ProgressBar" xml:space="preserve">
-    <value>Progressions bar</value>
+    <value>Progressionsbar</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
     <value>Lanecover</value>
@@ -535,7 +535,7 @@
     <value>Gameplaybrugerflade</value>
   </data>
   <data name="Screen_Options_SongSelection" xml:space="preserve">
-    <value>Sang Udvalg</value>
+    <value>Sangvalg</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
     <value>Redigeringsværktøj</value>
@@ -553,19 +553,19 @@
     <value>Notifikationer</value>
   </data>
   <data name="Screen_Options_SongSelect" xml:space="preserve">
-    <value>Sang Valg</value>
+    <value>Sangvalg</value>
   </data>
   <data name="Screen_Options_ScreenResolution" xml:space="preserve">
     <value>Skærmopløsning</value>
   </data>
   <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
-    <value>Slå fullscreen til</value>
+    <value>Slå fullscreen til/fra</value>
   </data>
   <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
     <value>Slå borderless window til/fra</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
-    <value>Ramme begrænser</value>
+    <value>FPS-begrænser</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
     <value>Indstil brugerdefineret FPS</value>
@@ -598,7 +598,7 @@
     <value>Tilbage</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Forsøg map igen</value>
+    <value>Prøv map igen</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
     <value>Se gengivelse</value>
@@ -655,7 +655,7 @@
     <value>Standardafvigelse:</value>
   </data>
   <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Størrelsesforhold </value>
+    <value>Ratio:</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistik ikke tilgængelig</value>
@@ -663,7 +663,7 @@
   <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
     <value>Dette viser udviklingen i nøjagtighed gennem scoren.
 
-Hvis mappet ikke blev fuldført, vil det også vise nøjagtigheden hvis alle efterfølgende hits havde været Marvelous.</value>
+Hvis mappet ikke blev gennemført, vil det også vise nøjagtigheden hvis alle efterfølgende hits havde været Marvelous.</value>
   </data>
   <data name="Screen_Results_Latehitwindow" xml:space="preserve">
     <value>Sent (+{0} ms)</value>
@@ -683,7 +683,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>GLOBAL RANG</value>
   </data>
   <data name="Screen_Results_CountryRank" xml:space="preserve">
-    <value>LANDE RANG</value>
+    <value>LANDSRANG</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
     <value>SAMLET RATING</value>
@@ -719,7 +719,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Karakter</value>
   </data>
   <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Maks Combo</value>
+    <value>Højeste combo</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -743,13 +743,13 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Modifikationer </value>
   </data>
   <data name="Screen_Results_Loadingresults" xml:space="preserve">
-    <value>Loading Resultater </value>
+    <value>Indlæser resultater</value>
   </data>
   <data name="Screen_Results_Failedtoretrieveplayersscores" xml:space="preserve">
-    <value>Kunne ikke hente spilleres scores!</value>
+    <value>Kunne ikke hente spillernes scores!</value>
   </data>
   <data name="Screen_Results_Therewasanissuewhileretrievingthereplayforthisscore" xml:space="preserve">
-    <value>Der opstod et problem under indhentningen af gengivelsen for denne score!</value>
+    <value>Der opstod et problem under indhentningen af scorens gengivelse!</value>
   </data>
   <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
     <value>Gengivelsen af denne score kunne ikke downloades.</value>
@@ -770,7 +770,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Du har allerede fikset dit lokale offset for dette map! Det er ikke nødvendigt at gøre det igen.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
-    <value>Der er ingen data som kan bruges til at fikse dit lokale offset!</value>
+    <value>Der er ingen data, som kan bruges til at fikse dit lokale offset!</value>
   </data>
   <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
     <value>FIKS LOKALT OFFSET</value>
@@ -791,7 +791,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Der er ingen gengivelsesdata tilgængelig til at konvertere denne score med!</value>
   </data>
   <data name="Screen_Options_GlobalAudioOffset" xml:space="preserve">
-    <value>Globalt audio offset</value>
+    <value>Globalt lydoffset</value>
   </data>
   <data name="Screen_Options_VisualOffset" xml:space="preserve">
     <value>Visuelt offset</value>
@@ -806,22 +806,22 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Baggrundslysstyrke</value>
   </data>
   <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
-    <value>Lange noders skrumpe mængde</value>
+    <value>Indskrumpning af lange noder</value>
   </data>
   <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
-    <value>Slå hitsounds til</value>
+    <value>Slå hitsounds til/fra</value>
   </data>
   <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
-    <value>Slå lange noders frigørelseslyd til</value>
+    <value>Slå hitsounds ved slip af lange noder til/fra</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
-    <value>Slå tastelyde til</value>
+    <value>Slå keysounds til/fra</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
-    <value>Slå tryk til at pause til</value>
+    <value>Slå tap for at pause til/fra</value>
   </data>
   <data name="Screen_Options_EnableTapToRestart" xml:space="preserve">
-    <value>Slå tryk til at prøve igen til</value>
+    <value>Slå tap for at prøve igen til/fra</value>
   </data>
   <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
     <value>Spring resultats skærmen over efter afbrydelse</value>
@@ -839,10 +839,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Vis bedømmelsestæller</value>
   </data>
   <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
-    <value>Vis Scoreboard</value>
+    <value>Vis pointtavle</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBar" xml:space="preserve">
-    <value>Vis sanglængdens progressions bar</value>
+    <value>Vis sangens statuslinje</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBarTimeNumbers" xml:space="preserve">
     <value>Vis tid på sangens statuslinje</value>
@@ -860,7 +860,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Højde på nederste lanecover</value>
   </data>
   <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
-    <value>Vis UI-Elementer over lanecovers</value>
+    <value>Vis UI-elementer over lanecovers</value>
   </data>
   <data name="Screen_Options_DisplayReceptorsOverLaneCovers" xml:space="preserve">
     <value>Vis receptorer over lanecovers</value>
@@ -875,13 +875,13 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Standardskin</value>
   </data>
   <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
-    <value>Åben Skinmappe</value>
+    <value>Åbn skinmappe</value>
   </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
-    <value>Eksporter Skin</value>
+    <value>Eksporter skin</value>
   </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
-    <value>Upload Skin til Steam Workshop</value>
+    <value>Upload skin til Steam Workshop</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
     <value>Node- &amp; receptorstørrelsesskala</value>
@@ -896,13 +896,13 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Pause</value>
   </data>
   <data name="Screen_Options_QuickRestart" xml:space="preserve">
-    <value>Hurtig Genstart</value>
+    <value>Hurtig genstartning</value>
   </data>
   <data name="Screen_Options_QuickExit" xml:space="preserve">
-    <value>Hurtig Afslut</value>
+    <value>Hurtig afslutning</value>
   </data>
   <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
-    <value>Skip Sang Intro</value>
+    <value>Spring sangintro over</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
     <value>Sænk rullehastighed</value>
@@ -917,7 +917,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Øg map offset</value>
   </data>
   <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
-    <value>Nulstil Map Offset</value>
+    <value>Nulstil map offset</value>
   </data>
   <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
     <value>Slå pointtavle til/fra</value>
@@ -941,7 +941,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Fjern alle mods</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
-    <value>Pause/Afspil Bane</value>
+    <value>Pause/afspil sang</value>
   </data>
   <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
     <value>Sænk afspilningshastighed</value>
@@ -950,10 +950,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Øg afspilningshastighed</value>
   </data>
   <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
-    <value>Tag Screenshot</value>
+    <value>Tag screenshot</value>
   </data>
   <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
-    <value>Åben Spil Folder</value>
+    <value>Åbn spilmappe</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
     <value>Opdater rangeringsstatus for maps</value>
@@ -971,7 +971,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Vis notifikationer fra bund til top</value>
   </data>
   <data name="Screen_Options_DisplayOnlineFriendNotifications" xml:space="preserve">
-    <value>Vis notifikation når en ven går online</value>
+    <value>Vis notifikation når venner går online</value>
   </data>
   <data name="Screen_Options_PrioritizedGameMode" xml:space="preserve">
     <value>Prioriteret gamemode</value>
@@ -1013,7 +1013,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Vis scores der ikke kan slås</value>
   </data>
   <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
-    <value>Fortsæt med at spille ved tab</value>
+    <value>Fortsæt med at spille når du fejler</value>
   </data>
   <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
     <value>Normaliseringsgrad af scroll velocity efter hastighed</value>
@@ -1025,19 +1025,19 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Vis scores på spillefeltet i 1v1</value>
   </data>
   <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
-    <value>Genindlæs skin ved ændring</value>
+    <value>Genindlæs skin ved ændringer</value>
   </data>
   <data name="Screen_Options_TogglePlaytestAutoplay" xml:space="preserve">
-    <value>Slå playtest-autoplay til/fra</value>
+    <value>Slå autoplay under playtest til/fra</value>
   </data>
   <data name="Screen_Options_InvertEditorScrolling" xml:space="preserve">
-    <value>Omvendt scrollretning i editoren</value>
+    <value>Omvendt rulleretning i editoren</value>
   </data>
   <data name="Screen_Options_InvertScrolling" xml:space="preserve">
-    <value>Omvendt scrollretning i gameplay</value>
+    <value>Omvendt rulleretning i gameplay</value>
   </data>
   <data name="Screen_Options_AutomaticallyLogIntoTheServer" xml:space="preserve">
-    <value>Log ind på serveren automatisk</value>
+    <value>Log automatisk ind på serveren</value>
   </data>
   <data name="Screen_Options_DisplaySongRequestNotifications" xml:space="preserve">
     <value>Vis notifikationer for sangønsker</value>
@@ -1046,7 +1046,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Vis advarsel ved pausning</value>
   </data>
   <data name="Screen_Options_DisplayWarningForFailing" xml:space="preserve">
-    <value>Vis advarsel ved tab</value>
+    <value>Vis advarsel når du fejler</value>
   </data>
   <data name="Screen_Options_DisplayEpilepsyWarning" xml:space="preserve">
     <value>Vis epilepsiadvarsel</value>
@@ -1055,7 +1055,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Vis audiovisualiser i menuen</value>
   </data>
   <data name="Screen_Options_DisplayFailedLocalScores" xml:space="preserve">
-    <value>Vis tabte lokale scores</value>
+    <value>Vis fejlede lokale scores</value>
   </data>
   <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
     <value>Slet original fil efter importering</value>
@@ -1091,10 +1091,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>1K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>1K rullehastighed</value>
+    <value>1K Rullehastighed</value>
   </data>
   <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>1K rulleretning</value>
+    <value>1K Rulleretning</value>
   </data>
   <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
     <value>1K Scratch-layout</value>
@@ -1115,10 +1115,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>2K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>2K rullehastighed</value>
+    <value>2K Rullehastighed</value>
   </data>
   <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2K rulleretning</value>
+    <value>2K Rulleretning</value>
   </data>
   <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
     <value>2K Scratch-layout</value>
@@ -1139,10 +1139,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>3K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>3K rullehastighed</value>
+    <value>3K Rullehastighed</value>
   </data>
   <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>3K rulleretning</value>
+    <value>3K Rulleretning</value>
   </data>
   <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
     <value>3K Scratch-layout</value>
@@ -1163,10 +1163,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>4K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>4K rullehastighed</value>
+    <value>4K Rullehastighed</value>
   </data>
   <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>4K rulleretning</value>
+    <value>4K Rulleretning</value>
   </data>
   <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
     <value>4K Scratch-layout</value>
@@ -1187,10 +1187,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>5K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>5K rullehastighed</value>
+    <value>5K Rullehastighed</value>
   </data>
   <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>5K rulleretning</value>
+    <value>5K Rulleretning</value>
   </data>
   <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
     <value>5K Scratch-layout</value>
@@ -1211,10 +1211,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>6K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>6K rullehastighed</value>
+    <value>6K Rullehastighed</value>
   </data>
   <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>6K rulleretning</value>
+    <value>6K Rulleretning</value>
   </data>
   <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
     <value>6K Scratch-layout</value>
@@ -1235,10 +1235,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>7K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>7K rullehastighed</value>
+    <value>7K Rullehastighed</value>
   </data>
   <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>7K rulleretning</value>
+    <value>7K Rulleretning</value>
   </data>
   <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
     <value>7K Scratch-layout</value>
@@ -1259,10 +1259,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>8K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>8K rullehastighed</value>
+    <value>8K Rullehastighed</value>
   </data>
   <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>8K rulleretning</value>
+    <value>8K Rulleretning</value>
   </data>
   <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
     <value>8K Scratch-layout</value>
@@ -1283,10 +1283,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>9K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>9K rullehastighed</value>
+    <value>9K Rullehastighed</value>
   </data>
   <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>9K rulleretning</value>
+    <value>9K Rulleretning</value>
   </data>
   <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
     <value>9K Scratch-layout</value>
@@ -1307,10 +1307,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>10K Gameplay-layout</value>
   </data>
   <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>10K rullehastighed</value>
+    <value>10K Rullehastighed</value>
   </data>
   <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>10K rulleretning</value>
+    <value>10K Rulleretning</value>
   </data>
   <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
     <value>10K Scratch-layout</value>
@@ -1327,8 +1327,32 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Taster</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Settings</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Video Settings</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Audio Settings</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Language Settings</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Gameplay Settings</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Skin Settings</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Input Settings</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Game Mode Specific Settings</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Miscellaneous Settings</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} søgeresultat</value>
@@ -1367,10 +1391,10 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Alle</value>
   </data>
   <data name="Screen_Download_Unranked" xml:space="preserve">
-    <value>Ikke rangeret </value>
+    <value>Ikke rangeret</value>
   </data>
   <data name="Screen_Download_Ranked" xml:space="preserve">
-    <value>Rangeret </value>
+    <value>Rangeret</value>
   </data>
   <data name="Screen_Download_ClanRanked" xml:space="preserve">
     <value>Klanrangeret</value>
@@ -1403,13 +1427,13 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>MODE: </value>
   </data>
   <data name="Screen_Download_SORTBY" xml:space="preserve">
-    <value>SORTER EFTER:</value>
+    <value>SORTER EFTER: </value>
   </data>
   <data name="Screen_Download_Newest" xml:space="preserve">
     <value>Nyeste</value>
   </data>
   <data name="Screen_Download_DateSubmitted" xml:space="preserve">
-    <value>Dato indsendt </value>
+    <value>Dato indsendt</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
     <value>Længde</value>
@@ -1418,7 +1442,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Sværhedsgrad</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
-    <value>Maks Combo</value>
+    <value>Maks. combo</value>
   </data>
   <data name="Screen_Download_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -1448,7 +1472,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Af:</value>
   </data>
   <data name="Screen_Download_LNs" xml:space="preserve">
-    <value>LN:</value>
+    <value>LN: </value>
   </data>
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
     <value>FILTERINDSTILLINGER</value>
@@ -1466,21 +1490,21 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Vis eksplicitte mapsets</value>
   </data>
   <data name="Screen_Download_Maps" xml:space="preserve">
-    <value>Maps:</value>
+    <value>Maps: </value>
   </data>
   <data name="Screen_Download_NoSongSelected" xml:space="preserve">
     <value>Ingen sang valgt</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
     <value>Dobbeltklik på en sang for at starte med at downloade. 
-Et enkelt klik giver dig mulighed for at forhåndslytte sangen.
+Et enkelt klik giver dig mulighed for at få en forsmag på sangen.
 Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
-    <value>Slut dato</value>
+    <value>Slutdato</value>
   </data>
   <data name="Screen_Download_StartDate" xml:space="preserve">
-    <value>Start Dato</value>
+    <value>Startdato</value>
   </data>
   <data name="Screen_Download_DifficultyRating" xml:space="preserve">
     <value>Sværhedsgrad</value>
@@ -1492,10 +1516,10 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Min. rating</value>
   </data>
   <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
-    <value>Ranked Play Count</value>
+    <value>Rangeret Spilantal</value>
   </data>
   <data name="Screen_Download_MaxPlays" xml:space="preserve">
-    <value>Max. spilninger</value>
+    <value>Maks. spilninger</value>
   </data>
   <data name="Screen_Download_MinPlays" xml:space="preserve">
     <value>Min. spilninger</value>
@@ -1519,7 +1543,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Min. længde</value>
   </data>
   <data name="Screen_Download_SkillLevel" xml:space="preserve">
-    <value>Skill Niveau</value>
+    <value>Færdighedsniveau</value>
   </data>
   <data name="Screen_Download_MinCombo" xml:space="preserve">
     <value>Min. combo</value>
@@ -1579,13 +1603,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>10 Taster</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyTitle" xml:space="preserve">
-    <value>GODKEND PARAT</value>
+    <value>GODKEND PARATHED</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyMessage" xml:space="preserve">
-    <value>Hvis du gør dig klar som vært begynder runden, er du sikker på at du vil starte uden alle spillere er klar?</value>
+    <value>Hvis du som vært gør dig parat, begynder runden. Er du sikker på at du vil starte, uden alle spillere er klar?</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyTitle" xml:space="preserve">
-    <value>GÅ UD TIL LOBBY</value>
+    <value>TILBAGE TIL LOBBY</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
     <value>Er du sikker på at du vil forlade lobbyen?</value>
@@ -1603,10 +1627,10 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Modifikationer</value>
   </data>
   <data name="Screen_Multi_Leaderboard" xml:space="preserve">
-    <value>Leaderboard </value>
+    <value>Pointtavle</value>
   </data>
   <data name="Screen_Multi_History" xml:space="preserve">
-    <value>Historie</value>
+    <value>Historik</value>
   </data>
   <data name="Screen_Multi_SwitchTeams" xml:space="preserve">
     <value>Skift hold</value>
@@ -1621,10 +1645,10 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Venter på at værten starter</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
-    <value>ÆNDRE SPILNAVN</value>
+    <value>ÆNDR SPILNAVN</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
-    <value>Indtast et nyt navn for multiplayerspillet...</value>
+    <value>Indtast et nyt navn på multiplayerspillet...</value>
   </data>
   <data name="Screen_Multi_EnterNamePlaceholder" xml:space="preserve">
     <value>Indtast et navn...</value>
@@ -1639,13 +1663,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Indtast en adgangskode...</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>UPLOAD IKKE INDSENDT MAPSET</value>
+    <value>UPLOAD IKKE UPLOADET MAPSET</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetConfirmMessage" xml:space="preserve">
-    <value>Vil du midlertidigt uploade det nuværende mapset så andre spillere kan downloade det?</value>
+    <value>Vil du midlertidigt uploade det nuværende mapset, så andre spillere kan downloade det?</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>UPLOAD IKKE INDSENDT MAPSET</value>
+    <value>UPLOADER IKKE UPLOADET MAPSET</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetMessage" xml:space="preserve">
     <value>Vent venligst mens mapsettet uploades...</value>
@@ -1663,7 +1687,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Dommer</value>
   </data>
   <data name="Screen_Multi_WinsAbbreviation" xml:space="preserve">
-    <value>{0} V</value>
+    <value>{0} S</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
     <value>MULTIPLAYER</value>
@@ -1690,13 +1714,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Gamemode</value>
   </data>
   <data name="Screen_Multiplayer_MaxPlayers" xml:space="preserve">
-    <value>Maks spillere</value>
+    <value>Maks. spillere</value>
   </data>
   <data name="Screen_Multiplayer_AutoHostRotation" xml:space="preserve">
-    <value>Auto vært rotation </value>
+    <value>Automatisk værtsrotation</value>
   </data>
   <data name="Screen_Multiplayer_FreeMod" xml:space="preserve">
-    <value>Fri Mod</value>
+    <value>Frit valg af mods</value>
   </data>
   <data name="Screen_Multiplayer_FreeRate" xml:space="preserve">
     <value>Fri rate </value>
@@ -1705,7 +1729,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Slå forhåndsvisning til</value>
   </data>
   <data name="Screen_Multiplayer_HealthType" xml:space="preserve">
-    <value>Health Type</value>
+    <value>Livtype</value>
   </data>
   <data name="Screen_Multiplayer_Lives" xml:space="preserve">
     <value>Liv</value>
@@ -1729,13 +1753,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>GØR PARAT</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishes" xml:space="preserve">
-    <value>Vær sød og vent indtil runden slutter før du foretager dig denne handling.</value>
+    <value>Vent venligst til kampen slutter før du foretager dig denne handling.</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeReadying" xml:space="preserve">
     <value>Vent venligst til kampen er færdig, før du gør dig parat.</value>
   </data>
   <data name="Screen_Multiplayer_CannotReadyWithoutMap" xml:space="preserve">
-    <value>Du kan ikke gøre dig klar hvis du ikke har mappet!</value>
+    <value>Du kan ikke gøre dig parat hvis du ikke har mappet!</value>
   </data>
   <data name="Screen_Multiplayer_SelectMap" xml:space="preserve">
     <value>vælg map</value>
@@ -1765,7 +1789,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Vent venligst til kampen er færdig, før du vælger mods.</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeam" xml:space="preserve">
-    <value>Ændre Hold</value>
+    <value>Skift hold</value>
   </data>
   <data name="Screen_Multiplayer_MustUnreadyToSwitchTeams" xml:space="preserve">
     <value>Du kan ikke skifte hold når du er parat!</value>
@@ -1798,7 +1822,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Loader...</value>
   </data>
   <data name="Screen_Multiplayer_Wins" xml:space="preserve">
-    <value>{0} Vundet</value>
+    <value>{0} sejre</value>
   </data>
   <data name="Screen_Multiplayer_Referee" xml:space="preserve">
     <value>Dommer</value>
@@ -1834,7 +1858,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Værten vælger et map!</value>
   </data>
   <data name="Screen_Multiplayer_PleaseWait" xml:space="preserve">
-    <value>Vær sød at vente...</value>
+    <value>Vent venligst...</value>
   </data>
   <data name="Screen_Multiplayer_MapInfo" xml:space="preserve">
     <value>Af: {0} | Længde: {1} | BPM: {2} | LN: {3}%</value>
@@ -1983,7 +2007,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Sværhedsgradsinterval</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
     <value>Any</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
