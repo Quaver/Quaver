@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         public override string GetValue()
         {
             if (SelectedGame.Value.MaximumSongLength == 999999999)
-                return MultiplayerLobbyLocalization.Get("Any");
+                return MultiplayerLobbyLocalization.Get("AnyMaximumSongLength");
 
             var t = TimeSpan.FromSeconds(SelectedGame.Value.MaximumSongLength);
 
