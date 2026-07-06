@@ -553,7 +553,7 @@
     <value>Notifications</value>
   </data>
   <data name="Screen_Options_SongSelect" xml:space="preserve">
-    <value>Song Select</value>
+    <value>곡 선택</value>
   </data>
   <data name="Screen_Options_ScreenResolution" xml:space="preserve">
     <value>Screen Resolution</value>
@@ -577,37 +577,37 @@
     <value>Audio Output Device</value>
   </data>
   <data name="Screen_Options_MasterVolume" xml:space="preserve">
-    <value>Master Volume</value>
+    <value>전체 소리</value>
   </data>
   <data name="Screen_Options_MusicVolume" xml:space="preserve">
-    <value>Music Volume</value>
+    <value>노래 소리</value>
   </data>
   <data name="Screen_Options_EffectVolume" xml:space="preserve">
-    <value>Effect Volume</value>
+    <value>효과음</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
     <value>Master</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
-    <value>Music</value>
+    <value>음악</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>효과음</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
     <value>Back</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Retry Map</value>
+    <value>재시작</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
-    <value>Watch Replay</value>
+    <value>다시보기</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
     <value>Export Replay</value>
   </data>
   <data name="Screen_Results_FixOffset" xml:space="preserve">
-    <value>Fix Offset</value>
+    <value>오프셋 수정</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
     <value>Convert Score</value>
@@ -668,10 +668,10 @@ show the accuracy if all subsequent hits had been
 Marvelous instead.</value>
   </data>
   <data name="Screen_Results_Latehitwindow" xml:space="preserve">
-    <value>Late (+{0} ms)</value>
+    <value>느림 (+{0} ms)</value>
   </data>
   <data name="Screen_Results_Earlyhitwindow" xml:space="preserve">
-    <value>Early (-{0} ms)</value>
+    <value>빠름 (+{0} ms)</value>
   </data>
   <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
     <value>This displays the course of performance throughout the score.
@@ -684,10 +684,10 @@ Marvelous instead.</value>
     <value>SUBMITTING SCORE...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
-    <value>GLOBAL RANK</value>
+    <value>세계 순위</value>
   </data>
   <data name="Screen_Results_CountryRank" xml:space="preserve">
-    <value>COUNTRY RANK</value>
+    <value>국가 순위</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
     <value>OVERALL RATING</value>
@@ -711,10 +711,10 @@ Marvelous instead.</value>
     <value>팀</value>
   </data>
   <data name="Screen_Results_BlueTeam" xml:space="preserve">
-    <value>Blue Team</value>
+    <value>블루 팀</value>
   </data>
   <data name="Screen_Results_RedTeam" xml:space="preserve">
-    <value>Red Team</value>
+    <value>레드 팀</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
     <value>has won the match!</value>
@@ -897,16 +897,16 @@ Marvelous instead.</value>
     <value>Tint Hitlighting Based On Judgement Color</value>
   </data>
   <data name="Screen_Options_Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>정지</value>
   </data>
   <data name="Screen_Options_QuickRestart" xml:space="preserve">
-    <value>Quick Restart</value>
+    <value>빠른 재시작</value>
   </data>
   <data name="Screen_Options_QuickExit" xml:space="preserve">
-    <value>Quick Exit</value>
+    <value>빠른 나가기</value>
   </data>
   <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
-    <value>Skip Song Intro</value>
+    <value>도입부 건너뛰기</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
     <value>Decrease Scroll Speed</value>
@@ -957,7 +957,7 @@ Marvelous instead.</value>
     <value>Take Screenshot</value>
   </data>
   <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
-    <value>Open Game Folder</value>
+    <value>게임 폴더 열기</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
     <value>Update Map Ranked Statuses</value>
@@ -966,10 +966,10 @@ Marvelous instead.</value>
     <value>Update Map Online Offsets</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Load Songs From Other Installed Games</value>
+    <value>외부 게임에서 곡 가져오기</value>
   </data>
   <data name="Screen_Options_DetectSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Detect Songs From Other Installed Games</value>
+    <value>외부 게임에서 곡 불러오기</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsFromBottomToTop" xml:space="preserve">
     <value>Display Notifications From Bottom-To-Top</value>
@@ -1113,7 +1113,7 @@ Marvelous instead.</value>
     <value>Prioritized 1K Difficulty</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1K</value>
   </data>
   <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
     <value>2K Gameplay Layout</value>
@@ -1137,7 +1137,7 @@ Marvelous instead.</value>
     <value>Prioritized 2K Difficulty</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2K</value>
   </data>
   <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
     <value>3K Gameplay Layout</value>
@@ -1161,7 +1161,7 @@ Marvelous instead.</value>
     <value>Prioritized 3K Difficulty</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3K</value>
   </data>
   <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
     <value>4K Gameplay Layout</value>
@@ -1185,7 +1185,7 @@ Marvelous instead.</value>
     <value>Prioritized 4K Difficulty</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4K</value>
   </data>
   <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
     <value>5K Gameplay Layout</value>
@@ -1209,7 +1209,7 @@ Marvelous instead.</value>
     <value>Prioritized 5K Difficulty</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5K</value>
   </data>
   <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
     <value>6K Gameplay Layout</value>
@@ -1233,7 +1233,7 @@ Marvelous instead.</value>
     <value>Prioritized 6K Difficulty</value>
   </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6K</value>
   </data>
   <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
     <value>7K Gameplay Layout</value>
@@ -1257,7 +1257,7 @@ Marvelous instead.</value>
     <value>Prioritized 7K Difficulty</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7K</value>
   </data>
   <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
     <value>8K Gameplay Layout</value>
@@ -1281,7 +1281,7 @@ Marvelous instead.</value>
     <value>Prioritized 8K Difficulty</value>
   </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8K</value>
   </data>
   <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
     <value>9K Gameplay Layout</value>
@@ -1305,7 +1305,7 @@ Marvelous instead.</value>
     <value>Prioritized 9K Difficulty</value>
   </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9K</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
     <value>10K Gameplay Layout</value>
@@ -1329,10 +1329,34 @@ Marvelous instead.</value>
     <value>Prioritized 10K Difficulty</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10K</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Settings</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Video Settings</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Audio Settings</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Language Settings</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Gameplay Settings</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Skin Settings</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Input Settings</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Game Mode Specific Settings</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Miscellaneous Settings</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} Search Result</value>
@@ -1384,19 +1408,19 @@ for the selected game mode?</value>
     <value>DIFFICULTY: </value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
-    <value>None</value>
+    <value>없음</value>
   </data>
   <data name="Screen_Download_Beginner" xml:space="preserve">
     <value>Beginner</value>
   </data>
   <data name="Screen_Download_Easy" xml:space="preserve">
-    <value>Easy</value>
+    <value>쉬움</value>
   </data>
   <data name="Screen_Download_Normal" xml:space="preserve">
-    <value>Normal</value>
+    <value>보통</value>
   </data>
   <data name="Screen_Download_Hard" xml:space="preserve">
-    <value>Hard</value>
+    <value>어려움</value>
   </data>
   <data name="Screen_Download_Insane" xml:space="preserve">
     <value>Insane</value>
@@ -1417,10 +1441,10 @@ for the selected game mode?</value>
     <value>Date Submitted</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
-    <value>Length</value>
+    <value>길이</value>
   </data>
   <data name="Screen_Download_Difficulty" xml:space="preserve">
-    <value>Difficulty</value>
+    <value>난이도</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
     <value>Max Combo</value>
@@ -1432,7 +1456,7 @@ for the selected game mode?</value>
     <value>LN %</value>
   </data>
   <data name="Screen_Download_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>플레이 횟수</value>
   </data>
   <data name="Screen_Download_Ascending" xml:space="preserve">
     <value>Ascending</value>
@@ -1548,40 +1572,40 @@ You can use the filters below to narrow down your search.</value>
     <value>Select</value>
   </data>
   <data name="Screen_Download_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>다운로드</value>
   </data>
   <data name="Screen_Download_OnlineListing" xml:space="preserve">
     <value>Online Listing</value>
   </data>
   <data name="Screen_Download_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1K</value>
   </data>
   <data name="Screen_Download_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2K</value>
   </data>
   <data name="Screen_Download_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3K</value>
   </data>
   <data name="Screen_Download_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4K</value>
   </data>
   <data name="Screen_Download_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5K</value>
   </data>
   <data name="Screen_Download_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6K</value>
   </data>
   <data name="Screen_Download_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7K</value>
   </data>
   <data name="Screen_Download_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8K</value>
   </data>
   <data name="Screen_Download_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9K</value>
   </data>
   <data name="Screen_Download_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10K</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyTitle" xml:space="preserve">
     <value>CONFIRM READY</value>
@@ -1591,25 +1615,25 @@ You can use the filters below to narrow down your search.</value>
 sure you would like to start without all players ready?</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyTitle" xml:space="preserve">
-    <value>EXIT TO LOBBY</value>
+    <value>로비로 나가기</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
-    <value>Are you sure you would like to exit to the lobby?</value>
+    <value>로비로 나가시겠습니까?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
-    <value>Leave</value>
+    <value>나가기</value>
   </data>
   <data name="Screen_Multi_Commands" xml:space="preserve">
     <value>Commands</value>
   </data>
   <data name="Screen_Multi_SelectMap" xml:space="preserve">
-    <value>Select Map</value>
+    <value>곡 선택</value>
   </data>
   <data name="Screen_Multi_Modifiers" xml:space="preserve">
     <value>Modifiers</value>
   </data>
   <data name="Screen_Multi_Leaderboard" xml:space="preserve">
-    <value>Leaderboard</value>
+    <value>순위표</value>
   </data>
   <data name="Screen_Multi_History" xml:space="preserve">
     <value>History</value>
@@ -1618,31 +1642,31 @@ sure you would like to start without all players ready?</value>
     <value>Switch Teams</value>
   </data>
   <data name="Screen_Multi_NotReady" xml:space="preserve">
-    <value>Not Ready</value>
+    <value>준비 안 됨</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
-    <value>Ready Up</value>
+    <value>준비 하기</value>
   </data>
   <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
-    <value>Waiting for the host to start</value>
+    <value>방장을 기다리는 중입니다.</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
-    <value>CHANGE GAME NAME</value>
+    <value>방 이름 바꾸기</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
-    <value>Enter a new name for the multiplayer game...</value>
+    <value>새 방 이름 입력...</value>
   </data>
   <data name="Screen_Multi_EnterNamePlaceholder" xml:space="preserve">
-    <value>Enter a name...</value>
+    <value>이름을 입력하세요...</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordTitle" xml:space="preserve">
-    <value>CHANGE GAME PASSWORD</value>
+    <value>방 비밀번호 바꾸기</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordMessage" xml:space="preserve">
-    <value>Enter a new password for the multiplayer game...</value>
+    <value>새 비밀번호 입력...</value>
   </data>
   <data name="Screen_Multi_EnterPasswordPlaceholder" xml:space="preserve">
-    <value>Enter a password...</value>
+    <value>비밀번호를 입력...</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
     <value>UPLOAD UNSUBMITTED MAPSET</value>
@@ -1664,7 +1688,7 @@ for other players to download?</value>
     <value>There was an error while uploading the mapset.</value>
   </data>
   <data name="Screen_Multi_Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>로딩중...</value>
   </data>
   <data name="Screen_Multi_Referee" xml:space="preserve">
     <value>Referee</value>
@@ -1673,19 +1697,19 @@ for other players to download?</value>
     <value>{0} W</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
-    <value>MULTIPLAYER</value>
+    <value>멀티플레이어</value>
   </data>
   <data name="Screen_Multiplayer_HeaderSubtitle" xml:space="preserve">
-    <value>GAME</value>
+    <value>게임</value>
   </data>
   <data name="Screen_Multiplayer_HeaderDescription" xml:space="preserve">
     <value>play a match in real-time with others</value>
   </data>
   <data name="Screen_Multiplayer_Leave" xml:space="preserve">
-    <value>leave</value>
+    <value>나가기</value>
   </data>
   <data name="Screen_Multiplayer_Options" xml:space="preserve">
-    <value>options</value>
+    <value>옵션</value>
   </data>
   <data name="Screen_Multiplayer_MatchHistory" xml:space="preserve">
     <value>match history</value>
@@ -1694,10 +1718,10 @@ for other players to download?</value>
     <value>commands</value>
   </data>
   <data name="Screen_Multiplayer_GameMode" xml:space="preserve">
-    <value>Game Mode</value>
+    <value>게임 모드</value>
   </data>
   <data name="Screen_Multiplayer_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>최대 플레이어</value>
   </data>
   <data name="Screen_Multiplayer_AutoHostRotation" xml:space="preserve">
     <value>Auto Host Rotation</value>
@@ -1745,7 +1769,7 @@ for other players to download?</value>
     <value>You cannot ready up if you do not have the map!</value>
   </data>
   <data name="Screen_Multiplayer_SelectMap" xml:space="preserve">
-    <value>select map</value>
+    <value>맵 고르기</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMap" xml:space="preserve">
     <value>Please wait until the match finishes before selecting another map.</value>
@@ -1757,10 +1781,10 @@ for other players to download?</value>
     <value>UNREADY</value>
   </data>
   <data name="Screen_Multiplayer_Ready" xml:space="preserve">
-    <value>READY</value>
+    <value>준비</value>
   </data>
   <data name="Screen_Multiplayer_NotReady" xml:space="preserve">
-    <value>NOT READY</value>
+    <value>준비되지 않음</value>
   </data>
   <data name="Screen_Multiplayer_CancelMatchStart" xml:space="preserve">
     <value>CANCEL MATCH START</value>
@@ -1772,7 +1796,7 @@ for other players to download?</value>
     <value>Please wait until the match finishes before selecting mods.</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeam" xml:space="preserve">
-    <value>Change Team</value>
+    <value>팀 바꾸기</value>
   </data>
   <data name="Screen_Multiplayer_MustUnreadyToSwitchTeams" xml:space="preserve">
     <value>You must unready in order to switch teams!</value>
@@ -1781,46 +1805,46 @@ for other players to download?</value>
     <value>You cannot switch teams when the countdown timer is active</value>
   </data>
   <data name="Screen_Multiplayer_ViewProfile" xml:space="preserve">
-    <value>View Profile</value>
+    <value>프로필 보기</value>
   </data>
   <data name="Screen_Multiplayer_SteamProfile" xml:space="preserve">
-    <value>Steam Profile</value>
+    <value>스팀 프로필</value>
   </data>
   <data name="Screen_Multiplayer_KickPlayer" xml:space="preserve">
-    <value>Kick Player</value>
+    <value>플레이어 내보내기</value>
   </data>
   <data name="Screen_Multiplayer_GiveHost" xml:space="preserve">
-    <value>Give Host</value>
+    <value>방장 주기</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeamWithTeam" xml:space="preserve">
-    <value>Change Team ({0})</value>
+    <value>팀바꾸기 ({0})</value>
   </data>
   <data name="Screen_Multiplayer_Close" xml:space="preserve">
-    <value>Close</value>
+    <value>닫기</value>
   </data>
   <data name="Screen_Multiplayer_OptionsFor" xml:space="preserve">
     <value>Options for {0}</value>
   </data>
   <data name="Screen_Multiplayer_Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>로딩...</value>
   </data>
   <data name="Screen_Multiplayer_Wins" xml:space="preserve">
-    <value>{0} Wins</value>
+    <value>{0} 승리</value>
   </data>
   <data name="Screen_Multiplayer_Referee" xml:space="preserve">
     <value>Referee</value>
   </data>
   <data name="Screen_Multiplayer_PlayersCount" xml:space="preserve">
-    <value>({0}/{1}) Players</value>
+    <value>({0}/{1}) 플레이어들</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStart" xml:space="preserve">
-    <value>Waiting to start</value>
+    <value>시작 대기중</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartOneDot" xml:space="preserve">
-    <value>Waiting to start.</value>
+    <value>시작 대기중.</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartTwoDots" xml:space="preserve">
-    <value>Waiting to start..</value>
+    <value>시작 대기중..</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartThreeDots" xml:space="preserve">
     <value>Waiting to start...</value>
@@ -1844,10 +1868,10 @@ for other players to download?</value>
     <value>Please wait...</value>
   </data>
   <data name="Screen_Multiplayer_MapInfo" xml:space="preserve">
-    <value>By: {0} | Length: {1} | BPM: {2} | LNs: {3}%</value>
+    <value>제작자: {0} | 길이: {1} | BPM: {2} | 롱노트: {3}%</value>
   </data>
   <data name="Screen_Multiplayer_MapMissingClickToDownload" xml:space="preserve">
-    <value>You don't have this map. Click to download!</value>
+    <value>이 맵이 없습니다. 클릭해서 다운로드 하세요!</value>
   </data>
   <data name="Screen_Multiplayer_MapMissingDownloadNotAvailable" xml:space="preserve">
     <value>You don't have this map. Download not available!</value>
@@ -1859,13 +1883,13 @@ for other players to download?</value>
     <value>Downloading Map: {0}%</value>
   </data>
   <data name="Screen_Multiplayer_DownloadFailed" xml:space="preserve">
-    <value>Download Failed!</value>
+    <value>다운로드에 실패했습니다!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadComplete" xml:space="preserve">
-    <value>Download Complete!</value>
+    <value>다운로드가 완료되었습니다!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedMissingMap" xml:space="preserve">
-    <value>Match started, but we don't have the map!</value>
+    <value>게임이 시작 되었지만 맵이 없습니다!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
     <value>Match started. Click to watch the match live on the web as a referee. </value>
@@ -1886,16 +1910,16 @@ for other players to download?</value>
     <value>Free-For-All</value>
   </data>
   <data name="Screen_MultiplayerLobby_Team" xml:space="preserve">
-    <value>Team</value>
+    <value>팀</value>
   </data>
   <data name="Screen_MultiplayerLobby_ModeLabel" xml:space="preserve">
-    <value>MODE: </value>
+    <value>모드:</value>
   </data>
   <data name="Screen_MultiplayerLobby_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4K</value>
   </data>
   <data name="Screen_MultiplayerLobby_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7K</value>
   </data>
   <data name="Screen_MultiplayerLobby_MapStatusLabel" xml:space="preserve">
     <value>MAP STATUS: </value>
@@ -1913,10 +1937,10 @@ for other players to download?</value>
     <value>ROOM VISIBILITY: </value>
   </data>
   <data name="Screen_MultiplayerLobby_Open" xml:space="preserve">
-    <value>Open</value>
+    <value>열기</value>
   </data>
   <data name="Screen_MultiplayerLobby_Full" xml:space="preserve">
-    <value>Full</value>
+    <value>꽉참</value>
   </data>
   <data name="Screen_MultiplayerLobby_Password" xml:space="preserve">
     <value>비밀번호</value>
@@ -1928,7 +1952,7 @@ for other players to download?</value>
     <value>GAME FOUND</value>
   </data>
   <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
-    <value>Search for games...</value>
+    <value>게임을 찾는중입니다..</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateGame" xml:space="preserve">
     <value>게임 만들기</value>
@@ -1949,7 +1973,7 @@ for other players to download?</value>
     <value>Enter password...</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameTitle" xml:space="preserve">
-    <value>JOINING GAME</value>
+    <value>게임 참여중..</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameMessage" xml:space="preserve">
     <value>Connecting to multiplayer game. Please wait...</value>
@@ -1976,21 +2000,27 @@ for other players to download?</value>
     <value>Lose A Life Upon Failing</value>
   </data>
   <data name="Screen_MultiplayerLobby_Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>예</value>
   </data>
   <data name="Screen_MultiplayerLobby_No" xml:space="preserve">
-    <value>No</value>
+    <value>아니요</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeMod" xml:space="preserve">
     <value>Free Mod</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeRate" xml:space="preserve">
-    <value>Free Rate</value>
+    <value>프리 레이트</value>
   </data>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Difficulty Range</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
     <value>Any</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
@@ -2000,13 +2030,13 @@ for other players to download?</value>
     <value>Enable Preview</value>
   </data>
   <data name="Screen_MultiplayerLobby_AutoHost" xml:space="preserve">
-    <value>Auto Host</value>
+    <value>자동 호스트</value>
   </data>
   <data name="Screen_MultiplayerLobby_Ruleset" xml:space="preserve">
     <value>Ruleset</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>최대 플레이어</value>
   </data>
   <data name="Screen_MultiplayerLobby_Players" xml:space="preserve">
     <value>Players</value>
@@ -2015,13 +2045,13 @@ for other players to download?</value>
     <value>Allowed Game Modes</value>
   </data>
   <data name="Screen_MultiplayerLobby_None" xml:space="preserve">
-    <value>None</value>
+    <value>없음</value>
   </data>
   <data name="Screen_MultiplayerLobby_InProgress" xml:space="preserve">
     <value>In Progress</value>
   </data>
   <data name="Screen_MultiplayerLobby_HostRotation" xml:space="preserve">
-    <value>Host Rotation</value>
+    <value>호스트 돌리기</value>
   </data>
   <data name="Screen_MultiplayerLobby_LifeCount" xml:space="preserve">
     <value>Life Count</value>
