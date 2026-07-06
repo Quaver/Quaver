@@ -815,8 +815,10 @@ namespace Quaver.Shared.Skinning
                 if (!validExtensions.Contains(Path.GetExtension(f).ToLower()))
                     continue;
 
-                var metadata = SixLabors.ImageSharp.Image.Identify(f);
-                if (metadata.Width > 2560 || metadata.Height > 1440)
+                if (!ImageHelper.TryGetDimensions(f, out var width, out var height))
+                    continue;
+
+                if (width > 2560 || height > 1440)
                     continue;
 
                 BackgroundPaths.Add(f);
