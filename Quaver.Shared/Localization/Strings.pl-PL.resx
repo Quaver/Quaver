@@ -1331,8 +1331,32 @@ Marvelous instead.</value>
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Klawiszy</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Ustawień</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Video Settings</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Audio Settings</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Language Settings</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Gameplay Settings</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Skin Settings</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Input Settings</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Game Mode Specific Settings</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Miscellaneous Settings</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} Wynik Wyszukiwania</value>
@@ -1989,7 +2013,13 @@ dla innych graczy do pobrania?</value>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Difficulty Range</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
     <value>Any</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
