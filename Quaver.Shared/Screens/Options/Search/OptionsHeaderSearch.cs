@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Shaders;
 using Quaver.Shared.Helpers;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
@@ -30,6 +33,11 @@ namespace Quaver.Shared.Screens.Options.Search
         /// </summary>
         private Sprite SearchIcon { get; set; }
 
+        /// <summary>
+        ///     Draws this textbox's rounded-pill background (see <see cref="RoundedRectShader"/>).
+        /// </summary>
+        private Shader BackgroundShader { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -44,13 +52,45 @@ namespace Quaver.Shared.Screens.Options.Search
 
             AllowSubmission = false;
             Tint = ColorHelper.HexToColor("#2F2F2F");
-            Image = UserInterface.SearchBox;
             AlwaysFocused = false;
+
+            BackgroundShader = RoundedRectShader.Create(Height / 2f);
+
+            // Scissor test must stay enabled so this still gets clipped if ever nested inside a
+            // ScrollContainer - the default SpriteBatchOptions.RasterizerState (CullNone) doesn't enable it.
+            SpriteBatchOptions = new SpriteBatchOptions
+            {
+                Shader = BackgroundShader,
+                RasterizerState = new RasterizerState { CullMode = CullMode.None, ScissorTestEnable = true }
+            };
+            RoundedRectShader.UpdateSize(BackgroundShader, new Vector2(Width, Height));
+
+            // Textbox parents InputText/Cursor/SelectedSprite into a plain Container that just passes
+            // through whatever batch is currently active (Container doesn't participate in the
+            // SpriteBatchOptions/UsePreviousSpriteBatchOptions switching that Sprite does) - so without this,
+            // they'd inherit this textbox's own rounded-rect shader batch. That shader's coverage math is
+            // sized to the whole search box, not to each individual glyph's own tiny quad, so applying it to
+            // text corrupts/discards seemingly random glyphs. Give them their own clean, scissor-safe batch.
+            InputText.SpriteBatchOptions = RoundedRectShader.CreateScissorSafeOptions();
+            Cursor.SpriteBatchOptions = RoundedRectShader.CreateScissorSafeOptions();
+            SelectedSprite.SpriteBatchOptions = RoundedRectShader.CreateScissorSafeOptions();
 
             CreateSearchIcon();
 
             StoppedTypingActionCalltime = 400;
             OnStoppedTyping += StoppedTyping;
+        }
+
+        /// <inheritdoc />
+        protected override void OnRectangleRecalculated()
+        {
+            base.OnRectangleRecalculated();
+
+            if (BackgroundShader == null)
+                return;
+
+            RoundedRectShader.UpdateSize(BackgroundShader, new Vector2(Width, Height));
+            RoundedRectShader.UpdateRadius(BackgroundShader, Height / 2f);
         }
 
         /// <inheritdoc />

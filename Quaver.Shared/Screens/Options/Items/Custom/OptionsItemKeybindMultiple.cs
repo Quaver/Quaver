@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -5,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -17,7 +19,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 {
     public class OptionsItemKeybindMultiple : OptionsItem
     {
-        private IconButton ResetButton { get; }
+        private RoundedButton ResetButton { get; }
 
         /// <summary>
         /// </summary>
@@ -51,15 +53,18 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             BindedKeys = keys;
 
-            ResetButton = new IconButton(UserInterface.HubDownloadRetry)
+            ResetButton = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
                 Size = new ScalableVector2(20, 20),
+                PerformHoverFade = false,
                 Tint = ColorHelper.HexToColor("#ffffff"),
-                UsePreviousSpriteBatchOptions = true
+                Alpha = 0f
             };
+
+            ResetButton.SetIcon(UserInterface.HubDownloadRetry, new Vector2(20, 20));
 
             ResetButton.Clicked += (sender, args) =>
             {
@@ -122,6 +127,10 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         public override void Update(GameTime gameTime)
         {
             HandleKeySelect();
+
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            ResetButton.Alpha = MathHelper.Lerp(ResetButton.Alpha, ResetButton.IsHovered ? 0.55f : 0f, (float) Math.Min(dt / 60, 1));
+
             base.Update(gameTime);
         }
 
