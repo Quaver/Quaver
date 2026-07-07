@@ -830,7 +830,7 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Lås windows-tast under gameplay</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
-    <value>Vis timings linjer </value>
+    <value>Vis timinglinjer</value>
   </data>
   <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
     <value>Vis hitbubbles</value>
@@ -1328,31 +1328,31 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>10 Taster</value>
   </data>
   <data name="Screen_Options_VideoSettings" xml:space="preserve">
-    <value>Video Settings</value>
+    <value>Videoindstillinger</value>
   </data>
   <data name="Screen_Options_AudioSettings" xml:space="preserve">
-    <value>Audio Settings</value>
+    <value>Lydindstillinger</value>
   </data>
   <data name="Screen_Options_LanguageSettings" xml:space="preserve">
-    <value>Language Settings</value>
+    <value>Sprogindstillinger</value>
   </data>
   <data name="Screen_Options_GameplaySettings" xml:space="preserve">
-    <value>Gameplay Settings</value>
+    <value>Gameplay-indstillinger</value>
   </data>
   <data name="Screen_Options_SkinSettings" xml:space="preserve">
-    <value>Skin Settings</value>
+    <value>Skinindstillinger</value>
   </data>
   <data name="Screen_Options_InputSettings" xml:space="preserve">
-    <value>Input Settings</value>
+    <value>Inputindstillinger</value>
   </data>
   <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
-    <value>Game Mode Specific Settings</value>
+    <value>Gamemode-specifikke indstillinger</value>
   </data>
   <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
-    <value>Miscellaneous Settings</value>
+    <value>Diverse indstillinger</value>
   </data>
   <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>Avancerede indstillinger</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} søgeresultat</value>
@@ -1687,7 +1687,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Dommer</value>
   </data>
   <data name="Screen_Multi_WinsAbbreviation" xml:space="preserve">
-    <value>{0} S</value>
+    <value>{0} V</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
     <value>MULTIPLAYER</value>
@@ -1723,7 +1723,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Frit valg af mods</value>
   </data>
   <data name="Screen_Multiplayer_FreeRate" xml:space="preserve">
-    <value>Fri rate </value>
+    <value>Frit valg af hastighed</value>
   </data>
   <data name="Screen_Multiplayer_EnablePreview" xml:space="preserve">
     <value>Slå forhåndsvisning til</value>
@@ -1747,7 +1747,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Lang node %-interval</value>
   </data>
   <data name="Screen_Multiplayer_StartMatch" xml:space="preserve">
-    <value>START RUNDE</value>
+    <value>START KAMP</value>
   </data>
   <data name="Screen_Multiplayer_ReadyUp" xml:space="preserve">
     <value>GØR PARAT</value>
@@ -1780,7 +1780,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>IKKE PARAT</value>
   </data>
   <data name="Screen_Multiplayer_CancelMatchStart" xml:space="preserve">
-    <value>Afbryd runde start</value>
+    <value>Afbryd kampstart</value>
   </data>
   <data name="Screen_Multiplayer_Modifiers" xml:space="preserve">
     <value>Modifikationer </value>
@@ -1798,10 +1798,10 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Du kan ikke skifte hold mens nedtællingen er i gang</value>
   </data>
   <data name="Screen_Multiplayer_ViewProfile" xml:space="preserve">
-    <value>Se Profil</value>
+    <value>Se profil</value>
   </data>
   <data name="Screen_Multiplayer_SteamProfile" xml:space="preserve">
-    <value>Steam Profil</value>
+    <value>Steamprofil</value>
   </data>
   <data name="Screen_Multiplayer_KickPlayer" xml:space="preserve">
     <value>Smid spiller ud</value>
@@ -1810,7 +1810,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Gør til vært</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeamWithTeam" xml:space="preserve">
-    <value>Ændre Hold ({0})</value>
+    <value>Skift hold ({0})</value>
   </data>
   <data name="Screen_Multiplayer_Close" xml:space="preserve">
     <value>Luk</value>
@@ -1822,7 +1822,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Loader...</value>
   </data>
   <data name="Screen_Multiplayer_Wins" xml:space="preserve">
-    <value>{0} sejre</value>
+    <value>{0} Vundet</value>
   </data>
   <data name="Screen_Multiplayer_Referee" xml:space="preserve">
     <value>Dommer</value>
@@ -2008,13 +2008,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Sværhedsgradsinterval</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
-    <value>Any</value>
+    <value>Ikke indstillet</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
-    <value>Any</value>
+    <value>Ingen</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
-    <value>Any</value>
+    <value>Ikke indstillet</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
     <value>Lang node %-interval</value>
