@@ -1328,31 +1328,31 @@
     <value>10K</value>
   </data>
   <data name="Screen_Options_VideoSettings" xml:space="preserve">
-    <value>Video Settings</value>
+    <value>视频设置</value>
   </data>
   <data name="Screen_Options_AudioSettings" xml:space="preserve">
-    <value>Audio Settings</value>
+    <value>音频设置</value>
   </data>
   <data name="Screen_Options_LanguageSettings" xml:space="preserve">
-    <value>Language Settings</value>
+    <value>语言设置</value>
   </data>
   <data name="Screen_Options_GameplaySettings" xml:space="preserve">
-    <value>Gameplay Settings</value>
+    <value>游戏设置</value>
   </data>
   <data name="Screen_Options_SkinSettings" xml:space="preserve">
-    <value>Skin Settings</value>
+    <value>皮肤设置</value>
   </data>
   <data name="Screen_Options_InputSettings" xml:space="preserve">
-    <value>Input Settings</value>
+    <value>输入设置</value>
   </data>
   <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
-    <value>Game Mode Specific Settings</value>
+    <value>游戏模式特定设置</value>
   </data>
   <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
-    <value>Miscellaneous Settings</value>
+    <value>杂项设置</value>
   </data>
   <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>高级设置</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} 个结果</value>
@@ -2008,13 +2008,13 @@
     <value>难度区间</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
-    <value>Any</value>
+    <value>任意</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
-    <value>Any</value>
+    <value>任意</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
-    <value>Any</value>
+    <value>任意</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
     <value>长条比例%范围</value>
