@@ -24,6 +24,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Skinning.Menus;
+using SkiaSharp;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
@@ -815,13 +816,36 @@ namespace Quaver.Shared.Skinning
                 if (!validExtensions.Contains(Path.GetExtension(f).ToLower()))
                     continue;
 
-                if (!ImageHelper.TryGetDimensions(f, out var width, out var height))
+                if (!TryGetImageDimensions(f, out var width, out var height))
                     continue;
 
                 if (width > 2560 || height > 1440)
                     continue;
 
                 BackgroundPaths.Add(f);
+            }
+        }
+
+        private static bool TryGetImageDimensions(string path, out int width, out int height)
+        {
+            width = 0;
+            height = 0;
+
+            try
+            {
+                using (var codec = SKCodec.Create(path))
+                {
+                    if (codec == null)
+                        return false;
+
+                    width = codec.Info.Width;
+                    height = codec.Info.Height;
+                    return width > 0 && height > 0;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
