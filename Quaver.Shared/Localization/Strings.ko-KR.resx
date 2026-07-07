@@ -379,7 +379,7 @@
     <value>랜덤</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked Status</value>
+    <value>랭크 여부</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
     <value>랭킹:</value>
@@ -409,7 +409,7 @@
     <value>출처</value>
   </data>
   <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
-    <value>There is currently no map selected!</value>
+    <value>선택된 맵이 없습니다!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
     <value>이 맵은 랭크맵이 아닙니다!</value>
@@ -445,7 +445,7 @@
     <value>현재 모드 설정으로는 이 점수를 넘을 수 없습니다!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
-    <value>Your map is outdated. Please update it!</value>
+    <value>이 맵은 수정됐네요. 업데이트 해보세요!</value>
   </data>
   <data name="Screen_Options_Video" xml:space="preserve">
     <value>화면</value>
@@ -535,10 +535,10 @@
     <value>게임플레이 유저 정보</value>
   </data>
   <data name="Screen_Options_SongSelection" xml:space="preserve">
-    <value>Song Selection</value>
+    <value>곡 선택</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>편집</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
     <value>Misc</value>
@@ -547,34 +547,34 @@
     <value>Navigation &amp; Maintenance</value>
   </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
-    <value>Installed Games</value>
+    <value>설치된 게임</value>
   </data>
   <data name="Screen_Options_Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>알림</value>
   </data>
   <data name="Screen_Options_SongSelect" xml:space="preserve">
     <value>곡 선택</value>
   </data>
   <data name="Screen_Options_ScreenResolution" xml:space="preserve">
-    <value>Screen Resolution</value>
+    <value>해상도</value>
   </data>
   <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
-    <value>Enable Fullscreen</value>
+    <value>전체화면 켜기</value>
   </data>
   <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
-    <value>Enable Borderless Window</value>
+    <value>창없는 윈도우 켜기</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
-    <value>Frame Limiter</value>
+    <value>프레임 제한</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
-    <value>Set Custom FPS</value>
+    <value>커스텀 FPS 설정</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
-    <value>Display FPS Counter</value>
+    <value>FPS 카운터 켜기</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
-    <value>Audio Output Device</value>
+    <value>소리 출력장치</value>
   </data>
   <data name="Screen_Options_MasterVolume" xml:space="preserve">
     <value>전체 소리</value>
@@ -595,7 +595,7 @@
     <value>효과음</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>뒤로가기</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
     <value>재시작</value>
@@ -604,16 +604,16 @@
     <value>다시보기</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
-    <value>Export Replay</value>
+    <value>다시보기 추출</value>
   </data>
   <data name="Screen_Results_FixOffset" xml:space="preserve">
     <value>오프셋 수정</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
-    <value>Convert Score</value>
+    <value>점수 변환</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Please wait! Your score is already being converted!</value>
+    <value> 기다려주세요! 이미 점수가 변환되는 중입니다!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
     <value>Overview</value>
@@ -625,25 +625,25 @@
     <value>맵 제작자:</value>
   </data>
   <data name="Screen_Results_Playedby" xml:space="preserve">
-    <value>Played by</value>
+    <value>플레이어:</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
-    <value>on {0} @ {1}</value>
+    <value>on {0} {1}</value>
   </data>
   <data name="Screen_Results_JudgementPreset" xml:space="preserve">
-    <value>Judgement Preset:</value>
+    <value>현재 판정:</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
     <value>그래프:</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
-    <value>Deviance</value>
+    <value>편차</value>
   </data>
   <data name="Screen_Results_Accuracy" xml:space="preserve">
     <value>정확도</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
-    <value>Health</value>
+    <value>체력</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
     <value>Rating</value>
@@ -681,7 +681,7 @@ show the performance if all subsequent hits had been
 Marvelous instead.</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
-    <value>SUBMITTING SCORE...</value>
+    <value>점수 제출중...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
     <value>세계 순위</value>
@@ -699,7 +699,7 @@ Marvelous instead.</value>
     <value>UNRANKED GAMEMODE</value>
   </data>
   <data name="Screen_Results_Matchplayedon" xml:space="preserve">
-    <value>Match played on {0} @ {1}</value>
+    <value>{0} {1} 에 이뤄진 매치</value>
   </data>
   <data name="Screen_Results_FreeForAll" xml:space="preserve">
     <value>Free For All</value>
@@ -717,7 +717,7 @@ Marvelous instead.</value>
     <value>레드 팀</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
-    <value>has won the match!</value>
+    <value>이(가) 이겼습니다!</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Grade</value>
@@ -780,16 +780,16 @@ Marvelous instead.</value>
     <value>FIX LOCAL OFFSET</value>
   </data>
   <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
-    <value>Your local offset for this map will be changed from {0} ms to {1} ms.</value>
+    <value>이 맵의 로컬 오프셋이 {0} ms에서 {1}ms로 바뀔 것입니다.</value>
   </data>
   <data name="Screen_Results_Localoffsetset" xml:space="preserve">
-    <value>Local offset for this map was set to {0} ms.</value>
+    <value>이 맵의 로컬 오프셋이 {0} ms로 설정됐습니다.</value>
   </data>
   <data name="Screen_Results_FailedtosavelocalscoretothedatabasePleasecheckthelogs" xml:space="preserve">
-    <value>Failed to save local score to the database. Please check the logs!</value>
+    <value>로컬 점수를 데이터베이스에 저장하지 못했습니다. 로그를 확인해주세요!</value>
   </data>
   <data name="Screen_Results_TherewasanerrorwhensavingyourreplayCheckRuntimelogformoredetails" xml:space="preserve">
-    <value>There was an error when saving your replay. Check Runtime.log for more details.</value>
+    <value>리플레이를 저장하는데 문제가 생겼습니다. Runtime.log에서 문제를 확인해보세요.</value>
   </data>
   <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
     <value>There is no replay data available to convert this score!</value>
@@ -798,49 +798,49 @@ Marvelous instead.</value>
     <value>Global Audio Offset</value>
   </data>
   <data name="Screen_Options_VisualOffset" xml:space="preserve">
-    <value>Visual Offset</value>
+    <value>출력 오프셋</value>
   </data>
   <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
-    <value>Calibrate Offset</value>
+    <value>보정된 오프셋</value>
   </data>
   <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
-    <value>Pitch Audio With Playback Rate</value>
+    <value>배속에 따른 피치 조절</value>
   </data>
   <data name="Screen_Options_BackgroundBrightness" xml:space="preserve">
-    <value>Background Brightness</value>
+    <value>배경 밝기</value>
   </data>
   <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
-    <value>Long Note Shrink Amount</value>
+    <value>롱노트 축소 정도</value>
   </data>
   <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
-    <value>Enable Hitsounds</value>
+    <value>효과음 켜기</value>
   </data>
   <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
-    <value>Enable Long Note Release Hitsounds</value>
+    <value>롱노트 땔때 효과음 켜기</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
     <value>Enable Keysounds</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
-    <value>Enable Tap To Pause</value>
+    <value>빠른 정지 켜기</value>
   </data>
   <data name="Screen_Options_EnableTapToRestart" xml:space="preserve">
-    <value>Enable Tap To Restart</value>
+    <value>빠른 재시작 켜기</value>
   </data>
   <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
-    <value>Skip Results Screen After Quitting</value>
+    <value>플레이 도중에 나가면 결과창 건너뛰기</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
-    <value>Lock Windows Key during gameplay</value>
+    <value>플레이 도중 윈도우키 잠금</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
     <value>Display Timing Lines</value>
   </data>
   <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
-    <value>Display Hit Bubbles</value>
+    <value>히트버블 켜기</value>
   </data>
   <data name="Screen_Options_DisplayJudgementCounter" xml:space="preserve">
-    <value>Display Judgement Counter</value>
+    <value>판정 카운터 켜기</value>
   </data>
   <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
     <value>Display Scoreboard</value>
@@ -873,7 +873,7 @@ Marvelous instead.</value>
     <value>커스텀 스킨</value>
   </data>
   <data name="Screen_Options_CoopPlayer2Skin" xml:space="preserve">
-    <value>Co-op Player 2 Skin</value>
+    <value>Co-op 플레이어2 스킨</value>
   </data>
   <data name="Screen_Options_DefaultSkin" xml:space="preserve">
     <value>기본 스킨</value>
@@ -1092,241 +1092,241 @@ Marvelous instead.</value>
     <value>Search for options...</value>
   </data>
   <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>1K Gameplay Layout</value>
+    <value>1K 키 배치</value>
   </data>
   <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>1K Scroll Speed</value>
+    <value>1K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>1K Scroll Direction</value>
+    <value>1K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>1K Scratch Layout</value>
+    <value>1K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 1K Scratch Lane On Left</value>
+    <value>1K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
-    <value>1K Co-op Layout</value>
+    <value>1K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
-    <value>Prioritized 1K Difficulty</value>
+    <value>1K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
     <value>1K</value>
   </data>
   <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
-    <value>2K Gameplay Layout</value>
+    <value>2K 키 배치</value>
   </data>
   <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>2K Scroll Speed</value>
+    <value>2K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2K Scroll Direction</value>
+    <value>2K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
-    <value>2K Scratch Layout</value>
+    <value>2K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 2K Scratch Lane On Left</value>
+    <value>2K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
-    <value>2K Co-op Layout</value>
+    <value>2K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Prioritized 2K Difficulty</value>
+    <value>2K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
     <value>2K</value>
   </data>
   <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
-    <value>3K Gameplay Layout</value>
+    <value>3K 키 배치</value>
   </data>
   <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>3K Scroll Speed</value>
+    <value>3K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>3K Scroll Direction</value>
+    <value>3K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
-    <value>3K Scratch Layout</value>
+    <value>3K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 3K Scratch Lane On Left</value>
+    <value>3K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
-    <value>3K Co-op Layout</value>
+    <value>3K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
-    <value>Prioritized 3K Difficulty</value>
+    <value>3K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
     <value>3K</value>
   </data>
   <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
-    <value>4K Gameplay Layout</value>
+    <value>4K 키 배치</value>
   </data>
   <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>4K Scroll Speed</value>
+    <value>4K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>4K Scroll Direction</value>
+    <value>4K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
-    <value>4K Scratch Layout</value>
+    <value>4K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 4K Scratch Lane On Left</value>
+    <value>4K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>4K Co-op Layout</value>
+    <value>4K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Prioritized 4K Difficulty</value>
+    <value>4K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
     <value>4K</value>
   </data>
   <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
-    <value>5K Gameplay Layout</value>
+    <value>5K 키 배치</value>
   </data>
   <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>5K Scroll Speed</value>
+    <value>5K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>5K Scroll Direction</value>
+    <value>5K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
-    <value>5K Scratch Layout</value>
+    <value>5K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 5K Scratch Lane On Left</value>
+    <value>5K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
-    <value>5K Co-op Layout</value>
+    <value>5K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
-    <value>Prioritized 5K Difficulty</value>
+    <value>5K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
     <value>5K</value>
   </data>
   <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
-    <value>6K Gameplay Layout</value>
+    <value>6K 키 배치</value>
   </data>
   <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>6K Scroll Speed</value>
+    <value>6K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>6K Scroll Direction</value>
+    <value>6K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
-    <value>6K Scratch Layout</value>
+    <value>6K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 6K Scratch Lane On Left</value>
+    <value>6K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
-    <value>6K Co-op Layout</value>
+    <value>6K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
-    <value>Prioritized 6K Difficulty</value>
+    <value>6K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
     <value>6K</value>
   </data>
   <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
-    <value>7K Gameplay Layout</value>
+    <value>7K 키 배치</value>
   </data>
   <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>7K Scroll Speed</value>
+    <value>7K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>7K Scroll Direction</value>
+    <value>7K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
-    <value>7K Scratch Layout</value>
+    <value>7K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 7K Scratch Lane On Left</value>
+    <value>7K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
-    <value>7K Co-op Layout</value>
+    <value>7K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
-    <value>Prioritized 7K Difficulty</value>
+    <value>7K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
     <value>7K</value>
   </data>
   <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
-    <value>8K Gameplay Layout</value>
+    <value>8K 키 배치</value>
   </data>
   <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>8K Scroll Speed</value>
+    <value>8K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>8K Scroll Direction</value>
+    <value>8K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
-    <value>8K Scratch Layout</value>
+    <value>8K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 8K Scratch Lane On Left</value>
+    <value>8K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
-    <value>8K Co-op Layout</value>
+    <value>8K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
-    <value>Prioritized 8K Difficulty</value>
+    <value>8K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
     <value>8K</value>
   </data>
   <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
-    <value>9K Gameplay Layout</value>
+    <value>9K 키 배치</value>
   </data>
   <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>9K Scroll Speed</value>
+    <value>9K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>9K Scroll Direction</value>
+    <value>9K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
-    <value>9K Scratch Layout</value>
+    <value>9K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 9K Scratch Lane On Left</value>
+    <value>9K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
-    <value>9K Co-op Layout</value>
+    <value>9K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
-    <value>Prioritized 9K Difficulty</value>
+    <value>9K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
     <value>9K</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>10K Gameplay Layout</value>
+    <value>10K 키 배치</value>
   </data>
   <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>10K Scroll Speed</value>
+    <value>10K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>10K Scroll Direction</value>
+    <value>10K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
-    <value>10K Scratch Layout</value>
+    <value>10K 스크래치 키 배치</value>
   </data>
   <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 10K Scratch Lane On Left</value>
+    <value>10K 스크래치 레인을 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
-    <value>10K Co-op Layout</value>
+    <value>10K Co-op 키 배치</value>
   </data>
   <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
-    <value>Prioritized 10K Difficulty</value>
+    <value>10K 난이도를 우선순위로 하기</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10K</value>
@@ -1913,7 +1913,7 @@ for other players to download?</value>
     <value>팀</value>
   </data>
   <data name="Screen_MultiplayerLobby_ModeLabel" xml:space="preserve">
-    <value>모드:</value>
+    <value>모드: </value>
   </data>
   <data name="Screen_MultiplayerLobby_4Keys" xml:space="preserve">
     <value>4K</value>
