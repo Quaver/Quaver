@@ -65,12 +65,8 @@ namespace Quaver.Shared.Graphics.Buttons
         /// </summary>
         public bool PerformHoverFade { get; set; } = true;
 
-        /// <summary>
-        /// </summary>
         public Sprite Icon { get; private set; }
 
-        /// <summary>
-        /// </summary>
         public SpriteTextPlus Label { get; private set; }
 
         /// <summary>
