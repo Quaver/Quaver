@@ -21,6 +21,10 @@ namespace Quaver.Shared.Screens.Options.Sections
 
         /// <summary>
         /// </summary>
+        public string LocalizationLabel { get; }
+
+        /// <summary>
+        /// </summary>
         public List<OptionsSubcategory> Subcategories { get; }
 
         /// <summary>
@@ -30,6 +34,7 @@ namespace Quaver.Shared.Screens.Options.Sections
         /// <param name="subcategories"></param>
         public OptionsSection(string name, Texture2D icon, List<OptionsSubcategory> subcategories, Vector2? iconSize = null)
         {
+            LocalizationLabel = name;
             Name = OptionsLocalization.Get(name);
             Icon = icon;
             IconSize = iconSize;
