@@ -3,7 +3,8 @@
 	url = https://github.com/Quaver/Quaver.API
 [submodule "Quaver.Resources"]
 	path = Quaver.Resources
-	url = https://github.com/Quaver/Quaver.Resources
+	url = https://github.com/TDMG-NL/Quaver.Resources
+	branch = new-buttons
 [submodule "Wobble"]
 	path = Wobble
 	url = https://github.com/Quaver/Wobble
