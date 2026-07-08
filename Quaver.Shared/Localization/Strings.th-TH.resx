@@ -199,7 +199,7 @@
     <value>การกดปุ่ม F3/F4 ในระหว่างเกมการเล่นจะเปลี่ยนอัตราเร็วในการเลื่อน</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
-    <value>Your offset can be calibrated in the options menu.</value>
+    <value>คุณสามารถปรับค่า Offset ได้ในเมนูการตั้งค่า</value>
   </data>
   <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
     <value>Standard* is the default judgement window preset.</value>
@@ -274,7 +274,7 @@
     <value>จัดกลุ่มตาม:</value>
   </data>
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
-    <value>Highest Rated Score</value>
+    <value>คะแนนที่มีค่าคะแนนประสิทธิภาพสูงสุด</value>
   </data>
   <data name="Screen_Selection_Leaderboard" xml:space="preserve">
     <value>กระดานจัดอันดับ</value>
@@ -295,13 +295,13 @@
     <value>% โน้ตยาว</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
-    <value>แมพที่พบ</value>
+    <value>แมพที่ค้นเจอ</value>
   </data>
   <data name="Screen_Selection_MapsFound" xml:space="preserve">
-    <value>แมพที่พบ</value>
+    <value>แมพที่ค้นเจอ</value>
   </data>
   <data name="Screen_Selection_MarvelousPerfectRatio" xml:space="preserve">
-    <value>Marvelous/Perfect Ratio</value>
+    <value>อัตราส่วนระหว่าง Marvelous/Perfect</value>
   </data>
   <data name="Screen_Selection_MaxCombo" xml:space="preserve">
     <value>คอมโบสูงสุด</value>
@@ -385,22 +385,22 @@
     <value>การจัดอันดับ:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Rate</value>
+    <value>ความเร็ว</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
     <value>เล่นล่าสุด</value>
   </data>
   <data name="Screen_Selection_ResultFound" xml:space="preserve">
-    <value>Result Found</value>
+    <value>ผลการค้นหา</value>
   </data>
   <data name="Screen_Selection_ResultsFound" xml:space="preserve">
-    <value>Results Found</value>
+    <value>ผลการค้นหา</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
     <value>คะแนนในแมพนี้จะไม่ถูกจัดอันดับ!</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
-    <value>SELECT:</value>
+    <value>เลือก:</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
     <value>เรียงตาม:</value>
@@ -415,7 +415,7 @@
     <value>แมพนี้ไม่จัดอันดับ!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
-    <value>This map is not submitted online!</value>
+    <value>แมพนี้ไม่ได้อยู่ในระบบออนไลน์!</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
     <value>จำนวนครั้งที่เล่น</value>
@@ -445,10 +445,10 @@
     <value>คุณไม่สามารถทำคะแนนให้ดีกว่านี้ด้วยตัวดัดแปลงที่ใช้อยู่ได้!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
-    <value>Your map is outdated. Please update it!</value>
+    <value>แมพนี้เป็นเวอร์ชันเก่า โปรดอัปเดตเป็นเวอร์ชันล่าสุด!</value>
   </data>
   <data name="Screen_Options_Video" xml:space="preserve">
-    <value>Video</value>
+    <value>ภาพ</value>
   </data>
   <data name="Screen_Options_Audio" xml:space="preserve">
     <value>เสียง</value>
@@ -463,7 +463,7 @@
     <value>สกิน</value>
   </data>
   <data name="Screen_Options_Input" xml:space="preserve">
-    <value>Input</value>
+    <value>อินพุต</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
     <value>เฉพาะเกมโหมด</value>
@@ -475,16 +475,16 @@
     <value>ขั้นสูง</value>
   </data>
   <data name="Screen_Options_Window" xml:space="preserve">
-    <value>Window</value>
+    <value>หน้าต่าง</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
-    <value>Frame Time</value>
+    <value>เวลาต่อเฟรม</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
-    <value>Output</value>
+    <value>เอาต์พุต</value>
   </data>
   <data name="Screen_Options_Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>ระดับเสียง</value>
   </data>
   <data name="Screen_Options_Offset" xml:space="preserve">
     <value>Offset</value>
@@ -493,13 +493,13 @@
     <value>เอฟเฟกต์</value>
   </data>
   <data name="Screen_Options_Localization" xml:space="preserve">
-    <value>Localization</value>
+    <value>การแปลภาษา</value>
   </data>
   <data name="Screen_Options_Background" xml:space="preserve">
     <value>พื้นหลัง</value>
   </data>
   <data name="Screen_Options_Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>ภาพ</value>
   </data>
   <data name="Screen_Options_Sound" xml:space="preserve">
     <value>เสียง</value>
@@ -508,7 +508,7 @@
     <value>User Interface</value>
   </data>
   <data name="Screen_Options_Scoreboard" xml:space="preserve">
-    <value>Scoreboard</value>
+    <value>กระดานคะแนน</value>
   </data>
   <data name="Screen_Options_ProgressBar" xml:space="preserve">
     <value>Progress Bar</value>
@@ -559,10 +559,10 @@
     <value>ความละเอียดหน้าจอ</value>
   </data>
   <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
-    <value>Enable Fullscreen</value>
+    <value>เปิดเต็มจอ</value>
   </data>
   <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
-    <value>Enable Borderless Window</value>
+    <value>เปิดหน้าต่างไร้ขอบ</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
     <value>Frame Limiter</value>
@@ -571,7 +571,7 @@
     <value>ตั้งค่า FPS แบบกำหนดเอง</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
-    <value>Display FPS Counter</value>
+    <value>แสดงค่า FPS</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
     <value>Audio Output Device</value>
@@ -634,13 +634,13 @@
     <value>Judgement Preset:</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
-    <value>GRAPH:</value>
+    <value>กราฟ:</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>Deviance</value>
   </data>
   <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Accuracy</value>
+    <value>ความแม่นยำ</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Health</value>
@@ -1384,10 +1384,10 @@ for the selected game mode?</value>
     <value>Type to search...</value>
   </data>
   <data name="Screen_Download_MAPSETSFOUND" xml:space="preserve">
-    <value>MAPSETS FOUND</value>
+    <value>แมพเซตที่ค้นเจอ</value>
   </data>
   <data name="Screen_Download_MAPSETFOUND" xml:space="preserve">
-    <value>MAPSET FOUND</value>
+    <value>แมพเซตที่ค้นเจอ</value>
   </data>
   <data name="Screen_Download_STATUS" xml:space="preserve">
     <value>STATUS: </value>
@@ -1501,9 +1501,9 @@ for the selected game mode?</value>
     <value>No Song Selected</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>To begin downloading, double-click on a song.
-Clicking once will allow you to preview the audio.
-You can use the filters below to narrow down your search.</value>
+    <value>คลิกที่เพลงสองครั้งเพื่อดาวน์โหลด
+คลิกหนึ่งครั้งจะเล่นตัวอย่างของเพลง
+คุณสามารถใช้ตัวกรองด้านล่างเพื่อช่วยค้นหาได้</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
     <value>End Date</value>
@@ -1630,7 +1630,7 @@ sure you would like to start without all players ready?</value>
     <value>Select Map</value>
   </data>
   <data name="Screen_Multi_Modifiers" xml:space="preserve">
-    <value>Modifiers</value>
+    <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Multi_Leaderboard" xml:space="preserve">
     <value>Leaderboard</value>
@@ -1790,7 +1790,7 @@ for other players to download?</value>
     <value>CANCEL MATCH START</value>
   </data>
   <data name="Screen_Multiplayer_Modifiers" xml:space="preserve">
-    <value>Modifiers</value>
+    <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMods" xml:space="preserve">
     <value>Please wait until the match finishes before selecting mods.</value>
@@ -1937,97 +1937,97 @@ for other players to download?</value>
     <value>ROOM VISIBILITY: </value>
   </data>
   <data name="Screen_MultiplayerLobby_Open" xml:space="preserve">
-    <value>Open</value>
+    <value>เปิด</value>
   </data>
   <data name="Screen_MultiplayerLobby_Full" xml:space="preserve">
-    <value>Full</value>
+    <value>เต็ม</value>
   </data>
   <data name="Screen_MultiplayerLobby_Password" xml:space="preserve">
-    <value>Password</value>
+    <value>รหัสผ่าน</value>
   </data>
   <data name="Screen_MultiplayerLobby_GamesFound" xml:space="preserve">
-    <value>GAMES FOUND</value>
+    <value>เกมที่ค้นเจอ</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameFound" xml:space="preserve">
-    <value>GAME FOUND</value>
+    <value>เกมที่ค้นเจอ</value>
   </data>
   <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
-    <value>Search for games...</value>
+    <value>ค้นหาห้อง...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateGame" xml:space="preserve">
-    <value>CREATE GAME</value>
+    <value>สร้างห้อง</value>
   </data>
   <data name="Screen_MultiplayerLobby_QuickMatch" xml:space="preserve">
-    <value>Quick Match</value>
+    <value>แมตช์ด่วน</value>
   </data>
   <data name="Screen_MultiplayerLobby_NoAvailableOpenGames" xml:space="preserve">
-    <value>There are no available open games to join.</value>
+    <value>ไม่มีห้องที่สามารถเข้าได้</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterGamePasswordTitle" xml:space="preserve">
-    <value>ENTER GAME PASSWORD</value>
+    <value>ใส่รหัสผ่านห้อง</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterGamePasswordMessage" xml:space="preserve">
-    <value>Enter the password to join the multiplayer game...</value>
+    <value>ใส่รหัสผ่านเพื่อเข้าห้องผู้เล่นหลายคน...</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterPasswordPlaceholder" xml:space="preserve">
-    <value>Enter password...</value>
+    <value>ใส่รหัสผ่าน...</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameTitle" xml:space="preserve">
-    <value>JOINING GAME</value>
+    <value>กำลังเข้าห้อง</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameMessage" xml:space="preserve">
-    <value>Connecting to multiplayer game. Please wait...</value>
+    <value>กำลังเชื่อมต่อกับห้องผู้เล่นหลายคน โปรดรอสักครู่...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameTitle" xml:space="preserve">
-    <value>CREATE MULTIPLAYER GAME</value>
+    <value>สร้างห้องผู้เล่นหลายคน</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameMessage" xml:space="preserve">
-    <value>Fill in the details to create a multiplayer game...</value>
+    <value>ใส่รายละเอียดเพื่อสร้างห้องผู้เล่นหลายคน</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameName" xml:space="preserve">
-    <value>Game Name</value>
+    <value>ชื่อห้อง</value>
   </data>
   <data name="Screen_MultiplayerLobby_ChooseGameNamePlaceholder" xml:space="preserve">
-    <value>Choose a name for the game...</value>
+    <value>เลือกชื่อห้อง...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CannotCreateGameWithoutMap" xml:space="preserve">
-    <value>You cannot create a game without having a map selected!</value>
+    <value>คุณไม่สามารถสร้างห้องได้ถ้าไม่ได้เลือกแมพ!</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayersLabel" xml:space="preserve">
-    <value>MAX PLAYERS: </value>
+    <value>ผู้เล่นสูงสุด: </value>
   </data>
   <data name="Screen_MultiplayerLobby_LoseALifeUponFailing" xml:space="preserve">
-    <value>Lose A Life Upon Failing</value>
+    <value>ลดจำนวนชีวิตเมื่อล้มเหลว</value>
   </data>
   <data name="Screen_MultiplayerLobby_Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>ใช่</value>
   </data>
   <data name="Screen_MultiplayerLobby_No" xml:space="preserve">
-    <value>No</value>
+    <value>ไม่</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeMod" xml:space="preserve">
-    <value>Free Mod</value>
+    <value>เลือกตัวดัดแปลงได้อิสระ</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeRate" xml:space="preserve">
-    <value>Free Rate</value>
+    <value>เลือกความเร็วได้อิสระ</value>
   </data>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
-    <value>Difficulty Range</value>
+    <value>ช่วงระดับความยาก</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
-    <value>Any</value>
+    <value>ได้หมด</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
-    <value>Any</value>
+    <value>ได้หมด</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
-    <value>Any</value>
+    <value>ได้หมด</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
-    <value>Long Note % Range</value>
+    <value>ช่วง % โน้ตยาว</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnablePreview" xml:space="preserve">
-    <value>Enable Preview</value>
+    <value>เปิดตัวอย่าง</value>
   </data>
   <data name="Screen_MultiplayerLobby_AutoHost" xml:space="preserve">
     <value>Auto Host</value>
@@ -2054,9 +2054,9 @@ for other players to download?</value>
     <value>Host Rotation</value>
   </data>
   <data name="Screen_MultiplayerLobby_LifeCount" xml:space="preserve">
-    <value>Life Count</value>
+    <value>จำนวนชีวิต</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaximumSongLength" xml:space="preserve">
-    <value>Maximum Song Length</value>
+    <value>ความยาวเพลงสูงสุด</value>
   </data>
 </root>
