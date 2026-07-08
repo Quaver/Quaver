@@ -1,6 +1,8 @@
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
 {
@@ -10,7 +12,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
             MultiLocalization.Get("UploadUnsubmittedMapsetConfirmMessage"),
             () => DialogManager.Show(new UploadMultiplayerMapsetLoadingDialog()))
         {
-            YesButton.Image = UserInterface.MultiplayerUploadMapset;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "UPLOAD MAPSET", 20, Color.White);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Quaver.Shared.Graphics.Buttons
         public SpriteTextPlus Label { get; private set; }
 
         /// <inheritdoc />
-        public RoundedButton(EventHandler clickAction = null) : base(clickAction) { }
+        public RoundedButton(EventHandler clickAction = null) : base(clickAction) => SetChildrenAlpha = true;
 
         /// <summary>
         ///     Creates/updates the icon child, laying content back out afterwards.

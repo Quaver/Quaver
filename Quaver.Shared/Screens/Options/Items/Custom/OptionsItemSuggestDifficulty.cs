@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 Tint = ColorHelper.HexToColor("#0FBAE5")
             };
 
-            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CALIBRATE", 16, Color.White);
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CALIBRATE", 20, Color.White);
 
             Button.Clicked += (sender, args) =>
             {

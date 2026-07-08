@@ -42,11 +42,11 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
-                Size = new ScalableVector2(215 * scale, 36 * scale),
+                Size = new ScalableVector2(215 * scale + 5, 36 * scale + 5),
                 Tint = ColorHelper.HexToColor("#0FBAE5")
             };
 
-            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CALIBRATE", 16, Color.White);
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CALIBRATE", 20, Color.White);
 
             Button.Clicked += (sender, args) =>
             {

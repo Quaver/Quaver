@@ -1,21 +1,24 @@
 using System;
 using System.IO;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class EditorChangeBackgroundDialog : YesNoDialog
     {
-        private IconButton BannerButton { get; }
+        private RoundedButton BannerButton { get; }
 
         /// <param name="screen"></param>
         /// <param name="file"></param>
@@ -23,20 +26,23 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         public EditorChangeBackgroundDialog(EditScreen screen, string file) : base("CHANGE BACKGROUND / BANNER",
             $"Would you like to change the background or the banner?")
         {
-            YesButton.Image = UserInterface.EditorBackgroundButton;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "BACKGROUND", 20, Color.White);
             YesAction += () => ChangeBackground(screen, file);
 
             const float scale = 0.90f;
             YesButton.Size = new ScalableVector2(YesButton.Width * scale, YesButton.Height * scale);
             NoButton.Size = new ScalableVector2(NoButton.Width * scale, NoButton.Height * scale);
 
-            BannerButton = new IconButton(UserInterface.EditorBannerButton, (sender, args) => ChangeBanner(screen, file))
+            BannerButton = new RoundedButton((sender, args) => ChangeBanner(screen, file))
             {
                 Parent = Panel,
                 Size = YesButton.Size,
                 Alignment = Alignment.BotCenter,
                 Y = YesButton.Y,
+                Tint = ConfirmColor
             };
+
+            BannerButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "BANNER", 20, Color.White);
 
             YesButton.X -= 80;
             NoButton.X = -YesButton.X;
@@ -47,7 +53,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         public override void Close()
         {
             BannerButton.IsClickable = false;
-            BannerButton.IsPerformingFadeAnimations = false;
+            BannerButton.PerformHoverFade = false;
             base.Close();
         }
 

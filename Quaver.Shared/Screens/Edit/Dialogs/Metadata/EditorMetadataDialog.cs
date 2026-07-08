@@ -11,8 +11,10 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -60,9 +62,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             Color.White
         );
 
-        private IconButton SyncMetadataButton { get; set; }
-
-        private SpriteTextPlus SyncMetadataText { get; set; }
+        private RoundedButton SyncMetadataButton { get; set; }
 
         private Tooltip SyncMetadataTooltip { get; } = new("Copy all of the metadata from this difficulty to all of the difficulties from this mapset", Color.White);
 
@@ -295,7 +295,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         {
             var canSyncMetadata = CanSyncMetadata();
 
-            SyncMetadataButton = new IconButton(UserInterface.BlankButton, (sender, args) => SyncMetadata())
+            SyncMetadataButton = new RoundedButton((sender, args) => SyncMetadata())
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,
@@ -303,15 +303,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Size = new ScalableVector2(221, 40),
                 SetChildrenAlpha = true,
                 Visible = canSyncMetadata,
-                IsClickable = canSyncMetadata
+                IsClickable = canSyncMetadata,
+                Tint = ColorHelper.HexToColor("#0968AC")
             };
 
-            SyncMetadataText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SYNC METADATA", 18)
-            {
-                Parent = SyncMetadataButton,
-                Alignment = Alignment.MidCenter,
-                TextAlignment = TextAlignment.Center
-            };
+            SyncMetadataButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SYNC METADATA", 20, Color.White);
         }
 
         private bool CanSyncMetadata() => Screen.Map.Mapset?.Maps?.Count >= 2;
