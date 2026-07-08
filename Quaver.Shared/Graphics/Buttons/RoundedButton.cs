@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Graphics.Shaders;
 using Wobble.Graphics;
-using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -21,8 +20,8 @@ namespace Quaver.Shared.Graphics.Buttons
     }
 
     /// <summary>
-    ///     A button with a code-drawn, anti-aliased rounded-rect background (see <see cref="RoundedRectShader"/>)
-    ///     instead of a pre-baked texture, so it never stretch-blurs at arbitrary sizes.
+    ///     A button with a code-generated, anti-aliased rounded-rect background instead of a pre-baked,
+    ///     stretched asset. Exact-size textures are cached so multiple buttons retain normal SpriteBatch batching.
     /// </summary>
     public class RoundedButton : Button
     {
@@ -55,7 +54,7 @@ namespace Quaver.Shared.Graphics.Buttons
             set
             {
                 _cornerRadius = value;
-                UpdateShaderRadius();
+                UpdateBackgroundTexture();
             }
         }
 
@@ -69,25 +68,8 @@ namespace Quaver.Shared.Graphics.Buttons
 
         public SpriteTextPlus Label { get; private set; }
 
-        /// <summary>
-        ///     The shader instance drawing this button's rounded-rect background.
-        /// </summary>
-        private Shader BackgroundShader { get; }
-
         /// <inheritdoc />
-        public RoundedButton(EventHandler clickAction = null) : base(clickAction)
-        {
-            BackgroundShader = RoundedRectShader.Create(0);
-
-            // Scissor test must stay enabled so this still gets clipped when nested inside a
-            // ScrollContainer (which relies on RasterizerState.ScissorTestEnable to confine its content) -
-            // the default SpriteBatchOptions.RasterizerState (CullNone) doesn't enable it.
-            SpriteBatchOptions = new SpriteBatchOptions
-            {
-                Shader = BackgroundShader,
-                RasterizerState = RoundedRectShader.ScissorSafeRasterizerState
-            };
-        }
+        public RoundedButton(EventHandler clickAction = null) : base(clickAction) { }
 
         /// <summary>
         ///     Creates/updates the icon child, laying content back out afterwards.
@@ -98,15 +80,11 @@ namespace Quaver.Shared.Graphics.Buttons
 
             if (Icon == null)
             {
-                // Its own (shader-less) scissor-safe batch: sharing the background's rounded-rect shader
-                // batch would corrupt the icon (the shader's coverage math is sized to the button's
-                // rectangle, not the icon's much smaller one), but it still needs scissor testing enabled
-                // so it respects an ancestor ScrollContainer's clip region like the background does.
                 Icon = new Sprite
                 {
                     Parent = this,
                     Alignment = Alignment.MidCenter,
-                    SpriteBatchOptions = RoundedRectShader.CreateScissorSafeOptions()
+                    UsePreviousSpriteBatchOptions = true
                 };
             }
 
@@ -126,15 +104,9 @@ namespace Quaver.Shared.Graphics.Buttons
                 Label = new SpriteTextPlus(font, text, fontSize)
                 {
                     Parent = this,
-                    Alignment = Alignment.MidCenter
+                    Alignment = Alignment.MidCenter,
+                    UsePreviousSpriteBatchOptions = true
                 };
-
-                // Reuse the icon's scissor-safe batch if there is one, otherwise get its own - either way,
-                // avoid sharing the background's rounded-rect shader batch (see SetIcon for why).
-                if (Icon != null)
-                    Label.UsePreviousSpriteBatchOptions = true;
-                else
-                    Label.SpriteBatchOptions = RoundedRectShader.CreateScissorSafeOptions();
             }
             else
                 Label.Text = text;
@@ -185,18 +157,20 @@ namespace Quaver.Shared.Graphics.Buttons
         protected override void OnRectangleRecalculated()
         {
             base.OnRectangleRecalculated();
-            UpdateShaderSize();
-            UpdateShaderRadius();
+            UpdateBackgroundTexture();
         }
 
-        private void UpdateShaderSize() => RoundedRectShader.UpdateSize(BackgroundShader, new Vector2(Width, Height));
+        private void UpdateBackgroundTexture()
+        {
+            if (Width <= 0 || Height <= 0)
+                return;
 
-        private void UpdateShaderRadius() =>
-            // Radius must never exceed half of the smaller dimension - the SDF in RoundedRectShader
-            // degenerates past that point (see https://github.com/raysan5/raylib/blob/65abee1cbade6bf7edf55da6eb1eed6980aa754b/src/rshapes.c#L706
-            // for the equivalent clamp raylib applies), producing a seam where the two rounded halves
-            // overlap instead of a clean curve.
-            RoundedRectShader.UpdateRadius(BackgroundShader, Math.Min(CornerRadius ?? Height / 2f, Math.Min(Width, Height) / 2f));
+            var radius = Math.Min(CornerRadius ?? Height / 2f, Math.Min(Width, Height) / 2f);
+            var texture = RoundedRectTextureCache.Get(Width, Height, radius);
+
+            if (Image != texture)
+                Image = texture;
+        }
 
         /// <inheritdoc />
         public override void Update(GameTime gameTime)
@@ -204,7 +178,13 @@ namespace Quaver.Shared.Graphics.Buttons
             if (PerformHoverFade)
             {
                 var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-                Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.75f : 1f, (float) Math.Min(dt / 60, 1));
+                var targetAlpha = IsHovered ? 0.75f : 1f;
+
+                if (Alpha != targetAlpha)
+                {
+                    var alpha = MathHelper.Lerp(Alpha, targetAlpha, (float) Math.Min(dt / 60, 1));
+                    Alpha = Math.Abs(alpha - targetAlpha) < 0.001f ? targetAlpha : alpha;
+                }
             }
 
             base.Update(gameTime);
