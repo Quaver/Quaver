@@ -43,6 +43,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                 using (var file = File.OpenText(ConfigPath))
                     config = Deserialize(file);
                 Logger.Debug("Loaded editor key config", LogType.Runtime);
+                config.RemoveLegacyResnapKeybind();
                 config.SaveToConfig(); // Reformat after loading
             }
             catch (YamlException e)
@@ -55,6 +56,16 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
 
             return config;
+        }
+
+        /// <summary>
+        ///     This function is only temporary and should make sure that we remove the old default
+        ///     keybind for Resnaping, as it is now used to switch to mines notes
+        /// </summary>
+        private void RemoveLegacyResnapKeybind()
+        {
+            if (Keybinds.TryGetValue(ResnapToCurrentBeatSnap, out var keybinds))
+                keybinds.Remove(new Keybind(Keys.R));
         }
 
         public KeybindList GetOrDefault(KeybindActions action) => Keybinds.GetValueOrDefault(action, new KeybindList());
@@ -314,7 +325,7 @@ namespace Quaver.Shared.Screens.Edit.Input
             {Save, new KeybindList(new[] {new Keybind(Keys.S), new Keybind(KeyModifiers.Ctrl, Keys.S)})},
             {Deselect, new KeybindList(new[] {new Keybind(Keys.D), new Keybind(KeyModifiers.Ctrl, Keys.D)})},
             {ApplyOffsetToMap, new KeybindList()},
-            {ResnapToCurrentBeatSnap, new KeybindList(new[] {new Keybind(KeyModifiers.Ctrl, Keys.R)})},
+            {ResnapToCurrentBeatSnap, new KeybindList(KeyModifiers.Ctrl, Keys.R)},
             {AddBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.B)},
             {SeekToLastBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.Left)},
             {SeekToNextBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.Right)}
