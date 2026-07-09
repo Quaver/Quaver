@@ -125,6 +125,7 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             CreateBackground();
+            MenuBar = new EditorFileMenuBar(EditScreen);
             CreatePlayfield();
             CreateFooter();
             CreateSelector();
@@ -137,8 +138,6 @@ namespace Quaver.Shared.Screens.Edit
 
             if (EditScreen.DisplayGameplayPreview.Value)
                 CreateGameplayPreview();
-
-            MenuBar = new EditorFileMenuBar(EditScreen);
 
             EditScreen.DisplayGameplayPreview.ValueChanged += OnDisplayGameplayPreviewChanged;
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
@@ -431,12 +430,13 @@ namespace Quaver.Shared.Screens.Edit
             if (MapPreview != null)
                 return;
 
+            var menuBarVirtualY = (int)(EditorFileMenuBar.CurrentHeight / WindowManager.ScreenScale.Y);
             MapPreview = new EditorMapPreview(EditScreen.ActionManager, new Bindable<bool>(false), EditScreen.ActiveLeftPanel,
-                (int)WindowManager.Height - MenuBorder.HEIGHT - 34, EditScreen.Track, EditScreen.WorkingMap)
+                (int)(WindowManager.Height - menuBarVirtualY - EditorFooter.HEIGHT), EditScreen.Track, EditScreen.WorkingMap)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
-                Y = 34,
+                Y = menuBarVirtualY,
             };
 
             var keyCount = ModeHelper.ToKeyCount(EditScreen.WorkingMap.Mode);

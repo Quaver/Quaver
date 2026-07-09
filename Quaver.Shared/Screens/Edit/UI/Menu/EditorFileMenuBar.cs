@@ -59,13 +59,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         public bool IsActive { get; private set; }
 
+        public static float CurrentHeight { get; private set; }
+
 #if VISUAL_TESTS
         private static bool DestroyContext { get; } = false;
 #else
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions(), screen.ImGuiScale) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions(), screen.ImGuiScale)
+        {
+            Screen = screen;
+            CurrentHeight = 14 + 20 * screen.ImGuiScale;
+        }
 
 
         /// <inheritdoc />
@@ -83,6 +89,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 return;
 
             Height = ImGui.GetWindowSize().Y;
+            CurrentHeight = Height;
 
             CreateFileSection();
             CreateEditSection();
