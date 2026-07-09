@@ -27,8 +27,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                     mods = 0;
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Rate, mods);
-                map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
-                ScoreFetcherOnlineMapStatus.UpdateRankedStatus(map);
+                ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
 
                 var scores = new List<Score>();
 

@@ -22,14 +22,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
 
                 if (!OnlineManager.IsDonator)
                 {
-                    ScoreFetcherOnlineMapStatus.UpdateRankedStatus(map);
+                    ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
                     return new FetchedScoreStore(new List<Score>());
                 }
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Friends);
 
-                map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
-                ScoreFetcherOnlineMapStatus.UpdateRankedStatus(map);
+                ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
 
                 var scores = new List<Score>();
 

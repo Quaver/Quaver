@@ -30,9 +30,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                 mods = ModManager.Mods - (long) mods;
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Mods, mods);
-                map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
-                ScoreFetcherOnlineMapStatus.UpdateRankedStatus(map);
 
+                ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
                 var scores = new List<Score>();
 
                 if (onlineScores?.Scores == null)
