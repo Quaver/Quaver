@@ -1390,7 +1390,7 @@ for the selected game mode?</value>
     <value>แมพเซตที่ค้นเจอ</value>
   </data>
   <data name="Screen_Download_STATUS" xml:space="preserve">
-    <value>STATUS: </value>
+    <value>สถานะ: </value>
   </data>
   <data name="Screen_Download_All" xml:space="preserve">
     <value>All</value>
@@ -1530,22 +1530,22 @@ for the selected game mode?</value>
     <value>Min Plays</value>
   </data>
   <data name="Screen_Download_LongNote" xml:space="preserve">
-    <value>Long Note %</value>
+    <value>% โน้ตยาว</value>
   </data>
   <data name="Screen_Download_MaxLN" xml:space="preserve">
-    <value>Max LN%</value>
+    <value>% โน้ตยาวสูงสุด</value>
   </data>
   <data name="Screen_Download_MinLN" xml:space="preserve">
-    <value>Min LN%</value>
+    <value>% โน้ตยาวต่ำสุด</value>
   </data>
   <data name="Screen_Download_LengthSeconds" xml:space="preserve">
-    <value>Length (Seconds)</value>
+    <value>ความยาว (วินาที)</value>
   </data>
   <data name="Screen_Download_MaxLength" xml:space="preserve">
-    <value>Max Length</value>
+    <value>ยาวสุด</value>
   </data>
   <data name="Screen_Download_MinLength" xml:space="preserve">
-    <value>Min Length</value>
+    <value>สั้นสุด</value>
   </data>
   <data name="Screen_Download_SkillLevel" xml:space="preserve">
     <value>Skill Level</value>
@@ -1566,46 +1566,46 @@ for the selected game mode?</value>
     <value>Recommended difficulty</value>
   </data>
   <data name="Screen_Download_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>กลับ</value>
   </data>
   <data name="Screen_Download_Select" xml:space="preserve">
-    <value>Select</value>
+    <value>เลือก</value>
   </data>
   <data name="Screen_Download_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>ดาวน์โหลด</value>
   </data>
   <data name="Screen_Download_OnlineListing" xml:space="preserve">
-    <value>Online Listing</value>
+    <value>รายการออนไลน์</value>
   </data>
   <data name="Screen_Download_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1 คีย์</value>
   </data>
   <data name="Screen_Download_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2 คีย์</value>
   </data>
   <data name="Screen_Download_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3 คีย์</value>
   </data>
   <data name="Screen_Download_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 คีย์</value>
   </data>
   <data name="Screen_Download_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5 คีย์</value>
   </data>
   <data name="Screen_Download_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6 คีย์</value>
   </data>
   <data name="Screen_Download_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 คีย์</value>
   </data>
   <data name="Screen_Download_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8 คีย์</value>
   </data>
   <data name="Screen_Download_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9 คีย์</value>
   </data>
   <data name="Screen_Download_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10 คีย์</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyTitle" xml:space="preserve">
     <value>CONFIRM READY</value>
@@ -1621,13 +1621,13 @@ sure you would like to start without all players ready?</value>
     <value>Are you sure you would like to exit to the lobby?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
-    <value>Leave</value>
+    <value>ออก</value>
   </data>
   <data name="Screen_Multi_Commands" xml:space="preserve">
-    <value>Commands</value>
+    <value>คำสั่ง</value>
   </data>
   <data name="Screen_Multi_SelectMap" xml:space="preserve">
-    <value>Select Map</value>
+    <value>เลือกแมพ</value>
   </data>
   <data name="Screen_Multi_Modifiers" xml:space="preserve">
     <value>ตัวดัดแปลง</value>
@@ -1636,22 +1636,22 @@ sure you would like to start without all players ready?</value>
     <value>Leaderboard</value>
   </data>
   <data name="Screen_Multi_History" xml:space="preserve">
-    <value>History</value>
+    <value>ประวัติ</value>
   </data>
   <data name="Screen_Multi_SwitchTeams" xml:space="preserve">
-    <value>Switch Teams</value>
+    <value>เปลี่ยนทีม</value>
   </data>
   <data name="Screen_Multi_NotReady" xml:space="preserve">
-    <value>Not Ready</value>
+    <value>ไม่พร้อม</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
-    <value>Ready Up</value>
+    <value>เตรียมพร้อม</value>
   </data>
   <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
-    <value>Waiting for the host to start</value>
+    <value>รอให้เจ้าของห้องเริ่ม</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
-    <value>CHANGE GAME NAME</value>
+    <value>เปลี่ยนชื่อห้อง</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
     <value>Enter a new name for the multiplayer game...</value>
@@ -1660,7 +1660,7 @@ sure you would like to start without all players ready?</value>
     <value>Enter a name...</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordTitle" xml:space="preserve">
-    <value>CHANGE GAME PASSWORD</value>
+    <value>เปลี่ยนรหัสผ่านห้อง</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordMessage" xml:space="preserve">
     <value>Enter a new password for the multiplayer game...</value>
@@ -1688,13 +1688,13 @@ for other players to download?</value>
     <value>There was an error while uploading the mapset.</value>
   </data>
   <data name="Screen_Multi_Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>กำลังโหลด...</value>
   </data>
   <data name="Screen_Multi_Referee" xml:space="preserve">
-    <value>Referee</value>
+    <value>กรรมการ</value>
   </data>
   <data name="Screen_Multi_WinsAbbreviation" xml:space="preserve">
-    <value>{0} W</value>
+    <value>ชนะ {0}</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
     <value>MULTIPLAYER</value>
@@ -1781,10 +1781,10 @@ for other players to download?</value>
     <value>UNREADY</value>
   </data>
   <data name="Screen_Multiplayer_Ready" xml:space="preserve">
-    <value>READY</value>
+    <value>พร้อม</value>
   </data>
   <data name="Screen_Multiplayer_NotReady" xml:space="preserve">
-    <value>NOT READY</value>
+    <value>ไม่พร้อม</value>
   </data>
   <data name="Screen_Multiplayer_CancelMatchStart" xml:space="preserve">
     <value>CANCEL MATCH START</value>
@@ -1796,7 +1796,7 @@ for other players to download?</value>
     <value>Please wait until the match finishes before selecting mods.</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeam" xml:space="preserve">
-    <value>Change Team</value>
+    <value>เปลี่ยนทีม</value>
   </data>
   <data name="Screen_Multiplayer_MustUnreadyToSwitchTeams" xml:space="preserve">
     <value>You must unready in order to switch teams!</value>
@@ -1805,10 +1805,10 @@ for other players to download?</value>
     <value>You cannot switch teams when the countdown timer is active</value>
   </data>
   <data name="Screen_Multiplayer_ViewProfile" xml:space="preserve">
-    <value>View Profile</value>
+    <value>ดูโปรไฟล์</value>
   </data>
   <data name="Screen_Multiplayer_SteamProfile" xml:space="preserve">
-    <value>Steam Profile</value>
+    <value>โปรไฟล์ Steam</value>
   </data>
   <data name="Screen_Multiplayer_KickPlayer" xml:space="preserve">
     <value>Kick Player</value>
@@ -1829,10 +1829,10 @@ for other players to download?</value>
     <value>Loading...</value>
   </data>
   <data name="Screen_Multiplayer_Wins" xml:space="preserve">
-    <value>{0} Wins</value>
+    <value>ชนะ {0}</value>
   </data>
   <data name="Screen_Multiplayer_Referee" xml:space="preserve">
-    <value>Referee</value>
+    <value>กรรมการ</value>
   </data>
   <data name="Screen_Multiplayer_PlayersCount" xml:space="preserve">
     <value>({0}/{1}) Players</value>
@@ -1865,37 +1865,37 @@ for other players to download?</value>
     <value>Host is currently selecting a map!</value>
   </data>
   <data name="Screen_Multiplayer_PleaseWait" xml:space="preserve">
-    <value>Please wait...</value>
+    <value>โปรดรอสักครู่...</value>
   </data>
   <data name="Screen_Multiplayer_MapInfo" xml:space="preserve">
-    <value>By: {0} | Length: {1} | BPM: {2} | LNs: {3}%</value>
+    <value>โดย: {0} | ความยาว: {1} | BPM: {2} | โน้ตยาว: {3}%</value>
   </data>
   <data name="Screen_Multiplayer_MapMissingClickToDownload" xml:space="preserve">
-    <value>You don't have this map. Click to download!</value>
+    <value>คุณไม่มีแมพนี้ คลิกเพื่อดาวน์โหลด!</value>
   </data>
   <data name="Screen_Multiplayer_MapMissingDownloadNotAvailable" xml:space="preserve">
-    <value>You don't have this map. Download not available!</value>
+    <value>คุณไม่มีแมพนี้ ดาวน์โหลดแมพนี้ไม่ได้!</value>
   </data>
   <data name="Screen_Multiplayer_MapsetAlreadyDownloading" xml:space="preserve">
     <value>The mapset is already downloading. Slow down!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadingMap" xml:space="preserve">
-    <value>Downloading Map: {0}%</value>
+    <value>กำลังดาวน์โหลดแมพ: {0}%</value>
   </data>
   <data name="Screen_Multiplayer_DownloadFailed" xml:space="preserve">
-    <value>Download Failed!</value>
+    <value>ดาวน์โหลดไม่สำเร็จ!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadComplete" xml:space="preserve">
-    <value>Download Complete!</value>
+    <value>ดาวน์โหลดเสร็จสิ้น!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedMissingMap" xml:space="preserve">
-    <value>Match started, but we don't have the map!</value>
+    <value>แมตช์ได้เริ่มไปแล้ว แต่เราไม่มีแมพนี้!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
-    <value>Match started. Click to watch the match live on the web as a referee. </value>
+    <value>แมตช์ได้เริ่มไปแล้ว คลิกเพื่อดูแมตช์บนเว็บในฐานะกรรมการ </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
-    <value>MATCH DETAILS</value>
+    <value>รายละเอียดของแมตช์</value>
   </data>
   <data name="Screen_MultiplayerLobby_ViewInformationAboutMatch" xml:space="preserve">
     <value>View information about a match</value>
@@ -1910,19 +1910,19 @@ for other players to download?</value>
     <value>Free-For-All</value>
   </data>
   <data name="Screen_MultiplayerLobby_Team" xml:space="preserve">
-    <value>Team</value>
+    <value>ทีม</value>
   </data>
   <data name="Screen_MultiplayerLobby_ModeLabel" xml:space="preserve">
-    <value>MODE: </value>
+    <value>โหมด: </value>
   </data>
   <data name="Screen_MultiplayerLobby_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 คีย์</value>
   </data>
   <data name="Screen_MultiplayerLobby_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 คีย์</value>
   </data>
   <data name="Screen_MultiplayerLobby_MapStatusLabel" xml:space="preserve">
-    <value>MAP STATUS: </value>
+    <value>สถานะของแมพ: </value>
   </data>
   <data name="Screen_MultiplayerLobby_Imported" xml:space="preserve">
     <value>Imported</value>
@@ -2036,10 +2036,10 @@ for other players to download?</value>
     <value>Ruleset</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>ผู้เล่นสูงสุด</value>
   </data>
   <data name="Screen_MultiplayerLobby_Players" xml:space="preserve">
-    <value>Players</value>
+    <value>ผู้เล่น</value>
   </data>
   <data name="Screen_MultiplayerLobby_AllowedGameModes" xml:space="preserve">
     <value>Allowed Game Modes</value>
