@@ -159,6 +159,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D HubDownloadRetry => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-retry.png");
         public static Texture2D HubDownloadRemove => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-remove.png");
         public static Texture2D TwitchIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon.png");
+        public static Texture2D TwitchIconWhite => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon-white.png");
         public static Texture2D ConnectTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/connect-twitch.png");
         public static Texture2D UnlinkTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/unlink-twitch.png");
         public static Texture2D Emoji => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/emoji.png");

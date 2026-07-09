@@ -117,7 +117,7 @@ namespace Quaver.Shared.Graphics.Playercards
                 Tint = ColorHelper.HexToColor("#0EAED6")
             };
 
-            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "LOG IN", 20, Color.White);
+            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "LOG IN", 15, Color.White);
 
             LoginButton.Clicked += (sender, args) => OnlineManager.Login();
         }
