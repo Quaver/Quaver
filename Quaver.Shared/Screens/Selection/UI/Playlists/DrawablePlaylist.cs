@@ -1,6 +1,8 @@
+using System;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -47,6 +49,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
             PlaylistManager.PlaylistMapsManaged += OnPLaylistMapsManaged;
+            ScoreFetcherOnlineMapStatus.RankedStatusUpdated += OnOnlineRankedStatusUpdated;
             ModManager.ModsChanged += OnModsChanged;
         }
 
@@ -80,6 +83,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             PlaylistManager.Selected.ValueChanged -= OnPlaylistChanged;
             ModManager.ModsChanged -= OnModsChanged;
             PlaylistManager.PlaylistMapsManaged -= OnPLaylistMapsManaged;
+            ScoreFetcherOnlineMapStatus.RankedStatusUpdated -= OnOnlineRankedStatusUpdated;
 
             base.Destroy();
         }
@@ -121,5 +125,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
+
+        private void OnOnlineRankedStatusUpdated(object sender, EventArgs e) => UpdateContent(Item, Index);
     }
 }
