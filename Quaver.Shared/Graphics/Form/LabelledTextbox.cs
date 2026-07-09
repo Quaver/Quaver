@@ -28,7 +28,7 @@ namespace Quaver.Shared.Graphics.Form
         /// <param name="spacing"></param>
         /// <param name="textboxPlaceholder"></param>
         /// <param name="initialText"></param>
-        public LabelledTextbox(float width, string label, int labelSize = 20, int textboxHeight = 60, int textboxFontSize = 20, int spacing = 14,
+        public LabelledTextbox(float width, string label, int labelSize = 18, int textboxHeight = 60, int textboxFontSize = 18, int spacing = 14,
             string textboxPlaceholder = "", string initialText = "")
         {
             Size = new ScalableVector2(width, 62);

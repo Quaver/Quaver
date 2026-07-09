@@ -194,7 +194,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -207,7 +207,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateStatus()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -318,7 +318,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateGlobalRanking()
         {
-            GlobalRanking = new TextKeyValue("Global Rank", "#1", 20, Color.White)
+            GlobalRanking = new TextKeyValue("Global Rank", "#1", 18, Color.White)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -341,7 +341,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateOverallRating()
         {
-            OverallRating = new TextKeyValue("Overall Rating", "0.00", 20, Color.White)
+            OverallRating = new TextKeyValue("Overall Rating", "0.00", 18, Color.White)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -364,7 +364,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateOverallAccuracy()
         {
-            OverallAccuracy = new TextKeyValue("Overall Accuracy", "99.99%", 20, Color.White)
+            OverallAccuracy = new TextKeyValue("Overall Accuracy", "99.99%", 18, Color.White)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,

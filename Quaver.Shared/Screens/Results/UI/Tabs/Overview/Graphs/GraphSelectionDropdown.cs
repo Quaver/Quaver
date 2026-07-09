@@ -9,8 +9,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 {
     public class GraphSelectionDropdown : LabelledDropdown
     {
-        public GraphSelectionDropdown() : base(ResultsLocalization.Get("Graph:"), 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(150, 38), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
+        public GraphSelectionDropdown() : base(ResultsLocalization.Get("Graph:"), 20, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(150, 38), 20, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
         }

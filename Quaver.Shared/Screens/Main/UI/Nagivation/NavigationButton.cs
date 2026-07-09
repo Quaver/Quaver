@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
         };
 
         private void CreateName(string name) => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-            name.ToUpper(), 22)
+            name.ToUpper(), 18)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,

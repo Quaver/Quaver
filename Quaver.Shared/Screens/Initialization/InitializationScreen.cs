@@ -69,7 +69,9 @@ namespace Quaver.Shared.Screens.Initialization
             game.SetProcessPriority();
             game.PerformGameSetup();
 
-            SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
+            if (SteamManager.IsInitialized)
+                SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
+
             BackgroundHelper.Initialize();
 
             // Create the global FPS counter.

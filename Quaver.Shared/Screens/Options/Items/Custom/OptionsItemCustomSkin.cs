@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         }
 
         public OptionsItemCustomSkin(RectangleF containerRect, string name, Bindable<string> skin, List<string> skinOptions) : base(containerRect, name,
-            new Dropdown(skinOptions, new ScalableVector2(300, 35), 22,
+            new Dropdown(skinOptions, new ScalableVector2(300, 35), 20,
             Colors.MainAccent, GetSelectedIndex(skin, skinOptions), 240, 700))
         {
             Dropdown.ItemContainer.Scrollbar.Tint = Color.White;

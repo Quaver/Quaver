@@ -315,6 +315,10 @@ namespace Quaver.Shared
             QuaverLocalization.Configure(ConfigManager.Language.Value);
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
 
+#if VISUAL_TESTS
+            Fonts.LoadWobbleFonts();
+#endif
+
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
             ChangeResolution();
@@ -373,7 +377,9 @@ namespace Quaver.Shared
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
             base.UnloadContent();
-            SteamAPI.Shutdown();
+
+            if (SteamManager.IsInitialized)
+                SteamAPI.Shutdown();
         }
 
         /// <inheritdoc />

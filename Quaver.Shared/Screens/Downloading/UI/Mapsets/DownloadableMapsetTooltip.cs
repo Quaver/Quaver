@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             foreach (var difficulty in mapset.Difficulties)
             {
                 var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                    $"{difficulty.Key} - " + $"{StringHelper.RatingToString(difficulty.Value)}", 20)
+                    $"{difficulty.Key} - " + $"{StringHelper.RatingToString(difficulty.Value)}", 18)
                 {
                     Parent = this,
                     UsePreviousSpriteBatchOptions = true,

@@ -157,7 +157,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Health
                     Size = new ScalableVector2(ContentContainer.Width, thickness),
                 };
 
-                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{health}%", 20,
+                var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{health}%", 18,
                     false)
                 {
                     Parent = line,

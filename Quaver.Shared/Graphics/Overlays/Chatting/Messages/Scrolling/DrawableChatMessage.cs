@@ -185,7 +185,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void CreateTime()
         {
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 23)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -257,7 +257,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void CreateMessage()
         {
-            Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", Time.FontSize)
+            Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", Time.FontSize)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

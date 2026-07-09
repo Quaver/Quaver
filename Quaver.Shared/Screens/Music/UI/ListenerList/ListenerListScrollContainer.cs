@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
         /// </summary>
         private void CreateStatusText()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), StatusText, 20)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), StatusText, 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         /// <param name="selectedMapset"></param>
         public DownloadFilterLongNotePercentage(Bindable<DownloadableMapset> selectedMapset)
-            : base(DownloadLocalization.Get("LNs: "), "50-50%", 20, ColorHelper.HexToColor($"#ffe76b"))
+            : base(DownloadLocalization.Get("LNs: "), "50-50%", 18, ColorHelper.HexToColor($"#ffe76b"))
         {
             SelectedMapset = selectedMapset;
 

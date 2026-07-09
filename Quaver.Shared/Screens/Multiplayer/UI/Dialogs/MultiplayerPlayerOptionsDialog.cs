@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             {
                 Parent = Options,
                 Y = -25,
-                FontSize = 16,
+                FontSize = 14,
             };
         }
 

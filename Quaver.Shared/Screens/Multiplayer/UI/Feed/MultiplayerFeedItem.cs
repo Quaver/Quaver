@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
     {
         public MultiplayerFeedItem(Color color, string text) : base(FontManager.GetWobbleFont(Fonts.InterBold), text)
         {
-            FontSize = 15;
+            FontSize = 13;
             Text = $"[{DateTime.Now.ToLocalTime().ToShortTimeString()}]";
 
             // ReSharper disable once ObjectCreationAsStatement
@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                FontSize = 16,
+                FontSize = 14,
                 X = Width + 6,
                 Tint = color
             };

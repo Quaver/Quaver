@@ -201,7 +201,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
             else
             {
-                Title.FontSize = 26;
+                Title.FontSize = 22;
                 Title.Text = item.Title;
                 Title.TruncateWithEllipsis(400);
 
@@ -282,7 +282,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -296,7 +296,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(Title.Font, "Artist", 20)
+            Artist = new SpriteTextPlus(Title.Font, "Artist", 16)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
@@ -371,7 +371,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
+            GameModeText = new SpriteTextPlus(Title.Font, "", 14)
             {
                 Parent = GameModes,
                 Alignment = Alignment.MidCenter,
@@ -399,7 +399,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
+            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 18)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Artist.Y),

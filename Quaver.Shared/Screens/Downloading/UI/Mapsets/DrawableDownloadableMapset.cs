@@ -291,7 +291,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateArtistTitle()
         {
-            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = ContentContainer,
                 Position = new ScalableVector2(22, 18),
@@ -304,7 +304,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateByText()
         {
-            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("By:"), 20)
+            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("By:"), 18)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -320,7 +320,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -361,7 +361,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
+            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 14)
             {
                 Parent = GameModeIcon,
                 Alignment = Alignment.MidCenter,
@@ -400,7 +400,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 Parent = ContentContainer,
                 Alignment = Alignment.TopRight,
                 Y = ByText.Y + 2,
-                X = RankedStatusIcon.X - 56,
+                X = RankedStatusIcon.X - 68,
                 UsePreviousSpriteBatchOptions = true,
             };
 

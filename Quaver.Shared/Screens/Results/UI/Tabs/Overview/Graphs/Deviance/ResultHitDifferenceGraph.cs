@@ -225,7 +225,7 @@ namespace Quaver.Shared.Screens.Result.UI
 
             // ReSharper disable once ObjectCreationAsStatement
             new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                ResultsLocalization.Get("Late hit window", unscaledLargestHitWindow), 18, false)
+                ResultsLocalization.Get("Late hit window", unscaledLargestHitWindow), 16, false)
             {
                 Parent = this,
                 X = x,
@@ -234,7 +234,7 @@ namespace Quaver.Shared.Screens.Result.UI
 
             // ReSharper disable once ObjectCreationAsStatement
             new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                ResultsLocalization.Get("Early hit window", unscaledLargestHitWindow), 20, false)
+                ResultsLocalization.Get("Early hit window", unscaledLargestHitWindow), 18, false)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,

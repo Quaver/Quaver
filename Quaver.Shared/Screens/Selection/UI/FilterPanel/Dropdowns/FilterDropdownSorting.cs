@@ -44,8 +44,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <summary>
         /// </summary>
         /// <param name="availableMapsets"></param>
-        public FilterDropdownSorting(Bindable<List<Mapset>> availableMapsets) : base(SelectionLocalization.Get("Sort By:"), 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(188, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
+        public FilterDropdownSorting(Bindable<List<Mapset>> availableMapsets) : base(SelectionLocalization.Get("Sort By:"), 20, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(188, 38), 20, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
             AvailableMapsets = availableMapsets;
             Dropdown.ItemSelected += OnItemSelected;
