@@ -13,15 +13,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
         ///     Refreshes the selected map's online status from /v2/map/:id.
         /// </summary>
         /// <param name="map"></param>
-        public static void UpdateMapStatus(Map map)
+        public static bool UpdateMapStatus(Map map)
         {
             if (map == null || map.MapId <= 0 || OnlineManager.Client == null)
-                return;
+                return false;
 
             var response = OnlineManager.Client.RetrieveMapInfo(map.MapId);
 
             if (response?.Map == null)
-                return;
+                return false;
 
             var rankedStatus = response.Map.RankedStatus;
             var needsOnlineUpdate = NeedsOnlineUpdate(map, response.Map.Md5);
@@ -29,17 +29,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
             var rankedStatusChanged = map.RankedStatus != rankedStatus;
             var needsOnlineUpdateChanged = map.NeedsOnlineUpdate != needsOnlineUpdate;
 
-            if (!rankedStatusChanged && !needsOnlineUpdateChanged)
-                return;
+            if (rankedStatusChanged || needsOnlineUpdateChanged)
+            {
+                map.RankedStatus = rankedStatus;
+                map.NeedsOnlineUpdate = needsOnlineUpdate;
 
-            map.RankedStatus = rankedStatus;
-            map.NeedsOnlineUpdate = needsOnlineUpdate;
+                if (rankedStatusChanged)
+                    MapDatabaseCache.UpdateMap(map);
 
-            if (rankedStatusChanged)
-                MapDatabaseCache.UpdateMap(map);
+                Logger.Debug($"Updated online map status for map {map.MapId}: ranked={rankedStatus}, needsUpdate={needsOnlineUpdate}", LogType.Runtime);
+                RankedStatusUpdated?.Invoke(null, EventArgs.Empty);
+            }
 
-            Logger.Debug($"Updated online map status for map {map.MapId}: ranked={rankedStatus}, needsUpdate={needsOnlineUpdate}", LogType.Runtime);
-            RankedStatusUpdated?.Invoke(null, EventArgs.Empty);
+            return needsOnlineUpdate;
         }
 
         /// <summary>

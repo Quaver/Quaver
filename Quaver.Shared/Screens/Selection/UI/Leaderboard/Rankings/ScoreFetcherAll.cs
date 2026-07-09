@@ -24,9 +24,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                     if (!OnlineManager.Connected)
                         return new FetchedScoreStore(new List<Score>());
 
-                    var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.All);
+                    if (ScoreFetcherOnlineMapStatus.UpdateMapStatus(map))
+                        return new FetchedScoreStore(new List<Score>());
 
-                    ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
+                    var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.All);
 
                     var scores = new List<Score>();
 
