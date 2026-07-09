@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
 
             Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), value)
             {
-                FontSize = 16
+                FontSize = 14
             };
         }
 

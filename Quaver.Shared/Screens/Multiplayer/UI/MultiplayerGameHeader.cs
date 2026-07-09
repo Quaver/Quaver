@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                FontSize = 16,
+                FontSize = 14,
                 Tint = Colors.SecondaryAccent
             };
 

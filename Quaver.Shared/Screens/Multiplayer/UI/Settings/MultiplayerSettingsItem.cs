@@ -70,7 +70,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 UsePreviousSpriteBatchOptions = true,
-                FontSize = 16,
+                FontSize = 14,
                 X = 22
             };
 

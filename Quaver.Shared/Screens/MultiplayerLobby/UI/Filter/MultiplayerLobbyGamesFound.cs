@@ -72,7 +72,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// </summary>
         private void CreateTextCount()
         {
-            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0", 22)
+            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0", 20)
             {
                 Parent = this,
                 Tint = Colors.MainAccent
@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// </summary>
         private void CreateTextMatchesFound()
         {
-            TextMatchesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLobbyLocalization.Get("GamesFound"), 22)
+            TextMatchesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLobbyLocalization.Get("GamesFound"), 20)
             {
                 Parent = this,
                 X = TextCount.Width + TextSpacing
