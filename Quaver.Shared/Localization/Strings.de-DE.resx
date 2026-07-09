@@ -980,16 +980,16 @@ Wenn die Map nicht fertig gespielt wurde, dann wird zusätzlich die Genauigkeit 
     <value>Schwierigkeit von Gesamtbewertung vorschlagen</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio/Frame Timing During Gameplay</value>
+    <value>Sanfte Audio / Frame Timing während des Gameplays benutzen</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio Start Timing During Gameplay</value>
+    <value>Sanfte Audio Start Timing während des Gameplays benutzen</value>
   </data>
   <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Display Gameplay Overlay (Shift + F6)</value>
+    <value>Gameplay Overlay anzeigen (Shift + F6)</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
-    <value>Display Notifications During Gameplay</value>
+    <value>Benachrichtigungen während Gameplay anzeigen</value>
   </data>
   <data name="Screen_Options_ShowSpectators" xml:space="preserve">
     <value>Zuschauer anzeigen</value>
@@ -1118,19 +1118,19 @@ Wenn die Map nicht fertig gespielt wurde, dann wird zusätzlich die Genauigkeit 
     <value>2K Scrollgeschwindigkeit</value>
   </data>
   <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2K Scroll Direction</value>
+    <value>2K Scrollrichtung</value>
   </data>
   <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
     <value>2K Scratch Layout</value>
   </data>
   <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 2K Scratch Lane On Left</value>
+    <value>Platziere 2K Scratch Lane links</value>
   </data>
   <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
     <value>2K Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Prioritized 2K Difficulty</value>
+    <value>2K Schwierigkeitslevel Priorität</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
     <value>2 Keys</value>
@@ -1434,7 +1434,7 @@ für den ausgewählten Spielmodus finden?</value>
     <value>Neuste</value>
   </data>
   <data name="Screen_Download_DateSubmitted" xml:space="preserve">
-    <value>Date Submitted</value>
+    <value>Einreichungsdatum</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
     <value>Länge</value>
@@ -1464,31 +1464,31 @@ für den ausgewählten Spielmodus finden?</value>
     <value>Maps Herunterladen</value>
   </data>
   <data name="Screen_Download_Findnewsongstoplayfromthecommunity" xml:space="preserve">
-    <value>Find new songs to play from the community</value>
+    <value>Finde neue Songs aus der Community zum Spielen</value>
   </data>
   <data name="Screen_Download_Finisheddownloading01" xml:space="preserve">
-    <value>Finished downloading: {0} - {1}!</value>
+    <value>Downloads abgeschlossen: {0} - {1}!</value>
   </data>
   <data name="Screen_Download_By" xml:space="preserve">
-    <value>By:</value>
+    <value>Von:</value>
   </data>
   <data name="Screen_Download_LNs" xml:space="preserve">
     <value>LNs: </value>
   </data>
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
-    <value>FILTER OPTIONS</value>
+    <value>FILTER OPTIONEN</value>
   </data>
   <data name="Screen_Download_UploadDate" xml:space="preserve">
-    <value>Upload Date</value>
+    <value>Veröffentlichungsdatum</value>
   </data>
   <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
-    <value>Last Update Date</value>
+    <value>Zuletzt aktualisiert</value>
   </data>
   <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
-    <value>Display Owned Mapsets</value>
+    <value>Eigene Mapsets anzeigen</value>
   </data>
   <data name="Screen_Download_DisplayExplicitMapsets" xml:space="preserve">
-    <value>Display Explicit Mapsets</value>
+    <value>Explizite Mapsets anzeigen</value>
   </data>
   <data name="Screen_Download_Maps" xml:space="preserve">
     <value>Maps: </value>
@@ -1497,39 +1497,39 @@ für den ausgewählten Spielmodus finden?</value>
     <value>Kein Song ausgewählt</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>To begin downloading, double-click on a song.
-Clicking once will allow you to preview the audio.
-You can use the filters below to narrow down your search.</value>
+    <value>Um das Downloaden zu starten, doppelklicke auf einen Song. 
+Mit einem einfachen Klick kannst du eine Audiovorschau anhören.
+Mit den Filtern unten kannst du deine Suche eingrenzen.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
-    <value>End Date</value>
+    <value>Enddatum</value>
   </data>
   <data name="Screen_Download_StartDate" xml:space="preserve">
-    <value>Start Date</value>
+    <value>Startdatum</value>
   </data>
   <data name="Screen_Download_DifficultyRating" xml:space="preserve">
-    <value>Difficulty Rating</value>
+    <value>Schwierigkeitsspanne</value>
   </data>
   <data name="Screen_Download_MaxRating" xml:space="preserve">
-    <value>Max Rating</value>
+    <value>Max. Bewertung</value>
   </data>
   <data name="Screen_Download_MinRating" xml:space="preserve">
-    <value>Min Rating</value>
+    <value>Min. Bewertung</value>
   </data>
   <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
-    <value>Ranked Play Count</value>
+    <value>Ranked Spielanzahl</value>
   </data>
   <data name="Screen_Download_MaxPlays" xml:space="preserve">
-    <value>Max Plays</value>
+    <value>Max. Plays</value>
   </data>
   <data name="Screen_Download_MinPlays" xml:space="preserve">
-    <value>Min Plays</value>
+    <value>Min. Plays</value>
   </data>
   <data name="Screen_Download_LongNote" xml:space="preserve">
     <value>Long Note %</value>
   </data>
   <data name="Screen_Download_MaxLN" xml:space="preserve">
-    <value>Max LN%</value>
+    <value>Max. LN%</value>
   </data>
   <data name="Screen_Download_MinLN" xml:space="preserve">
     <value>Min LN%</value>
@@ -1675,7 +1675,7 @@ for other players to download?</value>
     <value>UPLOADING UNSUBMITTED MAPSET</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetMessage" xml:space="preserve">
-    <value>Please wait while the mapset is being uploaded...</value>
+    <value>Bitte warte, während dein Mapset hochgeladen wird...</value>
   </data>
   <data name="Screen_Multi_SuccessfullyUploadedUnsubmittedMapset" xml:space="preserve">
     <value>Successfully uploaded unsubmitted mapset for the multiplayer game!</value>
@@ -1684,40 +1684,40 @@ for other players to download?</value>
     <value>There was an error while uploading the mapset.</value>
   </data>
   <data name="Screen_Multi_Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>Wird geladen...</value>
   </data>
   <data name="Screen_Multi_Referee" xml:space="preserve">
-    <value>Referee</value>
+    <value>Schiedsrichter</value>
   </data>
   <data name="Screen_Multi_WinsAbbreviation" xml:space="preserve">
     <value>{0} W</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
-    <value>MULTIPLAYER</value>
+    <value>MEHRSPIELER</value>
   </data>
   <data name="Screen_Multiplayer_HeaderSubtitle" xml:space="preserve">
-    <value>GAME</value>
+    <value>SPIEL</value>
   </data>
   <data name="Screen_Multiplayer_HeaderDescription" xml:space="preserve">
-    <value>play a match in real-time with others</value>
+    <value>spiele ein spiel in echtzeit mit anderen</value>
   </data>
   <data name="Screen_Multiplayer_Leave" xml:space="preserve">
-    <value>leave</value>
+    <value>verlassen</value>
   </data>
   <data name="Screen_Multiplayer_Options" xml:space="preserve">
-    <value>options</value>
+    <value>optionen</value>
   </data>
   <data name="Screen_Multiplayer_MatchHistory" xml:space="preserve">
-    <value>match history</value>
+    <value>spiel verlauf</value>
   </data>
   <data name="Screen_Multiplayer_Commands" xml:space="preserve">
-    <value>commands</value>
+    <value>befehle</value>
   </data>
   <data name="Screen_Multiplayer_GameMode" xml:space="preserve">
-    <value>Game Mode</value>
+    <value>Spielmodus</value>
   </data>
   <data name="Screen_Multiplayer_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>Max. Spieler</value>
   </data>
   <data name="Screen_Multiplayer_AutoHostRotation" xml:space="preserve">
     <value>Auto Host Rotation</value>
