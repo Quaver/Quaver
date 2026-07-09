@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateMillisecondValue()
         {
-            MillisecondValue = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "ms", 24)
+            MillisecondValue = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "ms", 22)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

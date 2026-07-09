@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "PLAYLIST TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "PLAYLIST TITLE", 24)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -340,7 +340,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
+            GameModeText = new SpriteTextPlus(Title.Font, "", 14)
             {
                 Parent = GameModes,
                 Alignment = Alignment.MidCenter,

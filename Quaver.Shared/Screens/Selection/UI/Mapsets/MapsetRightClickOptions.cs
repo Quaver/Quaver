@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {Export, ColorHelper.HexToColor("#0787E3")},
             {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
             {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
-        }, new ScalableVector2(200, 40), 22)
+        }, new ScalableVector2(200, 40), 20)
         {
             DrawableMapset = drawableMapset;
             Mapset = DrawableMapset.Item;
