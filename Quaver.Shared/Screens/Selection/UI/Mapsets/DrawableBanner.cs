@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -52,6 +53,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         /// <summary>
         /// </summary>
+        internal static bool ShouldDisplayBanners => ConfigManager.DisplaySongSelectBanners?.Value ?? true;
+
+        /// <summary>
+        /// </summary>
+        internal static ScalableVector2 DisplaySize => ShouldDisplayBanners
+            ? SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82)
+            : new ScalableVector2(0, 0);
+
+        /// <summary>
+        /// </summary>
         public static float DeselectedAlpha { get; } = 0.75f;
 
         /// <summary>
@@ -69,9 +80,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             Alpha = 0;
             Image = DefaultBanner;
+            Visible = ShouldDisplayBanners;
 
             BackgroundHelper.BannerLoaded += OnBannerLoaded;
             MapManager.Selected.ValueChanged += OnMapChanged;
+
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged += OnDisplaySongSelectBannersChanged;
         }
 
         /// <summary>
@@ -84,9 +99,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             Alpha = 0;
             Image = DefaultBanner;
+            Visible = ShouldDisplayBanners;
 
             BackgroundHelper.BannerLoaded += OnBannerLoaded;
             PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
+
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged += OnDisplaySongSelectBannersChanged;
         }
 
         /// <inheritdoc />
@@ -95,6 +114,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!ShouldDisplayBanners)
+            {
+                DisableBanner();
+                base.Update(gameTime);
+                return;
+            }
+
             TimeSinceLoadRequested += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (TimeSinceLoadRequested >= 200 && !HasBannerLoaded)
@@ -129,6 +155,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             Mapset = mapset;
 
+            if (!ShouldDisplayBanners)
+            {
+                DisableBanner();
+                return;
+            }
+
             // The map is already loaded, so just use it.
             if (BackgroundHelper.MapsetBanners.ContainsKey(Mapset.Item.Directory))
             {
@@ -147,6 +179,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public void UpdateContent(Playlist playlist)
         {
             Playlist = playlist;
+
+            if (!ShouldDisplayBanners)
+            {
+                DisableBanner();
+                return;
+            }
 
             // The map is already loaded, so just use it.
             if (BackgroundHelper.PlaylistBanners.ContainsKey(Playlist.Id.ToString()))
@@ -179,6 +217,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             BackgroundHelper.BannerLoaded -= OnBannerLoaded;
 
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged -= OnDisplaySongSelectBannersChanged;
+
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
 
@@ -190,6 +231,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="tex"></param>
         private void HandleFade(Texture2D tex)
         {
+            if (!ShouldDisplayBanners)
+            {
+                DisableBanner();
+                return;
+            }
+
             var selected = Type == DrawableBannerType.Mapsets ? Mapset.IsSelected : PlaylistManager.Selected.Value == Playlist;
             var mask = SkinManager.Skin?.SongSelect?.MapsetBannerMask ?? UserInterface.MapsetBannerMask;
 
@@ -199,16 +246,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 AddScheduledUpdate(() => GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
                 {
-                    if (IsDisposed || tex == null || tex.IsDisposed || mask == null || mask.IsDisposed)
+                    if (IsDisposed || !ShouldDisplayBanners || tex == null || tex.IsDisposed || mask == null || mask.IsDisposed)
                         return;
 
                     Image = PerformBlend(tex, mask);
                 }));
 
+                Visible = true;
                 FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
             }
             else
             {
+                Visible = true;
                 ClearAnimations();
                 FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
             }
@@ -230,12 +279,32 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
+        ///     Disables this banner without clearing any cached banner textures.
+        /// </summary>
+        private void DisableBanner()
+        {
+            if (!Visible && Alpha == 0 && !HasBannerLoaded && TimeSinceLoadRequested == 0 && OriginalTexture == null)
+                return;
+
+            Visible = false;
+            Alpha = 0;
+            ClearAnimations();
+
+            HasBannerLoaded = false;
+            TimeSinceLoadRequested = 0;
+            OriginalTexture = null;
+        }
+
+        /// <summary>
         ///     Called when a new banner has loaded
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnBannerLoaded(object sender, BannerLoadedEventArgs e)
         {
+            if (!ShouldDisplayBanners)
+                return;
+
             if (e.Mapset != null)
             {
                 if (e.Mapset?.Directory != Mapset?.Item?.Directory)
@@ -265,6 +334,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="e"></param>
         private void OnPlaylistChanged(object sender, BindableValueChangedEventArgs<Playlist> e)
             => UpdateContent(Playlist);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplaySongSelectBannersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (!e.Value)
+            {
+                DisableBanner();
+                return;
+            }
+
+            switch (Type)
+            {
+                case DrawableBannerType.Mapsets:
+                    UpdateContent(Mapset);
+                    break;
+                case DrawableBannerType.Playlists:
+                    UpdateContent(Playlist);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 
     public enum DrawableBannerType
