@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         {
             // ReSharper disable twice CompareOfFloatsByEqualityOperator
             if (SelectedGame.Value.MinimumDifficultyRating == 0 && SelectedGame.Value.MaximumDifficultyRating == 9999)
-                return MultiplayerLobbyLocalization.Get("Any");
+                return MultiplayerLobbyLocalization.Get("AnyDifficultyRange");
 
             return $"{StringHelper.RatingToString(SelectedGame.Value.MinimumDifficultyRating)} " +
                    $"- {StringHelper.RatingToString(SelectedGame.Value.MaximumDifficultyRating)}";

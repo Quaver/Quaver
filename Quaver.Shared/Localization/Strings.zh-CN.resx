@@ -211,7 +211,7 @@
     <value>正在播放：</value>
   </data>
   <data name="Screen_Main_Published" xml:space="preserve">
-    <value>发布于：{0}</value>
+    <value>发布于 {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>全部</value>

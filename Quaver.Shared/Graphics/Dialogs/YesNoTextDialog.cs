@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
@@ -30,7 +31,7 @@ namespace Quaver.Shared.Graphics.Dialogs
                 SubmitAction?.Invoke(Textbox.RawText);
             };
             Panel.Height += 50;
-            YesButton.Image = UserInterface.SaveButton;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SAVE", 20, Color.White);
             YesButton.Y += 10;
             NoButton.Y += 10;
 

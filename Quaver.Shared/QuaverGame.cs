@@ -59,6 +59,7 @@ using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.AutoMods;
+using Quaver.Shared.Screens.Tests.ButtonPerformance;
 using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Chat;
 using Quaver.Shared.Screens.Tests.CheckboxContainers;
@@ -264,6 +265,7 @@ namespace Quaver.Shared
             {"MultiplayerGameScreen", typeof(MultiplayerGameScreen)},
             {"MultiplayerLobbyScreen", typeof(MultiplayerLobbyScreen)},
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
+            {"ButtonPerformance", typeof(ButtonPerformanceTestScreen)},
         };
 
         public QuaverGame(HotLoader hl) : base(hl, ConfigureSdlVideoBackend())

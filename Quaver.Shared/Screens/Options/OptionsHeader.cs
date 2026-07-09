@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void UpdateActiveSectionText() => ScheduleUpdate(() =>
         {
-            ActiveSectionText.Text = OptionsLocalization.GetSectionSettings(SelectedSection.Value.Name);
+            ActiveSectionText.Text = OptionsLocalization.GetSectionSettings(SelectedSection.Value);
         });
 
         /// <summary>

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.API.MapsetSearch;
 using Quaver.Shared.Screens.Downloading.UI.Mapsets;
@@ -43,7 +44,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         /// <summary>
         /// </summary>
-        private Sprite RankedStatus { get; set; }
+        private RoundedButton RankedStatus { get; set; }
 
         /// <summary>
         /// </summary>
@@ -164,14 +165,15 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateRankedStatus()
         {
-            RankedStatus = new Sprite
+            RankedStatus = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Y = 12,
                 X = -18,
                 Size = new ScalableVector2(88, 23),
-                Image = UserInterface.StatusRanked,
+                IsClickable = false,
+                PerformHoverFade = false,
                 Visible = false
             };
         }
@@ -371,7 +373,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             Length.Map.Value = tempMap;
 
             GameModeHelper.SetGameModeTexture(e.Value.Maps.Select(x => x.GameMode), Mode, ModeText);
-            RankedStatus.Image = DrawableDownloadableMapset.GetRankedStatusTexture(e.Value);
+
+            var (statusText, statusColor) = DrawableDownloadableMapset.GetRankedStatusInfo(e.Value);
+            RankedStatus.Tint = statusColor;
+            RankedStatus.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), statusText, 16, Color.White);
 
             const int spacing = 30;
 

@@ -1,14 +1,17 @@
 using System;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Profiles;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
 {
@@ -16,7 +19,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     {
         /// <summary>
         /// </summary>
-        private IconButton Button { get; }
+        private RoundedButton Button { get; }
 
         /// <summary>
         /// </summary>
@@ -27,14 +30,16 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             const float scale = 0.85f;
 
-            Button = new IconButton(UserInterface.OptionsCalibrateOffsetButton)
+            Button = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
                 Size = new ScalableVector2(215 * scale, 36 * scale),
-                UsePreviousSpriteBatchOptions = true
+                Tint = ColorHelper.HexToColor("#0FBAE5")
             };
+
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CALIBRATE", 18, Color.White);
 
             Button.Clicked += (sender, args) =>
             {

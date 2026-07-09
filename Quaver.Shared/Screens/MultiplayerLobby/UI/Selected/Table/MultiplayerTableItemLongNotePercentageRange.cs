@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         public override string GetValue()
         {
             if (SelectedGame.Value.MinimumLongNotePercentage == 0 && SelectedGame.Value.MaximumLongNotePercentage == 100)
-                return MultiplayerLobbyLocalization.Get("Any");
+                return MultiplayerLobbyLocalization.Get("AnyLongNotePercentageRange");
 
             return $"{SelectedGame.Value.MinimumLongNotePercentage}-{SelectedGame.Value.MaximumLongNotePercentage}%";
         }
