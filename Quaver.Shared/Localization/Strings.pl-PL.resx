@@ -723,7 +723,7 @@ Marvelous instead.</value>
     <value>Ocena</value>
   </data>
   <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Max Combo</value>
+    <value>Maks. Combo</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -849,7 +849,7 @@ Marvelous instead.</value>
     <value>Wyświetl Pasek Postępu Czasu Utworu</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBarTimeNumbers" xml:space="preserve">
-    <value>Display Song Time Progress Bar Time Numbers</value>
+    <value>Wyświetl Liczby Paska Postępu Utworu</value>
   </data>
   <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
     <value>Enable Top Lane Cover</value>
@@ -1062,7 +1062,7 @@ Marvelous instead.</value>
     <value>Display Failed Local Scores</value>
   </data>
   <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
-    <value>Delete Original File After Import</value>
+    <value>Usuń Oryginalny Plik Po Imporcie</value>
   </data>
   <data name="Screen_Options_DiscordRichPresence" xml:space="preserve">
     <value>Discord Rich Presence</value>
@@ -2005,7 +2005,7 @@ dla innych graczy do pobrania?</value>
     <value>Nie</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeMod" xml:space="preserve">
-    <value>Free Mod</value>
+    <value>Dowolne Mody</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeRate" xml:space="preserve">
     <value>Dowolna Prędkość</value>
