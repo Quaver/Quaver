@@ -17,12 +17,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
         {
             try
             {
-                if (!OnlineManager.Connected || !OnlineManager.IsDonator)
+                if (!OnlineManager.Connected)
                     return new FetchedScoreStore(new List<Score>());
+
+                if (!OnlineManager.IsDonator)
+                {
+                    ScoreFetcherOnlineMapStatus.UpdateRankedStatus(map);
+                    return new FetchedScoreStore(new List<Score>());
+                }
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Friends);
 
                 map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
+                ScoreFetcherOnlineMapStatus.UpdateRankedStatus(map);
 
                 var scores = new List<Score>();
 

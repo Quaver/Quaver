@@ -12,6 +12,7 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -73,6 +74,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 OnlineManager.Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
 
             MapsetInfoRetriever.MapsetInfoRetrieved += OnMapsetInfoRetrieved;
+            ScoreFetcherOnlineMapStatus.RankedStatusUpdated += OnOnlineRankedStatusUpdated;
 
             ModManager.ModsChanged += OnModsChanged;
 
@@ -91,6 +93,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 OnlineManager.Client.OnRetrievedOnlineScores -= OnRetrievedOnlineScores;
 
             MapsetInfoRetriever.MapsetInfoRetrieved -= OnMapsetInfoRetrieved;
+            ScoreFetcherOnlineMapStatus.RankedStatusUpdated -= OnOnlineRankedStatusUpdated;
 
             ModManager.ModsChanged -= OnModsChanged;
 
@@ -159,6 +162,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         private void OnMapsetInfoRetrieved(object sender, EventArgs args) => UpdateContent(Item, Index);
+
+        private void OnOnlineRankedStatusUpdated(object sender, EventArgs args) => UpdateContent(Item, Index);
 
         /// <summary>
         /// </summary>
