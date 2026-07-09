@@ -20,16 +20,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                 if (!OnlineManager.Connected)
                     return new FetchedScoreStore(new List<Score>());
 
-                if (!OnlineManager.IsDonator)
-                {
-                    ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
+                if (ScoreFetcherOnlineMapStatus.UpdateMapStatus(map))
                     return new FetchedScoreStore(new List<Score>());
-                }
+
+                if (!OnlineManager.IsDonator)
+                    return new FetchedScoreStore(new List<Score>());
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Country,
                     0, OnlineManager.Self.OnlineUser.CountryFlag.ToUpper());
-
-                ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
 
                 var scores = new List<Score>();
 

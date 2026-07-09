@@ -22,6 +22,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                 if (!OnlineManager.Connected)
                     return new FetchedScoreStore(new List<Score>());
 
+                if (ScoreFetcherOnlineMapStatus.UpdateMapStatus(map))
+                    return new FetchedScoreStore(new List<Score>());
+
                 var mods = ModHelper.GetModsFromRate(ModHelper.GetRateFromMods(ModManager.Mods));
 
                 if (mods == ModIdentifier.None)
@@ -31,7 +34,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Mods, mods);
 
-                ScoreFetcherOnlineMapStatus.UpdateMapStatus(map);
                 var scores = new List<Score>();
 
                 if (onlineScores?.Scores == null)
