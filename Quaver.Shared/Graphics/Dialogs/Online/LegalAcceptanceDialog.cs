@@ -32,8 +32,8 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
             Container.AddContainedDrawable(legalText);
             Container.ContentContainer.Height = legalText.Height;
 
-            YesButton.Image = UserInterface.AcceptButton;
-            NoButton.Image = UserInterface.DeclineButton;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "ACCEPT", 20, Color.White);
+            NoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "DECLINE", 20, Color.White);
             Panel.Image = UserInterface.LegalPanel;
 
             YesButton.Y += 20;

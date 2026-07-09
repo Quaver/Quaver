@@ -8,7 +8,9 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Leaderboard;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -34,7 +36,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
 
         /// <summary>
         /// </summary>
-        private IconButton LoginButton { get; set; }
+        private RoundedButton LoginButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -179,7 +181,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
         /// </summary>
         private void CreateLoginButton()
         {
-            LoginButton = new IconButton(UserInterface.LoginButton, (sender, args) =>
+            LoginButton = new RoundedButton((sender, args) =>
             {
                 OnlineManager.Login();
             })
@@ -188,8 +190,11 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
                 Alignment = Alignment.MidCenter,
                 Y = Status.Y + Status.Height + 12,
                 Size = new ScalableVector2(221, 41),
-                Alpha = 0
+                Alpha = 0,
+                Tint = ColorHelper.HexToColor("#0FBAE5")
             };
+
+            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "LOG IN", 20, Color.White);
         }
 
         /// <summary>
@@ -204,7 +209,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
             {
                 case ConnectionStatus.Disconnected:
                     text = StatusText;
-                    LoginButton.IsPerformingFadeAnimations = true;
+                    LoginButton.PerformHoverFade = true;
 
                     Status.ClearAnimations();
                     Status.FadeTo(1, Easing.Linear, time);
@@ -218,7 +223,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
                 case ConnectionStatus.Connecting:
                 case ConnectionStatus.Reconnecting:
                     text = "";
-                    LoginButton.IsPerformingFadeAnimations = false;
+                    LoginButton.PerformHoverFade = false;
 
                     Status.ClearAnimations();
                     Status.FadeTo(0, Easing.Linear, time);
@@ -231,7 +236,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
                     break;
                 case ConnectionStatus.Connected:
                     text = "";
-                    LoginButton.IsPerformingFadeAnimations = false;
+                    LoginButton.PerformHoverFade = false;
 
                     Status.ClearAnimations();
                     Status.FadeTo(0, Easing.Linear, time);

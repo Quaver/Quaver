@@ -7,6 +7,7 @@ using Quaver.API.Enums;
 using Quaver.Server.Client.Events.Download;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -73,7 +74,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        private Sprite RankedStatusIcon { get; set; }
+        private RoundedButton RankedStatusIcon { get; set; }
 
         /// <summary>
         /// </summary>
@@ -187,7 +188,9 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
                 Creator.Text = Item.CreatorUsername;
 
-                RankedStatusIcon.Image = GetRankedStatusTexture(Item);
+                var (statusText, statusColor) = GetRankedStatusInfo(Item);
+                RankedStatusIcon.Tint = statusColor;
+                RankedStatusIcon.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), statusText, 16, Color.White);
                 GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.GameMode), GameModeIcon, GameModeText);
 
                 DifficultyRange.ChangeValue(Item.Maps.Min(x => x.DifficultyRating),
@@ -330,7 +333,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        private void CreateRankedStatus() => RankedStatusIcon = new Sprite
+        private void CreateRankedStatus() => RankedStatusIcon = new RoundedButton
         {
             Parent = ContentContainer,
             Alignment = Alignment.TopRight,
@@ -338,6 +341,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             X = -Banner.X - Banner.Width - 18,
             Alpha = 0.85f,
             Size = new ScalableVector2(94, 24),
+            IsClickable = false,
+            PerformHoverFade = false,
             UsePreviousSpriteBatchOptions = true
         };
 
@@ -369,18 +374,18 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static Texture2D GetRankedStatusTexture(DownloadableMapset item)
+        public static (string Text, Color Color) GetRankedStatusInfo(DownloadableMapset item)
         {
             switch (item.Maps.First().RankedStatus)
             {
                 case RankedStatus.NotSubmitted:
-                    return UserInterface.StatusNotSubmitted;
+                    return ("UNSUBMITTED", ColorHelper.HexToColor("#808080"));
                 case RankedStatus.Unranked:
-                    return UserInterface.StatusUnranked;
+                    return ("UNRANKED", ColorHelper.HexToColor("#F16264"));
                 case RankedStatus.Ranked:
-                    return UserInterface.StatusRanked;
+                    return ("RANKED", ColorHelper.HexToColor("#1FBE83"));
                 case RankedStatus.DanCourse:
-                    return UserInterface.StatusNotSubmitted;
+                    return ("UNSUBMITTED", ColorHelper.HexToColor("#808080"));
                 default:
                     throw new ArgumentOutOfRangeException();
             }
