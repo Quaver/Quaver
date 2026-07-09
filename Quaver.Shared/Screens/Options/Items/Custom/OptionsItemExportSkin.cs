@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 Tint = ColorHelper.HexToColor("#0FBAE5")
             };
 
-            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "EXPORT SKIN", 20, Color.White);
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "EXPORT SKIN", 18, Color.White);
 
             Button.Clicked += (sender, args) => SkinManager.Export();
         }

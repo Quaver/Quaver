@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 Tint = ColorHelper.HexToColor("#27B06E")
             };
 
-            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "UPLOAD", 20, Color.White);
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "UPLOAD", 18, Color.White);
 
             Button.Clicked += (sender, args) =>
             {

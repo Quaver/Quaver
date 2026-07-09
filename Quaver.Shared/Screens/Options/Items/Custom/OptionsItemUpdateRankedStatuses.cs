@@ -42,7 +42,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                 Tint = ColorHelper.HexToColor("#F2994A")
             };
 
-            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "UPDATE", 20, Color.White);
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "UPDATE", 18, Color.White);
 
             Button.Clicked += (sender, args) =>
             {
