@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DownloadDifficultyDropdown() : base(DownloadLocalization.Get("DIFFICULTY: "), 22,
+        public DownloadDifficultyDropdown() : base(DownloadLocalization.Get("DIFFICULTY: "), 20,
             new Dropdown(GetDropdownItems(), new ScalableVector2(150, 38), 20, ColorHelper.HexToColor("#ffe76b")))
         {
         }

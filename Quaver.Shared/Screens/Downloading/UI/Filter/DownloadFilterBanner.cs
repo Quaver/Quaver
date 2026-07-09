@@ -299,7 +299,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Creator.Y + Creator.Height + 14,
+                Y = Creator.Y + Creator.Height + 12,
                 X = Creator.X,
                 Visible = false
             };

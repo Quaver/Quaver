@@ -18,8 +18,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <summary>
         /// </summary>
         /// <param name="status"></param>
-        public DownloadStatusDropdown(Bindable<DownloadFilterRankedStatus> status) : base(DownloadLocalization.Get("STATUS: "), 22,
-            new Dropdown(GetDropdownItems(), new ScalableVector2(150, 38), 20, Colors.MainAccent, GetSelectedIndex()))
+        public DownloadStatusDropdown(Bindable<DownloadFilterRankedStatus> status) : base(DownloadLocalization.Get("STATUS: "), 20,
+            new Dropdown(GetDropdownItems(), new ScalableVector2(150, 38), 18, Colors.MainAccent, GetSelectedIndex()))
         {
             Status = status;
 

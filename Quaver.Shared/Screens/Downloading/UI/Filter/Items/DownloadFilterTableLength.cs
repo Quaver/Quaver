@@ -26,14 +26,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             const int spacing = 12;
 
-            Max = new DownloadFilterItemLengthTextbox("Max Length", max)
+            Max = new DownloadFilterItemLengthTextbox("Max", max)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X
             };
 
-            Min = new DownloadFilterItemLengthTextbox("Min Length", min)
+            Min = new DownloadFilterItemLengthTextbox("Min", min)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

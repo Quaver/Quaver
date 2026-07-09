@@ -31,14 +31,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             const int spacing = 12;
 
-            Max = new DownloadFilterItemDifficultyTextbox("Max Rating", maxDiff)
+            Max = new DownloadFilterItemDifficultyTextbox("Max", maxDiff)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X
             };
 
-            Min = new DownloadFilterItemDifficultyTextbox("Min Rating", minDiff)
+            Min = new DownloadFilterItemDifficultyTextbox("Min", minDiff)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

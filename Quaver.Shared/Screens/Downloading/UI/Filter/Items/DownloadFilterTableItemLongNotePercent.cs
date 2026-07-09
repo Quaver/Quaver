@@ -26,14 +26,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             const int spacing = 12;
 
-            Max = new DownloadFilterItemLongNoteTextbox("Max LN%", max)
+            Max = new DownloadFilterItemLongNoteTextbox("Max %", max)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X
             };
 
-            Min = new DownloadFilterItemLongNoteTextbox("Min LN%", min)
+            Min = new DownloadFilterItemLongNoteTextbox("Min %", min)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
