@@ -415,7 +415,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 return;
             }
 
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            GameBase.Game.ScheduleRenderTargetDraw(() =>
             {
                 RenderTarget2D banner = null;
 

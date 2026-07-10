@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 OriginalTexture = tex;
 
-                AddScheduledUpdate(() => GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+                AddScheduledUpdate(() => GameBase.Game.ScheduleRenderTargetDraw(() =>
                 {
                     if (IsDisposed || !ShouldDisplayBanners || tex == null || tex.IsDisposed || mask == null || mask.IsDisposed)
                         return;

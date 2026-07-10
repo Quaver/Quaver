@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
         /// </summary>
         public override void Cache()
         {
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            GameBase.Game.ScheduleRenderTargetDraw(() =>
             {
                 try
                 {
