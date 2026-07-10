@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
                  TimeSinceLastCapture = 0;
              }*/
 
-            LastKeyPressState = GetKeyPressState();
+            LastKeyPressState = currentPressState;
             LastRecordedJudgementCount = judgementCount;
 
             if (Screen.IsPlayComplete || Screen.Failed)
