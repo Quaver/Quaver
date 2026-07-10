@@ -19,9 +19,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Processing;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -87,6 +84,20 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         /// </summary>
         private static Texture2D DefaultBanner => UserInterface.DefaultBanner;
+
+        /// <summary>
+        /// </summary>
+        private static bool ShouldLoadSongSelectBanners => ConfigManager.DisplaySongSelectBanners?.Value ?? true;
+
+        private const int BannerWidth = 421;
+
+        private const int BannerHeight = 82;
+
+        private const int ResizedBannerWidth = 448;
+
+        private const int ResizedBannerHeight = 252;
+
+        private const int ResizedBannerCropY = 20;
 
         /// <summary>
         ///     Event invoked when a new background has been loaded
@@ -222,6 +233,9 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <param name="mapset"></param>
         public static void LoadMapsetBanner(Mapset mapset)
         {
+            if (!ShouldLoadSongSelectBanners)
+                return;
+
             MapsetBannersToLoad.Add(mapset);
         }
 
@@ -231,6 +245,9 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <param name="playlist"></param>
         public static void LoadPlaylistBanner(Playlist playlist)
         {
+            if (!ShouldLoadSongSelectBanners)
+                return;
+
             PlaylistBannersToLoad.Add(playlist);
         }
 
@@ -288,25 +305,17 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     bannerExists = false;
                 }
 
-                Texture2D mapTexture;
-
-                try
+                if (!File.Exists(path))
                 {
-                    mapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
-                }
-                catch (Exception e)
-                {
-                    mapTexture = DefaultBanner;
-                    Logger.Error(e, LogType.Runtime);
+                    AddBanner(DefaultBanner, mapset);
+                    bannersToRemove.Add(mapset);
+                    continue;
                 }
 
-                // The banner is the default, so there's no need to cache it to a RenderTarget
-                if (mapTexture == DefaultBanner || bannerExists)
+                // Custom banners already have the final banner dimensions, so they can be used directly.
+                if (bannerExists)
                 {
-                    if (!MapsetBanners.ContainsKey(mapset.Directory))
-                        MapsetBanners.Add(mapset.Directory, mapTexture);
-
-                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, mapTexture));
+                    AddBanner(LoadBannerTexture(path), mapset);
                     bannersToRemove.Add(mapset);
                     continue;
                 }
@@ -359,30 +368,22 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     }
                 }
 
-                Texture2D mapTexture;
-
-                try
+                if (!File.Exists(path))
                 {
-                    mapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
-                }
-                catch (Exception e)
-                {
-                    mapTexture = DefaultBanner;
-                    Logger.Error(e, LogType.Runtime);
-                }
-
-                // The banner is the default, so there's no need to cache it to a RenderTarget
-                if (mapTexture == DefaultBanner || bannerExists)
-                {
-                    if (!PlaylistBanners.ContainsKey(playlist.Id.ToString()))
-                        PlaylistBanners.Add(playlist.Id.ToString(), mapTexture);
-
-                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(playlist, mapTexture));
+                    AddBanner(DefaultBanner, playlist);
                     bannersToRemove.Add(playlist);
                     continue;
                 }
 
-                CreateBanner(path, null, playlist);
+                // Custom banners already have the final banner dimensions, so they can be used directly.
+                if (bannerExists)
+                {
+                    AddBanner(LoadBannerTexture(path), playlist);
+                    bannersToRemove.Add(playlist);
+                    continue;
+                }
+
+                CreateBanner(path, playlist);
                 bannersToRemove.Add(playlist);
             }
 
@@ -395,35 +396,126 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// </summary>
         /// <param name="path"></param>
         /// <param name="mapset"></param>
+        private static void CreateBanner(string path, Mapset mapset) => CreateBanner(path, banner => AddBanner(banner, mapset));
+
+        /// <summary>
+        ///     Makes and creates a banner to use for playlists
+        /// </summary>
+        /// <param name="path"></param>
         /// <param name="playlist"></param>
-        private static void CreateBanner(string path, Mapset mapset = null, Playlist playlist = null)
+        private static void CreateBanner(string path, Playlist playlist) => CreateBanner(path, banner => AddBanner(banner, playlist));
+
+        private static void CreateBanner(string path, Action<Texture2D> addBanner)
         {
-            if (mapset == null && playlist == null || mapset != null && playlist != null)
-                throw new InvalidOperationException();
+            var sourceTexture = LoadBannerTexture(path);
 
-            using (var outStream = new MemoryStream())
-            using (var image = Image.Load(File.OpenRead(path), out var format))
+            if (sourceTexture == DefaultBanner)
             {
-                image.Mutate(i => i.Resize(448, 252).Crop(new SixLabors.ImageSharp.Rectangle(0, 20, 421, 82)));
-                image.Save(outStream, format);
-
-                var img = Texture2D.FromStream(GameBase.Game.GraphicsDevice, outStream);
-
-                if (mapset != null)
-                {
-                    if (!MapsetBanners.ContainsKey(mapset.Directory))
-                        MapsetBanners.Add(mapset.Directory, img);
-
-                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, img));
-                }
-                else
-                {
-                    if (!PlaylistBanners.ContainsKey(playlist.Id.ToString()))
-                        PlaylistBanners.Add(playlist.Id.ToString(), img);
-
-                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(playlist, img));
-                }
+                addBanner(DefaultBanner);
+                return;
             }
+
+            GameBase.Game.ScheduleRenderTargetDraw(() =>
+            {
+                RenderTarget2D banner = null;
+
+                try
+                {
+                    banner = CreateBannerRenderTarget(sourceTexture);
+                    addBanner(banner);
+                    banner = null;
+                }
+                catch (Exception e)
+                {
+                    addBanner(DefaultBanner);
+                    Logger.Error(e, LogType.Runtime);
+                }
+                finally
+                {
+                    banner?.Dispose();
+                    sourceTexture.Dispose();
+                }
+            });
+        }
+
+        private static Texture2D LoadBannerTexture(string path)
+        {
+            try
+            {
+                return AssetLoader.LoadTexture2DFromFile(path);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                return DefaultBanner;
+            }
+        }
+
+        private static RenderTarget2D CreateBannerRenderTarget(Texture2D sourceTexture)
+        {
+            var graphicsDevice = GameBase.Game.GraphicsDevice;
+            var banner = new RenderTarget2D(graphicsDevice, BannerWidth, BannerHeight, false,
+                graphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+
+            try
+            {
+                GameBase.Game.TryEndBatch();
+                graphicsDevice.SetRenderTarget(banner);
+                graphicsDevice.Clear(Color.Transparent);
+
+                GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.LinearClamp);
+                GameBase.Game.SpriteBatch.Draw(sourceTexture,
+                    new Rectangle(0, -ResizedBannerCropY, ResizedBannerWidth, ResizedBannerHeight), Color.White);
+                GameBase.Game.SpriteBatch.End();
+
+                graphicsDevice.SetRenderTarget(null);
+                return banner;
+            }
+            catch
+            {
+                GameBase.Game.TryEndBatch();
+                graphicsDevice.SetRenderTarget(null);
+                banner.Dispose();
+                throw;
+            }
+        }
+
+        private static void AddBanner(Texture2D banner, Mapset mapset)
+        {
+            if (MapsetBanners.TryGetValue(mapset.Directory, out var existingBanner))
+            {
+                DisposeDuplicateBanner(banner, existingBanner);
+                banner = existingBanner;
+            }
+            else
+            {
+                MapsetBanners.Add(mapset.Directory, banner);
+            }
+
+            BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, banner));
+        }
+
+        private static void AddBanner(Texture2D banner, Playlist playlist)
+        {
+            var playlistKey = playlist.Id.ToString();
+
+            if (PlaylistBanners.TryGetValue(playlistKey, out var existingPlaylistBanner))
+            {
+                DisposeDuplicateBanner(banner, existingPlaylistBanner);
+                banner = existingPlaylistBanner;
+            }
+            else
+            {
+                PlaylistBanners.Add(playlistKey, banner);
+            }
+
+            BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(playlist, banner));
+        }
+
+        private static void DisposeDuplicateBanner(Texture2D banner, Texture2D existingBanner)
+        {
+            if (banner != existingBanner && banner != DefaultBanner && !banner.IsDisposed)
+                banner.Dispose();
         }
     }
 }

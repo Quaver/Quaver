@@ -261,6 +261,10 @@ namespace Quaver.Shared.Screens.Options
                             {Tags = new List<string>() {"mini"}},
                         new OptionsSlider(containerRect, "Playfield Scale", ConfigManager.PlayfieldScale, i => $"{i / 100f:0.00}x")
                             {Tags = new List<string>() {"mini"}},
+                        new OptionsItemCheckbox(containerRect, "Display Song Select Banners", ConfigManager.DisplaySongSelectBanners)
+                        {
+                            Tags = new List<string> {"banner", "mapset", "playlist"}
+                        },
                         new OptionsItemCheckbox(containerRect, "Tint Hitlighting Based On Judgement Color", ConfigManager.TintHitLightingBasedOnJudgementColor)
                     })
                 }),
