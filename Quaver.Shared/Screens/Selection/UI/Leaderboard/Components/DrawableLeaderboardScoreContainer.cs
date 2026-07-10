@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
@@ -150,11 +149,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private Sprite Flag { get; set; }
 
-        /// <summary>
-        ///     A blank texture2D image
-        /// </summary>
-        private Texture2D BlankImage { get; set; }
-
         private bool IsScrollVisible { get; set; } = true;
 
         private bool CantBeatAlertShouldBeVisible { get; set; }
@@ -168,9 +162,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             Score = score;
             Size = Score.Size;
-
-            if (Score.Item.IsEmptyScore)
-                return;
 
             CreateButton();
             CreateGrade();
@@ -222,7 +213,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
                 // Empty scores don't need to update its state
                 if (Score.Item.IsEmptyScore)
+                {
+                    SetContentVisibility(false);
                     return;
+                }
+
+                SetContentVisibility(IsScrollVisible);
 
                 Tint = Button.IsHovered || CantBeatAlert.IsHovered || RequiredAccuracyAlert.IsHovered
                     ? ColorHelper.HexToColor("#575757"): BackgroundColor;
@@ -257,7 +253,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public override void Destroy()
         {
             UnbeatableTooltip?.Destroy();
-            BlankImage?.Dispose();
 
             // ReSharper disable once DelegateSubtraction
             SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
@@ -325,8 +320,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateAvatar()
         {
-            BlankImage = new Texture2D(GameBase.Game.GraphicsDevice, 1, 1);
-
             Avatar = new Sprite
             {
                 Parent = this,
@@ -334,7 +327,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 X = Grade.X + Grade.Width + 15,
                 Size = new ScalableVector2(45, 45),
                 UsePreviousSpriteBatchOptions = true,
-                Image = BlankImage,
+                Image = WobbleAssets.WhiteBox,
                 Alpha = 0
             };
             
@@ -927,6 +920,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (Score.Item.IsEmptyScore)
                 return;
 
+            SetContentVisibility(visible);
+            ApplyAlertVisibility();
+
+            if (!visible)
+            {
+                CantBeatAlert.IsClickable = false;
+                RequiredAccuracyAlert.IsClickable = false;
+            }
+        }
+
+        private void SetContentVisibility(bool visible)
+        {
             if (!Score.IsPersonalBest)
                 Rank.Visible = visible;
 
@@ -943,12 +948,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             Time.Visible = visible;
             Modifiers?.ForEach(x => x.Visible = visible);
 
-            ApplyAlertVisibility();
-
             if (!visible)
             {
-                CantBeatAlert.IsClickable = false;
-                RequiredAccuracyAlert.IsClickable = false;
+                CantBeatAlert.Visible = false;
+                RequiredAccuracyAlert.Visible = false;
             }
         }
 
