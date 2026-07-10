@@ -85,6 +85,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private const int MaxRetainedMessages = 250;
 
         /// <summary>
+        ///     The interval between refreshes of visible relative timestamps.
+        /// </summary>
+        private const int MessageTimestampRefreshInterval = 10_000;
+
+        /// <summary>
+        ///     The elapsed time since visible timestamps were last refreshed.
+        /// </summary>
+        private double ElapsedTimeSinceTimestampRefresh { get; set; }
+
+        /// <summary>
         ///     Extra pixels above and below the viewport to keep message drawables active while scrolling.
         /// </summary>
         private const int VisibleMessageBuffer = 300;
@@ -184,7 +194,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             base.Update(gameTime);
 
             if (!isLoadingHistory)
+            {
                 UpdateVisibleMessageDrawables();
+                RefreshVisibleMessageTimestamps(gameTime);
+            }
         }
 
         /// <summary>
@@ -491,6 +504,33 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                         message.SetScrollVisibility(isVisible);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Refreshes relative timestamps while the chat container is active.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void RefreshVisibleMessageTimestamps(GameTime gameTime)
+        {
+            ElapsedTimeSinceTimestampRefresh += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (ElapsedTimeSinceTimestampRefresh < MessageTimestampRefreshInterval)
+                return;
+
+            ElapsedTimeSinceTimestampRefresh = 0;
+            var needsReflow = false;
+
+            lock (Pool)
+            {
+                foreach (var message in Pool.OfType<DrawableChatMessage>())
+                {
+                    if (message.Parent == ContentContainer)
+                        needsReflow |= message.RefreshTimestamp();
+                }
+            }
+
+            if (needsReflow)
+                NeedsReflow = true;
         }
 
         /// <summary>

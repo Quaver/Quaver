@@ -110,9 +110,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Item = item;
             Index = index;
 
-            var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) item.Time).ToLocalTime();
-
-            Time.Text = dateTime.Humanize(culture: LocalizationManager.CurrentCulture);
+            Time.Text = GetHumanizedTime(item);
             var icon = GetIcon(Item.Sender.OnlineUser.UserGroups);
             var labelStartX = Time.X + Time.Width + PADDING_X / 2f;
 
@@ -178,6 +176,19 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             Height = Message.Height + 16;
             ApplyScrollVisibility();
+        }
+
+        /// <summary>
+        ///     Refreshes the relative timestamp and returns whether the message height changed.
+        /// </summary>
+        public bool RefreshTimestamp()
+        {
+            if (Time.Text == GetHumanizedTime(Item))
+                return false;
+
+            var previousHeight = Height;
+            UpdateContent(Item, Index);
+            return Height != previousHeight;
         }
 
         /// <summary>
@@ -337,5 +348,12 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         ///     Darkens a color for hover state.
         /// </summary>
         private static Color Darken(Color color) => new Color(color.R / 2, color.G / 2, color.B / 2);
+
+        /// <summary>
+        ///     Gets the localized, relative time displayed beside a message.
+        /// </summary>
+        private static string GetHumanizedTime(ChatMessage message)
+            => DateTimeOffset.FromUnixTimeMilliseconds((long) message.Time).ToLocalTime().Humanize(culture: LocalizationManager.CurrentCulture);
+
     }
 }
