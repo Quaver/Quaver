@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorScrollSpeedFactorPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
+        public EditorScrollSpeedFactorPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(14), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();
@@ -702,11 +702,5 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             SelectedScrollSpeedFactors.AddRange(clonedObjects);
             NeedsToScrollToFirstSelectedSv = SelectedScrollGroup.ScrollSpeedFactors.IndexOf(clonedObjects[0]);
         }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public static ImGuiOptions GetOptions() => new ImGuiOptions(
-            new List<ImGuiFont> { new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14), }, false);
     }
 }
