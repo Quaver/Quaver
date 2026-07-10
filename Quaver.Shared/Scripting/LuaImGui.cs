@@ -16,6 +16,7 @@ using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI.Menu;
@@ -226,7 +227,7 @@ namespace Quaver.Shared.Scripting
         /// <param name="isResource"></param>
         /// <param name="name"></param>
         public LuaImGui(string filePath, bool isResource = false, string name = null)
-            : base(false, EditorFileMenuBar.GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
+            : base(false, EditorImGuiOptions.GetOptions(16), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
         {
             FilePath = filePath;
             IsResource = isResource;
