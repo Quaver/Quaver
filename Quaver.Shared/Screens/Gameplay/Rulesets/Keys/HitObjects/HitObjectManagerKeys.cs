@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public HashSet<NoteControllerKeys> RenderedHitObjectInfos { get; private set; }
 
         /// <summary>
-        ///     Used by <see cref="UpdateHitObjects"/> to avoid instantiating a new hash set every update
+        ///     Used by <see cref="UpdateRenderedHitObjects"/> to avoid instantiating a new hash set every visual update
         /// </summary>
         public HashSet<NoteControllerKeys> InRangeHitObjectInfos { get; private set; }
 
@@ -125,6 +125,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Used for things related to timing that are affected by screen latency.
         /// </summary>
         public double CurrentVisualAudioOffset { get; private set; }
+
+        /// <summary>
+        ///     Time accumulated since the visual hit object state was last refreshed.
+        /// </summary>
+        private double TimeSinceLastVisualUpdate { get; set; } = 1000d / 60;
 
         /// <summary>
         ///     A mapping from hit objects to the associated hit stats from a replay.
@@ -487,7 +492,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ScoreMissedHitObjects();
             ScoreMissedReleases();
 
-            UpdateHitObjects();
+            TimeSinceLastVisualUpdate += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (TimeSinceLastVisualUpdate >= 1000d / 60)
+            {
+                UpdateRenderedHitObjects();
+                TimeSinceLastVisualUpdate = 0;
+            }
+
+            UpdateHitObjectPositions();
         }
 
         /// <summary>
@@ -505,9 +518,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public NoteControllerKeys GetClosestRelease(int lane) => HeldLongNoteLanes[lane].Count > 0 ? HeldLongNoteLanes[lane].Peek() : null;
 
         /// <summary>
-        ///     Determine which hitobjects to render and update rendered hitobjects' sprite positions.
+        ///     Determine which hitobjects should be rendered.
         /// </summary>
-        private void UpdateHitObjects()
+        private void UpdateRenderedHitObjects()
         {
             // stop rendering hitobjects outside range
             bool removeIfNotVisible(NoteControllerKeys info)
@@ -548,7 +561,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 RenderedHitObjectInfos.Add(info);
             }
 
-            // update sprite positions
+        }
+
+        /// <summary>
+        ///     Updates rendered hit object positions at the game's full update rate.
+        /// </summary>
+        private void UpdateHitObjectPositions()
+        {
             foreach (var info in RenderedHitObjectInfos)
             {
                 info.HitObject.UpdateSpritePositions(CurrentVisualAudioOffset);
