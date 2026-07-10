@@ -336,6 +336,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<LeaderboardType> LeaderboardSection { get; private set; }
 
         /// <summary>
+        ///     If true, mapset and playlist banners will be displayed during song select.
+        /// </summary>
+        internal static Bindable<bool> DisplaySongSelectBanners { get; private set; }
+
+        /// <summary>
         ///     If true, the user will be auto logged into the server.
         /// </summary>
         internal static Bindable<bool> AutoLoginToServer { get; private set; }
@@ -1103,6 +1108,7 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayHitBubbles = ReadValue(@"DisplayHitBubbles", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
+            DisplaySongSelectBanners = ReadValue(@"DisplaySongSelectBanners", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
             EnableLongNoteReleaseHitsounds = ReadValue(@"EnableLongNoteReleaseHitsounds", false, data);
             EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);

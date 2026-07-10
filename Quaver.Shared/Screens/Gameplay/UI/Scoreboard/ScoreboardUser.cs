@@ -390,7 +390,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
         private void ScheduleAvatarMaskBlend(Texture2D avatar)
         {
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            GameBase.Game.ScheduleRenderTargetDraw(() =>
             {
                 if (IsDisposed || avatar == null || avatar.IsDisposed || SkinManager.Skin?.ScoreboardAvatarMask == null)
                     return;

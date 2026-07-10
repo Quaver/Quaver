@@ -14,6 +14,7 @@ using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -136,6 +137,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateGameModes();
             CreateOnlineGrade();
 
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged += OnDisplaySongSelectBannersChanged;
+
             UsePreviousSpriteBatchOptions = true;
         }
 
@@ -149,6 +153,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             PerformHoverAnimation(gameTime);
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged -= OnDisplaySongSelectBannersChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -223,6 +238,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             RankedStatusSprite.Tint = statusColor;
             RankedStatusSprite.SetLabel(Title.Font, statusText, 16, Color.White);
             GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.Mode), GameModes, GameModeText);
+            UpdateBannerLayout();
 
             if (ParentMapset.IsSelected)
                 Select(true);
@@ -271,7 +287,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
+                Size = DrawableBanner.DisplaySize,
                 X = -2,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -379,6 +395,26 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Tint = Color.White,
             };
         }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateBannerLayout()
+        {
+            var bannerSize = DrawableBanner.DisplaySize;
+
+            if (Banner.Width != bannerSize.X.Value || Banner.Height != bannerSize.Y.Value)
+                Banner.Size = bannerSize;
+
+            RankedStatusSprite.X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18);
+            GameModes.X = RankedStatusSprite.X - RankedStatusSprite.Width + (SkinManager.Skin?.SongSelect?.GameModePosOffsetX ?? -18);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplaySongSelectBannersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => UpdateBannerLayout();
 
         /// <summary>
         /// </summary>
