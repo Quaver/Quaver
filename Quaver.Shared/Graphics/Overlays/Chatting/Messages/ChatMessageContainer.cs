@@ -128,6 +128,15 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         }
 
         /// <summary>
+        ///     Lets message views stage missed messages after F8 is opened again without rebuilding their caches.
+        /// </summary>
+        public void StageStoreCatchUpForOverlayClose()
+        {
+            foreach (var container in MessageScrollContainers.Values.ToList())
+                container.StageStoreCatchUpForOverlayClose();
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="chan"></param>
         public void AddChannel(ChatChannel chan)

@@ -46,6 +46,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private bool HasQueuedInitialHistory { get; set; }
 
         /// <summary>
+        ///     If messages received while F8 was closed should be staged before rendering again.
+        /// </summary>
+        private bool ShouldStageStoreCatchUp { get; set; }
+
+        /// <summary>
         ///     The last message-store generation rendered by this view.
         /// </summary>
         private long AppliedStoreGeneration { get; set; } = -1;
@@ -98,6 +103,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         ///     If the container should scroll to the bottom after the next reflow.
         /// </summary>
         private bool NeedsScrollToBottom { get; set; }
+
+        /// <summary>
+        ///     If the next bottom scroll should ignore the user's current scroll position.
+        /// </summary>
+        private bool ForceScrollToBottom { get; set; }
 
         /// <summary>
         ///     The currently active right click options for the screen
@@ -165,9 +175,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 ReflowMessageDrawables();
 
                 if (NeedsScrollToBottom)
-                    ScrollToBottomIfNecessary();
+                    ScrollToBottomIfNecessary(ForceScrollToBottom);
 
                 NeedsScrollToBottom = false;
+                ForceScrollToBottom = false;
             }
 
             base.Update(gameTime);
@@ -211,6 +222,15 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 return;
 
             UpdateVisibleMessageDrawables();
+        }
+
+        /// <summary>
+        ///     Stages messages received while F8 is closed without discarding this tab's cached drawables.
+        /// </summary>
+        public void StageStoreCatchUpForOverlayClose()
+        {
+            if (IsOverlayView)
+                ShouldStageStoreCatchUp = true;
         }
 
         /// <inheritdoc />
@@ -261,13 +281,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 return;
 
             if (snapshot.Version == AppliedStoreVersion)
+            {
+                ShouldStageStoreCatchUp = false;
                 return;
+            }
 
             lock (AvailableItems)
             lock (MessageHistoryQueue)
             lock (MessageQueue)
             {
-                var queue = HasQueuedInitialHistory ? MessageQueue : MessageHistoryQueue;
+                var queue = !HasQueuedInitialHistory || ShouldStageStoreCatchUp ? MessageHistoryQueue : MessageQueue;
 
                 foreach (var message in snapshot.Messages)
                 {
@@ -280,6 +303,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
                 HasQueuedInitialHistory = true;
                 AppliedStoreVersion = snapshot.Version;
+                ShouldStageStoreCatchUp = false;
             }
         }
 
@@ -303,6 +327,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 TotalMessageHeight = 0;
                 NeedsReflow = false;
                 NeedsScrollToBottom = false;
+                ForceScrollToBottom = false;
                 UpdateContentContainerSize();
             }
         }
@@ -328,7 +353,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             lock (MessageHistoryQueue)
             {
                 if (MessageHistoryQueue.Count == 0)
+                {
                     NeedsScrollToBottom = true;
+                    ForceScrollToBottom = true;
+                }
             }
         }
 
@@ -502,15 +530,27 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
         /// <summary>
         /// </summary>
-        private void ScrollToBottomIfNecessary()
+        private void ScrollToBottomIfNecessary(bool force = false)
         {
             if (AvailableItems.Count == 0)
                 return;
 
-            if (!ShouldScrollToBottom(AvailableItems.Last()))
+            if (!ShouldScrollToBottom(AvailableItems.Last(), force))
                 return;
 
             ClearAnimations();
+
+            if (force)
+            {
+                var y = MathHelper.Clamp(-TotalMessageHeight, -ContentContainer.Height + Height, 0);
+
+                ContentContainer.Animations.Clear();
+                TargetY = y;
+                PreviousTargetY = y;
+                PreviousContentContainerY = y;
+                ContentContainer.Y = y;
+                return;
+            }
 
             ScrollTo(-TotalMessageHeight, 600);
         }
@@ -518,10 +558,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// <summary>
         /// </summary>
         /// <param name="latestMessage"></param>
+        /// <param name="force"></param>
         /// <returns></returns>
-        private bool ShouldScrollToBottom(ChatMessage latestMessage)
+        private bool ShouldScrollToBottom(ChatMessage latestMessage, bool force = false)
         {
-            return TotalMessageHeight - Height - Math.Abs(ContentContainer.Y) < 600 || latestMessage.IsFromSelf;
+            return force || TotalMessageHeight - Height - Math.Abs(ContentContainer.Y) < 600 || latestMessage.IsFromSelf;
         }
 
         /// <summary>

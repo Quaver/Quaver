@@ -139,6 +139,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         public void Close()
         {
             DismissActiveDropdowns();
+            MessageContainer.StageStoreCatchUpForOverlayClose();
 
             ClearAnimations();
             MoveToY((int)Height + 10, Easing.OutQuint, 500);
