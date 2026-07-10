@@ -42,7 +42,7 @@ namespace Quaver.Shared.Graphics.Online.Playercard
                 UsePreviousSpriteBatchOptions = true,
             };
 
-            Value = new SpriteText(Fonts.Exo2BoldItalic, " ", 24)
+            Value = new SpriteText(Fonts.InterBold, " ", 24)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,

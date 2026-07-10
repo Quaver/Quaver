@@ -152,7 +152,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
                 item.Alignment = direction == AlignmentDirection.LeftToRight ? Alignment.MidLeft : Alignment.MidRight;
 
                 const int padding = 25;
-                var spacing = item is IMenuBorderItem b && b.UseCustomPaddingX ? b.CustomPaddingX : 60;
+                var spacing = item is IMenuBorderItem b && b.UseCustomPaddingX ? b.CustomPaddingX : 40;
 
                 if (i == 0)
                     item.X = direction == AlignmentDirection.LeftToRight ? padding : -padding;

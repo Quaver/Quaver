@@ -163,7 +163,7 @@
     <value>Opprett eller rediger et map til hvilken som helst sang du ønsker</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
-    <value>Finn nye sanger fra samfunnet til å spillet</value>
+    <value>Finn nye sanger fra samfunnet til å spille</value>
   </data>
   <data name="Screen_Main_TipLabel" xml:space="preserve">
     <value>TIP:</value>
@@ -625,7 +625,7 @@
     <value>Mappet av:</value>
   </data>
   <data name="Screen_Results_Playedby" xml:space="preserve">
-    <value>Spilt av:</value>
+    <value>Spilt av</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
     <value>på {0} @ {1}</value>
@@ -677,7 +677,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise nøyaktigheten dersom all
 Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påfølgende treff i stedet hadde vært "Strålende".</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
-    <value>SENDER INN SKÅR...</value>
+    <value>SENDER INN SCORE...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
     <value>GLOBALT RANGERING</value>
@@ -752,7 +752,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Det oppstod en feil under henting av spillingen for denne scoren!</value>
   </data>
   <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
-    <value>Kan ikke laste ned spillingen for denne scoren!</value>
+    <value>Kan ikke laste ned spillingen for denne scoren.</value>
   </data>
   <data name="Screen_Results_FetchingReplay" xml:space="preserve">
     <value>HENTER SPILLINGEN</value>
@@ -770,7 +770,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Du har allerede fikset din lokale offset på denne mappen. Det er ikke nødvendig å gjøre det igjen.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
-    <value>Det er ingen data som kan fikse ditt lokale offset.</value>
+    <value>Det er ingen data som kan fikse ditt lokale offset!</value>
   </data>
   <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
     <value>FIKS LOKALE OFFSET</value>
@@ -785,7 +785,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Kunne ikke lagre lokal score til databasen. Vennligst sjekk loggene!</value>
   </data>
   <data name="Screen_Results_TherewasanerrorwhensavingyourreplayCheckRuntimelogformoredetails" xml:space="preserve">
-    <value>Det oppstod en feil ved lagring av din replay. Sjekk runtime.log for mer informasjon.</value>
+    <value>Det oppstod en feil ved lagring av din replay. Sjekk Runtime.log for mer informasjon.</value>
   </data>
   <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
     <value>Det er ingen replay data tilgjengelig til å konvertere denne scoren!</value>
@@ -794,7 +794,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Global lyd offset</value>
   </data>
   <data name="Screen_Options_VisualOffset" xml:space="preserve">
-    <value>Visuelle Offset</value>
+    <value>Visuell Offset</value>
   </data>
   <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
     <value>Kalibrer Offset</value>
@@ -1327,8 +1327,32 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Taster</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Innstillinger</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Videoinnstillinger</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Lydinnstillinger</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Språkinnstillinger</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Spillinstillinger</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Stilinstillinger</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Inputinstillinger</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Spillmodusspesifikke innstillinger</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Diverse innstillinger</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Avanserte innstillinger</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} søkeresultat</value>
@@ -1466,7 +1490,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Vis eksplisitte mapsetter</value>
   </data>
   <data name="Screen_Download_Maps" xml:space="preserve">
-    <value>Maps:</value>
+    <value>Maps: </value>
   </data>
   <data name="Screen_Download_NoSongSelected" xml:space="preserve">
     <value>Ingen sang valgt</value>
@@ -1582,7 +1606,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>BEKREFT KLAR</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyMessage" xml:space="preserve">
-    <value>Å gjør seg klar som verten vil starte runden, er du sikker på at du har lyst til å start uten at alle spillerene er klare?</value>
+    <value>Å gjøre seg klar som verten vil starte runden, er du sikker på at du har lyst til å start uten at alle spillerene er klare?</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyTitle" xml:space="preserve">
     <value>DRA TIL LOBBYEN</value>
@@ -1651,7 +1675,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Vennligst vent mens mapsettet lastes opp...</value>
   </data>
   <data name="Screen_Multi_SuccessfullyUploadedUnsubmittedMapset" xml:space="preserve">
-    <value>vellykket lastet opp usendt mapsett for multiplayer-spillet!</value>
+    <value>Vellykket lastet opp usendt mapsett for multiplayer-spillet!</value>
   </data>
   <data name="Screen_Multi_UploadMapsetError" xml:space="preserve">
     <value>Det oppsto en feil under opplasting av mapsettet.</value>
@@ -1771,7 +1795,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Du må være uklar for å kunne bytte lag!</value>
   </data>
   <data name="Screen_Multiplayer_CannotSwitchTeamsDuringCountdown" xml:space="preserve">
-    <value>Du kan ikke bytte lag når nedtellingstiden er aktiv.</value>
+    <value>Du kan ikke bytte lag når nedtellingstiden er aktiv</value>
   </data>
   <data name="Screen_Multiplayer_ViewProfile" xml:space="preserve">
     <value>Vis profil</value>
@@ -1861,7 +1885,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Kampen har startet, men vi har ikke mappen!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
-    <value>Match startet. Klikk til å se matchen direkte på nettet som en dommer.</value>
+    <value>Match startet. Klikk til å se matchen direkte på nettet som en dommer. </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
     <value>MATCH DETALJER</value>
@@ -1909,7 +1933,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Åpen</value>
   </data>
   <data name="Screen_MultiplayerLobby_Full" xml:space="preserve">
-    <value>Full</value>
+    <value>Fullt</value>
   </data>
   <data name="Screen_MultiplayerLobby_Password" xml:space="preserve">
     <value>Passord</value>
@@ -1983,7 +2007,13 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Vanskelighetsgrad Rangering</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Enhver</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Enhver</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
     <value>Enhver</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">

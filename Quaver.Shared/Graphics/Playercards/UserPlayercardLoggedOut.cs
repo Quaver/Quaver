@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -28,7 +29,7 @@ namespace Quaver.Shared.Graphics.Playercards
 
         /// <summary>
         /// </summary>
-        public IconButton LoginButton { get; private set; }
+        public RoundedButton LoginButton { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -90,7 +91,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,
@@ -105,15 +106,18 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateLoginButton()
         {
-            LoginButton = new IconButton(UserInterface.LoginButtonPlayercard)
+            LoginButton = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 UsePreviousSpriteBatchOptions = true,
                 Size = new ScalableVector2(76, 25),
                 Position = new ScalableVector2(-16, 0),
-                Visible = false
+                Visible = false,
+                Tint = ColorHelper.HexToColor("#0EAED6")
             };
+
+            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "LOG IN", 15, Color.White);
 
             LoginButton.Clicked += (sender, args) => OnlineManager.Login();
         }

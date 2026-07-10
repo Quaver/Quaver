@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         /// <param name="keyColor"></param>
         public TextKeyValue(string key, string value, int fontSize, Color keyColor)
         {
-            FontSize = fontSize;
+            FontSize = fontSize - 2;
             KeyColor = keyColor;
 
             CreateKey(key);

@@ -55,18 +55,18 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Tint = Color.Black;
             Alpha = 0f;
 
-            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("PlayersCount", 0, 16))
+            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("PlayersCount", 0, 14))
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                FontSize = 16,
+                FontSize = 14,
             };
 
             Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("WaitingToStart"))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                FontSize = 16,
+                FontSize = 14,
             };
 
             // ReSharper disable once ObjectCreationAsStatement

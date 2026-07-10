@@ -1,26 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Quaver.API.Enums;
 using Quaver.Server.Client.Events.Scores;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
-using Wobble.Assets;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.Animations;
-using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Sprites.Text;
-using Wobble.Graphics.UI.Buttons;
-using Wobble.Input;
-using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
@@ -73,6 +59,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 OnlineManager.Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
 
             MapsetInfoRetriever.MapsetInfoRetrieved += OnMapsetInfoRetrieved;
+            ScoreFetcherOnlineMapStatus.RankedStatusUpdated += OnOnlineRankedStatusUpdated;
 
             ModManager.ModsChanged += OnModsChanged;
 
@@ -91,6 +78,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 OnlineManager.Client.OnRetrievedOnlineScores -= OnRetrievedOnlineScores;
 
             MapsetInfoRetriever.MapsetInfoRetrieved -= OnMapsetInfoRetrieved;
+            ScoreFetcherOnlineMapStatus.RankedStatusUpdated -= OnOnlineRankedStatusUpdated;
 
             ModManager.ModsChanged -= OnModsChanged;
 
@@ -159,6 +147,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         private void OnMapsetInfoRetrieved(object sender, EventArgs args) => UpdateContent(Item, Index);
+
+        private void OnOnlineRankedStatusUpdated(object sender, EventArgs args) => UpdateContent(Item, Index);
 
         /// <summary>
         /// </summary>

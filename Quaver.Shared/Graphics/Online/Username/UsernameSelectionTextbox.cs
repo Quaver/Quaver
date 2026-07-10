@@ -49,7 +49,7 @@ namespace Quaver.Shared.Graphics.Online.Username
                 Text =
                 {
                     FontSize = 13,
-                    Font = Fonts.Exo2SemiBold
+                    Font = Fonts.InterSemiBold
                 }
             };
 

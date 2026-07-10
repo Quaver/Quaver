@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             Alpha = 0;
 
             NowPlaying = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                LocalizationManager.Get("Screen_Main_NowPlaying"), 20)
+                LocalizationManager.Get("Screen_Main_NowPlaying"), 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -57,7 +57,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
                 Alpha = 0
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

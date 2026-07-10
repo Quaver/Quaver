@@ -18,6 +18,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
 {
@@ -73,7 +74,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
             Password.Height = 0;
 
             YesButton.Y = -30;
-            YesButton.Image = UserInterface.CreateButton;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CREATE", 20, Color.White);
             NoButton.Y = YesButton.Y;
 
             YesAction += OnCreateClicked;

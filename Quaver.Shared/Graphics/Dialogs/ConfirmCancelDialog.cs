@@ -160,7 +160,7 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// </summary>
         private void CreateAreYouSureText()
         {
-            AreYouSure = new SpriteText(Fonts.Exo2Medium, HeaderText, 24)
+            AreYouSure = new SpriteText(Fonts.InterSemiBold, HeaderText, 24)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
@@ -195,7 +195,7 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// </summary>
         private void CreateSureButton()
         {
-            SureButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Medium,
+            SureButton = new TextButton(UserInterface.BlankBox, Fonts.InterSemiBold,
                 "Sure", 14, (o, e) =>
                 {
                     OnConfirm(o, e);
@@ -223,7 +223,7 @@ namespace Quaver.Shared.Graphics.Dialogs
         private void CreateCancelButton()
         {
             CancelButton = new TextButton(UserInterface.BlankBox,
-                Fonts.Exo2Medium, "Cancel", 14, (o, e) =>
+                Fonts.InterSemiBold, "Cancel", 14, (o, e) =>
                 {
                     OnCancel?.Invoke(o, e);
                     Dismiss();

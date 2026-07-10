@@ -7,6 +7,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps;
@@ -74,7 +75,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     The ranked status of the map
         /// </summary>
-        private Sprite RankedStatusSprite { get; set; }
+        private RoundedButton RankedStatusSprite { get; set; }
 
         /// <summary>
         ///     The game modes the mapset has
@@ -215,7 +216,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
             else
             {
-                Title.FontSize = 26;
+                Title.FontSize = 22;
                 Title.Text = item.Title;
                 Title.TruncateWithEllipsis(400);
 
@@ -233,7 +234,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             ByText.X = DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX;
             Creator.X = ByText.X + ByText.Width + ArtistCreatorSpacingX;
 
-            RankedStatusSprite.Image = GetRankedStatusImage();
+            var (statusText, statusColor) = GetRankedStatusInfo();
+            RankedStatusSprite.Tint = statusColor;
+            RankedStatusSprite.SetLabel(Title.Font, statusText, 16, Color.White);
             GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.Mode), GameModes, GameModeText);
             UpdateBannerLayout();
 
@@ -295,7 +298,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -309,7 +312,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(Title.Font, "Artist", 20)
+            Artist = new SpriteTextPlus(Title.Font, "Artist", 16)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
@@ -359,13 +362,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateRankedStatus()
         {
-            RankedStatusSprite = new Sprite
+            RankedStatusSprite = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(115, 28),
                 X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18),
-                Image = UserInterface.StatusPanel,
+                IsClickable = false,
+                PerformHoverFade = false,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -383,7 +387,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
+            GameModeText = new SpriteTextPlus(Title.Font, "", 14)
             {
                 Parent = GameModes,
                 Alignment = Alignment.MidCenter,
@@ -431,7 +435,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
+            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 18)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Artist.Y),
@@ -441,20 +445,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     Retrieves the color of a map's ranked status
+        ///     Retrieves the label text/color of a map's ranked status, used to populate the
+        ///     <see cref="RankedStatusSprite"/> pill.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private Texture2D GetRankedStatusImage()
+        private (string Text, Color Color) GetRankedStatusInfo()
         {
             if (ParentMapset.Item.Maps.First().Game != MapGame.Quaver)
             {
                 switch (ParentMapset.Item.Maps.First().Game)
                 {
                     case MapGame.Osu:
-                        return SkinManager.Skin?.SongSelect?.StatusOsu ?? UserInterface.StatusOtherGameOsu;
+                        return ("OTHER GAME", ColorHelper.HexToColor("#FF6FA8"));
                     case MapGame.Etterna:
-                        return SkinManager.Skin?.SongSelect?.StatusStepmania ?? UserInterface.StatusOtherGameEtterna;
+                        return ("OTHER GAME", ColorHelper.HexToColor("#5D5195"));
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -463,13 +468,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             switch (ParentMapset.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
-                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
+                    return ("UNSUBMITTED", ColorHelper.HexToColor("#808080"));
                 case RankedStatus.Unranked:
-                    return SkinManager.Skin?.SongSelect?.StatusUnranked ?? UserInterface.StatusUnranked;
+                    return ("UNRANKED", ColorHelper.HexToColor("#F16264"));
                 case RankedStatus.Ranked:
-                    return SkinManager.Skin?.SongSelect?.StatusRanked ?? UserInterface.StatusRanked;
+                    return ("RANKED", ColorHelper.HexToColor("#1FBE83"));
                 case RankedStatus.DanCourse:
-                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
+                    return ("UNSUBMITTED", ColorHelper.HexToColor("#808080"));
                 default:
                     throw new ArgumentOutOfRangeException();
             }

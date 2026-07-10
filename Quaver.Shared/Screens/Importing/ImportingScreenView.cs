@@ -187,7 +187,7 @@ namespace Quaver.Shared.Screens.Importing
         private void CreatePleaseWaitText()
         {
             PleaseWaitText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                "Please wait while your maps are being processed!".ToUpper(), 26)
+                "Please wait while your maps are being processed!".ToUpper(), 24)
             {
                 Parent = Banner,
                 Alignment = Alignment.TopCenter,
