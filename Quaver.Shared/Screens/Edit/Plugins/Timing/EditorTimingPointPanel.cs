@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorTimingPointPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
+        public EditorTimingPointPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(14), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();
@@ -761,13 +761,5 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             SelectedTimingPoints.AddRange(clonedObjects);
             NeedsToScrollToFirstSelectedPoint = Screen.WorkingMap.TimingPoints.IndexOf(clonedObjects[0]);
         }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
-        {
-            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14),
-        }, false);
     }
 }

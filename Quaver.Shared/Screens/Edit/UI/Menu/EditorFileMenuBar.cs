@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Localization;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
@@ -65,7 +66,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions(), screen.ImGuiScale) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, EditorImGuiOptions.GetOptions(16), screen.ImGuiScale) => Screen = screen;
 
 
         /// <inheritdoc />
@@ -1130,14 +1131,5 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             ImGui.PopTextWrapPos();
             ImGui.EndTooltip();
         }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
-        {
-            // ToDo replace to use the new font we use!
-            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 16),
-        }, false);
     }
 }

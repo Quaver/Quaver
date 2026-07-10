@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorTimingGroupPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
+        public EditorTimingGroupPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(14), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();
@@ -621,12 +621,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     childHitObjects);
             }
         }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public static ImGuiOptions GetOptions() => new(
-            new List<ImGuiFont> { new($"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14), }, false);
 
         public override void Destroy()
         {

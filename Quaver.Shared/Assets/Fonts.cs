@@ -86,6 +86,8 @@ namespace Quaver.Shared.Assets
 
             // Copy over
             File.WriteAllBytes($"{dir}/inter.ttf", interFont);
+            File.WriteAllBytes($"{dir}/noto-sans-cjk.ttc",
+                GameBase.Game.Resources.Get($@"{Folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"));
             File.WriteAllBytes($"{dir}/lato-black.ttf", interFont);
         }
 
