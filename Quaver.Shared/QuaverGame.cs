@@ -109,6 +109,7 @@ using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
@@ -456,6 +457,10 @@ namespace Quaver.Shared
             NotificationManager.Draw(gameTime);
             VolumeController?.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
+
+            // F8 chat belongs to global UI, which draws after Wobble's normal tooltip layer.
+            if (OnlineChat?.IsOpen == true)
+                TooltipManager.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
 
