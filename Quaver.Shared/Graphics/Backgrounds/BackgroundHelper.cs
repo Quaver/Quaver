@@ -19,6 +19,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning;
+using SkiaSharp;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -30,7 +31,6 @@ using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
 using Logger = Wobble.Logging.Logger;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Quaver.Shared.Graphics.Backgrounds
 {
@@ -84,10 +84,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         /// </summary>
         private static Texture2D DefaultBanner => UserInterface.DefaultBanner;
-
-        /// <summary>
-        /// </summary>
-        private static bool ShouldLoadSongSelectBanners => ConfigManager.DisplaySongSelectBanners?.Value ?? true;
 
         private const int BannerWidth = 421;
 
@@ -233,9 +229,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <param name="mapset"></param>
         public static void LoadMapsetBanner(Mapset mapset)
         {
-            if (!ShouldLoadSongSelectBanners)
-                return;
-
             MapsetBannersToLoad.Add(mapset);
         }
 
@@ -245,9 +238,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <param name="playlist"></param>
         public static void LoadPlaylistBanner(Playlist playlist)
         {
-            if (!ShouldLoadSongSelectBanners)
-                return;
-
             PlaylistBannersToLoad.Add(playlist);
         }
 
@@ -407,9 +397,9 @@ namespace Quaver.Shared.Graphics.Backgrounds
 
         private static void CreateBanner(string path, Action<Texture2D> addBanner)
         {
-            var sourceTexture = LoadBannerTexture(path);
+            var bannerData = CreateBannerData(path);
 
-            if (sourceTexture == DefaultBanner)
+            if (bannerData == null)
             {
                 addBanner(DefaultBanner);
                 return;
@@ -417,23 +407,14 @@ namespace Quaver.Shared.Graphics.Backgrounds
 
             GameBase.Game.ScheduleRenderTargetDraw(() =>
             {
-                RenderTarget2D banner = null;
-
                 try
                 {
-                    banner = CreateBannerRenderTarget(sourceTexture);
-                    addBanner(banner);
-                    banner = null;
+                    addBanner(AssetLoader.LoadTexture2D(bannerData));
                 }
                 catch (Exception e)
                 {
                     addBanner(DefaultBanner);
                     Logger.Error(e, LogType.Runtime);
-                }
-                finally
-                {
-                    banner?.Dispose();
-                    sourceTexture.Dispose();
                 }
             });
         }
@@ -451,32 +432,30 @@ namespace Quaver.Shared.Graphics.Backgrounds
             }
         }
 
-        private static RenderTarget2D CreateBannerRenderTarget(Texture2D sourceTexture)
+        private static byte[] CreateBannerData(string path)
         {
-            var graphicsDevice = GameBase.Game.GraphicsDevice;
-            var banner = new RenderTarget2D(graphicsDevice, BannerWidth, BannerHeight, false,
-                graphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
             try
             {
-                GameBase.Game.TryEndBatch();
-                graphicsDevice.SetRenderTarget(banner);
-                graphicsDevice.Clear(Color.Transparent);
+                using (var source = SKImage.FromEncodedData(path))
+                using (var surface = SKSurface.Create(new SKImageInfo(BannerWidth, BannerHeight, SKColorType.Rgba8888, SKAlphaType.Premul)))
+                using (var paint = new SKPaint { IsAntialias = true })
+                {
+                    if (source == null || surface == null)
+                        return null;
 
-                GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.LinearClamp);
-                GameBase.Game.SpriteBatch.Draw(sourceTexture,
-                    new Rectangle(0, -ResizedBannerCropY, ResizedBannerWidth, ResizedBannerHeight), Color.White);
-                GameBase.Game.SpriteBatch.End();
+                    surface.Canvas.Clear(SKColors.Transparent);
+                    surface.Canvas.DrawImage(source, new SKRect(0, -ResizedBannerCropY, ResizedBannerWidth, ResizedBannerHeight - ResizedBannerCropY), new SKSamplingOptions(SKFilterMode.Linear), paint);
+                    surface.Canvas.Flush();
 
-                graphicsDevice.SetRenderTarget(null);
-                return banner;
+                    using (var image = surface.Snapshot())
+                    using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+                        return data?.ToArray();
+                }
             }
-            catch
+            catch (Exception e)
             {
-                GameBase.Game.TryEndBatch();
-                graphicsDevice.SetRenderTarget(null);
-                banner.Dispose();
-                throw;
+                Logger.Error(e, LogType.Runtime);
+                return null;
             }
         }
 
