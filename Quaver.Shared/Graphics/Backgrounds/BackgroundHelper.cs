@@ -444,7 +444,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                         return null;
 
                     surface.Canvas.Clear(SKColors.Transparent);
-                    surface.Canvas.DrawImage(source, new SKRect(0, -ResizedBannerCropY, ResizedBannerWidth, ResizedBannerHeight), new SKSamplingOptions(SKFilterMode.Linear), paint);
+                    surface.Canvas.DrawImage(source, new SKRect(0, -ResizedBannerCropY, ResizedBannerWidth, ResizedBannerHeight - ResizedBannerCropY), new SKSamplingOptions(SKFilterMode.Linear), paint);
                     surface.Canvas.Flush();
 
                     using (var image = surface.Snapshot())
