@@ -69,7 +69,7 @@ namespace Quaver.Shared.Assets
             void CacheInterFont(string name, int weight)
             {
                 CacheFont(name, new WobbleFontStore(InterDefaultSize,
-                    new WobbleFontFace(interFont, weight: weight),
+                    new WobbleFontFace(interFont, weight: weight, enableTabularNumbers: true),
                     implicitFontSizeReduction: InterImplicitFontSizeReduction,
                     addedFonts: CreateFallbacks()));
             }

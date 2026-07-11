@@ -128,6 +128,15 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         }
 
         /// <summary>
+        ///     Lets message views stage missed messages after F8 is opened again without rebuilding their caches.
+        /// </summary>
+        public void StageStoreCatchUpForOverlayClose()
+        {
+            foreach (var container in MessageScrollContainers.Values.ToList())
+                container.StageStoreCatchUpForOverlayClose();
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="chan"></param>
         public void AddChannel(ChatChannel chan)
@@ -136,18 +145,13 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
                 return;
 
             var container = new ChatMessageScrollContainer(chan, new ScalableVector2(Width,
-                Height - TopicHeader.Height - TextboxContainer.Height), TopicHeader.Height, TextboxContainer.Height)
+                Height - TopicHeader.Height - TextboxContainer.Height), TopicHeader.Height, TextboxContainer.Height, true)
             {
                 Y = TopicHeader.Height,
                 DestroyIfParentIsNull = false
             };
 
             MessageScrollContainers.Add(chan, container);
-
-            if (OnlineChat.Instance != null)
-                container.SetEventProcessingSuspended(OnlineChat.Instance.IsEventProcessingSuspended);
-
-            container.InitializeMessageHistory();
         }
 
         /// <summary>
