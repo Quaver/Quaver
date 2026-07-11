@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         /// <summary>
         /// </summary>
         private void CreateLabel() => Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-            GetTipLabel(), 20)
+            GetTipLabel(), 18)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         private void CreateTextTip()
         {
             TextTip = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                LocalizationManager.Get(TipKeys[12]), Label.FontSize)
+                LocalizationManager.Get(TipKeys[12]), 16)
             {
                 Alignment = Alignment.MidLeft,
                 Tint = SkinManager.Skin?.MainMenu?.TipTextColor ?? Color.White

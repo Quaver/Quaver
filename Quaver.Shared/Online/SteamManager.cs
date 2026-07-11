@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -95,21 +94,19 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Initializes the Steam API.
         /// </summary>
-        public static void Initialize()
+        public static void Initialize(bool restartIfNecessary = true, bool throwOnFailure = true)
         {
-            [DoesNotReturn]
             static void Fail(string log)
             {
                 Console.Beep();
                 Logger.Error(log, LogType.Runtime);
-                throw new InvalidOperationException(log);
             }
 #if DEBUG
             // Creates a file with the Steam Application Id, this is required for debugging
             File.WriteAllText($"{Directory.GetCurrentDirectory()}/steam_appid.txt", ApplicationId.ToString());
 #endif
             // Make sure the game is started with Steam.
-            if (SteamAPI.RestartAppIfNecessary((AppId_t)ApplicationId))
+            if (restartIfNecessary && SteamAPI.RestartAppIfNecessary((AppId_t)ApplicationId))
                 Environment.Exit(0);
 
             IsInitialized = SteamAPI.Init();
@@ -118,13 +115,34 @@ namespace Quaver.Shared.Online
             UserAvatarsLarge = new ConcurrentDictionary<ulong, Texture2D>();
 
             if (!IsInitialized)
+            {
                 Fail("SteamAPI.Init() call has failed! Steam is not initialized");
 
+                if (throwOnFailure)
+                    throw new InvalidOperationException("SteamAPI.Init() call has failed! Steam is not initialized");
+
+                return;
+            }
+
             if (!Packsize.Test())
+            {
                 Fail("The incorrect Steamworks.NET assembly was loaded for this platform!");
 
+                if (throwOnFailure)
+                    throw new InvalidOperationException("The incorrect Steamworks.NET assembly was loaded for this platform!");
+
+                return;
+            }
+
             if (!DllCheck.Test())
+            {
                 Fail("The wrong dlls were loaded for this platform!");
+
+                if (throwOnFailure)
+                    throw new InvalidOperationException("The wrong dlls were loaded for this platform!");
+
+                return;
+            }
 
             Logger.Important($"Successfully initialized and logged into Steam as : {SteamFriends.GetPersonaName()} " +
                               $"<{SteamUser.GetSteamID()}>", LogType.Runtime);

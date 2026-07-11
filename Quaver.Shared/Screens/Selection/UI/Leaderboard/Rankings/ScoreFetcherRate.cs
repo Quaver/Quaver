@@ -21,13 +21,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                 if (!OnlineManager.Connected)
                     return new FetchedScoreStore(new List<Score>());
 
+                if (ScoreFetcherOnlineMapStatus.UpdateMapStatus(map))
+                    return new FetchedScoreStore(new List<Score>());
+
                 var mods = ModHelper.GetModsFromRate(ModHelper.GetRateFromMods(ModManager.Mods));
 
                 if (mods == ModIdentifier.None)
                     mods = 0;
 
                 var onlineScores = OnlineManager.Client?.RetrieveScoreboard(map.MapId, map.Md5Checksum, OnlineScoreboard.Rate, mods);
-                map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
 
                 var scores = new List<Score>();
 

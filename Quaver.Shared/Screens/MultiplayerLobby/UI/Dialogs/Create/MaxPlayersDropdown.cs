@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
     public class MaxPlayersDropdown : LabelledDropdown
     {
         public MaxPlayersDropdown() : base(MultiplayerLobbyLocalization.Get("MaxPlayersLabel"), 21, new Dropdown(GetOptions(),
-            new ScalableVector2(76, 35), 21))
+            new ScalableVector2(76, 35), 20))
         {
             Dropdown.SelectedIndex = Dropdown.Options.Count - 1;
             Dropdown.SelectedText.Text = Dropdown.Options[Dropdown.SelectedIndex];

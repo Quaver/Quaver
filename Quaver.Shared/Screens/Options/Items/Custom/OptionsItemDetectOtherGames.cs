@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -8,14 +9,16 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
 {
@@ -23,7 +26,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     {
         /// <summary>
         /// </summary>
-        private IconButton Button { get; }
+        private RoundedButton Button { get; }
 
         /// <summary>
         /// </summary>
@@ -33,14 +36,16 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             const float scale = 0.85f;
 
-            Button = new IconButton(UserInterface.DetectOtherGamesButton)
+            Button = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
                 Size = new ScalableVector2(215 * scale, 36 * scale),
-                UsePreviousSpriteBatchOptions = true
+                Tint = ColorHelper.HexToColor("#0FBAE5")
             };
+
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "DETECT", 18, Color.White);
 
             Button.Clicked += (sender, args) =>
             {

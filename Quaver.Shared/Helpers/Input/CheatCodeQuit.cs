@@ -1,9 +1,11 @@
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Wobble.Graphics.Animations;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Helpers.Input
 {
@@ -43,7 +45,7 @@ namespace Quaver.Shared.Helpers.Input
                 Dialog.Header.Text = "CREATE QUAVER";
                 Dialog.Confirmation.Text = $"You cannot quit Quaver, only create it.";
 
-                Dialog.YesButton.Image = UserInterface.CreateButton;
+                Dialog.YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CREATE", 20, Color.White);
                 Dialog.YesButton.MoveToX(Dialog.Panel.Width / 2f - Dialog.YesButton.Width / 2f, Easing.OutQuint, 450);
             });
         }

@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
     public class CreateGameRulesetDropdown : LabelledDropdown
     {
         public CreateGameRulesetDropdown() : base(MultiplayerLobbyLocalization.Get("RulesetLabel"), 21,
-            new Dropdown(GetOptions(), new ScalableVector2(166, 35), 21))
+            new Dropdown(GetOptions(), new ScalableVector2(166, 35), 20))
         {
         }
 

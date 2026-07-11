@@ -9,6 +9,7 @@ using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -54,15 +55,15 @@ namespace Quaver.Shared.Graphics.Playercards
 
         /// <summary>
         /// </summary>
-        public IconButton LogoutButton { get; private set; }
+        public RoundedButton LogoutButton { get; private set; }
 
         /// <summary>
         /// </summary>
-        public IconButton ViewProfileButton { get; private set; }
+        public RoundedButton ViewProfileButton { get; private set; }
 
         /// <summary>
         /// </summary>
-        public IconButton ViewClanButton { get; private set; }
+        public RoundedButton ViewClanButton { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -193,7 +194,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -206,7 +207,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateStatus()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -253,7 +254,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateLogoutButton()
         {
-            LogoutButton = new IconButton(UserInterface.LogoutButtonPlayercard)
+            LogoutButton = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -261,7 +262,10 @@ namespace Quaver.Shared.Graphics.Playercards
                 X = -Avatar.X,
                 Y = ModeButton.Y,
                 Size = new ScalableVector2(76, 25),
+                Tint = ColorHelper.HexToColor("#E95E57")
             };
+
+            LogoutButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "LOG OUT", 15, Color.White);
 
             LogoutButton.Clicked += (sender, args) =>
             {
@@ -273,7 +277,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateViewProfileButton()
         {
-            ViewProfileButton = new IconButton(UserInterface.ViewProfileButtonPlayercard)
+            ViewProfileButton = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -281,7 +285,10 @@ namespace Quaver.Shared.Graphics.Playercards
                 X = LogoutButton.X - LogoutButton.Width - 10,
                 Y = ModeButton.Y,
                 Size = new ScalableVector2(110, 25),
+                Tint = ColorHelper.HexToColor("#0583DE")
             };
+
+            ViewProfileButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "VIEW PROFILE", 15, Color.White);
 
             ViewProfileButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User?.OnlineUser?.Id}");
         }
@@ -290,7 +297,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateViewClanButton()
         {
-            ViewClanButton = new IconButton(UserInterface.ViewClanButtonPlayercard)
+            ViewClanButton = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -299,7 +306,10 @@ namespace Quaver.Shared.Graphics.Playercards
                 Y = ModeButton.Y,
                 Size = new ScalableVector2(92, 25),
                 Scale = new Vector2(0.92f, 0.92f),
+                Tint = ColorHelper.HexToColor("#0FB6E0")
             };
+
+            ViewClanButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "VIEW CLAN", 15, Color.White);
 
             ViewClanButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{User?.OnlineUser?.ClanId}");
         }
@@ -308,7 +318,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateGlobalRanking()
         {
-            GlobalRanking = new TextKeyValue("Global Rank", "#1", 20, Color.White)
+            GlobalRanking = new TextKeyValue("Global Rank", "#1", 18, Color.White)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -331,7 +341,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateOverallRating()
         {
-            OverallRating = new TextKeyValue("Overall Rating", "0.00", 20, Color.White)
+            OverallRating = new TextKeyValue("Overall Rating", "0.00", 18, Color.White)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -354,7 +364,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateOverallAccuracy()
         {
-            OverallAccuracy = new TextKeyValue("Overall Accuracy", "99.99%", 20, Color.White)
+            OverallAccuracy = new TextKeyValue("Overall Accuracy", "99.99%", 18, Color.White)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,

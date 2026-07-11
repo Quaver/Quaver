@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// </summary>
         /// <param name="profile"></param>
         public ProfileSelectionDropdown(Bindable<UserProfile> profile) : base(SelectionLocalization.Get("Select:"), 24, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(185, 30), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
+            new ScalableVector2(185, 30), 20, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Profile = profile;
 

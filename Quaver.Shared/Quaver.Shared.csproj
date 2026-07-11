@@ -50,7 +50,13 @@
   <ItemGroup>
     <PackageReference Include="Emik.Rubbish" Version="1.1.0" />
     <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
-    <PackageReference Include="Humanizer" Version="3.0.10" />
+    <PackageReference Include="Humanizer.Core" Version="3.0.10" />
+    <PackageReference Include="Humanizer.Core.fr" Version="3.0.10" />
+    <PackageReference Include="Humanizer.Core.zh-CN" Version="3.0.10" />
+    <PackageReference Include="Humanizer.Core.de" Version="3.0.10" />
+    <PackageReference Include="Humanizer.Core.da" Version="3.0.10" />
+    <PackageReference Include="Humanizer.Core.nl" Version="3.0.10" />
+    <PackageReference Include="Humanizer.Core.nb" Version="3.0.10" />
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="3.2.0" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
@@ -59,7 +65,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RestSharp" Version="106.12.0" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
+    <PackageReference Include="SkiaSharp" Version="4.148.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.148.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
     <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.6" />
     <PackageReference Include="SQLitePCLRaw.core" Version="2.0.6" />

@@ -86,7 +86,7 @@ namespace Quaver.Shared.Screens.Options
         private void CreateTextOptionsMenu()
         {
             TextOptionsMenu = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                OptionsLocalization.Get("OPTIONS MENU"), 24)
+                OptionsLocalization.Get("OPTIONS MENU"), 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateActiveSectionText()
         {
-            ActiveSectionText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
+            ActiveSectionText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void UpdateActiveSectionText() => ScheduleUpdate(() =>
         {
-            ActiveSectionText.Text = OptionsLocalization.GetSectionSettings(SelectedSection.Value.Name);
+            ActiveSectionText.Text = OptionsLocalization.GetSectionSettings(SelectedSection.Value);
         });
 
         /// <summary>

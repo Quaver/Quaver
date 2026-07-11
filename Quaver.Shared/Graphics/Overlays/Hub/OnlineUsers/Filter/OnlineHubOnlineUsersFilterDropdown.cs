@@ -9,8 +9,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter
 {
     public class OnlineHubOnlineUsersFilterDropdown : LabelledDropdown
     {
-        public OnlineHubOnlineUsersFilterDropdown() : base("Filter: ".ToUpper(), 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(124, 30), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
+        public OnlineHubOnlineUsersFilterDropdown() : base("Filter: ".ToUpper(), 20, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(124, 30), 20, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += (sender, args) =>
             {

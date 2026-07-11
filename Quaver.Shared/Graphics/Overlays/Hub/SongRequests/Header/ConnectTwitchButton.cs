@@ -1,21 +1,18 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
-using Wobble;
-using Wobble.Assets;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Header
 {
-    public class ConnectTwitchButton : IconButton
+    public class ConnectTwitchButton : RoundedButton
     {
         /// <summary>
         ///     Returns if the user's twitch account is connected
@@ -24,9 +21,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Header
 
         /// <summary>
         /// </summary>
-        public ConnectTwitchButton() : base(UserInterface.BlankBox)
+        public ConnectTwitchButton()
         {
             Size = new ScalableVector2(135, 27);
+            Tint = ColorHelper.HexToColor("#9146FF");
+            SetIcon(UserInterface.TwitchIconWhite, new Vector2(16, 16));
+            SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CONNECT", 16, Color.White);
             Clicked += OnClicked;
         }
 
@@ -36,7 +36,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Header
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Image = IsTwitchConnected ? UserInterface.UnlinkTwitch : UserInterface.ConnectTwitch;
+            SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), IsTwitchConnected ? "UNLINK" : "CONNECT", 16, Color.White);
 
             base.Update(gameTime);
         }

@@ -76,7 +76,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
                 Tint = BaseColor
             };
 
-            Text = new SpriteTextPlus(font, GetDisplayText(text).ToUpper(), 20)
+            Text = new SpriteTextPlus(font, GetDisplayText(text).ToUpper(), 18)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,

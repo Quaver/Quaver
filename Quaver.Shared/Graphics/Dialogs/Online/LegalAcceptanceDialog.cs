@@ -23,7 +23,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
 
             var text = request.ExecuteRequest();
 
-            var legalText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), text, 22, true)
+            var legalText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), text, 18, true)
             {
                 MaxWidth = Container.Width - 20,
                 Alignment = Alignment.TopCenter
@@ -32,8 +32,8 @@ namespace Quaver.Shared.Graphics.Dialogs.Online
             Container.AddContainedDrawable(legalText);
             Container.ContentContainer.Height = legalText.Height;
 
-            YesButton.Image = UserInterface.AcceptButton;
-            NoButton.Image = UserInterface.DeclineButton;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "ACCEPT", 18, Color.White);
+            NoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "DECLINE", 18, Color.White);
             Panel.Image = UserInterface.LegalPanel;
 
             YesButton.Y += 20;

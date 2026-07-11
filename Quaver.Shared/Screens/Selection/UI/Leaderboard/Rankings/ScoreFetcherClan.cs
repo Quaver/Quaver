@@ -24,6 +24,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings
                     if (!OnlineManager.Connected)
                         return new FetchedScoreStore(new List<Score>());
 
+                    if (ScoreFetcherOnlineMapStatus.UpdateMapStatus(map))
+                        return new FetchedScoreStore(new List<Score>());
+
                     var onlineScores = OnlineManager.Client?.GetClanScoreboard(map.Md5Checksum);
                     
                     var scores = new List<Score>();

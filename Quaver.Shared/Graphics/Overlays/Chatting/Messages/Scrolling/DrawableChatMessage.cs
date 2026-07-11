@@ -295,7 +295,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void CreateMessage()
         {
-            Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", Time.FontSize)
+            Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", Time.FontSize)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

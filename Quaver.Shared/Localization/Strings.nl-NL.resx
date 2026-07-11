@@ -301,7 +301,7 @@
     <value>Mappen Gevonden</value>
   </data>
   <data name="Screen_Selection_MarvelousPerfectRatio" xml:space="preserve">
-    <value>Uistekend/Perfect Verhouding</value>
+    <value>Uitstekend/Perfect Verhouding</value>
   </data>
   <data name="Screen_Selection_MaxCombo" xml:space="preserve">
     <value>Maximale Combo</value>
@@ -1331,8 +1331,32 @@ als Uitstekend werden geraakt.</value>
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Toetsen</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Instellingen</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Video Settings</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Audio Settings</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Language Settings</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Gameplay Settings</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Skin Settings</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Input Settings</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Game Mode Specific Settings</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Miscellaneous Settings</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} Zoekresultaat</value>
@@ -1993,8 +2017,14 @@ om andere spelers het te laten downloaden?</value>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Bereik Van Moeilijkheid</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
-    <value>Elk</value>
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
+    <value>Any</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
     <value>Bereik Van Lange Noot %</value>

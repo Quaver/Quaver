@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
     public class MultiplayerLobbyMapDropdown : LabelledDropdown
     {
         public MultiplayerLobbyMapDropdown() : base(MultiplayerLobbyLocalization.Get("MapStatusLabel"), 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(168, 38), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
+            new ScalableVector2(168, 38), 20, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
         }

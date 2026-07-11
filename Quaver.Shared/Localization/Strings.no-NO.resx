@@ -16,7 +16,7 @@
     <value>Engelsk</value>
   </data>
   <data name="Language_Bulgarian" xml:space="preserve">
-    <value>Bulgarisk</value>
+    <value>Bulgarsk</value>
   </data>
   <data name="Language_Danish" xml:space="preserve">
     <value>Dansk</value>
@@ -52,7 +52,7 @@
     <value>Polsk</value>
   </data>
   <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portugisisk</value>
+    <value>Portugisisk (Brasil)</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
     <value>Russisk</value>
@@ -61,7 +61,7 @@
     <value>Svensk</value>
   </data>
   <data name="Language_Thai" xml:space="preserve">
-    <value>Thai</value>
+    <value>Thai/Thailandsk</value>
   </data>
   <data name="Language_Ukrainian" xml:space="preserve">
     <value>Ukrainsk</value>
@@ -73,7 +73,7 @@
     <value>Kinesisk (Tradisjonell)</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
-    <value>Endre skjermer for å oppdatere språket</value>
+    <value>Endre skjermer for å oppdatere språket.</value>
   </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
     <value>Send en melding...</value>
@@ -91,7 +91,7 @@
     <value>Musikkspiller</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
-    <value>Skinner</value>
+    <value>Stiler</value>
   </data>
   <data name="Screen_Main_Menu_Donate" xml:space="preserve">
     <value>Doner</value>
@@ -121,13 +121,13 @@
     <value>Flerspiller</value>
   </data>
   <data name="Screen_Main_Editor" xml:space="preserve">
-    <value>Redigerer</value>
+    <value>Editor</value>
   </data>
   <data name="Screen_Main_Competitive" xml:space="preserve">
     <value>Konkurranse</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
-    <value>Map Redigerer</value>
+    <value>Map Editor</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
     <value>Last ned maps</value>
@@ -151,7 +151,7 @@
     <value>Er du sikker på at du vil avslutte spillet?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
-    <value>Konkurrere mot andre</value>
+    <value>Konkurranse for rangeringslister</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
     <value>Spill tilpassende matcher online med andre</value>
@@ -163,7 +163,7 @@
     <value>Opprett eller rediger et map til hvilken som helst sang du ønsker</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
-    <value>Finn nye sanger fra samfunnet for å spillet</value>
+    <value>Finn nye sanger fra samfunnet til å spille</value>
   </data>
   <data name="Screen_Main_TipLabel" xml:space="preserve">
     <value>TIP:</value>
@@ -175,7 +175,7 @@
     <value>Dra map-filer (.qp) inn i spillet for å importere dem.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Ved å trykke på F3 i sang-velgeren for å forhåndsvise et map.</value>
+    <value>Ved å trykke på F3 i sang-velgeren vises det forhåndsvisning av map.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Pauser mens du spiller hindrer score-submisjon.</value>
@@ -184,10 +184,10 @@
     <value>Du kan rapportere feil ved å åpne et GitHub-Problem.</value>
   </data>
   <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
-    <value>Be om nye funksjoner ved å åpne et GitHub-Problem.</value>
+    <value>Be om nye funksjoner ved å åpne et GitHub-Problem!</value>
   </data>
   <data name="Screen_Main_TipCreateMap" xml:space="preserve">
-    <value>Dra en .mp3 fil i spillet for å lage et nytt map!</value>
+    <value>Dra en .mp3 fil inni spillet for å lage et nytt map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
     <value>Ved å trykke på F2 i sang-velgeren velger du en tilfeldig sang.</value>
@@ -196,7 +196,7 @@
     <value>Ved å trykke på F10 i menyen åpner det spilletkortet ditt.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Ved å trykke på F3/F4 midt i spill endrer det scroll hastighet.</value>
+    <value>Ved å trykke på F3/F4 midt i spill endrer det rullehastighet.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Ditt offset kan kalibreres i instillngene.</value>
@@ -226,7 +226,7 @@
     <value>Laget av:</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
-    <value>Slag Per Minutt</value>
+    <value>BPM</value>
   </data>
   <data name="Screen_Selection_Clan" xml:space="preserve">
     <value>Klan</value>
@@ -244,7 +244,7 @@
     <value>Opprett spilleliste</value>
   </data>
   <data name="Screen_Selection_Creator" xml:space="preserve">
-    <value>Lager</value>
+    <value>Skaper</value>
   </data>
   <data name="Screen_Selection_DateAdded" xml:space="preserve">
     <value>Dato opprettet</value>
@@ -277,7 +277,7 @@
     <value>Høyes Rangerte Score</value>
   </data>
   <data name="Screen_Selection_Leaderboard" xml:space="preserve">
-    <value>Plasseringsliste</value>
+    <value>Rangeringsliste</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
     <value>Varighet</value>
@@ -289,10 +289,10 @@
     <value>Lokal</value>
   </data>
   <data name="Screen_Selection_LocalProfile" xml:space="preserve">
-    <value>Lokalt Profil</value>
+    <value>Lokal Profil</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
-    <value>Lang Noter %</value>
+    <value>Lange Noter %</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
     <value>Map Funnet</value>
@@ -319,7 +319,7 @@
     <value>Aldri Spilt</value>
   </data>
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
-    <value>Ingen scores tilgjengelig. Vær den første!</value>
+    <value>Ingen scorer tilgjengelig. Vær den første!</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
     <value>INGEN PERSONLIG BESTE SATT</value>
@@ -349,7 +349,7 @@
     <value>Samlet Nøyaktighet</value>
   </data>
   <data name="Screen_Selection_OverallRating" xml:space="preserve">
-    <value>Samlet vurdering</value>
+    <value>Samlet Vurdering</value>
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
     <value>Antall Bestått/Feil</value>
@@ -361,13 +361,13 @@
     <value>Spill</value>
   </data>
   <data name="Screen_Selection_PlayCount" xml:space="preserve">
-    <value>Spillforsøk</value>
+    <value>Antall Avspillinger</value>
   </data>
   <data name="Screen_Selection_Player" xml:space="preserve">
     <value>Spiller</value>
   </data>
   <data name="Screen_Selection_Playlists" xml:space="preserve">
-    <value>Spillerlister</value>
+    <value>Spillelister</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
     <value>Forhåndsvisning er slått av i dette spillet!</value>
@@ -397,7 +397,7 @@
     <value>Resultater funnet</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
-    <value>Scores på denne mappet vil ikke bli rangert!</value>
+    <value>Scorer på dette mappet vil bli urangert!</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
     <value>VELG:</value>
@@ -436,10 +436,10 @@
     <value>Vis map</value>
   </data>
   <data name="Screen_Selection_Youmustbeadonatortoaccessthisleaderboard" xml:space="preserve">
-    <value>Du må være en donator for å få tilgang til denne plasseringsliste!</value>
+    <value>Du må være en donator for å få tilgang til denne rangeringsliste!</value>
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
-    <value>Du må være tilkoblet til nett for å få tilgang til denne plasseringsliste!</value>
+    <value>Du må være tilkoblet til nett for å få tilgang til denne rangeringsliste!</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
     <value>Du kan ikke slå denne scoren med de aktiverte modifikatorene dine!</value>
@@ -460,7 +460,7 @@
     <value>Spillopplevelse</value>
   </data>
   <data name="Screen_Options_Skin" xml:space="preserve">
-    <value>Skinn</value>
+    <value>Stil</value>
   </data>
   <data name="Screen_Options_Input" xml:space="preserve">
     <value>Input</value>
@@ -538,7 +538,7 @@
     <value>Sang velger</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
-    <value>Redigerer</value>
+    <value>Editor</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
     <value>Diverse</value>
@@ -625,7 +625,7 @@
     <value>Mappet av:</value>
   </data>
   <data name="Screen_Results_Playedby" xml:space="preserve">
-    <value>Spilt av:</value>
+    <value>Spilt av</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
     <value>på {0} @ {1}</value>
@@ -677,7 +677,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise nøyaktigheten dersom all
 Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påfølgende treff i stedet hadde vært "Strålende".</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
-    <value>SENDER INN SKÅR...</value>
+    <value>SENDER INN SCORE...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
     <value>GLOBALT RANGERING</value>
@@ -752,7 +752,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Det oppstod en feil under henting av spillingen for denne scoren!</value>
   </data>
   <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
-    <value>Kan ikke laste ned spillingen for denne scoren!</value>
+    <value>Kan ikke laste ned spillingen for denne scoren.</value>
   </data>
   <data name="Screen_Results_FetchingReplay" xml:space="preserve">
     <value>HENTER SPILLINGEN</value>
@@ -770,7 +770,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Du har allerede fikset din lokale offset på denne mappen. Det er ikke nødvendig å gjøre det igjen.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
-    <value>Det er ingen data som kan fikse ditt lokale offset.</value>
+    <value>Det er ingen data som kan fikse ditt lokale offset!</value>
   </data>
   <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
     <value>FIKS LOKALE OFFSET</value>
@@ -785,7 +785,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Kunne ikke lagre lokal score til databasen. Vennligst sjekk loggene!</value>
   </data>
   <data name="Screen_Results_TherewasanerrorwhensavingyourreplayCheckRuntimelogformoredetails" xml:space="preserve">
-    <value>Det oppstod en feil ved lagring av din replay. Sjekk runtime.log for mer informasjon.</value>
+    <value>Det oppstod en feil ved lagring av din replay. Sjekk Runtime.log for mer informasjon.</value>
   </data>
   <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
     <value>Det er ingen replay data tilgjengelig til å konvertere denne scoren!</value>
@@ -794,7 +794,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Global lyd offset</value>
   </data>
   <data name="Screen_Options_VisualOffset" xml:space="preserve">
-    <value>Visuelle Offset</value>
+    <value>Visuell Offset</value>
   </data>
   <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
     <value>Kalibrer Offset</value>
@@ -866,22 +866,22 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Vis Reseptorer Over Bane-Trekk</value>
   </data>
   <data name="Screen_Options_CustomSkin" xml:space="preserve">
-    <value>Egendefinert skinn</value>
+    <value>Egendefinert Stil</value>
   </data>
   <data name="Screen_Options_CoopPlayer2Skin" xml:space="preserve">
-    <value>Co-op 2-spiller skinn</value>
+    <value>Co-op 2-spiller Stil</value>
   </data>
   <data name="Screen_Options_DefaultSkin" xml:space="preserve">
-    <value>Standard Skinn</value>
+    <value>Standard Stil</value>
   </data>
   <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
-    <value>Åpne Skinn Mappe</value>
+    <value>Åpne Stil Mappe</value>
   </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
-    <value>Eksporter Skinn</value>
+    <value>Eksporter Stil</value>
   </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
-    <value>Last opp Skinn til Steam Workshop</value>
+    <value>Last opp stil til Steam Workshop</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
     <value>Note &amp; Reseptor Størrelse Skala</value>
@@ -923,503 +923,526 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Vis/Skjul Rangeringsliste synlighet</value>
   </data>
   <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
-    <value>Toggle Chat Overlay</value>
+    <value>Vis/Skjul Chatoverlegg</value>
   </data>
   <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
-    <value>Decrease Gameplay Rate</value>
+    <value>Reduser spillhastighet</value>
   </data>
   <data name="Screen_Options_IncreaseGameplayRate" xml:space="preserve">
-    <value>Increase Gameplay Rate</value>
+    <value>Øk spillhastighet</value>
   </data>
   <data name="Screen_Options_ToggleMirrorMod" xml:space="preserve">
-    <value>Toggle Mirror Mod</value>
+    <value>Slå av/på speilet modus</value>
   </data>
   <data name="Screen_Options_TogglePitch" xml:space="preserve">
-    <value>Toggle Pitch</value>
+    <value>Slå av/på Pitch</value>
   </data>
   <data name="Screen_Options_RemoveAllMods" xml:space="preserve">
-    <value>Remove All Mods</value>
+    <value>Fjern Alle Modifikasjoner</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
-    <value>Pause/Play Track</value>
+    <value>Pause/Spill spor</value>
   </data>
   <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
-    <value>Decrease Playback Rate</value>
+    <value>Reduser avspillingshastighet</value>
   </data>
   <data name="Screen_Options_IncreasePlaybackRate" xml:space="preserve">
-    <value>Increase Playback Rate</value>
+    <value>Øk avspillingshastighet</value>
   </data>
   <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
-    <value>Take Screenshot</value>
+    <value>Ta skjermbilde</value>
   </data>
   <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
-    <value>Open Game Folder</value>
+    <value>Åpne spillmappe</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
-    <value>Update Map Ranked Statuses</value>
+    <value>Oppdater map rangerte statuser</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
-    <value>Update Map Online Offsets</value>
+    <value>Oppdater online map offseter</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Load Songs From Other Installed Games</value>
+    <value>Last sanger fra andre installerte spill</value>
   </data>
   <data name="Screen_Options_DetectSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Detect Songs From Other Installed Games</value>
+    <value>Finn sanger fra andre installerte spill</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsFromBottomToTop" xml:space="preserve">
-    <value>Display Notifications From Bottom-To-Top</value>
+    <value>Vis varsler fra bunn-til-topp</value>
   </data>
   <data name="Screen_Options_DisplayOnlineFriendNotifications" xml:space="preserve">
-    <value>Display Online Friend Notifications</value>
+    <value>Vis online vennevarsler</value>
   </data>
   <data name="Screen_Options_PrioritizedGameMode" xml:space="preserve">
-    <value>Prioritized Game Mode</value>
+    <value>Prioritert spillmodus</value>
   </data>
   <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
-    <value>Suggest Difficulty from Overall Rating</value>
+    <value>Foreslå vanskelighetsgrad fra samlet vurdering</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio/Frame Timing During Gameplay</value>
+    <value>Bruk jevnt lyd-/ramme-tid under spilling</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio Start Timing During Gameplay</value>
+    <value>Bruk jevnt lydstart under spilling</value>
   </data>
   <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Display Gameplay Overlay (Shift + F6)</value>
+    <value>Vis spilloverlegg (Shift + F6)</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
-    <value>Display Notifications During Gameplay</value>
+    <value>Vis varsler under spillingen</value>
   </data>
   <data name="Screen_Options_ShowSpectators" xml:space="preserve">
-    <value>Show Spectators</value>
+    <value>Vis tilskuere</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyWithCustomJudgements" xml:space="preserve">
-    <value>Display Ranked Accuracy With Custom Judgements</value>
+    <value>Vis rangert nøyaktighet med egendefinerte dommere</value>
   </data>
   <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
-    <value>Hit Error Fade Time</value>
+    <value>Treff feilåpningstid</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
-    <value>Hit Error Early / Late Coloring</value>
+    <value>Trykk feil tidlig / Sent Farge</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
-    <value>Hit Error Early / Late Window</value>
+    <value>Trykk feil tidlig / Sen-vindu</value>
   </data>
   <data name="Screen_Options_EnableComboAlerts" xml:space="preserve">
-    <value>Enable Combo Alerts</value>
+    <value>Aktiver Kombo varsler</value>
   </data>
   <data name="Screen_Options_DisplayUnbeatableScores" xml:space="preserve">
     <value>Vis uslåelige skårer</value>
   </data>
   <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
-    <value>Keep Playing Upon Failing</value>
+    <value>Fortsett å spille ved mislykket</value>
   </data>
   <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
-    <value>Normalise Scroll Velocity By Rate Percentage</value>
+    <value>Normaliser rullehastighet ved prosentvis rangering</value>
   </data>
   <data name="Screen_Options_Display1v1TournamentOverlay" xml:space="preserve">
-    <value>Display 1v1 Tournament Overlay</value>
+    <value>Vis 1v1 turnering overlegg</value>
   </data>
   <data name="Screen_Options_Display1v1PlayfieldScores" xml:space="preserve">
-    <value>Display 1v1 Playfield Scores</value>
+    <value>Vis 1v1 spillefelt score</value>
   </data>
   <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
-    <value>Reload Skin On Change</value>
+    <value>Oppdater stil ved endring</value>
   </data>
   <data name="Screen_Options_TogglePlaytestAutoplay" xml:space="preserve">
-    <value>Toggle Playtest Autoplay</value>
+    <value>Vis/Skjul spilltest automatisk avspilling</value>
   </data>
   <data name="Screen_Options_InvertEditorScrolling" xml:space="preserve">
-    <value>Invert Editor Scrolling</value>
+    <value>Inverter editor rulling</value>
   </data>
   <data name="Screen_Options_InvertScrolling" xml:space="preserve">
-    <value>Invert Scrolling</value>
+    <value>Inverter rulling</value>
   </data>
   <data name="Screen_Options_AutomaticallyLogIntoTheServer" xml:space="preserve">
-    <value>Automatically Log Into The Server</value>
+    <value>Automatisk logg inn på serveren</value>
   </data>
   <data name="Screen_Options_DisplaySongRequestNotifications" xml:space="preserve">
-    <value>Display Song Request Notifications</value>
+    <value>Vis ønske sang varsler</value>
   </data>
   <data name="Screen_Options_DisplayWarningForPausing" xml:space="preserve">
-    <value>Display Warning For Pausing</value>
+    <value>Vis advarsel ved pausing</value>
   </data>
   <data name="Screen_Options_DisplayWarningForFailing" xml:space="preserve">
-    <value>Display Warning For Failing</value>
+    <value>Vis advarsel ved mislykke</value>
   </data>
   <data name="Screen_Options_DisplayEpilepsyWarning" xml:space="preserve">
-    <value>Display Epilepsy Warning</value>
+    <value>Vis epilepsi advarsel</value>
   </data>
   <data name="Screen_Options_DisplayMenuAudioVisualizer" xml:space="preserve">
-    <value>Display Menu Audio Visualizer</value>
+    <value>Vis meny lyd visualisering</value>
   </data>
   <data name="Screen_Options_DisplayFailedLocalScores" xml:space="preserve">
-    <value>Display Failed Local Scores</value>
+    <value>Vis mislykkede lokale score</value>
   </data>
   <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
-    <value>Delete Original File After Import</value>
+    <value>Slett opprinnelig fil etter import</value>
   </data>
   <data name="Screen_Options_DiscordRichPresence" xml:space="preserve">
     <value>Discord Rich Presence</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyForLocalLeaderboards" xml:space="preserve">
-    <value>Display Ranked Accuracy For Local Leaderboards</value>
+    <value>Vis rangert nøyaktighet for lokale rangeringsliste</value>
   </data>
   <data name="Screen_Options_LowerFPSOnInactiveWindow" xml:space="preserve">
-    <value>Lower FPS On Inactive Window</value>
+    <value>Senke FPS på inaktiv vindu</value>
   </data>
   <data name="Screen_Options_EnableHighProcessPriority" xml:space="preserve">
-    <value>Enable High Process Priority</value>
+    <value>Aktiver høy prosessprioritet</value>
   </data>
   <data name="Screen_Options_PreferWayland" xml:space="preserve">
-    <value>Prefer Wayland</value>
+    <value>Foretrekk Wayland</value>
   </data>
   <data name="Screen_Options_PrefermacOSInputHandling" xml:space="preserve">
-    <value>Prefer macOS Input Handling</value>
+    <value>Foretrekk macOS input håndtering</value>
   </data>
   <data name="Screen_Options_EditorImGuiScale" xml:space="preserve">
-    <value>Editor ImGui Scale</value>
+    <value>Editor ImGui Skala</value>
   </data>
   <data name="Screen_Options_OPTIONSMENU" xml:space="preserve">
-    <value>OPTIONS MENU</value>
+    <value>INSTILLINGER MENY</value>
   </data>
   <data name="Screen_Options_Searchforoptions" xml:space="preserve">
-    <value>Search for options...</value>
+    <value>Søk etter instillinger...</value>
   </data>
   <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>1K Gameplay Layout</value>
+    <value>1T Spill-layout</value>
   </data>
   <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>1K Scroll Speed</value>
+    <value>1T Rullehastighet</value>
   </data>
   <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>1K Scroll Direction</value>
+    <value>1T Rulleretning</value>
   </data>
   <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>1K Scratch Layout</value>
+    <value>1T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 1K Scratch Lane On Left</value>
+    <value>Plasser 1T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
-    <value>1K Co-op Layout</value>
+    <value>1T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
-    <value>Prioritized 1K Difficulty</value>
+    <value>Prioritert 1T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1 Tast</value>
   </data>
   <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
-    <value>2K Gameplay Layout</value>
+    <value>2T Spill-layout</value>
   </data>
   <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>2K Scroll Speed</value>
+    <value>2T Rullehastighet</value>
   </data>
   <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2K Scroll Direction</value>
+    <value>2T Rulleretning</value>
   </data>
   <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
-    <value>2K Scratch Layout</value>
+    <value>2T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 2K Scratch Lane On Left</value>
+    <value>Plasser 2T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
-    <value>2K Co-op Layout</value>
+    <value>2T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Prioritized 2K Difficulty</value>
+    <value>Prioritert 2T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2 Taster</value>
   </data>
   <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
-    <value>3K Gameplay Layout</value>
+    <value>3T Spill-layout</value>
   </data>
   <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>3K Scroll Speed</value>
+    <value>3T Rullehastighet</value>
   </data>
   <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>3K Scroll Direction</value>
+    <value>3T Rulleretning</value>
   </data>
   <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
-    <value>3K Scratch Layout</value>
+    <value>3T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 3K Scratch Lane On Left</value>
+    <value>Plasser 3T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
-    <value>3K Co-op Layout</value>
+    <value>3T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
-    <value>Prioritized 3K Difficulty</value>
+    <value>Prioritert 3T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3 Taster</value>
   </data>
   <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
-    <value>4K Gameplay Layout</value>
+    <value>4T Spill-layout</value>
   </data>
   <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>4K Scroll Speed</value>
+    <value>4T Rullehastighet</value>
   </data>
   <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>4K Scroll Direction</value>
+    <value>4T Rulleretning</value>
   </data>
   <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
-    <value>4K Scratch Layout</value>
+    <value>4T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 4K Scratch Lane On Left</value>
+    <value>Plasser 4T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>4K Co-op Layout</value>
+    <value>4T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Prioritized 4K Difficulty</value>
+    <value>Prioritert 4T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 Taster</value>
   </data>
   <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
-    <value>5K Gameplay Layout</value>
+    <value>5T Spill-layout</value>
   </data>
   <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>5K Scroll Speed</value>
+    <value>5T Rullehastighet</value>
   </data>
   <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>5K Scroll Direction</value>
+    <value>5T Rulleretning</value>
   </data>
   <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
-    <value>5K Scratch Layout</value>
+    <value>5T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 5K Scratch Lane On Left</value>
+    <value>Plasser 5T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
-    <value>5K Co-op Layout</value>
+    <value>5T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
-    <value>Prioritized 5K Difficulty</value>
+    <value>Prioritert 5T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5 Taster</value>
   </data>
   <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
-    <value>6K Gameplay Layout</value>
+    <value>6T Spill-layout</value>
   </data>
   <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>6K Scroll Speed</value>
+    <value>6T Rullehastighet</value>
   </data>
   <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>6K Scroll Direction</value>
+    <value>6T Rulleretning</value>
   </data>
   <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
-    <value>6K Scratch Layout</value>
+    <value>6T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 6K Scratch Lane On Left</value>
+    <value>Plasser 6T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
-    <value>6K Co-op Layout</value>
+    <value>6T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
-    <value>Prioritized 6K Difficulty</value>
+    <value>Prioritert 6T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6 Taster</value>
   </data>
   <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
-    <value>7K Gameplay Layout</value>
+    <value>7T Spill-layout</value>
   </data>
   <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>7K Scroll Speed</value>
+    <value>7T Rullehastighet</value>
   </data>
   <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>7K Scroll Direction</value>
+    <value>7T Rulleretning</value>
   </data>
   <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
-    <value>7K Scratch Layout</value>
+    <value>7T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 7K Scratch Lane On Left</value>
+    <value>Plasser 7T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
-    <value>7K Co-op Layout</value>
+    <value>7T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
-    <value>Prioritized 7K Difficulty</value>
+    <value>Prioritert 7T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 Taster</value>
   </data>
   <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
-    <value>8K Gameplay Layout</value>
+    <value>8T Spill-layout</value>
   </data>
   <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>8K Scroll Speed</value>
+    <value>8T Rullehastighet</value>
   </data>
   <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>8K Scroll Direction</value>
+    <value>8T Rulleretning</value>
   </data>
   <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
-    <value>8K Scratch Layout</value>
+    <value>8T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 8K Scratch Lane On Left</value>
+    <value>Plasser 8T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
-    <value>8K Co-op Layout</value>
+    <value>8T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
-    <value>Prioritized 8K Difficulty</value>
+    <value>Prioritert 8T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8 Taster</value>
   </data>
   <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
-    <value>9K Gameplay Layout</value>
+    <value>9T Spill-layout</value>
   </data>
   <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>9K Scroll Speed</value>
+    <value>9T Rullehastighet</value>
   </data>
   <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>9K Scroll Direction</value>
+    <value>9T Rulleretning</value>
   </data>
   <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
-    <value>9K Scratch Layout</value>
+    <value>9T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 9K Scratch Lane On Left</value>
+    <value>Plasser 9T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
-    <value>9K Co-op Layout</value>
+    <value>9T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
-    <value>Prioritized 9K Difficulty</value>
+    <value>Prioritert 9T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9 Taster</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>10K Gameplay Layout</value>
+    <value>10T Spill-layout</value>
   </data>
   <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>10K Scroll Speed</value>
+    <value>10T Rullehastighet</value>
   </data>
   <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>10K Scroll Direction</value>
+    <value>10T Rulleretning</value>
   </data>
   <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
-    <value>10K Scratch Layout</value>
+    <value>10T Scratch-layout</value>
   </data>
   <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 10K Scratch Lane On Left</value>
+    <value>Plasser 10T Scratch Lane til Venstre</value>
   </data>
   <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
-    <value>10K Co-op Layout</value>
+    <value>10T Co-op Layout</value>
   </data>
   <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
-    <value>Prioritized 10K Difficulty</value>
+    <value>Prioritert 10T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10 Taster</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Settings</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Videoinnstillinger</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Lydinnstillinger</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Språkinnstillinger</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Spillinstillinger</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Stilinstillinger</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Inputinstillinger</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Spillmodusspesifikke innstillinger</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Diverse innstillinger</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Avanserte innstillinger</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
-    <value>{0} Search Result</value>
+    <value>{0} søkeresultat</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
-    <value>{0} Search Results</value>
+    <value>{0} søkeresultater</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
-    <value>Music is currently paused!</value>
+    <value>Musikken er pauset!</value>
   </data>
   <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
-    <value>Music is now playing!</value>
+    <value>Musikk spiller!</value>
   </data>
   <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
-    <value>This mapset is already downloading!</value>
+    <value>Dette mapsettet lastes ned allerede!</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
-    <value>RECOMMEND DIFFICULTY</value>
+    <value>ANBEFAL VANSKELIGHET</value>
   </data>
   <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
-    <value>Would you like to find recommended maps around your skill level
-for the selected game mode?</value>
+    <value>Ønsker du å finne anbefalte mapper rundt ferdighetsnivået ditt for den valgte spillmodusen?</value>
   </data>
   <data name="Screen_Download_Typetosearch" xml:space="preserve">
-    <value>Type to search...</value>
+    <value>Skriv for å søke...</value>
   </data>
   <data name="Screen_Download_MAPSETSFOUND" xml:space="preserve">
-    <value>MAPSETS FOUND</value>
+    <value>MAPSETTER FUNNET</value>
   </data>
   <data name="Screen_Download_MAPSETFOUND" xml:space="preserve">
-    <value>MAPSET FOUND</value>
+    <value>MAPSETT FUNNET</value>
   </data>
   <data name="Screen_Download_STATUS" xml:space="preserve">
     <value>STATUS: </value>
   </data>
   <data name="Screen_Download_All" xml:space="preserve">
-    <value>All</value>
+    <value>Alle</value>
   </data>
   <data name="Screen_Download_Unranked" xml:space="preserve">
-    <value>Unranked</value>
+    <value>Urangert</value>
   </data>
   <data name="Screen_Download_Ranked" xml:space="preserve">
-    <value>Ranked</value>
+    <value>Rangert</value>
   </data>
   <data name="Screen_Download_ClanRanked" xml:space="preserve">
-    <value>Clan Ranked</value>
+    <value>Klan Rangert</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>DIFFICULTY: </value>
+    <value>VANSKELIGHET: </value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
-    <value>None</value>
+    <value>Ingen</value>
   </data>
   <data name="Screen_Download_Beginner" xml:space="preserve">
-    <value>Beginner</value>
+    <value>Nybegynner</value>
   </data>
   <data name="Screen_Download_Easy" xml:space="preserve">
-    <value>Easy</value>
+    <value>Enkel</value>
   </data>
   <data name="Screen_Download_Normal" xml:space="preserve">
-    <value>Normal</value>
+    <value>Vanlig</value>
   </data>
   <data name="Screen_Download_Hard" xml:space="preserve">
-    <value>Hard</value>
+    <value>Vanskelig</value>
   </data>
   <data name="Screen_Download_Insane" xml:space="preserve">
-    <value>Insane</value>
+    <value>Vanvittig</value>
   </data>
   <data name="Screen_Download_Expert" xml:space="preserve">
-    <value>Expert</value>
+    <value>Ekspert</value>
   </data>
   <data name="Screen_Download_MODE" xml:space="preserve">
-    <value>MODE: </value>
+    <value>MODUS: </value>
   </data>
   <data name="Screen_Download_SORTBY" xml:space="preserve">
-    <value>SORT BY: </value>
+    <value>SORTER ETTER: </value>
   </data>
   <data name="Screen_Download_Newest" xml:space="preserve">
-    <value>Newest</value>
+    <value>Nyeste</value>
   </data>
   <data name="Screen_Download_DateSubmitted" xml:space="preserve">
-    <value>Date Submitted</value>
+    <value>Dato Innsendt</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
-    <value>Length</value>
+    <value>Varighet</value>
   </data>
   <data name="Screen_Download_Difficulty" xml:space="preserve">
-    <value>Difficulty</value>
+    <value>Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
-    <value>Max Combo</value>
+    <value>Maks Kombo</value>
   </data>
   <data name="Screen_Download_BPM" xml:space="preserve">
     <value>BPM</value>
@@ -1428,601 +1451,605 @@ for the selected game mode?</value>
     <value>LN %</value>
   </data>
   <data name="Screen_Download_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>Antall Avspillinger</value>
   </data>
   <data name="Screen_Download_Ascending" xml:space="preserve">
-    <value>Ascending</value>
+    <value>Stigende</value>
   </data>
   <data name="Screen_Download_Descending" xml:space="preserve">
-    <value>Descending</value>
+    <value>Synkende</value>
   </data>
   <data name="Screen_Download_DownloadMaps" xml:space="preserve">
-    <value>Download Maps</value>
+    <value>Last ned mapper</value>
   </data>
   <data name="Screen_Download_Findnewsongstoplayfromthecommunity" xml:space="preserve">
-    <value>Find new songs to play from the community</value>
+    <value>Finn nye sanger å spille fra samfunnet</value>
   </data>
   <data name="Screen_Download_Finisheddownloading01" xml:space="preserve">
-    <value>Finished downloading: {0} - {1}!</value>
+    <value>Fullførte nedlasting: {0} - {1}!</value>
   </data>
   <data name="Screen_Download_By" xml:space="preserve">
-    <value>By:</value>
+    <value>Laget av:</value>
   </data>
   <data name="Screen_Download_LNs" xml:space="preserve">
-    <value>LNs: </value>
+    <value>LNer: </value>
   </data>
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
-    <value>FILTER OPTIONS</value>
+    <value>FILTRER ALTERNATIVER</value>
   </data>
   <data name="Screen_Download_UploadDate" xml:space="preserve">
-    <value>Upload Date</value>
+    <value>Opplastningsdato</value>
   </data>
   <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
-    <value>Last Update Date</value>
+    <value>Siste oppdateringsdato</value>
   </data>
   <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
-    <value>Display Owned Mapsets</value>
+    <value>Vis egne mapsett</value>
   </data>
   <data name="Screen_Download_DisplayExplicitMapsets" xml:space="preserve">
-    <value>Display Explicit Mapsets</value>
+    <value>Vis eksplisitte mapsetter</value>
   </data>
   <data name="Screen_Download_Maps" xml:space="preserve">
     <value>Maps: </value>
   </data>
   <data name="Screen_Download_NoSongSelected" xml:space="preserve">
-    <value>No Song Selected</value>
+    <value>Ingen sang valgt</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>To begin downloading, double-click on a song.
-Clicking once will allow you to preview the audio.
-You can use the filters below to narrow down your search.</value>
+    <value>For å starte nedlastingen, dobbelklikk på en sang.
+Å klikke en gang vil la deg til å forhåndsvise sangen.
+Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
-    <value>End Date</value>
+    <value>Slutt Dato</value>
   </data>
   <data name="Screen_Download_StartDate" xml:space="preserve">
-    <value>Start Date</value>
+    <value>Start Dato</value>
   </data>
   <data name="Screen_Download_DifficultyRating" xml:space="preserve">
-    <value>Difficulty Rating</value>
+    <value>Vanskelighetsgrad Rangering</value>
   </data>
   <data name="Screen_Download_MaxRating" xml:space="preserve">
-    <value>Max Rating</value>
+    <value>Maks Vurdering</value>
   </data>
   <data name="Screen_Download_MinRating" xml:space="preserve">
-    <value>Min Rating</value>
+    <value>Min. Vurdering</value>
   </data>
   <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
-    <value>Ranked Play Count</value>
+    <value>Rangerte Antall Avspillinger</value>
   </data>
   <data name="Screen_Download_MaxPlays" xml:space="preserve">
-    <value>Max Plays</value>
+    <value>Maks spilleforsøk</value>
   </data>
   <data name="Screen_Download_MinPlays" xml:space="preserve">
-    <value>Min Plays</value>
+    <value>Min spilleforsøk</value>
   </data>
   <data name="Screen_Download_LongNote" xml:space="preserve">
-    <value>Long Note %</value>
+    <value>Lang Noter %</value>
   </data>
   <data name="Screen_Download_MaxLN" xml:space="preserve">
-    <value>Max LN%</value>
+    <value>Maks LN%</value>
   </data>
   <data name="Screen_Download_MinLN" xml:space="preserve">
     <value>Min LN%</value>
   </data>
   <data name="Screen_Download_LengthSeconds" xml:space="preserve">
-    <value>Length (Seconds)</value>
+    <value>Lengde (Sekunder)</value>
   </data>
   <data name="Screen_Download_MaxLength" xml:space="preserve">
-    <value>Max Length</value>
+    <value>Maks lengde</value>
   </data>
   <data name="Screen_Download_MinLength" xml:space="preserve">
-    <value>Min Length</value>
+    <value>Min lengde</value>
   </data>
   <data name="Screen_Download_SkillLevel" xml:space="preserve">
-    <value>Skill Level</value>
+    <value>Ferdighetsnivå</value>
   </data>
   <data name="Screen_Download_MinCombo" xml:space="preserve">
-    <value>Min Combo</value>
+    <value>Min Kombo</value>
   </data>
   <data name="Screen_Download_MaxBPM" xml:space="preserve">
-    <value>Max BPM</value>
+    <value>Maks BPM</value>
   </data>
   <data name="Screen_Download_MinBPM" xml:space="preserve">
     <value>Min BPM</value>
   </data>
   <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
-    <value>Recommend Difficulty</value>
+    <value>Anbefal vanskelighetsgrad</value>
   </data>
   <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
-    <value>Recommended difficulty</value>
+    <value>Anbefalt vanskelighetsgrad</value>
   </data>
   <data name="Screen_Download_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Tilbake</value>
   </data>
   <data name="Screen_Download_Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Velg</value>
   </data>
   <data name="Screen_Download_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Nedlast</value>
   </data>
   <data name="Screen_Download_OnlineListing" xml:space="preserve">
-    <value>Online Listing</value>
+    <value>Online Oppføring</value>
   </data>
   <data name="Screen_Download_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1 Tast</value>
   </data>
   <data name="Screen_Download_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2 Taster</value>
   </data>
   <data name="Screen_Download_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3 Taster</value>
   </data>
   <data name="Screen_Download_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 Taster</value>
   </data>
   <data name="Screen_Download_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5 Taster</value>
   </data>
   <data name="Screen_Download_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6 Taster</value>
   </data>
   <data name="Screen_Download_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 Taster</value>
   </data>
   <data name="Screen_Download_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8 Taster</value>
   </data>
   <data name="Screen_Download_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9 Taster</value>
   </data>
   <data name="Screen_Download_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10 Taster</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyTitle" xml:space="preserve">
-    <value>CONFIRM READY</value>
+    <value>BEKREFT KLAR</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyMessage" xml:space="preserve">
-    <value>Readying up as the host will start the round, are you
-sure you would like to start without all players ready?</value>
+    <value>Å gjøre seg klar som verten vil starte runden, er du sikker på at du har lyst til å start uten at alle spillerene er klare?</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyTitle" xml:space="preserve">
-    <value>EXIT TO LOBBY</value>
+    <value>DRA TIL LOBBYEN</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
-    <value>Are you sure you would like to exit to the lobby?</value>
+    <value>Er du sikker på at du vil dra til lobbyen?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
-    <value>Leave</value>
+    <value>Dra</value>
   </data>
   <data name="Screen_Multi_Commands" xml:space="preserve">
-    <value>Commands</value>
+    <value>Kommandoer</value>
   </data>
   <data name="Screen_Multi_SelectMap" xml:space="preserve">
-    <value>Select Map</value>
+    <value>Velg Map</value>
   </data>
   <data name="Screen_Multi_Modifiers" xml:space="preserve">
-    <value>Modifiers</value>
+    <value>Modifikatorer</value>
   </data>
   <data name="Screen_Multi_Leaderboard" xml:space="preserve">
-    <value>Leaderboard</value>
+    <value>Rangeringsliste</value>
   </data>
   <data name="Screen_Multi_History" xml:space="preserve">
-    <value>History</value>
+    <value>Historikk</value>
   </data>
   <data name="Screen_Multi_SwitchTeams" xml:space="preserve">
-    <value>Switch Teams</value>
+    <value>Bytt lag</value>
   </data>
   <data name="Screen_Multi_NotReady" xml:space="preserve">
-    <value>Not Ready</value>
+    <value>Ikke Klar</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
-    <value>Ready Up</value>
+    <value>Klar</value>
   </data>
   <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
-    <value>Waiting for the host to start</value>
+    <value>Venter på at verten skal starte</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
-    <value>CHANGE GAME NAME</value>
+    <value>ENDRE SPILLENAVN</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
-    <value>Enter a new name for the multiplayer game...</value>
+    <value>Angi et nytt navn for multiplayer-spillet...</value>
   </data>
   <data name="Screen_Multi_EnterNamePlaceholder" xml:space="preserve">
-    <value>Enter a name...</value>
+    <value>Angi et navn...</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordTitle" xml:space="preserve">
-    <value>CHANGE GAME PASSWORD</value>
+    <value>ENDRE SPILL PASSORD</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordMessage" xml:space="preserve">
-    <value>Enter a new password for the multiplayer game...</value>
+    <value>Angi et nytt passord for multiplayer-spillet...</value>
   </data>
   <data name="Screen_Multi_EnterPasswordPlaceholder" xml:space="preserve">
-    <value>Enter a password...</value>
+    <value>Skriv inn et passord...</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>UPLOAD UNSUBMITTED MAPSET</value>
+    <value>LAST OPP ET USENDT MAPSETT</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetConfirmMessage" xml:space="preserve">
-    <value>Would you like to temporarily upload the current mapset
-for other players to download?</value>
+    <value>Vil du midlertidig laste opp denne gjeldende mapsettet for andre spillere for å laste ned?</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>UPLOADING UNSUBMITTED MAPSET</value>
+    <value>LASTER OPP ET USENDT MAPSETT</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetMessage" xml:space="preserve">
-    <value>Please wait while the mapset is being uploaded...</value>
+    <value>Vennligst vent mens mapsettet lastes opp...</value>
   </data>
   <data name="Screen_Multi_SuccessfullyUploadedUnsubmittedMapset" xml:space="preserve">
-    <value>Successfully uploaded unsubmitted mapset for the multiplayer game!</value>
+    <value>Vellykket lastet opp usendt mapsett for multiplayer-spillet!</value>
   </data>
   <data name="Screen_Multi_UploadMapsetError" xml:space="preserve">
-    <value>There was an error while uploading the mapset.</value>
+    <value>Det oppsto en feil under opplasting av mapsettet.</value>
   </data>
   <data name="Screen_Multi_Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>Laster...</value>
   </data>
   <data name="Screen_Multi_Referee" xml:space="preserve">
-    <value>Referee</value>
+    <value>Dommer</value>
   </data>
   <data name="Screen_Multi_WinsAbbreviation" xml:space="preserve">
     <value>{0} W</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
-    <value>MULTIPLAYER</value>
+    <value>FLERSPILLER</value>
   </data>
   <data name="Screen_Multiplayer_HeaderSubtitle" xml:space="preserve">
-    <value>GAME</value>
+    <value>SPILL</value>
   </data>
   <data name="Screen_Multiplayer_HeaderDescription" xml:space="preserve">
-    <value>play a match in real-time with others</value>
+    <value>spill en kamp i sanntid med andre</value>
   </data>
   <data name="Screen_Multiplayer_Leave" xml:space="preserve">
-    <value>leave</value>
+    <value>dra</value>
   </data>
   <data name="Screen_Multiplayer_Options" xml:space="preserve">
-    <value>options</value>
+    <value>innstillinger</value>
   </data>
   <data name="Screen_Multiplayer_MatchHistory" xml:space="preserve">
-    <value>match history</value>
+    <value>kamphistorikk</value>
   </data>
   <data name="Screen_Multiplayer_Commands" xml:space="preserve">
-    <value>commands</value>
+    <value>kommandoer</value>
   </data>
   <data name="Screen_Multiplayer_GameMode" xml:space="preserve">
-    <value>Game Mode</value>
+    <value>Spill Modus</value>
   </data>
   <data name="Screen_Multiplayer_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>Maks Spillere</value>
   </data>
   <data name="Screen_Multiplayer_AutoHostRotation" xml:space="preserve">
-    <value>Auto Host Rotation</value>
+    <value>Automatisk vertsrotasjon</value>
   </data>
   <data name="Screen_Multiplayer_FreeMod" xml:space="preserve">
-    <value>Free Mod</value>
+    <value>Valgfritt Mod</value>
   </data>
   <data name="Screen_Multiplayer_FreeRate" xml:space="preserve">
-    <value>Free Rate</value>
+    <value>Valgfritt Hastighet</value>
   </data>
   <data name="Screen_Multiplayer_EnablePreview" xml:space="preserve">
-    <value>Enable Preview</value>
+    <value>Aktiver Forhåndsvisning</value>
   </data>
   <data name="Screen_Multiplayer_HealthType" xml:space="preserve">
-    <value>Health Type</value>
+    <value>Helse Type</value>
   </data>
   <data name="Screen_Multiplayer_Lives" xml:space="preserve">
-    <value>Lives</value>
+    <value>Liv</value>
   </data>
   <data name="Screen_Multiplayer_AllowedGameModes" xml:space="preserve">
-    <value>Allowed Game Modes</value>
+    <value>Tillatte spillmoduser</value>
   </data>
   <data name="Screen_Multiplayer_MaximumSongLength" xml:space="preserve">
-    <value>Maximum Song Length</value>
+    <value>Maksimal sang varighet</value>
   </data>
   <data name="Screen_Multiplayer_DifficultyRange" xml:space="preserve">
-    <value>Difficulty Range</value>
+    <value>Vanskelighetsgrad Spekter</value>
   </data>
   <data name="Screen_Multiplayer_LongNotePercentageRange" xml:space="preserve">
-    <value>Long Note % Range</value>
+    <value>Lang Noter % Rekkevide</value>
   </data>
   <data name="Screen_Multiplayer_StartMatch" xml:space="preserve">
-    <value>START MATCH</value>
+    <value>START MATCHEN</value>
   </data>
   <data name="Screen_Multiplayer_ReadyUp" xml:space="preserve">
-    <value>READY UP</value>
+    <value>KLAR</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishes" xml:space="preserve">
-    <value>Please wait until the match finishes before performing this action.</value>
+    <value>Vennligst vent til kampen er ferdig før du gjør denne handlingen.</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeReadying" xml:space="preserve">
-    <value>Please wait until the match finishes before readying up.</value>
+    <value>Vennligst vent til kampen er ferdig før du gjør deg klar.</value>
   </data>
   <data name="Screen_Multiplayer_CannotReadyWithoutMap" xml:space="preserve">
-    <value>You cannot ready up if you do not have the map!</value>
+    <value>Du kan ikke være klar hvis du har ikke mappen.</value>
   </data>
   <data name="Screen_Multiplayer_SelectMap" xml:space="preserve">
-    <value>select map</value>
+    <value>velg map</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMap" xml:space="preserve">
-    <value>Please wait until the match finishes before selecting another map.</value>
+    <value>Vennligst vent til kampen er ferdig før du velger et annet map.</value>
   </data>
   <data name="Screen_Multiplayer_CannotSelectMapIfNotHost" xml:space="preserve">
-    <value>You cannot select the map if you aren't host!</value>
+    <value>Du kan ikke velge map hvis du er ikke verten!</value>
   </data>
   <data name="Screen_Multiplayer_Unready" xml:space="preserve">
-    <value>UNREADY</value>
+    <value>IKKE KLAR</value>
   </data>
   <data name="Screen_Multiplayer_Ready" xml:space="preserve">
-    <value>READY</value>
+    <value>KLAR</value>
   </data>
   <data name="Screen_Multiplayer_NotReady" xml:space="preserve">
-    <value>NOT READY</value>
+    <value>IKKE KLAR</value>
   </data>
   <data name="Screen_Multiplayer_CancelMatchStart" xml:space="preserve">
-    <value>CANCEL MATCH START</value>
+    <value>AVBRYT KAMPSTART</value>
   </data>
   <data name="Screen_Multiplayer_Modifiers" xml:space="preserve">
-    <value>Modifiers</value>
+    <value>Modifikatorer</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMods" xml:space="preserve">
-    <value>Please wait until the match finishes before selecting mods.</value>
+    <value>Vennligst vent til kampen er ferdig før du velger modifikasjoner.</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeam" xml:space="preserve">
-    <value>Change Team</value>
+    <value>Bytt lag</value>
   </data>
   <data name="Screen_Multiplayer_MustUnreadyToSwitchTeams" xml:space="preserve">
-    <value>You must unready in order to switch teams!</value>
+    <value>Du må være uklar for å kunne bytte lag!</value>
   </data>
   <data name="Screen_Multiplayer_CannotSwitchTeamsDuringCountdown" xml:space="preserve">
-    <value>You cannot switch teams when the countdown timer is active</value>
+    <value>Du kan ikke bytte lag når nedtellingstiden er aktiv</value>
   </data>
   <data name="Screen_Multiplayer_ViewProfile" xml:space="preserve">
-    <value>View Profile</value>
+    <value>Vis profil</value>
   </data>
   <data name="Screen_Multiplayer_SteamProfile" xml:space="preserve">
-    <value>Steam Profile</value>
+    <value>Steam profil</value>
   </data>
   <data name="Screen_Multiplayer_KickPlayer" xml:space="preserve">
-    <value>Kick Player</value>
+    <value>Kast ut spikker</value>
   </data>
   <data name="Screen_Multiplayer_GiveHost" xml:space="preserve">
-    <value>Give Host</value>
+    <value>Gi vert</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeamWithTeam" xml:space="preserve">
-    <value>Change Team ({0})</value>
+    <value>Endre lag ({0})</value>
   </data>
   <data name="Screen_Multiplayer_Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Lukk</value>
   </data>
   <data name="Screen_Multiplayer_OptionsFor" xml:space="preserve">
-    <value>Options for {0}</value>
+    <value>Innstillinger for {0}</value>
   </data>
   <data name="Screen_Multiplayer_Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>Laster...</value>
   </data>
   <data name="Screen_Multiplayer_Wins" xml:space="preserve">
-    <value>{0} Wins</value>
+    <value>{0} Vinn</value>
   </data>
   <data name="Screen_Multiplayer_Referee" xml:space="preserve">
-    <value>Referee</value>
+    <value>Dommer</value>
   </data>
   <data name="Screen_Multiplayer_PlayersCount" xml:space="preserve">
-    <value>({0}/{1}) Players</value>
+    <value>({0}/{1}) Spillere</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStart" xml:space="preserve">
-    <value>Waiting to start</value>
+    <value>Venter på å starte</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartOneDot" xml:space="preserve">
-    <value>Waiting to start.</value>
+    <value>Venter på å starte.</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartTwoDots" xml:space="preserve">
-    <value>Waiting to start..</value>
+    <value>Venter på å starte..</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStartThreeDots" xml:space="preserve">
-    <value>Waiting to start...</value>
+    <value>Venter på å starte...</value>
   </data>
   <data name="Screen_Multiplayer_WaitingForServer" xml:space="preserve">
-    <value>Waiting for server</value>
+    <value>Venter på serveren</value>
   </data>
   <data name="Screen_Multiplayer_MatchIsNowStarting" xml:space="preserve">
-    <value>Match is now starting: {0}</value>
+    <value>Kampen starter: {0}</value>
   </data>
   <data name="Screen_Multiplayer_MatchInProgress" xml:space="preserve">
-    <value>Match in progress. Please wait until the next one!</value>
+    <value>Kamp pågår. Vennligst vent til den neste!</value>
   </data>
   <data name="Screen_Multiplayer_ModsNone" xml:space="preserve">
-    <value>Mods: None</value>
+    <value>Mods: Ingen</value>
   </data>
   <data name="Screen_Multiplayer_HostSelectingMap" xml:space="preserve">
-    <value>Host is currently selecting a map!</value>
+    <value>Verten velger for øyeblikket et map!</value>
   </data>
   <data name="Screen_Multiplayer_PleaseWait" xml:space="preserve">
-    <value>Please wait...</value>
+    <value>Vennligst vent...</value>
   </data>
   <data name="Screen_Multiplayer_MapInfo" xml:space="preserve">
-    <value>By: {0} | Length: {1} | BPM: {2} | LNs: {3}%</value>
+    <value>Av: {0} | Varighet: {1} | BPM: {2} | LNer: {3}%</value>
   </data>
   <data name="Screen_Multiplayer_MapMissingClickToDownload" xml:space="preserve">
-    <value>You don't have this map. Click to download!</value>
+    <value>Du har ikke denne mappen. Klikk for å laste ned!</value>
   </data>
   <data name="Screen_Multiplayer_MapMissingDownloadNotAvailable" xml:space="preserve">
-    <value>You don't have this map. Download not available!</value>
+    <value>Du har ikke denne mappen. Nedlasting ikke tilgjengelig!</value>
   </data>
   <data name="Screen_Multiplayer_MapsetAlreadyDownloading" xml:space="preserve">
-    <value>The mapset is already downloading. Slow down!</value>
+    <value>Dette mapsettet lastes ned allerede!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadingMap" xml:space="preserve">
-    <value>Downloading Map: {0}%</value>
+    <value>Laster ned map: {0}%</value>
   </data>
   <data name="Screen_Multiplayer_DownloadFailed" xml:space="preserve">
-    <value>Download Failed!</value>
+    <value>Nedlasting feilet!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadComplete" xml:space="preserve">
-    <value>Download Complete!</value>
+    <value>Nedlasting fullført!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedMissingMap" xml:space="preserve">
-    <value>Match started, but we don't have the map!</value>
+    <value>Kampen har startet, men vi har ikke mappen!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
-    <value>Match started. Click to watch the match live on the web as a referee. </value>
+    <value>Match startet. Klikk til å se matchen direkte på nettet som en dommer. </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
-    <value>MATCH DETAILS</value>
+    <value>MATCH DETALJER</value>
   </data>
   <data name="Screen_MultiplayerLobby_ViewInformationAboutMatch" xml:space="preserve">
-    <value>View information about a match</value>
+    <value>Se informasjon om en match</value>
   </data>
   <data name="Screen_MultiplayerLobby_RulesetLabel" xml:space="preserve">
-    <value>RULESET: </value>
+    <value>REGELSETT: </value>
   </data>
   <data name="Screen_MultiplayerLobby_All" xml:space="preserve">
-    <value>All</value>
+    <value>Alle</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeForAll" xml:space="preserve">
-    <value>Free-For-All</value>
+    <value>Alle Mot Alle</value>
   </data>
   <data name="Screen_MultiplayerLobby_Team" xml:space="preserve">
-    <value>Team</value>
+    <value>Lag</value>
   </data>
   <data name="Screen_MultiplayerLobby_ModeLabel" xml:space="preserve">
-    <value>MODE: </value>
+    <value>MODUS: </value>
   </data>
   <data name="Screen_MultiplayerLobby_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 Taster</value>
   </data>
   <data name="Screen_MultiplayerLobby_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 Taster</value>
   </data>
   <data name="Screen_MultiplayerLobby_MapStatusLabel" xml:space="preserve">
-    <value>MAP STATUS: </value>
+    <value>MAPPE STATUS: </value>
   </data>
   <data name="Screen_MultiplayerLobby_Imported" xml:space="preserve">
-    <value>Imported</value>
+    <value>Importert</value>
   </data>
   <data name="Screen_MultiplayerLobby_Uploaded" xml:space="preserve">
-    <value>Uploaded</value>
+    <value>Opplastet</value>
   </data>
   <data name="Screen_MultiplayerLobby_Unsubmitted" xml:space="preserve">
-    <value>Unsubmitted</value>
+    <value>Ikke innsendt</value>
   </data>
   <data name="Screen_MultiplayerLobby_RoomVisibilityLabel" xml:space="preserve">
-    <value>ROOM VISIBILITY: </value>
+    <value>ROM SYNLIGHET: </value>
   </data>
   <data name="Screen_MultiplayerLobby_Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Åpen</value>
   </data>
   <data name="Screen_MultiplayerLobby_Full" xml:space="preserve">
-    <value>Full</value>
+    <value>Fullt</value>
   </data>
   <data name="Screen_MultiplayerLobby_Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Passord</value>
   </data>
   <data name="Screen_MultiplayerLobby_GamesFound" xml:space="preserve">
-    <value>GAMES FOUND</value>
+    <value>SPILL FUNNET</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameFound" xml:space="preserve">
-    <value>GAME FOUND</value>
+    <value>SPILL FUNNET</value>
   </data>
   <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
-    <value>Search for games...</value>
+    <value>Søk etter spill...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateGame" xml:space="preserve">
-    <value>CREATE GAME</value>
+    <value>OPPRETT SPILL</value>
   </data>
   <data name="Screen_MultiplayerLobby_QuickMatch" xml:space="preserve">
-    <value>Quick Match</value>
+    <value>Rask Match</value>
   </data>
   <data name="Screen_MultiplayerLobby_NoAvailableOpenGames" xml:space="preserve">
-    <value>There are no available open games to join.</value>
+    <value>Det er ingen åpne spill å bli med.</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterGamePasswordTitle" xml:space="preserve">
-    <value>ENTER GAME PASSWORD</value>
+    <value>ANGI SPILL PASSORD</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterGamePasswordMessage" xml:space="preserve">
-    <value>Enter the password to join the multiplayer game...</value>
+    <value>Angi passordet for å bli med i flerspiller-spillet...</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterPasswordPlaceholder" xml:space="preserve">
-    <value>Enter password...</value>
+    <value>Angi passord...</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameTitle" xml:space="preserve">
-    <value>JOINING GAME</value>
+    <value>KOBLER TIL SPILLET</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameMessage" xml:space="preserve">
-    <value>Connecting to multiplayer game. Please wait...</value>
+    <value>Kobler til flerspillerspill. Vennligst vent...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameTitle" xml:space="preserve">
-    <value>CREATE MULTIPLAYER GAME</value>
+    <value>OPPRETT FLERSPILLERSPILL</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameMessage" xml:space="preserve">
-    <value>Fill in the details to create a multiplayer game...</value>
+    <value>Fyll inn detaljene for å opprette et flerspillerspill...</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameName" xml:space="preserve">
-    <value>Game Name</value>
+    <value>Spill Navn</value>
   </data>
   <data name="Screen_MultiplayerLobby_ChooseGameNamePlaceholder" xml:space="preserve">
-    <value>Choose a name for the game...</value>
+    <value>Velg et navn for spillet...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CannotCreateGameWithoutMap" xml:space="preserve">
-    <value>You cannot create a game without having a map selected!</value>
+    <value>Du kan ikke opprette et spill uten å ha en mappe valgt!</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayersLabel" xml:space="preserve">
-    <value>MAX PLAYERS: </value>
+    <value>MAX SPILLERE: </value>
   </data>
   <data name="Screen_MultiplayerLobby_LoseALifeUponFailing" xml:space="preserve">
-    <value>Lose A Life Upon Failing</value>
+    <value>Miste Et Liv Ved Mislykkelse</value>
   </data>
   <data name="Screen_MultiplayerLobby_Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Ja</value>
   </data>
   <data name="Screen_MultiplayerLobby_No" xml:space="preserve">
-    <value>No</value>
+    <value>Nei</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeMod" xml:space="preserve">
-    <value>Free Mod</value>
+    <value>Valgfritt Mod</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeRate" xml:space="preserve">
-    <value>Free Rate</value>
+    <value>Valgfritt Hastighet</value>
   </data>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
-    <value>Difficulty Range</value>
+    <value>Vanskelighetsgrad Rangering</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
-    <value>Any</value>
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Enhver</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Enhver</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
+    <value>Enhver</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
-    <value>Long Note % Range</value>
+    <value>Lang Note % Rekkevide</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnablePreview" xml:space="preserve">
-    <value>Enable Preview</value>
+    <value>Aktiver Forhåndsvisning</value>
   </data>
   <data name="Screen_MultiplayerLobby_AutoHost" xml:space="preserve">
-    <value>Auto Host</value>
+    <value>Automatisk Vert</value>
   </data>
   <data name="Screen_MultiplayerLobby_Ruleset" xml:space="preserve">
-    <value>Ruleset</value>
+    <value>Regelsett</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>Maks Spillere</value>
   </data>
   <data name="Screen_MultiplayerLobby_Players" xml:space="preserve">
-    <value>Players</value>
+    <value>Spillere</value>
   </data>
   <data name="Screen_MultiplayerLobby_AllowedGameModes" xml:space="preserve">
-    <value>Allowed Game Modes</value>
+    <value>Tillatte spillmoduser</value>
   </data>
   <data name="Screen_MultiplayerLobby_None" xml:space="preserve">
-    <value>None</value>
+    <value>Ingen</value>
   </data>
   <data name="Screen_MultiplayerLobby_InProgress" xml:space="preserve">
-    <value>In Progress</value>
+    <value>I gang</value>
   </data>
   <data name="Screen_MultiplayerLobby_HostRotation" xml:space="preserve">
-    <value>Host Rotation</value>
+    <value>Vert rotasjon</value>
   </data>
   <data name="Screen_MultiplayerLobby_LifeCount" xml:space="preserve">
-    <value>Life Count</value>
+    <value>Antall liv</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaximumSongLength" xml:space="preserve">
-    <value>Maximum Song Length</value>
+    <value>Maksimal sang varighet</value>
   </data>
 </root>
