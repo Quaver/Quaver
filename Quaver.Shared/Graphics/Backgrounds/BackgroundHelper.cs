@@ -85,10 +85,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// </summary>
         private static Texture2D DefaultBanner => UserInterface.DefaultBanner;
 
-        /// <summary>
-        /// </summary>
-        private static bool ShouldLoadSongSelectBanners => ConfigManager.DisplaySongSelectBanners?.Value ?? true;
-
         private const int BannerWidth = 421;
 
         private const int BannerHeight = 82;
@@ -233,9 +229,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <param name="mapset"></param>
         public static void LoadMapsetBanner(Mapset mapset)
         {
-            if (!ShouldLoadSongSelectBanners)
-                return;
-
             MapsetBannersToLoad.Add(mapset);
         }
 
@@ -245,9 +238,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <param name="playlist"></param>
         public static void LoadPlaylistBanner(Playlist playlist)
         {
-            if (!ShouldLoadSongSelectBanners)
-                return;
-
             PlaylistBannersToLoad.Add(playlist);
         }
 
