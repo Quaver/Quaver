@@ -176,6 +176,23 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         public bool IsJoinChannelDialogOpen() => ActiveJoinChatChannelContainer != null && ActiveJoinChatChannelContainer.IsOpen;
 
         /// <summary>
+        ///     Returns whether a tooltip target is available while the chat overlay is open.
+        /// </summary>
+        public bool AllowsTooltip(Drawable target)
+        {
+            if (!IsOpen)
+                return true;
+
+            for (var drawable = target; drawable != null; drawable = drawable.Parent)
+            {
+                if (ReferenceEquals(drawable, this))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// </summary>
         private void DismissActiveDropdowns()
         {

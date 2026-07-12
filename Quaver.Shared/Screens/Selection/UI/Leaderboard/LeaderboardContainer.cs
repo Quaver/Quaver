@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Y = Header.Y / 2f
+                Y = (Header.Height - 40) / 2f
             };
         }
 

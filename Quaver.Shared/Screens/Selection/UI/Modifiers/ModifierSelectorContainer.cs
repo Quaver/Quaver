@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "MODIFIERS", 28)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "MODIFIERS", 24)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

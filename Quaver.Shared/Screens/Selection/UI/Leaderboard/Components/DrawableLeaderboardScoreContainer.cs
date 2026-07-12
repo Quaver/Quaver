@@ -22,6 +22,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Logging;
 using Wobble.Managers;
 
@@ -127,7 +128,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <summary>
         ///     Tooltip that displays when hovering over <see cref="CantBeatAlert"/>
         /// </summary>
-        private Tooltip UnbeatableTooltip { get; set; }
+        private IDisposable UnbeatableTooltipRegistration { get; set; }
+
+        private IDisposable RequiredAccuracyTooltipRegistration { get; set; }
+
+        private TooltipOptions RequiredAccuracyTooltipOptions { get; set; }
 
         /// <summary>
         ///     An icon to represent the time the score was played at
@@ -252,7 +257,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         public override void Destroy()
         {
-            UnbeatableTooltip?.Destroy();
+            UnbeatableTooltipRegistration?.Dispose();
+            RequiredAccuracyTooltipRegistration?.Dispose();
 
             // ReSharper disable once DelegateSubtraction
             SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
@@ -378,7 +384,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Flag.X + Flag.Width + PaddingLeft / 4f, UsernameY + 6),
+                Position = new ScalableVector2(Flag.X + Flag.Width + PaddingLeft / 4f, UsernameY + 4),
                 UsePreviousSpriteBatchOptions = true
             };
             
@@ -393,7 +399,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Flag.X + Flag.Width + PaddingLeft / 4f, UsernameY + 6),
+                Position = new ScalableVector2(Flag.X + Flag.Width + PaddingLeft / 4f, UsernameY + 4),
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -404,7 +410,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 SkinManager.Skin?.SongSelect?.LeaderboardScoreUsernameOtherColor ?? ColorHelper.HexToColor("#FBFFB6"));
 
             Clan.X = Flag.X + Flag.Width + PaddingLeft / 4f;
-            Username.X = Clan.HasClan ? Clan.X + Clan.Width + 6 : Clan.X;
+            Username.X = Clan.HasClan ? Clan.X + Clan.Width + 3 : Clan.X;
             var changed = ScoreUsername != score.Name;
             if (changed)
             {
@@ -423,7 +429,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreatePerformanceRating()
         {
-            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00", 20)
+            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00", 22)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -439,7 +445,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateAccuracyMaxCombo()
         {
-            AccuracyMaxCombo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00% | 0,000x", 16)
+            AccuracyMaxCombo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00.00% | 0,000x", 18)
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
@@ -460,7 +466,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Parent = this,
                 Alignment = Alignment.BotLeft,
                 X = Username.X,
-                Y = -Username.Y,
+                Y = -PerformanceRating.Y,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -481,23 +487,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alpha = 0
             };
 
-            UnbeatableTooltip = new Tooltip(SelectionLocalization.Get("You cannot beat this score with your currently activated modifiers!"),
-                Color.Crimson)
+            UnbeatableTooltipRegistration = CantBeatAlert.AddTooltip(new TooltipOptions(
+                SelectionLocalization.Get("You cannot beat this score with your currently activated modifiers!"))
             {
-                DestroyIfParentIsNull = false
-            };
-
-            CantBeatAlert.Hovered += (sender, args) =>
-            {
-                var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen.ActivateTooltip(UnbeatableTooltip);
-            };
-
-            CantBeatAlert.LeftHover += (sender, args) =>
-            {
-                var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen.DeactivateTooltip();
-            };
+                HoverDelayMilliseconds = 350,
+                Style = new TooltipStyle
+                {
+                    BackgroundColor = ColorHelper.HexToColor("#161616"),
+                    BorderColor = Color.Crimson,
+                    BorderThickness = 2,
+                    TextSize = 20,
+                    TextWeight = FontWeight.Bold
+                }
+            });
 
             if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
                 CantBeatAlert.Size = new ScalableVector2(0, 0);
@@ -519,13 +521,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Tint = ColorHelper.HexToColor("#5dc7f9")
             };
 
-            RequiredAccuracyAlert.Hovered += (sender, args) => ActivateRequiredAccuracyTooltip();
-
-            RequiredAccuracyAlert.LeftHover += (sender, args) =>
+            RequiredAccuracyTooltipOptions = new TooltipOptions
             {
-                var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen.DeactivateTooltip();
+                HoverDelayMilliseconds = 350,
+                Style = new TooltipStyle
+                {
+                    BackgroundColor = ColorHelper.HexToColor("#161616"),
+                    BorderColor = ColorHelper.HexToColor("#5dc7f9"),
+                    BorderThickness = 2,
+                    TextSize = 20,
+                    TextWeight = FontWeight.Bold
+                }
             };
+
+            UpdateRequiredAccuracyTooltip();
+            RequiredAccuracyTooltipRegistration = RequiredAccuracyAlert.AddTooltip(RequiredAccuracyTooltipOptions);
             
             if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Clan)
                 RequiredAccuracyAlert.Size = new ScalableVector2(0, 0);
@@ -566,7 +576,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             var timeDifference = DateTime.Now - date;
 
             Clock.Y = Username.Y + Username.Height / 2f - Clock.Height / 2f;
-            Clock.X = Username.X + Username.Width + 8;
+            Clock.X = Username.X + Username.Width + 4;
 
             Time.Parent = Clock;
             Time.Alignment = Alignment.MidLeft;
@@ -792,16 +802,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            var game = GameBase.Game as QuaverGame;
-
-            if (!RequiredAccuracyAlert.IsHovered || !RequiredAccuracyAlert.Visible)
-                return;
-
-            if (game?.CurrentScreen?.ActiveTooltip == UnbeatableTooltip)
-                return;
-
-            game?.CurrentScreen?.DeactivateTooltip();
-            ActivateRequiredAccuracyTooltip();
+            UpdateRequiredAccuracyTooltip();
         }
 
         /// <summary>
@@ -835,19 +836,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         /// <summary>
         /// </summary>
-        private void ActivateRequiredAccuracyTooltip()
+        private void UpdateRequiredAccuracyTooltip()
         {
-            var game = (QuaverGame) GameBase.Game;
-
             var processor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods));
 
             var requiredAcc = processor.GetAccuracyFromRating(Score.Item.PerformanceRating);
 
-            var tooltip = new Tooltip("In order to beat this score with your current modifiers,\n" +
-                                      $"you must achieve higher than {StringHelper.AccuracyToString((float) requiredAcc)} accuracy.",
-                ColorHelper.HexToColor("#5dc7f9"));
-
-            game.CurrentScreen.ActivateTooltip(tooltip);
+            RequiredAccuracyTooltipOptions.Text = "In order to beat this score with your current modifiers,\n" +
+                                                  $"you must achieve higher than {StringHelper.AccuracyToString((float) requiredAcc)} accuracy.";
         }
 
         /// <summary>

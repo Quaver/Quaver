@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
     {
         public Bindable<Map> Map { get; }
 
-        public FilterMetadataLength(Bindable<Map> map = null) : base(LocalizationManager.Get("Screen_Selection_LengthLabel"), "00:00", 20, ColorHelper.HexToColor($"#ffe76b"))
+        public FilterMetadataLength(Bindable<Map> map = null) : base(LocalizationManager.Get("Screen_Selection_LengthLabel"), "00:00", 18, ColorHelper.HexToColor($"#ffe76b"))
         {
             Map = map ?? MapManager.Selected;
 

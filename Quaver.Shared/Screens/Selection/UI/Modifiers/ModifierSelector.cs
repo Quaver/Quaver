@@ -42,11 +42,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         private Sprite ButtonBackground { get; set; }
 
         /// <summary>
-        ///     The currently active tooltip that is displayed on top of the container
-        /// </summary>
-        public Tooltip ActiveTooltip { get; set; }
-
-        /// <summary>
         /// </summary>
         private ImageButton ResetModifiersButton { get; set; }
 
@@ -88,8 +83,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
             ScrollbarBackground.Visible = ContentContainer.Height > Height;
 
-            HandleTooltipAnimation();
-
             base.Update(gameTime);
         }
 
@@ -112,8 +105,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                 for (var j = 0; j < section.Modifiers.Count; j++)
                 {
                     var mod = section.Modifiers[j];
-                    mod.Selector = this;
-
                     // mod.OriginalColor = j % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
                     mod.OriginalColor = ColorHelper.HexToColor("#242424");
                     AddContainedDrawable(mod);
@@ -206,45 +197,5 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
             };
         }
 
-        /// <summary>
-        ///     Sets the active tooltip
-        /// </summary>
-        /// <param name="tooltip"></param>
-        public void ActivateTooltip(Tooltip tooltip)
-        {
-            ActiveTooltip?.Hide();
-
-            ActiveTooltip = tooltip;
-
-            if (ActiveTooltip == null)
-                return;
-
-            ActiveTooltip.Parent = this;
-            ActiveTooltip.Show();
-
-            ActiveTooltip.Alpha = 0;
-            ActiveTooltip.ClearAnimations();
-            ActiveTooltip.FadeTo(1, Easing.Linear, 150);
-        }
-
-        public void DeactivateTooltip()
-        {
-            if (ActiveTooltip == null)
-                return;
-
-            ActiveTooltip.Hide();
-            ActiveTooltip = null;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleTooltipAnimation()
-        {
-            if (ActiveTooltip == null)
-                return;
-
-            ActiveTooltip.X = MathHelper.Clamp(MouseManager.CurrentState.X - AbsolutePosition.X - ActiveTooltip.Width / 2f, 5, Width - ActiveTooltip.Width - 5);
-            ActiveTooltip.Y = MathHelper.Clamp(MouseManager.CurrentState.Y - AbsolutePosition.Y - ActiveTooltip.Height - 2, 5, Height - ActiveTooltip.Height - 5);
-        }
     }
 }

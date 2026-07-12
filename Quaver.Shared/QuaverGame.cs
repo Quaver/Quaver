@@ -377,6 +377,7 @@ namespace Quaver.Shared
             ConfigManager.WriteConfigFileAsync().Wait();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
+            TooltipManager.TargetEligibilityFilter = null;
             base.UnloadContent();
 
             if (SteamManager.IsInitialized)
@@ -406,6 +407,7 @@ namespace Quaver.Shared
                 // be initialized
                 OnlineHub = new OnlineHub();
                 OnlineChat = new OnlineChat();
+                TooltipManager.TargetEligibilityFilter = target => OnlineChat.AllowsTooltip(target);
                 VolumeController = new VolumeControl();
                 FirstUpdateCalled = true;
             }

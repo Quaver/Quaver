@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components;
@@ -25,6 +26,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
             new IconTextButtonCreatePlaylist()
         })
         {
+            foreach (var item in LeftAlignedItems.Concat(RightAlignedItems).OfType<IconTextButton>())
+                item.Text.Y = 1;
         }
     }
 }
