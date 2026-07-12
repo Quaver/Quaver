@@ -9,7 +9,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Backgrounds;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using Quaver.Shared.Modifiers;

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Shaders;
+using Wobble.Graphics.Shaders;
 using Quaver.Shared.Helpers;
 using Wobble.Bindables;
 using Wobble.Graphics;
