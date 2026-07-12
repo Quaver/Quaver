@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
@@ -17,6 +18,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Skinning;
 using TagLib.Ape;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -24,6 +26,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Managers;
+using Wobble.Logging;
 using Wobble.Scheduling;
 using Wobble.Window;
 
@@ -65,6 +68,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private IconButton UpdateButton { get; set; }
 
+        private Sprite CachedRows { get; set; }
+        private Sprite HoverHighlight { get; set; }
+        private RenderTarget2D RowsRenderTarget { get; set; }
+        private bool RowsCacheDirty { get; set; } = true;
+        private bool RowsCacheBuildQueued { get; set; }
+        private int RowsCacheRevision { get; set; }
+        private float PreviousRowsCacheY { get; set; }
+        private double RowsCacheStillTime { get; set; }
+
+        internal bool IsRowsCacheActive => CachedRows?.Visible == true;
+
+        private const double RowsCacheSettleTime = 100;
+
         /// <summary>
         /// </summary>
         /// <param name="container"></param>
@@ -84,12 +100,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             ScrollSpeed = 220;
             IsMinScrollYEnabled = true;
 
+            CreateRowsCache();
             CreateScrollbar();
             CreateLoadingWheel();
             CreateStatusText();
             CreateUpdateButton();
 
             Container.FetchScoreTask.OnCompleted += OnScoresRetrieved;
+            SkinManager.SkinLoaded += OnSkinLoaded;
+            WindowManager.ResolutionChanged += OnResolutionChanged;
         }
 
         /// <inheritdoc />
@@ -126,6 +145,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             base.Update(gameTime);
             ApplyPoolVisibility();
+            UpdateHoverHighlight();
+            UpdateRowsCache(gameTime);
         }
 
         /// <summary>
@@ -133,10 +154,172 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public override void Destroy()
         {
             Container.FetchScoreTask.OnCompleted -= OnScoresRetrieved;
+            SkinManager.SkinLoaded -= OnSkinLoaded;
+            WindowManager.ResolutionChanged -= OnResolutionChanged;
             ReusableRows.ForEach(x => x.Destroy());
             ReusableRows.Clear();
+            RowsRenderTarget?.Dispose();
             base.Destroy();
         }
+
+        private void CreateRowsCache()
+        {
+            HoverHighlight = new Sprite
+            {
+                Parent = this,
+                Size = new ScalableVector2(560, DrawableLeaderboardScore.ScoreHeight),
+                UsePreviousSpriteBatchOptions = true,
+                Tint = ColorHelper.HexToColor("#575757"),
+                Visible = false
+            };
+
+            CachedRows = new Sprite
+            {
+                Parent = this,
+                Size = Size,
+                UsePreviousSpriteBatchOptions = true,
+                Visible = false
+            };
+        }
+
+        internal void InvalidateRowsCache()
+        {
+            if (RowsCacheDirty && !RowsCacheBuildQueued && CachedRows?.Visible != true)
+                return;
+
+            RowsCacheDirty = true;
+            RowsCacheRevision++;
+            CachedRows.Visible = false;
+            HoverHighlight.Visible = false;
+        }
+
+        private void UpdateHoverHighlight()
+        {
+            if (!IsRowsCacheActive || Pool == null)
+            {
+                HoverHighlight.Visible = false;
+                return;
+            }
+
+            var hoveredRow = Pool.OfType<DrawableLeaderboardScore>()
+                .FirstOrDefault(x => x.Visible && x.ChildContainer.IsHighlightHovered);
+
+            if (hoveredRow == null)
+            {
+                HoverHighlight.Visible = false;
+                return;
+            }
+
+            HoverHighlight.X = hoveredRow.ScreenRectangle.X - ScreenRectangle.X;
+            HoverHighlight.Y = hoveredRow.ScreenRectangle.Y - ScreenRectangle.Y;
+            HoverHighlight.Visible = true;
+        }
+
+        private void UpdateRowsCache(GameTime gameTime)
+        {
+            if (Pool == null || Pool.Count == 0 || !FinishedLoading)
+            {
+                InvalidateRowsCache();
+                RowsCacheStillTime = 0;
+                PreviousRowsCacheY = ContentContainer.Y;
+                return;
+            }
+
+            var expectedWidth = Math.Max(1, (int)Math.Ceiling(Width * WindowManager.ScreenScale.X));
+            var expectedHeight = Math.Max(1, (int)Math.Ceiling(Height * WindowManager.ScreenScale.Y));
+
+            if (RowsRenderTarget != null && !RowsRenderTarget.IsDisposed &&
+                (RowsRenderTarget.Width != expectedWidth || RowsRenderTarget.Height != expectedHeight))
+                InvalidateRowsCache();
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (ContentContainer.Y != PreviousRowsCacheY || IsMiddleMouseDragging || IsScrollbarDragging)
+            {
+                InvalidateRowsCache();
+                RowsCacheStillTime = 0;
+                PreviousRowsCacheY = ContentContainer.Y;
+                return;
+            }
+
+            PreviousRowsCacheY = ContentContainer.Y;
+
+            if (!RowsCacheDirty || RowsCacheBuildQueued)
+                return;
+
+            RowsCacheStillTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (RowsCacheStillTime < RowsCacheSettleTime ||
+                Pool.OfType<DrawableLeaderboardScore>().Any(x => !x.ChildContainer.IsStaticVisualStable))
+                return;
+
+            QueueRowsCacheBuild(gameTime);
+        }
+
+        private void QueueRowsCacheBuild(GameTime gameTime)
+        {
+            RowsCacheBuildQueued = true;
+            var revision = RowsCacheRevision;
+
+            // Render-target work runs from the end of the list. Insert first so dirty text caches run before capture.
+            GameBase.Game.ScheduleRenderTargetDrawAfterPending(() =>
+            {
+                RowsCacheBuildQueued = false;
+
+                if (revision != RowsCacheRevision || !RowsCacheDirty || IsDisposed)
+                    return;
+
+                var graphicsDevice = GameBase.Game.GraphicsDevice;
+                var previousTargets = graphicsDevice.GetRenderTargets();
+
+                try
+                {
+                    EnsureRowsRenderTarget();
+
+                    _ = GameBase.Game.TryEndBatch();
+                    graphicsDevice.SetRenderTarget(RowsRenderTarget);
+                    graphicsDevice.Clear(Color.Transparent);
+
+                    var transform = Matrix.CreateTranslation(-ScreenRectangle.X, -ScreenRectangle.Y, 0) * WindowManager.Scale;
+                    GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied,
+                        SamplerState.LinearClamp, null, RasterizerState.CullNone, null, transform);
+
+                    foreach (var row in Pool.OfType<DrawableLeaderboardScore>())
+                        row.ChildContainer.DrawStaticContent(gameTime);
+
+                    _ = GameBase.Game.TryEndBatch();
+                    graphicsDevice.SetRenderTargets(previousTargets);
+
+                    CachedRows.Image = RowsRenderTarget;
+                    CachedRows.Visible = true;
+                    RowsCacheDirty = false;
+                    RowsCacheStillTime = 0;
+                }
+                catch (Exception e)
+                {
+                    GameBase.Game.TryEndBatch();
+                    graphicsDevice.SetRenderTargets(previousTargets);
+                    Logger.Error(e, LogType.Runtime);
+                }
+            });
+        }
+
+        private void EnsureRowsRenderTarget()
+        {
+            var pixelWidth = Math.Max(1, (int)Math.Ceiling(Width * WindowManager.ScreenScale.X));
+            var pixelHeight = Math.Max(1, (int)Math.Ceiling(Height * WindowManager.ScreenScale.Y));
+
+            if (RowsRenderTarget != null && !RowsRenderTarget.IsDisposed &&
+                RowsRenderTarget.Width == pixelWidth && RowsRenderTarget.Height == pixelHeight)
+                return;
+
+            RowsRenderTarget?.Dispose();
+            RowsRenderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, pixelWidth, pixelHeight, false,
+                GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+        }
+
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => InvalidateRowsCache();
+
+        private void OnResolutionChanged(object sender, EventArgs e) => InvalidateRowsCache();
 
         /// <summary>
         ///     Creates the scrollbar sprite and aligns it properly
@@ -183,6 +366,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             ScheduleUpdate(() =>
             {
+                InvalidateRowsCache();
                 LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
                 LoadingWheel.FadeTo(1, Easing.Linear, 250);
                 FadeStatusTextOut();
@@ -393,6 +577,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             ScheduleUpdate(() =>
             {
+                InvalidateRowsCache();
                 RecyclePool();
                 SnapToTop();
 

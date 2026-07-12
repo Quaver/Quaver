@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
@@ -76,6 +77,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             Index = index;
 
             ChildContainer.UpdateContent(this);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            if (Container is LeaderboardScoresContainer { IsRowsCacheActive: true })
+                return;
+
+            base.Draw(gameTime);
         }
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
