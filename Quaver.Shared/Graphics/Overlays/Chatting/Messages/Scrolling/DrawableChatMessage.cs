@@ -8,10 +8,10 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling;
 using Quaver.Shared.Helpers;
-using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
@@ -32,6 +32,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         ///     The hover target for the message timestamp.
         /// </summary>
         private DrawableChatMessageUsernameButton TimeButton { get; set; }
+
+        /// <summary>
+        ///     The timestamp tooltip options, updated when this pooled drawable receives a new message.
+        /// </summary>
+        private TooltipOptions TimeTooltipOptions { get; } = new TooltipOptions();
 
         /// <summary>
         ///     An icon to represent the user
@@ -63,14 +68,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private const int PADDING_X = 16;
 
         /// <summary>
+        ///     The horizontal gap between timestamp, badge, clan, and username metadata.
+        /// </summary>
+        private const float MetadataSpacing = PADDING_X / 4f;
+
+        /// <summary>
         ///     The normal color of a message timestamp.
         /// </summary>
         private static Color TimestampColor { get; } = ColorHelper.HexToColor("#a8a8a8");
-
-        /// <summary>
-        ///     The space reserved for every timestamp so sender metadata aligns between messages.
-        /// </summary>
-        private float TimestampWidth { get; }
 
         private bool IsScrollVisible { get; set; } = true;
 
@@ -89,7 +94,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Alpha = 0;
 
             CreateTime();
-            TimestampWidth = Time.Font.Store.MeasureString("88:88:88").X;
             CreateTimeButton();
             CreateIcon();
             CreateClan();
@@ -129,10 +133,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Index = index;
 
             Time.Text = GetTimestampText(item);
+            TimeTooltipOptions.Text = GetTimestampTooltip(item);
             var icon = GetIcon(Item.Sender.OnlineUser.UserGroups);
-            var timestampEndX = PADDING_X + TimestampWidth;
-            Time.X = timestampEndX - Time.Width;
-            var labelStartX = timestampEndX + PADDING_X / 2f;
+            Time.X = PADDING_X;
+            var labelStartX = Time.X + Time.Width + MetadataSpacing;
 
             if (icon != null)
             {
@@ -140,7 +144,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Icon.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
                 Icon.X = labelStartX;
 
-                labelStartX = Icon.X + Icon.Width + PADDING_X / 2f;
+                labelStartX = Icon.X + Icon.Width + MetadataSpacing;
             }
 
             IconShouldBeVisible = icon != null;
@@ -190,8 +194,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             }
 
             TimeButton.Alignment = Time.Alignment;
-            TimeButton.Position = new ScalableVector2(PADDING_X, Time.Y);
-            TimeButton.Size = new ScalableVector2(TimestampWidth, Time.Height);
+            TimeButton.Position = new ScalableVector2(Time.X, Time.Y);
+            TimeButton.Size = new ScalableVector2(Time.Width, Time.Height);
 
             // Make sure the button is properly aligned with the sender's username
             UsernameButton.Alignment = Username.Alignment;
@@ -229,8 +233,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Alpha = 0
             };
 
-            TimeButton.Hovered += (sender, args) => (GameBase.Game as QuaverGame)?.CurrentScreen?.ActivateTooltip(new Tooltip(GetTimestampTooltip(Item), TimestampColor));
-            TimeButton.LeftHover += (sender, args) => (GameBase.Game as QuaverGame)?.CurrentScreen?.DeactivateTooltip();
+            TimeButton.AddTooltip(TimeTooltipOptions);
         }
 
         /// <summary>

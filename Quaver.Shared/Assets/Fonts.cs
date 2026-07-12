@@ -11,6 +11,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Localization;
 using Wobble;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Assets
@@ -80,6 +81,16 @@ namespace Quaver.Shared.Assets
             CacheInterFont(InterLight, FontWeight.Light);
             CacheInterFont(InterHeavy, FontWeight.ExtraBold);
             CacheInterFont(InterBlack, FontWeight.Black);
+
+            TooltipManager.Theme.Fonts = new Dictionary<int, WobbleFontStore>
+            {
+                { FontWeight.Regular, FontManager.GetWobbleFont(InterRegular) },
+                { FontWeight.Light, FontManager.GetWobbleFont(InterLight) },
+                { FontWeight.SemiBold, FontManager.GetWobbleFont(InterSemiBold) },
+                { FontWeight.Bold, FontManager.GetWobbleFont(InterBold) },
+                { FontWeight.ExtraBold, FontManager.GetWobbleFont(InterHeavy) },
+                { FontWeight.Black, FontManager.GetWobbleFont(InterBlack) }
+            };
 
             var dir = $"{WobbleGame.WorkingDirectory}/Fonts";
             Directory.CreateDirectory(dir);
