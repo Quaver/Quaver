@@ -239,15 +239,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D ResultsAvatarMask => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-avatar-mask.png");
         public static Texture2D ResultsBackgroundFilter => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-background-filter.png");
         public static Texture2D ResultsTabSelectorBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-tab-selector-background.png");
-        public static Texture2D ResultsLabelAccuracy => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-accuracy.png");
-        public static Texture2D ResultsLabelMaxCombo => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-max-combo.png");
-        public static Texture2D ResultsLabelPerformanceRating => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-performance-rating.png");
-        public static Texture2D ResultsLabelRankedAccuracy => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-ranked-accuracy.png");
-        public static Texture2D ResultsLabelRatio => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-ratio.png");
-        public static Texture2D ResultsLabelTotalScore => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-total-score.png");
-        public static Texture2D ResultsLabelScore => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-score.png");
-        public static Texture2D ResultsLabelBlueTeam => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-blue-team.png");
-        public static Texture2D ResultsLabelRedTeam => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-red-team.png");
+        public static Texture2D ResultsLabelBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-bg.png");
         public static Texture2D ResultsMultiplayerTeamPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/multiplayer-team-panel.png");
         public static Texture2D ResultsScoreContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/overview-score-container-panel.png");
         public static Texture2D ResultsGraphContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-overview-graph-container.png");

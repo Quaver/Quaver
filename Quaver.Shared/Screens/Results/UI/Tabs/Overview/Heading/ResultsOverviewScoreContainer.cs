@@ -49,12 +49,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 
             Items.AddRange(new []
             {
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelMaxCombo ?? UserInterface.ResultsLabelMaxCombo, $"{Processor.Value.MaxCombo:n0}x"),
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelAccuracy ?? UserInterface.ResultsLabelAccuracy, StringHelper.AccuracyToString(Processor.Value.Accuracy)),
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelPerformanceRating ?? UserInterface.ResultsLabelPerformanceRating,
+                new DrawableResultsScoreMetric(ResultsLocalization.Get("MAX COMBO"), $"{Processor.Value.MaxCombo:n0}x"),
+                new DrawableResultsScoreMetric(ResultsLocalization.Get("ACCURACY"), StringHelper.AccuracyToString(Processor.Value.Accuracy)),
+                new DrawableResultsScoreMetric(ResultsLocalization.Get("PERFORMANCE RATING"),
                     $"{StringHelper.RatingToString(rating.CalculateRating(accuracy))}", ColorHelper.HexToColor("#E9B736")),
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelRankedAccuracy ?? UserInterface.ResultsLabelRankedAccuracy, StringHelper.AccuracyToString(accuracy)),
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelRatio ?? UserInterface.ResultsLabelRatio,
+                new DrawableResultsScoreMetric(ResultsLocalization.Get("RANKED ACCURACY"), StringHelper.AccuracyToString(accuracy)),
+                new DrawableResultsScoreMetric(ResultsLocalization.Get("RATIO"),
                     $"{StringHelper.RatioToString(Processor.Value.CurrentJudgements[Judgement.Marv], Processor.Value.CurrentJudgements[Judgement.Perf])}"),
             });
         }
