@@ -45,11 +45,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Header
         {
             Items.AddRange(new []
             {
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelBlueTeam ?? UserInterface.ResultsLabelBlueTeam,
+                new DrawableResultsScoreMetric("BLUE TEAM RATING",
                     StringHelper.RatingToString(GetTeamAverageRating(Map, BlueTeam)), ColorHelper.HexToColor("#0587E5")),
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelScore ?? UserInterface.ResultsLabelScore,
+                new DrawableResultsScoreMetric("SCORE",
                     $"{Game.BlueTeamWins:n0} : {Game.RedTeamWins:n0}"),
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelRedTeam ?? UserInterface.ResultsLabelRedTeam,
+                new DrawableResultsScoreMetric("RED TEAM RATING",
                     StringHelper.RatingToString(GetTeamAverageRating(Map, RedTeam)), ColorHelper.HexToColor("#F9645D")),
             });
         }

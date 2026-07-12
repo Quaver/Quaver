@@ -12,15 +12,7 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D ResultsAvatarMask { get; private set; }
         public Texture2D ResultsBackgroundFilter { get; private set; }
         public Texture2D ResultsTabSelectorBackground { get; private set; }
-        public Texture2D ResultsLabelAccuracy { get; private set; }
-        public Texture2D ResultsLabelMaxCombo { get; private set; }
-        public Texture2D ResultsLabelPerformanceRating { get; private set; }
-        public Texture2D ResultsLabelRankedAccuracy { get; private set; }
-        public Texture2D ResultsLabelRatio { get; private set; }
-        public Texture2D ResultsLabelTotalScore { get; private set; }
-        public Texture2D ResultsLabelScore { get; private set; }
-        public Texture2D ResultsLabelBlueTeam { get; private set; }
-        public Texture2D ResultsLabelRedTeam { get; private set; }
+        public Texture2D ResultsLabelBackground { get; private set; }
         public Texture2D ResultsMultiplayerTeamPanel { get; private set; }
         public Texture2D ResultsScoreContainerPanel { get; private set; }
         public Texture2D ResultsGraphContainerPanel { get; private set; }
@@ -52,15 +44,7 @@ namespace Quaver.Shared.Skinning.Menus
             ResultsAvatarMask = LoadSkinElement(folder, "avatar-mask.png");
             ResultsBackgroundFilter = LoadSkinElement(folder, "background-filter.png");
             ResultsTabSelectorBackground = LoadSkinElement(folder, "tab-selector-background.png");
-            ResultsLabelAccuracy = LoadSkinElement(folder, "label-accuracy.png");
-            ResultsLabelMaxCombo = LoadSkinElement(folder, "label-max-combo.png");
-            ResultsLabelPerformanceRating = LoadSkinElement(folder, "label-performance-rating.png");
-            ResultsLabelRankedAccuracy = LoadSkinElement(folder, "label-ranked-accuracy.png");
-            ResultsLabelRatio = LoadSkinElement(folder, "label-ratio.png");
-            ResultsLabelTotalScore = LoadSkinElement(folder, "label-total-score.png");
-            ResultsLabelScore = LoadSkinElement(folder, "label-score.png");
-            ResultsLabelBlueTeam = LoadSkinElement(folder, "label-blue-team.png");
-            ResultsLabelRedTeam = LoadSkinElement(folder, "label-red-team.png");
+            ResultsLabelBackground = LoadSkinElement(folder, "label-bg.png");
             ResultsMultiplayerTeamPanel = LoadSkinElement(folder, "multiplayer-team-panel.png");
             ResultsScoreContainerPanel = LoadSkinElement(folder, "score-container-panel.png");
             ResultsGraphContainerPanel = LoadSkinElement(folder, "graph-container-panel.png");
