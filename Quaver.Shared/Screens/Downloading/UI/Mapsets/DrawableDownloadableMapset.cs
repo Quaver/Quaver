@@ -7,7 +7,7 @@ using Quaver.API.Enums;
 using Quaver.Server.Client.Events.Download;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;

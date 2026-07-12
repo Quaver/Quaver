@@ -6,7 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;

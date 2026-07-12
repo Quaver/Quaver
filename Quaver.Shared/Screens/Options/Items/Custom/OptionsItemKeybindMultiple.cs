@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;

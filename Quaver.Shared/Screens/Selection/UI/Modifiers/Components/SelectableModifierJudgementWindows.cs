@@ -1,11 +1,11 @@
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows;
 using Microsoft.Xna.Framework;
 using Wobble.Graphics;
+using Wobble.Graphics.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 
@@ -20,11 +20,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Icon.X,
-                Size = new ScalableVector2(102, 22),
+                Size = new ScalableVector2(112, 22),
                 Tint = ColorHelper.HexToColor("#F2C94C")
             };
 
-            customizeButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CUSTOMIZE", 20, ColorHelper.HexToColor("#242424"));
+            customizeButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CUSTOMIZE", 16, ColorHelper.HexToColor("#242424"));
 
             Clicked += (sender, args) => DialogManager.Show(new JudgementWindowDialog());
         }

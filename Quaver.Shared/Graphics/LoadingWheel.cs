@@ -16,7 +16,11 @@ namespace Quaver.Shared.Graphics
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            PerformLoadingWheelRotation();
+            if (Visible && Alpha > 0)
+                PerformLoadingWheelRotation();
+            else
+                Animations.RemoveAll(x => x.Properties == AnimationProperty.Rotation);
+
             base.Update(gameTime);
         }
 

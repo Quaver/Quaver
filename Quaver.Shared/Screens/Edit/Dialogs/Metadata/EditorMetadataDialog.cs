@@ -11,7 +11,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;

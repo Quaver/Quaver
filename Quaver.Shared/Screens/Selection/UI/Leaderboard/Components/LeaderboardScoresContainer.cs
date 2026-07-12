@@ -56,6 +56,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private bool FinishedLoading { get; set; }
 
         /// <summary>
+        ///     Rows detached while scores are loading, ready to be rebound by the next fetch.
+        /// </summary>
+        private List<DrawableLeaderboardScore> ReusableRows { get; } = new List<DrawableLeaderboardScore>();
+
+        /// <summary>
         ///     The button to update the map to the latest version
         /// </summary>
         private IconButton UpdateButton { get; set; }
@@ -128,6 +133,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public override void Destroy()
         {
             Container.FetchScoreTask.OnCompleted -= OnScoresRetrieved;
+            ReusableRows.ForEach(x => x.Destroy());
+            ReusableRows.Clear();
             base.Destroy();
         }
 
@@ -179,7 +186,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
                 LoadingWheel.FadeTo(1, Easing.Linear, 250);
                 FadeStatusTextOut();
-                ClearPool();
+                RecyclePool();
                 ContentContainer.Height = Height;
 
                 SnapToTop();
@@ -386,7 +393,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             ScheduleUpdate(() =>
             {
-                ClearPool();
+                RecyclePool();
                 SnapToTop();
 
                 AvailableItems = e.Result.Scores;
@@ -406,14 +413,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                         AvailableItems.Add(new Score { IsEmptyScore = true});
                 }
 
-                try
-                {
-                    CreatePool(false);
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
+                PopulatePool();
 
                 FinishedLoading = true;
             });
@@ -434,22 +434,49 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             PoolStartingIndex = 0;
         }
 
-        private void ClearPool()
+        private void RecyclePool()
         {
             if (Pool is null)
                 return;
 
-            try
+            foreach (var row in Pool.OfType<DrawableLeaderboardScore>())
             {
-                foreach (var x in new List<Drawable>(Pool))
-                    x.Destroy();
+                RemoveContainedDrawable(row);
+                row.SetScrollVisibility(false);
+                ReusableRows.Add(row);
+            }
 
-                Pool.Clear();
-            }
-            catch (Exception)
+            Pool.Clear();
+        }
+
+        private void PopulatePool()
+        {
+            Pool ??= new List<PoolableSprite<Score>>();
+
+            var count = Math.Min(PoolSize, AvailableItems.Count);
+
+            for (var i = 0; i < count; i++)
             {
-                // ignored
+                DrawableLeaderboardScore row;
+
+                if (ReusableRows.Count != 0)
+                {
+                    var reusableIndex = ReusableRows.Count - 1;
+                    row = ReusableRows[reusableIndex];
+                    ReusableRows.RemoveAt(reusableIndex);
+                }
+                else
+                {
+                    row = (DrawableLeaderboardScore) CreateObject(AvailableItems[i], i);
+                    row.DestroyIfParentIsNull = false;
+                }
+
+                row.Y = i * row.Height + PaddingTop;
+                row.UpdateContent(AvailableItems[i], i);
+                Pool.Add(row);
             }
+
+            RecalculateContainerHeight();
         }
 
         private void ApplyPoolVisibility()

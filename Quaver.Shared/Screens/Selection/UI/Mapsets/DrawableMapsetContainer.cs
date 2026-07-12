@@ -7,7 +7,6 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps;
@@ -17,6 +16,7 @@ using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -236,8 +236,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             var (statusText, statusColor) = GetRankedStatusInfo();
             RankedStatusSprite.Tint = statusColor;
-            RankedStatusSprite.SetLabel(Title.Font, statusText, 16, Color.White);
+            RankedStatusSprite.SetLabel(Title.Font, statusText, 14, Color.White);
             GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.Mode), GameModes, GameModeText);
+            AlignTextRows();
             UpdateBannerLayout();
 
             if (ParentMapset.IsSelected)
@@ -366,7 +367,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(115, 28),
+                Size = new ScalableVector2(124, 30),
                 X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18),
                 IsClickable = false,
                 PerformHoverFade = false,
@@ -382,12 +383,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(71, 28),
+                Size = new ScalableVector2(72, 30),
                 X = RankedStatusSprite.X - RankedStatusSprite.Width + (SkinManager.Skin?.SongSelect?.GameModePosOffsetX ?? -18),
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(Title.Font, "", 14)
+            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
             {
                 Parent = GameModes,
                 Alignment = Alignment.MidCenter,
@@ -442,6 +443,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true,
                 Alpha = 0
             };
+        }
+
+        /// <summary>
+        ///     Vertically centers the two text rows using the current font metrics.
+        /// </summary>
+        private void AlignTextRows()
+        {
+            const int spacing = 5;
+            var secondRowHeight = Math.Max(Artist.Height, DifficultyName.Height);
+
+            Title.Y = (Height - Title.Height - spacing - secondRowHeight) / 2f;
+            Artist.Y = Title.Y + Title.Height + spacing;
+            DifficultyName.Y = Artist.Y;
+            DividerLine.Y = Artist.Y;
+            ByText.Y = Artist.Y;
+            Creator.Y = Artist.Y;
         }
 
         /// <summary>
