@@ -59,12 +59,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                     new ScalableVector2(Width, 50)));
             }
 
-            if (Processor.Value.CountMineHit > 0)
-            {
-                Bars.Add(new ResultsJudgementGraphMineHitBar(Processor,
-                    new ScalableVector2(Width, 50)));
-            }
-
             var heightSum = Bars.First().Height * Bars.Count;
             var heightPer = (Height - heightSum) / (Bars.Count + 1);
 
@@ -327,26 +321,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-    }
-
-    public class ResultsJudgementGraphMineHitBar : ResultsJudgementGraphNumberBar
-    {
-        public static Color Color => new(179, 179, 179);
-        private const string JudgementTextureDirectory = $"Quaver.Resources/Textures/UI/Results";
-
-        /// <summary>
-        /// </summary>
-        /// <param name="processor"></param>
-        /// <param name="size"></param>
-        public ResultsJudgementGraphMineHitBar(Bindable<ScoreProcessor> processor,
-            ScalableVector2 size)
-            : base(processor.Value.CountMineHit,
-                (float)processor.Value.CountMineHit / processor.Value.TotalJudgementCount,
-                TextureManager.Load($"{JudgementTextureDirectory}/judge-mines.png"),
-                size,
-                Color)
-        {
         }
     }
 }

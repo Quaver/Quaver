@@ -243,6 +243,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D ResultsLabelMaxCombo => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-max-combo.png");
         public static Texture2D ResultsLabelPerformanceRating => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-performance-rating.png");
         public static Texture2D ResultsLabelRankedAccuracy => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-ranked-accuracy.png");
+        public static Texture2D ResultsLabelRatio => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-ratio.png");
         public static Texture2D ResultsLabelTotalScore => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-total-score.png");
         public static Texture2D ResultsLabelScore => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-score.png");
         public static Texture2D ResultsLabelBlueTeam => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-blue-team.png");

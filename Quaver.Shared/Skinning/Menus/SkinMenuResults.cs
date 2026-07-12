@@ -16,6 +16,7 @@ namespace Quaver.Shared.Skinning.Menus
         public Texture2D ResultsLabelMaxCombo { get; private set; }
         public Texture2D ResultsLabelPerformanceRating { get; private set; }
         public Texture2D ResultsLabelRankedAccuracy { get; private set; }
+        public Texture2D ResultsLabelRatio { get; private set; }
         public Texture2D ResultsLabelTotalScore { get; private set; }
         public Texture2D ResultsLabelScore { get; private set; }
         public Texture2D ResultsLabelBlueTeam { get; private set; }
@@ -55,6 +56,7 @@ namespace Quaver.Shared.Skinning.Menus
             ResultsLabelMaxCombo = LoadSkinElement(folder, "label-max-combo.png");
             ResultsLabelPerformanceRating = LoadSkinElement(folder, "label-performance-rating.png");
             ResultsLabelRankedAccuracy = LoadSkinElement(folder, "label-ranked-accuracy.png");
+            ResultsLabelRatio = LoadSkinElement(folder, "label-ratio.png");
             ResultsLabelTotalScore = LoadSkinElement(folder, "label-total-score.png");
             ResultsLabelScore = LoadSkinElement(folder, "label-score.png");
             ResultsLabelBlueTeam = LoadSkinElement(folder, "label-blue-team.png");

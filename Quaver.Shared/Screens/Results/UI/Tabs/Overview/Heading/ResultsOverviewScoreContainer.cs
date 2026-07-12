@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
@@ -53,8 +54,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
                 new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelPerformanceRating ?? UserInterface.ResultsLabelPerformanceRating,
                     $"{StringHelper.RatingToString(rating.CalculateRating(accuracy))}", ColorHelper.HexToColor("#E9B736")),
                 new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelRankedAccuracy ?? UserInterface.ResultsLabelRankedAccuracy, StringHelper.AccuracyToString(accuracy)),
-                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelTotalScore ?? UserInterface.ResultsLabelTotalScore,
-                    $"{Processor.Value.Score:n0}"),
+                new DrawableResultsScoreMetric(SkinManager.Skin?.Results?.ResultsLabelRatio ?? UserInterface.ResultsLabelRatio,
+                    $"{StringHelper.RatioToString(Processor.Value.CurrentJudgements[Judgement.Marv], Processor.Value.CurrentJudgements[Judgement.Perf])}"),
             });
         }
 
