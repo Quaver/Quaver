@@ -36,6 +36,20 @@ namespace Quaver.Shared.Helpers
         /// <returns></returns>
         internal static string AccuracyToString(float accuracy) => accuracy >= 100 ? "100.00%" : $"{accuracy:00.00}%";
 
+        internal static string RatioToString(int marv, int perf)
+        {
+            string ratio;
+
+            if (marv == 0)
+                ratio = "0";
+            else if (marv > 0 && perf == 0)
+                ratio = "∞";
+            else
+                ratio = $"{((float)marv / perf):0.0}:1";
+
+            return ratio;
+        }
+
         /// <summary>
         ///     Makes a string safe to be written as a file name.
         /// </summary>
