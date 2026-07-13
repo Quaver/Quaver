@@ -60,7 +60,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         /// <summary>
         ///     The y spacing between each piece of text
         /// </summary>
-        private const int TEXT_SPACING = 8;
+        private const int TEXT_SPACING = 4;
 
         /// <summary>
         /// </summary>
@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         /// <summary>
         /// </summary>
         private void CreateSongTitle() => SongTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-            $"{Map.Artist} - {Map.Title}", 30)
+            $"{Map.Artist} - {Map.Title}", 28)
         {
             Parent = this,
             X = Avatar.X + Avatar.Width + 32,
@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
         /// <summary>
         /// </summary>
-        private void CreateCreator() => Creator = new TextKeyValue(ResultsLocalization.Get("Mapped by:"), Map.Creator, 23,
+        private void CreateCreator() => Creator = new TextKeyValue(ResultsLocalization.Get("Mapped by:"), Map.Creator, 18,
             ColorHelper.HexToColor("#CACACA"))
         {
             Parent = this,

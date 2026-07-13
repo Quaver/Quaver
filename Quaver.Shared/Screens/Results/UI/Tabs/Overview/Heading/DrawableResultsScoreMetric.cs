@@ -77,6 +77,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
         /// </summary>
         private void CreateValueText() => ValueText = new SpriteTextPlus(
             FontManager.GetWobbleFont(Fonts.InterBold),
-            Value, 36) { Parent = this, Alignment = Alignment.TopCenter, Tint = TextColor };
+            Value, 32) { Parent = this, Alignment = Alignment.TopCenter, Tint = TextColor };
     }
 }

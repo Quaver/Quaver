@@ -166,7 +166,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateTextCount()
         {
-            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 30)
+            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 26)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -222,7 +222,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// <summary>
         /// </summary>
         private void CreatePercentage() => Percentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-            "", 19)
+            "", 18)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,

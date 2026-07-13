@@ -687,7 +687,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            LoadingWaveform = new LoadingWheelText(20, "Loading Waveform...")
+            LoadingWaveform = new LoadingWheelText(18, "Loading Waveform...")
             {
                 Alignment = Alignment.TopCenter,
                 Y = 200,
@@ -723,7 +723,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            LoadingSpectrogram = new LoadingWheelText(20, "Loading Spectrogram...")
+            LoadingSpectrogram = new LoadingWheelText(18, "Loading Spectrogram...")
             {
                 Alignment = Alignment.TopCenter,
                 Y = 200,
