@@ -112,7 +112,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 X = -Hub.HeaderText.X,
-                Y = -Hub.HeaderBackground.Height * 2 - 2
+                Y = -Hub.HeaderBackground.Height * 2 - 12
             };
 
             UserCount.Y += UserCount.Height;
