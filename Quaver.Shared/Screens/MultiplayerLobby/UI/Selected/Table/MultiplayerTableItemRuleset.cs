@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             "Free-For-All",
             //"Team",
             //"Battle Royale"
-        }, new ScalableVector2(170, 36), 22, Colors.MainAccent, 0)
+        }, new ScalableVector2(170, 36), 18, Colors.MainAccent, 0)
         {
             Game = game;
 
