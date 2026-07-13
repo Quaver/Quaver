@@ -93,9 +93,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         {
             BackgroundImage = new BackgroundImage(UserInterface.MenuBackgroundClear, 75, false)
             {
+                Size = new ScalableVector2(1152, 700),
                 Alignment = Alignment.BotLeft,
                 X = -100,
-                Size = new ScalableVector2(1152, 648),
+                Y = 0,
             };
 
             AddContainedDrawable(BackgroundImage);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
@@ -168,7 +167,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
             {
                 Parent = Container,
                 X = 14,
-                Y = Banner.Y + Banner.Height + 16,
+                Y = Banner.Y + Banner.Height + 8,
                 Tint = SkinManager.Skin?.MainMenu?.NewsTitleColor ?? ColorHelper.HexToColor("#45D6F5"),
                 Alpha = 0
             };
@@ -180,12 +179,12 @@ namespace Quaver.Shared.Screens.Main.UI.News
         private void CreatePublishedTime(NewsFeedItem item)
         {
             PublishedTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                LocalizationManager.Get("Screen_Main_Published", item.DatePublished.Humanize(culture: LocalizationManager.CurrentCulture)),
+                LocalizationManager.Get("Screen_Main_Published", item.DatePublished.ToString("d")),
                 16)
             {
                 Parent = Container,
                 X = Title.X,
-                Y = Title.Y + Title.Height + 5,
+                Y = Title.Y + Title.Height + 4,
                 Tint = SkinManager.Skin?.MainMenu?.NewsDateColor ?? ColorHelper.HexToColor("#808080"),
                 Alpha = 0
             };
@@ -199,7 +198,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
             {
                 Parent = Container,
                 X = Title.X,
-                Y = PublishedTime.Y + PublishedTime.Height + 6,
+                Y = PublishedTime.Y + PublishedTime.Height + 4,
                 MaxWidth = Container.Width - 20,
                 Alpha = 0,
                 Tint = SkinManager.Skin?.MainMenu?.NewsTextColor ?? Color.White

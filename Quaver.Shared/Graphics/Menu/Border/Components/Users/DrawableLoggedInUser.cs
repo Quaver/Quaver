@@ -198,7 +198,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// </summary>
         private void CreateClan()
         {
-            Clan = new ClanTag(21)
+            Clan = new ClanTag(18)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,

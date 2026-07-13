@@ -242,7 +242,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
             {
                 Parent = this,
-                Y = Title.Y + Title.Height + 14,
+                Y = Title.Y + Title.Height + 10,
                 X = -RankedStatus.X,
                 Tint = Colors.MainAccent,
                 Visible = false
@@ -257,7 +257,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Creator.Y + Creator.Height + 12,
+                Y = Creator.Y + Creator.Height + 10,
                 X = Creator.X,
                 Visible = false
             };
@@ -271,7 +271,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Creator.Y + Creator.Height + 12,
+                Y = Creator.Y + Creator.Height + 10,
                 X = Bpm.X + Bpm.Width + 20,
                 Visible = false
             };
@@ -285,7 +285,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Creator.Y + Creator.Height + 12,
+                Y = Creator.Y + Creator.Height + 10,
                 X = MapCount.X + MapCount.Width + 20,
                 Visible = false
             };
@@ -299,7 +299,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Creator.Y + Creator.Height + 12,
+                Y = Creator.Y + Creator.Height + 10,
                 X = Creator.X,
                 Visible = false
             };
@@ -312,7 +312,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
-                Y = DifficultyRange.Y + DifficultyRange.Height + 20,
+                Y = DifficultyRange.Y + DifficultyRange.Height + 10,
                 X = -RankedStatus.X,
                 Visible = false
             };
