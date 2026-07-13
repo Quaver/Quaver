@@ -180,6 +180,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Alpha = 0,
+                AllowInputWhenDialogOpen = true,
                 UsePreviousSpriteBatchOptions = true
             };
         }
