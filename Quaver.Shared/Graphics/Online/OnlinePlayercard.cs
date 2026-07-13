@@ -108,7 +108,7 @@ namespace Quaver.Shared.Graphics.Online
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
                 X = Flag.Width + 8,
-                FontSize = 20
+                FontSize = 18
             };
 
             GameMode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value))

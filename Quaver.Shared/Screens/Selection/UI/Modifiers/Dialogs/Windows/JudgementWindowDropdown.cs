@@ -15,8 +15,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
         protected Bindable<JudgementWindows> SelectedWindow { get; }
 
-        public JudgementWindowDropdown(Bindable<JudgementWindows> selectedWindow, string label, List<string> options) : base(label, 24,
-            new Dropdown(options, new ScalableVector2(150, 40), 20, ColorHelper.HexToColor("#10C8F6")))
+        public JudgementWindowDropdown(Bindable<JudgementWindows> selectedWindow, string label, List<string> options) : base(label, 18,
+            new Dropdown(options, new ScalableVector2(150, 40), 18, ColorHelper.HexToColor("#10C8F6")))
         {
             SelectedWindow = selectedWindow;
             SelectedWindow.ValueChanged += OnSelectedWindowChanged;

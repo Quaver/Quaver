@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), MultiplayerLobbyLocalization.Get("MatchDetails"), 28)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), MultiplayerLobbyLocalization.Get("MatchDetails"), 26)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
