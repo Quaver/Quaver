@@ -79,14 +79,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             ChildContainer.UpdateContent(this);
         }
 
-        public override void Draw(GameTime gameTime)
-        {
-            if (Container is LeaderboardScoresContainer { IsRowsCacheActive: true })
-                return;
-
-            base.Draw(gameTime);
-        }
-
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
 
         public void SetScrollVisibility(bool visible)
