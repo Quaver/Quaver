@@ -46,7 +46,7 @@ namespace Quaver.Shared.Localization
             LocalizationManager.Configure(
                 new ResourceManager("Quaver.Shared.Localization.Strings", typeof(QuaverLocalization).Assembly),
                 CultureInfo.GetCultureInfo(DefaultCultureName),
-                GetCulture(cultureName));
+                GetCulture(cultureName), embeddedResourceAssembly: typeof(QuaverLocalization).Assembly);
         }
 
         public static void SetCurrentCulture(string cultureName)
