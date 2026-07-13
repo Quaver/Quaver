@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private void CreateScoresLoadingWheelText()
         {
-            ResultLoadingWheelText = new LoadingWheelText(23, ResultsLocalization.Get("Loading results"))
+            ResultLoadingWheelText = new LoadingWheelText(18, ResultsLocalization.Get("Loading results"))
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,

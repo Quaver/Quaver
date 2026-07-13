@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
     {
         public Bindable<Map> Map { get; }
 
-        public FilterMetadataBpm(Bindable<Map> map = null) : base("BPM:", "000", 18, ColorHelper.HexToColor($"#ffe76b"))
+        public FilterMetadataBpm(Bindable<Map> map = null) : base("BPM:", "000", 16, ColorHelper.HexToColor($"#ffe76b"))
         {
             Map = map ?? MapManager.Selected;
 

@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private const int STATISTICS_SPACING_X = 65;
+        private const int STATISTICS_SPACING_X = 32;
 
         /// <summary>
         /// </summary>
@@ -212,7 +212,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         {
             var mineHits = Processor.Value.CountMineHit.ToString();
 
-            MineMiss = new TextKeyValue(ResultsLocalization.Get("Mine Miss:"), mineHits, 22, Color.White)
+            MineMiss = new TextKeyValue(ResultsLocalization.Get("Mine Miss:"), mineHits, 20, Color.White)
             {
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
@@ -227,7 +227,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateMean()
         {
-            Mean = new TextKeyValue(ResultsLocalization.Get("Mean:"), $"{-Statistics.Mean:0.00} ms", 22, Color.White)
+            Mean = new TextKeyValue(ResultsLocalization.Get("Mean:"), $"{-Statistics.Mean:0.00} ms", 20, Color.White)
             {
                 Parent = RightContainer,
                 X = MineMiss.X + MineMiss.Width + STATISTICS_SPACING_X,
@@ -243,7 +243,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         private void CreateStandardDeviation()
         {
             StandardDeviation = new TextKeyValue(ResultsLocalization.Get("Std. Dev:"), $"{Statistics.StandardDeviation:0.00} ms",
-                22, Color.White)
+                20, Color.White)
             {
                 Parent = RightContainer,
                 X = Mean.X + Mean.Width + STATISTICS_SPACING_X,
@@ -287,7 +287,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 return;
             }
 
-            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Statistics Not Available"), 20)
+            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Statistics Not Available"), 18)
             {
                 Parent = GraphContainer,
                 Alignment = Alignment.MidCenter

@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
         /// <summary>
         /// </summary>
         private void CreateHeader() => Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-            HeaderText, 19)
+            HeaderText, 18)
         {
             Parent = this,
             Alignment = Alignment.TopCenter,

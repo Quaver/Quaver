@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         /// <summary>
         /// </summary>
-        public LeaderboardScoreRightClickOptions(Score score) : base(GetOptions(score), new ScalableVector2(200, 40), 22)
+        public LeaderboardScoreRightClickOptions(Score score) : base(GetOptions(score), new ScalableVector2(200, 40), 18)
         {
             Score = score;
 
