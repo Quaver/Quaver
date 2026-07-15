@@ -1,191 +1,165 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
+using ManagedBass;
+using ManagedBass.Fx;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Config;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
-using ManagedBass;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Scheduling;
-using Wobble.Logging;
-using ManagedBass.Fx;
-using Quaver.Shared.Config;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
     public class EditorPlayfieldWaveform : Container
     {
-        private List<EditorPlayfieldWaveformSlice> Slices { get; set; }
+        private const double ChunkLength = 1000;
+        private const double FilterPreRollMilliseconds = 100;
 
-        private List<EditorPlayfieldWaveformSlice> VisibleSlices { get; }
+        private readonly EditorPlayfieldWaveformFilter _filter;
+        private readonly int _leftChannel;
+        private readonly int _rightChannel;
+        private readonly int _channelCount;
+        private readonly int _textureWidth;
 
-        private EditorPlayfield Playfield { get; }
+        private int _stream;
 
-        private float[] TrackData { get; set; }
+        private readonly EditorPlayfield _playfield;
+        private readonly EditorPlayfieldChunkCoordinator<EditorPlayfieldWaveformSlice,
+            EditorPlayfieldWaveformChunk> _chunks;
 
-        private long TrackByteLength { get; set; }
-
-        private double TrackLengthMilliSeconds { get; set; }
-
-        private int SliceSize { get; set; }
-
-        private int Stream { get; set; }
-
-        private int FFT_samples { get; set; } = 1024;
-
-        private CancellationToken Token { get; }
+        public bool IsActive
+        {
+            get => _chunks.IsActive;
+            set => _chunks.IsActive = value;
+        }
 
         public EditorPlayfieldWaveform(EditorPlayfield playfield, CancellationToken token)
         {
-            Playfield = playfield;
-            Token = token;
+            token.ThrowIfCancellationRequested();
+            _playfield = playfield;
+            _filter = ConfigManager.EditorAudioFilter.Value;
+            _textureWidth = Math.Max(1, (int)playfield.Width);
 
-            Slices = new List<EditorPlayfieldWaveformSlice>();
-            VisibleSlices = new List<EditorPlayfieldWaveformSlice>();
+            var direction = ConfigManager.EditorAudioDirection.Value;
+            _leftChannel = direction == EditorPlayfieldWaveformAudioDirection.Right ? 1 : 0;
+            _rightChannel = direction == EditorPlayfieldWaveformAudioDirection.Left ? 0 : 1;
 
-            GenerateWaveform();
-            CheckCancellationToken();
-        }
+            _stream = Bass.CreateStream(((AudioTrack)Audio.AudioEngine.Track).OriginalFilePath, 0, 0,
+                BassFlags.Decode | BassFlags.Float);
 
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            if (Slices.Count > 0)
+            if (_stream == 0)
+                throw new InvalidOperationException($"Could not create waveform decode stream: {Bass.LastError}");
+
+            var channelInfo = Bass.ChannelGetInfo(_stream);
+            _channelCount = Math.Max(1, channelInfo.Channels);
+            TrackLengthMilliseconds = Bass.ChannelBytes2Seconds(_stream, Bass.ChannelGetLength(_stream)) * 1000;
+
+            if (_filter != EditorPlayfieldWaveformFilter.None)
             {
-                foreach (var slice in Slices)
-                    slice.Update(gameTime);
+                var effect = Bass.ChannelSetFX(_stream, EffectType.BQF, 1);
+                var parameters = new BQFParameters
+                {
+                    fCenter = 200,
+                    lFilter = _filter == EditorPlayfieldWaveformFilter.LowPass ? BQFType.LowPass : BQFType.HighPass
+                };
+
+                Bass.FXSetParameters(effect, parameters);
             }
 
+            _chunks = new EditorPlayfieldChunkCoordinator<EditorPlayfieldWaveformSlice,
+                EditorPlayfieldWaveformChunk>(playfield, TrackLengthMilliseconds, ChunkLength, GenerateChunk,
+                CreateSlice, DisposeDecoder, token);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            _chunks.Update(gameTime);
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime) => _chunks.Draw(gameTime);
+
+        public override void Destroy()
         {
-            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * Slices.Count);
-
-            var amount = Math.Max(6, (int)(2.5f / Playfield.TrackSpeed + 0.5f));
-
-            for (var i = 0; i < amount; i++)
-                TryDrawSlice(index + (i - amount / 2), gameTime);
-        }
-
-        /// <summary>
-        /// </summary>
-        public void GenerateWaveform()
-        {
-            SliceSize = (int)Playfield.Height;
-            GenerateTrackData();
-
-            var tempSlices = new List<EditorPlayfieldWaveformSlice>();
-
-            for (var t = 0; t < TrackLengthMilliSeconds; t += SliceSize)
-            {
-                var trackSliceData = new float[SliceSize, 2];
-
-                for (var y = 0; y < SliceSize; y++)
-                {
-                    var timePoint = t + y;
-
-                    var index = Bass.ChannelSeconds2Bytes(Stream, timePoint / 1000.0) / 4;
-
-                    if (index >= TrackByteLength / sizeof(float))
-                        continue;
-
-                    trackSliceData[y, 0] = TrackData[index] / 1.5f;
-                    trackSliceData[y, 1] = TrackData[index + 1] / 1.5f;
-                }
-
-                var slice = new EditorPlayfieldWaveformSlice(Playfield, SliceSize, trackSliceData, t);
-                tempSlices.Add(slice);
-            }
-
-            Slices = tempSlices;
-            Bass.StreamFree(Stream);
-            TrackData = null;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void GenerateTrackData()
-        {
-            const BassFlags flags = BassFlags.Decode | BassFlags.Float;
-
-            Stream = Bass.CreateStream(((AudioTrack)Audio.AudioEngine.Track).OriginalFilePath, 0, 0, flags);
-
-            if (ConfigManager.EditorAudioFilter.Value != EditorPlayfieldWaveformFilter.None)
-            {
-                var StreamHandle = Bass.ChannelSetFX(Stream, EffectType.BQF, 1);
-                var Filter = new BQFParameters()
-                {
-                    fCenter = 200, // Cut-off in Hz
-                    lFilter = ConfigManager.EditorAudioFilter.Value == EditorPlayfieldWaveformFilter.LowPass ? BQFType.LowPass : BQFType.HighPass
-                };
-                Bass.FXSetParameters(StreamHandle, Filter);
-            }
-
-            TrackByteLength = Bass.ChannelGetLength(Stream);
-            TrackData = new float[TrackByteLength / sizeof(float)];
-
-            var TrackDataFFT = new float[FFT_samples];
-            var index = 0;
-
-            TrackByteLength = Bass.ChannelGetData(Stream, TrackDataFFT, FFT_samples);
-            while (TrackData.Length - index > FFT_samples)
-            {
-                TrackDataFFT.CopyTo(TrackData, index);
-                TrackDataFFT = new float[FFT_samples];
-                
-                TrackByteLength = Bass.ChannelGetData(Stream, TrackDataFFT, FFT_samples);
-
-                index += FFT_samples / 4;
-            }
-
-            TrackByteLength = Bass.ChannelGetLength(Stream);
-            TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="gameTime"></param>
-        private void TryDrawSlice(int index, GameTime gameTime)
-        {
-            if (index >= 0 && index < Slices.Count)
-                Slices[index]?.Draw(gameTime);
-        }
-
-        private void CheckCancellationToken()
-        {
-            if (!Token.IsCancellationRequested)
-                return;
-
-            Destroy();
-        }
-
-        /// <summary>
-        /// </summary>
-        public override void Destroy() => DisposeWaveform();
-
-        /// <summary>
-        /// </summary>
-        public void DisposeWaveform()
-        {
-            DisposeSlices();
-            TrackData = null;
+            _chunks.Destroy();
             base.Destroy();
         }
 
-        private void DisposeSlices()
-        {
-            foreach (var slice in Slices)
-                slice.Destroy();
+        private double TrackLengthMilliseconds { get; }
 
-            Slices.Clear();
+        private EditorPlayfieldWaveformChunk? GenerateChunk(int index, Func<bool> isStillRequested,
+            CancellationToken cancellationToken)
+        {
+            var startTime = index * ChunkLength;
+            var endTime = Math.Min(TrackLengthMilliseconds, startTime + ChunkLength);
+            var length = endTime - startTime;
+
+            if (length <= 0)
+                return null;
+
+            var decodeStartTime = _filter == EditorPlayfieldWaveformFilter.None
+                ? startTime
+                : Math.Max(0, startTime - FilterPreRollMilliseconds);
+            var decodeStartByte = Bass.ChannelSeconds2Bytes(_stream, decodeStartTime / 1000);
+            var decodeEndByte = Bass.ChannelSeconds2Bytes(_stream, endTime / 1000);
+            var requestedBytes = (int)Math.Min(int.MaxValue, Math.Max(0, decodeEndByte - decodeStartByte));
+            var samples = new float[(requestedBytes + sizeof(float) - 1) / sizeof(float)];
+
+            Bass.ChannelSetPosition(_stream, decodeStartByte);
+            var bytesRead = Bass.ChannelGetData(_stream, samples, requestedBytes);
+
+            if (bytesRead < 0)
+                throw new InvalidOperationException($"Could not decode waveform chunk {index}: {Bass.LastError}");
+
+            var sampleCount = bytesRead / sizeof(float);
+            var textureHeight = Math.Max(1, (int)Math.Ceiling(length));
+            var pixels = new Color[_textureWidth * textureHeight];
+            var leftChannel = Math.Min(_leftChannel, _channelCount - 1);
+            var rightChannel = Math.Min(_rightChannel, _channelCount - 1);
+
+            for (var y = 0; y < textureHeight; y++)
+            {
+                if ((y & 31) == 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (!isStillRequested())
+                        return null;
+                }
+
+                var time = Math.Min(endTime, startTime + y);
+                var sampleByte = Bass.ChannelSeconds2Bytes(_stream, time / 1000);
+                var sampleIndex = (int)((sampleByte - decodeStartByte) / sizeof(float));
+
+                if (sampleIndex < 0 || sampleIndex + leftChannel >= sampleCount ||
+                    sampleIndex + rightChannel >= sampleCount)
+                    continue;
+
+                var leftPoint = (int)Math.Clamp(_textureWidth / 2f -
+                    Math.Abs(samples[sampleIndex + leftChannel] / 1.5f) * 254, 0, _textureWidth / 2f);
+                var rightPoint = (int)Math.Clamp(_textureWidth / 2f +
+                    Math.Abs(samples[sampleIndex + rightChannel] / 1.5f) * 254,
+                    _textureWidth / 2f, _textureWidth);
+
+                for (var x = leftPoint; x < rightPoint; x++)
+                    pixels[(textureHeight - y - 1) * _textureWidth + x] = Color.White;
+            }
+
+            return new EditorPlayfieldWaveformChunk(pixels, _textureWidth, textureHeight, startTime, length);
+        }
+
+        private EditorPlayfieldWaveformSlice CreateSlice(EditorPlayfieldWaveformChunk chunk)
+            => new(_playfield, chunk.Pixels, chunk.Width, chunk.Height, chunk.StartTime, chunk.Length);
+
+        private void DisposeDecoder()
+        {
+            if (_stream == 0)
+                return;
+
+            Bass.StreamFree(_stream);
+            _stream = 0;
         }
     }
+
+    internal sealed record EditorPlayfieldWaveformChunk(Color[] Pixels, int Width, int Height, double StartTime,
+        double Length);
 }

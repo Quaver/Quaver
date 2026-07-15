@@ -1,169 +1,107 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
+using ManagedBass;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Config;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
-using ManagedBass;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Scheduling;
 using Wobble.Logging;
-using ManagedBass.Fx;
-using Quaver.Shared.Config;
-using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Screens.Edit.UI.Playfield.Waveform;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 {
     public class EditorPlayfieldSpectrogram : Container
     {
-        private List<EditorPlayfieldSpectrogramSlice> Slices { get; set; }
+        private const double TargetChunkLengthMilliseconds = 1000;
 
-        private List<EditorPlayfieldSpectrogramSlice> VisibleSlices { get; }
+        private readonly EditorPlayfield _playfield;
+        private readonly EditorPlayfieldChunkCoordinator<EditorPlayfieldSpectrogramSlice,
+            EditorPlayfieldSpectrogramChunk> _chunks;
+        private readonly int _interleaveCount;
+        private readonly int _bytesReadPerFft;
+        private readonly int _fftStepsPerChunk;
+        private readonly int _totalFftSteps;
+        private readonly int _sampleRate;
+        private readonly double _millisecondsPerFft;
+        private readonly double _chunkLengthMilliseconds;
+        private readonly Func<float, float> _frequencyTransform;
+        private readonly int _minimumFrequency;
+        private readonly int _maximumFrequency;
+        private readonly float _cutoffFactor;
+        private readonly float _intensityFactor;
 
-        private EditorPlayfield Playfield { get; }
-
-        private float[][] _trackData;
-
-        private long TrackByteLength { get; set; }
-
-        private double TrackLengthMilliSeconds { get; set; }
-
-        private int FftPerSlice { get; set; }
-
-        private int InterleaveCount { get; set; } = 1;
-
-        private int InterleavedFftPerSlice => FftPerSlice * InterleaveCount;
-
-        private int Stream { get; set; }
+        private int _stream;
 
         public int FftCount { get; }
 
         public int FftFlag { get; }
+
         public int FftResultCount { get; set; }
 
-        private int FftRoundsTaken { get; set; }
-
-        private int BytesReadPerFft { get; set; }
-
-        private long TotalBytes => (long)FftResultCount * InterleaveCount * FftRoundsTaken * sizeof(float);
-
-        private CancellationToken Token { get; }
+        public bool IsActive
+        {
+            get => _chunks.IsActive;
+            set => _chunks.IsActive = value;
+        }
 
         public EditorPlayfieldSpectrogram(EditorPlayfield playfield, CancellationToken token)
         {
-            Playfield = playfield;
-            Token = token;
+            token.ThrowIfCancellationRequested();
+            _playfield = playfield;
             FftCount = ConfigManager.EditorSpectrogramFftSize.Value;
+            FftResultCount = FftCount;
             FftFlag = (int)GetFftDataFlag(FftCount);
-            InterleaveCount = ConfigManager.EditorSpectrogramInterleaveCount.Value;
+            _interleaveCount = ConfigManager.EditorSpectrogramInterleaveCount.Value;
+            _cutoffFactor = ConfigManager.EditorSpectrogramCutoffFactor.Value;
+            _intensityFactor = ConfigManager.EditorSpectrogramIntensityFactor.Value;
+            _frequencyTransform = ConfigManager.EditorSpectrogramFrequencyScale.Value switch
+            {
+                EditorPlayfieldSpectrogramFrequencyScale.Mel => Mel,
+                EditorPlayfieldSpectrogramFrequencyScale.Erb1 => Erb1,
+                EditorPlayfieldSpectrogramFrequencyScale.Erb2 => Erb2,
+                EditorPlayfieldSpectrogramFrequencyScale.Linear => Linear,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            _minimumFrequency = (int)_frequencyTransform(ConfigManager.EditorSpectrogramMinimumFrequency.Value);
+            _maximumFrequency = (int)_frequencyTransform(ConfigManager.EditorSpectrogramMaximumFrequency.Value);
 
-            Slices = new List<EditorPlayfieldSpectrogramSlice>();
-            VisibleSlices = new List<EditorPlayfieldSpectrogramSlice>();
+            _stream = Bass.CreateStream(((AudioTrack)Audio.AudioEngine.Track).OriginalFilePath, 0, 0,
+                BassFlags.Decode | BassFlags.Float);
 
-            GenerateWaveform();
-            CheckCancellationToken();
+            if (_stream == 0)
+                throw new InvalidOperationException($"Could not create spectrogram decode stream: {Bass.LastError}");
+
+            var channelInfo = Bass.ChannelGetInfo(_stream);
+            _sampleRate = channelInfo.Frequency;
+            _bytesReadPerFft = sizeof(float) * FftResultCount * Math.Max(1, channelInfo.Channels) * 2;
+            _millisecondsPerFft = Bass.ChannelBytes2Seconds(_stream, _bytesReadPerFft) * 1000;
+            _fftStepsPerChunk = Math.Max(1,
+                (int)Math.Ceiling(TargetChunkLengthMilliseconds / _millisecondsPerFft));
+            _chunkLengthMilliseconds = _fftStepsPerChunk * _millisecondsPerFft;
+
+            var trackByteLength = Bass.ChannelGetLength(_stream);
+            var trackLengthMilliseconds = Bass.ChannelBytes2Seconds(_stream, trackByteLength) * 1000;
+            _totalFftSteps = Math.Max(1, (int)Math.Ceiling((double)trackByteLength / _bytesReadPerFft));
+
+            Logger.Debug($"Precision of spectrogram: {_millisecondsPerFft / _interleaveCount}ms",
+                LogType.Runtime);
+
+            _chunks = new EditorPlayfieldChunkCoordinator<EditorPlayfieldSpectrogramSlice,
+                EditorPlayfieldSpectrogramChunk>(playfield, trackLengthMilliseconds, _chunkLengthMilliseconds,
+                GenerateChunk, CreateSlice, DisposeDecoder, token);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (Slices.Count > 0)
-            {
-                foreach (var slice in Slices)
-                    slice.Update(gameTime);
-            }
-
+            _chunks.Update(gameTime);
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime) => _chunks.Draw(gameTime);
+
+        public override void Destroy()
         {
-            var index = (int)(Audio.AudioEngine.Track.Time / TrackLengthMilliSeconds * Slices.Count);
-
-            var amount = Math.Max(6, (int)(2.5f / Playfield.TrackSpeed + 0.5f));
-
-            for (var i = 0; i < amount; i++)
-                TryDrawSlice(index + (i - amount / 2), gameTime);
-        }
-
-        /// <summary>
-        /// </summary>
-        public void GenerateWaveform()
-        {
-            FftPerSlice = (int)Playfield.Height;
-            if (!GenerateTrackData()) return;
-
-            var tempSlices = new List<EditorPlayfieldSpectrogramSlice>();
-            var millisecondPerFft = Bass.ChannelBytes2Seconds(Stream, BytesReadPerFft) * 1000;
-            Logger.Debug($"Precision of spectrogram: {millisecondPerFft / InterleaveCount}ms", LogType.Runtime);
-            var millisecondPerSlice = FftPerSlice * millisecondPerFft;
-            var sampleRate = Bass.ChannelGetInfo(Stream).Frequency;
-
-            for (var fftRound = 0; fftRound < FftRoundsTaken; fftRound += FftPerSlice)
-            {
-                var t = (int)(fftRound * millisecondPerFft);
-                var trackDataYOffset = fftRound * InterleaveCount;
-
-                var slice = new EditorPlayfieldSpectrogramSlice(this, Playfield, (float)millisecondPerSlice,
-                    InterleavedFftPerSlice,
-                    _trackData, trackDataYOffset, t, sampleRate);
-                tempSlices.Add(slice);
-            }
-
-            Slices = tempSlices;
-            Bass.StreamFree(Stream);
-            _trackData = null;
-        }
-
-        /// <summary>
-        /// </summary>
-        private bool GenerateTrackData()
-        {
-            const BassFlags flags = BassFlags.Decode | BassFlags.Float;
-
-            Stream = Bass.CreateStream(((AudioTrack)Audio.AudioEngine.Track).OriginalFilePath, 0, 0, flags);
-
-            TrackByteLength = Bass.ChannelGetLength(Stream);
-            FftResultCount = FftCount;
-            BytesReadPerFft = sizeof(float) * FftResultCount * Bass.ChannelGetInfo(Stream).Channels * 2;
-            FftRoundsTaken = (int)(TrackByteLength / BytesReadPerFft);
-
-            const long bytesPerMb = 1 << 20;
-            Logger.Debug($"The spectrogram requires {(double)TotalBytes / bytesPerMb:#.##}MB memory", LogType.Runtime);
-            if (TotalBytes > 1024L * bytesPerMb)
-            {
-                NotificationManager.Show(NotificationLevel.Warning,
-                    $"Spectrogram will not be loaded because it requires too much memory ({TotalBytes / bytesPerMb:#.##} MB)! Please lower the precision or FFT size.");
-                return false;
-            }
-
-            _trackData = new float[(FftRoundsTaken + 1) * InterleaveCount][];
-            for (var i = 0; i < _trackData.Length; i++)
-                _trackData[i] = GC.AllocateUninitializedArray<float>(FftResultCount);
-
-            for (var interleaveRound = 0; interleaveRound < InterleaveCount; interleaveRound++)
-            {
-                Bass.ChannelSetPosition(Stream, BytesReadPerFft / InterleaveCount * interleaveRound);
-                var currentFftRound = 0;
-                int row;
-                do
-                {
-                    row = currentFftRound * InterleaveCount + interleaveRound;
-                    if (row >= _trackData.Length) break;
-
-                    currentFftRound++;
-                } while (Bass.ChannelGetData(Stream, _trackData[row], FftFlag | (int)DataFlags.FFTRemoveDC) > 0);
-            }
-
-            TrackByteLength = Bass.ChannelGetLength(Stream);
-            TrackLengthMilliSeconds = Bass.ChannelBytes2Seconds(Stream, TrackByteLength) * 1000.0;
-            return true;
+            _chunks.Destroy();
+            base.Destroy();
         }
 
         public static DataFlags GetFftDataFlag(int fftSize)
@@ -182,43 +120,153 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             };
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="gameTime"></param>
-        private void TryDrawSlice(int index, GameTime gameTime)
+        private EditorPlayfieldSpectrogramChunk? GenerateChunk(int index, Func<bool> isStillRequested,
+            CancellationToken cancellationToken)
         {
-            if (index >= 0 && index < Slices.Count)
-                Slices[index]?.Draw(gameTime);
+            var startStep = index * _fftStepsPerChunk;
+            var stepCount = Math.Min(_fftStepsPerChunk, _totalFftSteps - startStep);
+
+            if (stepCount <= 0)
+                return null;
+
+            var rowCount = stepCount * _interleaveCount;
+            var fftData = new float[rowCount][];
+
+            for (var row = 0; row < fftData.Length; row++)
+                fftData[row] = new float[FftResultCount];
+
+            for (var interleaveRound = 0; interleaveRound < _interleaveCount; interleaveRound++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (!isStillRequested())
+                    return null;
+
+                var position = (long)startStep * _bytesReadPerFft +
+                    (long)_bytesReadPerFft * interleaveRound / _interleaveCount;
+                Bass.ChannelSetPosition(_stream, position);
+
+                for (var step = 0; step < stepCount; step++)
+                {
+                    if ((step & 15) == 0)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        if (!isStillRequested())
+                            return null;
+                    }
+
+                    var row = step * _interleaveCount + interleaveRound;
+                    var bytesRead = Bass.ChannelGetData(_stream, fftData[row],
+                        FftFlag | (int)DataFlags.FFTRemoveDC);
+
+                    if (bytesRead <= 0)
+                        break;
+                }
+            }
+
+            var pixels = GeneratePixels(fftData, isStillRequested, cancellationToken);
+
+            if (pixels == null)
+                return null;
+
+            var startTime = startStep * _millisecondsPerFft;
+            var length = stepCount * _millisecondsPerFft;
+            return new EditorPlayfieldSpectrogramChunk(pixels, FftCount, rowCount, startTime, length);
         }
 
-        private void CheckCancellationToken()
+        private Color[]? GeneratePixels(float[][] fftData, Func<bool> isStillRequested,
+            CancellationToken cancellationToken)
         {
-            if (!Token.IsCancellationRequested)
+            var textureHeight = fftData.Length;
+            var pixels = new Color[FftCount * textureHeight];
+
+            for (var y = 0; y < textureHeight; y++)
+            {
+                if ((y & 15) == 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (!isStillRequested())
+                        return null;
+                }
+
+                for (var x = 0; x < FftCount; x++)
+                {
+                    var textureX = CalculateTextureX(x);
+
+                    if (textureX == -1)
+                        continue;
+
+                    var intensity = GetIntensity(fftData[y][x]);
+                    var nextTextureX = CalculateTextureX(x + 1);
+
+                    if (nextTextureX == -1)
+                        nextTextureX = FftCount - 1;
+
+                    var color = SpectrogramColormap.GetColor(intensity);
+                    var start = DataColorIndex(textureHeight, y, textureX);
+                    var end = DataColorIndex(textureHeight, y, nextTextureX);
+
+                    for (var pixel = start; pixel < end && pixel < pixels.Length; pixel++)
+                        pixels[pixel] = color;
+                }
+            }
+
+            return pixels;
+        }
+
+        private float GetIntensity(float rawIntensity)
+        {
+            var db = MathF.Abs(rawIntensity) < 1e-4f ? -100 : 20 * MathF.Log10(rawIntensity);
+            var intensity = Math.Clamp(1 + db / 100, 0f, 1f);
+            intensity = MathF.Max(intensity, _cutoffFactor);
+            intensity = (intensity - _cutoffFactor) * (1 - _cutoffFactor);
+            intensity *= intensity * _intensityFactor;
+            intensity = Sigmoid(Math.Clamp(intensity, 0, 1));
+            return intensity;
+        }
+
+        private int CalculateTextureX(int x)
+        {
+            var frequency = (float)x * _sampleRate / FftCount;
+            var transformedFrequency = _frequencyTransform(frequency);
+
+            if (transformedFrequency > _maximumFrequency || transformedFrequency < _minimumFrequency)
+                return -1;
+
+            var textureX = (int)((transformedFrequency - _minimumFrequency) /
+                (_maximumFrequency - _minimumFrequency) * FftCount);
+            return Math.Clamp(textureX, 0, FftCount - 1);
+        }
+
+        private int DataColorIndex(int textureHeight, int y, int x)
+            => (textureHeight - y - 1) * FftCount + x;
+
+        private EditorPlayfieldSpectrogramSlice CreateSlice(EditorPlayfieldSpectrogramChunk chunk)
+            => new(_playfield, chunk.Pixels, chunk.Width, chunk.Height, chunk.StartTime, chunk.Length);
+
+        private void DisposeDecoder()
+        {
+            if (_stream == 0)
                 return;
 
-            Destroy();
+            Bass.StreamFree(_stream);
+            _stream = 0;
         }
 
-        /// <summary>
-        /// </summary>
-        public override void Destroy() => DisposeWaveform();
+        private static float Linear(float x) => x;
 
-        /// <summary>
-        /// </summary>
-        public void DisposeWaveform()
-        {
-            DisposeSlices();
-            _trackData = null;
-            base.Destroy();
-        }
+        private static float Mel(float frequency) => 2595 * MathF.Log10(1 + frequency / 700);
 
-        private void DisposeSlices()
-        {
-            foreach (var slice in Slices)
-                slice.Destroy();
+        private static float Erb1(float frequency)
+            => 6.23f * frequency * frequency / 1000 / 1000 + 93.39f * frequency / 1000 + 28.52f;
 
-            Slices.Clear();
-        }
+        private static float Erb2(float frequency) => 24.7f * (4.37f * frequency / 1000 + 1);
+
+        private static float Sigmoid(float x) => x < 0.2f ? 0 : (MathF.Tanh(x * 2 - 1) + 1) / 2;
     }
+
+    internal sealed record EditorPlayfieldSpectrogramChunk(Color[] Pixels, int Width, int Height, double StartTime,
+        double Length);
 }
