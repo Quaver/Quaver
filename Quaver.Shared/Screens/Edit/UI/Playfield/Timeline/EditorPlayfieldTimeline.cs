@@ -72,6 +72,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         private List<EditorPlayfieldTimelineTick> LinePool { get; set; }
 
         /// <summary>
+        ///     Reusable draw buffers for determining which visible measure numbers overlap.
+        /// </summary>
+        private List<EditorPlayfieldTimelineTick> VisibleMeasureLines { get; } =
+            new List<EditorPlayfieldTimelineTick>();
+
+        private List<EditorPlayfieldTimelineTick> DrawnMeasureLines { get; } =
+            new List<EditorPlayfieldTimelineTick>();
+
+        private HashSet<EditorPlayfieldTimelineTick> HiddenMeasureLines { get; } =
+            new HashSet<EditorPlayfieldTimelineTick>();
+
+        /// <summary>
         ///     The index of the last object that was added to the pool
         /// </summary>
         private int LastPooledLineIndex { get; set; } = -1;
@@ -292,22 +304,63 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="gameTime"></param>
         private void DrawLines(GameTime gameTime)
         {
-            const float minimumDistanceToDraw = 8;
+            VisibleMeasureLines.Clear();
+            DrawnMeasureLines.Clear();
+            HiddenMeasureLines.Clear();
 
             for (var i = 0; i < LinePool.Count; i++)
             {
                 var line = LinePool[i];
-                var previous = LinePool.FindLastIndex(i, i, x => x.IsMeasureLine);
-                var next = LinePool.FindIndex(i + 1, LinePool.Count - i - 1, x => x.IsMeasureLine);
                 line.SetPosition();
                 line.Tint = GetLineColor(line.Index % BeatSnap.Value, line.Index);
 
-                if (line.IsOnScreen() &&
-                    (previous is -1 ||
-                        next is -1 ||
-                        LinePool[previous].Y - line.Y > minimumDistanceToDraw ||
-                        line.Y - LinePool[next].Y > minimumDistanceToDraw))
-                    line.Draw(gameTime);
+                if (line.IsOnScreen() && line.IsMeasureLine)
+                    VisibleMeasureLines.Add(line);
+            }
+
+            // Keep as many evenly spaced measure numbers as will fit instead of reducing a dense run to only its
+            // endpoints. This preserves useful numerical gaps throughout the visible timeline.
+            for (var i = 0; i < VisibleMeasureLines.Count; i++)
+            {
+                var current = VisibleMeasureLines[i];
+
+                if (DrawnMeasureLines.Count == 0 ||
+                    !current.MeasureOverlaps(DrawnMeasureLines[DrawnMeasureLines.Count - 1]))
+                {
+                    DrawnMeasureLines.Add(current);
+                }
+                else
+                {
+                    HiddenMeasureLines.Add(current);
+                }
+            }
+
+            // Preserve the final visible number without leaving a +1 label directly beside the previous selection.
+            // Replace as many overlapping selections as needed, while retaining the first visible number.
+            if (VisibleMeasureLines.Count > 1)
+            {
+                var last = VisibleMeasureLines[VisibleMeasureLines.Count - 1];
+
+                if (HiddenMeasureLines.Remove(last))
+                {
+                    while (DrawnMeasureLines.Count > 1 &&
+                           last.MeasureOverlaps(DrawnMeasureLines[DrawnMeasureLines.Count - 1]))
+                    {
+                        var overlapping = DrawnMeasureLines[DrawnMeasureLines.Count - 1];
+                        HiddenMeasureLines.Add(overlapping);
+                        DrawnMeasureLines.RemoveAt(DrawnMeasureLines.Count - 1);
+                    }
+
+                    DrawnMeasureLines.Add(last);
+                }
+            }
+
+            for (var i = 0; i < LinePool.Count; i++)
+            {
+                var line = LinePool[i];
+
+                if (line.IsOnScreen())
+                    line.Draw(gameTime, !HiddenMeasureLines.Contains(line));
             }
         }
 

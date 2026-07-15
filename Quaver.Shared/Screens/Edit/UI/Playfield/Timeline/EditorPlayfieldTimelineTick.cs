@@ -37,6 +37,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
         private SpriteTextPlus Measure { get; }
 
+        /// <summary>
+        ///     The top edge of the measure number as rendered on-screen.
+        /// </summary>
+        internal float MeasureTop => Measure?.ScreenRectangle.Top ?? 0;
+
+        /// <summary>
+        ///     The bottom edge of the measure number as rendered on-screen.
+        /// </summary>
+        internal float MeasureBottom => Measure?.ScreenRectangle.Bottom ?? 0;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -75,10 +85,29 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
+            => Draw(gameTime, true);
+
+        /// <summary>
+        ///     Draws the timeline line and optionally its measure number.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="drawMeasure">Whether the measure number should be drawn.</param>
+        internal void Draw(GameTime gameTime, bool drawMeasure)
         {
             DrawToSpriteBatch();
-            Measure?.Draw(gameTime);
+
+            if (drawMeasure)
+                Measure?.Draw(gameTime);
         }
+
+        /// <summary>
+        ///     Whether this measure number vertically overlaps another measure number.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        internal bool MeasureOverlaps(EditorPlayfieldTimelineTick other) =>
+            IsMeasureLine && other.IsMeasureLine &&
+            MeasureTop < other.MeasureBottom && MeasureBottom > other.MeasureTop;
 
         /// <inheritdoc />
         /// <summary>
