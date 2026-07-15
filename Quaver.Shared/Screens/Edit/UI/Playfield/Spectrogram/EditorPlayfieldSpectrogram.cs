@@ -12,6 +12,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
     public class EditorPlayfieldSpectrogram : Container
     {
         private const double TargetChunkLengthMilliseconds = 1000;
+        private const double DecoderPreRollMilliseconds = 100;
 
         private readonly EditorPlayfield _playfield;
         private readonly EditorPlayfieldChunkCoordinator<EditorPlayfieldSpectrogramSlice,
@@ -21,6 +22,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         private readonly int _fftStepsPerChunk;
         private readonly int _totalFftSteps;
         private readonly int _sampleRate;
+        private readonly int _decoderPreRollBytes;
         private readonly double _millisecondsPerFft;
         private readonly double _chunkLengthMilliseconds;
         private readonly Func<float, float> _frequencyTransform;
@@ -73,6 +75,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             var channelInfo = Bass.ChannelGetInfo(_stream);
             _sampleRate = channelInfo.Frequency;
             _bytesReadPerFft = sizeof(float) * FftResultCount * Math.Max(1, channelInfo.Channels) * 2;
+            _decoderPreRollBytes = (int)Bass.ChannelSeconds2Bytes(_stream,
+                DecoderPreRollMilliseconds / 1000);
             _millisecondsPerFft = Bass.ChannelBytes2Seconds(_stream, _bytesReadPerFft) * 1000;
             _fftStepsPerChunk = Math.Max(1,
                 (int)Math.Ceiling(TargetChunkLengthMilliseconds / _millisecondsPerFft));
@@ -144,7 +148,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
                 var position = (long)startStep * _bytesReadPerFft +
                     (long)_bytesReadPerFft * interleaveRound / _interleaveCount;
-                Bass.ChannelSetPosition(_stream, position);
+                SeekWithPreRoll(position, index);
 
                 for (var step = 0; step < stepCount; step++)
                 {
@@ -245,6 +249,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
         private EditorPlayfieldSpectrogramSlice CreateSlice(EditorPlayfieldSpectrogramChunk chunk)
             => new(_playfield, chunk.Pixels, chunk.Width, chunk.Height, chunk.StartTime, chunk.Length);
+
+        private void SeekWithPreRoll(long position, int chunkIndex)
+        {
+            var decodeStart = Math.Max(0, position - _decoderPreRollBytes);
+
+            if (!Bass.ChannelSetPosition(_stream, decodeStart, PositionFlags.Bytes))
+                throw new InvalidOperationException(
+                    $"Could not seek spectrogram chunk {chunkIndex}: {Bass.LastError}");
+
+            var bytesToDiscard = (int)(position - decodeStart);
+
+            if (bytesToDiscard == 0)
+                return;
+
+            var preRoll = new float[(bytesToDiscard + sizeof(float) - 1) / sizeof(float)];
+            var bytesRead = Bass.ChannelGetData(_stream, preRoll, bytesToDiscard);
+
+            if (bytesRead != bytesToDiscard)
+                throw new InvalidOperationException(
+                    $"Could not pre-roll spectrogram chunk {chunkIndex}: {Bass.LastError}");
+        }
 
         private void DisposeDecoder()
         {

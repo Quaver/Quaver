@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
     public class EditorPlayfieldWaveform : Container
     {
         private const double ChunkLength = 1000;
-        private const double FilterPreRollMilliseconds = 100;
+        private const double DecoderPreRollMilliseconds = 100;
 
         private readonly EditorPlayfieldWaveformFilter _filter;
         private readonly int _leftChannel;
@@ -96,15 +96,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             if (length <= 0)
                 return null;
 
-            var decodeStartTime = _filter == EditorPlayfieldWaveformFilter.None
-                ? startTime
-                : Math.Max(0, startTime - FilterPreRollMilliseconds);
+            // Compressed formats such as MP3 can output a short run of silence after a random seek while
+            // their decoder state is rebuilt. Decode a small overlap before every chunk and discard it.
+            // This also supplies the history required by the optional BQF filter.
+            var decodeStartTime = Math.Max(0, startTime - DecoderPreRollMilliseconds);
             var decodeStartByte = Bass.ChannelSeconds2Bytes(_stream, decodeStartTime / 1000);
             var decodeEndByte = Bass.ChannelSeconds2Bytes(_stream, endTime / 1000);
             var requestedBytes = (int)Math.Min(int.MaxValue, Math.Max(0, decodeEndByte - decodeStartByte));
             var samples = new float[(requestedBytes + sizeof(float) - 1) / sizeof(float)];
 
-            Bass.ChannelSetPosition(_stream, decodeStartByte);
+            if (!Bass.ChannelSetPosition(_stream, decodeStartByte, PositionFlags.Bytes))
+                throw new InvalidOperationException($"Could not seek waveform chunk {index}: {Bass.LastError}");
+
             var bytesRead = Bass.ChannelGetData(_stream, samples, requestedBytes);
 
             if (bytesRead < 0)
