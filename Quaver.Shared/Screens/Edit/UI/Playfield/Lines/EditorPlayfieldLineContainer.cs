@@ -6,7 +6,6 @@ using MonoGame.Extended.Timers;
 using MoreLinq.Extensions;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
-using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
@@ -16,11 +15,6 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
-using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
-using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
-using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
-using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
-using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -115,13 +109,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollSpeedFactorBatchRemoved += OnScrollGraphChanged;
             ActionManager.ScrollSpeedFactorOffsetBatchChanged += OnScrollGraphChanged;
             ActionManager.ScrollSpeedFactorMultiplierBatchChanged += OnScrollGraphChanged;
-            ActionManager.TimingPointAdded += OnTimingPointAdded;
-            ActionManager.TimingPointRemoved += OnTimingPointRemoved;
-            ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
-            ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
+            ActionManager.TimingPointAdded += OnScrollGraphChanged;
+            ActionManager.TimingPointRemoved += OnScrollGraphChanged;
+            ActionManager.TimingPointBatchAdded += OnScrollGraphChanged;
+            ActionManager.TimingPointBatchRemoved += OnScrollGraphChanged;
             ActionManager.PreviewTimeChanged += OnPreviewTimeChanged;
-            ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
-            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
+            ActionManager.TimingPointOffsetChanged += OnScrollGraphChanged;
+            ActionManager.TimingPointOffsetBatchChanged += OnScrollGraphChanged;
             ActionManager.BookmarkAdded += OnBookmarkAdded;
             ActionManager.BookmarkBatchAdded += OnBookmarkBatchAdded;
             ActionManager.BookmarkRemoved += OnBookmarkRemoved;
@@ -204,13 +198,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollSpeedFactorBatchRemoved -= OnScrollGraphChanged;
             ActionManager.ScrollSpeedFactorOffsetBatchChanged -= OnScrollGraphChanged;
             ActionManager.ScrollSpeedFactorMultiplierBatchChanged -= OnScrollGraphChanged;
-            ActionManager.TimingPointAdded -= OnTimingPointAdded;
-            ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
-            ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
-            ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
+            ActionManager.TimingPointAdded -= OnScrollGraphChanged;
+            ActionManager.TimingPointRemoved -= OnScrollGraphChanged;
+            ActionManager.TimingPointBatchAdded -= OnScrollGraphChanged;
+            ActionManager.TimingPointBatchRemoved -= OnScrollGraphChanged;
             ActionManager.PreviewTimeChanged -= OnPreviewTimeChanged;
-            ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
-            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
+            ActionManager.TimingPointOffsetChanged -= OnScrollGraphChanged;
+            ActionManager.TimingPointOffsetBatchChanged -= OnScrollGraphChanged;
             ActionManager.BookmarkAdded -= OnBookmarkAdded;
             ActionManager.BookmarkBatchAdded -= OnBookmarkBatchAdded;
             ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
@@ -230,11 +224,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private void InitializeTicks()
         {
             Lines = new List<DrawableEditorLine>();
-
-            foreach (var timingPointInfo in Map.TimingPoints)
-            {
-                Lines.Add(new DrawableEditorLineTimingPoint(Playfield, timingPointInfo));
-            }
 
             foreach (var bookmark in Map.Bookmarks)
             {
@@ -330,84 +319,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         }
 
         private void OnScrollGraphChanged(object sender, EventArgs e) => ScrollGraph.Invalidate();
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnTimingPointAdded(object sender, EditorTimingPointAddedEventArgs e)
-        {
-            Lines.InsertSorted(new DrawableEditorLineTimingPoint(Playfield, e.TimingPoint));
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnTimingPointOffsetChanged(object sender, EditorTimingPointOffsetChangedEventArgs e)
-        {
-            Lines.HybridSort();
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e)
-        {
-            Lines.HybridSort();
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e)
-        {
-            Lines.RemoveAll(x =>
-            {
-                var found = x is DrawableEditorLineTimingPoint line && line.TimingPoint == e.TimingPoint;
-                
-                if (found)
-                    x.Destroy();
-
-                return found;
-            });
-            
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnTimingPointBatchAdded(object sender, EditorTimingPointBatchAddedEventArgs e)
-        {
-            Lines.InsertSorted(e.TimingPoints.Select(tp => new DrawableEditorLineTimingPoint(Playfield, tp)));
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnTimingPointBatchRemoved(object sender, EditorTimingPointBatchRemovedEventArgs e)
-        {
-            Lines.RemoveAll(x =>
-            {
-                var found = x is DrawableEditorLineTimingPoint line && e.TimingPoints.Contains(line.TimingPoint);
-
-                if (found)
-                    x.Destroy();
-
-                return found;
-            });
-            
-            InitializeLinePool();
-        }
 
         /// <summary>
         /// </summary>

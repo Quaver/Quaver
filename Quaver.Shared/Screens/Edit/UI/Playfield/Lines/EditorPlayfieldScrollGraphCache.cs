@@ -8,35 +8,34 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Wobble;
-using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 {
     /// <summary>
-    ///     Flattens the visible SV and SF graphs into one buffered sprite.
+    ///     Flattens the visible timing, SV, and SF graphs into a compact buffered atlas.
     /// </summary>
     internal sealed class EditorPlayfieldScrollGraphCache
     {
         private const float DefaultLineWidth = 40;
         private const float MinimumLineWidth = 10;
         private const float MaximumLineWidth = 150;
-        private const float LineHeight = 2;
+        private const float ScrollLineHeight = 2;
+        private const float TimingLineHeight = 4;
         private const float SvRightPadding = 2;
 
         private readonly EditorPlayfield _playfield;
         private readonly Qua _map;
-        private readonly Sprite _cachedGraph;
 
         private RenderTarget2D _renderTarget;
         private double _cacheStartTime;
         private double _cacheEndTime;
-        private float _cacheWidth;
         private float _cacheHeight;
+        private int _stripPixelWidth;
         private int _revision;
         private bool _cacheBoundsValid;
+        private bool _visible;
         private bool _dirty = true;
         private bool _buildQueued;
         private bool _destroyed;
@@ -44,7 +43,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private string _observedSelectedGroupId;
         private bool _observedColorByTimingGroup;
         private float _observedTrackSpeed;
-        private float _observedPlayfieldWidth;
         private float _observedPlayfieldHeight;
         private Vector2 _observedScreenScale;
 
@@ -55,17 +53,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             _observedSelectedGroupId = playfield.ActionManager.EditScreen.SelectedScrollGroupId;
             _observedColorByTimingGroup = ConfigManager.EditorColorSvLineByTimingGroup.Value;
             _observedTrackSpeed = playfield.TrackSpeed;
-            _observedPlayfieldWidth = playfield.Width;
             _observedPlayfieldHeight = playfield.Height;
             _observedScreenScale = WindowManager.ScreenScale;
-
-            _cachedGraph = new Sprite
-            {
-                Image = UserInterface.BlankBox,
-                Visible = false,
-                DrawIfOffScreen = true,
-                UsePreviousSpriteBatchOptions = true
-            };
         }
 
         public void Update(GameTime gameTime)
@@ -80,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             if (viewportOutsideCache)
             {
-                _cachedGraph.Visible = false;
+                _visible = false;
 
                 if (!_dirty)
                     Invalidate();
@@ -88,23 +77,57 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             if (!RenderTargetIsValid())
             {
-                _cachedGraph.Visible = false;
+                _visible = false;
 
                 if (!_dirty)
                     Invalidate();
             }
 
-            UpdateCachedGraphPosition();
-            _cachedGraph.Update(gameTime);
-
             if (_dirty)
                 QueueBuild();
         }
 
+        /// <summary>
+        ///     Draws only the visible vertical section from each narrow atlas strip.
+        /// </summary>
         public void Draw(GameTime gameTime)
         {
-            if (!_destroyed && _cachedGraph.Visible)
-                _cachedGraph.Draw(gameTime);
+            if (_destroyed || !_visible || !RenderTargetIsValid() || !_cacheBoundsValid)
+                return;
+
+            var trackSpeed = _playfield.TrackSpeed;
+            var cacheTop = _playfield.HitPositionY - (float)(_cacheEndTime * trackSpeed);
+            var cacheBottom = cacheTop + _cacheHeight;
+            var visibleTop = -_playfield.TrackPositionY;
+            var visibleBottom = visibleTop + _playfield.Height;
+            var drawTop = Math.Max(cacheTop, visibleTop);
+            var drawBottom = Math.Min(cacheBottom, visibleBottom);
+
+            if (drawBottom <= drawTop)
+                return;
+
+            var scaleY = _renderTarget.Height / _cacheHeight;
+            var sourceTop = Math.Clamp((int)Math.Floor((drawTop - cacheTop) * scaleY), 0,
+                _renderTarget.Height);
+            var sourceBottom = Math.Clamp((int)Math.Ceiling((drawBottom - cacheTop) * scaleY), sourceTop,
+                _renderTarget.Height);
+            var sourceHeight = sourceBottom - sourceTop;
+
+            if (sourceHeight <= 0)
+                return;
+
+            var actualDrawTop = cacheTop + sourceTop / scaleY;
+            var actualDrawHeight = sourceHeight / scaleY;
+            var scale = new Vector2(MaximumLineWidth / _stripPixelWidth, actualDrawHeight / sourceHeight);
+            var leftSource = new Rectangle(0, sourceTop, _stripPixelWidth, sourceHeight);
+            var rightSource = new Rectangle(_stripPixelWidth, sourceTop, _stripPixelWidth, sourceHeight);
+
+            GameBase.Game.SpriteBatch.Draw(_renderTarget,
+                new Vector2(_playfield.AbsolutePosition.X - MaximumLineWidth, actualDrawTop), leftSource,
+                Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+            GameBase.Game.SpriteBatch.Draw(_renderTarget,
+                new Vector2(_playfield.AbsolutePosition.X + _playfield.Width + SvRightPadding, actualDrawTop),
+                rightSource, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
 
         public void Invalidate(bool hideUntilRebuilt = false)
@@ -116,7 +139,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             _dirty = true;
 
             if (hideUntilRebuilt)
-                _cachedGraph.Visible = false;
+                _visible = false;
         }
 
         public void Destroy()
@@ -127,7 +150,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             _destroyed = true;
             _revision++;
             _buildQueued = false;
-            _cachedGraph.Destroy();
+            _visible = false;
 
             if (_renderTarget != null && !_renderTarget.IsDisposed)
                 _renderTarget.Dispose();
@@ -140,14 +163,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             var selectedGroupId = _playfield.ActionManager.EditScreen.SelectedScrollGroupId;
             var colorByTimingGroup = ConfigManager.EditorColorSvLineByTimingGroup.Value;
             var trackSpeed = _playfield.TrackSpeed;
-            var playfieldWidth = _playfield.Width;
             var playfieldHeight = _playfield.Height;
             var screenScale = WindowManager.ScreenScale;
 
             if (_observedSelectedGroupId == selectedGroupId &&
                 _observedColorByTimingGroup == colorByTimingGroup &&
                 _observedTrackSpeed == trackSpeed &&
-                _observedPlayfieldWidth == playfieldWidth &&
                 _observedPlayfieldHeight == playfieldHeight &&
                 _observedScreenScale == screenScale)
                 return;
@@ -155,7 +176,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             _observedSelectedGroupId = selectedGroupId;
             _observedColorByTimingGroup = colorByTimingGroup;
             _observedTrackSpeed = trackSpeed;
-            _observedPlayfieldWidth = playfieldWidth;
             _observedPlayfieldHeight = playfieldHeight;
             _observedScreenScale = screenScale;
             _cacheBoundsValid = false;
@@ -185,12 +205,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                         return;
 
                     _dirty = false;
-                    _cachedGraph.Visible = true;
+                    _visible = true;
                 }
                 catch (Exception e)
                 {
                     _dirty = true;
-                    _cachedGraph.Visible = false;
+                    _visible = false;
                     Logger.Error(e, LogType.Runtime);
                 }
             });
@@ -203,11 +223,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             var visibleDuration = Math.Max(visibleEnd - visibleStart, double.Epsilon);
             var cacheStart = visibleStart - visibleDuration;
             var cacheEnd = visibleEnd + visibleDuration;
-            var cacheWidth = MaximumLineWidth * 2 + _playfield.Width + SvRightPadding;
             var cacheHeight = (float)((cacheEnd - cacheStart) * trackSpeed);
             var lines = CreateLineSnapshot(cacheStart, cacheEnd);
 
-            EnsureRenderTarget(cacheWidth, cacheHeight);
+            EnsureRenderTarget(cacheHeight);
 
             var graphicsDevice = GameBase.Game.GraphicsDevice;
             var previousTargets = graphicsDevice.GetRenderTargets();
@@ -221,7 +240,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied,
                     SamplerState.PointClamp, null, RasterizerState.CullNone);
 
-                DrawLines(lines, cacheEnd, trackSpeed, cacheWidth, cacheHeight);
+                DrawLines(lines, cacheEnd, trackSpeed, cacheHeight);
                 _ = GameBase.Game.TryEndBatch();
             }
             finally
@@ -232,12 +251,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             _cacheStartTime = cacheStart;
             _cacheEndTime = cacheEnd;
-            _cacheWidth = cacheWidth;
             _cacheHeight = cacheHeight;
             _cacheBoundsValid = true;
-            _cachedGraph.Image = _renderTarget;
-            _cachedGraph.Size = new ScalableVector2(cacheWidth, cacheHeight);
-            UpdateCachedGraphPosition();
         }
 
         private List<GraphLine> CreateLineSnapshot(double cacheStart, double cacheEnd)
@@ -251,9 +266,33 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             if (!ReferenceEquals(selectedGroup, globalGroup))
                 AddGroupLines(lines, globalGroup, cacheStart, cacheEnd);
 
-            lines.Sort((left, right) => left.StartTime.CompareTo(right.StartTime));
+            var timingColor = ColorHelper.HexToColor("#FE5656");
+            var firstTimingPoint = FindFirstIndex(_map.TimingPoints, cacheStart, point => point.StartTime);
+            for (var i = firstTimingPoint; i < _map.TimingPoints.Count; i++)
+            {
+                var point = _map.TimingPoints[i];
+
+                if (point.StartTime > cacheEnd)
+                    break;
+
+                lines.Add(new GraphLine(point.StartTime, DefaultLineWidth, TimingLineHeight,
+                    GraphLineType.TimingPoint, timingColor, lines.Count));
+            }
+
+            lines.Sort((left, right) =>
+            {
+                var layerComparison = GetDrawLayer(left.Type).CompareTo(GetDrawLayer(right.Type));
+
+                if (layerComparison != 0)
+                    return layerComparison;
+
+                var timeComparison = left.StartTime.CompareTo(right.StartTime);
+                return timeComparison != 0 ? timeComparison : left.DrawOrder.CompareTo(right.DrawOrder);
+            });
             return lines;
         }
+
+        private static int GetDrawLayer(GraphLineType type) => type == GraphLineType.TimingPoint ? 1 : 0;
 
         private static void AddGroupLines(List<GraphLine> lines, ScrollGroup group, double cacheStart,
             double cacheEnd)
@@ -273,7 +312,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 if (point.StartTime > cacheEnd)
                     break;
 
-                lines.Add(new GraphLine(point.StartTime, point.Multiplier, true, color));
+                var width = MathHelper.Clamp(Math.Abs(point.Multiplier) * DefaultLineWidth,
+                    MinimumLineWidth, MaximumLineWidth);
+                lines.Add(new GraphLine(point.StartTime, width, ScrollLineHeight, GraphLineType.ScrollVelocity,
+                    color, lines.Count));
             }
 
             var firstSf = FindFirstIndex(group.ScrollSpeedFactors, cacheStart, point => point.StartTime);
@@ -284,26 +326,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 if (point.StartTime > cacheEnd)
                     break;
 
-                lines.Add(new GraphLine(point.StartTime, point.Multiplier, false, color));
+                var width = MathHelper.Clamp(Math.Abs(point.Multiplier) * DefaultLineWidth,
+                    MinimumLineWidth, MaximumLineWidth);
+                lines.Add(new GraphLine(point.StartTime, width, ScrollLineHeight,
+                    GraphLineType.ScrollSpeedFactor, color, lines.Count));
             }
         }
 
         private void DrawLines(IReadOnlyList<GraphLine> lines, double cacheEnd, float trackSpeed,
-            float cacheWidth, float cacheHeight)
+            float cacheHeight)
         {
-            var scaleX = _renderTarget.Width / cacheWidth;
+            var scaleX = _stripPixelWidth / MaximumLineWidth;
             var scaleY = _renderTarget.Height / cacheHeight;
 
             foreach (var line in lines)
             {
-                var width = MathHelper.Clamp(Math.Abs(line.Multiplier) * DefaultLineWidth,
-                    MinimumLineWidth, MaximumLineWidth);
-                var x = line.IsScrollVelocity
-                    ? MaximumLineWidth + _playfield.Width + SvRightPadding
-                    : MaximumLineWidth - width;
-                var y = (float)((cacheEnd - line.StartTime) * trackSpeed) -
-                        (line.IsScrollVelocity ? LineHeight / 2 : LineHeight * 1.5f);
-                var destination = ToRenderTargetRectangle(x, y, width, LineHeight, scaleX, scaleY);
+                var x = line.Type switch
+                {
+                    GraphLineType.ScrollSpeedFactor => MaximumLineWidth - line.Width,
+                    _ => MaximumLineWidth
+                };
+                var verticalOffset = line.Type switch
+                {
+                    GraphLineType.ScrollVelocity => ScrollLineHeight / 2,
+                    GraphLineType.ScrollSpeedFactor => ScrollLineHeight * 1.5f,
+                    _ => TimingLineHeight / 2
+                };
+                var y = (float)((cacheEnd - line.StartTime) * trackSpeed) - verticalOffset;
+                var destination = ToRenderTargetRectangle(x, y, line.Width, line.Height, scaleX, scaleY);
 
                 if (destination.Width > 0 && destination.Height > 0)
                     GameBase.Game.SpriteBatch.Draw(UserInterface.BlankBox, destination, line.Color);
@@ -320,41 +370,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             return new Rectangle(left, top, right - left, bottom - top);
         }
 
-        private void EnsureRenderTarget(float cacheWidth, float cacheHeight)
+        private void EnsureRenderTarget(float cacheHeight)
         {
-            var width = Math.Max(1, (int)Math.Ceiling(cacheWidth * WindowManager.ScreenScale.X));
+            var stripWidth = Math.Max(1,
+                (int)Math.Ceiling(MaximumLineWidth * WindowManager.ScreenScale.X));
+            var width = stripWidth * 2;
             var height = Math.Max(1, (int)Math.Ceiling(cacheHeight * WindowManager.ScreenScale.Y));
 
             if (_renderTarget != null && !_renderTarget.IsDisposed && !_renderTarget.IsContentLost &&
                 _renderTarget.GraphicsDevice == GameBase.Game.GraphicsDevice &&
                 _renderTarget.Width == width && _renderTarget.Height == height)
+            {
+                _stripPixelWidth = stripWidth;
                 return;
+            }
 
-            _cachedGraph.Visible = false;
+            _visible = false;
 
             if (_renderTarget != null && !_renderTarget.IsDisposed)
                 _renderTarget.Dispose();
 
             _renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, width, height, false,
                 SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _stripPixelWidth = stripWidth;
         }
 
         private bool RenderTargetIsValid() =>
             _renderTarget != null && !_renderTarget.IsDisposed && !_renderTarget.IsContentLost &&
             _renderTarget.GraphicsDevice == GameBase.Game.GraphicsDevice;
-
-        private void UpdateCachedGraphPosition()
-        {
-            if (!_cacheBoundsValid)
-                return;
-
-            _cachedGraph.Position = new ScalableVector2(
-                _playfield.AbsolutePosition.X - MaximumLineWidth,
-                _playfield.HitPositionY - (float)(_cacheEndTime * _playfield.TrackSpeed));
-
-            if (_cachedGraph.Width != _cacheWidth || _cachedGraph.Height != _cacheHeight)
-                _cachedGraph.Size = new ScalableVector2(_cacheWidth, _cacheHeight);
-        }
 
         private (double Start, double End) GetVisibleTimeRange()
         {
@@ -383,7 +426,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             return low;
         }
 
-        private readonly record struct GraphLine(float StartTime, float Multiplier, bool IsScrollVelocity,
-            Color Color);
+        private enum GraphLineType
+        {
+            ScrollVelocity,
+            ScrollSpeedFactor,
+            TimingPoint
+        }
+
+        private readonly record struct GraphLine(float StartTime, float Width, float Height, GraphLineType Type,
+            Color Color, int DrawOrder);
     }
 }
