@@ -70,7 +70,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             Y = -2;
 
             // Uncached labels measure themselves when drawn, so they do not need a per-label font change subscription.
-            Measure = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), measureCount.ToString(), 24,
+            Measure = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), measureCount.ToString(), 18,
                 false, false)
             {
                 Parent = this,
@@ -85,16 +85,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
-            => Draw(gameTime, true);
+            => Draw(gameTime, true, true);
 
         /// <summary>
         ///     Draws the timeline line and optionally its measure number.
         /// </summary>
         /// <param name="gameTime"></param>
+        /// <param name="drawLine">Whether the timeline line should be drawn.</param>
         /// <param name="drawMeasure">Whether the measure number should be drawn.</param>
-        internal void Draw(GameTime gameTime, bool drawMeasure)
+        internal void Draw(GameTime gameTime, bool drawLine, bool drawMeasure)
         {
-            DrawToSpriteBatch();
+            if (drawLine)
+                DrawToSpriteBatch();
 
             if (drawMeasure)
                 Measure?.Draw(gameTime);

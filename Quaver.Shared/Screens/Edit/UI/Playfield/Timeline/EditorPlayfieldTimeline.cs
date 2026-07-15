@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -82,6 +84,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
         private HashSet<EditorPlayfieldTimelineTick> HiddenMeasureLines { get; } =
             new HashSet<EditorPlayfieldTimelineTick>();
+
+        private List<(float StartTime, float EndTime)> DenseMeasureRanges { get; } =
+            new List<(float StartTime, float EndTime)>();
 
         /// <summary>
         ///     The index of the last object that was added to the pool
@@ -307,6 +312,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             VisibleMeasureLines.Clear();
             DrawnMeasureLines.Clear();
             HiddenMeasureLines.Clear();
+            DenseMeasureRanges.Clear();
 
             for (var i = 0; i < LinePool.Count; i++)
             {
@@ -316,6 +322,31 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
                 if (line.IsOnScreen() && line.IsMeasureLine)
                     VisibleMeasureLines.Add(line);
+            }
+
+            // Dense sections are the merged time spans between adjacent measure numbers whose rendered bounds
+            // overlap. Outside these spans, timeline line rendering remains unchanged.
+            for (var i = 1; i < VisibleMeasureLines.Count; i++)
+            {
+                var previous = VisibleMeasureLines[i - 1];
+                var current = VisibleMeasureLines[i];
+
+                if (!current.MeasureOverlaps(previous))
+                    continue;
+
+                var startTime = Math.Min(previous.StartTime, current.StartTime);
+                var endTime = Math.Max(previous.StartTime, current.StartTime);
+
+                if (DenseMeasureRanges.Count == 0 ||
+                    startTime > DenseMeasureRanges[DenseMeasureRanges.Count - 1].EndTime)
+                {
+                    DenseMeasureRanges.Add((startTime, endTime));
+                    continue;
+                }
+
+                var lastRange = DenseMeasureRanges[DenseMeasureRanges.Count - 1];
+                DenseMeasureRanges[DenseMeasureRanges.Count - 1] =
+                    (lastRange.StartTime, Math.Max(lastRange.EndTime, endTime));
             }
 
             // Keep as many evenly spaced measure numbers as will fit instead of reducing a dense run to only its
@@ -355,13 +386,48 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                 }
             }
 
+            var denseRangeIndex = 0;
+
             for (var i = 0; i < LinePool.Count; i++)
             {
                 var line = LinePool[i];
 
-                if (line.IsOnScreen())
-                    line.Draw(gameTime, !HiddenMeasureLines.Contains(line));
+                if (!line.IsOnScreen())
+                    continue;
+
+                while (denseRangeIndex < DenseMeasureRanges.Count &&
+                       line.StartTime > DenseMeasureRanges[denseRangeIndex].EndTime)
+                    denseRangeIndex++;
+
+                var isDense = denseRangeIndex < DenseMeasureRanges.Count &&
+                              line.StartTime >= DenseMeasureRanges[denseRangeIndex].StartTime;
+                var drawLine = !isDense || line.Tint != Color.White || HasHitObjectAt(line.StartTime);
+
+                line.Draw(gameTime, drawLine, !HiddenMeasureLines.Contains(line));
             }
+        }
+
+        /// <summary>
+        ///     Returns whether a normal note or long-note head starts on a timeline tick.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private bool HasHitObjectAt(float time)
+        {
+            // Tick positions use floating-point beat lengths while hit objects store integer milliseconds. Allow the
+            // one-millisecond truncation difference produced by snapping the same beat position into those formats.
+            const float tolerance = 1;
+            var index = Map.HitObjects.IndexAtTime(time + tolerance);
+
+            while (index >= 0 && Map.HitObjects[index].StartTime >= time - tolerance)
+            {
+                if (Map.HitObjects[index].Type != HitObjectType.Mine)
+                    return true;
+
+                index--;
+            }
+
+            return false;
         }
 
         /// <summary>
