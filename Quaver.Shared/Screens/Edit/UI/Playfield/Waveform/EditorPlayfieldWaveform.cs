@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             _rightChannel = direction == EditorPlayfieldWaveformAudioDirection.Left ? 0 : 1;
 
             _stream = Bass.CreateStream(((AudioTrack)Audio.AudioEngine.Track).OriginalFilePath, 0, 0,
-                BassFlags.Decode | BassFlags.Float);
+                BassFlags.Decode | BassFlags.Float | BassFlags.Prescan);
 
             if (_stream == 0)
                 throw new InvalidOperationException($"Could not create waveform decode stream: {Bass.LastError}");

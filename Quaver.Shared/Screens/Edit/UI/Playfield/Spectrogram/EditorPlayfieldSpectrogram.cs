@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             _maximumFrequency = (int)_frequencyTransform(ConfigManager.EditorSpectrogramMaximumFrequency.Value);
 
             _stream = Bass.CreateStream(((AudioTrack)Audio.AudioEngine.Track).OriginalFilePath, 0, 0,
-                BassFlags.Decode | BassFlags.Float);
+                BassFlags.Decode | BassFlags.Float | BassFlags.Prescan);
 
             if (_stream == 0)
                 throw new InvalidOperationException($"Could not create spectrogram decode stream: {Bass.LastError}");

@@ -366,15 +366,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                 }
             }
 
-            // Preserve the final visible number without leaving a +1 label directly beside the previous selection.
-            // Replace as many overlapping selections as needed, while retaining the first visible number.
+            // Preserve the final visible number when it can replace overlapping selections without colliding with
+            // the first visible number. Preventing stacked labels takes priority over showing both endpoints.
             if (VisibleMeasureLines.Count > 1)
             {
                 var last = VisibleMeasureLines[VisibleMeasureLines.Count - 1];
 
-                if (HiddenMeasureLines.Remove(last))
+                if (HiddenMeasureLines.Contains(last) && !last.MeasureOverlaps(DrawnMeasureLines[0]))
                 {
-                    while (DrawnMeasureLines.Count > 1 &&
+                    HiddenMeasureLines.Remove(last);
+
+                    while (DrawnMeasureLines.Count > 0 &&
                            last.MeasureOverlaps(DrawnMeasureLines[DrawnMeasureLines.Count - 1]))
                     {
                         var overlapping = DrawnMeasureLines[DrawnMeasureLines.Count - 1];
