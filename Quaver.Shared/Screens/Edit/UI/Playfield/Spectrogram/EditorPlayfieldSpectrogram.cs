@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Threading;
 using ManagedBass;
 using Microsoft.Xna.Framework;
@@ -11,7 +12,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 {
     public class EditorPlayfieldSpectrogram : Container
     {
-        private const double TargetChunkLengthMilliseconds = 1000;
+        private const double TargetChunkLengthMilliseconds = 500;
+        private const int PrefetchChunkCount = 2;
         private const double DecoderPreRollMilliseconds = 100;
 
         private readonly EditorPlayfield _playfield;
@@ -91,7 +93,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
 
             _chunks = new EditorPlayfieldChunkCoordinator<EditorPlayfieldSpectrogramSlice,
                 EditorPlayfieldSpectrogramChunk>(playfield, trackLengthMilliseconds, _chunkLengthMilliseconds,
-                GenerateChunk, CreateSlice, DisposeDecoder, token);
+                GenerateChunk, CreateSlice, DisposeDecoder, PrefetchChunkCount, token);
         }
 
         public override void Update(GameTime gameTime)
@@ -136,23 +138,78 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             var rowCount = stepCount * _interleaveCount;
             var fftData = new float[rowCount][];
 
-            for (var row = 0; row < fftData.Length; row++)
-                fftData[row] = new float[FftResultCount];
-
-            for (var interleaveRound = 0; interleaveRound < _interleaveCount; interleaveRound++)
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                for (var row = 0; row < fftData.Length; row++)
+                {
+                    fftData[row] = ArrayPool<float>.Shared.Rent(FftResultCount);
+                    Array.Clear(fftData[row], 0, FftResultCount);
+                }
 
-                if (!isStillRequested())
+                for (var interleaveRound = 0; interleaveRound < _interleaveCount; interleaveRound++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (!isStillRequested())
+                        return null;
+
+                    var position = (long)startStep * _bytesReadPerFft +
+                        (long)_bytesReadPerFft * interleaveRound / _interleaveCount;
+                    SeekWithPreRoll(position, index);
+
+                    for (var step = 0; step < stepCount; step++)
+                    {
+                        if ((step & 15) == 0)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            if (!isStillRequested())
+                                return null;
+                        }
+
+                        var row = step * _interleaveCount + interleaveRound;
+                        var bytesRead = Bass.ChannelGetData(_stream, fftData[row],
+                            FftFlag | (int)DataFlags.FFTRemoveDC);
+
+                        if (bytesRead <= 0)
+                            break;
+                    }
+                }
+
+                var pixels = GeneratePixels(fftData, isStillRequested, cancellationToken);
+
+                if (pixels == null)
                     return null;
 
-                var position = (long)startStep * _bytesReadPerFft +
-                    (long)_bytesReadPerFft * interleaveRound / _interleaveCount;
-                SeekWithPreRoll(position, index);
-
-                for (var step = 0; step < stepCount; step++)
+                var startTime = startStep * _millisecondsPerFft;
+                var length = stepCount * _millisecondsPerFft;
+                return new EditorPlayfieldSpectrogramChunk(pixels, FftCount, rowCount, startTime, length);
+            }
+            finally
+            {
+                foreach (var row in fftData)
                 {
-                    if ((step & 15) == 0)
+                    if (row != null)
+                        ArrayPool<float>.Shared.Return(row);
+                }
+            }
+        }
+
+        private Color[]? GeneratePixels(float[][] fftData, Func<bool> isStillRequested,
+            CancellationToken cancellationToken)
+        {
+            var textureHeight = fftData.Length;
+            var pixelCount = FftCount * textureHeight;
+            var pixels = ArrayPool<Color>.Shared.Rent(pixelCount);
+            var ownershipTransferred = false;
+
+            try
+            {
+                Array.Clear(pixels, 0, pixelCount);
+
+                for (var y = 0; y < textureHeight; y++)
+                {
+                    if ((y & 15) == 0)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -160,64 +217,36 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
                             return null;
                     }
 
-                    var row = step * _interleaveCount + interleaveRound;
-                    var bytesRead = Bass.ChannelGetData(_stream, fftData[row],
-                        FftFlag | (int)DataFlags.FFTRemoveDC);
+                    for (var x = 0; x < FftCount; x++)
+                    {
+                        var textureX = CalculateTextureX(x);
 
-                    if (bytesRead <= 0)
-                        break;
+                        if (textureX == -1)
+                            continue;
+
+                        var intensity = GetIntensity(fftData[y][x]);
+                        var nextTextureX = CalculateTextureX(x + 1);
+
+                        if (nextTextureX == -1)
+                            nextTextureX = FftCount - 1;
+
+                        var color = SpectrogramColormap.GetColor(intensity);
+                        var start = DataColorIndex(textureHeight, y, textureX);
+                        var end = DataColorIndex(textureHeight, y, nextTextureX);
+
+                        for (var pixel = start; pixel < end && pixel < pixelCount; pixel++)
+                            pixels[pixel] = color;
+                    }
                 }
+
+                ownershipTransferred = true;
+                return pixels;
             }
-
-            var pixels = GeneratePixels(fftData, isStillRequested, cancellationToken);
-
-            if (pixels == null)
-                return null;
-
-            var startTime = startStep * _millisecondsPerFft;
-            var length = stepCount * _millisecondsPerFft;
-            return new EditorPlayfieldSpectrogramChunk(pixels, FftCount, rowCount, startTime, length);
-        }
-
-        private Color[]? GeneratePixels(float[][] fftData, Func<bool> isStillRequested,
-            CancellationToken cancellationToken)
-        {
-            var textureHeight = fftData.Length;
-            var pixels = new Color[FftCount * textureHeight];
-
-            for (var y = 0; y < textureHeight; y++)
+            finally
             {
-                if ((y & 15) == 0)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (!isStillRequested())
-                        return null;
-                }
-
-                for (var x = 0; x < FftCount; x++)
-                {
-                    var textureX = CalculateTextureX(x);
-
-                    if (textureX == -1)
-                        continue;
-
-                    var intensity = GetIntensity(fftData[y][x]);
-                    var nextTextureX = CalculateTextureX(x + 1);
-
-                    if (nextTextureX == -1)
-                        nextTextureX = FftCount - 1;
-
-                    var color = SpectrogramColormap.GetColor(intensity);
-                    var start = DataColorIndex(textureHeight, y, textureX);
-                    var end = DataColorIndex(textureHeight, y, nextTextureX);
-
-                    for (var pixel = start; pixel < end && pixel < pixels.Length; pixel++)
-                        pixels[pixel] = color;
-                }
+                if (!ownershipTransferred)
+                    ArrayPool<Color>.Shared.Return(pixels);
             }
-
-            return pixels;
         }
 
         private float GetIntensity(float rawIntensity)
@@ -263,12 +292,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
             if (bytesToDiscard == 0)
                 return;
 
-            var preRoll = new float[(bytesToDiscard + sizeof(float) - 1) / sizeof(float)];
-            var bytesRead = Bass.ChannelGetData(_stream, preRoll, bytesToDiscard);
+            var preRoll = ArrayPool<float>.Shared.Rent(
+                (bytesToDiscard + sizeof(float) - 1) / sizeof(float));
 
-            if (bytesRead != bytesToDiscard)
-                throw new InvalidOperationException(
-                    $"Could not pre-roll spectrogram chunk {chunkIndex}: {Bass.LastError}");
+            try
+            {
+                var bytesRead = Bass.ChannelGetData(_stream, preRoll, bytesToDiscard);
+
+                if (bytesRead != bytesToDiscard)
+                    throw new InvalidOperationException(
+                        $"Could not pre-roll spectrogram chunk {chunkIndex}: {Bass.LastError}");
+            }
+            finally
+            {
+                ArrayPool<float>.Shared.Return(preRoll);
+            }
         }
 
         private void DisposeDecoder()
@@ -292,6 +330,32 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
         private static float Sigmoid(float x) => x < 0.2f ? 0 : (MathF.Tanh(x * 2 - 1) + 1) / 2;
     }
 
-    internal sealed record EditorPlayfieldSpectrogramChunk(Color[] Pixels, int Width, int Height, double StartTime,
-        double Length);
+    internal sealed class EditorPlayfieldSpectrogramChunk : IDisposable
+    {
+        public Color[] Pixels { get; }
+        public int Width { get; }
+        public int Height { get; }
+        public double StartTime { get; }
+        public double Length { get; }
+
+        private bool _isDisposed;
+
+        public EditorPlayfieldSpectrogramChunk(Color[] pixels, int width, int height, double startTime, double length)
+        {
+            Pixels = pixels;
+            Width = width;
+            Height = height;
+            StartTime = startTime;
+            Length = length;
+        }
+
+        public void Dispose()
+        {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+            ArrayPool<Color>.Shared.Return(Pixels);
+        }
+    }
 }

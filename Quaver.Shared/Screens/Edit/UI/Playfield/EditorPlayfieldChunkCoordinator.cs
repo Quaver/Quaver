@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -12,7 +11,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 {
     internal sealed class EditorPlayfieldChunkCoordinator<TSlice, TChunk>
         where TSlice : Drawable
-        where TChunk : class
+        where TChunk : class, IDisposable
     {
         private const int CompletedChunkLimit = 2;
 
@@ -26,23 +25,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private readonly EditorPlayfield _playfield;
         private readonly double _trackLengthMilliseconds;
         private readonly double _chunkLengthMilliseconds;
+        private readonly int _prefetchChunkCount;
         private readonly Func<int, Func<bool>, CancellationToken, TChunk?> _generateChunk;
         private readonly Func<TChunk, TSlice> _createSlice;
         private readonly Action _disposeDecoder;
 
-        private List<int> _requestedChunks = new();
-        private List<int> _visibleChunks = new();
+        private readonly List<int> _requestedChunks = new();
+        private readonly List<int> _visibleChunks = new();
+        private readonly List<int> _requestedChunkBuffer = new();
         private bool _isDestroyed;
 
         public bool IsActive { get; set; }
 
         public EditorPlayfieldChunkCoordinator(EditorPlayfield playfield, double trackLengthMilliseconds,
             double chunkLengthMilliseconds, Func<int, Func<bool>, CancellationToken, TChunk?> generateChunk,
-            Func<TChunk, TSlice> createSlice, Action disposeDecoder, CancellationToken cancellationToken)
+            Func<TChunk, TSlice> createSlice, Action disposeDecoder, int prefetchChunkCount,
+            CancellationToken cancellationToken)
         {
             _playfield = playfield;
             _trackLengthMilliseconds = trackLengthMilliseconds;
             _chunkLengthMilliseconds = chunkLengthMilliseconds;
+            _prefetchChunkCount = prefetchChunkCount;
             _generateChunk = generateChunk;
             _createSlice = createSlice;
             _disposeDecoder = disposeDecoder;
@@ -55,8 +58,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             if (IsActive)
             {
-                _visibleChunks = GetVisibleChunks();
-                SetRequestedChunks(GetRequestedChunks(_visibleChunks));
+                UpdateVisibleChunks();
+                UpdateRequestedChunks();
             }
             else
             {
@@ -107,8 +110,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             _cachedSlices.Clear();
 
-            while (_completedChunks.TryDequeue(out _))
+            while (_completedChunks.TryDequeue(out var completed))
+            {
+                completed.Chunk.Dispose();
                 _completedChunkSlots.Release();
+            }
         }
 
         private async Task RunWorkerAsync()
@@ -138,6 +144,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
                             if (chunk == null || !IsRequested(index))
                             {
+                                chunk?.Dispose();
                                 MarkMissing(index);
                                 _completedChunkSlots.Release();
                                 continue;
@@ -150,6 +157,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                                     if (!_isDestroyed)
                                         _chunkStates[index] = ChunkState.Missing;
 
+                                    chunk.Dispose();
                                     _completedChunkSlots.Release();
                                     continue;
                                 }
@@ -224,15 +232,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             }
             finally
             {
+                completed.Chunk.Dispose();
                 _completedChunkSlots.Release();
                 SignalWorker();
             }
         }
 
-        private List<int> GetVisibleChunks()
+        private void UpdateVisibleChunks()
         {
+            _visibleChunks.Clear();
+
             if (_trackLengthMilliseconds <= 0 || _chunkLengthMilliseconds <= 0)
-                return new List<int>();
+                return;
 
             var trackSpeed = Math.Max(_playfield.TrackSpeed, float.Epsilon);
             var currentTime = Math.Clamp(Audio.AudioEngine.Track.Time, 0, _trackLengthMilliseconds);
@@ -243,48 +254,88 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var chunkCount = (int)Math.Ceiling(_trackLengthMilliseconds / _chunkLengthMilliseconds);
             var first = Math.Clamp((int)(visibleStart / _chunkLengthMilliseconds), 0, chunkCount - 1);
             var last = Math.Clamp((int)(visibleEnd / _chunkLengthMilliseconds), first, chunkCount - 1);
-            var result = new List<int>(last - first + 1);
-
             for (var index = first; index <= last; index++)
-                result.Add(index);
-
-            return result;
+                _visibleChunks.Add(index);
         }
 
-        private List<int> GetRequestedChunks(IReadOnlyList<int> visibleChunks)
+        private void UpdateRequestedChunks()
         {
-            if (visibleChunks.Count == 0)
-                return new List<int>();
+            _requestedChunkBuffer.Clear();
+
+            if (_visibleChunks.Count == 0)
+            {
+                SetRequestedChunks(_requestedChunkBuffer);
+                return;
+            }
 
             var chunkCount = (int)Math.Ceiling(_trackLengthMilliseconds / _chunkLengthMilliseconds);
             var currentIndex = Math.Clamp((int)(Audio.AudioEngine.Track.Time / _chunkLengthMilliseconds),
                 0, chunkCount - 1);
-            var requested = visibleChunks.OrderBy(index => Math.Abs(index - currentIndex)).ToList();
-            var before = visibleChunks[0] - 1;
-            var after = visibleChunks[^1] + 1;
+            var firstVisible = _visibleChunks[0];
+            var lastVisible = _visibleChunks[^1];
+            currentIndex = Math.Clamp(currentIndex, firstVisible, lastVisible);
+            _requestedChunkBuffer.Add(currentIndex);
 
-            if (before >= 0)
-                requested.Add(before);
+            for (var distance = 1; _requestedChunkBuffer.Count < _visibleChunks.Count; distance++)
+            {
+                var after = currentIndex + distance;
 
-            if (after < chunkCount)
-                requested.Add(after);
+                if (after <= lastVisible)
+                    _requestedChunkBuffer.Add(after);
 
-            return requested;
+                var before = currentIndex - distance;
+
+                if (before >= firstVisible)
+                    _requestedChunkBuffer.Add(before);
+            }
+
+            for (var distance = 1; distance <= _prefetchChunkCount; distance++)
+            {
+                var after = lastVisible + distance;
+
+                if (after < chunkCount)
+                    _requestedChunkBuffer.Add(after);
+            }
+
+            for (var distance = 1; distance <= _prefetchChunkCount; distance++)
+            {
+                var before = firstVisible - distance;
+
+                if (before >= 0)
+                    _requestedChunkBuffer.Add(before);
+            }
+
+            SetRequestedChunks(_requestedChunkBuffer);
         }
 
-        private void SetRequestedChunks(IEnumerable<int> requestedChunks)
+        private void SetRequestedChunks(IReadOnlyList<int> requestedChunks)
         {
-            var requested = requestedChunks.ToList();
-
             lock (_stateLock)
             {
-                if (_requestedChunks.SequenceEqual(requested))
+                if (RequestedChunksEqual(requestedChunks))
                     return;
 
-                _requestedChunks = requested;
+                _requestedChunks.Clear();
+
+                for (var index = 0; index < requestedChunks.Count; index++)
+                    _requestedChunks.Add(requestedChunks[index]);
             }
 
             SignalWorker();
+        }
+
+        private bool RequestedChunksEqual(IReadOnlyList<int> requestedChunks)
+        {
+            if (_requestedChunks.Count != requestedChunks.Count)
+                return false;
+
+            for (var index = 0; index < requestedChunks.Count; index++)
+            {
+                if (_requestedChunks[index] != requestedChunks[index])
+                    return false;
+            }
+
+            return true;
         }
 
         private bool TryBeginNextChunk(out int index)

@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Threading;
 using ManagedBass;
 using ManagedBass.Fx;
@@ -11,7 +12,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 {
     public class EditorPlayfieldWaveform : Container
     {
-        private const double ChunkLength = 1000;
+        private const double ChunkLength = 500;
+        private const int PrefetchChunkCount = 2;
         private const double DecoderPreRollMilliseconds = 100;
 
         private readonly EditorPlayfieldWaveformFilter _filter;
@@ -67,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
             _chunks = new EditorPlayfieldChunkCoordinator<EditorPlayfieldWaveformSlice,
                 EditorPlayfieldWaveformChunk>(playfield, TrackLengthMilliseconds, ChunkLength, GenerateChunk,
-                CreateSlice, DisposeDecoder, token);
+                CreateSlice, DisposeDecoder, PrefetchChunkCount, token);
         }
 
         public override void Update(GameTime gameTime)
@@ -103,51 +105,73 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             var decodeStartByte = Bass.ChannelSeconds2Bytes(_stream, decodeStartTime / 1000);
             var decodeEndByte = Bass.ChannelSeconds2Bytes(_stream, endTime / 1000);
             var requestedBytes = (int)Math.Min(int.MaxValue, Math.Max(0, decodeEndByte - decodeStartByte));
-            var samples = new float[(requestedBytes + sizeof(float) - 1) / sizeof(float)];
+            var requestedSampleCount = (requestedBytes + sizeof(float) - 1) / sizeof(float);
+            var samples = ArrayPool<float>.Shared.Rent(requestedSampleCount);
 
-            if (!Bass.ChannelSetPosition(_stream, decodeStartByte, PositionFlags.Bytes))
-                throw new InvalidOperationException($"Could not seek waveform chunk {index}: {Bass.LastError}");
-
-            var bytesRead = Bass.ChannelGetData(_stream, samples, requestedBytes);
-
-            if (bytesRead < 0)
-                throw new InvalidOperationException($"Could not decode waveform chunk {index}: {Bass.LastError}");
-
-            var sampleCount = bytesRead / sizeof(float);
-            var textureHeight = Math.Max(1, (int)Math.Ceiling(length));
-            var pixels = new Color[_textureWidth * textureHeight];
-            var leftChannel = Math.Min(_leftChannel, _channelCount - 1);
-            var rightChannel = Math.Min(_rightChannel, _channelCount - 1);
-
-            for (var y = 0; y < textureHeight; y++)
+            try
             {
-                if ((y & 31) == 0)
+                if (!Bass.ChannelSetPosition(_stream, decodeStartByte, PositionFlags.Bytes))
+                    throw new InvalidOperationException($"Could not seek waveform chunk {index}: {Bass.LastError}");
+
+                var bytesRead = Bass.ChannelGetData(_stream, samples, requestedBytes);
+
+                if (bytesRead < 0)
+                    throw new InvalidOperationException($"Could not decode waveform chunk {index}: {Bass.LastError}");
+
+                var sampleCount = bytesRead / sizeof(float);
+                var textureHeight = Math.Max(1, (int)Math.Ceiling(length));
+                var pixelCount = _textureWidth * textureHeight;
+                var pixels = ArrayPool<Color>.Shared.Rent(pixelCount);
+                var pixelOwnershipTransferred = false;
+
+                try
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    Array.Clear(pixels, 0, pixelCount);
+                    var leftChannel = Math.Min(_leftChannel, _channelCount - 1);
+                    var rightChannel = Math.Min(_rightChannel, _channelCount - 1);
 
-                    if (!isStillRequested())
-                        return null;
+                    for (var y = 0; y < textureHeight; y++)
+                    {
+                        if ((y & 31) == 0)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            if (!isStillRequested())
+                                return null;
+                        }
+
+                        var time = Math.Min(endTime, startTime + y);
+                        var sampleByte = Bass.ChannelSeconds2Bytes(_stream, time / 1000);
+                        var sampleIndex = (int)((sampleByte - decodeStartByte) / sizeof(float));
+
+                        if (sampleIndex < 0 || sampleIndex + leftChannel >= sampleCount ||
+                            sampleIndex + rightChannel >= sampleCount)
+                            continue;
+
+                        var leftPoint = (int)Math.Clamp(_textureWidth / 2f -
+                            Math.Abs(samples[sampleIndex + leftChannel] / 1.5f) * 254,
+                            0, _textureWidth / 2f);
+                        var rightPoint = (int)Math.Clamp(_textureWidth / 2f +
+                            Math.Abs(samples[sampleIndex + rightChannel] / 1.5f) * 254,
+                            _textureWidth / 2f, _textureWidth);
+
+                        for (var x = leftPoint; x < rightPoint; x++)
+                            pixels[(textureHeight - y - 1) * _textureWidth + x] = Color.White;
+                    }
+
+                    pixelOwnershipTransferred = true;
+                    return new EditorPlayfieldWaveformChunk(pixels, _textureWidth, textureHeight, startTime, length);
                 }
-
-                var time = Math.Min(endTime, startTime + y);
-                var sampleByte = Bass.ChannelSeconds2Bytes(_stream, time / 1000);
-                var sampleIndex = (int)((sampleByte - decodeStartByte) / sizeof(float));
-
-                if (sampleIndex < 0 || sampleIndex + leftChannel >= sampleCount ||
-                    sampleIndex + rightChannel >= sampleCount)
-                    continue;
-
-                var leftPoint = (int)Math.Clamp(_textureWidth / 2f -
-                    Math.Abs(samples[sampleIndex + leftChannel] / 1.5f) * 254, 0, _textureWidth / 2f);
-                var rightPoint = (int)Math.Clamp(_textureWidth / 2f +
-                    Math.Abs(samples[sampleIndex + rightChannel] / 1.5f) * 254,
-                    _textureWidth / 2f, _textureWidth);
-
-                for (var x = leftPoint; x < rightPoint; x++)
-                    pixels[(textureHeight - y - 1) * _textureWidth + x] = Color.White;
+                finally
+                {
+                    if (!pixelOwnershipTransferred)
+                        ArrayPool<Color>.Shared.Return(pixels);
+                }
             }
-
-            return new EditorPlayfieldWaveformChunk(pixels, _textureWidth, textureHeight, startTime, length);
+            finally
+            {
+                ArrayPool<float>.Shared.Return(samples);
+            }
         }
 
         private EditorPlayfieldWaveformSlice CreateSlice(EditorPlayfieldWaveformChunk chunk)
@@ -163,6 +187,32 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
         }
     }
 
-    internal sealed record EditorPlayfieldWaveformChunk(Color[] Pixels, int Width, int Height, double StartTime,
-        double Length);
+    internal sealed class EditorPlayfieldWaveformChunk : IDisposable
+    {
+        public Color[] Pixels { get; }
+        public int Width { get; }
+        public int Height { get; }
+        public double StartTime { get; }
+        public double Length { get; }
+
+        private bool _isDisposed;
+
+        public EditorPlayfieldWaveformChunk(Color[] pixels, int width, int height, double startTime, double length)
+        {
+            Pixels = pixels;
+            Width = width;
+            Height = height;
+            StartTime = startTime;
+            Length = length;
+        }
+
+        public void Dispose()
+        {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+            ArrayPool<Color>.Shared.Return(Pixels);
+        }
+    }
 }

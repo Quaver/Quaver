@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
             _lengthMilliseconds = length;
 
             _sliceTexture = new Texture2D(GameBase.Game.GraphicsDevice, textureWidth, textureHeight);
-            _sliceTexture.SetData(pixels);
+            _sliceTexture.SetData(pixels, 0, textureWidth * textureHeight);
 
             _sliceSprite = new Sprite
             {
