@@ -1,5 +1,6 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Modifiers;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -81,7 +82,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
         /// </summary>
         public void SlideToDifficultyValue(bool instant = false)
         {
-            var diff = Map.DifficultyFromMods(ModManager.Mods);
+            var diff = PlaylistManager.GetDifficultyForMap(Map);
 
             const int maxDiff = 50;
 
@@ -102,7 +103,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => SlideToDifficultyValue();
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            if (PlaylistManager.IsTournamentPlaylistActive())
+                return;
+
+            SlideToDifficultyValue();
+        }
 
         /// <summary>
         ///     Changes the map this difficulty display represents

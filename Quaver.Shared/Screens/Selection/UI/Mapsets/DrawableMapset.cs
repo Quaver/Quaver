@@ -1,6 +1,7 @@
 using System;
 using Quaver.Server.Client.Events.Scores;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -160,6 +161,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            // Tournament rows use their own persisted modifiers and do not depend on the selected map's global mods.
+            if (PlaylistManager.IsTournamentPlaylistActive())
+                return;
+
+            UpdateContent(Item, Index);
+        }
     }
 }

@@ -379,15 +379,17 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <exception cref="NotImplementedException"></exception>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
+            // Tournament filtering and ordering use each map's persisted modifiers, not the selected map's mods.
+            if (PlaylistManager.IsTournamentPlaylistActive())
+                return;
+
             if (ConfigManager.SelectOrderMapsetsBy == null)
                 return;
 
             if (ConfigManager.SelectOrderMapsetsBy.Value != OrderMapsetsBy.Difficulty)
                 return;
 
-            var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
-                             e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X ||
-                             e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X;
+            var isSpeedMod = (e.ChangedMods & ModIdentifier.SpeedMods) != 0;
 
             if (e.Type == ModChangeType.RemoveAll || e.Type == ModChangeType.RemoveSpeed || isSpeedMod)
                 StartFilterMapsetsTask();

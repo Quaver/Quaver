@@ -149,8 +149,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             if (item.Maps.Count != 0)
             {
-                DifficultyDisplay.ChangeValue(item.Maps.Min(x => x.DifficultyFromMods(ModManager.Mods)),
-                    item.Maps.Max(x => x.DifficultyFromMods(ModManager.Mods)));
+                var difficulties = item.Maps.Select(map => map.DifficultyFromMods(item.IsTournament()
+                    ? (ModIdentifier)item.GetMapModifiers(map)
+                    : ModManager.Mods)).ToList();
+
+                DifficultyDisplay.ChangeValue(difficulties.Min(), difficulties.Max());
             }
             else
                 DifficultyDisplay.ChangeValue(0, 0);

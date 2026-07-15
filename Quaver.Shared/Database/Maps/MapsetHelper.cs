@@ -15,7 +15,6 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
-using Quaver.Shared.Modifiers;
 using Quaver.Shared.Helpers;
 using WilliamQiufeng.SearchParser.AST;
 using WilliamQiufeng.SearchParser.Parsing;
@@ -60,6 +59,8 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery, bool musicPlayer = false)
         {
+            PlaylistManager.PrepareSelectedTournamentDifficulties();
+
             var mapsets = MapManager.Mapsets;
 
             // Handle playlists
@@ -337,7 +338,11 @@ namespace Quaver.Shared.Database.Maps
             else
                 newMapsets = mapsets;
 
-            return newMapsets.OrderBy(x => x.Maps.First().DifficultyFromMods(ModManager.Mods)).ToList();
+            return newMapsets.OrderBy(x =>
+            {
+                var map = x.Maps.First();
+                return PlaylistManager.GetDifficultyForMap(map);
+            }).ToList();
         }
 
         /// <summary>
@@ -684,12 +689,12 @@ namespace Quaver.Shared.Database.Maps
                         _ => 0
                     };
 
-                    return CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, operatorKind, false);
+                    return CompareValues(PlaylistManager.GetDifficultyForMap(map), valDiff, operatorKind, false);
                 case SearchFilterOption.NPS:
                     var valNps = (double)searchQuery.Value.Value!;
                     var objectCount = map.LongNoteCount + map.RegularNoteCount + map.MineCount;
                     var nps = (objectCount /
-                               (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
+                               (map.SongLength / (1000 * ModHelper.GetRateFromMods(PlaylistManager.GetModifiersForMap(map)))));
 
                     return CompareValues(nps, valNps, operatorKind, false);
                 case SearchFilterOption.Length:

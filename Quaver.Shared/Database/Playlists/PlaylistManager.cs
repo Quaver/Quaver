@@ -6,12 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using osu_database_reader.BinaryFiles;
+using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Playlists;
 using Quaver.Shared.Scheduling;
@@ -52,6 +54,57 @@ namespace Quaver.Shared.Database.Playlists
         ///     Event invoked when a playlist's maps have been managed
         /// </summary>
         public static event EventHandler<PlaylistMapsManagedEventArgs> PlaylistMapsManaged;
+
+        /// <summary>
+        ///     Returns if song select is currently browsing a tournament playlist.
+        /// </summary>
+        public static bool IsTournamentPlaylistActive()
+            => ConfigManager.SelectGroupMapsetsBy?.Value == GroupMapsetsBy.Playlists && Selected.Value?.IsTournament() == true;
+
+        /// <summary>
+        ///     Returns if user-driven modifier controls may edit the active tournament playlist settings.
+        /// </summary>
+        public static bool CanEditSelectedTournamentModifiers()
+            => !IsTournamentPlaylistActive() || Selected.Value.IsOwnedByCurrentUser();
+
+        /// <summary>
+        ///     Gets the modifiers a map should use for song-select calculations.
+        /// </summary>
+        public static ModIdentifier GetModifiersForMap(Map map)
+        {
+            var playlist = Selected.Value;
+
+            if (map?.Md5Checksum != null && IsTournamentPlaylistActive() &&
+                playlist.MapModifiers.TryGetValue(map.Md5Checksum, out var modifiers))
+            {
+                return (ModIdentifier)modifiers;
+            }
+
+            return ModManager.Mods;
+        }
+
+        /// <summary>
+        ///     Gets the displayed difficulty for a map, including its fully applied tournament modifiers.
+        /// </summary>
+        public static double GetDifficultyForMap(Map map)
+        {
+            if (map == null)
+                return 0;
+
+            var playlist = Selected.Value;
+
+            return IsTournamentPlaylistActive() ? playlist.GetMapDifficulty(map) :
+                map.DifficultyFromMods(ModManager.Mods);
+        }
+
+        /// <summary>
+        ///     Warms the selected tournament playlist's processed difficulty cache off the update thread.
+        /// </summary>
+        public static void PrepareSelectedTournamentDifficulties()
+        {
+            if (IsTournamentPlaylistActive())
+                Selected.Value.PrepareMapDifficulties();
+        }
 
         /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
@@ -164,7 +217,10 @@ namespace Quaver.Shared.Database.Playlists
                                     (x.PlaylistId == playlist.Id) && (x.Md5 == map.Md5Checksum));
 
                                 if (playlistMap != null)
+                                {
                                     playlistDictionary[playlist.Id].Maps.Add(map);
+                                    playlistDictionary[playlist.Id].MapModifiers[map.Md5Checksum] = playlistMap.Modifiers;
+                                }
                             }
                         }
                     }));
@@ -284,6 +340,7 @@ namespace Quaver.Shared.Database.Playlists
                 Name = $"{playlist.Name} (Copy)",
                 Description = playlist.Description,
                 Creator = playlist.Creator,
+                Type = playlist.Type,
                 OnlineMapPoolId = playlist.OnlineMapPoolId,
                 OnlineMapPoolCreatorId = playlist.OnlineMapPoolCreatorId
             };
@@ -291,7 +348,13 @@ namespace Quaver.Shared.Database.Playlists
             playlist.Maps.ForEach(x => newPlaylist.Maps.Add(x));
 
             AddPlaylist(newPlaylist);
-            ThreadScheduler.Run(() => newPlaylist.Maps.ForEach(x => AddMapToPlaylist(newPlaylist, x)));
+            ThreadScheduler.Run(() => newPlaylist.Maps.ForEach(x =>
+            {
+                AddMapToPlaylist(newPlaylist, x);
+
+                if (newPlaylist.IsTournament())
+                    SetMapModifiers(newPlaylist, x, playlist.GetMapModifiers(x), false);
+            }));
         }
 
         /// <summary>
@@ -386,7 +449,8 @@ namespace Quaver.Shared.Database.Playlists
             var playlistMap = new PlaylistMap()
             {
                 PlaylistId = playlist.Id,
-                Md5 = map.Md5Checksum
+                Md5 = map.Md5Checksum,
+                Modifiers = 0
             };
 
             // Only add the map if it doesn't already exist
@@ -396,7 +460,48 @@ namespace Quaver.Shared.Database.Playlists
             var check = DatabaseManager.Connection.Find<PlaylistMap>(y => y.PlaylistId == playlist.Id && y.Md5 == map.Md5Checksum);
 
             if (check == null)
+            {
                 DatabaseManager.Connection.Insert(playlistMap);
+                playlist.MapModifiers[map.Md5Checksum] = 0;
+            }
+            else
+                playlist.MapModifiers[map.Md5Checksum] = check.Modifiers;
+        }
+
+        /// <summary>
+        ///     Saves the current modifier combination for a map in a tournament playlist.
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="map"></param>
+        /// <param name="modifiers"></param>
+        /// <param name="enforceOwnership"></param>
+        /// <returns></returns>
+        public static bool SetMapModifiers(Playlist playlist, Map map, long modifiers, bool enforceOwnership = true)
+        {
+            if (playlist == null || map?.Md5Checksum == null || !playlist.IsTournament())
+                return false;
+
+            if (enforceOwnership && !playlist.IsOwnedByCurrentUser())
+                return false;
+
+            var playlistMap = DatabaseManager.Connection.Find<PlaylistMap>(x =>
+                x.PlaylistId == playlist.Id && x.Md5 == map.Md5Checksum);
+
+            if (playlistMap == null)
+            {
+                AddMapToPlaylist(playlist, map);
+                playlistMap = DatabaseManager.Connection.Find<PlaylistMap>(x =>
+                    x.PlaylistId == playlist.Id && x.Md5 == map.Md5Checksum);
+            }
+
+            if (playlistMap == null)
+                return false;
+
+            playlistMap.Modifiers = modifiers;
+            DatabaseManager.Connection.Update(playlistMap);
+            playlist.MapModifiers[map.Md5Checksum] = modifiers;
+            playlist.InvalidateMapDifficulty(map);
+            return true;
         }
 
         /// <summary>
@@ -407,6 +512,8 @@ namespace Quaver.Shared.Database.Playlists
         public static void RemoveMapFromPlaylist(Playlist playlist, Map map)
         {
             playlist.Maps.RemoveAll(x => x == map || x.Md5Checksum == map.Md5Checksum);
+            playlist.MapModifiers.Remove(map.Md5Checksum);
+            playlist.InvalidateMapDifficulty(map);
 
             var check = DatabaseManager.Connection.Find<PlaylistMap>(y => y.PlaylistId == playlist.Id && y.Md5 == map.Md5Checksum);
 
@@ -481,6 +588,7 @@ namespace Quaver.Shared.Database.Playlists
             Playlists.ForEach(x =>
             {
                 x.Maps.Remove(map);
+                x.MapModifiers.Remove(map.Md5Checksum);
 
                 try
                 {
@@ -508,7 +616,9 @@ namespace Quaver.Shared.Database.Playlists
                 if (!x.Maps.Contains(outdated))
                     return;
 
+                var modifiers = x.GetMapModifiers(outdated);
                 x.Maps.Remove(outdated);
+                x.MapModifiers.Remove(outdated.Md5Checksum);
 
                 if (!x.Maps.Contains(newMap))
                     x.Maps.Add(newMap);
@@ -521,6 +631,9 @@ namespace Quaver.Shared.Database.Playlists
                         DatabaseManager.Connection.Delete(playlistMap);
 
                     AddMapToPlaylist(x, newMap);
+
+                    if (x.IsTournament())
+                        SetMapModifiers(x, newMap, modifiers, false);
                 }
                 catch (Exception e)
                 {

@@ -461,7 +461,7 @@ namespace Quaver.Shared.Database.Maps
                     var json = JsonConvert.DeserializeObject<Playlist.PlaylistExportMetadata>(File.ReadAllText(metadata));
 
                     var onlineMapPoolId = json.OnlineMapPoolId;
-                    if (onlineMapPoolId > -1)
+                    if (onlineMapPoolId > -1 && json.Type != PlaylistType.Tournament)
                     {
                         PlaylistManager.ImportPlaylist(onlineMapPoolId);
                         return;
@@ -477,17 +477,22 @@ namespace Quaver.Shared.Database.Maps
                             Name = json.Name,
                             Description = json.Description,
                             Creator = json.Creator,
+                            Type = json.Type,
                             OnlineMapPoolId = onlineMapPoolId,
                             OnlineMapPoolCreatorId = json.OnlineMapPoolCreatorId
                         };
                     }
                     else
                     {
+                        playlist.Type = json.Type;
+
                         // Update playlist content to match metadata's content
                         playlist.Maps.Where(m => !json.Maps.Contains(m.Md5Checksum)).ToList().ForEach(m =>
                         {
                             PlaylistManager.RemoveMapFromPlaylist(playlist, m);
                         });
+
+                        PlaylistManager.EditPlaylist(playlist, null, false);
                     }
 
                     foreach (var map in json.Maps)
@@ -508,7 +513,28 @@ namespace Quaver.Shared.Database.Maps
                     if (isNewPlaylist)
                         PlaylistManager.AddPlaylist(playlist);
 
-                    playlist.Maps.ForEach(x => PlaylistManager.AddMapToPlaylist(playlist, x));
+                    var mapModifiers = json.MapModifiers ?? new List<Playlist.PlaylistMapExportMetadata>();
+                    playlist.Maps.ForEach(map =>
+                    {
+                        PlaylistManager.AddMapToPlaylist(playlist, map);
+
+                        if (!playlist.IsTournament())
+                            return;
+
+                        var saved = mapModifiers.Find(x => x.Md5 == map.Md5Checksum);
+                        var modifiers = (ModIdentifier)(saved?.Modifiers ?? 0);
+
+                        // Rate is exported separately for readability and as a fallback for compatible tools.
+                        if (saved != null && Math.Abs(ModHelper.GetRateFromMods(modifiers) - 1f) < 0.001f &&
+                            Math.Abs(saved.Rate - 1f) >= 0.001f)
+                        {
+                            var speedMod = ModHelper.GetModsFromRate(saved.Rate);
+                            if (speedMod != ModIdentifier.None)
+                                modifiers |= speedMod;
+                        }
+
+                        PlaylistManager.SetMapModifiers(playlist, map, (long)modifiers, false);
+                    });
                     importedPlaylist.Add(playlist);
                 }
                 catch (Exception e)

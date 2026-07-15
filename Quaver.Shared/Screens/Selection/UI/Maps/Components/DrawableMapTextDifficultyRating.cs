@@ -1,5 +1,6 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Wobble.Bindables;
@@ -45,7 +46,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components
         /// </summary>
         public void UpdateText() => ScheduleUpdate(() =>
         {
-            var difficulty = Map.DifficultyFromMods(ModManager.Mods);
+            var difficulty = PlaylistManager.GetDifficultyForMap(Map);
 
             Text = StringHelper.RatingToString(difficulty);
             Tint = ColorHelper.DifficultyToColor((float) difficulty);
@@ -78,7 +79,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateText();
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            if (PlaylistManager.IsTournamentPlaylistActive())
+                return;
+
+            UpdateText();
+        }
 
         /// <summary>
         /// </summary>
