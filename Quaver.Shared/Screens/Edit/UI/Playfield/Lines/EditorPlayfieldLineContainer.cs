@@ -16,24 +16,11 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
-using Quaver.Shared.Screens.Edit.Actions.SF.Add;
-using Quaver.Shared.Screens.Edit.Actions.SF.AddBatch;
-using Quaver.Shared.Screens.Edit.Actions.SF.ChangeOffsetBatch;
-using Quaver.Shared.Screens.Edit.Actions.SF.Remove;
-using Quaver.Shared.Screens.Edit.Actions.SF.RemoveBatch;
-using Quaver.Shared.Screens.Edit.Actions.SV.Add;
-using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
-using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
-using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
-using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
-using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Create;
-using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Remove;
-using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -52,6 +39,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private IAudioTrack Track { get; }
 
         private EditorActionManager ActionManager { get; }
+
+        /// <summary>
+        ///     The cached SV/SF graph layer.
+        /// </summary>
+        private EditorPlayfieldScrollGraphCache ScrollGraph { get; }
 
         private List<DrawableEditorLine> Lines { get; set; }
 
@@ -107,19 +99,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Map = map;
             Track = track;
             ActionManager = actionManager;
+            ScrollGraph = new EditorPlayfieldScrollGraphCache(playfield, map);
 
             InitializeTicks();
             Track.Seeked += OnTrackSeeked;
-            ActionManager.ScrollVelocityAdded += OnScrollVelocityAdded;
-            ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
-            ActionManager.ScrollVelocityBatchAdded += OnScrollVelocityBatchAdded;
-            ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
-            ActionManager.ScrollVelocityOffsetBatchChanged += OnScrollVelocityBatchOffsetChanged;
-            ActionManager.ScrollSpeedFactorAdded += OnScrollSpeedFactorAdded;
-            ActionManager.ScrollSpeedFactorRemoved += OnScrollSpeedFactorRemoved;
-            ActionManager.ScrollSpeedFactorBatchAdded += OnScrollSpeedFactorBatchAdded;
-            ActionManager.ScrollSpeedFactorBatchRemoved += OnScrollSpeedFactorBatchRemoved;
-            ActionManager.ScrollSpeedFactorOffsetBatchChanged += OnScrollSpeedFactorBatchOffsetChanged;
+            ActionManager.ScrollVelocityAdded += OnScrollGraphChanged;
+            ActionManager.ScrollVelocityRemoved += OnScrollGraphChanged;
+            ActionManager.ScrollVelocityBatchAdded += OnScrollGraphChanged;
+            ActionManager.ScrollVelocityBatchRemoved += OnScrollGraphChanged;
+            ActionManager.ScrollVelocityOffsetBatchChanged += OnScrollGraphChanged;
+            ActionManager.ScrollVelocityMultiplierBatchChanged += OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorAdded += OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorRemoved += OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorBatchAdded += OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorBatchRemoved += OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorOffsetBatchChanged += OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorMultiplierBatchChanged += OnScrollGraphChanged;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
@@ -132,8 +127,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.BookmarkRemoved += OnBookmarkRemoved;
             ActionManager.BookmarkBatchRemoved += OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
-            ActionManager.TimingGroupCreated += OnTimingGroupCreated;
-            ActionManager.TimingGroupDeleted += OnTimingGroupDeleted;
+            ActionManager.TimingGroupCreated += OnScrollGraphChanged;
+            ActionManager.TimingGroupDeleted += OnScrollGraphChanged;
+            ActionManager.TimingGroupColorChanged += OnScrollGraphChanged;
             RemoveTimer.Tick += RemoveLines;
             RemoveTimer.Start();
         }
@@ -145,6 +141,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public override void Update(GameTime gameTime)
         {
             RemoveTimer.Update(gameTime);
+            ScrollGraph.Update(gameTime);
             UpdateLinePool(gameTime);
             base.Update(gameTime);
         }
@@ -158,6 +155,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             // Skip frame if we're lagging
             if (gameTime.ElapsedGameTime.TotalMilliseconds > 50f && _frameCounter % FrameSkipFactor != 0)
                 return;
+
+            ScrollGraph.Draw(gameTime);
 
             for (var i = 0; i < LinePool.Count; i ++)
             {
@@ -190,18 +189,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 line.Destroy();
 
             PreviewLine?.Destroy();
+            ScrollGraph.Destroy();
 
             Track.Seeked -= OnTrackSeeked;
-            ActionManager.ScrollVelocityAdded -= OnScrollVelocityAdded;
-            ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
-            ActionManager.ScrollVelocityBatchAdded -= OnScrollVelocityBatchAdded;
-            ActionManager.ScrollVelocityBatchRemoved -= OnScrollVelocityBatchRemoved;
-            ActionManager.ScrollVelocityOffsetBatchChanged -= OnScrollVelocityBatchOffsetChanged;
-            ActionManager.ScrollSpeedFactorAdded -= OnScrollSpeedFactorAdded;
-            ActionManager.ScrollSpeedFactorRemoved -= OnScrollSpeedFactorRemoved;
-            ActionManager.ScrollSpeedFactorBatchAdded -= OnScrollSpeedFactorBatchAdded;
-            ActionManager.ScrollSpeedFactorBatchRemoved -= OnScrollSpeedFactorBatchRemoved;
-            ActionManager.ScrollSpeedFactorOffsetBatchChanged -= OnScrollSpeedFactorBatchOffsetChanged;
+            ActionManager.ScrollVelocityAdded -= OnScrollGraphChanged;
+            ActionManager.ScrollVelocityRemoved -= OnScrollGraphChanged;
+            ActionManager.ScrollVelocityBatchAdded -= OnScrollGraphChanged;
+            ActionManager.ScrollVelocityBatchRemoved -= OnScrollGraphChanged;
+            ActionManager.ScrollVelocityOffsetBatchChanged -= OnScrollGraphChanged;
+            ActionManager.ScrollVelocityMultiplierBatchChanged -= OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorAdded -= OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorRemoved -= OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorBatchAdded -= OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorBatchRemoved -= OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorOffsetBatchChanged -= OnScrollGraphChanged;
+            ActionManager.ScrollSpeedFactorMultiplierBatchChanged -= OnScrollGraphChanged;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
@@ -214,15 +216,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.BookmarkRemoved -= OnBookmarkRemoved;
             ActionManager.BookmarkBatchRemoved -= OnBookmarkBatchRemoved;
             ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
-            ActionManager.TimingGroupCreated -= OnTimingGroupCreated;
-            ActionManager.TimingGroupDeleted -= OnTimingGroupDeleted;
+            ActionManager.TimingGroupCreated -= OnScrollGraphChanged;
+            ActionManager.TimingGroupDeleted -= OnScrollGraphChanged;
+            ActionManager.TimingGroupColorChanged -= OnScrollGraphChanged;
             RemoveTimer.Tick -= RemoveLines;
             
             base.Destroy();
         }
         
         /// <summary>
-        ///     Initializes and positions all the timing point/sv lines
+        ///     Initializes and positions the non-cached editor lines
         /// </summary>
         private void InitializeTicks()
         {
@@ -231,21 +234,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             foreach (var timingPointInfo in Map.TimingPoints)
             {
                 Lines.Add(new DrawableEditorLineTimingPoint(Playfield, timingPointInfo));
-            }
-
-            foreach (var (id, timingGroup) in Map.TimingGroups)
-            {
-                if (timingGroup is ScrollGroup scrollGroup)
-                {
-                    foreach (var scrollVelocity in scrollGroup.ScrollVelocities)
-                    {
-                        Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, scrollVelocity, timingGroup));
-                    }
-                    foreach (var scrollSpeedFactorInfo in scrollGroup.ScrollSpeedFactors)
-                    {
-                        Lines.Add(new DrawableEditorLineScrollSpeedFactor(Playfield, scrollSpeedFactorInfo, timingGroup));
-                    }
-                }
             }
 
             foreach (var bookmark in Map.Bookmarks)
@@ -335,121 +323,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             }
         }
 
-        private void OnTrackSeeked(object sender, TrackSeekedEventArgs e) => InitializeLinePool();
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollVelocityAdded(object sender, EditorScrollVelocityAddedEventArgs e)
+        private void OnTrackSeeked(object sender, TrackSeekedEventArgs e)
         {
-            Lines.InsertSorted(new DrawableEditorLineScrollVelocity(Playfield, e.ScrollVelocity, e.TimingGroup));
             InitializeLinePool();
+            ScrollGraph.Invalidate(true);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollVelocityBatchAdded(object sender, EditorScrollVelocityBatchAddedEventArgs e)
-        {
-            Lines.InsertSorted(e.ScrollVelocities.Select(sv => new DrawableEditorLineScrollVelocity(Playfield, sv, e.ScrollGroup)));
-            InitializeLinePool();
-        }
+        private void OnScrollGraphChanged(object sender, EventArgs e) => ScrollGraph.Invalidate();
 
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollVelocityRemoved(object sender, EditorScrollVelocityRemovedEventArgs e)
-        {
-            Lines.RemoveAll(x =>
-            {
-                var found = x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == e.ScrollVelocity;
-                
-                if (found)
-                    x.Destroy();
-
-                return found;
-            });
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollVelocityBatchRemoved(object sender, EditorScrollVelocityBatchRemovedEventArgs e)
-        {
-            Lines.RemoveAll(x =>
-            {
-                var found = x is DrawableEditorLineScrollVelocity line && e.ScrollVelocities.Contains(line.ScrollVelocity);
-
-                if (found)
-                    x.Destroy();
-
-                return found;
-            });
-            
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollSpeedFactorAdded(object sender, EditorScrollSpeedFactorAddedEventArgs e)
-        {
-            Lines.InsertSorted(new DrawableEditorLineScrollSpeedFactor(Playfield, e.ScrollSpeedFactor, e.ScrollGroup));
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollSpeedFactorBatchAdded(object sender, EditorScrollSpeedFactorBatchAddedEventArgs e)
-        {
-            Lines.InsertSorted(e.ScrollSpeedFactors.Select(sv => new DrawableEditorLineScrollSpeedFactor(Playfield, sv, e.ScrollGroup)));
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollSpeedFactorRemoved(object sender, EditorScrollSpeedFactorRemovedEventArgs e)
-        {
-            Lines.RemoveAll(x =>
-            {
-                var found = x is DrawableEditorLineScrollSpeedFactor line && line.ScrollSpeedFactor == e.ScrollSpeedFactor;
-                
-                if (found)
-                    x.Destroy();
-
-                return found;
-            });
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollSpeedFactorBatchRemoved(object sender, EditorScrollSpeedFactorBatchRemovedEventArgs e)
-        {
-            Lines.RemoveAll(x =>
-            {
-                var found = x is DrawableEditorLineScrollSpeedFactor line && e.ScrollSpeedFactors.Contains(line.ScrollSpeedFactor);
-
-                if (found)
-                    x.Destroy();
-
-                return found;
-            });
-            
-            InitializeLinePool();
-        }
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
@@ -475,26 +356,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e)
-        {
-            Lines.HybridSort();
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollVelocityBatchOffsetChanged(object sender, EditorChangedScrollVelocityOffsetBatchEventArgs e)
-        {
-            Lines.HybridSort();
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScrollSpeedFactorBatchOffsetChanged(object sender, EditorChangedScrollSpeedFactorOffsetBatchEventArgs e)
         {
             Lines.HybridSort();
             InitializeLinePool();
@@ -606,25 +467,5 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             InitializeLinePool();
         }
 
-        private void OnTimingGroupDeleted(object sender, EditorTimingGroupRemovedEventArgs e)
-        {
-            if (e.TimingGroup is not ScrollGroup scrollGroup)
-                return;
-
-            Lines.RemoveAll(l =>
-                l is DrawableEditorLineScrollVelocity { ScrollVelocity: var sv } &&
-                scrollGroup.ScrollVelocities.Contains(sv));
-            InitializeLinePool();
-        }
-
-        private void OnTimingGroupCreated(object sender, EditorTimingGroupCreatedEventArgs e)
-        {
-            if (e.TimingGroup is not ScrollGroup scrollGroup)
-                return;
-
-            Lines.InsertSorted(scrollGroup.ScrollVelocities.Select(sv =>
-                new DrawableEditorLineScrollVelocity(Playfield, sv, scrollGroup)));
-            InitializeLinePool();
-        }
     }
 }
