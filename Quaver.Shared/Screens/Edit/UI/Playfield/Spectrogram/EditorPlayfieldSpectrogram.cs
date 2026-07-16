@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Spectrogram
     public class EditorPlayfieldSpectrogram : Container
     {
         private const double TargetChunkLengthMilliseconds = 500;
-        private const int PrefetchChunkCount = 2;
+        private const int PrefetchChunkCount = 3;
         private const double DecoderPreRollMilliseconds = 100;
 
         private readonly EditorPlayfield _playfield;
