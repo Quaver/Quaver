@@ -42,6 +42,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private List<DrawableEditorLine> Lines { get; set; }
 
         /// <summary>
+        ///     Bookmark lines own globally registered buttons and subscribed text drawables, unlike ordinary timing
+        ///     and scroll lines, so only these lines require explicit destruction.
+        /// </summary>
+        private List<DrawableEditorLineBookmark> BookmarkLines { get; } = new List<DrawableEditorLineBookmark>();
+
+        /// <summary>
         ///     The lines that are visible and ready to be drawn to the screen
         /// </summary>
         private List<DrawableEditorLine> LinePool { get; set; }
@@ -173,7 +179,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// </summary>
         public override void Destroy()
         {
-            foreach (var line in Lines)
+            foreach (var line in BookmarkLines)
                 line.Destroy();
 
             PreviewLine?.Destroy();
@@ -220,7 +226,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Lines = new List<DrawableEditorLine>();
 
             foreach (var bookmark in Map.Bookmarks)
-                Lines.Add(new DrawableEditorLineBookmark(Playfield, bookmark));
+            {
+                var line = new DrawableEditorLineBookmark(Playfield, bookmark);
+                BookmarkLines.Add(line);
+                Lines.Add(line);
+            }
             
             PreviewLine = new DrawableEditorLinePreview(Playfield, Map.SongPreviewTime);
 
@@ -318,21 +328,30 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         
         private void OnBookmarkAdded(object sender, EditorActionBookmarkAddedEventArgs e)
         {
-            Lines.InsertSorted(new DrawableEditorLineBookmark(Playfield, e.Bookmark));
+            var line = new DrawableEditorLineBookmark(Playfield, e.Bookmark);
+            BookmarkLines.Add(line);
+            Lines.InsertSorted(line);
             InitializeLinePool();
         }
         
         private void OnBookmarkBatchAdded(object sender, EditorActionBookmarkBatchAddedEventArgs e)
         {
-            Lines.InsertSorted(e.Bookmarks.Select(bookmark => new DrawableEditorLineBookmark(Playfield, bookmark)));
+            var lines = e.Bookmarks.Select(bookmark => new DrawableEditorLineBookmark(Playfield, bookmark)).ToList();
+            BookmarkLines.AddRange(lines);
+            Lines.InsertSorted(lines);
             InitializeLinePool();
         }
         
         private void OnBookmarkRemoved(object sender, EditorActionBookmarkRemovedEventArgs e)
         {
             var line = Lines.Find(x => x is DrawableEditorLineBookmark line && line.Bookmark == e.Bookmark);
+
+            if (line == null)
+                return;
+
             line.Destroy();
             Lines.Remove(line);
+            BookmarkLines.Remove((DrawableEditorLineBookmark)line);
             InitializeLinePool();
         }
         
@@ -343,7 +362,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 var found = x is DrawableEditorLineBookmark line && e.Bookmarks.Contains(line.Bookmark);
 
                 if (found)
+                {
                     x.Destroy();
+                    BookmarkLines.Remove((DrawableEditorLineBookmark)x);
+                }
 
                 return found;
             });
