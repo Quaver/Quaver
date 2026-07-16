@@ -326,8 +326,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                     Name = Name.Textbox.RawText,
                     Creator = ConfigManager.Username.Value ?? "Player",
                     Description = Description.Textbox.RawText,
-                    Type = (PlaylistType)PlaylistTypeDropdown.Dropdown.SelectedIndex,
-                    OnlineMapPoolCreatorId = OnlineManager.Self?.OnlineUser.Id ?? -1
+                    Type = (PlaylistType)PlaylistTypeDropdown.Dropdown.SelectedIndex
                 };
 
                 PlaylistManager.AddPlaylist(playlist, BannerPath);

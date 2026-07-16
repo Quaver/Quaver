@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                         DialogManager.Show(new UploadPlaylistConfirmationDialog(Playlist));
                         break;
                     case Copy:
-                        PlaylistManager.CopyPlaylist(Playlist);
+                        DialogManager.Show(new CopyPlaylistDialog(Playlist));
                         break;
                 }
             };

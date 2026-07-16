@@ -180,7 +180,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <returns></returns>
         protected bool CanActivateMultiplayerMod()
         {
-            if (!PlaylistManager.CanEditSelectedTournamentModifiers() && !(Mod is ModJudgementWindows))
+            if (!PlaylistManager.CanToggleSelectedTournamentModifier(Mod.ModIdentifier) && !(Mod is ModJudgementWindows))
                 return false;
 
             var game = OnlineManager.CurrentGame;

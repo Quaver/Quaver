@@ -93,6 +93,12 @@ namespace Quaver.Shared.Database.Playlists
                                                                       ModIdentifier.Mirror;
 
         /// <summary>
+        ///     Player-side modifiers that should not be persisted as tournament map modifiers.
+        /// </summary>
+        public const ModIdentifier PlayerControlledTournamentModifiers = ModIdentifier.Mirror |
+                                                                         ModIdentifier.NoMiss;
+
+        /// <summary>
         ///     The game the playlist is from
         /// </summary>
         [Ignore]
@@ -118,7 +124,7 @@ namespace Quaver.Shared.Database.Playlists
             if (PlaylistGame != MapGame.Quaver)
                 return false;
 
-            if (OnlineMapPoolCreatorId != -1)
+            if (IsOnlineMapPool() && OnlineMapPoolCreatorId != -1)
                 return OnlineMapPoolCreatorId == OnlineManager.Self?.OnlineUser.Id;
 
             return string.Equals(Creator?.Trim(), ConfigManager.Username?.Value?.Trim(),
@@ -133,7 +139,10 @@ namespace Quaver.Shared.Database.Playlists
             if (map?.Md5Checksum == null)
                 return 0;
 
-            return MapModifiers.TryGetValue(map.Md5Checksum, out var modifiers) ? modifiers : 0;
+            if (!MapModifiers.TryGetValue(map.Md5Checksum, out var modifiers))
+                return 0;
+
+            return IsTournament() ? modifiers & ~(long)PlayerControlledTournamentModifiers : modifiers;
         }
 
         /// <summary>

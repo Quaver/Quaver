@@ -534,6 +534,11 @@ namespace Quaver.Shared.Modifiers
         public static void FireModsChangedEvent() => ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Add, Mods, Mods));
 
         /// <summary>
+        ///     Synchronizes the current modifiers to the multiplayer lobby without changing the local modifier state.
+        /// </summary>
+        public static void SyncMultiplayerMods() => UpdateMultiplayerMods();
+
+        /// <summary>
         ///     Gets a texture for an individual mod
         /// </summary>
         /// <param name="mod"></param>

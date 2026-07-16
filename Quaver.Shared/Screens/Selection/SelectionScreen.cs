@@ -483,7 +483,7 @@ namespace Quaver.Shared.Screens.Selection
                 ModManager.RemoveAllMods();
 
             // Toggle Mirror
-            if (canEditTournamentModifiers &&
+            if (PlaylistManager.CanToggleSelectedTournamentModifier(ModIdentifier.Mirror) &&
                 KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
             {
                 if (ModManager.IsActivated(ModIdentifier.Mirror))
@@ -796,8 +796,10 @@ namespace Quaver.Shared.Screens.Selection
 
             ThreadScheduler.Run(() =>
             {
+                SyncTournamentPlaylistMultiplayerMods();
+
                 OnlineManager.Client.ChangeMultiplayerGameMap(map.Md5Checksum, map.MapId,
-                    map.MapSetId, map.ToString(), (byte)map.Mode, map.DifficultyFromMods(ModManager.Mods),
+                    map.MapSetId, map.ToString(), (byte)map.Mode, PlaylistManager.GetDifficultyForMap(map),
                     map.GetDifficultyRatings(), map.GetJudgementCount(), MapManager.Selected.Value.GetAlternativeMd5());
 
                 OnlineManager.Client.SetGameCurrentlySelectingMap(false);
@@ -807,11 +809,24 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
+        ///     Syncs tournament playlist modifiers to the multiplayer lobby when the host confirms the selected map.
+        /// </summary>
+        private static void SyncTournamentPlaylistMultiplayerMods()
+        {
+            var game = OnlineManager.CurrentGame;
+
+            if (!PlaylistManager.IsTournamentPlaylistActive() || game?.HostId != OnlineManager.Self?.OnlineUser?.Id)
+                return;
+
+            ModManager.SyncMultiplayerMods();
+        }
+
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         private bool CheckMultiplayerDifficultyRange()
         {
-            var diff = MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
+            var diff = PlaylistManager.GetDifficultyForMap(MapManager.Selected.Value);
 
             // Prevent host from picking a map not within difficulty range
             if (diff < OnlineManager.CurrentGame.MinimumDifficultyRating || diff > OnlineManager.CurrentGame.MaximumDifficultyRating)
@@ -1040,7 +1055,7 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
-            ModManager.ReplaceMods((ModIdentifier)playlist.GetMapModifiers(map));
+            ModManager.ReplaceMods((ModIdentifier)playlist.GetMapModifiers(map) | GetPlayerControlledTournamentModifiers());
             TournamentPlaylistModifiersApplied = true;
         }
 
@@ -1052,9 +1067,16 @@ namespace Quaver.Shared.Screens.Selection
             if (!TournamentPlaylistModifiersApplied)
                 return;
 
-            ModManager.ReplaceMods(0);
+            ModManager.ReplaceMods(GetPlayerControlledTournamentModifiers());
             TournamentPlaylistModifiersApplied = false;
         }
+
+        /// <summary>
+        ///     Gets player-side modifiers that are allowed while browsing tournament playlists, but are not saved per-map.
+        /// </summary>
+        /// <returns></returns>
+        private static ModIdentifier GetPlayerControlledTournamentModifiers()
+            => ModManager.Mods & Playlist.PlayerControlledTournamentModifiers;
 
         /// <summary>
         ///     Re-evaluates tournament modifiers when the selected playlist changes.

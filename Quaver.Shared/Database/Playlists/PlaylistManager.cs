@@ -18,6 +18,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Playlists;
 using Quaver.Shared.Scheduling;
 using SQLite;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Logging;
 
@@ -66,6 +67,16 @@ namespace Quaver.Shared.Database.Playlists
         /// </summary>
         public static bool CanEditSelectedTournamentModifiers()
             => !IsTournamentPlaylistActive() || Selected.Value.IsOwnedByCurrentUser();
+
+        /// <summary>
+        ///     Returns if a user-driven modifier control may toggle a modifier while browsing the active tournament playlist.
+        /// </summary>
+        /// <param name="modIdentifier"></param>
+        /// <returns></returns>
+        public static bool CanToggleSelectedTournamentModifier(ModIdentifier modIdentifier)
+            => CanEditSelectedTournamentModifiers() ||
+               (IsTournamentPlaylistActive() && modIdentifier != ModIdentifier.None &&
+                (modIdentifier & Playlist.PlayerControlledTournamentModifiers) == modIdentifier);
 
         /// <summary>
         ///     Gets the modifiers a map should use for song-select calculations.
@@ -300,7 +311,7 @@ namespace Quaver.Shared.Database.Playlists
         ///     Adds a playlist to the database
         /// </summary>
         /// <param name="playlist"></param>
-        public static int AddPlaylist(Playlist playlist, string bannerPath = null)
+        public static int AddPlaylist(Playlist playlist, string bannerPath = null, bool select = true, bool emitEvent = true)
         {
             var id = -1;
 
@@ -322,9 +333,11 @@ namespace Quaver.Shared.Database.Playlists
                     Playlists.Add(playlist);
 
                 Playlists = Playlists.OrderBy(x => x.PlaylistGame).ThenBy(x => x.Name).ToList();
-                Selected.Value = playlist;
+                if (select)
+                    Selected.Value = playlist;
 
-                PlaylistCreated?.Invoke(typeof(PlaylistManager), new PlaylistCreatedEventArgs(playlist));
+                if (emitEvent)
+                    InvokePlaylistCreatedEvent(playlist);
             }
 
             return id;
@@ -333,28 +346,33 @@ namespace Quaver.Shared.Database.Playlists
         /// <summary>
         /// </summary>
         /// <param name="playlist"></param>
-        public static void CopyPlaylist(Playlist playlist)
+        public static void CopyPlaylist(Playlist playlist, PlaylistType type)
         {
             var newPlaylist = new Playlist()
             {
                 Name = $"{playlist.Name} (Copy)",
                 Description = playlist.Description,
                 Creator = playlist.Creator,
-                Type = playlist.Type,
+                Type = type,
                 OnlineMapPoolId = playlist.OnlineMapPoolId,
                 OnlineMapPoolCreatorId = playlist.OnlineMapPoolCreatorId
             };
 
             playlist.Maps.ForEach(x => newPlaylist.Maps.Add(x));
 
-            AddPlaylist(newPlaylist);
-            ThreadScheduler.Run(() => newPlaylist.Maps.ForEach(x =>
+            AddPlaylist(newPlaylist, null, false, false);
+            ThreadScheduler.Run(() =>
             {
-                AddMapToPlaylist(newPlaylist, x);
+                newPlaylist.Maps.ForEach(x =>
+                {
+                    AddMapToPlaylist(newPlaylist, x);
 
-                if (newPlaylist.IsTournament())
-                    SetMapModifiers(newPlaylist, x, playlist.GetMapModifiers(x), false);
-            }));
+                    if (newPlaylist.IsTournament())
+                        SetMapModifiers(newPlaylist, x, playlist.GetMapModifiers(x), false);
+                });
+
+                SelectAndNotifyCopiedPlaylist(newPlaylist);
+            });
         }
 
         /// <summary>
@@ -496,6 +514,8 @@ namespace Quaver.Shared.Database.Playlists
 
             if (playlistMap == null)
                 return false;
+
+            modifiers &= ~(long)Playlist.PlayerControlledTournamentModifiers;
 
             playlistMap.Modifiers = modifiers;
             DatabaseManager.Connection.Update(playlistMap);
@@ -710,6 +730,38 @@ namespace Quaver.Shared.Database.Playlists
         /// <param name="playlist"></param>
         public static void InvokePlaylistMapsManagedEvent(Playlist playlist)
             => PlaylistMapsManaged?.Invoke(typeof(PlaylistManager), new PlaylistMapsManagedEventArgs(playlist));
+
+        /// <summary>
+        ///     Manually invokes an event that a playlist has been created.
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static void InvokePlaylistCreatedEvent(Playlist playlist)
+            => PlaylistCreated?.Invoke(typeof(PlaylistManager), new PlaylistCreatedEventArgs(playlist));
+
+        /// <summary>
+        ///     Selects a copied playlist and notifies UI listeners from the update thread.
+        /// </summary>
+        /// <param name="playlist"></param>
+        private static void SelectAndNotifyCopiedPlaylist(Playlist playlist)
+        {
+            void Notify()
+            {
+                Selected.Value = playlist;
+                InvokePlaylistCreatedEvent(playlist);
+                InvokePlaylistMapsManagedEvent(playlist);
+            }
+
+            var game = GameBase.Game as QuaverGame;
+
+            if (game?.CurrentScreen?.View?.Container == null ||
+                System.Threading.Thread.CurrentThread.ManagedThreadId == game.MainThreadId)
+            {
+                Notify();
+                return;
+            }
+
+            game.CurrentScreen.View.Container.AddScheduledUpdate(Notify);
+        }
 
         /// <summary>
         ///     Copies a banner path to the correct directory
