@@ -200,15 +200,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // Update Playfield
                 var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
 
-                // Get hit burst lane
-                var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
-
                 if (ReplayInputManager == null)
                 {
                     playfield.Stage.ComboDisplay.MakeVisible();
                     playfield.Stage.HitError.AddJudgement(Judgement.Miss, info.StartTime - time);
                     playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
-                    playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+                    playfield.Stage.PerformJudgementHitBurstAnimation(lane, Judgement.Miss);
                 }
 
                 // Update Object Pooling
@@ -270,15 +267,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Update Playfield
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
 
-            // Get hit burst lane
-            var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
-
             if (ReplayInputManager == null)
             {
                 playfield.Stage.ComboDisplay.MakeVisible();
                 playfield.Stage.HitError.AddJudgement(judgement, info.StartTime - time);
                 playfield.Stage.HitBubbles.AddJudgement(judgement);
-                playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(judgement);
+                playfield.Stage.PerformJudgementHitBurstAnimation(lane, judgement);
             }
 
             // Update Object Pooling
@@ -305,7 +299,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                         view.UpdateScoreboardUsers();
                         view.UpdateScoreAndAccuracyDisplays();
                         playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
-                        playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+                        playfield.Stage.PerformJudgementHitBurstAnimation(lane, Judgement.Miss);
                     }
 
                     info.State = HitObjectState.Dead;
@@ -351,9 +345,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             var view = (GameplayScreenView)Ruleset.Screen.View;
 
-            // Get hit burst lane
-            var judgementHitBurstLane = Math.Clamp(lane, 0, playfield.Stage.JudgementHitBursts.Count - 1);
-
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
@@ -387,7 +378,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     playfield.Stage.ComboDisplay.MakeVisible();
                     playfield.Stage.HitError.AddJudgement(judgement, info.EndTime - time);
                     playfield.Stage.HitBubbles.AddJudgement(judgement);
-                    playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(judgement);
+                    playfield.Stage.PerformJudgementHitBurstAnimation(lane, judgement);
                 }
 
                 // play hitlighting animation on release
@@ -430,7 +421,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (ReplayInputManager == null)
             {
                 playfield.Stage.HitBubbles.AddJudgement(Judgement.Miss);
-                playfield.Stage.JudgementHitBursts[judgementHitBurstLane].PerformJudgementAnimation(Judgement.Miss);
+                playfield.Stage.PerformJudgementHitBurstAnimation(lane, Judgement.Miss);
             }
 
             // Update Object Pool

@@ -124,9 +124,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public HitBubbles HitBubbles { get; private set; }
 
         /// <summary>
-        ///     The JudgementHitBurst Sprite.
+        ///     The per-column JudgementHitBurst sprites, used for the judgements configured in
+        ///     <see cref="SkinKeys.DisplayJudgementsInEachColumn"/>. Empty when that value is
+        ///     <see cref="JudgementsInEachColumn.False"/>.
         /// </summary>
         public List<JudgementHitBurst> JudgementHitBursts { get; private set; }
+
+        /// <summary>
+        ///     The normal, centered JudgementHitBurst sprite, shown when
+        ///     <see cref="SkinKeys.DisplayJudgementHitBursts"/> is true.
+        /// </summary>
+        public JudgementHitBurst NormalJudgementHitBurst { get; private set; }
 
         /// <summary>
         ///     When hitting an object, this is the sprite that will be shown at
@@ -602,10 +610,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Set size w/ scaling.
             var size = new Vector2(firstFrame.Width, firstFrame.Height) * Skin.JudgementHitBurstScale / firstFrame.Height;
 
-            var judgementBurstCount = skin.DisplayJudgementsInEachColumn ?
-                Screen.Map.GetKeyCount(Screen.Map.HasScratchKey) : 1;
+            NormalJudgementHitBurst = new JudgementHitBurst(Screen, frames, size, Skin.JudgementBurstPosY)
+            {
+                Parent = Playfield.ForegroundContainer,
+                Alignment = Alignment.MidCenter,
+                X = 0
+            };
+
+            if (skin.DisplayJudgementsInEachColumn == JudgementsInEachColumn.False)
+                return;
 
             var playfieldOffset = (Playfield.Width / 2) - (Playfield.LaneSize / 2);
+            var judgementBurstCount = Screen.Map.GetKeyCount(Screen.Map.HasScratchKey);
 
             for (var lane = 0; lane < judgementBurstCount; lane++)
             {
@@ -613,14 +629,37 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     Parent = Playfield.ForegroundContainer,
                     Alignment = Alignment.MidCenter,
-                    X = skin.DisplayJudgementsInEachColumn ? Receptors[lane].X - playfieldOffset : 0
+                    X = Receptors[lane].X - playfieldOffset
                 };
 
-                if (skin.RotateJudgements && skin.DisplayJudgementsInEachColumn)
+                if (skin.RotateJudgements)
                     judgementHitBurst.Rotation = GameplayHitObjectKeys.GetObjectRotation(Screen.Map.Mode, lane);
 
                 JudgementHitBursts.Add(judgementHitBurst);
             }
+        }
+
+        /// <summary>
+        ///     Performs the judgement hit burst animation for a given lane, dispatching to either
+        ///     the per-column hit burst (if the judgement is configured to show in
+        ///     <see cref="SkinKeys.DisplayJudgementsInEachColumn"/>) or the normal (centered) hit
+        ///     burst (if <see cref="SkinKeys.DisplayJudgementHitBursts"/> is true) never both.
+        /// </summary>
+        /// <param name="lane">Zero-indexed lane the judgement occurred in.</param>
+        /// <param name="judgement">The judgement to animate.</param>
+        public void PerformJudgementHitBurstAnimation(int lane, Judgement judgement)
+        {
+            var judgementFlag = (JudgementsInEachColumn)(1 << (int)judgement);
+
+            if (JudgementHitBursts.Count != 0 && Skin.DisplayJudgementsInEachColumn.HasFlag(judgementFlag))
+            {
+                var index = Math.Clamp(lane, 0, JudgementHitBursts.Count - 1);
+                JudgementHitBursts[index].PerformJudgementAnimation(judgement);
+                return;
+            }
+
+            if (Skin.DisplayJudgementHitBursts)
+                NormalJudgementHitBurst.PerformJudgementAnimation(judgement);
         }
 
         /// <summary>
