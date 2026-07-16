@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.Shared.Screens.Options.Sections
@@ -12,7 +13,15 @@ namespace Quaver.Shared.Screens.Options.Sections
 
         /// <summary>
         /// </summary>
+        public Vector2? IconSize { get; }
+
+        /// <summary>
+        /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// </summary>
+        public string LocalizationLabel { get; }
 
         /// <summary>
         /// </summary>
@@ -23,10 +32,12 @@ namespace Quaver.Shared.Screens.Options.Sections
         /// <param name="name"></param>
         /// <param name="icon"></param>
         /// <param name="subcategories"></param>
-        public OptionsSection(string name, Texture2D icon, List<OptionsSubcategory> subcategories)
+        public OptionsSection(string name, Texture2D icon, List<OptionsSubcategory> subcategories, Vector2? iconSize = null)
         {
-            Name = name;
+            LocalizationLabel = name;
+            Name = OptionsLocalization.Get(name);
             Icon = icon;
+            IconSize = iconSize;
             Subcategories = subcategories;
         }
     }

@@ -27,14 +27,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             const int spacing = 12;
 
-            Max = new DownloadFilterItemBpmTextbox("Max BPM", max)
+            Max = new DownloadFilterItemBpmTextbox("Max", max)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X
             };
 
-            Min = new DownloadFilterItemBpmTextbox("Min BPM", min)
+            Min = new DownloadFilterItemBpmTextbox("Min", min)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -49,8 +49,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// </summary>
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
-        public DownloadFilterItemBpmTextbox(string placeholder, BindableFloat bindable) : base(FontManager.GetWobbleFont(Fonts.LatoBlack),
-            22, "", placeholder)
+        public DownloadFilterItemBpmTextbox(string placeholder, BindableFloat bindable) : base(FontManager.GetWobbleFont(Fonts.InterSemiBold),
+            20, "", placeholder)
         {
             AllowedCharacters = new Regex(@"^(?!.*\..*\.)[.\d]+$");
 

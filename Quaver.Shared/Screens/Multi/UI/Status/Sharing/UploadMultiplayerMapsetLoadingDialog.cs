@@ -11,8 +11,8 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
 {
     public class UploadMultiplayerMapsetLoadingDialog : LoadingDialog
     {
-        public UploadMultiplayerMapsetLoadingDialog() : base("UPLOADING UNSUBMITTED MAPSET",
-            "Please wait while the mapset is being uploaded...", () =>
+        public UploadMultiplayerMapsetLoadingDialog() : base(MultiLocalization.Get("UploadingUnsubmittedMapsetTitle"),
+            MultiLocalization.Get("UploadingUnsubmittedMapsetMessage"), () =>
             {
                 try
                 {
@@ -38,12 +38,12 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
                         Logger.Error(ex, LogType.Runtime);
                     }
 
-                    var log = $"Successfully uploaded unsubmitted mapset for the multiplayer game!";
+                    var log = MultiLocalization.Get("SuccessfullyUploadedUnsubmittedMapset");
                     NotificationManager.Show(NotificationLevel.Success, log);
                 }
                 catch (Exception e)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "There was an error while uploading the mapset.");
+                    NotificationManager.Show(NotificationLevel.Error, MultiLocalization.Get("UploadMapsetError"));
                     Logger.Error(e, LogType.Network);
                 }
             })

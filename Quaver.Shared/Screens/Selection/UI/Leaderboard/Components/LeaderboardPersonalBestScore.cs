@@ -113,7 +113,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateNoPersonalBestScoreText()
         {
-            NoPersonalBestScore = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "NO PERSONAL BEST SET", 20)
+            NoPersonalBestScore = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), SelectionLocalization.Get("No Personal Best Set"), 16)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

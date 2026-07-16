@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     public class OptionsItemDefaultSkin : OptionsItemDropdown
     {
         public OptionsItemDefaultSkin(RectangleF containerRect, string name, Bindable<DefaultSkins> skin) : base(containerRect, name,
-            new Dropdown(GetOptions(), new ScalableVector2(300, 35), 22,
+            new Dropdown(GetOptions(), new ScalableVector2(300, 35), 20,
                 Colors.MainAccent, GetSelectedIndex(skin), 240))
         {
             Dropdown.ItemSelected += (sender, args) =>

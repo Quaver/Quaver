@@ -17,9 +17,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 ClickAction = () => checkbox?.FireButtonClickEvent();
         }
 
-        public override string GetName() => "Auto Host";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("AutoHost");
 
-        public override string GetValue() => SelectedGame.Value.IsAutoHost ? "Yes" : "No";
+        public override string GetValue() => SelectedGame.Value.IsAutoHost ? MultiplayerLobbyLocalization.Get("Yes") : MultiplayerLobbyLocalization.Get("No");
     }
 
     public class MultiplayerAutoHostCheckbox : QuaverCheckbox

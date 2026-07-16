@@ -14,6 +14,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Input;
 using Wobble.Managers;
 
@@ -21,10 +22,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 {
     public class SelectableModifier : Button
     {
-        /// <summary>
-        /// </summary>
-        public ModifierSelector Selector { get; set; }
-
         /// <summary>
         /// </summary>
         public IGameplayModifier Mod { get; }
@@ -39,7 +36,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 
         /// <summary>
         /// </summary>
-        public Tooltip Tooltip { get; }
+        private IDisposable TooltipRegistration { get; }
 
         /// <summary>
         /// </summary>
@@ -71,7 +68,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), mod.Name.ToUpper(), 22)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), mod.Name.ToUpper(), 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -80,17 +77,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 Tint = Mod.ModColor
             };
 
-            Tooltip = new Tooltip(mod.Description, mod.ModColor);
-
-            Hovered += (sender, args) => Selector?.ActivateTooltip(Tooltip);
-
-            LeftHover += (sender, args) =>
+            TooltipRegistration = this.AddTooltip(new TooltipOptions(mod.Description)
             {
-                if (Selector == null)
-                    return;
-
-                Selector.DeactivateTooltip();
-            };
+                HoverDelayMilliseconds = 350,
+                Style = new TooltipStyle
+                {
+                    BackgroundColor = ColorHelper.HexToColor("#161616"),
+                    BorderColor = mod.ModColor,
+                    BorderThickness = 2,
+                    TextSize = 20,
+                    TextWeight = FontWeight.Bold
+                }
+            });
 
             Clicked += (sender, args) =>
             {
@@ -128,7 +126,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// </summary>
         public override void Destroy()
         {
-            Tooltip.Destroy();
+            TooltipRegistration.Dispose();
             ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();

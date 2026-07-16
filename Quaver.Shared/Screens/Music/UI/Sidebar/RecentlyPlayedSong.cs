@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             Map = map;
             Alpha = 0;
 
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22) { Parent = this };
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22) { Parent = this };
             SetMap(Map);
 
             Clicked += (sender, args) =>

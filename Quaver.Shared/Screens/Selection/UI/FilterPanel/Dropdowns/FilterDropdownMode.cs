@@ -7,6 +7,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -23,8 +24,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <summary>
         /// </summary>
         /// <param name="availableMapsets"></param>
-        public FilterDropdownMode(Bindable<List<Mapset>> availableMapsets) : base("MODE: ", 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(120, 38), 22, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
+        public FilterDropdownMode(Bindable<List<Mapset>> availableMapsets) : base(SelectionLocalization.Get("Mode:"), 20, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(120, 38), 18, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
         {
             AvailableMapsets = availableMapsets;
             Dropdown.ItemSelected += OnItemSelected;
@@ -35,7 +36,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <returns></returns>
         private static List<string> GetDropdownItems() {
             var values = new List<string>(){
-                "All"
+                SelectionLocalization.Get("All")
             };
 
             foreach (GameMode mode in ModeHelper.AllModes)

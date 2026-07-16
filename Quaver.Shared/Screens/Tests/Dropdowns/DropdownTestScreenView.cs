@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Tests.Dropdowns
                 "Difficulty",
                 "Mode",
                 "Length"
-            }, new ScalableVector2(200, 45), 22)
+            }, new ScalableVector2(200, 45), 20)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
@@ -52,13 +52,13 @@ namespace Quaver.Shared.Screens.Tests.Dropdowns
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new LabelledDropdown("Favorite Foods:", 22, new Dropdown(new List<string>()
+            new LabelledDropdown("Favorite Foods:", 20, new Dropdown(new List<string>()
             {
                 "Pizza",
                 "Chicken",
                 "Ice Cream",
                 "Pasta"
-            }, new ScalableVector2(200, 40), 22))
+            }, new ScalableVector2(200, 40), 20))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Tests.Dropdowns
                 RightClickOptions.Open();
             };
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Right-Click Me", 22)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "Right-Click Me", 22)
             {
                 Parent = btn,
                 Alignment = Alignment.MidCenter

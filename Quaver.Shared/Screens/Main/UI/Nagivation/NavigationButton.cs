@@ -77,14 +77,16 @@ namespace Quaver.Shared.Screens.Main.UI.Nagivation
             Tint = SkinManager.Skin?.MainMenu?.NavigationButtonTextColor ?? Color.White
         };
 
-        private void CreateName(string name) => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-            name.ToUpper(), 22)
+        private void CreateName(string name) => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            name.ToUpper(), 18)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
             X = Icon.X + Icon.Width + 14,
             Tint = SkinManager.Skin?.MainMenu?.NavigationButtonTextColor ?? Color.White
         };
+
+        public void SetText(string text) => Name.Text = text.ToUpper();
 
         public void Select(bool instantWidth = false)
         {

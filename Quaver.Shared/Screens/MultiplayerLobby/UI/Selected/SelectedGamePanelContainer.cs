@@ -61,8 +61,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateNoGameSelectedText()
         {
-            NoGameSelected = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "No match selected!\n\nClick on a game to view its details,\nor create your own".ToUpper(), 20)
+            NoGameSelected = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                "No match selected!\n\nClick on a game to view its details,\nor create your own".ToUpper(), 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

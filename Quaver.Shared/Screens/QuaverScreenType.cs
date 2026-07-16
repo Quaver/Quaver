@@ -17,7 +17,6 @@ namespace Quaver.Shared.Screens
         Results,
         Select,
         Importing,
-        Alpha,
         Download,
         Lobby,
         Multiplayer,

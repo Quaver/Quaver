@@ -11,6 +11,8 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
@@ -46,23 +48,23 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap ArtistTitle { get; }
+        private SpriteTextPlus ArtistTitle { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap DifficultyRating { get; }
+        private SpriteTextPlus DifficultyRating { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap DifficultyName { get; }
+        private SpriteTextPlus DifficultyName { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Mode { get; }
+        private SpriteTextPlus Mode { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Creator { get; }
+        private SpriteTextPlus Creator { get; }
 
         /// <summary>
         /// </summary>
@@ -108,48 +110,48 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             var diffName = GetDifficultyName();
 
-            ArtistTitle = new SpriteTextBitmap(FontsBitmap.GothamRegular, game.Map.Replace($"[{diffName}]", ""))
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), game.Map.Replace($"[{diffName}]", ""))
             {
                 Parent = this,
                 X = Background.X + Background.Width + 16,
                 Y = 12,
-                FontSize = 16
+                FontSize = 14
             };
 
             AddContainedDrawable(ArtistTitle);
 
-            Mode = new SpriteTextBitmap(FontsBitmap.GothamRegular, "[" + ModeHelper.ToShortHand((GameMode)game.GameMode) + "]")
+            Mode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "[" + ModeHelper.ToShortHand((GameMode)game.GameMode) + "]")
             {
                 Parent = this,
                 X = ArtistTitle.X,
                 Y = ArtistTitle.Y + ArtistTitle.Height + 8,
-                FontSize = 14
+                FontSize = 12
             };
 
             AddContainedDrawable(Mode);
 
-            DifficultyRating = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{game.DifficultyRating:0.00}")
+            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{game.DifficultyRating:0.00}")
             {
                 Parent = this,
                 X = Mode.X + Mode.Width + 8,
                 Y = Mode.Y,
-                FontSize = 14,
+                FontSize = 12,
                 Tint = ColorHelper.DifficultyToColor((float)game.DifficultyRating)
             };
 
             AddContainedDrawable(DifficultyRating);
 
-            DifficultyName = new SpriteTextBitmap(FontsBitmap.GothamRegular, " - \"" + diffName + "\"")
+            DifficultyName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " - \"" + diffName + "\"")
             {
                 Parent = this,
                 X = DifficultyRating.X + DifficultyRating.Width + 2,
                 Y = Mode.Y,
-                FontSize = 14,
+                FontSize = 12,
             };
 
             AddContainedDrawable(DifficultyName);
 
-            Creator = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Mods: None")
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("ModsNone"))
             {
                 Parent = this,
                 X = Mode.X,
@@ -250,8 +252,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostSelectingMap)
             {
-                ArtistTitle.Text = "Host is currently selecting a map!";
-                Mode.Text = "Please wait...";
+                ArtistTitle.Text = MultiplayerLocalization.Get("HostSelectingMap");
+                Mode.Text = MultiplayerLocalization.Get("PleaseWait");
                 Creator.Text = "";
                 DifficultyName.Text = "";
                 DifficultyRating.Text = "";
@@ -283,8 +285,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostSelectingMap)
                     Creator.Text = "";
                 else
-                    Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} " +
-                                   $"| LNs: {(int) map.LNPercentage}%";
+                    Creator.Text = MultiplayerLocalization.Get("MapInfo", map.Creator, time,
+                        (int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods)), (int) map.LNPercentage);
 
                 // Inform the server that we now have the map if we didn't before.
                 if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
@@ -328,7 +330,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 ArtistTitle.Tint = Color.Red;
 
-                Creator.Text = Game.MapId != -1 ? "You don't have this map. Click to download!" : "You don't have this map. Download not available!";
+                Creator.Text = Game.MapId != -1 ? MultiplayerLocalization.Get("MapMissingClickToDownload") : MultiplayerLocalization.Get("MapMissingDownloadNotAvailable");
                 Creator.Tint = Colors.SecondaryAccent;
 
                 if (OnlineManager.CurrentGame != null && !OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
@@ -435,7 +437,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 if (CurrentDownload.MapsetId == Game.MapsetId)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "The mapset is already downloading. Slow down!");
+                    NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("MapsetAlreadyDownloading"));
                     return;
                 }
 
@@ -456,7 +458,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressEventArgs> e)
         {
             if (CurrentDownload.MapsetId == Game.MapsetId)
-                Creator.Text = $"Downloading Map: {e.Value.ProgressPercentage}%";
+                Creator.Text = MultiplayerLocalization.Get("DownloadingMap", e.Value.ProgressPercentage);
         }
 
         private void OnDownloadStatusChanged(object sender, BindableValueChangedEventArgs<DownloadStatusChangedEventArgs> e)
@@ -467,11 +469,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             CurrentDownload.Dispose();
 
             if (e.Value.Error != null)
-                NotificationManager.Show(NotificationLevel.Error, "Download Failed!");
+                NotificationManager.Show(NotificationLevel.Error, MultiplayerLocalization.Get("DownloadFailed"));
 
             if (CurrentDownload.MapsetId == Game.MapsetId)
             {
-                NotificationManager.Show(NotificationLevel.Success, "Download Complete!");
+                NotificationManager.Show(NotificationLevel.Success, MultiplayerLocalization.Get("DownloadComplete"));
 
                 var game = GameBase.Game as QuaverGame;
 

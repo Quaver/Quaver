@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 Size = new ScalableVector2(Width, 45)
             };
 
-            HeaderText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), text.ToUpper(), 22)
+            HeaderText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), text.ToUpper(), 20)
             {
                 Parent = Header,
                 Alignment = Alignment.MidLeft,

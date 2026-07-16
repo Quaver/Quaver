@@ -21,14 +21,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             Dropdown = new Dropdown(new List<string>
             {
-                "None",
-                "Beginner",
-                "Easy",
-                "Normal",
-                "Hard",
-                "Insane",
-                "Expert"
-            }, new ScalableVector2(160, 34), 22, Colors.MainAccent)
+                DownloadLocalization.Get("None"),
+                DownloadLocalization.Get("Beginner"),
+                DownloadLocalization.Get("Easy"),
+                DownloadLocalization.Get("Normal"),
+                DownloadLocalization.Get("Hard"),
+                DownloadLocalization.Get("Insane"),
+                DownloadLocalization.Get("Expert")
+            }, new ScalableVector2(160, 34), 20, Colors.MainAccent)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

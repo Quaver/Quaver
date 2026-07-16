@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components;
@@ -13,7 +14,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
         public SelectMenuFooter(SelectionScreen screen) : base(MenuBorderType.Footer, new List<Drawable>
         {
             new IconTextButtonSelectBack(screen),
-            new IconTextButtonOptions(),
+            new IconTextButtonOptions(SelectionLocalization.GetKey("Options")),
             new IconTextButtonModifiers(screen.ActiveLeftPanel),
             new IconTextButtonMapPreview(screen.ActiveLeftPanel),
             new IconTextButtonProfile(screen.ActiveLeftPanel),
@@ -25,6 +26,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
             new IconTextButtonCreatePlaylist()
         })
         {
+            foreach (var item in LeftAlignedItems.Concat(RightAlignedItems).OfType<IconTextButton>())
+                item.Text.Y = 1;
         }
     }
 }

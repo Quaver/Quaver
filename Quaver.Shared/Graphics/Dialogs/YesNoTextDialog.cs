@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
@@ -30,7 +31,7 @@ namespace Quaver.Shared.Graphics.Dialogs
                 SubmitAction?.Invoke(Textbox.RawText);
             };
             Panel.Height += 50;
-            YesButton.Image = UserInterface.SaveButton;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SAVE", 20, Color.White);
             YesButton.Y += 10;
             NoButton.Y += 10;
 
@@ -41,7 +42,7 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// </summary>
         private void CreateTextbox(string initialText, string placeHolderText)
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, initialText, placeHolderText, s =>
                 {
                     SubmitAction?.Invoke(s);

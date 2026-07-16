@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
     public class ResultsFooterBackButton : IconTextButton
     {
         public ResultsFooterBackButton(ResultsScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Back", (sender, args) => screen.ExitToMenu())
+            FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Back"), (sender, args) => screen.ExitToMenu())
         {
         }
     }

@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -13,6 +14,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
         /// <summary>
         /// </summary>
         private Texture2D Label { get; }
+
+        private string Key { get; }
 
         /// <summary>
         /// </summary>
@@ -28,16 +31,22 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 
         /// <summary>
         /// </summary>
+        private SpriteTextPlus KeyText { get; set; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus ValueText { get; set; }
 
         /// <summary>
         /// </summary>
-        /// <param name="label"></param>
+        /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="color"></param>
-        public DrawableResultsScoreMetric(Texture2D label, string value, Color? color = null)
+        public DrawableResultsScoreMetric(string key, string value, Color? color = null)
         {
-            Label = label;
+            Label = SkinManager.Skin?.Results?.ResultsLabelBackground ??
+                    UserInterface.ResultsLabelBackground;
+            Key = key;
             Value = value;
             TextColor = color ?? Color.White;
 
@@ -49,22 +58,25 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 
         /// <summary>
         /// </summary>
-        private void CreateLabel() => LabelSprite = new Sprite
+        private void CreateLabel()
         {
-            Parent = this,
-            Alignment = Alignment.BotCenter,
-            Image = Label,
-            Size = new ScalableVector2(Label.Width, Label.Height)
-        };
+            LabelSprite = new Sprite
+            {
+                Parent = this,
+                Alignment = Alignment.BotCenter,
+                Image = Label,
+                Size = new ScalableVector2(Label.Width, Label.Height)
+            };
+            KeyText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), Key, 16)
+            {
+                Parent = LabelSprite, Alignment = Alignment.MidCenter, Tint = TextColor
+            };
+        }
 
         /// <summary>
         /// </summary>
-        private void CreateValueText() => ValueText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold),
-            Value, 38)
-        {
-            Parent = this,
-            Alignment = Alignment.TopCenter,
-            Tint = TextColor
-        };
+        private void CreateValueText() => ValueText = new SpriteTextPlus(
+            FontManager.GetWobbleFont(Fonts.InterBold),
+            Value, 32) { Parent = this, Alignment = Alignment.TopCenter, Tint = TextColor };
     }
 }

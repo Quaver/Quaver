@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "•   " + Subcategory.Name, 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "•   " + Subcategory.Name, 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

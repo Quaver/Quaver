@@ -18,9 +18,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 ClickAction = () => checkbox?.FireButtonClickEvent();
         }
 
-        public override string GetName() => "Enable Preview";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("EnablePreview");
 
-        public override string GetValue() => SelectedGame.Value.EnablePreview ? "Yes" : "No";
+        public override string GetValue() => SelectedGame.Value.EnablePreview ? MultiplayerLobbyLocalization.Get("Yes") : MultiplayerLobbyLocalization.Get("No");
     }
 
     public class MultiplayerEnablePreviewCheckbox : QuaverCheckbox

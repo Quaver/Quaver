@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Options.Items
             if (bindedValue == null)
                 bindedValue = new BindableInt(0, 0, 100);
 
-            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "100%", 22)
+            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "100%", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -10,9 +12,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
 {
     public class BattleRoyalePlayerEliminated : Container
     {
-        public SpriteTextBitmap Username { get; }
+        public SpriteTextPlus Username { get; }
 
-        public SpriteTextBitmap Eliminated { get; }
+        public SpriteTextPlus Eliminated { get; }
 
         private GameplayScreen Screen { get; }
 
@@ -20,7 +22,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
         {
             Screen = screen;
 
-            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ", false)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " ", 0, false)
             {
                 Parent = this,
                 Tint = Color.Crimson,
@@ -28,7 +30,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
                 Alpha = 0
             };
 
-            Eliminated = new SpriteTextBitmap(FontsBitmap.GothamRegular, " has been eliminated!", false)
+            Eliminated = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " has been eliminated!", 0, false)
             {
                 Parent = this,
                 FontSize = 20,

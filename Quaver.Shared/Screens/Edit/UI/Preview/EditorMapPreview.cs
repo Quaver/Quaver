@@ -50,6 +50,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         /// </summary>
         private EditorActionManager ActionManager { get; }
 
+        protected override bool ShowHitBubbles { get; } = false;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -148,11 +150,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
 
         public void Refresh()
         {
-            if (LoadedGameplayScreen != null)
-            {
-                LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-                LoadedGameplayScreen.Destroy();
-            }
+            DestroyLoadedGameplayScreen();
 
             RunLoadTask();
         }

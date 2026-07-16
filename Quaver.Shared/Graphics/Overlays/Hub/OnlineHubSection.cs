@@ -119,7 +119,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         protected void CreateNotImplementedText()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{Name}\nARE NOT IMPLEMENTED YET.\nCHECK BACK LATER!",
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{Name}\nARE NOT IMPLEMENTED YET.\nCHECK BACK LATER!",
                 22)
             {
                 Parent = Container,

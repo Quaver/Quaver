@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components
         /// <summary>
         /// </summary>
         /// <param name="map"></param>
-        public DrawableMapTextDifficultyRating(Map map) : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00", 22)
+        public DrawableMapTextDifficultyRating(Map map) : base(FontManager.GetWobbleFont(Fonts.InterBold), "0.00", 18)
         {
             Map = map;
 

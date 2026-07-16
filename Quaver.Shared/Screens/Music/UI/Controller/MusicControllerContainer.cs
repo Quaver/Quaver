@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "No Track Playing", 34)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "No Track Playing", 32)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Unknown Artist", 28)
+            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Unknown Artist", 26)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -170,7 +170,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             {
                 Parent = PlayPauseButton,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(24, 22),
+                Size = new ScalableVector2(30, 28),
                 X = -50
             };
         }
@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateCurrentTime()
         {
-            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00:00", 24)
+            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00:00", 22)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -205,7 +205,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateTimeLeft()
         {
-            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "-00:00", CurrentTime.FontSize)
+            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "-00:00", CurrentTime.FontSize)
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,

@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Players
         /// </summary>
         private void CreatePlayerName()
         {
-            PlayerName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            PlayerName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 X = 10,
@@ -97,7 +97,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Players
         /// </summary>
         private void CreateMods()
         {
-            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 X = PlayerName.X
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Players
         /// </summary>
         private void CreatePerformanceRating()
         {
-            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            PerformanceRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 X = PlayerName.X
@@ -119,7 +119,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Players
         /// </summary>
         private void CreateAccuracy()
         {
-            Accuracy = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Accuracy = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 X = PlayerName.X
@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Players
         /// </summary>
         private void CreateJudgements()
         {
-            Judgements = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Judgements = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = this,
                 X = PlayerName.X

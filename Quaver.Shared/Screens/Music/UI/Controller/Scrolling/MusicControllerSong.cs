@@ -12,7 +12,6 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
-using TimeAgo;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -161,7 +160,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -173,7 +172,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -185,7 +184,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void CreateDateAdded()
         {
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -197,7 +196,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void CreateBpm()
         {
-            Bpm = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Bpm = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -209,7 +208,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void CreateLength()
         {
-            Length = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Length = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

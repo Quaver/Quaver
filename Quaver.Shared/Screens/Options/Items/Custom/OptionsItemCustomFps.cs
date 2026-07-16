@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -10,18 +11,18 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Selection.UI.Profile;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Managers;
@@ -36,7 +37,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <summary>
         ///    The button to open the dialog.
         /// </summary>
-        private IconButton Button { get; }
+        private RoundedButton Button { get; }
 
         /// <summary>
         /// </summary>
@@ -47,14 +48,16 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             const float scale = 0.85f;
 
-            Button = new IconButton(UserInterface.OptionsCustomFpsButton)
+            Button = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
                 Size = new ScalableVector2(215 * scale, 36 * scale),
-                UsePreviousSpriteBatchOptions = true
+                Tint = ColorHelper.HexToColor("#0FBAE5")
             };
+
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SET FPS", 18, Color.White);
 
             Button.Clicked += (sender, args) =>
             {

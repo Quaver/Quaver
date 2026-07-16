@@ -26,14 +26,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             const int spacing = 12;
 
-            Max = new DownloadFilterItemLengthTextbox("Max Length", max)
+            Max = new DownloadFilterItemLengthTextbox("Max", max)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X
             };
 
-            Min = new DownloadFilterItemLengthTextbox("Min Length", min)
+            Min = new DownloadFilterItemLengthTextbox("Min", min)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -48,8 +48,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// </summary>
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
-        public DownloadFilterItemLengthTextbox(string placeholder, BindableInt bindable) : base(FontManager.GetWobbleFont(Fonts.LatoBlack),
-            22, "", placeholder)
+        public DownloadFilterItemLengthTextbox(string placeholder, BindableInt bindable) : base(FontManager.GetWobbleFont(Fonts.InterSemiBold),
+            20, "", placeholder)
         {
             AllowedCharacters = new Regex(@"^(?!.*\..*\.)[.\d]+$");
 

@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
 
         public EditorDifficultySeekBar(EditorActionManager actionManager, Qua map, ModIdentifier mods, ScalableVector2 size,
             int maxBars = 120, int barSize = 3, IAudioTrack track = null, bool alignRightToLeft = false, float barWidthScale = 1)
-            : base(map, mods, size, maxBars, barSize, track, alignRightToLeft, barWidthScale)
+            : base(map, mods, size, maxBars, barSize, track, alignRightToLeft, barWidthScale, cacheBars: true)
         {
             ActionManager = actionManager;
             ActionManager.HitObjectPlaced += OnHitObjectPlaced;

@@ -150,7 +150,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         private void CreateSearchBox()
         {
             SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, new Bindable<bool>(false), null,
-                "Type to search...")
+                "Type to search...", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -164,7 +164,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         /// </summary>
         private void CreateSongsFound()
         {
-            SongsFound = new FilterPanelMapsAvailable(AvailableSongs, true)
+            SongsFound = new FilterPanelMapsAvailable(AvailableSongs, true, 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

@@ -144,13 +144,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         {
             const int posX = 14;
 
-            CurrentTime = new EditorFooterTime(EditorFooterTimeType.Current, FontManager.GetWobbleFont(Fonts.LatoBlack), Track)
+            CurrentTime = new EditorFooterTime(EditorFooterTimeType.Current, FontManager.GetWobbleFont(Fonts.InterBold), Track)
             {
                 Parent = this,
                 X = posX,
             };
 
-            TimeLeft = new EditorFooterTime(EditorFooterTimeType.Left, FontManager.GetWobbleFont(Fonts.LatoBlack), Track)
+            TimeLeft = new EditorFooterTime(EditorFooterTimeType.Left, FontManager.GetWobbleFont(Fonts.InterBold), Track)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

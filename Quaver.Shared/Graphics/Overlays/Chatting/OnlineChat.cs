@@ -18,6 +18,7 @@ using Quaver.Shared.Graphics.Overlays.Chatting.Messages;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens;
 using Wobble;
 using Wobble.Bindables;
@@ -70,11 +71,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         ///     If the closed visibility state has been applied after the close animation.
         /// </summary>
         private bool IsClosedVisibilityApplied { get; set; }
-
-        /// <summary>
-        ///     If chat event processing is suspended while gameplay is active.
-        /// </summary>
-        public bool IsEventProcessingSuspended { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -143,6 +139,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         public void Close()
         {
             DismissActiveDropdowns();
+            MessageContainer.StageStoreCatchUpForOverlayClose();
 
             ClearAnimations();
             MoveToY((int)Height + 10, Easing.OutQuint, 500);
@@ -173,27 +170,27 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         }
 
         /// <summary>
-        ///     Suspends chat event processing while gameplay is active to avoid background UI work during play.
-        /// </summary>
-        public void UpdateEventProcessingSuspension()
-        {
-            var game = GameBase.Game as QuaverGame;
-            var shouldSuspend = game?.CurrentScreen?.Type == QuaverScreenType.Gameplay;
-
-            if (IsEventProcessingSuspended == shouldSuspend)
-                return;
-
-            IsEventProcessingSuspended = shouldSuspend;
-
-            foreach (var container in MessageContainer.MessageScrollContainers.Values.ToList())
-                container.SetEventProcessingSuspended(shouldSuspend);
-        }
-
-        /// <summary>
         ///     Returns if the dialog to join chat channels is open
         /// </summary>
         /// <returns></returns>
         public bool IsJoinChannelDialogOpen() => ActiveJoinChatChannelContainer != null && ActiveJoinChatChannelContainer.IsOpen;
+
+        /// <summary>
+        ///     Returns whether a tooltip target is available while the chat overlay is open.
+        /// </summary>
+        public bool AllowsTooltip(Drawable target)
+        {
+            if (!IsOpen)
+                return true;
+
+            for (var drawable = target; drawable != null; drawable = drawable.Parent)
+            {
+                if (ReferenceEquals(drawable, this))
+                    return true;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// </summary>
@@ -449,7 +446,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// <param name="channel"></param>
         public static void SaveChatLog(ChatChannel channel)
         {
-            if (channel.Messages.Count == 0)
+            var messages = ChatMessageStore.GetMessageSnapshot(channel);
+
+            if (messages.Count == 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "This chat channel contains no messages.");
                 return;
@@ -460,7 +459,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             messageStr.AppendLine($"{channel.Name} chat log - {DateTime.Now.ToLongDateString()} @ {DateTime.Now.ToLongTimeString()}");
             messageStr.AppendLine();
 
-            foreach (var message in channel.Messages)
+            foreach (var message in messages)
             {
                 var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)message.Time);
                 var time = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";

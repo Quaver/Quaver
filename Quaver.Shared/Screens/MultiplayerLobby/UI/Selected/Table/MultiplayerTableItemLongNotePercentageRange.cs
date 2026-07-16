@@ -14,12 +14,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 OnlineManager.Client.OnGameLongNotePercentageChanged += OnLongNotePercentageRangeChanged;
         }
 
-        public override string GetName() => "Long Note % Range";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("LongNotePercentageRange");
 
         public override string GetValue()
         {
             if (SelectedGame.Value.MinimumLongNotePercentage == 0 && SelectedGame.Value.MaximumLongNotePercentage == 100)
-                return "Any";
+                return MultiplayerLobbyLocalization.Get("AnyLongNotePercentageRange");
 
             return $"{SelectedGame.Value.MinimumLongNotePercentage}-{SelectedGame.Value.MaximumLongNotePercentage}%";
         }

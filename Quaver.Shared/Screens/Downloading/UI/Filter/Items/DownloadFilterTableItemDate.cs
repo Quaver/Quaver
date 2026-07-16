@@ -29,14 +29,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             const int spacing = 12;
 
-            Max = new DownloadFilterItemDateTextbox("End Date", max)
+            Max = new DownloadFilterItemDateTextbox("End", max)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X
             };
 
-            Min = new DownloadFilterItemDateTextbox("Start Date", min)
+            Min = new DownloadFilterItemDateTextbox("Start", min)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
         public DownloadFilterItemDateTextbox(string placeholder, Bindable<string> bindable)
-            : base(FontManager.GetWobbleFont(Fonts.LatoBlack), 22, "", placeholder)
+            : base(FontManager.GetWobbleFont(Fonts.InterSemiBold), 20, "", placeholder)
         {
             OnStoppedTyping += s =>
             {

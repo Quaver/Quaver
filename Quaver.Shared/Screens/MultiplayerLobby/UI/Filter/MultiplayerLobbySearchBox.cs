@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// <summary>
         /// </summary>
         public MultiplayerLobbySearchBox(Bindable<string> searchQuery) : base(new ScalableVector2(420, 40),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),22, "", "Search for games...")
+            FontManager.GetWobbleFont(Fonts.InterBold),22, "", MultiplayerLobbyLocalization.Get("SearchForGames"))
         {
             SearchQuery = searchQuery;
 

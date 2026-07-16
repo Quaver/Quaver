@@ -531,30 +531,6 @@ namespace Quaver.Shared.Online
 
                 var map = mapsets.First().Maps.Find(x => x.MapId == e.Id && x.Md5Checksum == e.Md5);
 
-                switch (e.Response.Code)
-                {
-                    case OnlineScoresResponseCode.NotSubmitted:
-                        map.RankedStatus = RankedStatus.NotSubmitted;
-                        break;
-                    case OnlineScoresResponseCode.NeedsUpdate:
-                        break;
-                    case OnlineScoresResponseCode.Unranked:
-                        map.RankedStatus = RankedStatus.Unranked;
-                        break;
-                    case OnlineScoresResponseCode.Ranked:
-                        map.RankedStatus = RankedStatus.Ranked;
-                        break;
-                    case OnlineScoresResponseCode.DanCourse:
-                        map.RankedStatus = RankedStatus.DanCourse;
-                        break;
-                    default:
-                        map.RankedStatus = RankedStatus.NotSubmitted;
-                        break;
-                }
-
-                if ((int)e.Response.Code == -1)
-                    map.RankedStatus = map.MapId == -1 ? RankedStatus.NotSubmitted : RankedStatus.Unranked;
-
                 // Update online grade
                 if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Rate && e.Response.PersonalBest != null)
                 {

@@ -13,8 +13,10 @@ using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -73,7 +75,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     The ranked status of the map
         /// </summary>
-        private Sprite RankedStatusSprite { get; set; }
+        private RoundedButton RankedStatusSprite { get; set; }
 
         /// <summary>
         ///     The game modes the mapset has
@@ -135,6 +137,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateGameModes();
             CreateOnlineGrade();
 
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged += OnDisplaySongSelectBannersChanged;
+
             UsePreviousSpriteBatchOptions = true;
         }
 
@@ -148,6 +153,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             PerformHoverAnimation(gameTime);
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged -= OnDisplaySongSelectBannersChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -200,7 +216,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
             else
             {
-                Title.FontSize = 26;
+                Title.FontSize = 22;
                 Title.Text = item.Title;
                 Title.TruncateWithEllipsis(400);
 
@@ -218,8 +234,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             ByText.X = DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX;
             Creator.X = ByText.X + ByText.Width + ArtistCreatorSpacingX;
 
-            RankedStatusSprite.Image = GetRankedStatusImage();
+            var (statusText, statusColor) = GetRankedStatusInfo();
+            RankedStatusSprite.Tint = statusColor;
+            RankedStatusSprite.SetLabel(Title.Font, statusText, 14, Color.White);
             GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.Mode), GameModes, GameModeText);
+            AlignTextRows();
+            UpdateBannerLayout();
 
             if (ParentMapset.IsSelected)
                 Select(true);
@@ -268,7 +288,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
+                Size = DrawableBanner.DisplaySize,
                 X = -2,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -279,7 +299,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -293,7 +313,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(Title.Font, "Artist", 20)
+            Artist = new SpriteTextPlus(Title.Font, "Artist", 16)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
@@ -321,7 +341,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateCreator()
         {
-            ByText = new SpriteTextPlus(Title.Font, "By:", Artist.FontSize)
+            ByText = new SpriteTextPlus(Title.Font, SelectionLocalization.Get("By:"), Artist.FontSize)
             {
                 Parent = this,
                 Position = new ScalableVector2(DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX, Artist.Y),
@@ -343,13 +363,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateRankedStatus()
         {
-            RankedStatusSprite = new Sprite
+            RankedStatusSprite = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(115, 28),
+                Size = new ScalableVector2(124, 30),
                 X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18),
-                Image = UserInterface.StatusPanel,
+                IsClickable = false,
+                PerformHoverFade = false,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -362,7 +383,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(71, 28),
+                Size = new ScalableVector2(72, 30),
                 X = RankedStatusSprite.X - RankedStatusSprite.Width + (SkinManager.Skin?.SongSelect?.GameModePosOffsetX ?? -18),
                 UsePreviousSpriteBatchOptions = true
             };
@@ -375,6 +396,26 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Tint = Color.White,
             };
         }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateBannerLayout()
+        {
+            var bannerSize = DrawableBanner.DisplaySize;
+
+            if (Banner.Width != bannerSize.X.Value || Banner.Height != bannerSize.Y.Value)
+                Banner.Size = bannerSize;
+
+            RankedStatusSprite.X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18);
+            GameModes.X = RankedStatusSprite.X - RankedStatusSprite.Width + (SkinManager.Skin?.SongSelect?.GameModePosOffsetX ?? -18);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplaySongSelectBannersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => UpdateBannerLayout();
 
         /// <summary>
         /// </summary>
@@ -395,7 +436,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
+            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 18)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Artist.Y),
@@ -405,20 +446,37 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     Retrieves the color of a map's ranked status
+        ///     Vertically centers the two text rows using the current font metrics.
+        /// </summary>
+        private void AlignTextRows()
+        {
+            const int spacing = 5;
+            var secondRowHeight = Math.Max(Artist.Height, DifficultyName.Height);
+
+            Title.Y = (Height - Title.Height - spacing - secondRowHeight) / 2f;
+            Artist.Y = Title.Y + Title.Height + spacing;
+            DifficultyName.Y = Artist.Y;
+            DividerLine.Y = Artist.Y;
+            ByText.Y = Artist.Y;
+            Creator.Y = Artist.Y;
+        }
+
+        /// <summary>
+        ///     Retrieves the label text/color of a map's ranked status, used to populate the
+        ///     <see cref="RankedStatusSprite"/> pill.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private Texture2D GetRankedStatusImage()
+        private (string Text, Color Color) GetRankedStatusInfo()
         {
             if (ParentMapset.Item.Maps.First().Game != MapGame.Quaver)
             {
                 switch (ParentMapset.Item.Maps.First().Game)
                 {
                     case MapGame.Osu:
-                        return SkinManager.Skin?.SongSelect?.StatusOsu ?? UserInterface.StatusOtherGameOsu;
+                        return ("OTHER GAME", ColorHelper.HexToColor("#FF6FA8"));
                     case MapGame.Etterna:
-                        return SkinManager.Skin?.SongSelect?.StatusStepmania ?? UserInterface.StatusOtherGameEtterna;
+                        return ("OTHER GAME", ColorHelper.HexToColor("#5D5195"));
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -427,13 +485,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             switch (ParentMapset.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
-                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
+                    return ("UNSUBMITTED", ColorHelper.HexToColor("#808080"));
                 case RankedStatus.Unranked:
-                    return SkinManager.Skin?.SongSelect?.StatusUnranked ?? UserInterface.StatusUnranked;
+                    return ("UNRANKED", ColorHelper.HexToColor("#F16264"));
                 case RankedStatus.Ranked:
-                    return SkinManager.Skin?.SongSelect?.StatusRanked ?? UserInterface.StatusRanked;
+                    return ("RANKED", ColorHelper.HexToColor("#1FBE83"));
                 case RankedStatus.DanCourse:
-                    return SkinManager.Skin?.SongSelect?.StatusNotSubmitted ?? UserInterface.StatusNotSubmitted;
+                    return ("UNSUBMITTED", ColorHelper.HexToColor("#808080"));
                 default:
                     throw new ArgumentOutOfRangeException();
             }

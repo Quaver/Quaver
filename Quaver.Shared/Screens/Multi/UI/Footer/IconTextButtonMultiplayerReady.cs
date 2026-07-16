@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
         /// </summary>
         /// <param name="game"></param>
         public IconTextButtonMultiplayerReady(Bindable<MultiplayerGame> game) : base(FontAwesome.Get(FontAwesomeIcon.fa_check),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"", (sender, args) =>
             {
                 if (game.Value.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
                 {
@@ -73,9 +73,9 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
         private void UpdateReadyText()
         {
             if (Game.Value.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
-                UpdateText("Not Ready");
+                UpdateText(MultiLocalization.Get("NotReady"));
             else
-                UpdateText("Ready Up");
+                UpdateText(MultiLocalization.Get("ReadyUp"));
         }
 
         /// <summary>

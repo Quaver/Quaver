@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -35,7 +37,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            var text = new SpriteTextBitmap(FontsBitmap.AllerRegular, "Waiting for other players to finish!")
+            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Waiting for other players to finish!")
             {
                 Parent = this,
                 FontSize = 20,

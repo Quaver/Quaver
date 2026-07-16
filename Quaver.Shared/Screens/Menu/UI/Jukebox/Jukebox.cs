@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -41,7 +43,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     The text that says "Now Playing"
         /// </summary>
-        public SpriteTextBitmap NowPlayingText { get; set; }
+        public SpriteTextPlus NowPlayingText { get; set; }
 
         /// <summary>
         ///     Button to select the previous track.
@@ -71,7 +73,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     The text that displays the song title.
         /// </summary>
-        public SpriteTextBitmap SongTitleText { get; set; }
+        public SpriteTextPlus SongTitleText { get; set; }
 
         /// <summary>
         ///     The song time progress bar.
@@ -304,7 +306,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Creates the text that says "Now Playing"
         /// </summary>
-        private void CreateNowPlayingText() => NowPlayingText = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Now Playing")
+        private void CreateNowPlayingText() => NowPlayingText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Now Playing")
         {
             Parent = TitleBackground,
             Alignment = Alignment.MidCenter,
@@ -325,7 +327,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 Alpha = 0
             };
 
-            SongTitleText = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
+            SongTitleText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " ")
             {
                 Y = 2,
                 Alignment = Alignment.MidLeft,

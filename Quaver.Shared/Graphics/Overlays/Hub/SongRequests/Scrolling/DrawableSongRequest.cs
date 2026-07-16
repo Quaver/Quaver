@@ -205,7 +205,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
         /// </summary>
         private void CreateArtistTitle()
         {
-            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), " ", 22)
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " ", 22)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
         /// </summary>
         private void CreateDifficultyRating()
         {
-            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,
@@ -261,7 +261,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Scrolling
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,

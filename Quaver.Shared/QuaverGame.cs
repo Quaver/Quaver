@@ -41,19 +41,17 @@ using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Localization;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Beta;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Initialization;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
-using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
@@ -61,6 +59,7 @@ using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.AutoMods;
+using Quaver.Shared.Screens.Tests.ButtonPerformance;
 using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Chat;
 using Quaver.Shared.Screens.Tests.CheckboxContainers;
@@ -110,6 +109,7 @@ using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
@@ -288,6 +288,7 @@ namespace Quaver.Shared
             {"MultiplayerGameScreen", typeof(MultiplayerGameScreen)},
             {"MultiplayerLobbyScreen", typeof(MultiplayerLobbyScreen)},
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
+            {"ButtonPerformance", typeof(ButtonPerformanceTestScreen)},
         };
 
         public QuaverGame(HotLoader hl) : base(hl, ConfigureSdlVideoBackend())
@@ -334,7 +335,12 @@ namespace Quaver.Shared
         {
             QuaverScreenManager.Initialize();
             WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
+            QuaverLocalization.Configure(ConfigManager.Language.Value);
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+
+#if VISUAL_TESTS
+            Fonts.LoadWobbleFonts();
+#endif
 
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
@@ -352,13 +358,11 @@ namespace Quaver.Shared
             Window.FileDropped += MapsetImporter.OnFileDropped;
             Window.ClientSizeChanged += OnClientSizeChanged;
             AudioManager.OutputDeviceChanged += OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = () => CurrentScreen?.Type == QuaverScreenType.Gameplay;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
 
-#if VISUAL_TESTS
-            HotLoaderGame.Font = FontsBitmap.CodeProBold;
-#endif
             base.Initialize();
         }
 
@@ -391,12 +395,15 @@ namespace Quaver.Shared
         protected override void UnloadContent()
         {
             AudioManager.OutputDeviceChanged -= OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = null;
             ConfigManager.WriteConfigFileAsync().Wait();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
+            TooltipManager.TargetEligibilityFilter = null;
             base.UnloadContent();
-            OnlineManager.Client?.Disconnect();
-            SteamAPI.Shutdown();
+
+            if (SteamManager.IsInitialized)
+                SteamAPI.Shutdown();
         }
 
         /// <inheritdoc />
@@ -422,6 +429,7 @@ namespace Quaver.Shared
                 // be initialized
                 OnlineHub = new OnlineHub();
                 OnlineChat = new OnlineChat();
+                TooltipManager.TargetEligibilityFilter = target => OnlineChat.AllowsTooltip(target);
                 VolumeController = new VolumeControl();
                 FirstUpdateCalled = true;
             }
@@ -431,7 +439,6 @@ namespace Quaver.Shared
 
             BackgroundHelper.Update(gameTime);
             DialogManager.Update(gameTime);
-            OnlineChat?.UpdateEventProcessingSuspension();
 
             HandleGlobalInput(gameTime);
             HandleOnlineHubInput();
@@ -476,6 +483,10 @@ namespace Quaver.Shared
             NotificationManager.Draw(gameTime);
             VolumeController?.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
+
+            // F8 chat belongs to global UI, which draws after Wobble's normal tooltip layer.
+            if (OnlineChat?.IsOpen == true)
+                TooltipManager.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
 
@@ -522,6 +533,13 @@ namespace Quaver.Shared
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.PreferCocoaEventLoop.ValueChanged += (sender, e) => InitializeFpsLimiting();
+            ConfigManager.Language.ValueChanged += (sender, e) =>
+            {
+                QuaverLocalization.SetCurrentCulture(e.Value);
+                Fonts.ReloadCjkFontFace(e.Value);
+                NotificationManager.Show(NotificationLevel.Info,
+                    LocalizationManager.Get("Notification_LanguageChangeRequiresScreenChange"));
+            };
             
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
             {
@@ -601,7 +619,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.InterBold), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,

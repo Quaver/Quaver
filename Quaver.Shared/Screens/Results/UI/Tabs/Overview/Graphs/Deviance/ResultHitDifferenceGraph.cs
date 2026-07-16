@@ -15,6 +15,7 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using TagLib.Matroska;
@@ -41,6 +42,11 @@ namespace Quaver.Shared.Screens.Result.UI
         ///     The width of each miss line.
         /// </summary>
         private const float MissLineWidth = 2;
+
+        /// <summary>
+        ///     Color of mine hits
+        /// </summary>
+        private static readonly Color MineHitColor = new(179, 179, 179);
 
         /// <summary>
         ///     The largest of the dot sizes. Used for things like minimum graph width and dot positioning.
@@ -223,7 +229,8 @@ namespace Quaver.Shared.Screens.Result.UI
             var y = 6;
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Late (+{unscaledLargestHitWindow} ms)", 18, false)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                ResultsLocalization.Get("Late hit window", unscaledLargestHitWindow), 16, false)
             {
                 Parent = this,
                 X = x,
@@ -231,7 +238,8 @@ namespace Quaver.Shared.Screens.Result.UI
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Early (-{unscaledLargestHitWindow} ms)", 20, false)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                ResultsLocalization.Get("Early hit window", unscaledLargestHitWindow), 18, false)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -280,7 +288,11 @@ namespace Quaver.Shared.Screens.Result.UI
                 {
                     Parent = this,
                     Alpha = 0.35f,
-                    Tint = ResultsJudgementGraphJudgementBar.GetColor(Judgement.Miss),
+                    Tint = miss.HitObject.Type switch
+                    {
+                        HitObjectType.Mine => MineHitColor,
+                        _ => ResultsJudgementGraphJudgementBar.GetColor(miss.Judgement),
+                    },
                     Alignment = Alignment.MidLeft,
                     X = TimeToX(miss.SongPosition),
                     Y = 0,
@@ -335,7 +347,7 @@ namespace Quaver.Shared.Screens.Result.UI
                     Parent = this,
                     Tint = breakdown.HitObject.Type switch
                     {
-                        HitObjectType.Mine when breakdown.Type == HitStatType.Miss => ResultsJudgementGraphMineHitBar.Color,
+                        HitObjectType.Mine when breakdown.Type == HitStatType.Miss => MineHitColor,
                         _ => ResultsJudgementGraphJudgementBar.GetColor(breakdown.Judgement),
                     },
                     Size = new ScalableVector2(MissDotSize, MissDotSize),

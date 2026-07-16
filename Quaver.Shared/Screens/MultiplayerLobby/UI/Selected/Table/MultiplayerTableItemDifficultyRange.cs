@@ -15,13 +15,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 OnlineManager.Client.OnDifficultyRangeChanged += OnDifficultyRangeChanged;
         }
 
-        public override string GetName() => "Difficulty Range";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("DifficultyRange");
 
         public override string GetValue()
         {
             // ReSharper disable twice CompareOfFloatsByEqualityOperator
             if (SelectedGame.Value.MinimumDifficultyRating == 0 && SelectedGame.Value.MaximumDifficultyRating == 9999)
-                return "Any";
+                return MultiplayerLobbyLocalization.Get("AnyDifficultyRange");
 
             return $"{StringHelper.RatingToString(SelectedGame.Value.MinimumDifficultyRating)} " +
                    $"- {StringHelper.RatingToString(SelectedGame.Value.MaximumDifficultyRating)}";

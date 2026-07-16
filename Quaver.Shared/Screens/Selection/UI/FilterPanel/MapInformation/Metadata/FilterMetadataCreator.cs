@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
     public class FilterMetadataCreator : TextKeyValue
     {
-        public FilterMetadataCreator() : base("By:", "", 21, ColorHelper.HexToColor("#10C8F6"))
+        public FilterMetadataCreator() : base(SelectionLocalization.Get("By:"), "", 18, ColorHelper.HexToColor("#10C8F6"))
         {
             if (MapManager.Selected.Value != null)
                 Value.Text = MapManager.Selected.Value.Creator;

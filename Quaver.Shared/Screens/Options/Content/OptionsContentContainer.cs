@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.Options.Content
                 // Create header if the subcategory has a valid name
                 if (!string.IsNullOrEmpty(subcategory.Name))
                 {
-                    var header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subcategory.Name, 24)
+                    var header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), subcategory.Name, 20)
                     {
                         Position = new ScalableVector2(28, totalHeight),
                         Tint = ColorHelper.HexToColor("#45D6F5")

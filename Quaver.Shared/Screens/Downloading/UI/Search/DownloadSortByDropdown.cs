@@ -9,22 +9,22 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
 {
     public class DownloadSortByDropdown : LabelledDropdown
     {
-        public DownloadSortByDropdown(Bindable<DownloadSortBy> sortBy) : base("SORT BY: ", 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(180, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
+        public DownloadSortByDropdown(Bindable<DownloadSortBy> sortBy) : base(DownloadLocalization.Get("SORT BY: "), 18, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(180, 38), 18, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += (sender, args) => sortBy.Value = (DownloadSortBy) args.Index;
         }
 
         private static List<string> GetDropdownItems() => new List<string>()
         {
-            "Newest",
-            "Date Submitted",
-            "Length",
-            "Difficulty",
-            "Max Combo",
-            "BPM",
-            "LN %",
-            "Play Count",
+            DownloadLocalization.Get("Newest"),
+            DownloadLocalization.Get("Date Submitted"),
+            DownloadLocalization.Get("Length"),
+            DownloadLocalization.Get("Difficulty"),
+            DownloadLocalization.Get("Max Combo"),
+            DownloadLocalization.Get("BPM"),
+            DownloadLocalization.Get("LN %"),
+            DownloadLocalization.Get("Play Count"),
         };
 
         private static int GetSelectedIndex() => 0;

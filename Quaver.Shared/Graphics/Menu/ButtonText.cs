@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.BitmapFonts;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -13,7 +13,7 @@ namespace Quaver.Shared.Graphics.Menu
     {
         /// <summary>
         /// </summary>
-        public SpriteTextBitmap Text { get; }
+        public SpriteTextPlus Text { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -22,9 +22,9 @@ namespace Quaver.Shared.Graphics.Menu
         /// <param name="text"></param>
         /// <param name="fontSize"></param>
         /// <param name="onClicked"></param>
-        public ButtonText(BitmapFont font, string text, int fontSize, EventHandler onClicked = null)
+        public ButtonText(WobbleFontStore font, string text, int fontSize, EventHandler onClicked = null)
         {
-            Text = new SpriteTextBitmap(font, text.ToUpper())
+            Text = new SpriteTextPlus(font, text.ToUpper())
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "MODIFIERS", 30)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "MODIFIERS", 24)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -68,7 +68,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         /// </summary>
         private void CreateSubHeaderText()
         {
-            SubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Customize gameplay to your heart's desire".ToUpper(), 18)
+            SubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Customize gameplay to your heart's desire".ToUpper(), 16)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

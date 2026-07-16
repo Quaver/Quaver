@@ -351,15 +351,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="width"></param>
         public EditorDetailsPanelKeyValue(string key, string value, float width)
         {
-            const int padding = 18;
+            const int padding = 16;
 
-            Key = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), key, 21)
+            Key = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), key, 16)
             {
                 Parent = this,
                 X = padding
             };
 
-            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), value, 21)
+            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), value, 16)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

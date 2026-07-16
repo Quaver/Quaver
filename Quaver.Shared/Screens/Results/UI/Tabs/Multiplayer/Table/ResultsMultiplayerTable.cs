@@ -130,9 +130,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private void CreateRulesetText()
         {
-            Ruleset = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                Game.Ruleset.ToString().Replace("_", " "),
-                22)
+            Ruleset = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                GetRulesetText(),
+                20)
             {
                 Parent = HeaderContainer,
                 Alignment = Alignment.MidLeft,
@@ -141,23 +141,38 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             };
         }
 
+        private string GetRulesetText()
+        {
+            switch (Game.Ruleset)
+            {
+                case MultiplayerGameRuleset.Free_For_All:
+                    return ResultsLocalization.Get("Free For All");
+                case MultiplayerGameRuleset.Battle_Royale:
+                    return ResultsLocalization.Get("Battle Royale");
+                case MultiplayerGameRuleset.Team:
+                    return ResultsLocalization.Get("Team");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         /// <summary>
         /// </summary>
         private void CreateColumnHeaders()
         {
             var headers = new List<string>
             {
-                "Rating",
-                "Grade",
-                "Accuracy",
-                "Max Combo",
-                "Marv",
-                "Perf",
-                "Great",
-                "Good",
-                "Okay",
-                "Miss",
-                "Mods"
+                ResultsLocalization.Get("Rating"),
+                ResultsLocalization.Get("Grade"),
+                ResultsLocalization.Get("Accuracy"),
+                ResultsLocalization.Get("Max Combo"),
+                ResultsLocalization.Get("Marv"),
+                ResultsLocalization.Get("Perf"),
+                ResultsLocalization.Get("Great"),
+                ResultsLocalization.Get("Good"),
+                ResultsLocalization.Get("Okay"),
+                ResultsLocalization.Get("Miss"),
+                ResultsLocalization.Get("Mods")
             };
 
             var lastWidth = 0f;
@@ -170,7 +185,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             for (var i = headers.Count - 1; i >= 0; i--)
             {
                 // ReSharper disable once ObjectCreationAsStatement
-                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), headers[i], 22)
+                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), headers[i], 20)
                 {
                     Parent = HeaderContainer,
                     Alignment = Alignment.MidRight,
@@ -194,7 +209,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private void CreateScoresLoadingWheelText()
         {
-            ResultLoadingWheelText = new LoadingWheelText(25, "Loading results")
+            ResultLoadingWheelText = new LoadingWheelText(18, ResultsLocalization.Get("Loading results"))
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -254,7 +269,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             // Skip fetching results if it's co-op play
             if (!SkipApiResultFetch && matchInfoResponse == null)
             {
-                NotificationManager.Show(NotificationLevel.Error, "Failed to retrieve players' scores!");
+                NotificationManager.Show(NotificationLevel.Error, ResultsLocalization.Get("Failed to retrieve players' scores!"));
                 players = GetOrderedUserList();
             }
             else if (!SkipApiResultFetch)

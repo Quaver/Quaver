@@ -158,7 +158,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
 
         /// <summary>
         /// </summary>
-        private void CreateRank() => Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.", 22)
+        private void CreateRank() => Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0.", 20)
         {
             Parent = this,
             UsePreviousSpriteBatchOptions = true,
@@ -180,7 +180,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
 
         /// <summary>
         /// </summary>
-        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
         {
             Parent = this,
             UsePreviousSpriteBatchOptions = true,
@@ -196,12 +196,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
 
             var data = new List<ResultsTableColumnData>()
             {
-                new ResultsTableColumnData("Rating", $"{StringHelper.RatingToString(rating)}", ColorHelper.HexToColor("#F2C94C")),
-                new ResultsTableColumnData("Grade", "", Color.White),
-                new ResultsTableColumnData("Accuracy", $"{StringHelper.AccuracyToString(Processor.Accuracy)}",
+                new ResultsTableColumnData(ResultsLocalization.Get("Rating"), $"{StringHelper.RatingToString(rating)}", ColorHelper.HexToColor("#F2C94C")),
+                new ResultsTableColumnData(ResultsLocalization.Get("Grade"), "", Color.White),
+                new ResultsTableColumnData(ResultsLocalization.Get("Accuracy"), $"{StringHelper.AccuracyToString(Processor.Accuracy)}",
                     GetUsernameColor()),
-                new ResultsTableColumnData("Max Combo", $"{Processor.MaxCombo:n0}x", GetUsernameColor()),
-                new ResultsTableColumnData("Mods", ModHelper.GetModsString(Processor.Mods), ColorHelper.HexToColor("#808080"))
+                new ResultsTableColumnData(ResultsLocalization.Get("Max Combo"), $"{Processor.MaxCombo:n0}x", GetUsernameColor()),
+                new ResultsTableColumnData(ResultsLocalization.Get("Mods"), ModHelper.GetModsString(Processor.Mods), ColorHelper.HexToColor("#808080"))
             };
 
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                 if (j > Judgement.Miss)
                     break;
 
-                data.Add(new ResultsTableColumnData(j.ToString(), $"{Processor.CurrentJudgements[j]:n0}",
+                data.Add(new ResultsTableColumnData(ResultsLocalization.Get(j.ToString()), $"{Processor.CurrentJudgements[j]:n0}",
                     ResultsJudgementGraphJudgementBar.GetColor(j)));
             }
 
@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
 
                 Sprite val;
 
-                if (item.ColumnText == "Grade")
+                if (item.ColumnText == ResultsLocalization.Get("Grade"))
                 {
                     var grade = Processor.Failed ? Grade.F : GradeHelper.GetGradeFromAccuracy(Processor.Accuracy);
                     var tex = TextureManager.Load($@"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-{grade.ToString().ToLower()}.png");
@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                 }
                 else
                 {
-                    val = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.Value, 22)
+                    val = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Value, 20)
                     {
                         Parent = this,
                         TextAlignment = TextAlignment.Center,
@@ -255,7 +255,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                         Tint = item.Tint,
                     };
 
-                    if (item.ColumnText == "Mods")
+                    if (item.ColumnText == ResultsLocalization.Get("Mods"))
                     {
                         var text = (SpriteTextPlus) val;
                         text.MaxWidth = 140;

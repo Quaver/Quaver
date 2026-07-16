@@ -23,6 +23,7 @@ using Quaver.Shared.IPC;
 using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Audio;
+using Wobble.Extended.HotReload;
 using Wobble.IO;
 using Wobble.Logging;
 using Wobble.Platform;
@@ -111,21 +112,15 @@ namespace Quaver
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
             NativeAssemblies.Copy();
+#if VISUAL_TESTS
+            SteamManager.Initialize(false, false);
+#else
             SteamManager.Initialize();
+#endif
 
-            try
-            {
-                var fileAssociations = CreateFileAssociations();
-                var applicationIconPath = GetFileIconPath(GetNativeIconFileName("quaver-logo"));
-
-                Utils.NativeUtils.RegisterURIScheme("quaver", "Quaver");
-                ExtractNativeIcons(fileAssociations, applicationIconPath);
-                Utils.NativeUtils.RegisterFileAssociations(fileAssociations, applicationIconPath);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-            }
+#if !VISUAL_TESTS
+            RegisterNativeIntegration();
+#endif
 
 #if VISUAL_TESTS
             using (var game = new QuaverGame(new HotLoader("../../../../Quaver.Shared/")))
@@ -142,6 +137,23 @@ namespace Quaver
                     Logger.Error(e, LogType.Runtime);
                     Utils.NativeUtils.ShowErrorMessage("Quaver Audio Error", e.Message);
                 }
+            }
+        }
+
+        private static void RegisterNativeIntegration()
+        {
+            try
+            {
+                var fileAssociations = CreateFileAssociations();
+                var applicationIconPath = GetFileIconPath(GetNativeIconFileName("quaver-logo"));
+
+                Utils.NativeUtils.RegisterURIScheme("quaver", "Quaver");
+                ExtractNativeIcons(fileAssociations, applicationIconPath);
+                Utils.NativeUtils.RegisterFileAssociations(fileAssociations, applicationIconPath);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
             }
         }
 

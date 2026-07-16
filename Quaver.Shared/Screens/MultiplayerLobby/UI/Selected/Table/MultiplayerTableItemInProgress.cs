@@ -17,9 +17,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             }
         }
         
-        public override string GetName() => "In Progress";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("InProgress");
 
-        public override string GetValue() => SelectedGame.Value.InProgress ? "Yes" : "No";
+        public override string GetValue() => SelectedGame.Value.InProgress ? MultiplayerLobbyLocalization.Get("Yes") : MultiplayerLobbyLocalization.Get("No");
         
         /// <summary>
         /// </summary>

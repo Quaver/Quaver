@@ -5,6 +5,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Wobble.Bindables;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
@@ -12,7 +13,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
     {
         public Bindable<Map> Map { get; }
 
-        public FilterMetadataLength(Bindable<Map> map = null) : base("Length:", "00:00", 20, ColorHelper.HexToColor($"#ffe76b"))
+        public FilterMetadataLength(Bindable<Map> map = null) : base(LocalizationManager.Get("Screen_Selection_LengthLabel"), "00:00", 16, ColorHelper.HexToColor($"#ffe76b"))
         {
             Map = map ?? MapManager.Selected;
 

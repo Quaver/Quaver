@@ -119,14 +119,42 @@ namespace Quaver.Shared.Graphics.Notifications
                 if (Item.AutomaticallySlide)
                     SlideIn();
 
-                Border.Tint = GetColor();
-                Icon.Image = GetIconTexture();
-
-                Text.Text = Item.Text;
-
-                const int padding = 30;
-                Height = Math.Max(Icon.Height + padding, Text.Height + padding);
+                ApplyContent();
             });
+        }
+
+        /// <summary>
+        ///     Refreshes the notification content and restarts its visible lifetime.
+        /// </summary>
+        /// <param name="item"></param>
+        internal void Refresh(NotificationInfo item)
+        {
+            Item = item;
+            TimeInactive = 0;
+            IsSlidingOut = false;
+            HasSlidOut = false;
+            ClearAnimations();
+
+            ScheduleUpdate(() =>
+            {
+                ApplyContent();
+
+                if (Item.AutomaticallySlide)
+                    MoveToX(-30, Easing.OutQuint, 450);
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ApplyContent()
+        {
+            Border.Tint = GetColor();
+            Icon.Image = GetIconTexture();
+
+            Text.Text = Item.Text;
+
+            const int padding = 30;
+            Height = Math.Max(Icon.Height + padding, Text.Height + padding);
         }
 
         /// <summary>
@@ -152,6 +180,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Alpha = 0,
+                AllowInputWhenDialogOpen = true,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -190,7 +219,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private void CreateText()
         {
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

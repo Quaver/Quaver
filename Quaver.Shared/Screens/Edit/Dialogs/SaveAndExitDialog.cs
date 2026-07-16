@@ -1,14 +1,18 @@
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Wobble.Graphics.Buttons;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class SaveAndExitDialog : YesNoDialog
     {
-        private IconButton YellowNoButton { get; }
+        private RoundedButton YellowNoButton { get; }
 
         public SaveAndExitDialog(EditScreen screen) : base("EXIT EDITOR",
             "You have unsaved changes. Would you like to save?")
@@ -24,7 +28,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             YesButton.Size = new ScalableVector2(YesButton.Width * scale, YesButton.Height * scale);
             NoButton.Size = new ScalableVector2(NoButton.Width * scale, NoButton.Height * scale);
 
-            YellowNoButton = new IconButton(UserInterface.NoYellowButton, (sender, args) =>
+            YellowNoButton = new RoundedButton((sender, args) =>
             {
                 screen.ExitToSongSelect();
                 Close();
@@ -33,8 +37,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 Parent = Panel,
                 Size = YesButton.Size,
                 Alignment = Alignment.BotCenter,
-                Y = YesButton.Y
+                Y = YesButton.Y,
+                Tint = ColorHelper.HexToColor("#F2994A")
             };
+
+            YellowNoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "NO", 20, Color.White);
 
             YesButton.X -= 80;
             NoButton.X = -YesButton.X;
@@ -43,7 +50,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         public override void Close()
         {
             YellowNoButton.IsClickable = false;
-            YellowNoButton.IsPerformingFadeAnimations = false;
+            YellowNoButton.PerformHoverFade = false;
             base.Close();
         }
     }

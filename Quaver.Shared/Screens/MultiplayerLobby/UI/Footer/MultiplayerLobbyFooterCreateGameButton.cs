@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Footer
     public class MultiplayerLobbyFooterCreateGameButton : IconTextButton
     {
         public MultiplayerLobbyFooterCreateGameButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), "CREATE GAME",
+            FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLobbyLocalization.Get("CreateGame"),
             (o, e) => DialogManager.Show(new CreateGameDialog()))
         {
         }

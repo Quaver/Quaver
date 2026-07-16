@@ -189,18 +189,16 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             if (!UserMeetsFilter(user))
                 return;
 
-            lock (AvailableItems)
-            {
-                if (!AvailableItems.Contains(user))
-                    AvailableItems.Add(user);
-            }
+            var userId = user.OnlineUser.Id;
 
+            lock (AvailableItems)
             lock (Pool)
             {
-                if (Pool.Any(x => x.Item == user))
+                if (AvailableItems.Any(x => IsUser(x, userId)) || Pool.Any(x => IsUser(x.Item, userId)))
                     return;
 
-                AddContainedDrawable(AddObject(AvailableItems.IndexOf(user)));
+                AvailableItems.Add(user);
+                AddContainedDrawable(AddObject(AvailableItems.Count - 1));
                 RecalculateContainerHeight();
             }
         }
@@ -209,16 +207,22 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         ///     Removes a user from the list
         /// </summary>
         /// <param name="user"></param>
-        public void RemoveUser(User user)
+        public void RemoveUser(User user) => RemoveUser(user.OnlineUser.Id);
+
+        /// <summary>
+        ///     Removes a user from the list
+        /// </summary>
+        /// <param name="userId"></param>
+        private void RemoveUser(int userId)
         {
             lock (AvailableItems)
             lock (Pool)
             {
-                var item = Pool.Find(x => x.Item == user);
-                AvailableItems.Remove(user);
+                var items = Pool.FindAll(x => IsUser(x.Item, userId));
+                AvailableItems.RemoveAll(x => IsUser(x, userId));
 
                 // Remove the item if it exists in the pool.
-                if (item != null)
+                foreach (var item in items)
                 {
                     item.Destroy();
                     RemoveContainedDrawable(item);
@@ -388,7 +392,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// </summary>
         private void CreateOfflineNotice()
         {
-            OfflineNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            OfflineNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -453,13 +457,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// <exception cref="NotImplementedException"></exception>
         private void OnUserDisconnected(object sender, UserDisconnectedEventArgs e)
         {
-            var user = Pool.Find(x => x.Item.OnlineUser.Id == e.UserId);
-
-            if (user == null)
-                return;
-
-            RemoveUser(user.Item);
+            RemoveUser(e.UserId);
         }
+
+        private static bool IsUser(User user, int userId) => user?.OnlineUser?.Id == userId;
 
         private void OnFriendsListReceived(object sender, UserFriendsListEventArgs e) => ResetPool();
 

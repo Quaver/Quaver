@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
     public class ResultsFooterFixOffsetButton : IconTextButton
     {
         public ResultsFooterFixOffsetButton(ResultsScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Fix Offset", (sender, args) => screen.FixLocalOffset())
+            FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Fix Offset"), (sender, args) => screen.FixLocalOffset())
         {
         }
     }

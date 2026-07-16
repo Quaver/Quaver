@@ -11,7 +11,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public override QuaverScreenType Screen { get; } = QuaverScreenType.Theatre;
 
         public IconTextButtonTheater() : base(FontAwesome.Get(FontAwesomeIcon.fa_photo_camera),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), "Theater")
+            FontManager.GetWobbleFont(Fonts.InterBold), "Theater")
         {
         }
 

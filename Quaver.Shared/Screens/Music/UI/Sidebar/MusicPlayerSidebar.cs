@@ -9,7 +9,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Downloading;
-using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Music.UI.Sidebar.Playlists;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
@@ -165,7 +165,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateDownloadSongsButton()
         {
             DownloadSongs = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive),
-                FontManager.GetWobbleFont(Fonts.LatoBlack), "Download Songs", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterBold), "Download Songs", (sender, args) =>
                 {
                     var game = (QuaverGame) GameBase.Game;
                     game.CurrentScreen.Exit(() => new DownloadingScreen());
@@ -187,7 +187,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateOnlineMapPoolsButton()
         {
             OnlineMapPools = new IconTextButton(UserInterface.JukeboxHamburgerIcon,
-                FontManager.GetWobbleFont(Fonts.LatoBlack), "Online Playlists", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterBold), "Online Playlists", (sender, args) =>
                 {
                     BrowserHelper.OpenURL($"https://quavergame.com/mappools/");
                 })
@@ -208,7 +208,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateSongSelectButton()
         {
             SongSelect = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
-                FontManager.GetWobbleFont(Fonts.LatoBlack), "Song Select", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterBold), "Song Select", (sender, args) =>
                 {
                     var game = (QuaverGame) GameBase.Game;
                     game.CurrentScreen.Exit(() => new SelectionScreen());
@@ -230,7 +230,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateMapEditorButton()
         {
             MapEditor = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
-                FontManager.GetWobbleFont(Fonts.LatoBlack), "Map Editor", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterBold), "Map Editor", (sender, args) =>
                 {
                     if (MapManager.Selected.Value == null)
                     {
@@ -248,7 +248,8 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
                     }
 
                     var game = (QuaverGame) GameBase.Game;
-                    game.CurrentScreen.Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
+                    game.CurrentScreen.Exit(() => new EditScreen(MapManager.Selected.Value,
+                        AudioEngine.LoadMapAudioTrack(MapManager.Selected.Value)));
                 })
             {
                 Parent = ExploreContainer,

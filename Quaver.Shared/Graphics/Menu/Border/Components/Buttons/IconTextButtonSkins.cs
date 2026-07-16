@@ -8,10 +8,10 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     public class IconTextButtonSkins : IconTextButton
     {
         public IconTextButtonSkins() : base(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Skins", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Skins", (sender, args) =>
             {
                 BrowserHelper.OpenURL($"https://steamcommunity.com/app/{SteamManager.ApplicationId}/workshop/");
-            })
+            }, localizationKey: "Screen_Main_Menu_Skins")
         {
         }
     }

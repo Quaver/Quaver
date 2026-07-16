@@ -124,7 +124,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void CreateNoDownloadsText()
         {
-            NoDownloadsText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),"", 20)
+            NoDownloadsText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),"", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

@@ -17,14 +17,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             Selector = new MultiplayerRulesetDropdown(game);
         }
 
-        public override string GetName() => "Ruleset";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("Ruleset");
 
         public override string GetValue()
         {
             switch (SelectedGame.Value.Ruleset)
             {
                 case MultiplayerGameRuleset.Free_For_All:
-                    return "Free-For-All";
+                    return MultiplayerLobbyLocalization.Get("FreeForAll");
                 // case MultiplayerGameRuleset.Team:
                 //     return "Team";
                 //case MultiplayerGameRuleset.Battle_Royale:
@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             "Free-For-All",
             //"Team",
             //"Battle Royale"
-        }, new ScalableVector2(170, 36), 22, Colors.MainAccent, 0)
+        }, new ScalableVector2(170, 36), 18, Colors.MainAccent, 0)
         {
             Game = game;
 

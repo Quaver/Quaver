@@ -72,14 +72,14 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
             };
 
             HeaderText = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_music_headphones),
-                FontManager.GetWobbleFont(Fonts.LatoBlack), "LISTENING PARTY", null, Color.White, Color.White)
+                FontManager.GetWobbleFont(Fonts.InterBold), "LISTENING PARTY", null, Color.White, Color.White)
             {
                 Parent = HeaderBackground,
                 Alignment = Alignment.MidLeft,
                 X = 14
             };
 
-            ListenerCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0/16", 22)
+            ListenerCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0/16", 22)
             {
                 Parent = HeaderBackground,
                 Alignment = Alignment.MidRight,

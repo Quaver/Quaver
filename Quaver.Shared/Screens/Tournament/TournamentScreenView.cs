@@ -324,7 +324,7 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 var screen = TournamentScreen.GameplayScreens[i];
 
-                var username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                var username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                     screen.LoadedReplay?.PlayerName ?? $"Player {i + 1}", 24)
                 {
                     Parent = screen.Ruleset.Playfield.Container,

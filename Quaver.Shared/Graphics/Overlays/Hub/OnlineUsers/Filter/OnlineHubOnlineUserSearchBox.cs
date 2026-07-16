@@ -22,8 +22,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter
         /// </summary>
         /// <param name="bindable"></param>
         /// <param name="size"></param>
-        public OnlineHubOnlineUserSearchBox(Bindable<string> bindable, ScalableVector2 size) : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack),
-            20, "", "Search for users...")
+        public OnlineHubOnlineUserSearchBox(Bindable<string> bindable, ScalableVector2 size) : base(size, FontManager.GetWobbleFont(Fonts.InterBold),
+            18, "", "Search for users...")
         {
             Tint = ColorHelper.HexToColor("#131313");
             Image = UserInterface.DropdownClosed;

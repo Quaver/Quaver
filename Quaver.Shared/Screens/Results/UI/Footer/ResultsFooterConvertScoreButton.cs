@@ -8,11 +8,11 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
     public class ResultsFooterConvertScoreButton : IconTextButton
     {
         public ResultsFooterConvertScoreButton(ResultsScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_refresh_arrow),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Convert Score", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Convert Score"), (sender, args) =>
             {
                 if (screen.IsConvertingScore)
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "Please wait! Your score is already being converted!");
+                    NotificationManager.Show(NotificationLevel.Warning, ResultsLocalization.Get("Please wait! Your score is already being converted!"));
                     return;
                 }
 

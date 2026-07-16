@@ -109,6 +109,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> Username { get; private set; }
 
         /// <summary>
+        ///     The culture code used for localized strings.
+        /// </summary>
+        internal static Bindable<string> Language { get; private set; }
+
+        /// <summary>
         ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
         /// </summary>
         internal static Bindable<string> Skin { get; private set; }
@@ -336,6 +341,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<LeaderboardType> LeaderboardSection { get; private set; }
 
         /// <summary>
+        ///     If true, mapset and playlist banners will be displayed during song select.
+        /// </summary>
+        internal static Bindable<bool> DisplaySongSelectBanners { get; private set; }
+
+        /// <summary>
         ///     If true, the user will be auto logged into the server.
         /// </summary>
         internal static Bindable<bool> AutoLoginToServer { get; private set; }
@@ -419,11 +429,6 @@ namespace Quaver.Shared.Config
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
-
-        /// <summary>
-        ///	    If enabled, automatically skip the beta splash screen.
-        /// </summary>
-        internal static Bindable<bool> SkipSplashScreen { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1071,6 +1076,7 @@ namespace Quaver.Shared.Config
             SteamWorkshopDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SteamWorkshopDirectory", _steamWorkshopDirectory, data);
             SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
             Username = ReadValue(@"Username", "Player", data);
+            Language = ReadValue(@"Language", "en", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
@@ -1113,6 +1119,7 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayHitBubbles = ReadValue(@"DisplayHitBubbles", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
+            DisplaySongSelectBanners = ReadValue(@"DisplaySongSelectBanners", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
             EnableLongNoteReleaseHitsounds = ReadValue(@"EnableLongNoteReleaseHitsounds", false, data);
             EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);
@@ -1238,7 +1245,6 @@ namespace Quaver.Shared.Config
             ReloadSkinOnChange = ReadValue(@"ReloadSkinOnChange", false, data);
             //EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
             AcceptedTermsAndPrivacyPolicy = ReadValue(@"AcceptedTermsAndPrivacyPolicy", false, data);
-            SkipSplashScreen = ReadValue(@"SkipSplashScreen", false, data);
             DisplayGameplayOverlay = ReadValue(@"DisplayGameplayOverlay", true, data);
             EnableHighProcessPriority = ReadValue(@"EnableHighProcessPriority", false, data);
             DisplayNotificationsInGameplay = ReadValue(@"DisplayNotificationsInGameplay", false, data);
