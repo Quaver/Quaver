@@ -490,7 +490,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            // The timeline, scroll graph, and hit objects are drawn manually after the normal child pass. Exclude the
+            // zoom controls from that pass so they can be drawn once above those layers at the end.
+            var drawZoomOnTop = Zoom?.Visible == true;
+
+            if (drawZoomOnTop)
+                Zoom.Visible = false;
+
+            try
+            {
+                base.Draw(gameTime);
+            }
+            finally
+            {
+                if (drawZoomOnTop)
+                    Zoom.Visible = true;
+            }
 
             try
             {
@@ -528,6 +543,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (ShowSpectrogram.Value)
                 LoadingSpectrogram?.Draw(gameTime);
 
+            if (drawZoomOnTop)
+                Zoom.Draw(gameTime);
         }
 
         /// <inheritdoc />
