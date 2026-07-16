@@ -59,7 +59,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
             Y = -2;
 
-            Measure = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), measureCount.ToString(), 24, false)
+            // Uncached labels measure themselves when drawn, so they do not need a per-label font change subscription.
+            Measure = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), measureCount.ToString(), 24,
+                false, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
