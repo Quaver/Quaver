@@ -202,10 +202,20 @@ namespace Quaver.Shared
         private bool WasPlayingGameplayMusicInPreviousFrame { get; set; }
 
         /// <summary>
-        ///     The music volume that <see cref="HandleMusicVolumeFade"/> is currently easing
+        ///     The music volume that <see cref="HandleMusicVolumeFade"/> is currently fading
         ///     <see cref="AudioTrack.GlobalVolume"/> towards.
         /// </summary>
         private float TargetMusicVolume { get; set; }
+
+        /// <summary>
+        ///     The music volume the current fade started from.
+        /// </summary>
+        private float MusicVolumeFadeStart { get; set; }
+
+        /// <summary>
+        ///     How long in milliseconds the current fade has been running for.
+        /// </summary>
+        private double MusicVolumeFadeElapsed { get; set; }
 
         /// <summary>
         ///     How long in milliseconds it takes to fade between music volumes
@@ -1029,29 +1039,38 @@ namespace Quaver.Shared
         {
             var muted = ConfigManager.MuteAudioOnWindowInactive.Value && !IsActive;
             var musicVolume = IsPlayingGameplayMusic ? ConfigManager.VolumeMusic.Value : ConfigManager.VolumeMenuMusic.Value;
-
-            TargetMusicVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * musicVolume / 100f;
+            var target = muted ? 0 : ConfigManager.VolumeGlobal.Value * musicVolume / 100f;
 
             if (immediate)
-                AudioTrack.GlobalVolume = TargetMusicVolume;
+            {
+                TargetMusicVolume = target;
+                AudioTrack.GlobalVolume = target;
+            }
+            else if (target != TargetMusicVolume)
+            {
+                MusicVolumeFadeStart = (float) AudioTrack.GlobalVolume;
+                MusicVolumeFadeElapsed = 0;
+                TargetMusicVolume = target;
+            }
 
             AudioSample.GlobalVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeEffect.Value / 100f;
         }
 
         /// <summary>
-        ///     Eases <see cref="AudioTrack.GlobalVolume"/> towards <see cref="TargetMusicVolume"/>
-        ///     over <see cref="MusicVolumeFadeTime"/>, so music volume changes fade smoothly
-        ///     instead of jumping instantly (e.g. when returning from gameplay to the menu).
+        ///     Smoothly fades music volume between the current and target values over
+        ///     <see cref="MusicVolumeFadeTime"/>. The volume is calculated from elapsed
+        ///     time instead of incrementally adjusting the current volume, ensuring
+        ///     symmetric fade-in/out behavior.
         /// </summary>
         private void HandleMusicVolumeFade(GameTime gameTime)
         {
-            var current = (float) AudioTrack.GlobalVolume;
-
-            if (Math.Abs(current - TargetMusicVolume) < 0.1f)
+            if ((float) AudioTrack.GlobalVolume == TargetMusicVolume)
                 return;
 
-            var t = (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / MusicVolumeFadeTime, 1);
-            AudioTrack.GlobalVolume = Microsoft.Xna.Framework.MathHelper.Lerp(current, TargetMusicVolume, t);
+            MusicVolumeFadeElapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            var progress = (float) Math.Min(MusicVolumeFadeElapsed / MusicVolumeFadeTime, 1);
+            AudioTrack.GlobalVolume = Microsoft.Xna.Framework.MathHelper.Lerp(MusicVolumeFadeStart, TargetMusicVolume, progress);
         }
 
         /// <summary>
