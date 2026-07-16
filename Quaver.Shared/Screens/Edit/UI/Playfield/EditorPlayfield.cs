@@ -14,7 +14,6 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -548,20 +547,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Spectrogram?.Destroy();
             SpectrogramLoadTask?.Dispose();
 
-            ThreadScheduler.Run(() =>
-            {
-                if (HitObjects.Count < 1000)
-                    HitObjects.ForEach(x => x.Destroy());
-
-                Timeline?.Destroy();
-                LineContainer?.Destroy();
-
-                HitObjects.Clear();
-                HitObjectMap.Clear();
-                LineContainer = null;
-                Timeline = null;
-            });
-
             Track.Seeked -= OnTrackSeeked;
             Track.RateChanged -= OnTrackRateChanged;
 
@@ -604,9 +589,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged -= OnSpectrogramInterleaveCountChanged;
             ConfigManager.EditorPlayfieldAlpha.ValueChanged -= OnPlayfieldAlphaChanged;
 
+            Timeline?.Destroy();
+            Timeline = null;
+            LineContainer?.Destroy();
+            LineContainer = null;
+
+            // Hit objects only reference managed drawables and shared skin textures. Dropping the collection roots
+            // avoids walking and disposing every object while still allowing the GC to reclaim the complete graph.
+            HitObjects = null;
+            HitObjectMap = null;
+            HitObjectPool = null;
+            LongNoteInDrag = null;
+
             base.Destroy();
             ActionManager = null;
-            HitObjectPool.Clear();
         }
 
         /// <summary>

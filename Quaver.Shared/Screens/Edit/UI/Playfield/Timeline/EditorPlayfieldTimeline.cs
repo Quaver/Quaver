@@ -134,8 +134,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         public override void Destroy()
         {
-            foreach (var item in CachedLines)
-                item.Value.ForEach(x => x.Destroy());
+            Lines = null;
+            LinePool = null;
+            CachedLines.Clear();
 
             // ReSharper disable twice DelegateSubtraction
             BeatSnap.ValueChanged -= OnBeatSnapChanged;
@@ -144,6 +145,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             Track.RateChanged -= OnTrackRateChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
+            ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
@@ -461,10 +463,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
        /// </summary>
        private void ReInitialize()
        {
-           foreach (var lines in CachedLines)
-               lines.Value.ForEach(x => x.Destroy());
-
-           Lines.Clear();
+           Lines = null;
+           LinePool = null;
            CachedLines.Clear();
 
            InitializeLines();
