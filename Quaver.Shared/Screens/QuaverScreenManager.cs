@@ -108,7 +108,6 @@ namespace Quaver.Shared.Screens
                 OnlineManager.Client?.UpdateClientStatus(status);
 
             OtherGameMapDatabaseCache.RunThread();
-            GC.Collect();
 
             if (switchImmediately)
                 Transitioner.FadeOut();

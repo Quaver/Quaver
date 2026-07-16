@@ -14,7 +14,6 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -485,7 +484,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            // The timeline, scroll graph, and hit objects are drawn manually after the normal child pass. Exclude the
+            // zoom controls from that pass so they can be drawn once above those layers at the end.
+            var drawZoomOnTop = Zoom?.Visible == true;
+
+            if (drawZoomOnTop)
+                Zoom.Visible = false;
+
+            try
+            {
+                base.Draw(gameTime);
+            }
+            finally
+            {
+                if (drawZoomOnTop)
+                    Zoom.Visible = true;
+            }
 
             try
             {
@@ -523,6 +537,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (ShowSpectrogram.Value)
                 LoadingSpectrogram?.Draw(gameTime);
 
+            if (drawZoomOnTop)
+                Zoom.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -549,20 +565,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             LoadingWaveform = null;
             LoadingSpectrogram?.Destroy();
             LoadingSpectrogram = null;
-
-            ThreadScheduler.Run(() =>
-            {
-                if (HitObjects.Count < 1000)
-                    HitObjects.ForEach(x => x.Destroy());
-
-                Timeline?.Destroy();
-                LineContainer?.Destroy();
-
-                HitObjects.Clear();
-                HitObjectMap.Clear();
-                LineContainer = null;
-                Timeline = null;
-            });
 
             Track.Seeked -= OnTrackSeeked;
             Track.RateChanged -= OnTrackRateChanged;
@@ -606,9 +608,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged -= OnSpectrogramInterleaveCountChanged;
             ConfigManager.EditorPlayfieldAlpha.ValueChanged -= OnPlayfieldAlphaChanged;
 
+            Timeline?.Destroy();
+            Timeline = null;
+            LineContainer?.Destroy();
+            LineContainer = null;
+
+            // Hit objects only reference managed drawables and shared skin textures. Dropping the collection roots
+            // avoids walking and disposing every object while still allowing the GC to reclaim the complete graph.
+            HitObjects = null;
+            HitObjectMap = null;
+            HitObjectPool = null;
+            LongNoteInDrag = null;
+
             base.Destroy();
             ActionManager = null;
-            HitObjectPool.Clear();
         }
 
         /// <summary>
