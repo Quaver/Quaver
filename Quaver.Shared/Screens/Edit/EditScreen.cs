@@ -590,6 +590,11 @@ namespace Quaver.Shared.Screens.Edit
             BackupScheduler = null;
             if (EditorPluginUtils.EditScreen == this)
                 EditorPluginUtils.EditScreen = null;
+
+            // The editor can release a very large, long-lived managed graph. Request collection after the screen
+            // transition has finished, without blocking the game thread or retaining this screen in the callback.
+            ThreadScheduler.RunAfter(static () =>
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, false, false), 1000);
         }
 
         /// <summary>
