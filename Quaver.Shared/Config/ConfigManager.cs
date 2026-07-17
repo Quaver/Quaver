@@ -139,9 +139,14 @@ namespace Quaver.Shared.Config
         internal static BindableInt VolumeEffect { get; private set; }
 
         /// <summary>
-        ///     The Music volume of the gamne.
+        ///     The Music volume of the gamne. Only applies while actively playing a map.
         /// </summary>
         internal static BindableInt VolumeMusic { get; private set; }
+
+        /// <summary>
+        ///     The music volume used everywhere outside of gameplay (menus, song select, editor, etc).
+        /// </summary>
+        internal static BindableInt VolumeMenuMusic { get; private set; }
 
         /// <summary>
         ///     The BASS device period.
@@ -314,6 +319,11 @@ namespace Quaver.Shared.Config
         ///     Dictates how to order the mapsets during song select.Get
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
+
+        /// <summary>
+        ///     Dictates how to order the playlists during song select.
+        /// </summary>
+        internal static Bindable<OrderPlaylistsBy> SelectOrderPlaylistsBy { get; private set; }
 
         /// <summary>
         ///     Dictates how to group mapsets in song select
@@ -627,6 +637,11 @@ namespace Quaver.Shared.Config
         /// </summary>
         /// <returns></returns>
         internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
+
+        /// <summary>
+        ///     If true, audio will be muted when Quaver isn't the focused window
+        /// </summary>
+        internal static Bindable<bool> MuteAudioOnWindowInactive { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -1070,6 +1085,7 @@ namespace Quaver.Shared.Config
             VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
+            VolumeMenuMusic = ReadInt(@"VolumeMenuMusic", 50, 0, 100, data);
             DevicePeriod = ReadInt(@"DevicePeriod", 2, 1, 100, data);
             DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", 4, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
@@ -1098,6 +1114,7 @@ namespace Quaver.Shared.Config
             DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
             LeaderboardRankedAccuracy = ReadValue(@"LeaderboardRankedAccuracy", false, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
+            SelectOrderPlaylistsBy = ReadValue(@"SelectOrderPlaylistsBy", OrderPlaylistsBy.Title, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);
@@ -1195,6 +1212,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
+            MuteAudioOnWindowInactive = ReadValue(@"MuteAudioOnWindowInactive", false, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
             DownloadDisplayExplicitMapsets = ReadValue(@"DownloadDisplayExplicitMapsets", false, data);
             DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);

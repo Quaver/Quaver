@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -59,7 +62,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 Tint = Color.White,
                 Visible = PlaylistManager.Playlists.Count == 0
             };
+
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy() => base.Destroy();
 
         /// <inheritdoc />
         /// <summary>
@@ -158,7 +167,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 DestroyAndClearPool();
 
-                AvailableItems = PlaylistManager.Playlists;
+                AvailableItems = OrderPlaylists(PlaylistManager.Playlists);
 
                 SetSelectedIndex();
 
@@ -178,5 +187,54 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             HasReinitialized = true;
             FireInitializedEvent();
         }
+
+        /// <summary>
+        ///     Restarts and immediately initializes the playlists.
+        /// </summary>
+        public void InitializePlaylistsImmediately()
+        {
+            TimeElapsedUntilInitializationRequest = ReinitializeTime;
+            HasReinitialized = false;
+            InitializePlaylists(false);
+        }
+
+        /// <summary>
+        ///     Orders playlists by the song select sort setting when playlists are the visible list.
+        /// </summary>
+        /// <param name="playlists"></param>
+        /// <returns></returns>
+        private static List<Playlist> OrderPlaylists(IEnumerable<Playlist> playlists)
+        {
+            switch (ConfigManager.SelectOrderPlaylistsBy?.Value)
+            {
+                case OrderPlaylistsBy.Creator:
+                    return playlists.OrderBy(x => x.Creator).ThenBy(x => x.Name).ToList();
+                case OrderPlaylistsBy.DateAdded:
+                    return playlists.OrderByDescending(x => x.Id).ThenBy(x => x.Name).ToList();
+                case OrderPlaylistsBy.Game:
+                    return playlists.OrderBy(x => x.PlaylistGame).ThenBy(x => x.Name).ToList();
+                case OrderPlaylistsBy.Difficulty:
+                    return playlists.OrderBy(GetPlaylistMinDifficulty).ThenBy(x => x.Name).ToList();
+                case OrderPlaylistsBy.Length:
+                    return playlists.OrderBy(x => x.Maps.Count).ThenBy(x => x.Name).ToList();
+                case OrderPlaylistsBy.Title:
+                default:
+                    return playlists.OrderBy(x => x.Name).ToList();
+            }
+        }
+
+        /// <summary>
+        ///     Gets the minimum difficulty shown for a playlist.
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        private static double GetPlaylistMinDifficulty(Playlist playlist)
+        {
+            if (playlist.Maps.Count == 0)
+                return 0;
+
+            return playlist.Maps.Min(map => map.DifficultyFromMods(ModManager.Mods));
+        }
+
     }
 }

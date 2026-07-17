@@ -131,6 +131,7 @@ namespace Quaver.Shared.Screens.Selection
             MapsetContainer.ContainerInitialized += OnMapsetContainerInitialized;
             SelectScreen.ScreenExiting += OnExiting;
             ConfigManager.SelectGroupMapsetsBy.ValueChanged += OnGroupingChanged;
+            ConfigManager.SelectOrderPlaylistsBy.ValueChanged += OnSelectOrderPlaylistsChanged;
             PlaylistManager.PlaylistCreated += OnPlaylistCreated;
             PlaylistManager.PlaylistDeleted += OnPlaylistDeleted;
             PlaylistManager.PlaylistSynced += OnPlaylistSynced;
@@ -168,6 +169,7 @@ namespace Quaver.Shared.Screens.Selection
             SelectScreen.ActiveLeftPanel.ValueChanged -= OnActiveLeftPanelChanged;
             MapsetContainer.ContainerInitialized -= OnMapsetContainerInitialized;
             ConfigManager.SelectGroupMapsetsBy.ValueChanged -= OnGroupingChanged;
+            ConfigManager.SelectOrderPlaylistsBy.ValueChanged -= OnSelectOrderPlaylistsChanged;
             PlaylistManager.PlaylistCreated -= OnPlaylistCreated;
             PlaylistManager.PlaylistDeleted -= OnPlaylistDeleted;
             PlaylistManager.PlaylistSynced -= OnPlaylistSynced;
@@ -220,7 +222,7 @@ namespace Quaver.Shared.Screens.Selection
         ///     Creates <see cref="FilterPanel"/>
         /// </summary>
         private void CreateFilterPanel() => FilterPanel = new SelectFilterPanel(SelectScreen.AvailableMapsets,
-            SelectScreen.CurrentSearchQuery, SelectScreen.IsPlayTestingInPreview, SelectScreen.ActiveLeftPanel)
+            SelectScreen.CurrentSearchQuery, SelectScreen.IsPlayTestingInPreview, SelectScreen.ActiveLeftPanel, SelectScreen.ActiveScrollContainer)
         {
             Parent = Container,
             Y = Header.Height + Header.ForegroundLine.Height - 2
@@ -430,7 +432,7 @@ namespace Quaver.Shared.Screens.Selection
                     PlaylistContainer.MoveToX(inactivePosition, easing, animTime);
                     break;
                 case SelectScrollContainerType.Playlists:
-                    PlaylistContainer.MoveToX(activePosition, easing, animTime);
+                    PlaylistContainer.InitializePlaylistsImmediately();
 
                     MapsetContainer.MoveToX(inactivePosition, easing, animTime);
                     MapContainer.MoveToX(inactivePosition, easing, animTime);
@@ -548,6 +550,20 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
+        ///     Called when the song select playlist sort order has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectOrderPlaylistsChanged(object sender, BindableValueChangedEventArgs<OrderPlaylistsBy> e)
+        {
+            if (ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists ||
+                SelectScreen.ActiveScrollContainer.Value != SelectScrollContainerType.Playlists)
+                return;
+
+            ReInitializePlaylists();
+        }
+
+        /// <summary>
         ///     Handles reinitializing the playlist container with animations
         /// </summary>
         private void ReInitializePlaylists()
@@ -560,12 +576,12 @@ namespace Quaver.Shared.Screens.Selection
                     MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, Easing.OutQuint, 450);
 
                     // Add a delay before updating these values to account for animations
-                    ThreadScheduler.RunAfter(() =>
+                    ThreadScheduler.RunAfter(() => Container.AddScheduledUpdate(() =>
                     {
                         ConfigManager.SelectGroupMapsetsBy.Value = GroupMapsetsBy.Playlists;
                         SelectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
-                    }, 250);
-                    break;
+                    }), 250);
+                    return;
                 case SelectScrollContainerType.Playlists:
                     PlaylistContainer.ClearAnimations();
                     PlaylistContainer.MoveToX(PlaylistContainer.Width + ScreenPaddingX, Easing.OutQuint, 450);

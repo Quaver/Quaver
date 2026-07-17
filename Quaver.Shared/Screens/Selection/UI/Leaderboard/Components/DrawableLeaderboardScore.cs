@@ -1,10 +1,8 @@
-using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -53,17 +51,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 UsePreviousSpriteBatchOptions = true
             };
 
-            ModManager.ModsChanged += OnModsChanged;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy()
-        {
-            ModManager.ModsChanged -= OnModsChanged;
-
-            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -78,8 +65,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             ChildContainer.UpdateContent(this);
         }
-
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
 
         public void SetScrollVisibility(bool visible)
         {
