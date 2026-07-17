@@ -958,6 +958,14 @@ namespace Quaver.Shared.Screens.Selection
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
+                if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists &&
+                    PlaylistManager.Selected.Value?.Maps.Count == 0)
+                {
+                    View.Container.AddScheduledUpdate(() =>
+                        ActiveScrollContainer.Value = SelectScrollContainerType.Playlists);
+                    return;
+                }
+
                 var mapsetIndex = AvailableMapsets.Value.FindIndex(x => x.Maps.Contains(e.Map));
 
                 if (mapsetIndex == -1 && AvailableMapsets.Value.Count != 0)
