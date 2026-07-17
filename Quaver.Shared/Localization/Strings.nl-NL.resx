@@ -639,8 +639,8 @@
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>Afwijking</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Nauwkeurigheid</value>
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
+    <value>ACCURACY</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Levens</value>
@@ -654,8 +654,8 @@
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>Std. Afw:</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Verhouding:</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>RATIO</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistieken Niet Beschikbaar</value>
@@ -722,8 +722,14 @@ als Uitstekend werden geraakt.</value>
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Beoordelingsgraad</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Max Combo</value>
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
+    <value>MAX COMBO</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>PERFORMANCE RATING</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>RANKED ACCURACY</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Uitstekend</value>
@@ -1332,31 +1338,31 @@ als Uitstekend werden geraakt.</value>
     <value>10 Toetsen</value>
   </data>
   <data name="Screen_Options_VideoSettings" xml:space="preserve">
-    <value>Video Settings</value>
+    <value>Video instellingen</value>
   </data>
   <data name="Screen_Options_AudioSettings" xml:space="preserve">
-    <value>Audio Settings</value>
+    <value>Audio Instellingen</value>
   </data>
   <data name="Screen_Options_LanguageSettings" xml:space="preserve">
-    <value>Language Settings</value>
+    <value>Taal Instellingen</value>
   </data>
   <data name="Screen_Options_GameplaySettings" xml:space="preserve">
-    <value>Gameplay Settings</value>
+    <value>Gameplay Instellingen</value>
   </data>
   <data name="Screen_Options_SkinSettings" xml:space="preserve">
-    <value>Skin Settings</value>
+    <value>Skin Instellingen</value>
   </data>
   <data name="Screen_Options_InputSettings" xml:space="preserve">
-    <value>Input Settings</value>
+    <value>Invoer Instellingen</value>
   </data>
   <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
-    <value>Game Mode Specific Settings</value>
+    <value>Instellingen Van Specifieke Spelmodi</value>
   </data>
   <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
-    <value>Miscellaneous Settings</value>
+    <value>Overige Instellingen</value>
   </data>
   <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>Geavanceerde Instellingen</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} Zoekresultaat</value>
@@ -1757,16 +1763,16 @@ om andere spelers het te laten downloaden?</value>
     <value>Bereik Van Long Note %</value>
   </data>
   <data name="Screen_Multiplayer_StartMatch" xml:space="preserve">
-    <value>START HET POTJE</value>
+    <value>START DE RONDE</value>
   </data>
   <data name="Screen_Multiplayer_ReadyUp" xml:space="preserve">
     <value>KLAAR</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishes" xml:space="preserve">
-    <value>Wacht todat het potje voorbij is voordat je dit doet alstublieft.</value>
+    <value>Wacht tot de ronde voorbij is voordat je dit doet alsjeblieft.</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeReadying" xml:space="preserve">
-    <value>Wacht totdat het potje voorbij is voordat je jezelf gereed stelt alstublieft.</value>
+    <value>Wacht totdat de ronde voorbij is voordat je jezelf gereed stelt alsjeblieft.</value>
   </data>
   <data name="Screen_Multiplayer_CannotReadyWithoutMap" xml:space="preserve">
     <value>Je kan jezelf niet gereed stellen als je de map niet hebt!</value>
@@ -1775,7 +1781,7 @@ om andere spelers het te laten downloaden?</value>
     <value>selecteer map</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMap" xml:space="preserve">
-    <value>Wacht totdat het potje voorbij is voordat je een andere map selecteert alstublieft.</value>
+    <value>Wacht totdat de ronde voorbij is voordat je een andere map selecteert alstublieft.</value>
   </data>
   <data name="Screen_Multiplayer_CannotSelectMapIfNotHost" xml:space="preserve">
     <value>Je kan de map niet selecteren als je niet de host bent!</value>
@@ -1790,13 +1796,13 @@ om andere spelers het te laten downloaden?</value>
     <value>NIET KLAAR</value>
   </data>
   <data name="Screen_Multiplayer_CancelMatchStart" xml:space="preserve">
-    <value>ANNULLER HET STARTEN VAN HET POTJE</value>
+    <value>ANNULEER HET STARTEN VAN DE RONDE</value>
   </data>
   <data name="Screen_Multiplayer_Modifiers" xml:space="preserve">
     <value>Modificaties</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMods" xml:space="preserve">
-    <value>Wacht totdat het potje voorbij is voordat je modificaties selecteert alstublieft.</value>
+    <value>Wacht totdat de ronde voorbij is voordat je modificaties selecteert alsjeblieft.</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeam" xml:space="preserve">
     <value>Verander Van Team</value>
@@ -1859,7 +1865,7 @@ om andere spelers het te laten downloaden?</value>
     <value>Wedstrijd is nu aan het starten: {0}</value>
   </data>
   <data name="Screen_Multiplayer_MatchInProgress" xml:space="preserve">
-    <value>Er is nu een pot bezig. Wacht op de volgende!</value>
+    <value>Er is nog een ronde bezig. Wacht op de volgende!</value>
   </data>
   <data name="Screen_Multiplayer_ModsNone" xml:space="preserve">
     <value>Modificaties: Geen</value>
@@ -1892,16 +1898,16 @@ om andere spelers het te laten downloaden?</value>
     <value>Download Voltooid!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedMissingMap" xml:space="preserve">
-    <value>Het potje is gestart, maar we hebben de map niet!</value>
+    <value>De game is gestart, maar we hebben de map niet!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
-    <value>Pot gestart. Klik hier om de wedstrijd live op het web als scheidsrechter te bekijken. </value>
+    <value>Ronde gestart. Klik hier om de wedstrijd live op het web als scheidsrechter te bekijken. </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
-    <value>DETAILS VAN HET POTJE</value>
+    <value>DETAILS VAN DE RONDE</value>
   </data>
   <data name="Screen_MultiplayerLobby_ViewInformationAboutMatch" xml:space="preserve">
-    <value>Bekijk informatie over een pot</value>
+    <value>Bekijk informatie over een game</value>
   </data>
   <data name="Screen_MultiplayerLobby_RulesetLabel" xml:space="preserve">
     <value>REGELSET: </value>
@@ -1955,13 +1961,13 @@ om andere spelers het te laten downloaden?</value>
     <value>LOBBY GEVONDEN</value>
   </data>
   <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
-    <value>Zoek naar potjes...</value>
+    <value>Zoek naar games...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateGame" xml:space="preserve">
     <value>MAAK SPEL</value>
   </data>
   <data name="Screen_MultiplayerLobby_QuickMatch" xml:space="preserve">
-    <value>Snel Potje</value>
+    <value>Snelle Ronde</value>
   </data>
   <data name="Screen_MultiplayerLobby_NoAvailableOpenGames" xml:space="preserve">
     <value>Er zijn geen openbare sessies beschikbaar.</value>
@@ -2018,13 +2024,13 @@ om andere spelers het te laten downloaden?</value>
     <value>Bereik Van Moeilijkheid</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
-    <value>Any</value>
+    <value>Elk</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
-    <value>Any</value>
+    <value>Elk</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
-    <value>Any</value>
+    <value>Elk</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
     <value>Bereik Van Lange Noot %</value>
