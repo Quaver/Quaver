@@ -554,7 +554,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // This needs to be above any checks for IsPlayComplete, because that
             // relies on the object pool being empty.
             // If skipping ahead, the pool gets recreated
-            if (InReplayMode && !IsSongSelectPreview && OnlineManager.IsSpectatingSomeone)
+            if (InReplayMode && !IsSongSelectPreview && SpectatorClient != null && OnlineManager.IsSpectatingSomeone)
             {
                 HandleSpectatorSkipping();
 
@@ -1384,10 +1384,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleSpectatorSkipping()
         {
-            if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
+            var frames = SpectatorClient?.Replay?.Frames;
+
+            if (frames == null || frames.Count == 0 || this is TournamentGameplayScreen)
                 return;
 
-            var targetSyncTime = SpectatorClient.Replay.Frames.Last().Time;
+            var targetSyncTime = frames.Last().Time;
             // User can only be two seconds out of sync with the user
             if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000)
                 return;
