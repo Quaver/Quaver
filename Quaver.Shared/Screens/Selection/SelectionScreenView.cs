@@ -576,12 +576,12 @@ namespace Quaver.Shared.Screens.Selection
                     MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, Easing.OutQuint, 450);
 
                     // Add a delay before updating these values to account for animations
-                    ThreadScheduler.RunAfter(() =>
+                    ThreadScheduler.RunAfter(() => Container.AddScheduledUpdate(() =>
                     {
                         ConfigManager.SelectGroupMapsetsBy.Value = GroupMapsetsBy.Playlists;
                         SelectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
-                    }, 250);
-                    break;
+                    }), 250);
+                    return;
                 case SelectScrollContainerType.Playlists:
                     PlaylistContainer.ClearAnimations();
                     PlaylistContainer.MoveToX(PlaylistContainer.Width + ScreenPaddingX, Easing.OutQuint, 450);
