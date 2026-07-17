@@ -639,8 +639,8 @@
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>편차</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>정확도</value>
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
+    <value>ACCURACY</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>체력</value>
@@ -654,8 +654,8 @@
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>표준편차:</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>비율:</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>RATIO</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistics Not Available</value>
@@ -722,8 +722,14 @@ Marvelous instead.</value>
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Grade</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>최대 콤보</value>
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
+    <value>MAX COMBO</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>PERFORMANCE RATING</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>RANKED ACCURACY</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -1402,10 +1408,10 @@ for the selected game mode?</value>
     <value>Ranked</value>
   </data>
   <data name="Screen_Download_ClanRanked" xml:space="preserve">
-    <value>Clan Ranked</value>
+    <value>클랜 랭크</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>DIFFICULTY: </value>
+    <value>난이도:</value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
     <value>없음</value>
@@ -1474,10 +1480,10 @@ for the selected game mode?</value>
     <value>Finished downloading: {0} - {1}!</value>
   </data>
   <data name="Screen_Download_By" xml:space="preserve">
-    <value>By:</value>
+    <value>제작자:</value>
   </data>
   <data name="Screen_Download_LNs" xml:space="preserve">
-    <value>LNs: </value>
+    <value>LNs:</value>
   </data>
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
     <value>FILTER OPTIONS</value>
@@ -1745,7 +1751,7 @@ for other players to download?</value>
     <value>Allowed Game Modes</value>
   </data>
   <data name="Screen_Multiplayer_MaximumSongLength" xml:space="preserve">
-    <value>Maximum Song Length</value>
+    <value>최대 노래 길이</value>
   </data>
   <data name="Screen_Multiplayer_DifficultyRange" xml:space="preserve">
     <value>Difficulty Range</value>
@@ -1865,7 +1871,7 @@ for other players to download?</value>
     <value>Host is currently selecting a map!</value>
   </data>
   <data name="Screen_Multiplayer_PleaseWait" xml:space="preserve">
-    <value>Please wait...</value>
+    <value>기다려 주십쇼...</value>
   </data>
   <data name="Screen_Multiplayer_MapInfo" xml:space="preserve">
     <value>제작자: {0} | 길이: {1} | BPM: {2} | 롱노트: {3}%</value>
@@ -1880,7 +1886,7 @@ for other players to download?</value>
     <value>The mapset is already downloading. Slow down!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadingMap" xml:space="preserve">
-    <value>Downloading Map: {0}%</value>
+    <value>다운로드 맵: {0}%</value>
   </data>
   <data name="Screen_Multiplayer_DownloadFailed" xml:space="preserve">
     <value>다운로드에 실패했습니다!</value>
@@ -1979,13 +1985,13 @@ for other players to download?</value>
     <value>Connecting to multiplayer game. Please wait...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameTitle" xml:space="preserve">
-    <value>CREATE MULTIPLAYER GAME</value>
+    <value>멀티플레이 방 만들기</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameMessage" xml:space="preserve">
     <value>Fill in the details to create a multiplayer game...</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameName" xml:space="preserve">
-    <value>Game Name</value>
+    <value>방 이름</value>
   </data>
   <data name="Screen_MultiplayerLobby_ChooseGameNamePlaceholder" xml:space="preserve">
     <value>Choose a name for the game...</value>
@@ -2039,7 +2045,7 @@ for other players to download?</value>
     <value>최대 플레이어</value>
   </data>
   <data name="Screen_MultiplayerLobby_Players" xml:space="preserve">
-    <value>Players</value>
+    <value>플레이어</value>
   </data>
   <data name="Screen_MultiplayerLobby_AllowedGameModes" xml:space="preserve">
     <value>Allowed Game Modes</value>
@@ -2057,6 +2063,6 @@ for other players to download?</value>
     <value>Life Count</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaximumSongLength" xml:space="preserve">
-    <value>Maximum Song Length</value>
+    <value>최대 노래 길이</value>
   </data>
 </root>
