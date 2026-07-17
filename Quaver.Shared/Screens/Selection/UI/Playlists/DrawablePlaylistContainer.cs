@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
@@ -15,6 +16,7 @@ using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -98,6 +100,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             CreateRankedStatus();
             CreateGameModes();
             CreateOnlineMapPoolIcon();
+
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged += OnDisplaySongSelectBannersChanged;
         }
 
         /// <inheritdoc />
@@ -110,6 +115,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             PerformHoverAnimation(gameTime);
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged -= OnDisplaySongSelectBannersChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -143,6 +159,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             RankedStatusSprite.Image = GetRankedStatusImage();
             GameModeHelper.SetGameModeTexture(item.Maps.Select(x=>x.Mode), GameModes, GameModeText);
+            UpdateBannerLayout();
             Banner.UpdateContent(Playlist.Item);
 
             if (Playlist.IsSelected)
@@ -246,7 +263,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "PLAYLIST TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "PLAYLIST TITLE", 24)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -264,7 +281,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
+                Size = DrawableBanner.DisplaySize,
                 Image = UserInterface.DefaultBanner,
                 X = -2,
                 UsePreviousSpriteBatchOptions = true
@@ -321,7 +338,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(115, 28),
-                X = Banner.X - Banner.Width - 18,
+                X = GetRankedStatusX(),
                 Image = UserInterface.StatusPanel,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -336,11 +353,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(71, 28),
-                X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
+                X = GetGameModesX(),
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(Title.Font, "", 16)
+            GameModeText = new SpriteTextPlus(Title.Font, "", 14)
             {
                 Parent = GameModes,
                 Alignment = Alignment.MidCenter,
@@ -348,6 +365,36 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 Tint = Color.White,
             };
         }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateBannerLayout()
+        {
+            var bannerSize = DrawableBanner.DisplaySize;
+
+            if (Banner.Width != bannerSize.X.Value || Banner.Height != bannerSize.Y.Value)
+                Banner.Size = bannerSize;
+
+            RankedStatusSprite.X = GetRankedStatusX();
+            GameModes.X = GetGameModesX();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private float GetRankedStatusX() => Banner.X - Banner.Width - 18;
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private float GetGameModesX() => RankedStatusSprite.X - RankedStatusSprite.Width - 18;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplaySongSelectBannersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => UpdateBannerLayout();
 
         /// <summary>
         /// </summary>

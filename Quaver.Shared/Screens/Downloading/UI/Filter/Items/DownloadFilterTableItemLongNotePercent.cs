@@ -26,14 +26,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         {
             const int spacing = 12;
 
-            Max = new DownloadFilterItemLongNoteTextbox("Max LN%", max)
+            Max = new DownloadFilterItemLongNoteTextbox("Max %", max)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X
             };
 
-            Min = new DownloadFilterItemLongNoteTextbox("Min LN%", min)
+            Min = new DownloadFilterItemLongNoteTextbox("Min %", min)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
         public DownloadFilterItemLongNoteTextbox(string placeholder, BindableInt bindable)
-            : base(FontManager.GetWobbleFont(Fonts.InterBold),22, "", placeholder)
+            : base(FontManager.GetWobbleFont(Fonts.InterSemiBold),20, "", placeholder)
         {
             AllowedCharacters = new Regex(@"^([0-9]|[1-9][0-9]|100)$");
 

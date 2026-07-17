@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         /// <summary>
         /// </summary>
-        private void CreateName(string name) => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get(name), 22)
+        private void CreateName(string name) => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get(name), 18)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,

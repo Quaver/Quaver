@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
                 X = Flag.Width + 6,
-                FontSize = 16,
+                FontSize = 14,
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -172,7 +172,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -16,
-                FontSize = 16,
+                FontSize = 14,
                 Tint = Colors.SecondaryAccent,
                 Y = -2,
                 UsePreviousSpriteBatchOptions = true
@@ -183,7 +183,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = Avatar.X + Avatar.Width + 16,
-                FontSize = 14,
+                FontSize = 12,
                 Y = 8,
                 UsePreviousSpriteBatchOptions = true,
                 Tint = Colors.MainAccent
@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -16,
-                FontSize = 16,
+                FontSize = 14,
                 Y = -2,
                 UsePreviousSpriteBatchOptions = true
             };

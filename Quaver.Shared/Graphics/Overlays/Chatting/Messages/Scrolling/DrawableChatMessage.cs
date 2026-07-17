@@ -1,5 +1,4 @@
 using System;
-using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Structures;
@@ -12,6 +11,7 @@ using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
@@ -27,6 +27,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         ///     The time the message was displayed
         /// </summary>
         private SpriteTextPlus Time { get; set; }
+
+        /// <summary>
+        ///     The hover target for the message timestamp.
+        /// </summary>
+        private DrawableChatMessageUsernameButton TimeButton { get; set; }
+
+        /// <summary>
+        ///     The timestamp tooltip options, updated when this pooled drawable receives a new message.
+        /// </summary>
+        private TooltipOptions TimeTooltipOptions { get; } = new TooltipOptions();
 
         /// <summary>
         ///     An icon to represent the user
@@ -57,6 +67,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private const int PADDING_X = 16;
 
+        /// <summary>
+        ///     The horizontal gap between timestamp, badge, clan, and username metadata.
+        /// </summary>
+        private const float MetadataSpacing = PADDING_X / 4f;
+
+        /// <summary>
+        ///     The normal color of a message timestamp.
+        /// </summary>
+        private static Color TimestampColor { get; } = ColorHelper.HexToColor("#a8a8a8");
+
         private bool IsScrollVisible { get; set; } = true;
 
         private bool IconShouldBeVisible { get; set; }
@@ -74,6 +94,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Alpha = 0;
 
             CreateTime();
+            CreateTimeButton();
             CreateIcon();
             CreateClan();
             CreateUsername();
@@ -94,6 +115,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Icon.Tint = Username.Tint;
 
             Clan.Tint = UsernameButton.IsHovered ? Darken(Clan.BaseColor) : Clan.BaseColor;
+            Time.Tint = TimeButton.IsHovered ? Darken(TimestampColor) : TimestampColor;
 
             var container = (ChatMessageScrollContainer) Container;
 
@@ -110,11 +132,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Item = item;
             Index = index;
 
-            var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) item.Time).ToLocalTime();
-
-            Time.Text = dateTime.Humanize(culture: LocalizationManager.CurrentCulture);
+            Time.Text = GetTimestampText(item);
+            TimeTooltipOptions.Text = GetTimestampTooltip(item);
             var icon = GetIcon(Item.Sender.OnlineUser.UserGroups);
-            var labelStartX = Time.X + Time.Width + PADDING_X / 2f;
+            Time.X = PADDING_X;
+            var labelStartX = Time.X + Time.Width + MetadataSpacing;
 
             if (icon != null)
             {
@@ -122,7 +144,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Icon.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
                 Icon.X = labelStartX;
 
-                labelStartX = Icon.X + Icon.Width + PADDING_X / 2f;
+                labelStartX = Icon.X + Icon.Width + MetadataSpacing;
             }
 
             IconShouldBeVisible = icon != null;
@@ -171,6 +193,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Username.Y = Time.Y;
             }
 
+            TimeButton.Alignment = Time.Alignment;
+            TimeButton.Position = new ScalableVector2(Time.X, Time.Y);
+            TimeButton.Size = new ScalableVector2(Time.Width, Time.Height);
+
             // Make sure the button is properly aligned with the sender's username
             UsernameButton.Alignment = Username.Alignment;
             UsernameButton.Position = new ScalableVector2(clickableStartX, Username.Y);
@@ -185,14 +211,29 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void CreateTime()
         {
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 23)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = PADDING_X,
-                Tint = ColorHelper.HexToColor("#a8a8a8"),
+                Tint = TimestampColor,
                 UsePreviousSpriteBatchOptions = true
             };
+        }
+
+        /// <summary>
+        ///     Creates the invisible timestamp hover target.
+        /// </summary>
+        private void CreateTimeButton()
+        {
+            TimeButton = new DrawableChatMessageUsernameButton(UserInterface.BlankBox, Container)
+            {
+                Parent = this,
+                UsePreviousSpriteBatchOptions = true,
+                Alpha = 0
+            };
+
+            TimeButton.AddTooltip(TimeTooltipOptions);
         }
 
         /// <summary>
@@ -257,7 +298,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         private void CreateMessage()
         {
-            Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", Time.FontSize)
+            Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", Time.FontSize)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -311,6 +352,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         {
             Visible = IsScrollVisible;
             Time.Visible = IsScrollVisible;
+            TimeButton.Visible = IsScrollVisible;
+            TimeButton.IsClickable = IsScrollVisible;
             Icon.Visible = IsScrollVisible && IconShouldBeVisible;
             Clan.Visible = IsScrollVisible && Clan.HasClan;
             Username.Visible = IsScrollVisible;
@@ -337,5 +380,21 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         ///     Darkens a color for hover state.
         /// </summary>
         private static Color Darken(Color color) => new Color(color.R / 2, color.G / 2, color.B / 2);
+
+        /// <summary>
+        ///     Gets the local timestamp displayed beside a message.
+        /// </summary>
+        private static string GetTimestampText(ChatMessage message)
+        {
+            var timestamp = DateTimeOffset.FromUnixTimeMilliseconds((long) message.Time).ToLocalTime();
+            return $"{timestamp.Hour:00}:{timestamp.Minute:00}:{timestamp.Second:00}";
+        }
+
+        /// <summary>
+        ///     Gets the complete local timestamp displayed in the timestamp tooltip.
+        /// </summary>
+        private static string GetTimestampTooltip(ChatMessage message)
+            => DateTimeOffset.FromUnixTimeMilliseconds((long) message.Time).ToLocalTime()
+                .ToString("dddd dd MMMM yyyy HH:mm", LocalizationManager.CurrentCulture);
     }
 }

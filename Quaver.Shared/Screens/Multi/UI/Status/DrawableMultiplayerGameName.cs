@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 26)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 24)
             {
                 Parent = this,
             };

@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
     public class FilterMetadataMods : TextKeyValue
     {
-        public FilterMetadataMods() : base("Mods:", "None", 20, ColorHelper.HexToColor($"#ffe76b"))
+        public FilterMetadataMods() : base("Mods:", "None", 16, ColorHelper.HexToColor($"#ffe76b"))
         {
             ScheduleUpdate(SetText);
             ModManager.ModsChanged += OnModsChanged;

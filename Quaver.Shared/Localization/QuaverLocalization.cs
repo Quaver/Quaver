@@ -15,16 +15,16 @@ namespace Quaver.Shared.Localization
         {
             new AvailableLanguage("en", "Language_English"),
             // new AvailableLanguage("bg-BG", "Language_Bulgarian"),
-            // new AvailableLanguage("da-DK", "Language_Danish"),
-            // new AvailableLanguage("de-DE", "Language_German"),
+            new AvailableLanguage("da-DK", "Language_Danish"),
+            new AvailableLanguage("de-DE", "Language_German"),
             // new AvailableLanguage("es-ES", "Language_Spanish"),
             new AvailableLanguage("fr-FR", "Language_French"),
             // new AvailableLanguage("id-ID", "Language_Indonesian"),
             // new AvailableLanguage("it-IT", "Language_Italian"),
             // new AvailableLanguage("ja-JP", "Language_Japanese"),
             // new AvailableLanguage("ko-KR", "Language_Korean"),
-            // new AvailableLanguage("nl-NL", "Language_Dutch"),
-            // new AvailableLanguage("no-NO", "Language_Norwegian"),
+            new AvailableLanguage("nl-NL", "Language_Dutch"),
+            new AvailableLanguage("no-NO", "Language_Norwegian"),
             // new AvailableLanguage("pl-PL", "Language_Polish"),
             // new AvailableLanguage("pt-BR", "Language_PortugueseBrazil"),
             // new AvailableLanguage("ru-RU", "Language_Russian"),
@@ -46,7 +46,7 @@ namespace Quaver.Shared.Localization
             LocalizationManager.Configure(
                 new ResourceManager("Quaver.Shared.Localization.Strings", typeof(QuaverLocalization).Assembly),
                 CultureInfo.GetCultureInfo(DefaultCultureName),
-                GetCulture(cultureName));
+                GetCulture(cultureName), embeddedResourceAssembly: typeof(QuaverLocalization).Assembly);
         }
 
         public static void SetCurrentCulture(string cultureName)

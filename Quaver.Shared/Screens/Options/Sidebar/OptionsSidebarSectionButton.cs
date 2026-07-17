@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Section.Name, 21)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Section.Name, 18)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidRight,

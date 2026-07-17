@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Helpers.Input;
 using Quaver.Shared.Scheduling;
@@ -233,7 +233,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateHeader()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), HeaderText.ToUpper(), 26)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), HeaderText.ToUpper(), 22)
             {
                 Parent = Panel,
                 Alignment = Alignment.TopLeft,
@@ -246,7 +246,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateConfirmation()
         {
-            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfirmationText, 26)
+            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfirmationText, 22)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter,

@@ -68,7 +68,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
             Width = WindowManager.Width;
 
-            switch (game.CurrentScreen.Type)
+            switch (game.CurrentScreen?.Type)
             {
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Gameplay:
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
                     break;
             }
 
-            if (!IsClosing && game.CurrentScreen.Type != QuaverScreenType.Editor)
+            if (!IsClosing && game.CurrentScreen?.Type != QuaverScreenType.Editor)
                 game.GlobalUserInterface.Cursor.Alpha = 1;
 
             base.Update(gameTime);
@@ -174,7 +174,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             Hub.Close();
             Chat.Close();
 
-            if (GameBase.Game is QuaverGame game && game.CurrentScreen.Type == QuaverScreenType.Gameplay)
+            if (GameBase.Game is QuaverGame game && game.CurrentScreen?.Type == QuaverScreenType.Gameplay)
             {
                 if (game.CurrentScreen is GameplayScreen gameplay)
                     game.GlobalUserInterface.Cursor.Alpha = gameplay.InReplayMode && gameplay.SpectatorClient == null ? 1 : 0;

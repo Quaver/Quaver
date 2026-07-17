@@ -639,8 +639,8 @@
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>偏差</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>準確率</value>
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
+    <value>ACCURACY</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>血量</value>
@@ -654,8 +654,8 @@
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>標準差</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>比例</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>RATIO</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>數據不可用</value>
@@ -720,8 +720,14 @@ Marvelous instead.</value>
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Grade</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Max Combo</value>
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
+    <value>MAX COMBO</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>PERFORMANCE RATING</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>RANKED ACCURACY</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -1329,8 +1335,32 @@ Marvelous instead.</value>
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Keys</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Settings</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Video Settings</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Audio Settings</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Language Settings</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Gameplay Settings</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Skin Settings</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Input Settings</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Game Mode Specific Settings</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Miscellaneous Settings</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
     <value>{0} Search Result</value>
@@ -1988,7 +2018,13 @@ for other players to download?</value>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Difficulty Range</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
     <value>Any</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">

@@ -200,7 +200,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateNameText()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 24)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(14, 14),
@@ -212,7 +212,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateMapText()
         {
-            Map = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 21)
+            Map = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Position = new ScalableVector2(Name.X, Name.Y + Name.Height + 32)
@@ -226,10 +226,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateDifficultyRatingText()
         {
-            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 21)
+            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
-                Position = new ScalableVector2(Name.X, Map.Y + Map.Height + 10)
+                Position = new ScalableVector2(Name.X, Map.Y + Map.Height + 5)
             };
         }
 
@@ -265,7 +265,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         {
             Parent = this,
             X = Name.X,
-            Y = DifficultyRating.Y + DifficultyRating.Height + 10,
+            Y = DifficultyRating.Y + DifficultyRating.Height + 5,
             Visible = IsMultiplayer,
         };
 
@@ -305,7 +305,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         {
             Parent = this,
             X = Name.X,
-            Y = Map.Y + Map.Height + 10,
+            Y = Map.Y + Map.Height + 5,
             Visible = IsMultiplayer,
         };
 
@@ -377,7 +377,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateDownloadStatus()
         {
-            DownloadStatus = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            DownloadStatus = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Bpm.Alignment,

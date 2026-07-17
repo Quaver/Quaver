@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateMillisecondValue()
         {
-            MillisecondValue = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "ms", 24)
+            MillisecondValue = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "ms", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -148,8 +148,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateValueTextbox()
         {
-            ValueTextbox = new Textbox(new ScalableVector2(52, 40), FontManager.GetWobbleFont(Fonts.InterBold),
-                22, Bindable.Value.ToString(), "", null, s =>
+            ValueTextbox = new Textbox(new ScalableVector2(64, 40), FontManager.GetWobbleFont(Fonts.InterBold),
+                18, Bindable.Value.ToString(), "", null, s =>
                 {
                     if (string.IsNullOrEmpty(s))
                         return;

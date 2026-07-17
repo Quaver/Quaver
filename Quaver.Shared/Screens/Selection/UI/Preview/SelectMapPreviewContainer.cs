@@ -425,7 +425,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void CreateTestPlayPrompt()
         {
             TestPlayPrompt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                "Press [TAB] to toggle play testing", 22)
+                "Press [TAB] to toggle play testing", 20)
             {
                 Alignment = Alignment.TopCenter,
                 Y = 175,

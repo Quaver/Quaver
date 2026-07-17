@@ -13,97 +13,97 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Language_English" xml:space="preserve">
-    <value>English</value>
+    <value>Английский</value>
   </data>
   <data name="Language_Bulgarian" xml:space="preserve">
-    <value>Bulgarian</value>
+    <value>Болгарский</value>
   </data>
   <data name="Language_Danish" xml:space="preserve">
-    <value>Danish</value>
+    <value>Датский</value>
   </data>
   <data name="Language_German" xml:space="preserve">
-    <value>German</value>
+    <value>Немецкий</value>
   </data>
   <data name="Language_Spanish" xml:space="preserve">
-    <value>Spanish</value>
+    <value>Испанский</value>
   </data>
   <data name="Language_French" xml:space="preserve">
-    <value>French</value>
+    <value>Французский</value>
   </data>
   <data name="Language_Indonesian" xml:space="preserve">
-    <value>Indonesian</value>
+    <value>Индонезийский</value>
   </data>
   <data name="Language_Italian" xml:space="preserve">
-    <value>Italian</value>
+    <value>Итальянский</value>
   </data>
   <data name="Language_Japanese" xml:space="preserve">
-    <value>Japanese</value>
+    <value>Японский</value>
   </data>
   <data name="Language_Korean" xml:space="preserve">
-    <value>Korean</value>
+    <value>Корейский</value>
   </data>
   <data name="Language_Dutch" xml:space="preserve">
-    <value>Dutch</value>
+    <value>Нидерландский</value>
   </data>
   <data name="Language_Norwegian" xml:space="preserve">
-    <value>Norwegian</value>
+    <value>Норвежский</value>
   </data>
   <data name="Language_Polish" xml:space="preserve">
-    <value>Polish</value>
+    <value>Польский</value>
   </data>
   <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portuguese (Brazil)</value>
+    <value>Португальский (Бразилия)</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
-    <value>Russian</value>
+    <value>Русский</value>
   </data>
   <data name="Language_Swedish" xml:space="preserve">
-    <value>Swedish</value>
+    <value>Шведский</value>
   </data>
   <data name="Language_Thai" xml:space="preserve">
-    <value>Thai</value>
+    <value>Тайский</value>
   </data>
   <data name="Language_Ukrainian" xml:space="preserve">
-    <value>Ukrainian</value>
+    <value>Украинский</value>
   </data>
   <data name="Language_ChineseSimplified" xml:space="preserve">
-    <value>Chinese (Simplified)</value>
+    <value>Китайский (Упрощённый)</value>
   </data>
   <data name="Language_ChineseTraditional" xml:space="preserve">
-    <value>Chinese (Traditional)</value>
+    <value>Китайский (Традиционный)</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
-    <value>Change screens to update the language.</value>
+    <value>Сменить экран для применения языка.</value>
   </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
-    <value>Send a message...</value>
+    <value>Отправить сообщение...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Главная</value>
   </data>
   <data name="Screen_Main_Menu_Maps" xml:space="preserve">
-    <value>Maps</value>
+    <value>Карты</value>
   </data>
   <data name="Screen_Main_Menu_Clans" xml:space="preserve">
-    <value>Clans</value>
+    <value>Кланы</value>
   </data>
   <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
-    <value>Jukebox</value>
+    <value>Плейлист</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
-    <value>Skins</value>
+    <value>Скины</value>
   </data>
   <data name="Screen_Main_Menu_Donate" xml:space="preserve">
-    <value>Donate</value>
+    <value>Поддержать</value>
   </data>
   <data name="Screen_Main_Menu_GitHub" xml:space="preserve">
     <value>GitHub</value>
   </data>
   <data name="Screen_Main_Menu_Wiki" xml:space="preserve">
-    <value>Wiki</value>
+    <value>Вики</value>
   </data>
   <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
-    <value>Report Bugs</value>
+    <value>Сообщить об ошибке</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
     <value>Twitter</value>
@@ -112,618 +112,620 @@
     <value>Discord</value>
   </data>
   <data name="Screen_Main_Menu_Website" xml:space="preserve">
-    <value>Website</value>
+    <value>Вебсайт</value>
   </data>
   <data name="Screen_Main_SinglePlayer" xml:space="preserve">
-    <value>Single Player</value>
+    <value>Одиночная Игра</value>
   </data>
   <data name="Screen_Main_Multiplayer" xml:space="preserve">
-    <value>Multiplayer</value>
+    <value>Мультиплеер</value>
   </data>
   <data name="Screen_Main_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>Редактор</value>
   </data>
   <data name="Screen_Main_Competitive" xml:space="preserve">
-    <value>Competitive</value>
+    <value>Соревновательные</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
-    <value>Map Editor</value>
+    <value>Редактор Карт</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
-    <value>Download Maps</value>
+    <value>Загружать Карты</value>
   </data>
   <data name="Screen_Main_DownloadSongs" xml:space="preserve">
-    <value>Download Songs</value>
+    <value>Загружать Песни</value>
   </data>
   <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
-    <value>Steam Workshop</value>
+    <value>Мастерская Steam</value>
   </data>
   <data name="Screen_Main_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Настройки</value>
   </data>
   <data name="Screen_Main_QuitGame" xml:space="preserve">
-    <value>Quit Game</value>
+    <value>Выйти из игры</value>
   </data>
   <data name="Screen_Main_QuitDialogTitle" xml:space="preserve">
-    <value>EXIT QUAVER</value>
+    <value>ВЫЙТИ ИЗ QUAVER</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Are you sure you would like to quit the game?</value>
+    <value>Вы уверены, что хотите выйти из игры?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
-    <value>Compete for leaderboard ranks</value>
+    <value>Соревнуйтесь за места в таблице лидеров</value>
   </data>
   <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
-    <value>Play custom matches online with others</value>
+    <value>Играйте в пользовательские матчи онлайн с другими игроками</value>
   </data>
   <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
-    <value>Compete against players all over the world</value>
+    <value>Соревнуйтесь против игроков по всему миру</value>
   </data>
   <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
-    <value>Create or edit a map to any song you'd like</value>
+    <value>Создавайте и редактируйте карты под любые понравившиеся песни</value>
   </data>
   <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
-    <value>Find new songs from the community to play</value>
+    <value>Ищите новые песни от сообщества для игры</value>
   </data>
   <data name="Screen_Main_TipLabel" xml:space="preserve">
-    <value>TIP:</value>
+    <value>СОВЕТ:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing CTRL+O will open the options menu.</value>
+    <value>Нажатие CTRL+O открывает меню настроек.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
-    <value>Drag map files (.qp) into the game to import them.</value>
+    <value>Перетащите файлы карты (.qp) в игру, чтобы импортировать их.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing F3 in song select displays a map preview.</value>
+    <value>Нажатие F3 при выборе песни показывает предпросмотр карты.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
-    <value>Pausing in gameplay prevents score submission.</value>
+    <value>Пауза во время игры отменяет отправку счёта.</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
-    <value>You can report a bug by opening a GitHub issue.</value>
+    <value>Вы можете сообщить об ошибке через GitHub Issues.</value>
   </data>
   <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
-    <value>Request new features by opening GitHub issues!</value>
+    <value>Предлагайте идеи через GitHub Issues!</value>
   </data>
   <data name="Screen_Main_TipCreateMap" xml:space="preserve">
-    <value>Drag a .mp3 file in the game to create a new map!</value>
+    <value>Перетащите .mp3 файл в игру для создания карты!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing F2 in song select chooses a random song.</value>
+    <value>Нажатие F2 при выборе песни выбирает случайную песню.</value>
   </data>
   <data name="Screen_Main_TipPlayercard" xml:space="preserve">
-    <value>Pressing F10 in the menu opens your playercard.</value>
+    <value>Нажатие F10 в меню открывает профиль игрока.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing F3/F4 in gameplay changes scroll speed.</value>
+    <value>Нажатие F3/F4 в игре меняет скорость прокрутки.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
-    <value>Your offset can be calibrated in the options menu.</value>
+    <value>Ваша задержка может быть откалибрована в меню настроек.</value>
   </data>
   <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
-    <value>Standard* is the default judgement window preset.</value>
+    <value>Standard* - стандартный пресет строгости попаданий.</value>
   </data>
   <data name="Screen_Main_TipPlaybackRate" xml:space="preserve">
-    <value>CTRL+ +/- changes the playback rate of the song.</value>
+    <value>CTRL+ +/-  меняет скорость воспроизведения песни.</value>
   </data>
   <data name="Screen_Main_NowPlaying" xml:space="preserve">
-    <value>Now Playing:</value>
+    <value>Сейчас играет:</value>
   </data>
   <data name="Screen_Main_Published" xml:space="preserve">
-    <value>Published {0}</value>
+    <value>Опубликовано {0}</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
-    <value>All</value>
+    <value>Все</value>
   </data>
   <data name="Screen_Selection_Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Исполнитель</value>
   </data>
   <data name="Screen_Selection_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Назад</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
-    <value>By:</value>
+    <value>От:</value>
   </data>
   <data name="Screen_Selection_BPM" xml:space="preserve">
     <value>BPM</value>
   </data>
   <data name="Screen_Selection_Clan" xml:space="preserve">
-    <value>Clan</value>
+    <value>Клан</value>
   </data>
   <data name="Screen_Selection_Country" xml:space="preserve">
-    <value>Country</value>
+    <value>Страна</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Country Rank</value>
+    <value>Рейтинг в стране</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
-    <value>Create New</value>
+    <value>Создать Новую</value>
   </data>
   <data name="Screen_Selection_CreatePlaylist" xml:space="preserve">
-    <value>Create Playlist</value>
+    <value>Создать Плейлист</value>
   </data>
   <data name="Screen_Selection_Creator" xml:space="preserve">
-    <value>Creator</value>
+    <value>Создатель</value>
   </data>
   <data name="Screen_Selection_DateAdded" xml:space="preserve">
-    <value>Date Added</value>
+    <value>Дата Добавления</value>
   </data>
   <data name="Screen_Selection_Difficulty" xml:space="preserve">
-    <value>Difficulty</value>
+    <value>Сложность</value>
   </data>
   <data name="Screen_Selection_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Редактировать</value>
   </data>
   <data name="Screen_Selection_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Экспортировать</value>
   </data>
   <data name="Screen_Selection_Friends" xml:space="preserve">
-    <value>Friends</value>
+    <value>Друзья</value>
   </data>
   <data name="Screen_Selection_Game" xml:space="preserve">
-    <value>Game</value>
+    <value>Игра</value>
   </data>
   <data name="Screen_Selection_Global" xml:space="preserve">
-    <value>Global</value>
+    <value>По всему миру</value>
   </data>
   <data name="Screen_Selection_GlobalRank" xml:space="preserve">
-    <value>Global Rank</value>
+    <value>Мировой Рейтинг</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
-    <value>GROUP BY:</value>
+    <value>ГРУППИРОВАТЬ ПО:</value>
   </data>
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
-    <value>Highest Rated Score</value>
+    <value>Лучший результат</value>
   </data>
   <data name="Screen_Selection_Leaderboard" xml:space="preserve">
-    <value>LEADERBOARD</value>
+    <value>ТАБЛИЦА ЛИДЕРОВ</value>
   </data>
   <data name="Screen_Selection_Length" xml:space="preserve">
-    <value>Length</value>
+    <value>Длина</value>
   </data>
   <data name="Screen_Selection_LengthLabel" xml:space="preserve">
-    <value>Length:</value>
+    <value>Длина:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
-    <value>Local</value>
+    <value>Локальные</value>
   </data>
   <data name="Screen_Selection_LocalProfile" xml:space="preserve">
-    <value>Local Profile</value>
+    <value>Локальный Профиль</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
-    <value>Long Note %</value>
+    <value>% длинных нот</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
-    <value>Map Found</value>
+    <value>Карта Найдена</value>
   </data>
   <data name="Screen_Selection_MapsFound" xml:space="preserve">
-    <value>Maps Found</value>
+    <value>Карт Найдено</value>
   </data>
   <data name="Screen_Selection_MarvelousPerfectRatio" xml:space="preserve">
-    <value>Marvelous/Perfect Ratio</value>
+    <value>Соотношение Marvelous/Perfect</value>
   </data>
   <data name="Screen_Selection_MaxCombo" xml:space="preserve">
-    <value>Max Combo</value>
+    <value>Макс. Комбо</value>
   </data>
   <data name="Screen_Selection_Mode" xml:space="preserve">
-    <value>MODE:</value>
+    <value>РЕЖИМ:</value>
   </data>
   <data name="Screen_Selection_Modifiers" xml:space="preserve">
-    <value>Modifiers</value>
+    <value>Модификаторы</value>
   </data>
   <data name="Screen_Selection_Mods" xml:space="preserve">
-    <value>Mods</value>
+    <value>Моды</value>
   </data>
   <data name="Screen_Selection_NeverPlayed" xml:space="preserve">
-    <value>Never Played</value>
+    <value>Не сыграно</value>
   </data>
   <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
-    <value>No scores available. Be the first!</value>
+    <value>Нет результатов. Станьте первым!</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
-    <value>NO PERSONAL BEST SET</value>
+    <value>ЛУЧШИЙ РЕЗУЛЬТАТ НЕ УСТАНОВЛЕН</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
-    <value>None</value>
+    <value>Нет</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
-    <value>Notes Per Sec.</value>
+    <value>Нот в секунду.</value>
   </data>
   <data name="Screen_Selection_Online" xml:space="preserve">
-    <value>Online</value>
+    <value>Онлайн</value>
   </data>
   <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
-    <value>Online Grade</value>
+    <value>Онлайн Рейтинг</value>
   </data>
   <data name="Screen_Selection_OnlineListing" xml:space="preserve">
-    <value>Online Listing</value>
+    <value>Онлайн Список</value>
   </data>
   <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
-    <value>Online Profile</value>
+    <value>Онлайн Профиль</value>
   </data>
   <data name="Screen_Selection_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Настройки</value>
   </data>
   <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
-    <value>Overall Accuracy</value>
+    <value>Общая Точность</value>
   </data>
   <data name="Screen_Selection_OverallRating" xml:space="preserve">
-    <value>Overall Rating</value>
+    <value>Общий Рейтинг</value>
   </data>
   <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
-    <value>Pass/Failure Count</value>
+    <value>Кол-во Побед/Поражений</value>
   </data>
   <data name="Screen_Selection_PersonalBest" xml:space="preserve">
-    <value>PERSONAL BEST</value>
+    <value>ЛИЧНЫЙ РЕКОРД</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
-    <value>Play</value>
+    <value>Играть</value>
   </data>
   <data name="Screen_Selection_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>Кол-во Игр</value>
   </data>
   <data name="Screen_Selection_Player" xml:space="preserve">
-    <value>Player</value>
+    <value>Игрок</value>
   </data>
   <data name="Screen_Selection_Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Плейлисты</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
-    <value>Preview is disabled in this game!</value>
+    <value>Предпросмотр отключен в этой игре!</value>
   </data>
   <data name="Screen_Selection_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Профиль</value>
   </data>
   <data name="Screen_Selection_Random" xml:space="preserve">
-    <value>Random</value>
+    <value>Случайно</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Ranked Status</value>
+    <value>Статус Рейтинга</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
-    <value>RANKING:</value>
+    <value>РЕЙТИНГ:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Rate</value>
+    <value>Скорость</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
-    <value>Recently Played</value>
+    <value>Недавно Сыгранные</value>
   </data>
   <data name="Screen_Selection_ResultFound" xml:space="preserve">
-    <value>Result Found</value>
+    <value>Найден Результат</value>
   </data>
   <data name="Screen_Selection_ResultsFound" xml:space="preserve">
-    <value>Results Found</value>
+    <value>Найдено Результатов</value>
   </data>
   <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
-    <value>Scores on this map will be unranked!</value>
+    <value>Результаты на этой карте не пойдут в рейтинг!</value>
   </data>
   <data name="Screen_Selection_Select" xml:space="preserve">
-    <value>SELECT:</value>
+    <value>ВЫБРАТЬ:</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
-    <value>SORT BY:</value>
+    <value>СОРТИРОВАТЬ ПО:</value>
   </data>
   <data name="Screen_Selection_Source" xml:space="preserve">
-    <value>Source</value>
+    <value>Источник</value>
   </data>
   <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
-    <value>There is currently no map selected!</value>
+    <value>Карта не выбрана!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>This map is not ranked!</value>
+    <value>Эта карта не рейтинговая!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
-    <value>This map is not submitted online!</value>
+    <value>Эта карта не загружена онлайн!</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
-    <value>Times Played</value>
+    <value>Кол-во Игр</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
-    <value>Title</value>
+    <value>Название</value>
   </data>
   <data name="Screen_Selection_TotalHits" xml:space="preserve">
-    <value>Total Hits</value>
+    <value>Всего Попаданий</value>
   </data>
   <data name="Screen_Selection_TotalPauses" xml:space="preserve">
-    <value>Total Pauses</value>
+    <value>Всего Пауз</value>
   </data>
   <data name="Screen_Selection_TotalScore" xml:space="preserve">
-    <value>Total Score</value>
+    <value>Общий Счёт</value>
   </data>
   <data name="Screen_Selection_ViewMap" xml:space="preserve">
-    <value>View Map</value>
+    <value>Посмотреть Карту</value>
   </data>
   <data name="Screen_Selection_Youmustbeadonatortoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be a donator to access this leaderboard!</value>
+    <value>Для доступа к этой таблице лидеров нужно быть донатером!</value>
   </data>
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
-    <value>You must be online to access this leaderboard!</value>
+    <value>Для доступа к этой таблице лидеров нужно быть онлайн!</value>
   </data>
   <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
-    <value>You cannot beat this score with your currently activated modifiers!</value>
+    <value>С текущими модами результат не будет засчитан!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
-    <value>Your map is outdated. Please update it!</value>
+    <value>Карта устарела. Обновите её!</value>
   </data>
   <data name="Screen_Options_Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Видео</value>
   </data>
   <data name="Screen_Options_Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>Аудио</value>
   </data>
   <data name="Screen_Options_Language" xml:space="preserve">
-    <value>Language</value>
+    <value>Язык</value>
   </data>
   <data name="Screen_Options_Gameplay" xml:space="preserve">
-    <value>Gameplay</value>
+    <value>Геймплей</value>
   </data>
   <data name="Screen_Options_Skin" xml:space="preserve">
-    <value>Skin</value>
+    <value>Скин</value>
   </data>
   <data name="Screen_Options_Input" xml:space="preserve">
-    <value>Input</value>
+    <value>Управление</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
-    <value>Game mode specific</value>
+    <value>Настройки режима</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
-    <value>Miscellaneous</value>
+    <value>Прочее</value>
   </data>
   <data name="Screen_Options_Advanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Дополнительно</value>
   </data>
   <data name="Screen_Options_Window" xml:space="preserve">
-    <value>Window</value>
+    <value>Окно</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
-    <value>Frame Time</value>
+    <value>Время Кадра</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
-    <value>Output</value>
+    <value>Вывод</value>
   </data>
   <data name="Screen_Options_Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>Громкость</value>
   </data>
   <data name="Screen_Options_Offset" xml:space="preserve">
-    <value>Offset</value>
+    <value>Задержка</value>
   </data>
   <data name="Screen_Options_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>Эффекты</value>
   </data>
   <data name="Screen_Options_Localization" xml:space="preserve">
-    <value>Localization</value>
+    <value>Локализация</value>
   </data>
   <data name="Screen_Options_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>Задний фон</value>
   </data>
   <data name="Screen_Options_Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Визуальные Эффекты</value>
   </data>
   <data name="Screen_Options_Sound" xml:space="preserve">
-    <value>Sound</value>
+    <value>Звук</value>
   </data>
   <data name="Screen_Options_UserInterface" xml:space="preserve">
-    <value>User Interface</value>
+    <value>Пользовательский Интерфейс</value>
   </data>
   <data name="Screen_Options_Scoreboard" xml:space="preserve">
-    <value>Scoreboard</value>
+    <value>Таблица Результатов</value>
   </data>
   <data name="Screen_Options_ProgressBar" xml:space="preserve">
-    <value>Progress Bar</value>
+    <value>Шкала Прогресса</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
-    <value>Lane Cover</value>
+    <value>Затемнение Дорожек</value>
   </data>
   <data name="Screen_Options_Selection" xml:space="preserve">
-    <value>Selection</value>
+    <value>Выбор</value>
   </data>
   <data name="Screen_Options_Navigation" xml:space="preserve">
-    <value>Navigation</value>
+    <value>Навигация</value>
   </data>
   <data name="Screen_Options_Sharing" xml:space="preserve">
-    <value>Sharing</value>
+    <value>Публикация</value>
   </data>
   <data name="Screen_Options_Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>Конфигурация</value>
   </data>
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
-    <value>Gameplay Controls</value>
+    <value>Игровое Управление</value>
   </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
-    <value>Gameplay User Interface</value>
+    <value>Игровой Интерфейс</value>
   </data>
   <data name="Screen_Options_SongSelection" xml:space="preserve">
-    <value>Song Selection</value>
+    <value>Выбор Песен</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>Редактор</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
-    <value>Misc</value>
+    <value>Прочее</value>
   </data>
   <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
-    <value>Navigation &amp; Maintenance</value>
+    <value>Навигация и Обслуживание</value>
   </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
-    <value>Installed Games</value>
+    <value>Установленные игры</value>
   </data>
   <data name="Screen_Options_Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Уведомления</value>
   </data>
   <data name="Screen_Options_SongSelect" xml:space="preserve">
-    <value>Song Select</value>
+    <value>Выбор Песни</value>
   </data>
   <data name="Screen_Options_ScreenResolution" xml:space="preserve">
-    <value>Screen Resolution</value>
+    <value>Разрешение Экрана</value>
   </data>
   <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
-    <value>Enable Fullscreen</value>
+    <value>Включить Полноэкранный Режим</value>
   </data>
   <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
-    <value>Enable Borderless Window</value>
+    <value>Включить Окно без Рамок</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
-    <value>Frame Limiter</value>
+    <value>Лимит Кадров</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
-    <value>Set Custom FPS</value>
+    <value>Пользовательский FPS</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
-    <value>Display FPS Counter</value>
+    <value>Отображать Счётчик FPS</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
-    <value>Audio Output Device</value>
+    <value>Устройство Вывода Звука</value>
   </data>
   <data name="Screen_Options_MasterVolume" xml:space="preserve">
-    <value>Master Volume</value>
+    <value>Общая Громкость</value>
   </data>
   <data name="Screen_Options_MusicVolume" xml:space="preserve">
-    <value>Music Volume</value>
+    <value>Громкость Музыки</value>
   </data>
   <data name="Screen_Options_EffectVolume" xml:space="preserve">
-    <value>Effect Volume</value>
+    <value>Громкость Эффектов</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
-    <value>Master</value>
+    <value>Общий Звук</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Музыка</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>Эффект</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Назад</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Retry Map</value>
+    <value>Заново</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
-    <value>Watch Replay</value>
+    <value>Посмотреть Реплей</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
-    <value>Export Replay</value>
+    <value>Экспортировать Реплей</value>
   </data>
   <data name="Screen_Results_FixOffset" xml:space="preserve">
-    <value>Fix Offset</value>
+    <value>Настроить Задержку</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
-    <value>Convert Score</value>
+    <value>Конвертировать Счёт</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Please wait! Your score is already being converted!</value>
+    <value>Подождите! Ваш счёт уже преобразуется!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
-    <value>Overview</value>
+    <value>Обзор</value>
   </data>
   <data name="Screen_Results_Multiplayer" xml:space="preserve">
-    <value>Multiplayer</value>
+    <value>Мультиплеер</value>
   </data>
   <data name="Screen_Results_Mappedby" xml:space="preserve">
-    <value>Mapped by:</value>
+    <value>Карта создана:</value>
   </data>
   <data name="Screen_Results_Playedby" xml:space="preserve">
-    <value>Played by</value>
+    <value>Игрок:</value>
   </data>
   <data name="Screen_Results_Playedon" xml:space="preserve">
-    <value>on {0} @ {1}</value>
+    <value>{0}, {1}</value>
   </data>
   <data name="Screen_Results_JudgementPreset" xml:space="preserve">
-    <value>Judgement Preset:</value>
+    <value>Пресет Строгости Попаданий:</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
-    <value>GRAPH:</value>
+    <value>ГРАФИК:</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
-    <value>Deviance</value>
+    <value>Отклонение</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Accuracy</value>
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
+    <value>ACCURACY</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
-    <value>Health</value>
+    <value>Здоровье</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
-    <value>Rating</value>
+    <value>Рейтинг</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Mean:</value>
+    <value>Среднее:</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
-    <value>Std. Dev:</value>
+    <value>Стандартное Отклонение:</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Ratio:</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>RATIO</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
-    <value>Statistics Not Available</value>
+    <value>Статистика недоступна</value>
   </data>
   <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
-    <value>This displays the course of accuracy throughout the score.
+    <value>Показывает изменение точности на протяжении игры.
 
-If the map was not completed, then it will additionally
-show the accuracy if all subsequent hits had been
-Marvelous instead.</value>
+Если карта не пройдена, дополнительно появится точность, если все последующие ноты были бы Marvelous.</value>
   </data>
   <data name="Screen_Results_Latehitwindow" xml:space="preserve">
-    <value>Late (+{0} ms)</value>
+    <value>Поздно (+{0} мс)</value>
   </data>
   <data name="Screen_Results_Earlyhitwindow" xml:space="preserve">
-    <value>Early (-{0} ms)</value>
+    <value>Рано (-{0} мс)</value>
   </data>
   <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
-    <value>This displays the course of performance throughout the score.
+    <value>Показывает изменение результативности на протяжении игры.
 
-If the map was not completed, then it will additionally
-show the performance if all subsequent hits had been
-Marvelous instead.</value>
+Если карта не пройдена, дополнительно появится результативность, если все последующие ноты были бы Marvelous.</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
-    <value>SUBMITTING SCORE...</value>
+    <value>ОТПРАВКА СЧЁТА...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
-    <value>GLOBAL RANK</value>
+    <value>МЕСТО В МИРЕ</value>
   </data>
   <data name="Screen_Results_CountryRank" xml:space="preserve">
-    <value>COUNTRY RANK</value>
+    <value>МЕСТО В СТРАНЕ</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
-    <value>OVERALL RATING</value>
+    <value>ОБЩИЙ РЕЙТИНГ</value>
   </data>
   <data name="Screen_Results_OverallAccuracy" xml:space="preserve">
-    <value>OVERALL ACCURACY</value>
+    <value>ОБЩАЯ ТОЧНОСТЬ</value>
   </data>
   <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
-    <value>UNRANKED GAMEMODE</value>
+    <value>НЕРЕЙТИНГОВЫЙ РЕЖИМ</value>
   </data>
   <data name="Screen_Results_Matchplayedon" xml:space="preserve">
-    <value>Match played on {0} @ {1}</value>
+    <value>Матч сыгран {0}, {1}</value>
   </data>
   <data name="Screen_Results_FreeForAll" xml:space="preserve">
-    <value>Free For All</value>
+    <value>Все против Всех</value>
   </data>
   <data name="Screen_Results_BattleRoyale" xml:space="preserve">
-    <value>Battle Royale</value>
+    <value>Королевская Битва</value>
   </data>
   <data name="Screen_Results_Team" xml:space="preserve">
-    <value>Team</value>
+    <value>Команда</value>
   </data>
   <data name="Screen_Results_BlueTeam" xml:space="preserve">
-    <value>Blue Team</value>
+    <value>Синяя команда</value>
   </data>
   <data name="Screen_Results_RedTeam" xml:space="preserve">
-    <value>Red Team</value>
+    <value>Красная команда</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
-    <value>has won the match!</value>
+    <value>выиграла матч!</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
-    <value>Grade</value>
+    <value>Оценка</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Max Combo</value>
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
+    <value>MAX COMBO</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>PERFORMANCE RATING</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>RANKED ACCURACY</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -744,760 +746,781 @@ Marvelous instead.</value>
     <value>Miss</value>
   </data>
   <data name="Screen_Results_Mods" xml:space="preserve">
-    <value>Mods</value>
+    <value>Моды</value>
   </data>
   <data name="Screen_Results_Loadingresults" xml:space="preserve">
-    <value>Loading results</value>
+    <value>Загрузка результатов</value>
   </data>
   <data name="Screen_Results_Failedtoretrieveplayersscores" xml:space="preserve">
-    <value>Failed to retrieve players' scores!</value>
+    <value>Не удалось загрузить результаты игроков!</value>
   </data>
   <data name="Screen_Results_Therewasanissuewhileretrievingthereplayforthisscore" xml:space="preserve">
-    <value>There was an issue while retrieving the replay for this score!</value>
+    <value>Не удалось загрузить повтор для этого результата!</value>
   </data>
   <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
-    <value>The replay for this score could not be downloaded.</value>
+    <value>Не удалось скачать повтор для этого результата.</value>
   </data>
   <data name="Screen_Results_FetchingReplay" xml:space="preserve">
-    <value>FETCHING REPLAY</value>
+    <value>ЗАГРУЗКА РЕПЛЕЯ</value>
   </data>
   <data name="Screen_Results_DownloadingreplayPleasewait" xml:space="preserve">
-    <value>Downloading replay! Please wait...</value>
+    <value>Загрузка реплея! Подождите...</value>
   </data>
   <data name="Screen_Results_Pleasewaitwhileyourreplayisbeingexported" xml:space="preserve">
-    <value>Please wait while your replay is being exported...</value>
+    <value>Подождите, пока реплей экспортируется...</value>
   </data>
   <data name="Screen_Results_Anerroroccuredwhileexportingthereplay" xml:space="preserve">
-    <value>An error occured while exporting the replay!</value>
+    <value>Произошло ошибка при экспорте реплея!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
-    <value>You have already fixed your local offset for this map! There's no need to do it again.</value>
+    <value>Вы уже настроили локальную задержку для этой карты! Нет необходимости делать это снова.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
-    <value>There is no data to be able to fix your local offset!</value>
+    <value>Недостаточно данных для настройки локальной задержки!</value>
   </data>
   <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
-    <value>FIX LOCAL OFFSET</value>
+    <value>НАСТРОИТЬ ЛОКАЛЬНУЮ ЗАДЕРЖКУ</value>
   </data>
   <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
-    <value>Your local offset for this map will be changed from {0} ms to {1} ms.</value>
+    <value>Ваша локальная задержка для этой карты будет изменена с {0} мс до {1} мс.</value>
   </data>
   <data name="Screen_Results_Localoffsetset" xml:space="preserve">
-    <value>Local offset for this map was set to {0} ms.</value>
+    <value>Установлена локальная задержка в {0} мс для этой карты.</value>
   </data>
   <data name="Screen_Results_FailedtosavelocalscoretothedatabasePleasecheckthelogs" xml:space="preserve">
-    <value>Failed to save local score to the database. Please check the logs!</value>
+    <value>Не удалось сохранить локальный счёт в базу данных. Проверьте логи!</value>
   </data>
   <data name="Screen_Results_TherewasanerrorwhensavingyourreplayCheckRuntimelogformoredetails" xml:space="preserve">
-    <value>There was an error when saving your replay. Check Runtime.log for more details.</value>
+    <value>Произошла ошибка при сохранении реплея. Подробности в файле Runtime.log</value>
   </data>
   <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
-    <value>There is no replay data available to convert this score!</value>
+    <value>Нет данных реплея для конвертации этого результата!</value>
   </data>
   <data name="Screen_Options_GlobalAudioOffset" xml:space="preserve">
-    <value>Global Audio Offset</value>
+    <value>Общая Задержка Аудио</value>
   </data>
   <data name="Screen_Options_VisualOffset" xml:space="preserve">
-    <value>Visual Offset</value>
+    <value>Визуальная Задержка</value>
   </data>
   <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
-    <value>Calibrate Offset</value>
+    <value>Калибровка Задержки</value>
   </data>
   <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
-    <value>Pitch Audio With Playback Rate</value>
+    <value>Подстраивать Тон под Скорость</value>
   </data>
   <data name="Screen_Options_BackgroundBrightness" xml:space="preserve">
-    <value>Background Brightness</value>
+    <value>Яркость</value>
   </data>
   <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
-    <value>Long Note Shrink Amount</value>
+    <value>Изменение Размера Длинных Нот</value>
   </data>
   <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
-    <value>Enable Hitsounds</value>
+    <value>Включить Звуки Попаданий</value>
   </data>
   <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
-    <value>Enable Long Note Release Hitsounds</value>
+    <value>Включить Звуки Попаданий при Отпускании Длинных Нот</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
-    <value>Enable Keysounds</value>
+    <value>Включить Звуки Нажатий</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
-    <value>Enable Tap To Pause</value>
+    <value>Включить Паузу по Нажатию</value>
   </data>
   <data name="Screen_Options_EnableTapToRestart" xml:space="preserve">
-    <value>Enable Tap To Restart</value>
+    <value>Включить Рестарт по Нажатию</value>
   </data>
   <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
-    <value>Skip Results Screen After Quitting</value>
+    <value>Пропускать Окно Результатов при Выходе</value>
   </data>
   <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
-    <value>Lock Windows Key during gameplay</value>
+    <value>Отключить Клавишу Windows во время игры</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
-    <value>Display Timing Lines</value>
+    <value>Отображать Линии Тайминга</value>
   </data>
   <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
-    <value>Display Hit Bubbles</value>
+    <value>Отображать Анимации Попаданий</value>
   </data>
   <data name="Screen_Options_DisplayJudgementCounter" xml:space="preserve">
-    <value>Display Judgement Counter</value>
+    <value>Отображать Счётчик Строгости Попаданий</value>
   </data>
   <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
-    <value>Display Scoreboard</value>
+    <value>Отображать Таблицу Результатов</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBar" xml:space="preserve">
-    <value>Display Song Time Progress Bar</value>
+    <value>Отображать Шкалу Времени Песни</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBarTimeNumbers" xml:space="preserve">
-    <value>Display Song Time Progress Bar Time Numbers</value>
+    <value>Отображать Время Песни на Шкале Времени Песни</value>
   </data>
   <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
-    <value>Enable Top Lane Cover</value>
+    <value>Включить Верхнее Затемнение Дорожек</value>
   </data>
   <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
-    <value>Top Lane Cover Height</value>
+    <value>Высота Верхнего Затемнения</value>
   </data>
   <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
-    <value>Enable Bottom Lane Cover</value>
+    <value>Включить Нижнее Затемнение Дорожек</value>
   </data>
   <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
-    <value>Bottom Lane Cover Height</value>
+    <value>Высота Нижнего Затемнения</value>
   </data>
   <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
-    <value>Display UI Elements Over Lane Covers</value>
+    <value>Показывать Элементы Интерфейса Поверх Затемнения</value>
   </data>
   <data name="Screen_Options_DisplayReceptorsOverLaneCovers" xml:space="preserve">
-    <value>Display Receptors Over Lane Covers</value>
+    <value>Показывать Мишени Поверх Затемнения</value>
   </data>
   <data name="Screen_Options_CustomSkin" xml:space="preserve">
-    <value>Custom Skin</value>
+    <value>Пользовательский Скин</value>
   </data>
   <data name="Screen_Options_CoopPlayer2Skin" xml:space="preserve">
-    <value>Co-op Player 2 Skin</value>
+    <value>Скин Второго Игрока (кооператив)</value>
   </data>
   <data name="Screen_Options_DefaultSkin" xml:space="preserve">
-    <value>Default Skin</value>
+    <value>Стандартный Скин</value>
   </data>
   <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
-    <value>Open Skin Folder</value>
+    <value>Открыть Папку со Скинами</value>
   </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
-    <value>Export Skin</value>
+    <value>Экспортировать Скин</value>
   </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
-    <value>Upload Skin To Steam Workshop</value>
+    <value>Загрузить Скин в Steam Workshop</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
-    <value>Note &amp; Receptor Size Scale</value>
+    <value>Размер Нот и Мишеней</value>
   </data>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
-    <value>Playfield Scale</value>
+    <value>Размер Игрового Поля</value>
   </data>
   <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
-    <value>Tint Hitlighting Based On Judgement Color</value>
+    <value>Окрашивать Подсветку Попаданий в Цвет Точности Попаданий</value>
   </data>
   <data name="Screen_Options_Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Пауза</value>
   </data>
   <data name="Screen_Options_QuickRestart" xml:space="preserve">
-    <value>Quick Restart</value>
+    <value>Быстрый Рестарт</value>
   </data>
   <data name="Screen_Options_QuickExit" xml:space="preserve">
-    <value>Quick Exit</value>
+    <value>Быстрый Выход</value>
   </data>
   <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
-    <value>Skip Song Intro</value>
+    <value>Пропустить Вступление Песни</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
-    <value>Decrease Scroll Speed</value>
+    <value>Уменьшить Скорость Прокрутки</value>
   </data>
   <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
-    <value>Increase Scroll Speed</value>
+    <value>Увеличить Скорость Прокрутки</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
-    <value>Decrease Map Offset</value>
+    <value>Уменьшить Задержку Карты</value>
   </data>
   <data name="Screen_Options_IncreaseMapOffset" xml:space="preserve">
-    <value>Increase Map Offset</value>
+    <value>Увеличить Задержку Карты</value>
   </data>
   <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
-    <value>Reset Map Offset</value>
+    <value>Сбросить Задержку Карты</value>
   </data>
   <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
-    <value>Toggle Scoreboard Visibility</value>
+    <value>Показать/Скрыть Таблицу Очков</value>
   </data>
   <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
-    <value>Toggle Chat Overlay</value>
+    <value>Показать/Скрыть Чат</value>
   </data>
   <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
-    <value>Decrease Gameplay Rate</value>
+    <value>Уменьшить Скорость Игры</value>
   </data>
   <data name="Screen_Options_IncreaseGameplayRate" xml:space="preserve">
-    <value>Increase Gameplay Rate</value>
+    <value>Увеличить Скорость Игры</value>
   </data>
   <data name="Screen_Options_ToggleMirrorMod" xml:space="preserve">
-    <value>Toggle Mirror Mod</value>
+    <value>Включить/Выключить Зеркальный Режим</value>
   </data>
   <data name="Screen_Options_TogglePitch" xml:space="preserve">
-    <value>Toggle Pitch</value>
+    <value>Включить/Выключить Изменение Тона</value>
   </data>
   <data name="Screen_Options_RemoveAllMods" xml:space="preserve">
-    <value>Remove All Mods</value>
+    <value>Убрать Все Моды</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
-    <value>Pause/Play Track</value>
+    <value>Пауза/Воспроизведение Трека</value>
   </data>
   <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
-    <value>Decrease Playback Rate</value>
+    <value>Уменьшить Скорость Воспроизведения</value>
   </data>
   <data name="Screen_Options_IncreasePlaybackRate" xml:space="preserve">
-    <value>Increase Playback Rate</value>
+    <value>Увеличить Скорость Воспроизведения</value>
   </data>
   <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
-    <value>Take Screenshot</value>
+    <value>Сделать Скриншот</value>
   </data>
   <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
-    <value>Open Game Folder</value>
+    <value>Открыть Папку Игры</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
-    <value>Update Map Ranked Statuses</value>
+    <value>Обновить Статус Рейтинговых Карт</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
-    <value>Update Map Online Offsets</value>
+    <value>Обновить Онлайн-Задержку Карт</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Load Songs From Other Installed Games</value>
+    <value>Загрузить Песни из Других Установленных Игр</value>
   </data>
   <data name="Screen_Options_DetectSongsFromOtherInstalledGames" xml:space="preserve">
-    <value>Detect Songs From Other Installed Games</value>
+    <value>Найти Песни из Других Установленных Игр</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsFromBottomToTop" xml:space="preserve">
-    <value>Display Notifications From Bottom-To-Top</value>
+    <value>Отображать Уведомления Снизу Вверх</value>
   </data>
   <data name="Screen_Options_DisplayOnlineFriendNotifications" xml:space="preserve">
-    <value>Display Online Friend Notifications</value>
+    <value>Отображать Уведомления о Друзьях Онлайн</value>
   </data>
   <data name="Screen_Options_PrioritizedGameMode" xml:space="preserve">
-    <value>Prioritized Game Mode</value>
+    <value>Основной Режим Игры</value>
   </data>
   <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
-    <value>Suggest Difficulty from Overall Rating</value>
+    <value>Предлагать Сложность по Общему Рейтингу</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio/Frame Timing During Gameplay</value>
+    <value>Использовать Плавное Аудио/Синхронизацию Кадров во время Игры</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
-    <value>Use Smooth Audio Start Timing During Gameplay</value>
+    <value>Использовать Плавное Начало Аудио во время Игры</value>
   </data>
   <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Display Gameplay Overlay (Shift + F6)</value>
+    <value>Отображать Оверлей во время Игры (Shift + F6)</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
-    <value>Display Notifications During Gameplay</value>
+    <value>Отображать Уведомления во время Игры</value>
   </data>
   <data name="Screen_Options_ShowSpectators" xml:space="preserve">
-    <value>Show Spectators</value>
+    <value>Показывать Зрителей</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyWithCustomJudgements" xml:space="preserve">
-    <value>Display Ranked Accuracy With Custom Judgements</value>
+    <value>Отображать Рейтинговую Точность с Пользовательской Строгостью Попаданий</value>
   </data>
   <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
-    <value>Hit Error Fade Time</value>
+    <value>Время Затухания Ошибок Попаданий</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
-    <value>Hit Error Early / Late Coloring</value>
+    <value>Окраска Ранних/Поздних Попаданий</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
-    <value>Hit Error Early / Late Window</value>
+    <value>Окно Ранних/Поздних Попаданий</value>
   </data>
   <data name="Screen_Options_EnableComboAlerts" xml:space="preserve">
-    <value>Enable Combo Alerts</value>
+    <value>Включить Оповещения о Комбо</value>
   </data>
   <data name="Screen_Options_DisplayUnbeatableScores" xml:space="preserve">
-    <value>Display Unbeatable Scores</value>
+    <value>Отображать Непобиваемые Результаты</value>
   </data>
   <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
-    <value>Keep Playing Upon Failing</value>
+    <value>Продолжать Игру при Провале</value>
   </data>
   <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
-    <value>Normalise Scroll Velocity By Rate Percentage</value>
+    <value>Корректировать Скорость Прокрутки в зависимости от Темпа</value>
   </data>
   <data name="Screen_Options_Display1v1TournamentOverlay" xml:space="preserve">
-    <value>Display 1v1 Tournament Overlay</value>
+    <value>Отображать Оверлей Турнира 1 на 1</value>
   </data>
   <data name="Screen_Options_Display1v1PlayfieldScores" xml:space="preserve">
-    <value>Display 1v1 Playfield Scores</value>
+    <value>Отображать Результаты на Игровом Поле 1 на 1</value>
   </data>
   <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
-    <value>Reload Skin On Change</value>
+    <value>Перезагружать Скин при Изменении</value>
   </data>
   <data name="Screen_Options_TogglePlaytestAutoplay" xml:space="preserve">
-    <value>Toggle Playtest Autoplay</value>
+    <value>Включить/Выключить Автопроигрывание в Плейтесте</value>
   </data>
   <data name="Screen_Options_InvertEditorScrolling" xml:space="preserve">
-    <value>Invert Editor Scrolling</value>
+    <value>Инвертировать Прокрутку в Редакторе</value>
   </data>
   <data name="Screen_Options_InvertScrolling" xml:space="preserve">
-    <value>Invert Scrolling</value>
+    <value>Инвертировать Прокрутку</value>
   </data>
   <data name="Screen_Options_AutomaticallyLogIntoTheServer" xml:space="preserve">
-    <value>Automatically Log Into The Server</value>
+    <value>Автоматически Подключаться к Серверу</value>
   </data>
   <data name="Screen_Options_DisplaySongRequestNotifications" xml:space="preserve">
-    <value>Display Song Request Notifications</value>
+    <value>Отображать Уведомления о Запросах Песен</value>
   </data>
   <data name="Screen_Options_DisplayWarningForPausing" xml:space="preserve">
-    <value>Display Warning For Pausing</value>
+    <value>Отображать Предупреждение при Паузе</value>
   </data>
   <data name="Screen_Options_DisplayWarningForFailing" xml:space="preserve">
-    <value>Display Warning For Failing</value>
+    <value>Отображать Предупреждение при Провале</value>
   </data>
   <data name="Screen_Options_DisplayEpilepsyWarning" xml:space="preserve">
-    <value>Display Epilepsy Warning</value>
+    <value>Отображать Предупреждение об Эпилепсии</value>
   </data>
   <data name="Screen_Options_DisplayMenuAudioVisualizer" xml:space="preserve">
-    <value>Display Menu Audio Visualizer</value>
+    <value>Отображать Аудиовизуализатор в Меню</value>
   </data>
   <data name="Screen_Options_DisplayFailedLocalScores" xml:space="preserve">
-    <value>Display Failed Local Scores</value>
+    <value>Отображать Проваленные Локальные Результаты</value>
   </data>
   <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
-    <value>Delete Original File After Import</value>
+    <value>Удалять Исходный Файл После Импорта</value>
   </data>
   <data name="Screen_Options_DiscordRichPresence" xml:space="preserve">
-    <value>Discord Rich Presence</value>
+    <value>Отображать Статус в Discord</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyForLocalLeaderboards" xml:space="preserve">
-    <value>Display Ranked Accuracy For Local Leaderboards</value>
+    <value>Отображать Рейтинговую Точность в Локальной Таблице Лидеров</value>
   </data>
   <data name="Screen_Options_LowerFPSOnInactiveWindow" xml:space="preserve">
-    <value>Lower FPS On Inactive Window</value>
+    <value>Снижать FPS в Неактивном Окне</value>
   </data>
   <data name="Screen_Options_EnableHighProcessPriority" xml:space="preserve">
-    <value>Enable High Process Priority</value>
+    <value>Включить Высокий Приоритет Прогресса</value>
   </data>
   <data name="Screen_Options_PreferWayland" xml:space="preserve">
-    <value>Prefer Wayland</value>
+    <value>Использовать Wayland</value>
   </data>
   <data name="Screen_Options_PrefermacOSInputHandling" xml:space="preserve">
-    <value>Prefer macOS Input Handling</value>
+    <value>Использовать macOS-обработку Ввода</value>
   </data>
   <data name="Screen_Options_EditorImGuiScale" xml:space="preserve">
-    <value>Editor ImGui Scale</value>
+    <value>Масштаб Интерфейса в Редакторе</value>
   </data>
   <data name="Screen_Options_OPTIONSMENU" xml:space="preserve">
-    <value>OPTIONS MENU</value>
+    <value>МЕНЮ НАСТРОЕК</value>
   </data>
   <data name="Screen_Options_Searchforoptions" xml:space="preserve">
-    <value>Search for options...</value>
+    <value>Поиск Настроек...</value>
   </data>
   <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>1K Gameplay Layout</value>
+    <value>Раскладка для 1К</value>
   </data>
   <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>1K Scroll Speed</value>
+    <value>Скорость Прокрутки для 1К</value>
   </data>
   <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>1K Scroll Direction</value>
+    <value>Направление Прокрутки для 1К</value>
   </data>
   <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>1K Scratch Layout</value>
+    <value>Раскладка Scratch для 1К</value>
   </data>
   <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 1K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 1К слева</value>
   </data>
   <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
-    <value>1K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 1К</value>
   </data>
   <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
-    <value>Prioritized 1K Difficulty</value>
+    <value>Приоритетная Сложность для 1К</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1К</value>
   </data>
   <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
-    <value>2K Gameplay Layout</value>
+    <value>Раскладка для 2К</value>
   </data>
   <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>2K Scroll Speed</value>
+    <value>Скорость Прокрутки для 2К</value>
   </data>
   <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2K Scroll Direction</value>
+    <value>Направление Прокрутки для 2К</value>
   </data>
   <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
-    <value>2K Scratch Layout</value>
+    <value>Раскладка Scratch для 2К</value>
   </data>
   <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 2K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 2К слева</value>
   </data>
   <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
-    <value>2K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 2К</value>
   </data>
   <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Prioritized 2K Difficulty</value>
+    <value>Приоритетная Сложность для 2К</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2К</value>
   </data>
   <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
-    <value>3K Gameplay Layout</value>
+    <value>Раскладка для 3К</value>
   </data>
   <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>3K Scroll Speed</value>
+    <value>Скорость Прокрутки для 3К</value>
   </data>
   <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>3K Scroll Direction</value>
+    <value>Направление Прокрутки для 3К</value>
   </data>
   <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
-    <value>3K Scratch Layout</value>
+    <value>Раскладка Scratch для 3К</value>
   </data>
   <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 3K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 3К слева</value>
   </data>
   <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
-    <value>3K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 3К</value>
   </data>
   <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
-    <value>Prioritized 3K Difficulty</value>
+    <value>Приоритетная Сложность для 3К</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3К</value>
   </data>
   <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
-    <value>4K Gameplay Layout</value>
+    <value>Раскладка для 4К</value>
   </data>
   <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>4K Scroll Speed</value>
+    <value>Скорость Прокрутки для 4К</value>
   </data>
   <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>4K Scroll Direction</value>
+    <value>Направление Прокрутки для 4К</value>
   </data>
   <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
-    <value>4K Scratch Layout</value>
+    <value>Раскладка Scratch для 4К</value>
   </data>
   <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 4K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 4К слева</value>
   </data>
   <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>4K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 4К</value>
   </data>
   <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Prioritized 4K Difficulty</value>
+    <value>Приоритетная Сложность для 4К</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4К</value>
   </data>
   <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
-    <value>5K Gameplay Layout</value>
+    <value>Раскладка для 5К</value>
   </data>
   <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>5K Scroll Speed</value>
+    <value>Скорость Прокрутки для 5К</value>
   </data>
   <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>5K Scroll Direction</value>
+    <value>Направление Прокрутки для 5К</value>
   </data>
   <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
-    <value>5K Scratch Layout</value>
+    <value>Раскладка Scratch для 5К</value>
   </data>
   <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 5K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 5К слева</value>
   </data>
   <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
-    <value>5K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 5К</value>
   </data>
   <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
-    <value>Prioritized 5K Difficulty</value>
+    <value>Приоритетная Сложность для 5К</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5К</value>
   </data>
   <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
-    <value>6K Gameplay Layout</value>
+    <value>Раскладка для 6К</value>
   </data>
   <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>6K Scroll Speed</value>
+    <value>Скорость Прокрутки для 6К</value>
   </data>
   <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>6K Scroll Direction</value>
+    <value>Направление Прокрутки для 6К</value>
   </data>
   <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
-    <value>6K Scratch Layout</value>
+    <value>Раскладка Scratch для 6К</value>
   </data>
   <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 6K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 6К слева</value>
   </data>
   <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
-    <value>6K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 6К</value>
   </data>
   <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
-    <value>Prioritized 6K Difficulty</value>
+    <value>Приоритетная Сложность для 6К</value>
   </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6К</value>
   </data>
   <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
-    <value>7K Gameplay Layout</value>
+    <value>Раскладка для 7К</value>
   </data>
   <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>7K Scroll Speed</value>
+    <value>Скорость Прокрутки для 7К</value>
   </data>
   <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>7K Scroll Direction</value>
+    <value>Направление Прокрутки для 7К</value>
   </data>
   <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
-    <value>7K Scratch Layout</value>
+    <value>Раскладка Scratch для 7К</value>
   </data>
   <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 7K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 7К слева</value>
   </data>
   <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
-    <value>7K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 7К</value>
   </data>
   <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
-    <value>Prioritized 7K Difficulty</value>
+    <value>Приоритетная Сложность для 7К</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7К</value>
   </data>
   <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
-    <value>8K Gameplay Layout</value>
+    <value>Раскладка для 8К</value>
   </data>
   <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>8K Scroll Speed</value>
+    <value>Скорость Прокрутки для 8К</value>
   </data>
   <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>8K Scroll Direction</value>
+    <value>Направление Прокрутки для 8К</value>
   </data>
   <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
-    <value>8K Scratch Layout</value>
+    <value>Раскладка Scratch для 8К</value>
   </data>
   <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 8K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 8К слева</value>
   </data>
   <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
-    <value>8K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 8К</value>
   </data>
   <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
-    <value>Prioritized 8K Difficulty</value>
+    <value>Приоритетная Сложность для 8К</value>
   </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8К</value>
   </data>
   <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
-    <value>9K Gameplay Layout</value>
+    <value>Раскладка для 9К</value>
   </data>
   <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>9K Scroll Speed</value>
+    <value>Скорость Прокрутки для 9К</value>
   </data>
   <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>9K Scroll Direction</value>
+    <value>Направление Прокрутки для 9К</value>
   </data>
   <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
-    <value>9K Scratch Layout</value>
+    <value>Раскладка Scratch для 9К</value>
   </data>
   <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 9K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 9К слева</value>
   </data>
   <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
-    <value>9K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 9К</value>
   </data>
   <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
-    <value>Prioritized 9K Difficulty</value>
+    <value>Приоритетная Сложность для 9К</value>
   </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9К</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>10K Gameplay Layout</value>
+    <value>Раскладка для 10К</value>
   </data>
   <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>10K Scroll Speed</value>
+    <value>Скорость Прокрутки для 10К</value>
   </data>
   <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>10K Scroll Direction</value>
+    <value>Направление Прокрутки для 10К</value>
   </data>
   <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
-    <value>10K Scratch Layout</value>
+    <value>Раскладка Scratch для 10К</value>
   </data>
   <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 10K Scratch Lane On Left</value>
+    <value>Размещать Scratch-дорожку для 10К слева</value>
   </data>
   <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
-    <value>10K Co-op Layout</value>
+    <value>Кооперативная Раскладка для 10К</value>
   </data>
   <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
-    <value>Prioritized 10K Difficulty</value>
+    <value>Приоритетная Сложность для 10К</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10К</value>
   </data>
-  <data name="Screen_Options_SectionSettings" xml:space="preserve">
-    <value>{0} Settings</value>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>Настройки Видео</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>Настройки Аудио</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>Настройки Языка</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>Настройки Игрового Процесса</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>Настройки Скина</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>Настройки Управления</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>Настройки для Режимов Игры</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>Прочие Настройки</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>Дополнительные Настройки</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
-    <value>{0} Search Result</value>
+    <value>Результат Поиска {0}</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
-    <value>{0} Search Results</value>
+    <value>Результатов Поиска {0}</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
-    <value>Music is currently paused!</value>
+    <value>Музыка Приостановлена!</value>
   </data>
   <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
-    <value>Music is now playing!</value>
+    <value>Музыка Воспроизведена!</value>
   </data>
   <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
-    <value>This mapset is already downloading!</value>
+    <value>Этот набор карт уже загружается!</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
-    <value>RECOMMEND DIFFICULTY</value>
+    <value>РЕКОМЕНДОВАННАЯ СЛОЖНОСТЬ</value>
   </data>
   <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
-    <value>Would you like to find recommended maps around your skill level
-for the selected game mode?</value>
+    <value>Найти карты, соответствующие вашему уровню игры, для выбранного режима?</value>
   </data>
   <data name="Screen_Download_Typetosearch" xml:space="preserve">
-    <value>Type to search...</value>
+    <value>Введите для поиска...</value>
   </data>
   <data name="Screen_Download_MAPSETSFOUND" xml:space="preserve">
-    <value>MAPSETS FOUND</value>
+    <value>НАБОРОВ КАРТ НАЙДЕНО</value>
   </data>
   <data name="Screen_Download_MAPSETFOUND" xml:space="preserve">
-    <value>MAPSET FOUND</value>
+    <value>НАБОР КАРТ НАЙДЕН</value>
   </data>
   <data name="Screen_Download_STATUS" xml:space="preserve">
-    <value>STATUS: </value>
+    <value>СТАТУС:</value>
   </data>
   <data name="Screen_Download_All" xml:space="preserve">
-    <value>All</value>
+    <value>Все</value>
   </data>
   <data name="Screen_Download_Unranked" xml:space="preserve">
-    <value>Unranked</value>
+    <value>Нерейтинговые</value>
   </data>
   <data name="Screen_Download_Ranked" xml:space="preserve">
-    <value>Ranked</value>
+    <value>Рейтинговые</value>
   </data>
   <data name="Screen_Download_ClanRanked" xml:space="preserve">
-    <value>Clan Ranked</value>
+    <value>Рейтинговые для кланов</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>DIFFICULTY: </value>
+    <value>СЛОЖНОСТЬ:</value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
-    <value>None</value>
+    <value>Любая</value>
   </data>
   <data name="Screen_Download_Beginner" xml:space="preserve">
-    <value>Beginner</value>
+    <value>Начинающий</value>
   </data>
   <data name="Screen_Download_Easy" xml:space="preserve">
-    <value>Easy</value>
+    <value>Лёгкая</value>
   </data>
   <data name="Screen_Download_Normal" xml:space="preserve">
-    <value>Normal</value>
+    <value>Нормальная</value>
   </data>
   <data name="Screen_Download_Hard" xml:space="preserve">
-    <value>Hard</value>
+    <value>Сложная</value>
   </data>
   <data name="Screen_Download_Insane" xml:space="preserve">
-    <value>Insane</value>
+    <value>Безумная</value>
   </data>
   <data name="Screen_Download_Expert" xml:space="preserve">
-    <value>Expert</value>
+    <value>Эксперт</value>
   </data>
   <data name="Screen_Download_MODE" xml:space="preserve">
-    <value>MODE: </value>
+    <value>РЕЖИМ:</value>
   </data>
   <data name="Screen_Download_SORTBY" xml:space="preserve">
-    <value>SORT BY: </value>
+    <value>СОРТИРОВАТЬ ПО:</value>
   </data>
   <data name="Screen_Download_Newest" xml:space="preserve">
-    <value>Newest</value>
+    <value>Сначала Новые</value>
   </data>
   <data name="Screen_Download_DateSubmitted" xml:space="preserve">
-    <value>Date Submitted</value>
+    <value>Дата Публикации</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
-    <value>Length</value>
+    <value>Длительность</value>
   </data>
   <data name="Screen_Download_Difficulty" xml:space="preserve">
-    <value>Difficulty</value>
+    <value>Сложность</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
-    <value>Max Combo</value>
+    <value>Макс. Комбо</value>
   </data>
   <data name="Screen_Download_BPM" xml:space="preserve">
     <value>BPM</value>
   </data>
   <data name="Screen_Download_LN" xml:space="preserve">
-    <value>LN %</value>
+    <value>% длинных нот</value>
   </data>
   <data name="Screen_Download_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>Кол-во Игр</value>
   </data>
   <data name="Screen_Download_Ascending" xml:space="preserve">
-    <value>Ascending</value>
+    <value>По возрастанию</value>
   </data>
   <data name="Screen_Download_Descending" xml:space="preserve">
-    <value>Descending</value>
+    <value>По убыванию</value>
   </data>
   <data name="Screen_Download_DownloadMaps" xml:space="preserve">
-    <value>Download Maps</value>
+    <value>Загружать Карты</value>
   </data>
   <data name="Screen_Download_Findnewsongstoplayfromthecommunity" xml:space="preserve">
-    <value>Find new songs to play from the community</value>
+    <value>Ищите новые песни от сообщества для игры</value>
   </data>
   <data name="Screen_Download_Finisheddownloading01" xml:space="preserve">
-    <value>Finished downloading: {0} - {1}!</value>
+    <value>Загрузка завершена: {0} - {1}!</value>
   </data>
   <data name="Screen_Download_By" xml:space="preserve">
-    <value>By:</value>
+    <value>От:</value>
   </data>
   <data name="Screen_Download_LNs" xml:space="preserve">
-    <value>LNs: </value>
+    <value>Длинные Ноты:</value>
   </data>
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
-    <value>FILTER OPTIONS</value>
+    <value>ПАРАМЕТРЫ ФИЛЬТРОВ</value>
   </data>
   <data name="Screen_Download_UploadDate" xml:space="preserve">
-    <value>Upload Date</value>
+    <value>Дата Загрузки</value>
   </data>
   <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
-    <value>Last Update Date</value>
+    <value>Дата Последнего Обновления</value>
   </data>
   <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
-    <value>Display Owned Mapsets</value>
+    <value>Показывать Свои Наборы Карт</value>
   </data>
   <data name="Screen_Download_DisplayExplicitMapsets" xml:space="preserve">
-    <value>Display Explicit Mapsets</value>
+    <value>Показывать Наборы Карт с Нецензурным Содержанием</value>
   </data>
   <data name="Screen_Download_Maps" xml:space="preserve">
-    <value>Maps: </value>
+    <value>Карты:</value>
   </data>
   <data name="Screen_Download_NoSongSelected" xml:space="preserve">
-    <value>No Song Selected</value>
+    <value>Песня Не Выбрана:</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>To begin downloading, double-click on a song.
-Clicking once will allow you to preview the audio.
-You can use the filters below to narrow down your search.</value>
+    <value>Чтобы начать загрузку, дважды кликните по песне. Одиночный клик позволяет прослушать отрывок песни. Используйте фильтры ниже, чтобы уточнить поиск.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
-    <value>End Date</value>
+    <value>Дата Окончания</value>
   </data>
   <data name="Screen_Download_StartDate" xml:space="preserve">
-    <value>Start Date</value>
+    <value>Дата Начала</value>
   </data>
   <data name="Screen_Download_DifficultyRating" xml:space="preserve">
-    <value>Difficulty Rating</value>
+    <value>Рейтинг Сложности</value>
   </data>
   <data name="Screen_Download_MaxRating" xml:space="preserve">
-    <value>Max Rating</value>
+    <value>Макс. Рейтинг</value>
   </data>
   <data name="Screen_Download_MinRating" xml:space="preserve">
-    <value>Min Rating</value>
+    <value>Мин. Рейтинг</value>
   </data>
   <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
-    <value>Ranked Play Count</value>
+    <value>Кол-во Игр в Рейтинге</value>
   </data>
   <data name="Screen_Download_MaxPlays" xml:space="preserve">
     <value>Max Plays</value>
@@ -1990,7 +2013,13 @@ for other players to download?</value>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
     <value>Difficulty Range</value>
   </data>
-  <data name="Screen_MultiplayerLobby_Any" xml:space="preserve">
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
     <value>Any</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">

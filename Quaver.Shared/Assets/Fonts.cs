@@ -11,6 +11,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Localization;
 using Wobble;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Assets
@@ -18,18 +19,12 @@ namespace Quaver.Shared.Assets
     public static class Fonts
     {
         private const int NotoCjkWeight = FontWeight.SemiBold;
-        private const int InterImplicitFontSizeReduction = 4;
+        private const int InterImplicitFontSizeReduction = 0;
         private const int InterDefaultSize = 20;
         private const string Folder = "Quaver.Resources/Fonts";
         private const string Emoji = "Emoji";
         private const string Cjk = "CJK";
         private const string Inter = "Inter";
-
-        public static string Exo2Bold { get; } = "exo2-bold";
-        public static string Exo2BoldItalic { get; } = "exo2-bolditalic";
-        public static string Exo2Medium { get; } = "exo2-medium";
-        public static string Exo2Regular { get; } = "exo2-regular";
-        public static string Exo2SemiBold { get; } = "exo2-semibold";
 
         #region NEW_FONTS
 
@@ -64,10 +59,18 @@ namespace Quaver.Shared.Assets
                     { Cjk, notoCjkFont }
                 };
 
+            void CacheFont(string name, WobbleFontStore font)
+            {
+                if (FontManager.WobbleFonts.ContainsKey(name))
+                    return;
+
+                FontManager.CacheWobbleFont(name, font);
+            }
+
             void CacheInterFont(string name, int weight)
             {
-                FontManager.CacheWobbleFont(name, new WobbleFontStore(InterDefaultSize,
-                    new WobbleFontFace(interFont, weight: weight),
+                CacheFont(name, new WobbleFontStore(InterDefaultSize,
+                    new WobbleFontFace(interFont, weight: weight, enableTabularNumbers: true),
                     implicitFontSizeReduction: InterImplicitFontSizeReduction,
                     addedFonts: CreateFallbacks()));
             }
@@ -79,11 +82,23 @@ namespace Quaver.Shared.Assets
             CacheInterFont(InterHeavy, FontWeight.ExtraBold);
             CacheInterFont(InterBlack, FontWeight.Black);
 
+            TooltipManager.Theme.Fonts = new Dictionary<int, WobbleFontStore>
+            {
+                { FontWeight.Regular, FontManager.GetWobbleFont(InterRegular) },
+                { FontWeight.Light, FontManager.GetWobbleFont(InterLight) },
+                { FontWeight.SemiBold, FontManager.GetWobbleFont(InterSemiBold) },
+                { FontWeight.Bold, FontManager.GetWobbleFont(InterBold) },
+                { FontWeight.ExtraBold, FontManager.GetWobbleFont(InterHeavy) },
+                { FontWeight.Black, FontManager.GetWobbleFont(InterBlack) }
+            };
+
             var dir = $"{WobbleGame.WorkingDirectory}/Fonts";
             Directory.CreateDirectory(dir);
 
             // Copy over
             File.WriteAllBytes($"{dir}/inter.ttf", interFont);
+            File.WriteAllBytes($"{dir}/noto-sans-cjk.ttc",
+                GameBase.Game.Resources.Get($@"{Folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"));
             File.WriteAllBytes($"{dir}/lato-black.ttf", interFont);
         }
 

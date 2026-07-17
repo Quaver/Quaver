@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
 
         /// <summary>
         /// </summary>
-        private void CreatePlayedBy() => PlayedBy = new TextKeyValue(ResultsLocalization.Get("Played by"), $"{Processor.Value.PlayerName}", 22, Color.White)
+        private void CreatePlayedBy() => PlayedBy = new TextKeyValue(ResultsLocalization.Get("Played by"), $"{Processor.Value.PlayerName}", 18, Color.White)
         {
             Parent = ContentContainer,
             X = PADDING_X,
@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
             var time = $"{Processor.Value.Date:hh:mm:ss tt}";
 
             DateAndTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                ResultsLocalization.Get("Played on", Processor.Value.Date.ToShortDateString(), time), 22)
+                ResultsLocalization.Get("Played on", Processor.Value.Date.ToShortDateString(), time), 18)
             {
                 Parent = ContentContainer,
                 X = PADDING_X + PlayedBy.Width + 4,
@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         /// <summary>
         /// </summary>
         private void CreateJudgementWindowPreset() => JudgementWindows = new TextKeyValue(ResultsLocalization.Get("Judgement Preset:"), Processor.Value.Windows.Name,
-            22, Color.White)
+            18, Color.White)
         {
             Parent = ContentContainer,
             Alignment = Alignment.TopRight,

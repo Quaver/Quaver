@@ -7,15 +7,16 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -136,6 +137,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateGameModes();
             CreateOnlineGrade();
 
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged += OnDisplaySongSelectBannersChanged;
+
             UsePreviousSpriteBatchOptions = true;
         }
 
@@ -149,6 +153,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             PerformHoverAnimation(gameTime);
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (ConfigManager.DisplaySongSelectBanners != null)
+                ConfigManager.DisplaySongSelectBanners.ValueChanged -= OnDisplaySongSelectBannersChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -201,7 +216,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
             else
             {
-                Title.FontSize = 26;
+                Title.FontSize = 22;
                 Title.Text = item.Title;
                 Title.TruncateWithEllipsis(400);
 
@@ -221,8 +236,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             var (statusText, statusColor) = GetRankedStatusInfo();
             RankedStatusSprite.Tint = statusColor;
-            RankedStatusSprite.SetLabel(Title.Font, statusText, 16, Color.White);
+            RankedStatusSprite.SetLabel(Title.Font, statusText, 14, Color.White);
             GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.Mode), GameModes, GameModeText);
+            AlignTextRows();
+            UpdateBannerLayout();
 
             if (ParentMapset.IsSelected)
                 Select(true);
@@ -271,7 +288,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = SkinManager.Skin?.SongSelect?.MapsetPanelBannerSize ?? new ScalableVector2(421, 82),
+                Size = DrawableBanner.DisplaySize,
                 X = -2,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -282,7 +299,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "SONG TITLE", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),
@@ -296,7 +313,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(Title.Font, "Artist", 20)
+            Artist = new SpriteTextPlus(Title.Font, "Artist", 16)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
@@ -350,7 +367,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(115, 28),
+                Size = new ScalableVector2(124, 30),
                 X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18),
                 IsClickable = false,
                 PerformHoverFade = false,
@@ -366,7 +383,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(71, 28),
+                Size = new ScalableVector2(72, 30),
                 X = RankedStatusSprite.X - RankedStatusSprite.Width + (SkinManager.Skin?.SongSelect?.GameModePosOffsetX ?? -18),
                 UsePreviousSpriteBatchOptions = true
             };
@@ -379,6 +396,26 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Tint = Color.White,
             };
         }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateBannerLayout()
+        {
+            var bannerSize = DrawableBanner.DisplaySize;
+
+            if (Banner.Width != bannerSize.X.Value || Banner.Height != bannerSize.Y.Value)
+                Banner.Size = bannerSize;
+
+            RankedStatusSprite.X = Banner.X - Banner.Width + (SkinManager.Skin?.SongSelect?.RankedStatusPosOffsetX ?? -18);
+            GameModes.X = RankedStatusSprite.X - RankedStatusSprite.Width + (SkinManager.Skin?.SongSelect?.GameModePosOffsetX ?? -18);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplaySongSelectBannersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => UpdateBannerLayout();
 
         /// <summary>
         /// </summary>
@@ -399,13 +436,29 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
+            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 18)
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Artist.Y),
                 UsePreviousSpriteBatchOptions = true,
                 Alpha = 0
             };
+        }
+
+        /// <summary>
+        ///     Vertically centers the two text rows using the current font metrics.
+        /// </summary>
+        private void AlignTextRows()
+        {
+            const int spacing = 5;
+            var secondRowHeight = Math.Max(Artist.Height, DifficultyName.Height);
+
+            Title.Y = (Height - Title.Height - spacing - secondRowHeight) / 2f;
+            Artist.Y = Title.Y + Title.Height + spacing;
+            DifficultyName.Y = Artist.Y;
+            DividerLine.Y = Artist.Y;
+            ByText.Y = Artist.Y;
+            Creator.Y = Artist.Y;
         }
 
         /// <summary>

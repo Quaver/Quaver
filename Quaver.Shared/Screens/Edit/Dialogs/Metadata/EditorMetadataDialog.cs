@@ -11,7 +11,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -68,7 +68,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private TextboxTabControl TabControl { get; }
 
-        private const int LabelSize = 21;
+        private const int LabelSize = 18;
 
         private const int TextboxHeight = 42;
 
@@ -257,7 +257,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateBpmAffectsSvCheckbox()
         {
-            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 20,
+            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 18,
                 new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -269,7 +269,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateScratchKeyCheckbox()
         {
-            ScratchKey = new LabelledCheckbox("SCRATCH KEY:", 20,
+            ScratchKey = new LabelledCheckbox("SCRATCH KEY:", 18,
                 new QuaverCheckbox(new Bindable<bool>(WorkingMap.HasScratchKey)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -281,7 +281,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateLegacyLNRenderingCheckbox()
         {
-            LegacyLNRendering = new LabelledCheckbox("LEGACY LN RENDERING:", 20,
+            LegacyLNRendering = new LabelledCheckbox("LEGACY LN RENDERING:", 18,
                 new QuaverCheckbox(new Bindable<bool>(WorkingMap.LegacyLNRendering)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -307,7 +307,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Tint = ColorHelper.HexToColor("#0968AC")
             };
 
-            SyncMetadataButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SYNC METADATA", 20, Color.White);
+            SyncMetadataButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SYNC METADATA", 18, Color.White);
         }
 
         private bool CanSyncMetadata() => Screen.Map.Mapset?.Maps?.Count >= 2;

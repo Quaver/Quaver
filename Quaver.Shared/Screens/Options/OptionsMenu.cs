@@ -159,10 +159,21 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Volume", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Master Volume", ConfigManager.VolumeGlobal),
-                        new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic),
+                        new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic)
+                        {
+                            Tags = new List<string> {"gameplay", "in-game", "song"}
+                        },
+                        new OptionsSlider(containerRect, "Menu Music Volume", ConfigManager.VolumeMenuMusic)
+                        {
+                            Tags = new List<string> {"menu", "jukebox"}
+                        },
                         new OptionsSlider(containerRect, "Effect Volume", ConfigManager.VolumeEffect)
                         {
                             Tags = new List<string> {"fx", "sfx"}
+                        },
+                        new OptionsItemCheckbox(containerRect, "Mute Audio When Unfocused", ConfigManager.MuteAudioOnWindowInactive)
+                        {
+                            Tags = new List<string> {"focus", "background"}
                         },
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
@@ -261,6 +272,10 @@ namespace Quaver.Shared.Screens.Options
                             {Tags = new List<string>() {"mini"}},
                         new OptionsSlider(containerRect, "Playfield Scale", ConfigManager.PlayfieldScale, i => $"{i / 100f:0.00}x")
                             {Tags = new List<string>() {"mini"}},
+                        new OptionsItemCheckbox(containerRect, "Display Song Select Banners", ConfigManager.DisplaySongSelectBanners)
+                        {
+                            Tags = new List<string> {"banner", "mapset", "playlist"}
+                        },
                         new OptionsItemCheckbox(containerRect, "Tint Hitlighting Based On Judgement Color", ConfigManager.TintHitLightingBasedOnJudgementColor)
                     })
                 }),

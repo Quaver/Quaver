@@ -50,7 +50,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DrawableOnlineUserRightClickOptions(User user) : base(GetOptions(user), new ScalableVector2(200, 40), 22)
+        public DrawableOnlineUserRightClickOptions(User user) : base(GetOptions(user), new ScalableVector2(200, 40), 18)
         {
             ItemSelected += (sender, args) =>
             {

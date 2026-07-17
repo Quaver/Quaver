@@ -69,14 +69,14 @@ namespace Quaver.Shared.Graphics.Online.Username
                 Tint = Colors.MainAccent
             };
 
-            Header = new SpriteText(Fonts.Exo2Bold, "Create Username", 20)
+            Header = new SpriteText(Fonts.InterBold, "Create Username", 20)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
                 Y = 25
             };
 
-            TextContent = new SpriteText(Fonts.Exo2SemiBold,
+            TextContent = new SpriteText(Fonts.InterBold,
                 "Usernames must be between 3 to 15 characters and may only contain", 13)
             {
                 Parent = ContainingBox,
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Graphics.Online.Username
             };
 
 
-            TextContent2 = new SpriteText(Fonts.Exo2SemiBold,
+            TextContent2 = new SpriteText(Fonts.InterBold,
                 "letters (A-Z), numbers (0-9), hyphens (-), and spaces.", 13)
             {
                 Parent = ContainingBox,

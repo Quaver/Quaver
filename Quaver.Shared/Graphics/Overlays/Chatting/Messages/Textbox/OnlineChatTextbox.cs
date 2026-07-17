@@ -124,8 +124,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
             if (Standalone && DialogManager.Dialogs.Count != 0)
             {
                 AlwaysFocused = false;
-                InputEnabled = !muted;
-                Focused = !muted;
+                InputEnabled = false;
+                Focused = false;
                 AllowSubmission = false;
             }
             else
@@ -152,7 +152,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
                 InputEnabled = false;
                 Focused = false;
             }
-            else if (Standalone)
+            else if (Standalone && ActiveChannel.Value != null && DialogManager.Dialogs.Count == 0)
                 InputEnabled = true;
 
             base.Update(gameTime);

@@ -21,6 +21,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         private bool MapsetsOnly { get; }
 
         /// <summary>
+        ///     The font size used by both pieces of text.
+        /// </summary>
+        private int FontSize { get; }
+
+        /// <summary>
         ///    The amount of maps there are
         /// </summary>
         public SpriteTextPlus TextCount { get; private set; }
@@ -39,10 +44,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         /// <param name="availableMapsets"></param>
         /// <param name="mapsetsOnly"></param>
-        public FilterPanelMapsAvailable(Bindable<List<Mapset>> availableMapsets, bool mapsetsOnly = false)
+        /// <param name="fontSize"></param>
+        public FilterPanelMapsAvailable(Bindable<List<Mapset>> availableMapsets, bool mapsetsOnly = false,
+            int fontSize = 16)
         {
             AvailableMapsets = availableMapsets;
             MapsetsOnly = mapsetsOnly;
+            FontSize = fontSize;
 
             CreateTextCount();
             CreateTextMapsFound();
@@ -68,7 +76,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateTextCount()
         {
-            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0", 21)
+            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0", FontSize)
             {
                 Parent = this,
                 Tint = Colors.MainAccent
@@ -82,7 +90,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateTextMapsFound()
         {
-            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), SelectionLocalization.Get("Maps Found"), 21)
+            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), SelectionLocalization.Get("Maps Found"), FontSize)
             {
                 Parent = this,
                 X = TextCount.Width + TextSpacing

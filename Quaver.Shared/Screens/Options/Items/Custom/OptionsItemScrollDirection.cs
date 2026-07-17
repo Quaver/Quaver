@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="name"></param>
         /// <param name="direction"></param>
         public OptionsItemScrollDirection(RectangleF containerRect, string name, Bindable<ScrollDirection> direction)
-            : base(containerRect, name, new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22,
+            : base(containerRect, name, new Dropdown(GetOptions(), new ScalableVector2(180, 35), 20,
                 Colors.MainAccent, GetSelectedIndex(direction)))
         {
             Tags = new List<string>()

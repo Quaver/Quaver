@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 
         /// <summary>
         /// </summary>
-        private void CreateSubmittingScore() => SubmittingScore = new LoadingWheelText(21, ResultsLocalization.Get("Submitting Score"))
+        private void CreateSubmittingScore() => SubmittingScore = new LoadingWheelText(18, ResultsLocalization.Get("Submitting Score"))
         {
             Parent = this,
             Alignment = Alignment.MidCenter

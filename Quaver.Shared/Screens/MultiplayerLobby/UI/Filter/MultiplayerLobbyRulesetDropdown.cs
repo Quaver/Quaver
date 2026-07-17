@@ -11,8 +11,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
     {
         /// <summary>
         /// </summary>
-        public MultiplayerLobbyRulesetDropdown() : base(MultiplayerLobbyLocalization.Get("RulesetLabel"), 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(170, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
+        public MultiplayerLobbyRulesetDropdown() : base(MultiplayerLobbyLocalization.Get("RulesetLabel"), 20, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(170, 38), 20, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
         }

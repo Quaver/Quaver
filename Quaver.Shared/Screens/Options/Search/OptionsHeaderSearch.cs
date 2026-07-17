@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Shaders;
+using Wobble.Graphics.Shaders;
 using Quaver.Shared.Helpers;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Options.Search
         /// <param name="currentSearchQuery"></param>
         /// <param name="isOptionFocused"></param>
         public OptionsHeaderSearch(Bindable<string> currentSearchQuery, Bindable<bool> isOptionFocused)
-            : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.InterBold), 20, "",
+            : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.InterBold), 18, "",
                 OptionsLocalization.Get("Search for options..."))
         {
             CurrentSearchQuery = currentSearchQuery;

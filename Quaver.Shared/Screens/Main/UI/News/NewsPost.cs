@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
@@ -164,11 +163,11 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private void CreateTitle(NewsFeedItem item)
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Title, 22)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Title, 20)
             {
                 Parent = Container,
                 X = 14,
-                Y = Banner.Y + Banner.Height + 16,
+                Y = Banner.Y + Banner.Height + 8,
                 Tint = SkinManager.Skin?.MainMenu?.NewsTitleColor ?? ColorHelper.HexToColor("#45D6F5"),
                 Alpha = 0
             };
@@ -180,12 +179,12 @@ namespace Quaver.Shared.Screens.Main.UI.News
         private void CreatePublishedTime(NewsFeedItem item)
         {
             PublishedTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                LocalizationManager.Get("Screen_Main_Published", item.DatePublished.Humanize(culture: LocalizationManager.CurrentCulture)),
-                20)
+                LocalizationManager.Get("Screen_Main_Published", item.DatePublished.ToString("d")),
+                16)
             {
                 Parent = Container,
                 X = Title.X,
-                Y = Title.Y + Title.Height + 12,
+                Y = Title.Y + Title.Height + 4,
                 Tint = SkinManager.Skin?.MainMenu?.NewsDateColor ?? ColorHelper.HexToColor("#808080"),
                 Alpha = 0
             };
@@ -195,17 +194,17 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private void CreateShortText(NewsFeedItem item)
         {
-            ShortText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.ShortText, 20)
+            ShortText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.ShortText, 16)
             {
                 Parent = Container,
                 X = Title.X,
-                Y = PublishedTime.Y + PublishedTime.Height + 12,
+                Y = PublishedTime.Y + PublishedTime.Height + 4,
                 MaxWidth = Container.Width - 20,
                 Alpha = 0,
                 Tint = SkinManager.Skin?.MainMenu?.NewsTextColor ?? Color.White
             };
 
-            ShortText.TruncateWithEllipsis((int) ShortText.MaxWidth * 2 - 100);
+            ShortText.TruncateWithEllipsis((int) ShortText.MaxWidth * 3 - 100);
             ShortText.FadeTo(1, Easing.Linear, 450);
         }
 

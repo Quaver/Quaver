@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     public class OptionsItemAudioOutputDevice : OptionsItemDropdown
     {
         public OptionsItemAudioOutputDevice(RectangleF containerRect, string name) : base(containerRect, name,
-            new Dropdown(GetOptions(), new ScalableVector2(300, 35), 22, Colors.MainAccent, GetSelectedIndex(), 240))
+            new Dropdown(GetOptions(), new ScalableVector2(300, 35), 20, Colors.MainAccent, GetSelectedIndex(), 240))
             => Dropdown.ItemSelected += (sender, args) =>
             {
                 try

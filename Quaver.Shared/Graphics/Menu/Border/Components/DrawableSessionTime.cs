@@ -7,6 +7,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components
@@ -40,7 +41,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
 
         /// <summary>
         /// </summary>
-        private Tooltip Tooltip { get; }
+        private IDisposable TooltipRegistration { get; }
 
         /// <summary>
         ///     The time in the previous frame
@@ -61,27 +62,35 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
 
             Clock = TimeSpan.FromMilliseconds(GameBase.Game.TimeRunning);
 
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 19)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 16)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Y = 1,
             };
 
-            Tooltip = new Tooltip($"This displays how long the game has been running. Be sure to take breaks often!",
-                Colors.MainAccent) {DestroyIfParentIsNull = false};
-
-            Hovered += (sender, args) =>
+            TooltipRegistration = this.AddTooltip(new TooltipOptions(
+                "This displays how long the game has been running. Be sure to take breaks often!")
             {
-                var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen?.ActivateTooltip(Tooltip);
-            };
+                HoverDelayMilliseconds = 0,
+                Padding = 8,
+                Style = new TooltipStyle
+                {
+                    BackgroundColor = ColorHelper.HexToColor("#161616"),
+                    BorderColor = Colors.MainAccent,
+                    BorderThickness = 2,
+                    TextSize = 20,
+                    TextWeight = FontWeight.Bold,
+                    RoundedCorners = false
+                }
+            });
+        }
 
-            LeftHover += (sender, args) =>
-            {
-                var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen?.DeactivateTooltip();
-            };
+        /// <inheritdoc />
+        public override void Destroy()
+        {
+            TooltipRegistration.Dispose();
+            base.Destroy();
         }
 
         /// <summary>

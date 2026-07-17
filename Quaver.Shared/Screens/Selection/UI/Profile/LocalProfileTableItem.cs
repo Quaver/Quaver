@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
             Alpha = 0;
             SetChildrenAlpha = true;
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), name, 22)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), name, 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                 SetChildrenAlpha = true
             };
 
-            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), value, 22)
+            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), value, 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

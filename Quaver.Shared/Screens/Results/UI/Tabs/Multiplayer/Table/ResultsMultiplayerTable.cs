@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         {
             Ruleset = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
                 GetRulesetText(),
-                22)
+                20)
             {
                 Parent = HeaderContainer,
                 Alignment = Alignment.MidLeft,
@@ -185,7 +185,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             for (var i = headers.Count - 1; i >= 0; i--)
             {
                 // ReSharper disable once ObjectCreationAsStatement
-                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), headers[i], 22)
+                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), headers[i], 20)
                 {
                     Parent = HeaderContainer,
                     Alignment = Alignment.MidRight,
@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private void CreateScoresLoadingWheelText()
         {
-            ResultLoadingWheelText = new LoadingWheelText(25, ResultsLocalization.Get("Loading results"))
+            ResultLoadingWheelText = new LoadingWheelText(18, ResultsLocalization.Get("Loading results"))
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,

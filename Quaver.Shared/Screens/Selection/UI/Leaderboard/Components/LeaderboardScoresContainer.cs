@@ -51,9 +51,25 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private SpriteTextPlus StatusText { get; set; }
 
         /// <summary>
-        ///     If the scores have finished loading
+        ///     Rows detached while scores are loading, ready to be rebound by the next fetch.
         /// </summary>
-        private bool FinishedLoading { get; set; }
+        private List<DrawableLeaderboardScore> ReusableRows { get; } = new List<DrawableLeaderboardScore>();
+
+        /// <summary>
+        ///     Rows waiting to be rebound. Processing one per frame prevents all cached text from being rebuilt at once.
+        /// </summary>
+        private Queue<(DrawableLeaderboardScore Row, Score Item, int Index)> PendingRowUpdates { get; } =
+            new Queue<(DrawableLeaderboardScore Row, Score Item, int Index)>();
+
+        /// <summary>
+        ///     Rows that must stay hidden until their new content has been applied.
+        /// </summary>
+        private HashSet<DrawableLeaderboardScore> RowsPendingContent { get; } = new HashSet<DrawableLeaderboardScore>();
+
+        /// <summary>
+        ///     Whether a leaderboard fetch has been requested and the old rows should no longer be rebound.
+        /// </summary>
+        private bool LoadingRequested { get; set; }
 
         /// <summary>
         ///     The button to update the map to the latest version
@@ -94,25 +110,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public override void Update(GameTime gameTime)
         {
             if (Pool != null)
-                ScrollbarBackground.Visible = Pool.Count > 10 && !Pool.Last().Item.IsEmptyScore;
+                ScrollbarBackground.Visible = PendingRowUpdates.Count == 0 && Pool.Count > 10 &&
+                                              !Pool.Last().Item.IsEmptyScore;
             else
                 ScrollbarBackground.Visible = false;
 
-            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+            InputEnabled = PendingRowUpdates.Count == 0 &&
+                           GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && DialogManager.Dialogs.Count == 0
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
-            if (FinishedLoading && Pool.Count >= 10 && Pool.First().Parent != ContentContainer)
-            {
-                Pool.ForEach(x =>
-                {
-                    AddContainedDrawable(x);
-
-                    var score = x as DrawableLeaderboardScore;
-                    score?.AddScheduledUpdate(() => score.ChildContainer.FadeIn());
-                });
-            }
+            if (!LoadingRequested)
+                ProcessNextPendingRow();
 
             // Only make the update perform hover if absolutely necessary
             UpdateButton.IsPerformingFadeAnimations = MapManager.Selected.Value != null
@@ -128,6 +138,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public override void Destroy()
         {
             Container.FetchScoreTask.OnCompleted -= OnScoresRetrieved;
+            PendingRowUpdates.Clear();
+            RowsPendingContent.Clear();
+            ReusableRows.ForEach(x => x.Destroy());
+            ReusableRows.Clear();
             base.Destroy();
         }
 
@@ -174,20 +188,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         public void StartLoading()
         {
+            LoadingRequested = true;
+
             ScheduleUpdate(() =>
             {
                 LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
                 LoadingWheel.FadeTo(1, Easing.Linear, 250);
                 FadeStatusTextOut();
-                ClearPool();
+                RecyclePool();
                 ContentContainer.Height = Height;
 
                 SnapToTop();
 
                 AvailableItems?.Clear();
                 ScrollbarBackground.Visible = false;
-                FinishedLoading = false;
-
                 UpdateButton.ClearAnimations();
                 UpdateButton.IsClickable = false;
                 UpdateButton.FadeTo(0, Easing.Linear, 250);
@@ -202,7 +216,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
             LoadingWheel.FadeTo(0, Easing.Linear, 250);
             FadeStatusTextOut();
-            FinishedLoading = false;
         }
 
         /// <inheritdoc />
@@ -332,7 +345,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateStatusText()
         {
-            StatusText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            StatusText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -386,13 +399,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             ScheduleUpdate(() =>
             {
-                ClearPool();
+                RecyclePool();
                 SnapToTop();
 
                 AvailableItems = e.Result.Scores;
 
                 if (AvailableItems == null)
+                {
+                    LoadingRequested = false;
                     return;
+                }
 
                 var MAX_SHOWN_ITEMS = Height / DrawableLeaderboardScore.ScoreHeight;
 
@@ -406,16 +422,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                         AvailableItems.Add(new Score { IsEmptyScore = true});
                 }
 
-                try
-                {
-                    CreatePool(false);
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-
-                FinishedLoading = true;
+                PopulatePool();
+                LoadingRequested = false;
             });
         }
 
@@ -434,22 +442,76 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             PoolStartingIndex = 0;
         }
 
-        private void ClearPool()
+        private void RecyclePool()
         {
+            PendingRowUpdates.Clear();
+            RowsPendingContent.Clear();
+
             if (Pool is null)
                 return;
 
-            try
+            foreach (var row in Pool.OfType<DrawableLeaderboardScore>())
             {
-                foreach (var x in new List<Drawable>(Pool))
-                    x.Destroy();
+                // Disable the row's button before detaching it so stale hover state cannot block other elements
+                row.SetScrollVisibility(false);
+                RemoveContainedDrawable(row);
+                ReusableRows.Add(row);
+            }
 
-                Pool.Clear();
-            }
-            catch (Exception)
+            Pool.Clear();
+        }
+
+        private void PopulatePool()
+        {
+            Pool ??= new List<PoolableSprite<Score>>();
+
+            var count = Math.Min(PoolSize, AvailableItems.Count);
+
+            for (var i = 0; i < count; i++)
             {
-                // ignored
+                DrawableLeaderboardScore row;
+
+                if (ReusableRows.Count != 0)
+                {
+                    var reusableIndex = ReusableRows.Count - 1;
+                    row = ReusableRows[reusableIndex];
+                    ReusableRows.RemoveAt(reusableIndex);
+                }
+                else
+                {
+                    row = (DrawableLeaderboardScore) CreateObject(AvailableItems[i], i);
+                    row.DestroyIfParentIsNull = false;
+                }
+
+                row.Y = i * row.Height + PaddingTop;
+                row.SetScrollVisibility(false);
+                Pool.Add(row);
+                PendingRowUpdates.Enqueue((row, AvailableItems[i], i));
+                RowsPendingContent.Add(row);
             }
+
+            RecalculateContainerHeight();
+        }
+
+        /// <summary>
+        ///     Rebinds a single row so its text render targets are built separately from the remaining rows.
+        /// </summary>
+        private void ProcessNextPendingRow()
+        {
+            if (PendingRowUpdates.Count == 0)
+                return;
+
+            var (row, item, index) = PendingRowUpdates.Dequeue();
+            RowsPendingContent.Remove(row);
+
+            AddContainedDrawable(row);
+            row.UpdateContent(item, index);
+
+            var isVisible = row.ScreenRectangle.Intersects(ScreenRectangle);
+            row.SetScrollVisibility(isVisible);
+
+            if (isVisible)
+                row.AddScheduledUpdate(() => row.ChildContainer.FadeIn());
         }
 
         private void ApplyPoolVisibility()
@@ -458,7 +520,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 return;
 
             foreach (var score in Pool.OfType<DrawableLeaderboardScore>())
+            {
+                if (RowsPendingContent.Contains(score))
+                {
+                    score.SetScrollVisibility(false);
+                    continue;
+                }
+
                 score.SetScrollVisibility(score.ScreenRectangle.Intersects(ScreenRectangle));
+            }
         }
     }
 }

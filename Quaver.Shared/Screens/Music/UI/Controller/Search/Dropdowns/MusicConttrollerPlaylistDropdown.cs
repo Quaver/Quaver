@@ -10,8 +10,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns
 {
     public class MusicControllerPlaylistDropdown : LabelledDropdown
     {
-        public MusicControllerPlaylistDropdown() : base("PLAYLIST: ", 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(180, 38), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex(), 125))
+        public MusicControllerPlaylistDropdown() : base("PLAYLIST: ", 20, new Dropdown(GetDropdownItems(),
+            new ScalableVector2(180, 38), 20, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex(), 125))
         {
             Dropdown.ItemSelected += (sender, args) =>
             {

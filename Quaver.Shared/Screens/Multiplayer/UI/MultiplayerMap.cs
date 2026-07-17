@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Parent = this,
                 X = Background.X + Background.Width + 16,
                 Y = 12,
-                FontSize = 16
+                FontSize = 14
             };
 
             AddContainedDrawable(ArtistTitle);
@@ -125,7 +125,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Parent = this,
                 X = ArtistTitle.X,
                 Y = ArtistTitle.Y + ArtistTitle.Height + 8,
-                FontSize = 14
+                FontSize = 12
             };
 
             AddContainedDrawable(Mode);
@@ -135,7 +135,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Parent = this,
                 X = Mode.X + Mode.Width + 8,
                 Y = Mode.Y,
-                FontSize = 14,
+                FontSize = 12,
                 Tint = ColorHelper.DifficultyToColor((float)game.DifficultyRating)
             };
 
@@ -146,7 +146,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Parent = this,
                 X = DifficultyRating.X + DifficultyRating.Width + 2,
                 Y = Mode.Y,
-                FontSize = 14,
+                FontSize = 12,
             };
 
             AddContainedDrawable(DifficultyName);

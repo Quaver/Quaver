@@ -8,7 +8,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Buttons;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
         /// </summary>
         private void CreateStatusText()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), StatusText, 20)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), StatusText, 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

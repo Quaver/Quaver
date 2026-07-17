@@ -180,6 +180,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Alpha = 0,
+                AllowInputWhenDialogOpen = true,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -218,7 +219,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private void CreateText()
         {
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

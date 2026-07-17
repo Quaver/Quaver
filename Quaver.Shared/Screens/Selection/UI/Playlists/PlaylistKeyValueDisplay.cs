@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="keyColor"></param>
-        public PlaylistKeyValueDisplay(string key, string value, Color keyColor, bool displayDividerLine = true) : base(key, value, 20, keyColor)
+        public PlaylistKeyValueDisplay(string key, string value, Color keyColor, bool displayDividerLine = true) : base(key, value, 16, keyColor)
         {
             UsePreviousSpriteBatchOptions = true;
             Key.UsePreviousSpriteBatchOptions = true;
