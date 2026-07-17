@@ -211,6 +211,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public void UpdateContent(DrawableLeaderboardScore score)
         {
             Score = score;
+            Button.IsClickable = IsScrollVisible && !Score.Item.IsEmptyScore;
 
             AddScheduledUpdate(() =>
             {
@@ -920,6 +921,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             IsScrollVisible = visible;
             Visible = visible;
+            Button.IsClickable = visible && !Score.Item.IsEmptyScore;
 
             if (Score.Item.IsEmptyScore)
                 return;
