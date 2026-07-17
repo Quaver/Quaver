@@ -626,8 +626,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             foreach (var row in Pool.OfType<DrawableLeaderboardScore>())
             {
-                RemoveContainedDrawable(row);
+                // Disable the row's button before detaching it so stale hover state cannot block other elements
                 row.SetScrollVisibility(false);
+                RemoveContainedDrawable(row);
                 ReusableRows.Add(row);
             }
 
