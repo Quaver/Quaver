@@ -38,6 +38,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
         /// </summary>
         private ScoreProcessor Processor { get; set; }
 
+        /// <summary>
+        ///     The current value assigned to the health shader.
+        /// </summary>
+        private float CurrentShaderProgress { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
@@ -87,6 +92,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
                     ForegroundBar.Alignment = Alignment.TopLeft;
 
                     ForegroundBar.SpriteBatchOptions.Shader.SetParameter("p_position", new Vector2(ForegroundBar.Width, 0f), true);
+                    CurrentShaderProgress = ForegroundBar.Width;
                     break;
                 case HealthBarType.Vertical:
                     Alignment = Alignment.BotLeft;
@@ -101,6 +107,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
             // Set default shader params.
             ForegroundBar.SpriteBatchOptions.Shader.SetParameter("p_rectangle", new Vector2(Width, Height), true);
             ForegroundBar.SpriteBatchOptions.Shader.SetParameter("p_dimensions", new Vector2(Width, Height), true);
+
+            if (Type == HealthBarType.Vertical)
+                CurrentShaderProgress = Height;
         }
 
         /// <inheritdoc />
@@ -137,9 +146,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
                     // Target position based on the user's current health.
                     var targetPosX = Processor.Health / 100 * ForegroundBar.Width;
 
-                    var shaderPosition = (Vector2)ForegroundBar.SpriteBatchOptions.Shader.Parameters["p_position"];
+                    var newPosX = MathHelper.Lerp(CurrentShaderProgress, targetPosX, (float) Math.Min(dt / 30, 1));
 
-                    var newPosX = MathHelper.Lerp(shaderPosition.X, targetPosX, (float) Math.Min(dt / 30, 1));
+                    if (Math.Abs(newPosX - targetPosX) <= 0.01f)
+                        newPosX = targetPosX;
+
+                    if (newPosX == CurrentShaderProgress)
+                        break;
+
+                    CurrentShaderProgress = newPosX;
                     ForegroundBar.SpriteBatchOptions.Shader.SetParameter("p_position", new Vector2(newPosX, 0f), true);
                     break;
                 // We handle vertical bar types with the size of the bar instead of position, since we're
@@ -148,9 +163,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
                     // Get new size of the bar based on the user's current health.
                     var targetSizeY = ForegroundBar.Height - Processor.Health / 100 * ForegroundBar.Height;
 
-                    var shaderRectangle = (Vector2)ForegroundBar.SpriteBatchOptions.Shader.Parameters["p_rectangle"];
+                    var newSizeY = MathHelper.Lerp(CurrentShaderProgress, targetSizeY, (float) Math.Min(dt / 30, 1));
 
-                    var newSizeY = MathHelper.Lerp(shaderRectangle.Y, targetSizeY, (float) Math.Min(dt / 30, 1));
+                    if (Math.Abs(newSizeY - targetSizeY) <= 0.01f)
+                        newSizeY = targetSizeY;
+
+                    if (newSizeY == CurrentShaderProgress)
+                        break;
+
+                    CurrentShaderProgress = newSizeY;
                     ForegroundBar.SpriteBatchOptions.Shader.SetParameter("p_rectangle", new Vector2(ForegroundBar.Width, newSizeY), true);
                     break;
                 default:

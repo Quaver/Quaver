@@ -104,12 +104,12 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
 
                 if (i == 0)
                 {
-                    slider.Y = 16;
+                    slider.Y = 12;
                     continue;
                 }
 
                 var previous = Sliders[i - 1];
-                slider.Y = previous.Y + previous.Height - 14;
+                slider.Y = previous.Y + previous.Height - 18;
             }
         }
 

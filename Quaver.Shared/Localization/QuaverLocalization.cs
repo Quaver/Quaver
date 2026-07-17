@@ -25,7 +25,7 @@ namespace Quaver.Shared.Localization
             // new AvailableLanguage("ko-KR", "Language_Korean"),
             new AvailableLanguage("nl-NL", "Language_Dutch"),
             new AvailableLanguage("no-NO", "Language_Norwegian"),
-            // new AvailableLanguage("pl-PL", "Language_Polish"),
+            new AvailableLanguage("pl-PL", "Language_Polish"),
             // new AvailableLanguage("pt-BR", "Language_PortugueseBrazil"),
             // new AvailableLanguage("ru-RU", "Language_Russian"),
             // new AvailableLanguage("sv-SE", "Language_Swedish"),

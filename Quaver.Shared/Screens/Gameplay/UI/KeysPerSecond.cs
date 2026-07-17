@@ -60,14 +60,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private void CalculateKeysPerSecond()
         {
-            for (var i = 0; i < Clicks.Count; i++)
-            {
-                if (Clicks[i] <= Time - 1000)
-                {
-                    Clicks.RemoveAt(i);
-                    Value = Kps.ToString();
-                }
-            }
+            var expiredClicks = 0;
+
+            while (expiredClicks < Clicks.Count && Clicks[expiredClicks] <= Time - 1000)
+                expiredClicks++;
+
+            if (expiredClicks == 0)
+                return;
+
+            Clicks.RemoveRange(0, expiredClicks);
+            Value = Kps.ToString();
         }
 
         /// <summary>

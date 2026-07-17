@@ -37,7 +37,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
 
         /// <summary>
         /// </summary>
-        private const int Spacing = 18;
+        private const int Spacing = 14;
 
         /// <summary>
         /// </summary>
@@ -121,7 +121,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
         /// </summary>
         private void CreatePercentage()
         {
-            Percentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "100%", 20)
+            Percentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "100%", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
