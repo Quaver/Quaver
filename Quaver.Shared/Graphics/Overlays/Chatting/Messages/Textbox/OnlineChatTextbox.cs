@@ -27,7 +27,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
 
         /// <summary>
         /// </summary>
-        private const string DefaultPlaceholderText = "Send a message...";
+        private const string DefaultPlaceholderTextKey = "Chat_SendAMessage";
+
+        /// <summary>
+        /// </summary>
+        private static string DefaultPlaceholderText => LocalizationManager.Get(DefaultPlaceholderTextKey);
 
         /// <summary>
         /// </summary>
@@ -47,7 +51,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
         /// <param name="size"></param>
         /// <param name="standalone"></param>
         public OnlineChatTextbox(Bindable<ChatChannel> activeChatChannel, ScalableVector2 size, bool standalone = false)
-            : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "", DefaultPlaceholderText)
+            : base(size, FontManager.GetWobbleFont(Fonts.InterBold), 20, "", LocalizationManager.Get(DefaultPlaceholderTextKey))
         {
             ActiveChannel = activeChatChannel;
             Standalone = standalone;
@@ -120,8 +124,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
             if (Standalone && DialogManager.Dialogs.Count != 0)
             {
                 AlwaysFocused = false;
-                InputEnabled = !muted;
-                Focused = !muted;
+                InputEnabled = false;
+                Focused = false;
                 AllowSubmission = false;
             }
             else
@@ -148,7 +152,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
                 InputEnabled = false;
                 Focused = false;
             }
-            else if (Standalone)
+            else if (Standalone && ActiveChannel.Value != null && DialogManager.Dialogs.Count == 0)
                 InputEnabled = true;
 
             base.Update(gameTime);

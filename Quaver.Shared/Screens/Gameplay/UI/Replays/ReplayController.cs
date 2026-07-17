@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// </summary>
         private void CreateCurrentTime()
         {
-            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00:00:00", 22)
+            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00:00:00", 22)
             {
                 Parent = SongTimeProgressBar,
                 Alignment = Alignment.TopLeft,
@@ -232,7 +232,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// </summary>
         private void CreateTimeLeft()
         {
-            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "-00:00:00", 22)
+            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "-00:00:00", 22)
             {
                 Parent = SongTimeProgressBar,
                 Alignment = Alignment.TopRight,
@@ -394,7 +394,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// </summary>
         private void CreateHidePrompt()
         {
-            F1ToHide = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "PRESS F1 TO SHOW/HIDE", 20)
+            F1ToHide = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "PRESS F1 TO SHOW/HIDE", 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
     {
         private Sprite Eye { get; }
 
-        private SpriteTextBitmap SpectatorsText { get; }
+        private SpriteTextPlus SpectatorsText { get; }
 
         public SpectatorCount()
         {
@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 SetChildrenVisibility = true
             };
 
-            SpectatorsText = new SpriteTextBitmap(FontsBitmap.GothamRegular, $" ", false)
+            SpectatorsText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $" ", 0, false)
             {
                 Parent = this,
                 FontSize = 16,

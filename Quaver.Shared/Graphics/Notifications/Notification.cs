@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -40,7 +42,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <summary>
         ///     The notification content text.
         /// </summary>
-        private SpriteTextBitmap Content { get; }
+        private SpriteTextPlus Content { get; }
 
         /// <summary>
         ///     The avatar sprite of the notification, depending on the type.
@@ -98,7 +100,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Image = image
             };
 
-            Content = new SpriteTextBitmap(FontsBitmap.GothamRegular, text)
+            Content = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), text)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
         /// </summary>
         public override void Cache()
         {
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            GameBase.Game.ScheduleRenderTargetDraw(() =>
             {
                 try
                 {
@@ -142,10 +142,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Accuracy
                 Alpha = 0f,
             };
 
-            const string tooltipText = "This displays the course of accuracy throughout the score.\n\n" +
-                                       "If the map was not completed, then it will additionally\n" +
-                                       "show the accuracy if all subsequent hits had been\n" +
-                                       "Marvelous instead.";
+            var tooltipText = ResultsLocalization.Get("Accuracy graph tooltip");
 
             var game = GameBase.Game as QuaverGame;
             ToolTipArea.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(new Tooltip(tooltipText, ColorHelper.HexToColor("#5dc7f9")));

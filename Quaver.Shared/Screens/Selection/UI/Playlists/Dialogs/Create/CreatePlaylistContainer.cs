@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
@@ -50,7 +51,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// <summary>
         ///     The font size used for labels
         /// </summary>
-        private int LabelFontSize { get; } = 22;
+        private int LabelFontSize { get; } = 18;
 
         /// <summary>
         ///     The size of the textbox
@@ -70,12 +71,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// <summary>
         ///     The font size that each textbox will have
         /// </summary>
-        private int TextboxFontSize { get; } = 22;
+        private int TextboxFontSize { get; } = 18;
 
         /// <summary>
         ///     The amount of y spacing between each textbox
         /// </summary>
-        private int TextboxSpacingY { get; } = 26;
+        private int TextboxSpacingY { get; } = 20;
 
         /// <summary>
         ///     Used to handle tabbing through the form
@@ -95,12 +96,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// <summary>
         ///     The button to submit the form and create the playlist
         /// </summary>
-        private IconButton CreateButton { get; set; }
+        private RoundedButton CreateButton { get; set; }
 
         /// <summary>
         ///     The button to cancel the dialog
         /// </summary>
-        private IconButton CancelButton { get; set; }
+        private RoundedButton CancelButton { get; set; }
 
         /// <summary>
         ///     Informs the user that they can drag and drop to add a banner
@@ -159,7 +160,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         {
             var header = Dialog.Playlist != null ? "Edit Playlist" : "Create New Playlist";
 
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), header.ToUpper(), 26)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), header.ToUpper(), 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft
@@ -207,7 +208,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            DragAndDropText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Drag an image into the window...", 24)
+            DragAndDropText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "Drag an image into the window...", 20)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter
@@ -259,15 +260,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         private void CreateButtonCreate()
         {
-            CreateButton = new IconButton(Dialog.Playlist == null ? UserInterface.CreateButton : UserInterface.SaveButton, OnSubmit)
+            CreateButton = new RoundedButton(OnSubmit)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
                 Y = -18,
                 Size = new ScalableVector2(220, 40),
                 X = 100,
-                SetChildrenAlpha = true
+                SetChildrenAlpha = true,
+                Tint = ColorHelper.HexToColor("#27B06E")
             };
+
+            CreateButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), Dialog.Playlist == null ? "CREATE" : "SAVE", 18, Color.White);
         }
 
         /// <summary>
@@ -323,7 +327,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         private void CreateButtonCancel()
         {
-            CancelButton = new IconButton(UserInterface.CancelButton, (sender, args) =>
+            CancelButton = new RoundedButton((sender, args) =>
             {
                 Close();
             })
@@ -333,7 +337,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 Y = CreateButton.Y,
                 Size = CreateButton.Size,
                 X = -CreateButton.X,
+                Tint = ColorHelper.HexToColor("#F9645D")
             };
+
+            CancelButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CANCEL", 18, Color.White);
         }
 
         /// <summary>
@@ -421,11 +428,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
 
             Description.Textbox.Visible = false;
 
-            CreateButton.IsPerformingFadeAnimations = false;
+            CreateButton.PerformHoverFade = false;
             CreateButton.ClearAnimations();
             CreateButton.FadeTo(0, easing, time);
 
-            CancelButton.IsPerformingFadeAnimations = false;
+            CancelButton.PerformHoverFade = false;
             CancelButton.ClearAnimations();
             CancelButton.FadeTo(0, easing, time);
 

@@ -275,7 +275,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Sound.ToString(), 21)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Sound.ToString(), 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

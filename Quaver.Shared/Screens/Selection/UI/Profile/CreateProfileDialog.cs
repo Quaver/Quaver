@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, "", "Give your new profile a name", s =>
                 {
                     if (string.IsNullOrEmpty(s))

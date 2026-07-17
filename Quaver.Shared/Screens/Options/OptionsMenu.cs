@@ -159,10 +159,21 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Volume", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Master Volume", ConfigManager.VolumeGlobal),
-                        new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic),
+                        new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic)
+                        {
+                            Tags = new List<string> {"gameplay", "in-game", "song"}
+                        },
+                        new OptionsSlider(containerRect, "Menu Music Volume", ConfigManager.VolumeMenuMusic)
+                        {
+                            Tags = new List<string> {"menu", "jukebox"}
+                        },
                         new OptionsSlider(containerRect, "Effect Volume", ConfigManager.VolumeEffect)
                         {
                             Tags = new List<string> {"fx", "sfx"}
+                        },
+                        new OptionsItemCheckbox(containerRect, "Mute Audio When Unfocused", ConfigManager.MuteAudioOnWindowInactive)
+                        {
+                            Tags = new List<string> {"focus", "background"}
                         },
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
@@ -179,6 +190,13 @@ namespace Quaver.Shared.Screens.Options
                         }
                     }),
                 }),
+                new OptionsSection("Language", FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), new List<OptionsSubcategory>
+                {
+                    new OptionsSubcategory("Localization", new List<OptionsItem>()
+                    {
+                        new OptionsItemLanguage(containerRect, "Language")
+                    })
+                }, new Vector2(24, 24)),
                 new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Background", new List<OptionsItem>()
@@ -254,6 +272,10 @@ namespace Quaver.Shared.Screens.Options
                             {Tags = new List<string>() {"mini"}},
                         new OptionsSlider(containerRect, "Playfield Scale", ConfigManager.PlayfieldScale, i => $"{i / 100f:0.00}x")
                             {Tags = new List<string>() {"mini"}},
+                        new OptionsItemCheckbox(containerRect, "Display Song Select Banners", ConfigManager.DisplaySongSelectBanners)
+                        {
+                            Tags = new List<string> {"banner", "mapset", "playlist"}
+                        },
                         new OptionsItemCheckbox(containerRect, "Tint Hitlighting Based On Judgement Color", ConfigManager.TintHitLightingBasedOnJudgementColor)
                     })
                 }),
@@ -341,10 +363,6 @@ namespace Quaver.Shared.Screens.Options
                                 x.Value, i => $"{i / 10f:0.0}")
                             )
                     ).ToList()),
-                    // new OptionsSubcategory("Beta", new List<OptionsItem>()
-                    // {
-                    //     new OptionsItemCheckbox(containerRect, "Skip Beta Splash Screen", ConfigManager.SkipSplashScreen),
-                    // }),
                 }),
                 new OptionsSection("Advanced", FontAwesome.Get(FontAwesomeIcon.fa_open_folder), new List<OptionsSubcategory>
                 {
@@ -582,10 +600,7 @@ namespace Quaver.Shared.Screens.Options
                 }
 
                 // Create a temporary section
-                var categoryName = $"{items.Count} Search Result";
-
-                if (items.Count > 1 || items.Count == 0)
-                    categoryName += "s";
+                var categoryName = OptionsLocalization.GetSearchResultCount(items.Count);
 
                 var newSection = new OptionsSection(string.Empty, FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
                     new List<OptionsSubcategory> { new OptionsSubcategory(categoryName, items) });

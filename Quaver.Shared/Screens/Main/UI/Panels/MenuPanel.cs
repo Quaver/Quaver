@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Screens.Menu.UI.Panels;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -87,20 +86,26 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 Alpha = 0.60f,
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title, 30)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), title, 30)
             {
                 Parent = Button,
                 Alignment = Alignment.BotCenter,
                 Y = -150
             };
 
-            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subtitle, 22)
+            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), subtitle, 22)
             {
                 Parent = Button,
                 Alignment = Alignment.BotCenter,
                 Y = Title.Y + Title.Height + 4,
                 Visible = false
             };
+        }
+
+        public void SetText(string title, string subtitle)
+        {
+            Title.Text = title;
+            Subtitle.Text = subtitle;
         }
 
         /// <inheritdoc />

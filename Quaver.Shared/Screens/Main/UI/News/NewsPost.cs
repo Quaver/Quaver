@@ -9,7 +9,6 @@ using Quaver.Shared.Online.API.News;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Skinning;
-using TimeAgo;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -39,7 +38,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private SpriteTextPlus Title { get; set; }
 
-        private SpriteTextPlus TimeAgo { get; set; }
+        private SpriteTextPlus PublishedTime { get; set; }
 
         private SpriteTextPlus ShortText { get; set; }
 
@@ -68,7 +67,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
             {
                 Banner.Alpha = Alpha;
                 Title.Alpha = Alpha;
-                TimeAgo.Alpha = Alpha;
+                PublishedTime.Alpha = Alpha;
                 ShortText.Alpha = Alpha;
 
                 HoverEffect.Size = new ScalableVector2(Width - 4, Height - 4);
@@ -141,7 +140,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
             CreateBanner(newsFeed.RecentPostBanner);
             CreateTitle(latestPost);
-            CreateTimeAgo(latestPost);
+            CreatePublishedTime(latestPost);
             CreateShortText(latestPost);
             CreateHoverEffect();
 
@@ -164,11 +163,11 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private void CreateTitle(NewsFeedItem item)
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.Title, 22)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Title, 20)
             {
                 Parent = Container,
                 X = 14,
-                Y = Banner.Y + Banner.Height + 16,
+                Y = Banner.Y + Banner.Height + 8,
                 Tint = SkinManager.Skin?.MainMenu?.NewsTitleColor ?? ColorHelper.HexToColor("#45D6F5"),
                 Alpha = 0
             };
@@ -177,34 +176,35 @@ namespace Quaver.Shared.Screens.Main.UI.News
             Title.FadeTo(1, Easing.Linear, 450);
         }
 
-        private void CreateTimeAgo(NewsFeedItem item)
+        private void CreatePublishedTime(NewsFeedItem item)
         {
-            TimeAgo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Published {item.DatePublished.TimeAgo()}",
-                20)
+            PublishedTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                LocalizationManager.Get("Screen_Main_Published", item.DatePublished.ToString("d")),
+                16)
             {
                 Parent = Container,
                 X = Title.X,
-                Y = Title.Y + Title.Height + 12,
+                Y = Title.Y + Title.Height + 4,
                 Tint = SkinManager.Skin?.MainMenu?.NewsDateColor ?? ColorHelper.HexToColor("#808080"),
                 Alpha = 0
             };
 
-            TimeAgo.FadeTo(1, Easing.Linear, 450);
+            PublishedTime.FadeTo(1, Easing.Linear, 450);
         }
 
         private void CreateShortText(NewsFeedItem item)
         {
-            ShortText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.ShortText, 20)
+            ShortText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.ShortText, 16)
             {
                 Parent = Container,
                 X = Title.X,
-                Y = TimeAgo.Y + TimeAgo.Height + 12,
+                Y = PublishedTime.Y + PublishedTime.Height + 4,
                 MaxWidth = Container.Width - 20,
                 Alpha = 0,
                 Tint = SkinManager.Skin?.MainMenu?.NewsTextColor ?? Color.White
             };
 
-            ShortText.TruncateWithEllipsis((int) ShortText.MaxWidth * 2 - 100);
+            ShortText.TruncateWithEllipsis((int) ShortText.MaxWidth * 3 - 100);
             ShortText.FadeTo(1, Easing.Linear, 450);
         }
 

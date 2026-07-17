@@ -127,7 +127,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "PROFILE", 30)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "PROFILE", 28)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -161,7 +161,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// </summary>
         private void CreateStatusText()
         {
-            StatusText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            StatusText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = BackgroundContainer,
                 Alignment = Alignment.MidCenter,

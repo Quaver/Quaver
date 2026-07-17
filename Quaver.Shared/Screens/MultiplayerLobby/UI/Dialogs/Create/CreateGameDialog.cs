@@ -18,6 +18,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
 {
@@ -46,8 +47,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public CreateGameDialog() : base("CREATE MULTIPLAYER GAME",
-            "Fill in the details to create a multiplayer game...")
+        public CreateGameDialog() : base(MultiplayerLobbyLocalization.Get("CreateMultiplayerGameTitle"),
+            MultiplayerLobbyLocalization.Get("CreateMultiplayerGameMessage"))
         {
             Panel.Height = 510;
             Panel.Image = UserInterface.BlankBox;
@@ -73,7 +74,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
             Password.Height = 0;
 
             YesButton.Y = -30;
-            YesButton.Image = UserInterface.CreateButton;
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CREATE", 20, Color.White);
             NoButton.Y = YesButton.Y;
 
             YesAction += OnCreateClicked;
@@ -121,8 +122,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
         /// </summary>
         private void CreateNameTextbox()
         {
-            Name = new LabelledTextbox(Panel.Width * 0.90f, "Game Name", 22, 44,
-                20, 14, "Choose a name for the game...")
+            Name = new LabelledTextbox(Panel.Width * 0.90f, MultiplayerLobbyLocalization.Get("GameName"), 22, 44,
+                20, 14, MultiplayerLobbyLocalization.Get("ChooseGameNamePlaceholder"))
             {
                 Parent = Panel,
                 Y = Banner.Height + 18,
@@ -139,8 +140,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
         /// </summary>
         private void CreatePasswordTextbox()
         {
-            Password = new LabelledTextbox(Name.Width, "Password", Name.Label.FontSize, (int) Name.Textbox.Height,
-                Name.Textbox.InputText.FontSize, 14, "Enter a password...")
+            Password = new LabelledTextbox(Name.Width, MultiplayerLobbyLocalization.Get("Password"), Name.Label.FontSize, (int) Name.Textbox.Height,
+                Name.Textbox.InputText.FontSize, 14, MultiplayerLobbyLocalization.Get("EnterPasswordPlaceholder"))
             {
                 Parent = Panel,
                 Y = Name.Y + Name.Height + 18,
@@ -202,7 +203,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
 
             if (MapManager.Selected.Value == null)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot create a game without having a map selected!");
+                NotificationManager.Show(NotificationLevel.Warning, MultiplayerLobbyLocalization.Get("CannotCreateGameWithoutMap"));
                 return false;
             }
 
@@ -238,9 +239,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
                 var map = MapManager.Selected.Value.ToString();
                 var mapId = MapManager.Selected.Value.MapId;
                 var mapsetId = MapManager.Selected.Value.MapSetId;
-                var ruleset = Enum.Parse<MultiplayerGameRuleset>(Ruleset.Dropdown.SelectedText.Text
-                    .Replace("-", "_")
-                    .Replace(" ", "_"));
+                var ruleset = (MultiplayerGameRuleset) Ruleset.Dropdown.SelectedIndex;
                 var mode = (byte) MapManager.Selected.Value.Mode;
                 var difficultyRating = MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
                 var md5 = MapManager.Selected.Value.Md5Checksum;

@@ -320,7 +320,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
                 try
                 {
-                    var font = new WobbleFontStore(22, File.ReadAllBytes(file));
+                    var font = new WobbleFontStore(22, File.ReadAllBytes(file), 0);
                     FontManager.CacheWobbleFont(name, font);
                 }
                 catch (Exception e)

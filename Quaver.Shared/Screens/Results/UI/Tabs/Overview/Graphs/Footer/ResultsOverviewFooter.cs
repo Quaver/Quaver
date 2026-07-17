@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 
         /// <summary>
         /// </summary>
-        private void CreateSubmittingScore() => SubmittingScore = new LoadingWheelText(21, "SUBMITTING SCORE...")
+        private void CreateSubmittingScore() => SubmittingScore = new LoadingWheelText(18, ResultsLocalization.Get("Submitting Score"))
         {
             Parent = this,
             Alignment = Alignment.MidCenter
@@ -110,16 +110,16 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
             {
                 stats = new List<ResultsOverviewFooterStat>()
                 {
-                    new ResultsOverviewFooterStat("GLOBAL RANK", $"#{e.Value.Stats.NewGlobalRank:n0}"),
-                    new ResultsOverviewFooterStat("COUNTRY RANK", $"#{e.Value.Stats.NewCountryRank:n0}"),
-                    new ResultsOverviewFooterStat("OVERALL RATING", $"{StringHelper.RatingToString(e.Value.Stats.OverallPerformanceRating)}"),
-                    new ResultsOverviewFooterStat("OVERALL ACCURACY", $"{StringHelper.AccuracyToString((float) e.Value.Stats.OverallAccuracy)}"),
+                    new ResultsOverviewFooterStat(ResultsLocalization.Get("Global Rank"), $"#{e.Value.Stats.NewGlobalRank:n0}"),
+                    new ResultsOverviewFooterStat(ResultsLocalization.Get("Country Rank"), $"#{e.Value.Stats.NewCountryRank:n0}"),
+                    new ResultsOverviewFooterStat(ResultsLocalization.Get("Overall Rating"), $"{StringHelper.RatingToString(e.Value.Stats.OverallPerformanceRating)}"),
+                    new ResultsOverviewFooterStat(ResultsLocalization.Get("Overall Accuracy"), $"{StringHelper.AccuracyToString((float) e.Value.Stats.OverallAccuracy)}"),
                 };
             }
             else
             {
                 stats = new List<ResultsOverviewFooterStat>() {
-                    new ResultsOverviewFooterStat("UNRANKED GAMEMODE", ""),
+                    new ResultsOverviewFooterStat(ResultsLocalization.Get("Unranked Gamemode"), ""),
                 };
             }
 

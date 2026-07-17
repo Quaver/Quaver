@@ -6,6 +6,8 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Menu;
@@ -181,8 +183,8 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         private void CreateHeader()
         {
-            Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "MULTIPLAYER", "GAME",
-                "play a match in real-time with others", Colors.MainAccent)
+            Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), MultiplayerLocalization.Get("HeaderTitle"),
+                MultiplayerLocalization.Get("HeaderSubtitle"), MultiplayerLocalization.Get("HeaderDescription"), Colors.MainAccent)
             { Parent = Container };
 
             Header.Y = -Header.Height;
@@ -195,10 +197,10 @@ namespace Quaver.Shared.Screens.Multiplayer
         {
             Footer = new MenuFooterMultiplayer(new List<ButtonText>
             {
-                new ButtonText(FontsBitmap.GothamRegular, "leave", 14, (o, e) => MultiplayerScreen.LeaveGame()),
-                new ButtonText(FontsBitmap.GothamRegular, "options", 14, (o, e) => DialogManager.Show(new OptionsDialog())),
-                new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
-                new ButtonText(FontsBitmap.GothamRegular, "commands", 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/wiki/Multiplayer/Commands"))
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Leave"), 14, (o, e) => MultiplayerScreen.LeaveGame()),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Options"), 14, (o, e) => DialogManager.Show(new OptionsDialog())),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("MatchHistory"), 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Commands"), 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/wiki/Multiplayer/Commands"))
             }, new List<ButtonText>
             {
             }, Colors.MainAccent)
@@ -231,18 +233,18 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         private void CreateSettings() => Settings = new MultiplayerSettings(new List<IMultiplayerSettingsItem>
         {
-            new MultiplayerSettingsRuleset("Game Mode", OnlineManager.CurrentGame.Ruleset.ToString().Replace("_", " ")),
-            new MultiplayerSettingsMaxPlayers("Max Players", OnlineManager.CurrentGame.MaxPlayers.ToString()),
-            new MultiplayerSettingsAutoHostRotation("Auto Host Rotation", MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.HostRotation)),
-            new MultiplayerSettingsFreeModType("Free Mod", MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Regular), MultiplayerFreeModType.Regular),
-            new MultiplayerSettingsFreeModType("Free Rate", MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Rate), MultiplayerFreeModType.Rate),
-            new MultiplayerSettingsEnablePreview("Enable Preview", MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.EnablePreview)),
-            new MultiplayerSettingsHealthType("Health Type", ((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType).ToString().Replace("_", " ")),
-            new MultiplayerSettingsLives("Lives", OnlineManager.CurrentGame.Lives.ToString()),
-            new MultiplayerSettingsAllowedGameModes("Allowed Game Modes", MultiplayerSettingsAllowedGameModes.AllowedModesToString(OnlineManager.CurrentGame.AllowedGameModes)),
-            new MultiplayerSettingsMaximumSongLength("Maximum Song Length", MultiplayerSettingsMaximumSongLength.ToString(OnlineManager.CurrentGame.MaximumSongLength)),
-            new MultiplayerSettingsDifficultyRange("Difficulty Range", MultiplayerSettingsDifficultyRange.ToString(OnlineManager.CurrentGame.MinimumDifficultyRating, OnlineManager.CurrentGame.MaximumDifficultyRating)),
-            new MultiplayerSettingsLongNotePercentage("Long Note % Range", MultiplayerSettingsLongNotePercentage.ToString(OnlineManager.CurrentGame.MinimumLongNotePercentage, OnlineManager.CurrentGame.MaximumLongNotePercentage))
+            new MultiplayerSettingsRuleset(MultiplayerLocalization.Get("GameMode"), OnlineManager.CurrentGame.Ruleset.ToString().Replace("_", " ")),
+            new MultiplayerSettingsMaxPlayers(MultiplayerLocalization.Get("MaxPlayers"), OnlineManager.CurrentGame.MaxPlayers.ToString()),
+            new MultiplayerSettingsAutoHostRotation(MultiplayerLocalization.Get("AutoHostRotation"), MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.HostRotation)),
+            new MultiplayerSettingsFreeModType(MultiplayerLocalization.Get("FreeMod"), MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Regular), MultiplayerFreeModType.Regular),
+            new MultiplayerSettingsFreeModType(MultiplayerLocalization.Get("FreeRate"), MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Rate), MultiplayerFreeModType.Rate),
+            new MultiplayerSettingsEnablePreview(MultiplayerLocalization.Get("EnablePreview"), MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.EnablePreview)),
+            new MultiplayerSettingsHealthType(MultiplayerLocalization.Get("HealthType"), ((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType).ToString().Replace("_", " ")),
+            new MultiplayerSettingsLives(MultiplayerLocalization.Get("Lives"), OnlineManager.CurrentGame.Lives.ToString()),
+            new MultiplayerSettingsAllowedGameModes(MultiplayerLocalization.Get("AllowedGameModes"), MultiplayerSettingsAllowedGameModes.AllowedModesToString(OnlineManager.CurrentGame.AllowedGameModes)),
+            new MultiplayerSettingsMaximumSongLength(MultiplayerLocalization.Get("MaximumSongLength"), MultiplayerSettingsMaximumSongLength.ToString(OnlineManager.CurrentGame.MaximumSongLength)),
+            new MultiplayerSettingsDifficultyRange(MultiplayerLocalization.Get("DifficultyRange"), MultiplayerSettingsDifficultyRange.ToString(OnlineManager.CurrentGame.MinimumDifficultyRating, OnlineManager.CurrentGame.MaximumDifficultyRating)),
+            new MultiplayerSettingsLongNotePercentage(MultiplayerLocalization.Get("LongNotePercentageRange"), MultiplayerSettingsLongNotePercentage.ToString(OnlineManager.CurrentGame.MinimumLongNotePercentage, OnlineManager.CurrentGame.MaximumLongNotePercentage))
         })
         {
             Parent = Container,

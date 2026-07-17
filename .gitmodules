@@ -1,15 +1,9 @@
 [submodule "Quaver.API"]
 	path = Quaver.API
 	url = https://github.com/Quaver/Quaver.API
-[submodule "Quaver.Resources"]
-	path = Quaver.Resources
-	url = https://github.com/Quaver/Quaver.Resources
 [submodule "Wobble"]
 	path = Wobble
 	url = https://github.com/Quaver/Wobble
-[submodule "Quaver.Dependencies"]
-	path = Quaver.Dependencies
-	url = https://github.com/Quaver/Quaver.Dependencies
 [submodule "Quaver.Server.Client"]
 	path = Quaver.Server.Client
 	url = https://github.com/Quaver/Quaver.Server.Client

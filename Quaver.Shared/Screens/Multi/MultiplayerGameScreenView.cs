@@ -5,7 +5,6 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Multi.UI.Chat;
 using Quaver.Shared.Screens.Multi.UI.Footer;
 using Quaver.Shared.Screens.Multi.UI.Players;

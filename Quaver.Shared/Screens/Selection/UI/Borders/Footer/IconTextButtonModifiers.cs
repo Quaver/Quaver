@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics.Sprites.Text;
@@ -14,7 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonModifiers : IconTextButton
     {
         public IconTextButtonModifiers(Bindable<SelectContainerPanel> activeLeftPanel)
-            : base(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            : base(FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette), FontManager.GetWobbleFont(Fonts.InterBold),
             "Modifiers", (sender, args) =>
             {
                 if (activeLeftPanel == null)
@@ -24,7 +25,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
                     activeLeftPanel.Value = SelectContainerPanel.Leaderboard;
                 else
                     activeLeftPanel.Value = SelectContainerPanel.Modifiers;
-            })
+            }, localizationKey: SelectionLocalization.GetKey("Modifiers"))
         {
         }
     }

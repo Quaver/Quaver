@@ -121,7 +121,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
         /// </summary>
         private void CreatePercentage()
         {
-            Percentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "100%", 22)
+            Percentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "100%", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -134,7 +134,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
         /// <param name="name"></param>
         private void CreateName(string name)
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), name.ToUpper(), 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), name.ToUpper(), 18)
             {
                 Parent = Slider,
                 Y = -36

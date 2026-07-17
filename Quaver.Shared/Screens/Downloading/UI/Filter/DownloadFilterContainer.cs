@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateHeader()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "FILTER OPTIONS", 26)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("FILTER OPTIONS"), 22)
             {
                 Parent = this,
             };
@@ -202,8 +202,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 new DownloadFilterTableLength(tableWidth, MinLength, MaxLength),
                 new DownloadFilterTableItemLongNotePercent(tableWidth, MinLongNotePercent, MaxLongNotePercent),
                 new DownloadFilterTableItemMaxCombo(tableWidth, MinCombo, MaxCombo),
-                new DownloadFilterTableItemDate(tableWidth, "Upload Date", MinUploadDate, MaxUploadDate),
-                new DownloadFilterTableItemDate(tableWidth, "Last Update Date", MinLastUpdateDate, MaxLastUpdateDate),
+                // new DownloadFilterTableItemDate(tableWidth, "Upload Date", MinUploadDate, MaxUploadDate),
+                // new DownloadFilterTableItemDate(tableWidth, "Last Update Date", MinLastUpdateDate, MaxLastUpdateDate),
             };
 
             TabControl = new TextboxTabControl(new List<Textbox>()) { Parent = this };

@@ -1,6 +1,8 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Online;
 using Wobble.Assets;
@@ -13,9 +15,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
     {
         private Scoreboard Scoreboard { get; }
 
-        private SpriteTextBitmap SelfWins { get; }
+        private SpriteTextPlus SelfWins { get; }
 
-        private SpriteTextBitmap OtherWins { get; }
+        private SpriteTextPlus OtherWins { get; }
 
         private int Spacing { get; } = 15;
 
@@ -32,7 +34,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (myWins != null)
                 myWinCount = myWins.Wins;
 
-            SelfWins = new SpriteTextBitmap(FontsBitmap.GothamRegular, myWinCount.ToString())
+            SelfWins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), myWinCount.ToString())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -53,7 +55,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     otherWins = otherPlayerWinCount.Wins;
             }
 
-            OtherWins = new SpriteTextBitmap(FontsBitmap.GothamRegular, otherWins.ToString())
+            OtherWins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), otherWins.ToString())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

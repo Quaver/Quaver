@@ -7,14 +7,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
 {
     public class CreateGameRulesetDropdown : LabelledDropdown
     {
-        public CreateGameRulesetDropdown() : base("RULESET: ", 21,
-            new Dropdown(GetOptions(), new ScalableVector2(166, 35), 21))
+        public CreateGameRulesetDropdown() : base(MultiplayerLobbyLocalization.Get("RulesetLabel"), 21,
+            new Dropdown(GetOptions(), new ScalableVector2(166, 35), 20))
         {
         }
 
         private static List<string> GetOptions() => new List<string>()
         {
-            "Free-For-All",
+            MultiplayerLobbyLocalization.Get("FreeForAll"),
             // "Team",
             //"Battle Royale"
         };

@@ -136,6 +136,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             CreateSortModeDropdown();
             CreateSearchBox();
             CreateMapsAvailable();
+            AlignTextBaselines();
 
             FilterMapsetsTask = new TaskHandler<int, int>(StartFilterMapsetsTask);
 
@@ -255,6 +256,24 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 else
                     item.X = RightItems[i - 1].X - RightItems[i - 1].Width - spacing;
             }
+        }
+
+        /// <summary>
+        ///     Applies the Selection screen's baseline correction for the Inter font without changing
+        ///     the shared dropdown and textbox controls used by other screens.
+        /// </summary>
+        private void AlignTextBaselines()
+        {
+            foreach (var dropdown in new LabelledDropdown[] { SortDropdown, SortGroupBy, SortMode })
+            {
+                dropdown.Label.Y = 1;
+                dropdown.Dropdown.SelectedText.Y = 1;
+            }
+
+            SearchBox.InputText.Y = 1;
+
+            MapsAvailable.TextCount.Y = 1;
+            MapsAvailable.TextMapsFound.Y = 1;
         }
 
         /// <summary>

@@ -94,11 +94,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private TextKeyValue Ratio { get; set; }
+        private TextKeyValue MineMiss { get; set; }
 
         /// <summary>
         /// </summary>
-        private const int STATISTICS_SPACING_X = 65;
+        private const int STATISTICS_SPACING_X = 32;
 
         /// <summary>
         /// </summary>
@@ -134,9 +134,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             CreateJudgementGraph();
             CreateSelectionDropdown();
             CreateGraph();
+            CreateMineHits();
             CreateMean();
             CreateStandardDeviation();
-            CreateRatio();
 
             if (ConfigManager.ResultGraph != null)
                 ConfigManager.ResultGraph.ValueChanged += OnResultGraphDropdownChanged;
@@ -208,55 +208,45 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateMean()
+        private void CreateMineHits()
         {
-            Mean = new TextKeyValue("Mean:", $"{-Statistics.Mean:0.00} ms", 22, Color.White)
+            var mineHits = Processor.Value.CountMineHit.ToString();
+
+            MineMiss = new TextKeyValue(ResultsLocalization.Get("Mine Miss:"), mineHits, 20, Color.White)
             {
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
                 Y = GraphDropdown.Y + GraphDropdown.Dropdown.Height / 2f,
                 Key = {Tint = ColorHelper.HexToColor("#808080")},
+                Value = {Tint =new Color(249,100,93)},
+            };
+            MineMiss.Y -= MineMiss.Height / 2f;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateMean()
+        {
+            Mean = new TextKeyValue(ResultsLocalization.Get("Mean:"), $"{-Statistics.Mean:0.00} ms", 20, Color.White)
+            {
+                Parent = RightContainer,
+                X = MineMiss.X + MineMiss.Width + STATISTICS_SPACING_X,
+                Y = MineMiss.Y,
+                Key = {Tint = MineMiss.Key.Tint},
                 Value = {Tint = ColorHelper.HexToColor("#45D6F5")}
             };
 
-
-            Mean.Y -= Mean.Height / 2f;
         }
 
         /// <summary>
         /// </summary>
         private void CreateStandardDeviation()
         {
-            StandardDeviation = new TextKeyValue("Std. Dev:", $"{Statistics.StandardDeviation:0.00} ms",
-                Mean.Key.FontSize, Color.White)
+            StandardDeviation = new TextKeyValue(ResultsLocalization.Get("Std. Dev:"), $"{Statistics.StandardDeviation:0.00} ms",
+                20, Color.White)
             {
                 Parent = RightContainer,
                 X = Mean.X + Mean.Width + STATISTICS_SPACING_X,
-                Y = Mean.Y,
-                Key = {Tint = Mean.Key.Tint},
-                Value = {Tint = Mean.Value.Tint}
-            };
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateRatio()
-        {
-            var judgements = Processor.Value.CurrentJudgements;
-
-            var ratio = "0:0";
-
-            if (judgements[Judgement.Marv] == 0)
-                ratio = "0";
-            else if (judgements[Judgement.Marv] > 0 && judgements[Judgement.Perf] == 0)
-                ratio = "∞";
-            else
-                ratio = $"{(float) judgements[Judgement.Marv] / judgements[Judgement.Perf]:0.0}:1";
-
-            Ratio = new TextKeyValue("Ratio:", ratio, Mean.Key.FontSize, Color.White)
-            {
-                Parent = RightContainer,
-                X = StandardDeviation.X + StandardDeviation.Width + STATISTICS_SPACING_X,
                 Y = Mean.Y,
                 Key = {Tint = Mean.Key.Tint},
                 Value = {Tint = Mean.Value.Tint}
@@ -297,7 +287,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 return;
             }
 
-            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Statistics Not Available", 22)
+            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Statistics Not Available"), 18)
             {
                 Parent = GraphContainer,
                 Alignment = Alignment.MidCenter

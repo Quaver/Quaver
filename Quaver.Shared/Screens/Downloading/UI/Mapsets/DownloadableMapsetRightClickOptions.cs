@@ -28,6 +28,12 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
         private const string OnlineListing = "Online Listing";
 
+        private static string SelectText => DownloadLocalization.Get(Select);
+
+        private static string DownloadText => DownloadLocalization.Get(Download);
+
+        private static string OnlineListingText => DownloadLocalization.Get(OnlineListing);
+
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
@@ -42,19 +48,19 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             {
                 switch (args.Text)
                 {
-                    case Select:
+                    case var text when text == SelectText:
                         SelectedMapset.Value = Mapset;
                         break;
-                    case Download:
+                    case var text when text == DownloadText:
                         if (MapsetDownloadManager.IsMapsetInQueue(Mapset.Id))
                         {
-                            NotificationManager.Show(NotificationLevel.Warning, $"This mapset is already downloading!");
+                            NotificationManager.Show(NotificationLevel.Warning, DownloadLocalization.Get("This mapset is already downloading!"));
                             return;
                         }
 
                         MapsetDownloadManager.Download(Mapset.Id, Mapset.Artist, Mapset.Title);
                         break;
-                    case OnlineListing:
+                    case var text when text == OnlineListingText:
                         BrowserHelper.OpenURL($"https://quavergame.com/mapsets/{Mapset.Id}");
                         break;
                 }
@@ -71,10 +77,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             var options = new Dictionary<string, Color>();
 
             if (selectedMapset.Value != mapset)
-                options.Add(Select, Color.White);
+                options.Add(SelectText, Color.White);
 
-            options.Add(Download, ColorHelper.HexToColor("#27B06E"));
-            options.Add(OnlineListing, ColorHelper.HexToColor("#FFE76B"));
+            options.Add(DownloadText, ColorHelper.HexToColor("#27B06E"));
+            options.Add(OnlineListingText, ColorHelper.HexToColor("#FFE76B"));
 
             return options;
         }

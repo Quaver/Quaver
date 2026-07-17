@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Steamworks;
 using Wobble.Assets;
@@ -92,9 +93,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         {
             BackgroundImage = new BackgroundImage(UserInterface.MenuBackgroundClear, 75, false)
             {
+                Size = new ScalableVector2(1152, 700),
                 Alignment = Alignment.BotLeft,
                 X = -100,
-                Size = new ScalableVector2(1152, 648),
+                Y = 0,
             };
 
             AddContainedDrawable(BackgroundImage);
@@ -152,8 +154,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                Profile.Value.Username ?? ConfigManager.Username?.Value ?? "Player", 24)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                Profile.Value.Username ?? ConfigManager.Username?.Value ?? SelectionLocalization.Get("Player"), 22)
             {
                 Parent = this,
                 X = Avatar.X + Avatar.Width + Avatar.Border.Thickness + 12,
@@ -172,12 +174,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// </summary>
         private void CreateProfileType()
         {
-            var typeStr = "Local Profile";
+            var typeStr = SelectionLocalization.Get("Local Profile");
 
             if (Profile.Value.IsOnline)
-                typeStr = "Online Profile";
+                typeStr = SelectionLocalization.Get("Online Profile");
 
-            ProfileType = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), typeStr, 20)
+            ProfileType = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), typeStr, 18)
             {
                 Parent = this,
                 Y = Flag.Y + Flag.Height + 6,

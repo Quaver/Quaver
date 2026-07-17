@@ -94,8 +94,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer
         {
             var time = $"{Processor.Value.Date:hh:mm:ss tt}";
 
-            MatchPlayedDate = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                $"Match played on {Processor.Value.Date.ToShortDateString()} @ {time}", 22)
+            MatchPlayedDate = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                ResultsLocalization.Get("Match played on", Processor.Value.Date.ToShortDateString(), time), 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopRight,
@@ -125,19 +125,19 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer
 
                     if (blueTeamRating > redTeamRating)
                     {
-                        winnerText = "Blue Team";
+                        winnerText = ResultsLocalization.Get("Blue Team");
                         winnerColor = ColorHelper.HexToColor("#0587E5");
                     }
                     else
                     {
-                        winnerText = "Red Team";
+                        winnerText = ResultsLocalization.Get("Red Team");
                         winnerColor = ColorHelper.HexToColor("#F9645D");
                     }
 
                     break;
             }
 
-            Winner = new TextKeyValue(winnerText, "has won the match!", 22, Color.White)
+            Winner = new TextKeyValue(winnerText, ResultsLocalization.Get("has won the match!"), 22, Color.White)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,

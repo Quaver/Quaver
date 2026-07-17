@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Footer.Items
     public class DownloadingFooterBackButton : IconTextButton
     {
         public DownloadingFooterBackButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Back", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("Back"), (sender, args) =>
             {
                 var game = GameBase.Game as QuaverGame;
                 var screen = game?.CurrentScreen as DownloadingScreen;

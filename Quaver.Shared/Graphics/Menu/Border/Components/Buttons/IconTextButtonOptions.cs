@@ -7,11 +7,11 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
 {
     public class IconTextButtonOptions : IconTextButton
     {
-        public IconTextButtonOptions() : base(FontAwesome.Get(FontAwesomeIcon.fa_settings),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Options", (sender, args) =>
+        public IconTextButtonOptions(string localizationKey = null) : base(FontAwesome.Get(FontAwesomeIcon.fa_settings),
+            FontManager.GetWobbleFont(Fonts.InterBold),"Options", (sender, args) =>
             {
                 DialogManager.Show(new OptionsDialog());
-            })
+            }, localizationKey: localizationKey)
         {
         }
     }

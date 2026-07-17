@@ -104,7 +104,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), User.OnlineUser.Username, 24)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), User.OnlineUser.Username, 24)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,

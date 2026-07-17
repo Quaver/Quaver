@@ -11,7 +11,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public override QuaverScreenType Screen { get; } = QuaverScreenType.Music;
 
         public IconTextButtonMusicPlayer() : base(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol),
-            FontManager.GetWobbleFont(Fonts.LatoBlack), "Jukebox")
+            FontManager.GetWobbleFont(Fonts.InterBold), "Jukebox", localizationKey: "Screen_Main_Menu_Jukebox")
         {
         }
 

@@ -1,0 +1,2055 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Language_English" xml:space="preserve">
+    <value>英语</value>
+  </data>
+  <data name="Language_Bulgarian" xml:space="preserve">
+    <value>保加利亚语</value>
+  </data>
+  <data name="Language_Danish" xml:space="preserve">
+    <value>丹麦语</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>德语</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>西班牙语</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>法语</value>
+  </data>
+  <data name="Language_Indonesian" xml:space="preserve">
+    <value>印度尼西亚语</value>
+  </data>
+  <data name="Language_Italian" xml:space="preserve">
+    <value>意大利语</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>韩语</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>荷兰语</value>
+  </data>
+  <data name="Language_Norwegian" xml:space="preserve">
+    <value>挪威语</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>波兰语</value>
+  </data>
+  <data name="Language_PortugueseBrazil" xml:space="preserve">
+    <value>葡萄牙语（巴西）</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>俄语</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>瑞典语</value>
+  </data>
+  <data name="Language_Thai" xml:space="preserve">
+    <value>泰语</value>
+  </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>乌克兰语</value>
+  </data>
+  <data name="Language_ChineseSimplified" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="Language_ChineseTraditional" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
+  <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
+    <value>退出当前界面以更新语言。</value>
+  </data>
+  <data name="Chat_SendAMessage" xml:space="preserve">
+    <value>发送消息……</value>
+  </data>
+  <data name="Screen_Main_Menu_Home" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="Screen_Main_Menu_Maps" xml:space="preserve">
+    <value>谱面</value>
+  </data>
+  <data name="Screen_Main_Menu_Clans" xml:space="preserve">
+    <value>战队</value>
+  </data>
+  <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
+    <value>音乐盒</value>
+  </data>
+  <data name="Screen_Main_Menu_Skins" xml:space="preserve">
+    <value>皮肤</value>
+  </data>
+  <data name="Screen_Main_Menu_Donate" xml:space="preserve">
+    <value>赞助</value>
+  </data>
+  <data name="Screen_Main_Menu_GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Screen_Main_Menu_Wiki" xml:space="preserve">
+    <value>维基百科</value>
+  </data>
+  <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
+    <value>反馈问题</value>
+  </data>
+  <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
+    <value>推特</value>
+  </data>
+  <data name="Screen_Main_Menu_Discord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="Screen_Main_Menu_Website" xml:space="preserve">
+    <value>网站</value>
+  </data>
+  <data name="Screen_Main_SinglePlayer" xml:space="preserve">
+    <value>单人游戏</value>
+  </data>
+  <data name="Screen_Main_Multiplayer" xml:space="preserve">
+    <value>多人游戏</value>
+  </data>
+  <data name="Screen_Main_Editor" xml:space="preserve">
+    <value>编辑器</value>
+  </data>
+  <data name="Screen_Main_Competitive" xml:space="preserve">
+    <value>排位模式</value>
+  </data>
+  <data name="Screen_Main_MapEditor" xml:space="preserve">
+    <value>谱面编辑器</value>
+  </data>
+  <data name="Screen_Main_DownloadMaps" xml:space="preserve">
+    <value>下载谱面</value>
+  </data>
+  <data name="Screen_Main_DownloadSongs" xml:space="preserve">
+    <value>下载谱面</value>
+  </data>
+  <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
+    <value>Steam 创意工坊</value>
+  </data>
+  <data name="Screen_Main_Options" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="Screen_Main_QuitGame" xml:space="preserve">
+    <value>退出游戏</value>
+  </data>
+  <data name="Screen_Main_QuitDialogTitle" xml:space="preserve">
+    <value>退出 Quaver</value>
+  </data>
+  <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
+    <value>你确定要退出游戏吗？</value>
+  </data>
+  <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
+    <value>参与排行榜竞争</value>
+  </data>
+  <data name="Screen_Main_MultiplayerDescription" xml:space="preserve">
+    <value>与其他玩家线上游戏</value>
+  </data>
+  <data name="Screen_Main_CompetitiveDescription" xml:space="preserve">
+    <value>与全球玩家竞争</value>
+  </data>
+  <data name="Screen_Main_MapEditorDescription" xml:space="preserve">
+    <value>为任何歌曲创建或编辑谱面</value>
+  </data>
+  <data name="Screen_Main_DownloadMapsDescription" xml:space="preserve">
+    <value>寻找社区谱面游玩</value>
+  </data>
+  <data name="Screen_Main_TipLabel" xml:space="preserve">
+    <value>你知道吗：</value>
+  </data>
+  <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
+    <value>按下 CTRL+O 打开选项菜单。</value>
+  </data>
+  <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
+    <value>将谱面文件（.qp）拖入游戏窗口即可导入。</value>
+  </data>
+  <data name="Screen_Main_TipMapPreview" xml:space="preserve">
+    <value>在选歌界面按下 F3 键可以显示谱面预览。</value>
+  </data>
+  <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
+    <value>如果在游玩时暂停，成绩将不会上传。</value>
+  </data>
+  <data name="Screen_Main_TipReportBug" xml:space="preserve">
+    <value>如您想反馈一个 Bug，请在 GitHub 上创建一个 Issue。</value>
+  </data>
+  <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
+    <value>如您希望加入新功能，欢迎在 GitHub 上创建一个 Issue！</value>
+  </data>
+  <data name="Screen_Main_TipCreateMap" xml:space="preserve">
+    <value>如需创建谱面，请将 .mp3 文件拖入游戏窗口！</value>
+  </data>
+  <data name="Screen_Main_TipRandomSong" xml:space="preserve">
+    <value>在选歌界面按下 F2 键会随机选择一首歌曲。</value>
+  </data>
+  <data name="Screen_Main_TipPlayercard" xml:space="preserve">
+    <value>在菜单栏按下 F10 键可以打开你的玩家信息。</value>
+  </data>
+  <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
+    <value>在游玩时按下 F3/F4 键可以更改物件移动速度。</value>
+  </data>
+  <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
+    <value>在选项菜单可以校正您的延迟。</value>
+  </data>
+  <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
+    <value>Standard* 是游戏的默认判定窗口。</value>
+  </data>
+  <data name="Screen_Main_TipPlaybackRate" xml:space="preserve">
+    <value>按下 CTRL+ +/- 可以改变音频速度。</value>
+  </data>
+  <data name="Screen_Main_NowPlaying" xml:space="preserve">
+    <value>正在播放：</value>
+  </data>
+  <data name="Screen_Main_Published" xml:space="preserve">
+    <value>发布于 {0}</value>
+  </data>
+  <data name="Screen_Selection_All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Screen_Selection_Artist" xml:space="preserve">
+    <value>曲师</value>
+  </data>
+  <data name="Screen_Selection_Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Screen_Selection_By" xml:space="preserve">
+    <value>谱师：</value>
+  </data>
+  <data name="Screen_Selection_BPM" xml:space="preserve">
+    <value>BPM</value>
+  </data>
+  <data name="Screen_Selection_Clan" xml:space="preserve">
+    <value>战队</value>
+  </data>
+  <data name="Screen_Selection_Country" xml:space="preserve">
+    <value>国家/地区</value>
+  </data>
+  <data name="Screen_Selection_CountryRank" xml:space="preserve">
+    <value>国家/地区排名</value>
+  </data>
+  <data name="Screen_Selection_CreateNew" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="Screen_Selection_CreatePlaylist" xml:space="preserve">
+    <value>创建合集</value>
+  </data>
+  <data name="Screen_Selection_Creator" xml:space="preserve">
+    <value>谱师</value>
+  </data>
+  <data name="Screen_Selection_DateAdded" xml:space="preserve">
+    <value>导入时间</value>
+  </data>
+  <data name="Screen_Selection_Difficulty" xml:space="preserve">
+    <value>难度</value>
+  </data>
+  <data name="Screen_Selection_Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="Screen_Selection_Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="Screen_Selection_Friends" xml:space="preserve">
+    <value>好友</value>
+  </data>
+  <data name="Screen_Selection_Game" xml:space="preserve">
+    <value>游戏</value>
+  </data>
+  <data name="Screen_Selection_Global" xml:space="preserve">
+    <value>全球</value>
+  </data>
+  <data name="Screen_Selection_GlobalRank" xml:space="preserve">
+    <value>全球排名</value>
+  </data>
+  <data name="Screen_Selection_GroupBy" xml:space="preserve">
+    <value>分组：</value>
+  </data>
+  <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
+    <value>最高分数</value>
+  </data>
+  <data name="Screen_Selection_Leaderboard" xml:space="preserve">
+    <value>排行榜</value>
+  </data>
+  <data name="Screen_Selection_Length" xml:space="preserve">
+    <value>长度</value>
+  </data>
+  <data name="Screen_Selection_LengthLabel" xml:space="preserve">
+    <value>长度：</value>
+  </data>
+  <data name="Screen_Selection_Local" xml:space="preserve">
+    <value>本地</value>
+  </data>
+  <data name="Screen_Selection_LocalProfile" xml:space="preserve">
+    <value>本地个人资料</value>
+  </data>
+  <data name="Screen_Selection_LongNote" xml:space="preserve">
+    <value>长条比例</value>
+  </data>
+  <data name="Screen_Selection_MapFound" xml:space="preserve">
+    <value>个谱面</value>
+  </data>
+  <data name="Screen_Selection_MapsFound" xml:space="preserve">
+    <value>个谱面</value>
+  </data>
+  <data name="Screen_Selection_MarvelousPerfectRatio" xml:space="preserve">
+    <value>黄彩比</value>
+  </data>
+  <data name="Screen_Selection_MaxCombo" xml:space="preserve">
+    <value>最高连击</value>
+  </data>
+  <data name="Screen_Selection_Mode" xml:space="preserve">
+    <value>模式：</value>
+  </data>
+  <data name="Screen_Selection_Modifiers" xml:space="preserve">
+    <value>模组</value>
+  </data>
+  <data name="Screen_Selection_Mods" xml:space="preserve">
+    <value>模组</value>
+  </data>
+  <data name="Screen_Selection_NeverPlayed" xml:space="preserve">
+    <value>从未游玩</value>
+  </data>
+  <data name="Screen_Selection_NoScoresavailableBethefirst" xml:space="preserve">
+    <value>还没有成绩。来抢第一！</value>
+  </data>
+  <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
+    <value>没有个人最佳成绩</value>
+  </data>
+  <data name="Screen_Selection_None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
+    <value>每秒物件数</value>
+  </data>
+  <data name="Screen_Selection_Online" xml:space="preserve">
+    <value>在线</value>
+  </data>
+  <data name="Screen_Selection_OnlineGrade" xml:space="preserve">
+    <value>在线成绩</value>
+  </data>
+  <data name="Screen_Selection_OnlineListing" xml:space="preserve">
+    <value>网站查看</value>
+  </data>
+  <data name="Screen_Selection_OnlineProfile" xml:space="preserve">
+    <value>在线个人资料</value>
+  </data>
+  <data name="Screen_Selection_Options" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="Screen_Selection_OverallAccuracy" xml:space="preserve">
+    <value>总体准度</value>
+  </data>
+  <data name="Screen_Selection_OverallRating" xml:space="preserve">
+    <value>总体Rating</value>
+  </data>
+  <data name="Screen_Selection_PassFailureCount" xml:space="preserve">
+    <value>通过/失败计数</value>
+  </data>
+  <data name="Screen_Selection_PersonalBest" xml:space="preserve">
+    <value>个人最佳</value>
+  </data>
+  <data name="Screen_Selection_Play" xml:space="preserve">
+    <value>游玩</value>
+  </data>
+  <data name="Screen_Selection_PlayCount" xml:space="preserve">
+    <value>游玩数量</value>
+  </data>
+  <data name="Screen_Selection_Player" xml:space="preserve">
+    <value>玩家</value>
+  </data>
+  <data name="Screen_Selection_Playlists" xml:space="preserve">
+    <value>合集</value>
+  </data>
+  <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
+    <value>谱面预览在此房间已被禁用！</value>
+  </data>
+  <data name="Screen_Selection_Profile" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="Screen_Selection_Random" xml:space="preserve">
+    <value>随机</value>
+  </data>
+  <data name="Screen_Selection_RankedStatus" xml:space="preserve">
+    <value>分类</value>
+  </data>
+  <data name="Screen_Selection_Ranking" xml:space="preserve">
+    <value>排名：</value>
+  </data>
+  <data name="Screen_Selection_Rate" xml:space="preserve">
+    <value>速度</value>
+  </data>
+  <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
+    <value>最近游玩</value>
+  </data>
+  <data name="Screen_Selection_ResultFound" xml:space="preserve">
+    <value>个结果</value>
+  </data>
+  <data name="Screen_Selection_ResultsFound" xml:space="preserve">
+    <value>个结果</value>
+  </data>
+  <data name="Screen_Selection_Scoresonthismapwillbeunranked" xml:space="preserve">
+    <value>此谱面的成绩不会计入在线评分！</value>
+  </data>
+  <data name="Screen_Selection_Select" xml:space="preserve">
+    <value>资料：</value>
+  </data>
+  <data name="Screen_Selection_SortBy" xml:space="preserve">
+    <value>排序：</value>
+  </data>
+  <data name="Screen_Selection_Source" xml:space="preserve">
+    <value>来源</value>
+  </data>
+  <data name="Screen_Selection_Thereiscurrentlynomapselected" xml:space="preserve">
+    <value>当前没有选择任何谱面！</value>
+  </data>
+  <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
+    <value>此谱面没有上架！</value>
+  </data>
+  <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
+    <value>此谱面没有上传！</value>
+  </data>
+  <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
+    <value>次游玩</value>
+  </data>
+  <data name="Screen_Selection_Title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="Screen_Selection_TotalHits" xml:space="preserve">
+    <value>总击打数</value>
+  </data>
+  <data name="Screen_Selection_TotalPauses" xml:space="preserve">
+    <value>总暂停数</value>
+  </data>
+  <data name="Screen_Selection_TotalScore" xml:space="preserve">
+    <value>总分</value>
+  </data>
+  <data name="Screen_Selection_ViewMap" xml:space="preserve">
+    <value>预览谱面</value>
+  </data>
+  <data name="Screen_Selection_Youmustbeadonatortoaccessthisleaderboard" xml:space="preserve">
+    <value>您不是赞助者，无法查看此排行榜！</value>
+  </data>
+  <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
+    <value>您当前没有在线，无法查看此排行榜！</value>
+  </data>
+  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+    <value>当前激活的模组下不可能超过此成绩！</value>
+  </data>
+  <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
+    <value>您的谱面需要更新！</value>
+  </data>
+  <data name="Screen_Options_Video" xml:space="preserve">
+    <value>视频</value>
+  </data>
+  <data name="Screen_Options_Audio" xml:space="preserve">
+    <value>音频</value>
+  </data>
+  <data name="Screen_Options_Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Screen_Options_Gameplay" xml:space="preserve">
+    <value>游玩</value>
+  </data>
+  <data name="Screen_Options_Skin" xml:space="preserve">
+    <value>皮肤</value>
+  </data>
+  <data name="Screen_Options_Input" xml:space="preserve">
+    <value>输入</value>
+  </data>
+  <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
+    <value>模式特定</value>
+  </data>
+  <data name="Screen_Options_Miscellaneous" xml:space="preserve">
+    <value>杂项</value>
+  </data>
+  <data name="Screen_Options_Advanced" xml:space="preserve">
+    <value>高级</value>
+  </data>
+  <data name="Screen_Options_Window" xml:space="preserve">
+    <value>窗口</value>
+  </data>
+  <data name="Screen_Options_FrameTime" xml:space="preserve">
+    <value>帧率设置</value>
+  </data>
+  <data name="Screen_Options_Output" xml:space="preserve">
+    <value>输出</value>
+  </data>
+  <data name="Screen_Options_Volume" xml:space="preserve">
+    <value>音量</value>
+  </data>
+  <data name="Screen_Options_Offset" xml:space="preserve">
+    <value>偏移</value>
+  </data>
+  <data name="Screen_Options_Effects" xml:space="preserve">
+    <value>效果</value>
+  </data>
+  <data name="Screen_Options_Localization" xml:space="preserve">
+    <value>本地化</value>
+  </data>
+  <data name="Screen_Options_Background" xml:space="preserve">
+    <value>背景</value>
+  </data>
+  <data name="Screen_Options_Visuals" xml:space="preserve">
+    <value>视觉</value>
+  </data>
+  <data name="Screen_Options_Sound" xml:space="preserve">
+    <value>声音</value>
+  </data>
+  <data name="Screen_Options_UserInterface" xml:space="preserve">
+    <value>UI</value>
+  </data>
+  <data name="Screen_Options_Scoreboard" xml:space="preserve">
+    <value>计分板</value>
+  </data>
+  <data name="Screen_Options_ProgressBar" xml:space="preserve">
+    <value>进度条</value>
+  </data>
+  <data name="Screen_Options_LaneCover" xml:space="preserve">
+    <value>挡板</value>
+  </data>
+  <data name="Screen_Options_Selection" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="Screen_Options_Navigation" xml:space="preserve">
+    <value>导航</value>
+  </data>
+  <data name="Screen_Options_Sharing" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="Screen_Options_Configuration" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="Screen_Options_GameplayControls" xml:space="preserve">
+    <value>游戏</value>
+  </data>
+  <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
+    <value>游戏内UI</value>
+  </data>
+  <data name="Screen_Options_SongSelection" xml:space="preserve">
+    <value>选歌界面</value>
+  </data>
+  <data name="Screen_Options_Editor" xml:space="preserve">
+    <value>编辑器</value>
+  </data>
+  <data name="Screen_Options_Misc" xml:space="preserve">
+    <value>杂项</value>
+  </data>
+  <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
+    <value>导航与维护</value>
+  </data>
+  <data name="Screen_Options_InstalledGames" xml:space="preserve">
+    <value>其他游戏</value>
+  </data>
+  <data name="Screen_Options_Notifications" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Screen_Options_SongSelect" xml:space="preserve">
+    <value>选歌界面</value>
+  </data>
+  <data name="Screen_Options_ScreenResolution" xml:space="preserve">
+    <value>屏幕分辨率</value>
+  </data>
+  <data name="Screen_Options_EnableFullscreen" xml:space="preserve">
+    <value>全屏</value>
+  </data>
+  <data name="Screen_Options_EnableBorderlessWindow" xml:space="preserve">
+    <value>无边框窗口</value>
+  </data>
+  <data name="Screen_Options_FrameLimiter" xml:space="preserve">
+    <value>帧率限制</value>
+  </data>
+  <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
+    <value>自定义FPS</value>
+  </data>
+  <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
+    <value>显示FPS</value>
+  </data>
+  <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
+    <value>音频输出设备</value>
+  </data>
+  <data name="Screen_Options_MasterVolume" xml:space="preserve">
+    <value>主音量</value>
+  </data>
+  <data name="Screen_Options_MusicVolume" xml:space="preserve">
+    <value>音乐音量</value>
+  </data>
+  <data name="Screen_Options_EffectVolume" xml:space="preserve">
+    <value>音效音量</value>
+  </data>
+  <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
+    <value>主音量</value>
+  </data>
+  <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
+    <value>音乐音量</value>
+  </data>
+  <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
+    <value>音效音量</value>
+  </data>
+  <data name="Screen_Results_Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Screen_Results_RetryMap" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Screen_Results_WatchReplay" xml:space="preserve">
+    <value>观看回放</value>
+  </data>
+  <data name="Screen_Results_ExportReplay" xml:space="preserve">
+    <value>导出回放</value>
+  </data>
+  <data name="Screen_Results_FixOffset" xml:space="preserve">
+    <value>调整延迟</value>
+  </data>
+  <data name="Screen_Results_ConvertScore" xml:space="preserve">
+    <value>切换判定窗口</value>
+  </data>
+  <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
+    <value>正在转换分数，请稍候！</value>
+  </data>
+  <data name="Screen_Results_Overview" xml:space="preserve">
+    <value>个人</value>
+  </data>
+  <data name="Screen_Results_Multiplayer" xml:space="preserve">
+    <value>多人</value>
+  </data>
+  <data name="Screen_Results_Mappedby" xml:space="preserve">
+    <value>谱师：</value>
+  </data>
+  <data name="Screen_Results_Playedby" xml:space="preserve">
+    <value>玩家：</value>
+  </data>
+  <data name="Screen_Results_Playedon" xml:space="preserve">
+    <value>于 {0} {1} 达成</value>
+  </data>
+  <data name="Screen_Results_JudgementPreset" xml:space="preserve">
+    <value>判定窗口：</value>
+  </data>
+  <data name="Screen_Results_Graph" xml:space="preserve">
+    <value>图像：</value>
+  </data>
+  <data name="Screen_Results_Deviance" xml:space="preserve">
+    <value>偏差</value>
+  </data>
+  <data name="Screen_Results_Accuracy" xml:space="preserve">
+    <value>准度</value>
+  </data>
+  <data name="Screen_Results_Health" xml:space="preserve">
+    <value>血量</value>
+  </data>
+  <data name="Screen_Results_Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="Screen_Results_Mean" xml:space="preserve">
+    <value>平均：</value>
+  </data>
+  <data name="Screen_Results_StdDev" xml:space="preserve">
+    <value>标准差：</value>
+  </data>
+  <data name="Screen_Results_Ratio" xml:space="preserve">
+    <value>彩黄比：</value>
+  </data>
+  <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
+    <value>数据不可用</value>
+  </data>
+  <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
+    <value>此图记录准度变化过程。
+
+如果中途失败，将假设之后判定全部为Marvelous，显示对应的变化过程。</value>
+  </data>
+  <data name="Screen_Results_Latehitwindow" xml:space="preserve">
+    <value>过晚（+{0} ms）</value>
+  </data>
+  <data name="Screen_Results_Earlyhitwindow" xml:space="preserve">
+    <value>过早（-{0} ms）</value>
+  </data>
+  <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
+    <value>此图记录Rating变化过程。
+
+如果中途失败，将假设之后判定全部为Marvelous，显示对应的变化过程。</value>
+  </data>
+  <data name="Screen_Results_SubmittingScore" xml:space="preserve">
+    <value>正在上传成绩……</value>
+  </data>
+  <data name="Screen_Results_GlobalRank" xml:space="preserve">
+    <value>全球排名</value>
+  </data>
+  <data name="Screen_Results_CountryRank" xml:space="preserve">
+    <value>国家/地区排名</value>
+  </data>
+  <data name="Screen_Results_OverallRating" xml:space="preserve">
+    <value>总体 Rating</value>
+  </data>
+  <data name="Screen_Results_OverallAccuracy" xml:space="preserve">
+    <value>总体准度</value>
+  </data>
+  <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
+    <value>非上架模式</value>
+  </data>
+  <data name="Screen_Results_Matchplayedon" xml:space="preserve">
+    <value>对局于 {0} {1}</value>
+  </data>
+  <data name="Screen_Results_FreeForAll" xml:space="preserve">
+    <value>自由</value>
+  </data>
+  <data name="Screen_Results_BattleRoyale" xml:space="preserve">
+    <value>大逃杀</value>
+  </data>
+  <data name="Screen_Results_Team" xml:space="preserve">
+    <value>组队</value>
+  </data>
+  <data name="Screen_Results_BlueTeam" xml:space="preserve">
+    <value>蓝队</value>
+  </data>
+  <data name="Screen_Results_RedTeam" xml:space="preserve">
+    <value>红队</value>
+  </data>
+  <data name="Screen_Results_haswonthematch" xml:space="preserve">
+    <value>赢得了比赛！</value>
+  </data>
+  <data name="Screen_Results_Grade" xml:space="preserve">
+    <value>成绩</value>
+  </data>
+  <data name="Screen_Results_MaxCombo" xml:space="preserve">
+    <value>最大连击</value>
+  </data>
+  <data name="Screen_Results_Marv" xml:space="preserve">
+    <value>Marv</value>
+  </data>
+  <data name="Screen_Results_Perf" xml:space="preserve">
+    <value>Perf</value>
+  </data>
+  <data name="Screen_Results_Great" xml:space="preserve">
+    <value>Great</value>
+  </data>
+  <data name="Screen_Results_Good" xml:space="preserve">
+    <value>Good</value>
+  </data>
+  <data name="Screen_Results_Okay" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+  <data name="Screen_Results_Miss" xml:space="preserve">
+    <value>Miss</value>
+  </data>
+  <data name="Screen_Results_Mods" xml:space="preserve">
+    <value>模组</value>
+  </data>
+  <data name="Screen_Results_Loadingresults" xml:space="preserve">
+    <value>正在加载成绩</value>
+  </data>
+  <data name="Screen_Results_Failedtoretrieveplayersscores" xml:space="preserve">
+    <value>加载玩家成绩失败！</value>
+  </data>
+  <data name="Screen_Results_Therewasanissuewhileretrievingthereplayforthisscore" xml:space="preserve">
+    <value>获取该成绩回放时出现问题！</value>
+  </data>
+  <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
+    <value>无法下载此成绩的回放。</value>
+  </data>
+  <data name="Screen_Results_FetchingReplay" xml:space="preserve">
+    <value>正在获取回放</value>
+  </data>
+  <data name="Screen_Results_DownloadingreplayPleasewait" xml:space="preserve">
+    <value>正在下载回放！请稍等……</value>
+  </data>
+  <data name="Screen_Results_Pleasewaitwhileyourreplayisbeingexported" xml:space="preserve">
+    <value>正在导出回放，请稍等……</value>
+  </data>
+  <data name="Screen_Results_Anerroroccuredwhileexportingthereplay" xml:space="preserve">
+    <value>导出回放时出现了问题！</value>
+  </data>
+  <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
+    <value>已经调整过一次谱面延迟了！不需要再调整一次了。</value>
+  </data>
+  <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
+    <value>没有数据，无法调整谱面延迟！</value>
+  </data>
+  <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
+    <value>调整谱面延迟</value>
+  </data>
+  <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
+    <value>谱面延迟已从 {0} ms 调整至 {1} ms。</value>
+  </data>
+  <data name="Screen_Results_Localoffsetset" xml:space="preserve">
+    <value>当前谱面延迟为 {0} ms。</value>
+  </data>
+  <data name="Screen_Results_FailedtosavelocalscoretothedatabasePleasecheckthelogs" xml:space="preserve">
+    <value>无法将本地成绩存入数据库。请查看日志！</value>
+  </data>
+  <data name="Screen_Results_TherewasanerrorwhensavingyourreplayCheckRuntimelogformoredetails" xml:space="preserve">
+    <value>保存回放时出现错误。请查看 runtime.log 日志。</value>
+  </data>
+  <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
+    <value>没有回放数据，无法转换此成绩！</value>
+  </data>
+  <data name="Screen_Options_GlobalAudioOffset" xml:space="preserve">
+    <value>全局音频偏移</value>
+  </data>
+  <data name="Screen_Options_VisualOffset" xml:space="preserve">
+    <value>视觉偏移</value>
+  </data>
+  <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
+    <value>校准偏移</value>
+  </data>
+  <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
+    <value>变速时变调</value>
+  </data>
+  <data name="Screen_Options_BackgroundBrightness" xml:space="preserve">
+    <value>背景亮度</value>
+  </data>
+  <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
+    <value>长条投度</value>
+  </data>
+  <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
+    <value>启用打击音效</value>
+  </data>
+  <data name="Screen_Options_EnableLongNoteReleaseHitsounds" xml:space="preserve">
+    <value>长条尾播放打击音效</value>
+  </data>
+  <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
+    <value>启用谱面音效</value>
+  </data>
+  <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
+    <value>短按暂停</value>
+  </data>
+  <data name="Screen_Options_EnableTapToRestart" xml:space="preserve">
+    <value>短按重试</value>
+  </data>
+  <data name="Screen_Options_SkipResultsScreenAfterQuitting" xml:space="preserve">
+    <value>退出游戏不显示结算界面</value>
+  </data>
+  <data name="Screen_Options_LockWindowsKeyduringgameplay" xml:space="preserve">
+    <value>游玩时禁用Win按键</value>
+  </data>
+  <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
+    <value>显示小节线</value>
+  </data>
+  <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
+    <value>显示打击泡泡</value>
+  </data>
+  <data name="Screen_Options_DisplayJudgementCounter" xml:space="preserve">
+    <value>显示判定计数</value>
+  </data>
+  <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
+    <value>显示计分板</value>
+  </data>
+  <data name="Screen_Options_DisplaySongTimeProgressBar" xml:space="preserve">
+    <value>显示进度条</value>
+  </data>
+  <data name="Screen_Options_DisplaySongTimeProgressBarTimeNumbers" xml:space="preserve">
+    <value>显示进度条时间</value>
+  </data>
+  <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
+    <value>启用上挡板</value>
+  </data>
+  <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
+    <value>上挡板高度</value>
+  </data>
+  <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
+    <value>启用下挡板</value>
+  </data>
+  <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
+    <value>下挡板高度</value>
+  </data>
+  <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
+    <value>将UI置于挡板之上</value>
+  </data>
+  <data name="Screen_Options_DisplayReceptorsOverLaneCovers" xml:space="preserve">
+    <value>将判定线置于挡板之上</value>
+  </data>
+  <data name="Screen_Options_CustomSkin" xml:space="preserve">
+    <value>自定义皮肤</value>
+  </data>
+  <data name="Screen_Options_CoopPlayer2Skin" xml:space="preserve">
+    <value>Co-op 玩家2 皮肤</value>
+  </data>
+  <data name="Screen_Options_DefaultSkin" xml:space="preserve">
+    <value>默认皮肤</value>
+  </data>
+  <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
+    <value>打开皮肤文件夹</value>
+  </data>
+  <data name="Screen_Options_ExportSkin" xml:space="preserve">
+    <value>导出皮肤</value>
+  </data>
+  <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
+    <value>将皮肤上传至创意工坊</value>
+  </data>
+  <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
+    <value>音符和判定线缩放</value>
+  </data>
+  <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
+    <value>游玩界面缩放</value>
+  </data>
+  <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
+    <value>以判定颜色给打击特效上色</value>
+  </data>
+  <data name="Screen_Options_Pause" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="Screen_Options_QuickRestart" xml:space="preserve">
+    <value>快速重试</value>
+  </data>
+  <data name="Screen_Options_QuickExit" xml:space="preserve">
+    <value>快速退出</value>
+  </data>
+  <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
+    <value>跳过音乐开头</value>
+  </data>
+  <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
+    <value>减慢下落速度</value>
+  </data>
+  <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
+    <value>加快下落速度</value>
+  </data>
+  <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
+    <value>减少谱面偏移</value>
+  </data>
+  <data name="Screen_Options_IncreaseMapOffset" xml:space="preserve">
+    <value>增加谱面偏移</value>
+  </data>
+  <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
+    <value>重置谱面偏移</value>
+  </data>
+  <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
+    <value>开关计分板</value>
+  </data>
+  <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
+    <value>开关聊天栏</value>
+  </data>
+  <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
+    <value>减慢音频速度</value>
+  </data>
+  <data name="Screen_Options_IncreaseGameplayRate" xml:space="preserve">
+    <value>加快音频速度</value>
+  </data>
+  <data name="Screen_Options_ToggleMirrorMod" xml:space="preserve">
+    <value>开关谱面镜像</value>
+  </data>
+  <data name="Screen_Options_TogglePitch" xml:space="preserve">
+    <value>开关变速时变调</value>
+  </data>
+  <data name="Screen_Options_RemoveAllMods" xml:space="preserve">
+    <value>重置模组</value>
+  </data>
+  <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
+    <value>暂停/继续</value>
+  </data>
+  <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
+    <value>减慢回放速度</value>
+  </data>
+  <data name="Screen_Options_IncreasePlaybackRate" xml:space="preserve">
+    <value>加快回放速度</value>
+  </data>
+  <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
+    <value>截屏</value>
+  </data>
+  <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
+    <value>打开游戏文件夹</value>
+  </data>
+  <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
+    <value>更新谱面状态</value>
+  </data>
+  <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
+    <value>更新谱面在线偏移</value>
+  </data>
+  <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
+    <value>加载其他游戏的谱面</value>
+  </data>
+  <data name="Screen_Options_DetectSongsFromOtherInstalledGames" xml:space="preserve">
+    <value>检测其他游戏的谱面</value>
+  </data>
+  <data name="Screen_Options_DisplayNotificationsFromBottomToTop" xml:space="preserve">
+    <value>自底向上展示通知</value>
+  </data>
+  <data name="Screen_Options_DisplayOnlineFriendNotifications" xml:space="preserve">
+    <value>显示玩家上线通知</value>
+  </data>
+  <data name="Screen_Options_PrioritizedGameMode" xml:space="preserve">
+    <value>主游玩模式</value>
+  </data>
+  <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
+    <value>以总体Rating推荐难度</value>
+  </data>
+  <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
+    <value>游玩时使用平滑音频/帧计时</value>
+  </data>
+  <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
+    <value>游玩时使用平滑音频开头</value>
+  </data>
+  <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
+    <value>游玩时显示HUD（Shift + F6）</value>
+  </data>
+  <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
+    <value>游玩时显示通知</value>
+  </data>
+  <data name="Screen_Options_ShowSpectators" xml:space="preserve">
+    <value>显示观战者</value>
+  </data>
+  <data name="Screen_Options_DisplayRankedAccuracyWithCustomJudgements" xml:space="preserve">
+    <value>用自定义判定窗口时显示标准判定准度</value>
+  </data>
+  <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
+    <value>偏移条偏移滞留时长</value>
+  </data>
+  <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
+    <value>过早/过晚时给偏移条上色</value>
+  </data>
+  <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
+    <value>打击过早/过晚判定窗口</value>
+  </data>
+  <data name="Screen_Options_EnableComboAlerts" xml:space="preserve">
+    <value>连击提示</value>
+  </data>
+  <data name="Screen_Options_DisplayUnbeatableScores" xml:space="preserve">
+    <value>显示无法超越的成绩</value>
+  </data>
+  <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
+    <value>失败时继续游玩</value>
+  </data>
+  <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
+    <value>音频变速时改变下落速度（百分比）</value>
+  </data>
+  <data name="Screen_Options_Display1v1TournamentOverlay" xml:space="preserve">
+    <value>显示1v1竞赛HUD</value>
+  </data>
+  <data name="Screen_Options_Display1v1PlayfieldScores" xml:space="preserve">
+    <value>显示1v1分数</value>
+  </data>
+  <data name="Screen_Options_ReloadSkinOnChange" xml:space="preserve">
+    <value>改变皮肤时自动重载</value>
+  </data>
+  <data name="Screen_Options_TogglePlaytestAutoplay" xml:space="preserve">
+    <value>开关试玩</value>
+  </data>
+  <data name="Screen_Options_InvertEditorScrolling" xml:space="preserve">
+    <value>编辑器内反转鼠标滚轮</value>
+  </data>
+  <data name="Screen_Options_InvertScrolling" xml:space="preserve">
+    <value>反转鼠标滚轮</value>
+  </data>
+  <data name="Screen_Options_AutomaticallyLogIntoTheServer" xml:space="preserve">
+    <value>自动登录服务器</value>
+  </data>
+  <data name="Screen_Options_DisplaySongRequestNotifications" xml:space="preserve">
+    <value>显示打歌请求通知</value>
+  </data>
+  <data name="Screen_Options_DisplayWarningForPausing" xml:space="preserve">
+    <value>暂停时显示警告</value>
+  </data>
+  <data name="Screen_Options_DisplayWarningForFailing" xml:space="preserve">
+    <value>失败时显示警告</value>
+  </data>
+  <data name="Screen_Options_DisplayEpilepsyWarning" xml:space="preserve">
+    <value>显示光敏性癫痫警告</value>
+  </data>
+  <data name="Screen_Options_DisplayMenuAudioVisualizer" xml:space="preserve">
+    <value>菜单中显示音频可视化</value>
+  </data>
+  <data name="Screen_Options_DisplayFailedLocalScores" xml:space="preserve">
+    <value>显示本地失败成绩</value>
+  </data>
+  <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
+    <value>导入谱面后删除原文件</value>
+  </data>
+  <data name="Screen_Options_DiscordRichPresence" xml:space="preserve">
+    <value>启用Discord在线状态</value>
+  </data>
+  <data name="Screen_Options_DisplayRankedAccuracyForLocalLeaderboards" xml:space="preserve">
+    <value>在本地排行榜展示标准判定准度</value>
+  </data>
+  <data name="Screen_Options_LowerFPSOnInactiveWindow" xml:space="preserve">
+    <value>不聚焦游戏窗口时降低FPS</value>
+  </data>
+  <data name="Screen_Options_EnableHighProcessPriority" xml:space="preserve">
+    <value>启用高优先级进程</value>
+  </data>
+  <data name="Screen_Options_PreferWayland" xml:space="preserve">
+    <value>偏好Wayland</value>
+  </data>
+  <data name="Screen_Options_PrefermacOSInputHandling" xml:space="preserve">
+    <value>偏好macOS输入</value>
+  </data>
+  <data name="Screen_Options_EditorImGuiScale" xml:space="preserve">
+    <value>编辑器ImGui缩放</value>
+  </data>
+  <data name="Screen_Options_OPTIONSMENU" xml:space="preserve">
+    <value>选项菜单</value>
+  </data>
+  <data name="Screen_Options_Searchforoptions" xml:space="preserve">
+    <value>搜索选项……</value>
+  </data>
+  <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
+    <value>1K 键位</value>
+  </data>
+  <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
+    <value>1K 下落速度</value>
+  </data>
+  <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
+    <value>1K 下落方向</value>
+  </data>
+  <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
+    <value>1K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 1K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
+    <value>1K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
+    <value>偏好 1K 难度</value>
+  </data>
+  <data name="Screen_Options_1Keys" xml:space="preserve">
+    <value>1K</value>
+  </data>
+  <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
+    <value>2K 键位</value>
+  </data>
+  <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
+    <value>2K 下落速度</value>
+  </data>
+  <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
+    <value>2K 下落方向</value>
+  </data>
+  <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
+    <value>2K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 2K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
+    <value>2K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
+    <value>偏好 2K 难度</value>
+  </data>
+  <data name="Screen_Options_2Keys" xml:space="preserve">
+    <value>2K</value>
+  </data>
+  <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
+    <value>3K</value>
+  </data>
+  <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
+    <value>3K 下落速度</value>
+  </data>
+  <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
+    <value>3K 下落方向</value>
+  </data>
+  <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
+    <value>3K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 3K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
+    <value>3K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
+    <value>偏好 3K 难度</value>
+  </data>
+  <data name="Screen_Options_3Keys" xml:space="preserve">
+    <value>3K</value>
+  </data>
+  <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
+    <value>4K 键位</value>
+  </data>
+  <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
+    <value>4K 下落速度</value>
+  </data>
+  <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
+    <value>4K 下落方向</value>
+  </data>
+  <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
+    <value>4K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 4K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
+    <value>4K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
+    <value>偏好 4K 难度</value>
+  </data>
+  <data name="Screen_Options_4Keys" xml:space="preserve">
+    <value>4K</value>
+  </data>
+  <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
+    <value>5K 键位</value>
+  </data>
+  <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
+    <value>5K 下落速度</value>
+  </data>
+  <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
+    <value>5K 下落方向</value>
+  </data>
+  <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
+    <value>5K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 5K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
+    <value>5K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
+    <value>偏好 5K 难度</value>
+  </data>
+  <data name="Screen_Options_5Keys" xml:space="preserve">
+    <value>5K</value>
+  </data>
+  <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
+    <value>6K 键位</value>
+  </data>
+  <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
+    <value>6K 下落速度</value>
+  </data>
+  <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
+    <value>6K 下落方向</value>
+  </data>
+  <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
+    <value>6K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 6K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
+    <value>6K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
+    <value>偏好 6K 难度</value>
+  </data>
+  <data name="Screen_Options_6Keys" xml:space="preserve">
+    <value>6K</value>
+  </data>
+  <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
+    <value>7K 键位</value>
+  </data>
+  <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
+    <value>7K 下落速度</value>
+  </data>
+  <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
+    <value>7K 下落方向</value>
+  </data>
+  <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
+    <value>7K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 7K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
+    <value>7K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
+    <value>偏好 7K 难度</value>
+  </data>
+  <data name="Screen_Options_7Keys" xml:space="preserve">
+    <value>7K</value>
+  </data>
+  <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
+    <value>8K 键位</value>
+  </data>
+  <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
+    <value>8K 下落速度</value>
+  </data>
+  <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
+    <value>8K 下落方向</value>
+  </data>
+  <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
+    <value>8K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 8K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
+    <value>8K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
+    <value>偏好 8K 难度</value>
+  </data>
+  <data name="Screen_Options_8Keys" xml:space="preserve">
+    <value>8K</value>
+  </data>
+  <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
+    <value>9K 键位</value>
+  </data>
+  <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
+    <value>9K 下落速度</value>
+  </data>
+  <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
+    <value>9K 下落方向</value>
+  </data>
+  <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
+    <value>9K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 9K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
+    <value>9K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
+    <value>偏好 9K 难度</value>
+  </data>
+  <data name="Screen_Options_9Keys" xml:space="preserve">
+    <value>9K</value>
+  </data>
+  <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
+    <value>10K 键位</value>
+  </data>
+  <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
+    <value>10K 下落速度</value>
+  </data>
+  <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
+    <value>10K 下落方向</value>
+  </data>
+  <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
+    <value>10K 皿键位</value>
+  </data>
+  <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
+    <value>将 10K 皿置于左侧</value>
+  </data>
+  <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
+    <value>10K Co-op 键位</value>
+  </data>
+  <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
+    <value>偏好 10K 难度</value>
+  </data>
+  <data name="Screen_Options_10Keys" xml:space="preserve">
+    <value>10K</value>
+  </data>
+  <data name="Screen_Options_VideoSettings" xml:space="preserve">
+    <value>视频设置</value>
+  </data>
+  <data name="Screen_Options_AudioSettings" xml:space="preserve">
+    <value>音频设置</value>
+  </data>
+  <data name="Screen_Options_LanguageSettings" xml:space="preserve">
+    <value>语言设置</value>
+  </data>
+  <data name="Screen_Options_GameplaySettings" xml:space="preserve">
+    <value>游戏设置</value>
+  </data>
+  <data name="Screen_Options_SkinSettings" xml:space="preserve">
+    <value>皮肤设置</value>
+  </data>
+  <data name="Screen_Options_InputSettings" xml:space="preserve">
+    <value>输入设置</value>
+  </data>
+  <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
+    <value>游戏模式特定设置</value>
+  </data>
+  <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
+    <value>杂项设置</value>
+  </data>
+  <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
+    <value>高级设置</value>
+  </data>
+  <data name="Screen_Options_SearchResult" xml:space="preserve">
+    <value>{0} 个结果</value>
+  </data>
+  <data name="Screen_Options_SearchResults" xml:space="preserve">
+    <value>{0}个结果</value>
+  </data>
+  <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
+    <value>音乐已暂停！</value>
+  </data>
+  <data name="Screen_Download_Musicisnowplaying" xml:space="preserve">
+    <value>音乐已继续！</value>
+  </data>
+  <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
+    <value>已经在下载此谱面了！</value>
+  </data>
+  <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
+    <value>推荐难度</value>
+  </data>
+  <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
+    <value>希望推荐所选模式下适应您水平的谱面吗？</value>
+  </data>
+  <data name="Screen_Download_Typetosearch" xml:space="preserve">
+    <value>输入以搜索……</value>
+  </data>
+  <data name="Screen_Download_MAPSETSFOUND" xml:space="preserve">
+    <value>个歌曲结果</value>
+  </data>
+  <data name="Screen_Download_MAPSETFOUND" xml:space="preserve">
+    <value>个歌曲结果</value>
+  </data>
+  <data name="Screen_Download_STATUS" xml:space="preserve">
+    <value>状态：</value>
+  </data>
+  <data name="Screen_Download_All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Screen_Download_Unranked" xml:space="preserve">
+    <value>未上架</value>
+  </data>
+  <data name="Screen_Download_Ranked" xml:space="preserve">
+    <value>上架</value>
+  </data>
+  <data name="Screen_Download_ClanRanked" xml:space="preserve">
+    <value>战队记分</value>
+  </data>
+  <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
+    <value>难度：</value>
+  </data>
+  <data name="Screen_Download_None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="Screen_Download_Beginner" xml:space="preserve">
+    <value>初学者</value>
+  </data>
+  <data name="Screen_Download_Easy" xml:space="preserve">
+    <value>简单</value>
+  </data>
+  <data name="Screen_Download_Normal" xml:space="preserve">
+    <value>普通</value>
+  </data>
+  <data name="Screen_Download_Hard" xml:space="preserve">
+    <value>困难</value>
+  </data>
+  <data name="Screen_Download_Insane" xml:space="preserve">
+    <value>极难</value>
+  </data>
+  <data name="Screen_Download_Expert" xml:space="preserve">
+    <value>高手</value>
+  </data>
+  <data name="Screen_Download_MODE" xml:space="preserve">
+    <value>模式：</value>
+  </data>
+  <data name="Screen_Download_SORTBY" xml:space="preserve">
+    <value>排序：</value>
+  </data>
+  <data name="Screen_Download_Newest" xml:space="preserve">
+    <value>最新</value>
+  </data>
+  <data name="Screen_Download_DateSubmitted" xml:space="preserve">
+    <value>上传时间</value>
+  </data>
+  <data name="Screen_Download_Length" xml:space="preserve">
+    <value>长度</value>
+  </data>
+  <data name="Screen_Download_Difficulty" xml:space="preserve">
+    <value>难度</value>
+  </data>
+  <data name="Screen_Download_MaxCombo" xml:space="preserve">
+    <value>最大连击</value>
+  </data>
+  <data name="Screen_Download_BPM" xml:space="preserve">
+    <value>BPM</value>
+  </data>
+  <data name="Screen_Download_LN" xml:space="preserve">
+    <value>长条比例</value>
+  </data>
+  <data name="Screen_Download_PlayCount" xml:space="preserve">
+    <value>总游玩数</value>
+  </data>
+  <data name="Screen_Download_Ascending" xml:space="preserve">
+    <value>升序</value>
+  </data>
+  <data name="Screen_Download_Descending" xml:space="preserve">
+    <value>降序</value>
+  </data>
+  <data name="Screen_Download_DownloadMaps" xml:space="preserve">
+    <value>下载谱面</value>
+  </data>
+  <data name="Screen_Download_Findnewsongstoplayfromthecommunity" xml:space="preserve">
+    <value>寻找社区谱面游玩</value>
+  </data>
+  <data name="Screen_Download_Finisheddownloading01" xml:space="preserve">
+    <value>{0} - {1} 已完成下载！</value>
+  </data>
+  <data name="Screen_Download_By" xml:space="preserve">
+    <value>谱师：</value>
+  </data>
+  <data name="Screen_Download_LNs" xml:space="preserve">
+    <value>长条比例：</value>
+  </data>
+  <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
+    <value>过滤选项</value>
+  </data>
+  <data name="Screen_Download_UploadDate" xml:space="preserve">
+    <value>上传日期</value>
+  </data>
+  <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
+    <value>更新日期</value>
+  </data>
+  <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
+    <value>显示已有谱面</value>
+  </data>
+  <data name="Screen_Download_DisplayExplicitMapsets" xml:space="preserve">
+    <value>显示包含不宜内容的谱面</value>
+  </data>
+  <data name="Screen_Download_Maps" xml:space="preserve">
+    <value>难度数量：</value>
+  </data>
+  <data name="Screen_Download_NoSongSelected" xml:space="preserve">
+    <value>未选择歌曲</value>
+  </data>
+  <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
+    <value>双击一首音乐以开始下载。
+单次点击可以预览音乐。
+您可使用下方的过滤选项细化搜索。</value>
+  </data>
+  <data name="Screen_Download_EndDate" xml:space="preserve">
+    <value>截止日期</value>
+  </data>
+  <data name="Screen_Download_StartDate" xml:space="preserve">
+    <value>起始日期</value>
+  </data>
+  <data name="Screen_Download_DifficultyRating" xml:space="preserve">
+    <value>难度</value>
+  </data>
+  <data name="Screen_Download_MaxRating" xml:space="preserve">
+    <value>最高难度</value>
+  </data>
+  <data name="Screen_Download_MinRating" xml:space="preserve">
+    <value>最低难度</value>
+  </data>
+  <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
+    <value>总游玩数</value>
+  </data>
+  <data name="Screen_Download_MaxPlays" xml:space="preserve">
+    <value>最多游玩数</value>
+  </data>
+  <data name="Screen_Download_MinPlays" xml:space="preserve">
+    <value>最少游玩数</value>
+  </data>
+  <data name="Screen_Download_LongNote" xml:space="preserve">
+    <value>长条比例%</value>
+  </data>
+  <data name="Screen_Download_MaxLN" xml:space="preserve">
+    <value>最大长条比例%</value>
+  </data>
+  <data name="Screen_Download_MinLN" xml:space="preserve">
+    <value>最低长条比例%</value>
+  </data>
+  <data name="Screen_Download_LengthSeconds" xml:space="preserve">
+    <value>长度（秒）</value>
+  </data>
+  <data name="Screen_Download_MaxLength" xml:space="preserve">
+    <value>最长长度</value>
+  </data>
+  <data name="Screen_Download_MinLength" xml:space="preserve">
+    <value>最短长度</value>
+  </data>
+  <data name="Screen_Download_SkillLevel" xml:space="preserve">
+    <value>水平</value>
+  </data>
+  <data name="Screen_Download_MinCombo" xml:space="preserve">
+    <value>最低连击</value>
+  </data>
+  <data name="Screen_Download_MaxBPM" xml:space="preserve">
+    <value>最高BPM</value>
+  </data>
+  <data name="Screen_Download_MinBPM" xml:space="preserve">
+    <value>最低BPM</value>
+  </data>
+  <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
+    <value>推荐难度</value>
+  </data>
+  <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
+    <value>推荐难度</value>
+  </data>
+  <data name="Screen_Download_Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Screen_Download_Select" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="Screen_Download_Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="Screen_Download_OnlineListing" xml:space="preserve">
+    <value>网页查看</value>
+  </data>
+  <data name="Screen_Download_1Keys" xml:space="preserve">
+    <value>1K</value>
+  </data>
+  <data name="Screen_Download_2Keys" xml:space="preserve">
+    <value>2K</value>
+  </data>
+  <data name="Screen_Download_3Keys" xml:space="preserve">
+    <value>3K</value>
+  </data>
+  <data name="Screen_Download_4Keys" xml:space="preserve">
+    <value>4K</value>
+  </data>
+  <data name="Screen_Download_5Keys" xml:space="preserve">
+    <value>5K</value>
+  </data>
+  <data name="Screen_Download_6Keys" xml:space="preserve">
+    <value>6K</value>
+  </data>
+  <data name="Screen_Download_7Keys" xml:space="preserve">
+    <value>7K</value>
+  </data>
+  <data name="Screen_Download_8Keys" xml:space="preserve">
+    <value>8K</value>
+  </data>
+  <data name="Screen_Download_9Keys" xml:space="preserve">
+    <value>9K</value>
+  </data>
+  <data name="Screen_Download_10Keys" xml:space="preserve">
+    <value>10K</value>
+  </data>
+  <data name="Screen_Multi_ConfirmReadyTitle" xml:space="preserve">
+    <value>确认准备</value>
+  </data>
+  <data name="Screen_Multi_ConfirmReadyMessage" xml:space="preserve">
+    <value>以房主身份准备将开始游戏。确认在有玩家没有准备时开始游戏吗？</value>
+  </data>
+  <data name="Screen_Multi_ExitToLobbyTitle" xml:space="preserve">
+    <value>退出至大厅</value>
+  </data>
+  <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
+    <value>确认退出至大厅吗？</value>
+  </data>
+  <data name="Screen_Multi_Leave" xml:space="preserve">
+    <value>离开</value>
+  </data>
+  <data name="Screen_Multi_Commands" xml:space="preserve">
+    <value>指令</value>
+  </data>
+  <data name="Screen_Multi_SelectMap" xml:space="preserve">
+    <value>选择谱面</value>
+  </data>
+  <data name="Screen_Multi_Modifiers" xml:space="preserve">
+    <value>模组</value>
+  </data>
+  <data name="Screen_Multi_Leaderboard" xml:space="preserve">
+    <value>排行榜</value>
+  </data>
+  <data name="Screen_Multi_History" xml:space="preserve">
+    <value>历史</value>
+  </data>
+  <data name="Screen_Multi_SwitchTeams" xml:space="preserve">
+    <value>切换队伍</value>
+  </data>
+  <data name="Screen_Multi_NotReady" xml:space="preserve">
+    <value>未准备</value>
+  </data>
+  <data name="Screen_Multi_ReadyUp" xml:space="preserve">
+    <value>准备</value>
+  </data>
+  <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
+    <value>正在等待房主开始游戏</value>
+  </data>
+  <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
+    <value>更改房间名称</value>
+  </data>
+  <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
+    <value>输入该房间的新名称……</value>
+  </data>
+  <data name="Screen_Multi_EnterNamePlaceholder" xml:space="preserve">
+    <value>输入名称……</value>
+  </data>
+  <data name="Screen_Multi_ChangeGamePasswordTitle" xml:space="preserve">
+    <value>更改房间密码</value>
+  </data>
+  <data name="Screen_Multi_ChangeGamePasswordMessage" xml:space="preserve">
+    <value>输入该房间的新密码……</value>
+  </data>
+  <data name="Screen_Multi_EnterPasswordPlaceholder" xml:space="preserve">
+    <value>输入密码……</value>
+  </data>
+  <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
+    <value>上传未提交的谱面</value>
+  </data>
+  <data name="Screen_Multi_UploadUnsubmittedMapsetConfirmMessage" xml:space="preserve">
+    <value>您希望暂时上传谱面，使其他玩家下载吗？</value>
+  </data>
+  <data name="Screen_Multi_UploadingUnsubmittedMapsetTitle" xml:space="preserve">
+    <value>正在上传未提交的谱面</value>
+  </data>
+  <data name="Screen_Multi_UploadingUnsubmittedMapsetMessage" xml:space="preserve">
+    <value>正在上传谱面，请稍等……</value>
+  </data>
+  <data name="Screen_Multi_SuccessfullyUploadedUnsubmittedMapset" xml:space="preserve">
+    <value>已成功将未提交的谱面上传至房间！</value>
+  </data>
+  <data name="Screen_Multi_UploadMapsetError" xml:space="preserve">
+    <value>上传谱面时出现错误。</value>
+  </data>
+  <data name="Screen_Multi_Loading" xml:space="preserve">
+    <value>加载中……</value>
+  </data>
+  <data name="Screen_Multi_Referee" xml:space="preserve">
+    <value>裁判</value>
+  </data>
+  <data name="Screen_Multi_WinsAbbreviation" xml:space="preserve">
+    <value>{0} 胜</value>
+  </data>
+  <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
+    <value>多人游戏</value>
+  </data>
+  <data name="Screen_Multiplayer_HeaderSubtitle" xml:space="preserve">
+    <value>房间</value>
+  </data>
+  <data name="Screen_Multiplayer_HeaderDescription" xml:space="preserve">
+    <value>与其他玩家一起游玩</value>
+  </data>
+  <data name="Screen_Multiplayer_Leave" xml:space="preserve">
+    <value>离开</value>
+  </data>
+  <data name="Screen_Multiplayer_Options" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="Screen_Multiplayer_MatchHistory" xml:space="preserve">
+    <value>历史记录</value>
+  </data>
+  <data name="Screen_Multiplayer_Commands" xml:space="preserve">
+    <value>指令</value>
+  </data>
+  <data name="Screen_Multiplayer_GameMode" xml:space="preserve">
+    <value>模式</value>
+  </data>
+  <data name="Screen_Multiplayer_MaxPlayers" xml:space="preserve">
+    <value>玩家上限</value>
+  </data>
+  <data name="Screen_Multiplayer_AutoHostRotation" xml:space="preserve">
+    <value>自动房主轮换</value>
+  </data>
+  <data name="Screen_Multiplayer_FreeMod" xml:space="preserve">
+    <value>自由选择模组</value>
+  </data>
+  <data name="Screen_Multiplayer_FreeRate" xml:space="preserve">
+    <value>自由选择速度</value>
+  </data>
+  <data name="Screen_Multiplayer_EnablePreview" xml:space="preserve">
+    <value>允许谱面预览</value>
+  </data>
+  <data name="Screen_Multiplayer_HealthType" xml:space="preserve">
+    <value>血量类型</value>
+  </data>
+  <data name="Screen_Multiplayer_Lives" xml:space="preserve">
+    <value>生命数</value>
+  </data>
+  <data name="Screen_Multiplayer_AllowedGameModes" xml:space="preserve">
+    <value>允许的模式</value>
+  </data>
+  <data name="Screen_Multiplayer_MaximumSongLength" xml:space="preserve">
+    <value>最长时长</value>
+  </data>
+  <data name="Screen_Multiplayer_DifficultyRange" xml:space="preserve">
+    <value>难度范围</value>
+  </data>
+  <data name="Screen_Multiplayer_LongNotePercentageRange" xml:space="preserve">
+    <value>长条比例%范围</value>
+  </data>
+  <data name="Screen_Multiplayer_StartMatch" xml:space="preserve">
+    <value>开始游戏</value>
+  </data>
+  <data name="Screen_Multiplayer_ReadyUp" xml:space="preserve">
+    <value>准备</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitUntilMatchFinishes" xml:space="preserve">
+    <value>请在当前游戏结束后再进行此操作。</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeReadying" xml:space="preserve">
+    <value>请在当前游戏结束后再准备。</value>
+  </data>
+  <data name="Screen_Multiplayer_CannotReadyWithoutMap" xml:space="preserve">
+    <value>您需要下载谱面才能准备！</value>
+  </data>
+  <data name="Screen_Multiplayer_SelectMap" xml:space="preserve">
+    <value>选择谱面</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMap" xml:space="preserve">
+    <value>请在当前游戏结束后再切换谱面。</value>
+  </data>
+  <data name="Screen_Multiplayer_CannotSelectMapIfNotHost" xml:space="preserve">
+    <value>您不是房主，无法切换谱面！</value>
+  </data>
+  <data name="Screen_Multiplayer_Unready" xml:space="preserve">
+    <value>取消准备</value>
+  </data>
+  <data name="Screen_Multiplayer_Ready" xml:space="preserve">
+    <value>准备</value>
+  </data>
+  <data name="Screen_Multiplayer_NotReady" xml:space="preserve">
+    <value>取消准备</value>
+  </data>
+  <data name="Screen_Multiplayer_CancelMatchStart" xml:space="preserve">
+    <value>取消游戏</value>
+  </data>
+  <data name="Screen_Multiplayer_Modifiers" xml:space="preserve">
+    <value>模组</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMods" xml:space="preserve">
+    <value>请在当前游戏结束后再更改模组。</value>
+  </data>
+  <data name="Screen_Multiplayer_ChangeTeam" xml:space="preserve">
+    <value>更改队伍</value>
+  </data>
+  <data name="Screen_Multiplayer_MustUnreadyToSwitchTeams" xml:space="preserve">
+    <value>您需要先取消准备才能更改队伍！</value>
+  </data>
+  <data name="Screen_Multiplayer_CannotSwitchTeamsDuringCountdown" xml:space="preserve">
+    <value>倒计时开始时无法更改队伍</value>
+  </data>
+  <data name="Screen_Multiplayer_ViewProfile" xml:space="preserve">
+    <value>查看个人资料</value>
+  </data>
+  <data name="Screen_Multiplayer_SteamProfile" xml:space="preserve">
+    <value>查看Steam资料</value>
+  </data>
+  <data name="Screen_Multiplayer_KickPlayer" xml:space="preserve">
+    <value>移除玩家</value>
+  </data>
+  <data name="Screen_Multiplayer_GiveHost" xml:space="preserve">
+    <value>设为房主</value>
+  </data>
+  <data name="Screen_Multiplayer_ChangeTeamWithTeam" xml:space="preserve">
+    <value>更改队伍 ({0})</value>
+  </data>
+  <data name="Screen_Multiplayer_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Screen_Multiplayer_OptionsFor" xml:space="preserve">
+    <value>{0} 选项</value>
+  </data>
+  <data name="Screen_Multiplayer_Loading" xml:space="preserve">
+    <value>加载中……</value>
+  </data>
+  <data name="Screen_Multiplayer_Wins" xml:space="preserve">
+    <value>{0} 胜</value>
+  </data>
+  <data name="Screen_Multiplayer_Referee" xml:space="preserve">
+    <value>裁判</value>
+  </data>
+  <data name="Screen_Multiplayer_PlayersCount" xml:space="preserve">
+    <value>（{0}/{1}）玩家</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitingToStart" xml:space="preserve">
+    <value>等待开始</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitingToStartOneDot" xml:space="preserve">
+    <value>等待开始。</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitingToStartTwoDots" xml:space="preserve">
+    <value>等待开始。。</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitingToStartThreeDots" xml:space="preserve">
+    <value>等待开始。。。</value>
+  </data>
+  <data name="Screen_Multiplayer_WaitingForServer" xml:space="preserve">
+    <value>等待服务器</value>
+  </data>
+  <data name="Screen_Multiplayer_MatchIsNowStarting" xml:space="preserve">
+    <value>游戏即将开始：{0}</value>
+  </data>
+  <data name="Screen_Multiplayer_MatchInProgress" xml:space="preserve">
+    <value>游戏进行中。请等待下一场！</value>
+  </data>
+  <data name="Screen_Multiplayer_ModsNone" xml:space="preserve">
+    <value>模组：无</value>
+  </data>
+  <data name="Screen_Multiplayer_HostSelectingMap" xml:space="preserve">
+    <value>房主正在更换谱面！</value>
+  </data>
+  <data name="Screen_Multiplayer_PleaseWait" xml:space="preserve">
+    <value>请稍等……</value>
+  </data>
+  <data name="Screen_Multiplayer_MapInfo" xml:space="preserve">
+    <value>谱师：{0} | 长度：{1} | BPM：{2} | 长条比例：{3}%</value>
+  </data>
+  <data name="Screen_Multiplayer_MapMissingClickToDownload" xml:space="preserve">
+    <value>您没有这张谱面。点此下载！</value>
+  </data>
+  <data name="Screen_Multiplayer_MapMissingDownloadNotAvailable" xml:space="preserve">
+    <value>您没有这张谱面。此谱面无法下载！</value>
+  </data>
+  <data name="Screen_Multiplayer_MapsetAlreadyDownloading" xml:space="preserve">
+    <value>谱面已经在下载中！</value>
+  </data>
+  <data name="Screen_Multiplayer_DownloadingMap" xml:space="preserve">
+    <value>正在下载谱面：{0}%</value>
+  </data>
+  <data name="Screen_Multiplayer_DownloadFailed" xml:space="preserve">
+    <value>下载失败！</value>
+  </data>
+  <data name="Screen_Multiplayer_DownloadComplete" xml:space="preserve">
+    <value>下载完成！</value>
+  </data>
+  <data name="Screen_Multiplayer_MatchStartedMissingMap" xml:space="preserve">
+    <value>游戏已开始，但您没有谱面！</value>
+  </data>
+  <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
+    <value>游戏已开始。点击在网页中以裁判身份观战。</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
+    <value>房间信息</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_ViewInformationAboutMatch" xml:space="preserve">
+    <value>查看房间信息</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_RulesetLabel" xml:space="preserve">
+    <value>玩法：</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_FreeForAll" xml:space="preserve">
+    <value>自由</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Team" xml:space="preserve">
+    <value>组队</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_ModeLabel" xml:space="preserve">
+    <value>模式：</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_4Keys" xml:space="preserve">
+    <value>4K</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_7Keys" xml:space="preserve">
+    <value>7K</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_MapStatusLabel" xml:space="preserve">
+    <value>谱面状态：</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Imported" xml:space="preserve">
+    <value>已导入</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Uploaded" xml:space="preserve">
+    <value>已上传</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Unsubmitted" xml:space="preserve">
+    <value>未上传</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_RoomVisibilityLabel" xml:space="preserve">
+    <value>房间可见度</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Open" xml:space="preserve">
+    <value>开放</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Full" xml:space="preserve">
+    <value>满员</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_GamesFound" xml:space="preserve">
+    <value>个房间</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_GameFound" xml:space="preserve">
+    <value>个房间</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
+    <value>搜索房间……</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_CreateGame" xml:space="preserve">
+    <value>创建房间</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_QuickMatch" xml:space="preserve">
+    <value>快速加入</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_NoAvailableOpenGames" xml:space="preserve">
+    <value>没有开放房间可加入。</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_EnterGamePasswordTitle" xml:space="preserve">
+    <value>输入房间密码</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_EnterGamePasswordMessage" xml:space="preserve">
+    <value>输入密码以进入房间……</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_EnterPasswordPlaceholder" xml:space="preserve">
+    <value>输入密码……</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_JoiningGameTitle" xml:space="preserve">
+    <value>正在加入游戏</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_JoiningGameMessage" xml:space="preserve">
+    <value>正在连接至房间。请稍等……</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_CreateMultiplayerGameTitle" xml:space="preserve">
+    <value>创建房间</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_CreateMultiplayerGameMessage" xml:space="preserve">
+    <value>填入房间信息……</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_GameName" xml:space="preserve">
+    <value>房间名称</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_ChooseGameNamePlaceholder" xml:space="preserve">
+    <value>选择房间名称……</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_CannotCreateGameWithoutMap" xml:space="preserve">
+    <value>创建房间时必须选择一张谱面！</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_MaxPlayersLabel" xml:space="preserve">
+    <value>人数上限：</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_LoseALifeUponFailing" xml:space="preserve">
+    <value>失败时扣除一条命</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_FreeMod" xml:space="preserve">
+    <value>自由选择模组</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_FreeRate" xml:space="preserve">
+    <value>自由选择速度</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
+    <value>难度区间</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
+    <value>任意</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
+    <value>任意</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
+    <value>任意</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
+    <value>长条比例%范围</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_EnablePreview" xml:space="preserve">
+    <value>允许谱面预览</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AutoHost" xml:space="preserve">
+    <value>自动主持</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Ruleset" xml:space="preserve">
+    <value>游戏方式</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_MaxPlayers" xml:space="preserve">
+    <value>人数上限</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_Players" xml:space="preserve">
+    <value>玩家</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_AllowedGameModes" xml:space="preserve">
+    <value>允许的模式</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_InProgress" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_HostRotation" xml:space="preserve">
+    <value>房主轮换</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_LifeCount" xml:space="preserve">
+    <value>生命数量</value>
+  </data>
+  <data name="Screen_MultiplayerLobby_MaximumSongLength" xml:space="preserve">
+    <value>最长时长</value>
+  </data>
+</root>

@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics;
+using Wobble.Graphics.Shaders;
 using Quaver.Shared.Helpers;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Managers;
 
@@ -36,21 +33,39 @@ namespace Quaver.Shared.Screens.Options.Search
         /// <param name="currentSearchQuery"></param>
         /// <param name="isOptionFocused"></param>
         public OptionsHeaderSearch(Bindable<string> currentSearchQuery, Bindable<bool> isOptionFocused)
-            : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "",
-                "Search for options...")
+            : base(new ScalableVector2(300, 34), FontManager.GetWobbleFont(Fonts.InterBold), 18, "",
+                OptionsLocalization.Get("Search for options..."))
         {
             CurrentSearchQuery = currentSearchQuery;
             IsOptionFocused = isOptionFocused;
 
             AllowSubmission = false;
             Tint = ColorHelper.HexToColor("#2F2F2F");
-            Image = UserInterface.SearchBox;
             AlwaysFocused = false;
+
+            Image = RoundedRectTextureCache.Get(Width, Height, Height / 2f);
+            InputText.UsePreviousSpriteBatchOptions = true;
+            Cursor.UsePreviousSpriteBatchOptions = true;
+            SelectedSprite.UsePreviousSpriteBatchOptions = true;
 
             CreateSearchIcon();
 
             StoppedTypingActionCalltime = 400;
             OnStoppedTyping += StoppedTyping;
+        }
+
+        /// <inheritdoc />
+        protected override void OnRectangleRecalculated()
+        {
+            base.OnRectangleRecalculated();
+
+            if (Width <= 0 || Height <= 0)
+                return;
+
+            var texture = RoundedRectTextureCache.Get(Width, Height, Height / 2f);
+
+            if (Image != texture)
+                Image = texture;
         }
 
         /// <inheritdoc />

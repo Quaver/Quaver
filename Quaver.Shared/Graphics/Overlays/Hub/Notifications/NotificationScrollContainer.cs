@@ -97,7 +97,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Notifications
         /// </summary>
         private void CreateTextNoNotifications()
         {
-            NoNotifications = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            NoNotifications = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

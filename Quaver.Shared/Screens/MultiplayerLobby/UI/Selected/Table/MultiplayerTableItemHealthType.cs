@@ -20,16 +20,16 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 ClickAction = () => checkbox?.FireButtonClickEvent();
         }
 
-        public override string GetName() => "Lose A Life Upon Failing";
+        public override string GetName() => MultiplayerLobbyLocalization.Get("LoseALifeUponFailing");
 
         public override string GetValue()
         {
             switch ((MultiplayerHealthType) SelectedGame.Value.HealthType)
             {
                 case MultiplayerHealthType.Manual_Regeneration:
-                    return "No";
+                    return MultiplayerLobbyLocalization.Get("No");
                 case MultiplayerHealthType.Lives:
-                    return "Yes";
+                    return MultiplayerLobbyLocalization.Get("Yes");
                 default:
                     throw new ArgumentOutOfRangeException();
             }

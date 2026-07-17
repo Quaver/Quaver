@@ -242,6 +242,18 @@ namespace Quaver.Shared.Database.Scores
         public string Country { get; set; }
 
         /// <summary>
+        ///     The clan tag of the player
+        /// </summary>
+        [Ignore]
+        public string ClanTag { get; set; }
+
+        /// <summary>
+        ///     The clan accent color of the player
+        /// </summary>
+        [Ignore]
+        public string ClanAccentColor { get; set; }
+
+        /// <summary>
         ///     The judgements received from online for the scoreboard
         /// </summary>
         [Ignore]
@@ -337,7 +349,9 @@ namespace Quaver.Shared.Database.Scores
                 CountMiss = score.CountMiss,
                 CountMineHit = score.CountMineHit,
                 Mods = (long)score.Mods,
-                Country = score.Country
+                Country = score.Country,
+                ClanTag = score.ClanTag,
+                ClanAccentColor = score.ClanAccentColor
             };
 
             if (score.Hits == null)

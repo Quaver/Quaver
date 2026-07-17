@@ -258,7 +258,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Rating
                 Size = new ScalableVector2(ContentContainer.Width, thickness),
             };
 
-            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{rating:f2}", 20,
+            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{rating:f2}", 18,
                 false)
             {
                 Parent = line,

@@ -41,19 +41,17 @@ using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Localization;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
-using Quaver.Shared.Screens.Beta;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Initialization;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Menu;
-using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
@@ -61,6 +59,7 @@ using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.AutoMods;
+using Quaver.Shared.Screens.Tests.ButtonPerformance;
 using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Chat;
 using Quaver.Shared.Screens.Tests.CheckboxContainers;
@@ -110,6 +109,7 @@ using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
@@ -277,6 +277,38 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrame { get; set; }
 
         /// <summary>
+        ///     Used to detect when to mute/restore audio if the user's window isn't active.
+        /// </summary>
+        private bool WindowActiveInPreviousFrameForAudio { get; set; } = true;
+
+        /// <summary>
+        ///     Used to detect when to switch between gameplay/menu music volume.
+        /// </summary>
+        private bool WasPlayingGameplayMusicInPreviousFrame { get; set; }
+
+        /// <summary>
+        ///     The music volume that <see cref="HandleMusicVolumeFade"/> is currently fading
+        ///     <see cref="AudioTrack.GlobalVolume"/> towards.
+        /// </summary>
+        private float TargetMusicVolume { get; set; }
+
+        /// <summary>
+        ///     The music volume the current fade started from.
+        /// </summary>
+        private float MusicVolumeFadeStart { get; set; }
+
+        /// <summary>
+        ///     How long in milliseconds the current fade has been running for.
+        /// </summary>
+        private double MusicVolumeFadeElapsed { get; set; }
+
+        /// <summary>
+        ///     How long in milliseconds it takes to fade between music volumes
+        ///     (e.g. when switching between gameplay/menu music volume or when muting).
+        /// </summary>
+        private const int MusicVolumeFadeTime = 400;
+
+        /// <summary>
         ///     FPS to use when reducing rendering for an inactive visible window.
         /// </summary>
         private const int InactiveWindowFpsLimit = 30;
@@ -351,6 +383,7 @@ namespace Quaver.Shared
             {"MultiplayerGameScreen", typeof(MultiplayerGameScreen)},
             {"MultiplayerLobbyScreen", typeof(MultiplayerLobbyScreen)},
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
+            {"ButtonPerformance", typeof(ButtonPerformanceTestScreen)},
         };
 
         public QuaverGame(HotLoader hl) : base(hl, ConfigureSdlVideoBackend())
@@ -397,7 +430,12 @@ namespace Quaver.Shared
         {
             QuaverScreenManager.Initialize();
             WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
+            QuaverLocalization.Configure(ConfigManager.Language.Value);
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+
+#if VISUAL_TESTS
+            Fonts.LoadWobbleFonts();
+#endif
 
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
@@ -415,13 +453,11 @@ namespace Quaver.Shared
             Window.FileDropped += MapsetImporter.OnFileDropped;
             Window.ClientSizeChanged += OnClientSizeChanged;
             AudioManager.OutputDeviceChanged += OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = () => CurrentScreen?.Type == QuaverScreenType.Gameplay;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
 
-#if VISUAL_TESTS
-            HotLoaderGame.Font = FontsBitmap.CodeProBold;
-#endif
             base.Initialize();
         }
 
@@ -454,12 +490,15 @@ namespace Quaver.Shared
         protected override void UnloadContent()
         {
             AudioManager.OutputDeviceChanged -= OnAudioOutputDeviceChanged;
+            AudioManager.ShouldSkipLostOutputDeviceCheck = null;
             ConfigManager.WriteConfigFileAsync().Wait();
             Transitioner.Dispose();
             DiscordHelper.Shutdown();
+            TooltipManager.TargetEligibilityFilter = null;
             base.UnloadContent();
-            OnlineManager.Client?.Disconnect();
-            SteamAPI.Shutdown();
+
+            if (SteamManager.IsInitialized)
+                SteamAPI.Shutdown();
         }
 
         /// <inheritdoc />
@@ -485,6 +524,7 @@ namespace Quaver.Shared
                 // be initialized
                 OnlineHub = new OnlineHub();
                 OnlineChat = new OnlineChat();
+                TooltipManager.TargetEligibilityFilter = target => OnlineChat.AllowsTooltip(target);
                 VolumeController = new VolumeControl();
                 FirstUpdateCalled = true;
             }
@@ -494,7 +534,6 @@ namespace Quaver.Shared
 
             BackgroundHelper.Update(gameTime);
             DialogManager.Update(gameTime);
-            OnlineChat?.UpdateEventProcessingSuspension();
 
             HandleGlobalInput(gameTime);
             HandleOnlineHubInput();
@@ -509,6 +548,8 @@ namespace Quaver.Shared
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
+            HandleMuteAudioOnWindowInactive();
+            HandleMusicVolumeFade(gameTime);
             UpdateFpsCounterPosition();
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
@@ -538,6 +579,10 @@ namespace Quaver.Shared
             VolumeController?.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
 
+            // F8 chat belongs to global UI, which draws after Wobble's normal tooltip layer.
+            if (OnlineChat?.IsOpen == true)
+                TooltipManager.Draw(gameTime);
+
             Transitioner.Draw(gameTime);
 
             ClearAlphaChannel(gameTime);
@@ -566,16 +611,13 @@ namespace Quaver.Shared
             MapsetImporter.WatchForChanges();
 
             // Initially set the global volume.
-            AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeMusic.Value / 100f;
-            AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeEffect.Value / 100f;
+            UpdateGlobalVolume(true);
 
-            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
-            {
-                AudioTrack.GlobalVolume = e.Value * ConfigManager.VolumeMusic.Value / 100f;
-                AudioSample.GlobalVolume = e.Value * ConfigManager.VolumeEffect.Value / 100f;
-            };
-            ConfigManager.VolumeMusic.ValueChanged += (sender, e) => AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
-            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
+            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.VolumeMusic.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.VolumeMenuMusic.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => UpdateGlobalVolume();
+            ConfigManager.MuteAudioOnWindowInactive.ValueChanged += (sender, e) => UpdateGlobalVolume();
 
             ConfigManager.Pitched.ValueChanged += (sender, e) =>
             {
@@ -586,6 +628,13 @@ namespace Quaver.Shared
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.CustomFpsLimit.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.PreferCocoaEventLoop.ValueChanged += (sender, e) => InitializeFpsLimiting();
+            ConfigManager.Language.ValueChanged += (sender, e) =>
+            {
+                QuaverLocalization.SetCurrentCulture(e.Value);
+                Fonts.ReloadCjkFontFace(e.Value);
+                NotificationManager.Show(NotificationLevel.Info,
+                    LocalizationManager.Get("Notification_LanguageChangeRequiresScreenChange"));
+            };
             
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
             {
@@ -680,7 +729,7 @@ namespace Quaver.Shared
         /// </summary>
         public void CreateFpsCounter()
         {
-            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.LatoBlack), 18)
+            Fps = new FpsCounter(FontManager.GetWobbleFont(Fonts.InterBold), 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
@@ -1068,6 +1117,76 @@ namespace Quaver.Shared
                 Logger.Error(e, LogType.Runtime);
                 throw;
             }
+        }
+
+        /// <summary>
+        ///     If true the music track being played is the gameplay track of an actively played map,
+        ///     rather than menu/song-select/editor background music.
+        /// </summary>
+        private bool IsPlayingGameplayMusic => CurrentScreen?.Type == QuaverScreenType.Gameplay;
+
+        /// <summary>
+        ///     Recalculates the global audio volume muting it if the window is inactive
+        ///     and the user has enabled that option. Uses the gameplay music volume while
+        ///     a map is actively being played and the menu music volume everywhere else.
+        ///
+        ///     The music volume is eased towards its new value by <see cref="HandleMusicVolumeFade"/>
+        ///     every frame rather than being applied immediately so that switching between
+        ///     gameplay/menu music (or muting) doesn't result in a jarring instant volume jump.
+        /// </summary>
+        /// <param name="immediate">If true, skips the fade and applies the music volume instantly.</param>
+        private void UpdateGlobalVolume(bool immediate = false)
+        {
+            var muted = ConfigManager.MuteAudioOnWindowInactive.Value && !IsActive;
+            var musicVolume = IsPlayingGameplayMusic ? ConfigManager.VolumeMusic.Value : ConfigManager.VolumeMenuMusic.Value;
+            var target = muted ? 0 : ConfigManager.VolumeGlobal.Value * musicVolume / 100f;
+
+            if (immediate)
+            {
+                TargetMusicVolume = target;
+                AudioTrack.GlobalVolume = target;
+            }
+            else if (target != TargetMusicVolume)
+            {
+                MusicVolumeFadeStart = (float) AudioTrack.GlobalVolume;
+                MusicVolumeFadeElapsed = 0;
+                TargetMusicVolume = target;
+            }
+
+            AudioSample.GlobalVolume = muted ? 0 : ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeEffect.Value / 100f;
+        }
+
+        /// <summary>
+        ///     Smoothly fades music volume between the current and target values over
+        ///     <see cref="MusicVolumeFadeTime"/>. The volume is calculated from elapsed
+        ///     time instead of incrementally adjusting the current volume, ensuring
+        ///     symmetric fade-in/out behavior.
+        /// </summary>
+        private void HandleMusicVolumeFade(GameTime gameTime)
+        {
+            if ((float) AudioTrack.GlobalVolume == TargetMusicVolume)
+                return;
+
+            MusicVolumeFadeElapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            var progress = (float) Math.Min(MusicVolumeFadeElapsed / MusicVolumeFadeTime, 1);
+            AudioTrack.GlobalVolume = Microsoft.Xna.Framework.MathHelper.Lerp(MusicVolumeFadeStart, TargetMusicVolume, progress);
+        }
+
+        /// <summary>
+        ///     Handles muting/restoring audio when the window's active state changes and
+        ///     switching between gameplay/menu music volume when entering or leaving gameplay.
+        /// </summary>
+        private void HandleMuteAudioOnWindowInactive()
+        {
+            var isPlayingGameplayMusic = IsPlayingGameplayMusic;
+
+            if (IsActive == WindowActiveInPreviousFrameForAudio && isPlayingGameplayMusic == WasPlayingGameplayMusicInPreviousFrame)
+                return;
+
+            WindowActiveInPreviousFrameForAudio = IsActive;
+            WasPlayingGameplayMusicInPreviousFrame = isPlayingGameplayMusic;
+            UpdateGlobalVolume();
         }
 
         /// <summary>

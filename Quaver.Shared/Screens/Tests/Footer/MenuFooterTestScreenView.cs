@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Graphics.Notifications;
@@ -17,12 +19,12 @@ namespace Quaver.Shared.Screens.Tests.Footer
         {
             var footer = new MenuFooter(new List<ButtonText>
             {
-                new ButtonText(FontsBitmap.GothamRegular, "Back", 16, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Back", 16, null),
             }, new List<ButtonText>()
             {
-                new ButtonText(FontsBitmap.GothamRegular, "Test Button 6", 10, null),
-                new ButtonText(FontsBitmap.GothamRegular, "Test Button 7", 10, null),
-                new ButtonText(FontsBitmap.GothamRegular, "Test Button 8", 10, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Test Button 6", 10, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Test Button 7", 10, null),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), "Test Button 8", 10, null),
             }, Colors.MainAccent)
             {
                 Parent = Container,

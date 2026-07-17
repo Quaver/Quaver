@@ -259,7 +259,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void CreateSongName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Name", 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Name", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -268,7 +268,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 UsePreviousSpriteBatchOptions = true,
                 Tint = Colors.MainBlue
             };
-            By = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), " by ", 20)
+            By = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " by ", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -276,7 +276,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 Y = Name.Y,
                 UsePreviousSpriteBatchOptions = true
             };
-            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "Artist", 20)
+            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Artist", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -289,7 +289,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "", 22)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -325,7 +325,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void CreateProgressPercentage()
         {
-            ProgressPercentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBold), "0%", 20)
+            ProgressPercentage = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0%", 20)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopRight,

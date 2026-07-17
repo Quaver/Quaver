@@ -330,6 +330,14 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private FileSystemWatcher FileWatcher { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private object ManualChangesDialogLock { get; } = new object();
+
+        /// <summary>
+        /// </summary>
+        private bool ManualChangesDialogOpen { get; set; }
+
         private double LastSeekDistance;
 
         /// <summary>
@@ -582,6 +590,11 @@ namespace Quaver.Shared.Screens.Edit
             BackupScheduler = null;
             if (EditorPluginUtils.EditScreen == this)
                 EditorPluginUtils.EditScreen = null;
+
+            // The editor can release a very large, long-lived managed graph. Request collection after the screen
+            // transition has finished, without blocking the game thread or retaining this screen in the callback.
+            ThreadScheduler.RunAfter(static () =>
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, false, false), 1000);
         }
 
         /// <summary>
@@ -1491,6 +1504,7 @@ namespace Quaver.Shared.Screens.Edit
                     ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
 
                 Map.DifficultyProcessorVersion = "Needs Update";
+                Map.DateAdded = DateTime.Now;
                 MapDatabaseCache.UpdateMap(Map);
 
                 if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
@@ -1976,10 +1990,19 @@ namespace Quaver.Shared.Screens.Edit
 
             FileWatcher.Changed += (sender, args) =>
             {
-                if (DialogManager.Dialogs.Count != 0)
-                    return;
+                lock (ManualChangesDialogLock)
+                {
+                    if (ManualChangesDialogOpen || DialogManager.Dialogs.Count != 0)
+                        return;
 
-                DialogManager.Show(new EditorManualChangesDialog(this));
+                    ManualChangesDialogOpen = true;
+                }
+
+                DialogManager.Show(new EditorManualChangesDialog(this, () =>
+                {
+                    lock (ManualChangesDialogLock)
+                        ManualChangesDialogOpen = false;
+                }));
             };
 
             FileWatcher.EnableRaisingEvents = true;

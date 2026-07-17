@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
@@ -18,6 +19,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         /// </summary>
         private bool MapsetsOnly { get; }
+
+        /// <summary>
+        ///     The font size used by both pieces of text.
+        /// </summary>
+        private int FontSize { get; }
 
         /// <summary>
         ///    The amount of maps there are
@@ -38,10 +44,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         /// <param name="availableMapsets"></param>
         /// <param name="mapsetsOnly"></param>
-        public FilterPanelMapsAvailable(Bindable<List<Mapset>> availableMapsets, bool mapsetsOnly = false)
+        /// <param name="fontSize"></param>
+        public FilterPanelMapsAvailable(Bindable<List<Mapset>> availableMapsets, bool mapsetsOnly = false,
+            int fontSize = 16)
         {
             AvailableMapsets = availableMapsets;
             MapsetsOnly = mapsetsOnly;
+            FontSize = fontSize;
 
             CreateTextCount();
             CreateTextMapsFound();
@@ -67,7 +76,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateTextCount()
         {
-            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0", 21)
+            TextCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0", FontSize)
             {
                 Parent = this,
                 Tint = Colors.MainAccent
@@ -81,7 +90,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateTextMapsFound()
         {
-            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Maps Found", 21)
+            TextMapsFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), SelectionLocalization.Get("Maps Found"), FontSize)
             {
                 Parent = this,
                 X = TextCount.Width + TextSpacing
@@ -100,9 +109,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 TextCount.Text = $"{count:n0}";
 
                 if (count == 0 || count > 1)
-                    TextMapsFound.Text = MapsetsOnly ? $"RESULTS FOUND" : $"MAPS FOUND";
+                    TextMapsFound.Text = MapsetsOnly ? SelectionLocalization.Get("Results Found").ToUpper() : SelectionLocalization.Get("Maps Found").ToUpper();
                 else
-                    TextMapsFound.Text = MapsetsOnly ? "RESULT FOUND" : $"MAP FOUND";
+                    TextMapsFound.Text = MapsetsOnly ? SelectionLocalization.Get("Result Found").ToUpper() : SelectionLocalization.Get("Map Found").ToUpper();
 
                 TextMapsFound.X = TextCount.Width + TextSpacing;
 

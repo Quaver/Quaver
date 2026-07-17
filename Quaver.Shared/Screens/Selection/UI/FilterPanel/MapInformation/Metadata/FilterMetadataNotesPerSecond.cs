@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
     public class FilterMetadataNotesPerSecond : TextKeyValue
     {
-        public FilterMetadataNotesPerSecond() : base("NPS: ", "0", 20, ColorHelper.HexToColor($"#ffe76b"))
+        public FilterMetadataNotesPerSecond() : base("NPS: ", "0", 16, ColorHelper.HexToColor($"#ffe76b"))
         {
             if (MapManager.Selected.Value != null)
                 Value.Text = $"{GetNotesPerSecond()}";

@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using Quaver.Shared.Online.API.Offsets;
 using Quaver.Shared.Online.API.Ranked;
 using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
 {
@@ -19,7 +22,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     {
         /// <summary>
         /// </summary>
-        private IconButton Button { get; }
+        private RoundedButton Button { get; }
 
         /// <summary>
         ///     If the task is currently running
@@ -30,14 +33,16 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             const float scale = 0.85f;
 
-            Button = new IconButton(UserInterface.OptionsUpdateButton)
+            Button = new RoundedButton
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
                 Size = new ScalableVector2(215 * scale, 36 * scale),
-                UsePreviousSpriteBatchOptions = true
+                Tint = ColorHelper.HexToColor("#F2994A")
             };
+
+            Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "UPDATE", 18, Color.White);
 
             Button.Clicked += (sender, args) =>
             {

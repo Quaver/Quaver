@@ -2,6 +2,8 @@ using System;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -12,9 +14,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
     {
         private Scoreboard Scoreboard { get; }
 
-        private SpriteTextBitmap Points { get; }
+        private SpriteTextPlus Points { get; }
 
-        private SpriteTextBitmap TeamRating { get; }
+        private SpriteTextPlus TeamRating { get; }
 
         public ScoreboardTeamBanner(Scoreboard scoreboard)
         {
@@ -44,7 +46,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             pointsContainer.X = Scoreboard.Team == MultiplayerTeam.Blue ? Width - 1 - pointsContainer.Width : 0;
 
-            Points = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0")
+            Points = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0")
             {
                 Parent = pointsContainer,
                 Alignment = Alignment.MidCenter,
@@ -71,7 +73,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             ratingContainer.X = Scoreboard.Team == MultiplayerTeam.Blue ? -Width + 1 + ratingContainer.Width : 0;
 
-            TeamRating = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0.00", false)
+            TeamRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0.00", 0, false)
             {
                 Parent = ratingContainer,
                 Alignment = Alignment.MidCenter,

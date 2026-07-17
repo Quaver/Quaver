@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
     {
         protected TournamentDrawableSettings Settings { get; }
 
-        public TournamentOverlaySpriteText(TournamentDrawableSettings settings) : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "")
+        public TournamentOverlaySpriteText(TournamentDrawableSettings settings) : base(FontManager.GetWobbleFont(Fonts.InterBold), "")
         {
             Settings = settings;
 

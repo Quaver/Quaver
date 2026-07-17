@@ -48,12 +48,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
             if (chat == null)
                 return;
 
-            for (var i = chat.Messages.Count - 5; i >= 0; i++)
+            var messages = ChatMessageStore.GetMessageSnapshot(chat);
+
+            for (var i = messages.Count - 5; i >= 0; i++)
             {
-                if (i < chat.Messages.Count)
+                if (i < messages.Count)
                 {
-                    AddItem(Color.Yellow, $"[CHAT] {chat.Messages[i].Sender.OnlineUser.Username}: " +
-                                          $"{string.Concat(chat.Messages[i].Message.Take(40))}{(chat.Messages[i].Message.Length >= 40 ? "..." : "")}");
+                    AddItem(Color.Yellow, $"[CHAT] {messages[i].Sender.OnlineUser.Username}: " +
+                                          $"{string.Concat(messages[i].Message.Take(40))}{(messages[i].Message.Length >= 40 ? "..." : "")}");
                 }
 
                 if (FeedItems.Count == 5)

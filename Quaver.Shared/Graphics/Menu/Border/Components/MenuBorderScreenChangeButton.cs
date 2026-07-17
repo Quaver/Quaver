@@ -13,7 +13,8 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         public abstract QuaverScreenType Screen { get; }
 
         public MenuBorderScreenChangeButton(Texture2D icon, WobbleFontStore font, string text, EventHandler onClick = null,
-            Color? baseColor = null, Color? hoveredColor = null) : base(icon, font, text, onClick, baseColor, hoveredColor)
+            Color? baseColor = null, Color? hoveredColor = null, string localizationKey = null) : base(icon, font, text, onClick, baseColor, hoveredColor,
+            localizationKey)
         {
             // ReSharper disable once ArrangeConstructorOrDestructorBody
             Clicked += (o, e) =>

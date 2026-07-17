@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Loading...", 22)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Loading...", 22)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

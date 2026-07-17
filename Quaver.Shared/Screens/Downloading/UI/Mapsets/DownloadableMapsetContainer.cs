@@ -240,7 +240,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 if (args.Value.Error == null)
                 {
                     NotificationManager.Show(NotificationLevel.Success,
-                        $"Finished downloading: {e.Download.Artist} - {e.Download.Title}!");
+                        DownloadLocalization.Get("Finished downloading: {0} - {1}!", e.Download.Artist, e.Download.Title));
                 }
 
                 var index = AvailableMapsets.Value.FindIndex(x => x.Id == e.Download.MapsetId);

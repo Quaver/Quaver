@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
     public class ResultsFooterExportReplayButton : IconTextButton
     {
         public ResultsFooterExportReplayButton(ResultsScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_archive_black_box),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Export Replay", (sender, args) => screen.ExportReplay())
+            FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Export Replay"), (sender, args) => screen.ExportReplay())
         {
         }
     }

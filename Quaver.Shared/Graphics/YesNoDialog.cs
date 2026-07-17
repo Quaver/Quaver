@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Helpers.Input;
 using Quaver.Shared.Scheduling;
@@ -54,12 +55,22 @@ namespace Quaver.Shared.Graphics
         public SpriteTextPlus Confirmation { get; private set; }
 
         /// <summary>
+        ///     The color used for confirmatory/affirmative actions (e.g. sure, save, create).
         /// </summary>
-        public IconButton YesButton { get; protected set; }
+        public static Color ConfirmColor { get; } = ColorHelper.HexToColor("#27B06E");
+
+        /// <summary>
+        ///     The color used for negative/cancelling actions (e.g. cancel, decline).
+        /// </summary>
+        public static Color CancelColor { get; } = ColorHelper.HexToColor("#F9645D");
 
         /// <summary>
         /// </summary>
-        public IconButton NoButton { get; protected set; }
+        public RoundedButton YesButton { get; protected set; }
+
+        /// <summary>
+        /// </summary>
+        public RoundedButton NoButton { get; protected set; }
 
         /// <summary>
         /// </summary>
@@ -167,10 +178,10 @@ namespace Quaver.Shared.Graphics
             Confirmation.ClearAnimations();
             Confirmation.FadeTo(0, Easing.Linear, fadeTime);
 
-            NoButton.IsPerformingFadeAnimations = false;
+            NoButton.PerformHoverFade = false;
             NoButton.IsClickable = false;
 
-            YesButton.IsPerformingFadeAnimations = false;
+            YesButton.PerformHoverFade = false;
             YesButton.IsClickable = false;
 
             ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), FadeTime);
@@ -222,7 +233,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateHeader()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), HeaderText.ToUpper(), 26)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), HeaderText.ToUpper(), 22)
             {
                 Parent = Panel,
                 Alignment = Alignment.TopLeft,
@@ -235,7 +246,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateConfirmation()
         {
-            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ConfirmationText, 26)
+            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfirmationText, 22)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter,
@@ -250,7 +261,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateButtons()
         {
-            YesButton = new IconButton(UserInterface.SureButton, (o, e) =>
+            YesButton = new RoundedButton((o, e) =>
             {
                 YesAction?.Invoke();
 
@@ -270,10 +281,13 @@ namespace Quaver.Shared.Graphics
                 Alignment = Alignment.BotLeft,
                 Size = new ScalableVector2(221, 40),
                 Y = -50,
-                X = 140
+                X = 140,
+                Tint = ConfirmColor
             };
 
-            NoButton = new IconButton(UserInterface.CancelButton, (o, e) =>
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SURE", 20, Color.White);
+
+            NoButton = new RoundedButton((o, e) =>
             {
                 NoAction?.Invoke();
                 Close();
@@ -283,8 +297,11 @@ namespace Quaver.Shared.Graphics
                 Alignment = Alignment.BotRight,
                 Size = YesButton.Size,
                 Y = YesButton.Y,
-                X = -YesButton.X
+                X = -YesButton.X,
+                Tint = CancelColor
             };
+
+            NoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CANCEL", 20, Color.White);
         }
     }
 }

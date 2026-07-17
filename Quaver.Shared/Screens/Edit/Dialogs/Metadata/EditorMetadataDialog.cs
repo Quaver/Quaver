@@ -11,8 +11,10 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -60,15 +62,13 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             Color.White
         );
 
-        private IconButton SyncMetadataButton { get; set; }
-
-        private SpriteTextPlus SyncMetadataText { get; set; }
+        private RoundedButton SyncMetadataButton { get; set; }
 
         private Tooltip SyncMetadataTooltip { get; } = new("Copy all of the metadata from this difficulty to all of the difficulties from this mapset", Color.White);
 
         private TextboxTabControl TabControl { get; }
 
-        private const int LabelSize = 21;
+        private const int LabelSize = 18;
 
         private const int TextboxHeight = 42;
 
@@ -257,7 +257,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateBpmAffectsSvCheckbox()
         {
-            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 20,
+            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 18,
                 new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -269,7 +269,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateScratchKeyCheckbox()
         {
-            ScratchKey = new LabelledCheckbox("SCRATCH KEY:", 20,
+            ScratchKey = new LabelledCheckbox("SCRATCH KEY:", 18,
                 new QuaverCheckbox(new Bindable<bool>(WorkingMap.HasScratchKey)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -281,7 +281,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateLegacyLNRenderingCheckbox()
         {
-            LegacyLNRendering = new LabelledCheckbox("LEGACY LN RENDERING:", 20,
+            LegacyLNRendering = new LabelledCheckbox("LEGACY LN RENDERING:", 18,
                 new QuaverCheckbox(new Bindable<bool>(WorkingMap.LegacyLNRendering)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -295,7 +295,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         {
             var canSyncMetadata = CanSyncMetadata();
 
-            SyncMetadataButton = new IconButton(UserInterface.BlankButton, (sender, args) => SyncMetadata())
+            SyncMetadataButton = new RoundedButton((sender, args) => SyncMetadata())
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,
@@ -303,15 +303,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Size = new ScalableVector2(221, 40),
                 SetChildrenAlpha = true,
                 Visible = canSyncMetadata,
-                IsClickable = canSyncMetadata
+                IsClickable = canSyncMetadata,
+                Tint = ColorHelper.HexToColor("#0968AC")
             };
 
-            SyncMetadataText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SYNC METADATA", 18)
-            {
-                Parent = SyncMetadataButton,
-                Alignment = Alignment.MidCenter,
-                TextAlignment = TextAlignment.Center
-            };
+            SyncMetadataButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SYNC METADATA", 18, Color.White);
         }
 
         private bool CanSyncMetadata() => Screen.Map.Mapset?.Maps?.Count >= 2;

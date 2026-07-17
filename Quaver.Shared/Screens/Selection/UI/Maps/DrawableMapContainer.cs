@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         private void CreateDifficultyName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "DIFFICULTY", 26)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "DIFFICULTY", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(PaddingX, 18),
@@ -292,7 +292,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         private void CreateCreator()
         {
-            ByText = new SpriteTextPlus(Name.Font, "By:", 20)
+            ByText = new SpriteTextPlus(Name.Font, SelectionLocalization.Get("By:"), 16)
             {
                 Parent = this,
                 Position = new ScalableVector2(Name.X, Name.Y + Name.Height + 5),

@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.Server.Client.Objects;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -45,11 +47,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular,$"Options for {User.Username ?? "Loading..."}")
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                MultiplayerLocalization.Get("OptionsFor", User.Username ?? MultiplayerLocalization.Get("Loading")))
             {
                 Parent = Options,
                 Y = -25,
-                FontSize = 16,
+                FontSize = 14,
             };
         }
 

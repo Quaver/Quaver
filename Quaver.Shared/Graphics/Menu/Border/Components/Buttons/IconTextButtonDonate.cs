@@ -14,12 +14,12 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     public class IconTextButtonDonate : IconTextButton
     {
         public IconTextButtonDonate() : base(FontAwesome.Get(FontAwesomeIcon.fa_heart_shape_silhouette),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Donate", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold),"Donate", (sender, args) =>
             {
                 NotificationManager.Show(NotificationLevel.Info, 
                     "Donating is currently unavailable from in-game and can only be done on the website.\n\n" +
                     "We are working on adding this back soon.");
-            })
+            }, localizationKey: "Screen_Main_Menu_Donate")
         {
         }
 

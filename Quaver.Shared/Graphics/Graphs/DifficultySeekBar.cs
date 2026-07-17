@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -19,6 +20,8 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
+using Wobble.Logging;
+using Wobble.Window;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Graphics.Graphs
@@ -62,6 +65,36 @@ namespace Quaver.Shared.Graphics.Graphs
         private float BarWidthScale { get; }
 
         /// <summary>
+        ///     If the difficulty bars should be flattened into a single cached sprite
+        /// </summary>
+        private bool CacheBars { get; }
+
+        /// <summary>
+        ///     Contains the individual difficulty bars. When caching is enabled this stays outside the live drawable tree.
+        /// </summary>
+        private Container BarsContainer { get; }
+
+        /// <summary>
+        ///     Displays the cached difficulty bars
+        /// </summary>
+        private Sprite CachedBars { get; }
+
+        /// <summary>
+        ///     The render target used by <see cref="CachedBars"/>
+        /// </summary>
+        private RenderTarget2D BarsRenderTarget { get; set; }
+
+        /// <summary>
+        ///     The screen scale used the last time <see cref="BarsRenderTarget"/> was created
+        /// </summary>
+        private Vector2 BarsRenderTargetScale { get; set; }
+
+        /// <summary>
+        ///     If a render-target draw has already been scheduled for the bar cache
+        /// </summary>
+        private bool BarCacheScheduled { get; set; }
+
+        /// <summary>
         /// </summary>
         private Sprite SeekBarLine { get; set; }
 
@@ -97,8 +130,9 @@ namespace Quaver.Shared.Graphics.Graphs
         /// <param name="track"></param>
         /// <param name="alignRightToLeft"></param>
         /// <param name="barWidthScale"></param>
+        /// <param name="cacheBars"></param>
         public DifficultySeekBar(Qua map, ModIdentifier mods, ScalableVector2 size, int maxBars = 120, int barSize = 3, IAudioTrack track = null,
-            bool alignRightToLeft = false, float barWidthScale = 1)
+            bool alignRightToLeft = false, float barWidthScale = 1, bool cacheBars = false)
             : base(UserInterface.BlankBox)
         {
             Map = map;
@@ -108,6 +142,21 @@ namespace Quaver.Shared.Graphics.Graphs
             BarSize = barSize;
             AlignRightToLeft = alignRightToLeft;
             BarWidthScale = barWidthScale;
+            CacheBars = cacheBars;
+
+            if (CacheBars)
+            {
+                BarsContainer = new Container(Size, new ScalableVector2(0, 0));
+                CachedBars = new Sprite
+                {
+                    Parent = this,
+                    Size = Size,
+                    Visible = false,
+                    UsePreviousSpriteBatchOptions = true
+                };
+
+                SizeChanged += OnSizeChanged;
+            }
 
             Processor = (DifficultyProcessorKeys)Map.SolveDifficulty(Mods);
 
@@ -157,6 +206,9 @@ namespace Quaver.Shared.Graphics.Graphs
             }
 
             base.Update(gameTime);
+
+            if (CacheBars && BarCacheNeedsRefresh())
+                ScheduleBarCache();
         }
 
         /// <inheritdoc />
@@ -165,6 +217,14 @@ namespace Quaver.Shared.Graphics.Graphs
         public override void Destroy()
         {
             AudioSeeked = null;
+            BarCacheScheduled = false;
+            SizeChanged -= OnSizeChanged;
+
+            BarsContainer?.Destroy();
+
+            if (BarsRenderTarget != null && !BarsRenderTarget.IsDisposed)
+                BarsRenderTarget.Dispose();
+
             base.Destroy();
         }
 
@@ -184,7 +244,10 @@ namespace Quaver.Shared.Graphics.Graphs
             Bars = new List<Sprite>();
 
             if (Map.HitObjects.Count == 0)
+            {
+                FinishCreatingBars();
                 return;
+            }
 
             var rate = ModHelper.GetRateFromMods(Mods);
             var sampleTime = (int)Math.Ceiling(Track.Length / rate / MaxBars);
@@ -201,7 +264,10 @@ namespace Quaver.Shared.Graphics.Graphs
             }
 
             if (bins.Count == 0)
+            {
+                FinishCreatingBars();
                 return;
+            }
 
             var highestDiff = bins.Max(grp =>
                 grp.Item2.Any() ? grp.Item2.Average(s => s.TotalStrainValue) : 0
@@ -218,7 +284,7 @@ namespace Quaver.Shared.Graphics.Graphs
 
                     var bar = new Sprite
                     {
-                        Parent = this,
+                        Parent = CacheBars ? BarsContainer : this,
                         Alignment = AlignRightToLeft ? Alignment.BotRight : Alignment.BotLeft,
                         Size = new ScalableVector2((int)(width * BarWidthScale), BarSize),
                         Y = -Height * pos - 2,
@@ -228,9 +294,127 @@ namespace Quaver.Shared.Graphics.Graphs
                     Bars.Add(bar);
                 }
 
-                SeekBarLine.Parent = this;
+                FinishCreatingBars();
             });
         }
+
+        /// <summary>
+        ///     Updates the cached bar layer and keeps the progress line above it
+        /// </summary>
+        private void FinishCreatingBars()
+        {
+            if (CacheBars)
+                ScheduleBarCache();
+
+            if (SeekBarLine != null)
+                SeekBarLine.Parent = this;
+        }
+
+        /// <summary>
+        ///     Schedules a single render-target draw for the current difficulty bars
+        /// </summary>
+        private void ScheduleBarCache()
+        {
+            if (!CacheBars || BarCacheScheduled || IsDisposed)
+                return;
+
+            BarCacheScheduled = true;
+            GameBase.Game.ScheduleRenderTargetDraw(CacheBarsToRenderTarget);
+        }
+
+        /// <summary>
+        ///     Returns if the cached texture needs to be recreated for the current size or screen scale
+        /// </summary>
+        private bool BarCacheNeedsRefresh()
+        {
+            if (BarsRenderTarget == null || BarsRenderTarget.IsDisposed || BarsRenderTarget.IsContentLost ||
+                BarsRenderTarget.GraphicsDevice != GameBase.Game.GraphicsDevice)
+                return true;
+
+            return BarsRenderTarget.Width != GetBarRenderTargetWidth() ||
+                   BarsRenderTarget.Height != GetBarRenderTargetHeight() ||
+                   BarsRenderTargetScale != WindowManager.ScreenScale;
+        }
+
+        /// <summary>
+        ///     Draws the source bars once and displays them as a single cached sprite
+        /// </summary>
+        private void CacheBarsToRenderTarget()
+        {
+            BarCacheScheduled = false;
+
+            if (IsDisposed || BarsContainer.IsDisposed)
+                return;
+
+            try
+            {
+                EnsureBarRenderTarget();
+
+                var graphicsDevice = GameBase.Game.GraphicsDevice;
+                var previousTargets = graphicsDevice.GetRenderTargets();
+
+                try
+                {
+                    _ = GameBase.Game.TryEndBatch();
+                    graphicsDevice.SetRenderTarget(BarsRenderTarget);
+                    graphicsDevice.Clear(Color.Transparent);
+
+                    BarsContainer.Draw(new GameTime());
+                    _ = GameBase.Game.TryEndBatch();
+                }
+                finally
+                {
+                    _ = GameBase.Game.TryEndBatch();
+                    graphicsDevice.SetRenderTargets(previousTargets);
+                }
+
+                CachedBars.Image = BarsRenderTarget;
+                CachedBars.Visible = true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        ///     Creates a render target that matches the seekbar's current physical dimensions
+        /// </summary>
+        private void EnsureBarRenderTarget()
+        {
+            if (!BarCacheNeedsRefresh())
+                return;
+
+            CachedBars.Visible = false;
+
+            if (BarsRenderTarget != null && !BarsRenderTarget.IsDisposed)
+                BarsRenderTarget.Dispose();
+
+            BarsRenderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, GetBarRenderTargetWidth(),
+                GetBarRenderTargetHeight(), false, SurfaceFormat.Color, DepthFormat.None, 0,
+                RenderTargetUsage.PreserveContents);
+            BarsRenderTargetScale = WindowManager.ScreenScale;
+        }
+
+        /// <summary>
+        ///     Keeps the cached layer sized with the seekbar and debounces a correctly proportioned bar rebuild
+        /// </summary>
+        private void OnSizeChanged(object sender, ScalableVector2 size)
+        {
+            BarsContainer.Size = size;
+            CachedBars.Size = size;
+            ScheduleCreateBars();
+        }
+
+        /// <summary>
+        /// </summary>
+        private int GetBarRenderTargetWidth() =>
+            Math.Max(1, (int)Math.Ceiling(Width * WindowManager.ScreenScale.X));
+
+        /// <summary>
+        /// </summary>
+        private int GetBarRenderTargetHeight() =>
+            Math.Max(1, (int)Math.Ceiling(Height * WindowManager.ScreenScale.Y));
 
         /// <summary>
         /// </summary>

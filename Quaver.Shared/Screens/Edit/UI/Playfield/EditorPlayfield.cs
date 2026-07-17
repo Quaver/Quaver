@@ -14,7 +14,6 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
@@ -221,11 +220,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private TaskHandler<int, int> WaveformLoadTask { get; set; }
+        private TaskHandler<int, EditorPlayfieldWaveform> WaveformLoadTask { get; set; }
 
         /// <summary>
         /// </summary>
-        private TaskHandler<int, int> SpectrogramLoadTask { get; set; }
+        private TaskHandler<int, EditorPlayfieldSpectrogram> SpectrogramLoadTask { get; set; }
 
         /// <summary>
         /// </summary>
@@ -443,22 +442,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             {
                 CreateSpectrogram();
             }
-            else if (!ShowSpectrogram.Value && Spectrogram != null)
-            {
-                Spectrogram?.Dispose();
-                Spectrogram = null;
-                SpectrogramLoadTask = null;
-            }
 
             if (ShowWaveform.Value && Waveform == null && WaveformLoadTask == null)
             {
                 CreateWaveform();
-            }
-            else if (!ShowWaveform.Value && Waveform != null)
-            {
-                Waveform?.Dispose();
-                Waveform = null;
-                WaveformLoadTask = null;
             }
 
             if (LoadingWaveform != null)
@@ -476,6 +463,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             }
 
             UpdateHitObjectPool();
+            if (Waveform != null)
+                Waveform.IsActive = ShowWaveform.Value;
+
+            if (Spectrogram != null)
+                Spectrogram.IsActive = ShowSpectrogram.Value;
+
             Waveform?.Update(gameTime);
             Spectrogram?.Update(gameTime);
             Timeline.Update(gameTime);
@@ -491,7 +484,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            // The timeline, scroll graph, and hit objects are drawn manually after the normal child pass. Exclude the
+            // zoom controls from that pass so they can be drawn once above those layers at the end.
+            var drawZoomOnTop = Zoom?.Visible == true;
+
+            if (drawZoomOnTop)
+                Zoom.Visible = false;
+
+            try
+            {
+                base.Draw(gameTime);
+            }
+            finally
+            {
+                if (drawZoomOnTop)
+                    Zoom.Visible = true;
+            }
 
             try
             {
@@ -529,6 +537,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (ShowSpectrogram.Value)
                 LoadingSpectrogram?.Draw(gameTime);
 
+            if (drawZoomOnTop)
+                Zoom.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -544,23 +554,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Destroy();
 
             WaveformLoadTask?.Dispose();
-            Waveform?.Destroy();
-            Spectrogram?.Destroy();
+            WaveformLoadTask = null;
             SpectrogramLoadTask?.Dispose();
-
-            ThreadScheduler.Run(() =>
-            {
-                if (HitObjects.Count < 1000)
-                    HitObjects.ForEach(x => x.Destroy());
-
-                Timeline?.Destroy();
-                LineContainer?.Destroy();
-
-                HitObjects.Clear();
-                HitObjectMap.Clear();
-                LineContainer = null;
-                Timeline = null;
-            });
+            SpectrogramLoadTask = null;
+            Waveform?.Destroy();
+            Waveform = null;
+            Spectrogram?.Destroy();
+            Spectrogram = null;
+            LoadingWaveform?.Destroy();
+            LoadingWaveform = null;
+            LoadingSpectrogram?.Destroy();
+            LoadingSpectrogram = null;
 
             Track.Seeked -= OnTrackSeeked;
             Track.RateChanged -= OnTrackRateChanged;
@@ -604,9 +608,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ConfigManager.EditorSpectrogramInterleaveCount.ValueChanged -= OnSpectrogramInterleaveCountChanged;
             ConfigManager.EditorPlayfieldAlpha.ValueChanged -= OnPlayfieldAlphaChanged;
 
+            Timeline?.Destroy();
+            Timeline = null;
+            LineContainer?.Destroy();
+            LineContainer = null;
+
+            // Hit objects only reference managed drawables and shared skin textures. Dropping the collection roots
+            // avoids walking and disposing every object while still allowing the GC to reclaim the complete graph.
+            HitObjects = null;
+            HitObjectMap = null;
+            HitObjectPool = null;
+            LongNoteInDrag = null;
+
             base.Destroy();
             ActionManager = null;
-            HitObjectPool.Clear();
         }
 
         /// <summary>
@@ -687,22 +702,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            LoadingWaveform = new LoadingWheelText(20, "Loading Waveform...")
+            LoadingWaveform = new LoadingWheelText(18, "Loading Waveform...")
             {
                 Alignment = Alignment.TopCenter,
                 Y = 200,
             };
 
-            WaveformLoadTask = new TaskHandler<int, int>(CreateWaveform);
+            var task = new TaskHandler<int, EditorPlayfieldWaveform>(CreateWaveform);
+            WaveformLoadTask = task;
 
-            WaveformLoadTask.OnCompleted += (sender, args) => LoadingWaveform.FadeOut();
-            WaveformLoadTask.OnCancelled += (sender, args) =>
+            task.OnCompleted += (sender, args) => AddScheduledUpdate(() =>
             {
-                Waveform?.Destroy();
-                LoadingWaveform.Destroy();
-            };
+                if (IsDestroyed || WaveformLoadTask != task)
+                {
+                    args.Result.Destroy();
+                    return;
+                }
 
-            WaveformLoadTask.Run(0);
+                Waveform = args.Result;
+                LoadingWaveform?.FadeOut();
+            });
+
+            task.Run(0);
         }
 
         /// <summary>
@@ -710,11 +731,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="arg1"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private int CreateWaveform(int arg1, CancellationToken token)
-        {
-            Waveform = new EditorPlayfieldWaveform(this, token);
-            return 0;
-        }
+        private EditorPlayfieldWaveform CreateWaveform(int arg1, CancellationToken token)
+            => new EditorPlayfieldWaveform(this, token);
 
         /// <summary>
         /// </summary>
@@ -723,22 +741,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            LoadingSpectrogram = new LoadingWheelText(20, "Loading Spectrogram...")
+            LoadingSpectrogram = new LoadingWheelText(18, "Loading Spectrogram...")
             {
                 Alignment = Alignment.TopCenter,
                 Y = 200,
             };
 
-            SpectrogramLoadTask = new TaskHandler<int, int>(CreateSpectrogram);
+            var task = new TaskHandler<int, EditorPlayfieldSpectrogram>(CreateSpectrogram);
+            SpectrogramLoadTask = task;
 
-            SpectrogramLoadTask.OnCompleted += (sender, args) => LoadingSpectrogram.FadeOut();
-            SpectrogramLoadTask.OnCancelled += (sender, args) =>
+            task.OnCompleted += (sender, args) => AddScheduledUpdate(() =>
             {
-                Spectrogram?.Destroy();
-                LoadingSpectrogram.Destroy();
-            };
+                if (IsDestroyed || SpectrogramLoadTask != task)
+                {
+                    args.Result.Destroy();
+                    return;
+                }
 
-            SpectrogramLoadTask.Run(0);
+                Spectrogram = args.Result;
+                LoadingSpectrogram?.FadeOut();
+            });
+
+            task.Run(0);
         }
 
         /// <summary>
@@ -746,11 +770,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="arg1"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private int CreateSpectrogram(int arg1, CancellationToken token)
-        {
-            Spectrogram = new EditorPlayfieldSpectrogram(this, token);
-            return 0;
-        }
+        private EditorPlayfieldSpectrogram CreateSpectrogram(int arg1, CancellationToken token)
+            => new EditorPlayfieldSpectrogram(this, token);
 
 
         /// <summary>
@@ -1794,16 +1815,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         private void ReloadWaveform()
         {
+            WaveformLoadTask?.Dispose();
+            WaveformLoadTask = null;
             Waveform?.Destroy();
-            LoadingWaveform.FadeIn();
-            WaveformLoadTask.Run(0);
+            Waveform = null;
+            LoadingWaveform?.Destroy();
+            LoadingWaveform = null;
+
+            if (ShowWaveform.Value)
+                CreateWaveform();
         }
 
         private void ReloadSpectrogram()
         {
+            SpectrogramLoadTask?.Dispose();
+            SpectrogramLoadTask = null;
             Spectrogram?.Destroy();
-            LoadingSpectrogram.FadeIn();
-            SpectrogramLoadTask.Run(0);
+            Spectrogram = null;
+            LoadingSpectrogram?.Destroy();
+            LoadingSpectrogram = null;
+
+            if (ShowSpectrogram.Value)
+                CreateSpectrogram();
         }
     }
 }

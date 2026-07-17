@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Screens.Download;
 using Wobble.Assets;
 
 namespace Quaver.Shared.Helpers
@@ -21,6 +20,8 @@ namespace Quaver.Shared.Helpers
     public static class ImageDownloader
     {
         private static readonly object MapsetBannerLock = new object();
+
+        private static Dictionary<int, Texture2D> MapsetBanners { get; } = new Dictionary<int, Texture2D>();
 
         private static Dictionary<int, Task<Texture2D>> MapsetBannerTasks { get; } = new Dictionary<int, Task<Texture2D>>();
 
@@ -34,8 +35,8 @@ namespace Quaver.Shared.Helpers
 
             lock (MapsetBannerLock)
             {
-                if (DownloadScreen.MapsetBanners.ContainsKey(id))
-                    return DownloadScreen.MapsetBanners[id];
+                if (MapsetBanners.ContainsKey(id))
+                    return MapsetBanners[id];
 
                 if (!MapsetBannerTasks.ContainsKey(id))
                     MapsetBannerTasks[id] = DownloadMapsetBannerTask(id);
@@ -72,7 +73,7 @@ namespace Quaver.Shared.Helpers
 
             lock (MapsetBannerLock)
             {
-                DownloadScreen.MapsetBanners[id] = texture;
+                MapsetBanners[id] = texture;
                 MapsetBannerTasks.Remove(id);
             }
 

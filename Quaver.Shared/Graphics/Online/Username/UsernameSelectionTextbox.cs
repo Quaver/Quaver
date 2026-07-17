@@ -29,7 +29,7 @@ namespace Quaver.Shared.Graphics.Online.Username
         /// <summary>
         /// </summary>
         public UsernameSelectionTextbox()
-            : base(new ScalableVector2(360, 39), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            : base(new ScalableVector2(360, 39), FontManager.GetWobbleFont(Fonts.InterBold),
                 14, "", "Enter Username")
         {
             Image = UserInterface.BlankBox;
@@ -49,7 +49,7 @@ namespace Quaver.Shared.Graphics.Online.Username
                 Text =
                 {
                     FontSize = 13,
-                    Font = Fonts.Exo2SemiBold
+                    Font = Fonts.InterSemiBold
                 }
             };
 

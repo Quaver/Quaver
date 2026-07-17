@@ -7,8 +7,8 @@ namespace Quaver.Shared.Screens.Multi.UI.Dialogs
     {
         private MultiplayerGameScreen Screen { get; }
 
-        public ConfirmExitToLobby(MultiplayerGameScreen screen) : base("EXIT TO LOBBY",
-            "Are you sure you would like to exit to the lobby?")
+        public ConfirmExitToLobby(MultiplayerGameScreen screen) : base(MultiLocalization.Get("ExitToLobbyTitle"),
+            MultiLocalization.Get("ExitToLobbyMessage"))
         {
             Screen = screen;
             YesAction += () =>

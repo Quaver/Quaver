@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens
                 Thread.Sleep(16);
 
             // Run this on the next game loop on the main thread.
-            game.ScheduledRenderTargetDraws.Add(() => ChangeScreen(e.Result, false));
+            game.ScheduleRenderTargetDraw(() => ChangeScreen(e.Result, false));
         }
 
         private static void ChangeScreen(QuaverScreen screen, bool switchImmediately)
@@ -108,12 +108,11 @@ namespace Quaver.Shared.Screens
                 OnlineManager.Client?.UpdateClientStatus(status);
 
             OtherGameMapDatabaseCache.RunThread();
-            GC.Collect();
 
             if (switchImmediately)
                 Transitioner.FadeOut();
             else
-                game.ScheduledRenderTargetDraws.Add(Transitioner.FadeOut);
+                game.ScheduleRenderTargetDraw(Transitioner.FadeOut);
 
             Logger.Important($"Screen has been switched to type: `{screen.Type}`", LogType.Runtime);
             Button.IsGloballyClickable = true;

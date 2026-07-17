@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
         /// <param name="game"></param>
         public IconTextButtonMultiplayerSwitchTeams(Bindable<MultiplayerGame> game)
             : base(FontAwesome.Get(FontAwesomeIcon.fa_refresh_arrow),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Switch Teams", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold), MultiLocalization.Get("SwitchTeams"), (sender, args) =>
             {
                 if (game.Value.Ruleset == MultiplayerGameRuleset.Team)
                 {

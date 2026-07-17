@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using osu_database_reader.Components.HitObjects;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Online;
 using Wobble;
@@ -18,9 +20,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
     {
         private Scoreboard Scoreboard { get; }
 
-        private SpriteTextBitmap PlayersLeft { get; }
+        private SpriteTextPlus PlayersLeft { get; }
 
-        private SpriteTextBitmap TimeLeft { get; }
+        private SpriteTextPlus TimeLeft { get; }
 
         private HitObjectInfo LastEliminationObject { get; set; }
 
@@ -32,7 +34,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             Size = new ScalableVector2(260, 34);
             Image = UserInterface.BattleRoyalePanel;
 
-            PlayersLeft = new SpriteTextBitmap(FontsBitmap.GothamRegular, Scoreboard.BattleRoyalePlayersLeft + " Left")
+            PlayersLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Scoreboard.BattleRoyalePlayersLeft + " Left")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -40,7 +42,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 X = 52
             };
 
-            TimeLeft = new SpriteTextBitmap(FontsBitmap.GothamRegular, "-00:00", false)
+            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "-00:00", 0, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

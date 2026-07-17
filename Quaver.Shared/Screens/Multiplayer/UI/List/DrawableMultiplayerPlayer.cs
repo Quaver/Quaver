@@ -8,6 +8,8 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Online;
@@ -35,7 +37,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Username { get; }
+        private SpriteTextPlus Username { get; }
 
         /// <summary>
         /// </summary>
@@ -59,15 +61,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Wins { get; }
+        private SpriteTextPlus Wins { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Mods { get; }
+        private SpriteTextPlus Mods { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Referee { get; }
+        private SpriteTextPlus Referee { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -129,12 +131,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, string.IsNullOrEmpty(item.Username) ? $"Loading..." : item.Username)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), string.IsNullOrEmpty(item.Username) ? MultiplayerLocalization.Get("Loading") : item.Username)
             {
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
                 X = Flag.Width + 6,
-                FontSize = 16,
+                FontSize = 14,
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -165,34 +167,34 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Wins = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0 Wins")
+            Wins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Wins", 0))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -16,
-                FontSize = 16,
+                FontSize = 14,
                 Tint = Colors.SecondaryAccent,
                 Y = -2,
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, "")
+            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = Avatar.X + Avatar.Width + 16,
-                FontSize = 14,
+                FontSize = 12,
                 Y = 8,
                 UsePreviousSpriteBatchOptions = true,
                 Tint = Colors.MainAccent
             };
 
-            Referee = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Referee")
+            Referee = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Referee"))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -16,
-                FontSize = 16,
+                FontSize = 14,
                 Y = -2,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -301,12 +303,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                             throw new ArgumentOutOfRangeException();
                     }
 
-                    Wins.Text = $"{wins} Wins";
+                    Wins.Text = MultiplayerLocalization.Get("Wins", wins);
                 }
                 else
                 {
                     var mpWins = OnlineManager.CurrentGame.PlayerWins.Find(x => x.UserId == item.Id);
-                    Wins.Text = mpWins != null ? $"{mpWins.Wins} Wins" : $"0 Wins";
+                    Wins.Text = MultiplayerLocalization.Get("Wins", mpWins?.Wins ?? 0);
                 }
 
                 var playerMods = OnlineManager.CurrentGame.PlayerMods.Find(x => x.UserId == item.Id);

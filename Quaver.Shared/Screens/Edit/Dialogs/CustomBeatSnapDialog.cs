@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
                 20, "", "Enter a beat snap value or range (max 48, e.g. \"7\" or \"5-9\")", s => OnSubmit(s))
             {
                 Parent = Panel,

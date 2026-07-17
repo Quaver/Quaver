@@ -219,7 +219,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// </summary>
         private void CreateSelectedText()
         {
-            SelectedText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Options[SelectedIndex],
+            SelectedText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Options[SelectedIndex],
                 FontSize)
             {
                 Parent = this,

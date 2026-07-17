@@ -379,6 +379,14 @@ namespace Quaver.Shared.Screens.Gameplay
 
         /// <summary>
         /// </summary>
+        private const string VISUAL_OFFSET_NOTIFICATION_KEY = "gameplay-visual-offset";
+
+        /// <summary>
+        /// </summary>
+        private const string LOCAL_MAP_OFFSET_NOTIFICATION_KEY = "gameplay-local-map-offset";
+
+        /// <summary>
+        /// </summary>
         public int FailFadeTime => HasQuit ? QUIT_FADE_TIME : FAILURE_FADE_TIME;
 
         /// <summary>
@@ -546,7 +554,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // This needs to be above any checks for IsPlayComplete, because that
             // relies on the object pool being empty.
             // If skipping ahead, the pool gets recreated
-            if (InReplayMode && !IsSongSelectPreview && OnlineManager.IsSpectatingSomeone)
+            if (InReplayMode && !IsSongSelectPreview && SpectatorClient != null && OnlineManager.IsSpectatingSomeone)
             {
                 HandleSpectatorSkipping();
 
@@ -666,12 +674,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (AudioEngine.Track.IsPlaying)
                         AudioEngine.Track.Pause();
 
-                    if (IsTestPlayingInNewEditor)
-                        ExitToNewEditor(true);
-                    else
-                    {
-                        Exit(() => new EditorScreen(OriginalEditorMap));
-                    }
+                    ExitToNewEditor(true);
                 }
 
                 if (!IsSongSelectPreview)
@@ -733,10 +736,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 CustomAudioSampleCache.StopAll();
 
-                if (IsTestPlayingInNewEditor)
-                    ExitToNewEditor();
-                else
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+                ExitToNewEditor();
 
                 return;
             }
@@ -909,10 +909,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 CustomAudioSampleCache.StopAll();
 
-                if (IsTestPlayingInNewEditor)
-                    ExitToNewEditor();
-                else
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+                ExitToNewEditor();
 
                 return;
             }
@@ -1387,10 +1384,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleSpectatorSkipping()
         {
-            if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
+            var frames = SpectatorClient?.Replay?.Frames;
+
+            if (frames == null || frames.Count == 0 || this is TournamentGameplayScreen)
                 return;
 
-            var targetSyncTime = SpectatorClient.Replay.Frames.Last().Time;
+            var targetSyncTime = frames.Last().Time;
             // User can only be two seconds out of sync with the user
             if (Math.Abs(AudioEngine.Track.Time - targetSyncTime) < 3000)
                 return;
@@ -1680,13 +1679,13 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value += change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset += change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
@@ -1699,13 +1698,13 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value -= change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset -= change;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
@@ -1718,13 +1717,13 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsAltDown())
                     {
                         ConfigManager.VisualOffset.Value = 0;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Visual offset has been reset to: {ConfigManager.VisualOffset.Value} ms", null, true);
                     }
                     else
                     {
                         MapManager.Selected.Value.LocalOffset = 0;
-                        NotificationManager.Show(NotificationLevel.Success,
+                        NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
                             $"Local map audio offset has been reset to: {MapManager.Selected.Value.LocalOffset} ms", null, true);
 
                         ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
