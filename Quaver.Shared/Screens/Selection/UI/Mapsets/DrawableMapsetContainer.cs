@@ -6,9 +6,9 @@ using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -181,7 +181,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 var map = ParentMapset.Item.Maps.First();
 
-                var diff = map.DifficultyFromMods(ModManager.Mods);
+                var diff = PlaylistManager.GetDifficultyForMap(map);
 
                 DifficultyName.Text = $"{StringHelper.RatingToString(diff)} - {map.DifficultyName}";
                 DifficultyName.Tint = ColorHelper.DifficultyToColor((float)diff);

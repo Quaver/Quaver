@@ -3,6 +3,7 @@ using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
+using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -124,7 +125,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            // Playlist rows are offscreen while tournament maps are being browsed, and tournament difficulty ranges
+            // are calculated from each map's persisted modifiers rather than the selected map's global modifiers.
+            if (PlaylistManager.IsTournamentPlaylistActive() && Container is PlaylistContainer playlistContainer &&
+                playlistContainer.ActiveScrollContainer.Value != SelectScrollContainerType.Playlists)
+                return;
+
+            UpdateContent(Item, Index);
+        }
 
         private void OnOnlineRankedStatusUpdated(object sender, EventArgs e) => UpdateContent(Item, Index);
     }

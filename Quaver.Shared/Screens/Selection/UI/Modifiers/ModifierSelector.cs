@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -154,6 +155,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 
             ResetModifiersButton = new IconButton(UserInterface.EditPlayButton, (sender, args) =>
             {
+                if (!PlaylistManager.CanEditSelectedTournamentModifiers())
+                    return;
+
                 if (OnlineManager.CurrentGame != null &&
                     (OnlineManager.CurrentGame.HostId != OnlineManager.Self?.OnlineUser?.Id && OnlineManager.CurrentGame.FreeModType == 0))
                 {

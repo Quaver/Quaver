@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -179,6 +180,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <returns></returns>
         protected bool CanActivateMultiplayerMod()
         {
+            if (!PlaylistManager.CanToggleSelectedTournamentModifier(Mod.ModIdentifier) && !(Mod is ModJudgementWindows))
+                return false;
+
             var game = OnlineManager.CurrentGame;
 
             if (game == null)

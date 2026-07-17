@@ -8,7 +8,10 @@ using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Form;
+using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble;
@@ -94,6 +97,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         private LabelledTextbox Description { get; set; }
 
         /// <summary>
+        ///     The kind of playlist to create.
+        /// </summary>
+        private LabelledDropdown PlaylistTypeDropdown { get; set; }
+
+        /// <summary>
         ///     The button to submit the form and create the playlist
         /// </summary>
         private RoundedButton CreateButton { get; set; }
@@ -125,7 +133,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             Dialog = dialog;
 
             Alpha = 0f;
-            Size = new ScalableVector2(660, 424);
+            Size = new ScalableVector2(660, 500);
 
             CreateHeader();
             CreateContainer();
@@ -134,6 +142,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             TabControl = new TextboxTabControl(new List<Textbox>()) {  Parent = this };
             CreateNameTextbox();
             CreateDescriptionTextbox();
+            CreatePlaylistTypeDropdown();
             CreateButtonCreate();
             CreateButtonCancel();
 
@@ -225,7 +234,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
-                Y = Banner.Height + 16,
+                Y = Banner.Height + 16 + TextboxHeight + TextboxSpacingY,
                 Textbox =
                 {
                     AllowSubmission = false
@@ -253,6 +262,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             };
 
             TabControl.AddTextbox(Description.Textbox);
+        }
+
+        /// <summary>
+        ///     Creates <see cref="PlaylistTypeDropdown"/>.
+        /// </summary>
+        private void CreatePlaylistTypeDropdown()
+        {
+            var selectedIndex = Dialog.Playlist == null ? 0 : (int)Dialog.Playlist.Type;
+
+            PlaylistTypeDropdown = new LabelledDropdown("Type", 21,
+                new Dropdown(new List<string> { "Normal", "Tournament" }, new ScalableVector2(166, 35), 20,
+                    selectedIndex: selectedIndex))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                X = (Container.Width - TextboxWidth) / 2,
+                Y = Banner.Height + 16
+            };
         }
 
         /// <summary>
@@ -298,7 +325,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 {
                     Name = Name.Textbox.RawText,
                     Creator = ConfigManager.Username.Value ?? "Player",
-                    Description = Description.Textbox.RawText
+                    Description = Description.Textbox.RawText,
+                    Type = (PlaylistType)PlaylistTypeDropdown.Dropdown.SelectedIndex
                 };
 
                 PlaylistManager.AddPlaylist(playlist, BannerPath);
@@ -309,6 +337,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 var playlist = Dialog.Playlist;
                 playlist.Name = Name.Textbox.RawText;
                 playlist.Description = Description.Textbox.RawText;
+                playlist.Type = (PlaylistType)PlaylistTypeDropdown.Dropdown.SelectedIndex;
 
                 PlaylistManager.EditPlaylist(playlist, BannerPath);
             }
@@ -427,6 +456,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             Description.Label.FadeTo(0, easing, time);
 
             Description.Textbox.Visible = false;
+
+            PlaylistTypeDropdown.Label.ClearAnimations();
+            PlaylistTypeDropdown.Label.FadeTo(0, easing, time);
+            PlaylistTypeDropdown.Dropdown.Visible = false;
 
             CreateButton.PerformHoverFade = false;
             CreateButton.ClearAnimations();

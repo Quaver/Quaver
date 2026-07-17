@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps.Components;
@@ -110,7 +111,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         public void UpdateContent(Map map, int index)
         {
             Name.Text = map.DifficultyName ?? "";
-            Name.Tint = ColorHelper.DifficultyToColor((float) map.DifficultyFromMods(ModManager.Mods));
+            Name.Tint = ColorHelper.DifficultyToColor((float) PlaylistManager.GetDifficultyForMap(map));
 
             Creator.Text = map.Creator ?? "";
 
@@ -367,6 +368,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
-            => Name.Tint = ColorHelper.DifficultyToColor((float) ParentMap.Item.DifficultyFromMods(ModManager.Mods));
+        {
+            if (PlaylistManager.IsTournamentPlaylistActive())
+                return;
+
+            Name.Tint = ColorHelper.DifficultyToColor((float) PlaylistManager.GetDifficultyForMap(ParentMap.Item));
+        }
     }
 }

@@ -7,6 +7,7 @@ using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
@@ -44,7 +45,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
         /// <summary>
         /// </summary>
-        private const int FontSize = 22;
+        private const int FontSize = 18;
 
         private const string Play = "Play";
 
@@ -53,6 +54,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         private const string ViewOnlineListing = "Online Listing";
 
         private const string AddToPlaylist = "Add To Playlist";
+
+        private const string ApplyCurrentMods = "Apply Current Mods";
 
         private const string Delete = "Delete Map";
 
@@ -65,7 +68,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         private const string DeleteMapset = "Delete Mapset";
         /// <summary>
         /// </summary>
-        public MapRightClickOptions(DrawableMap drawableMap) : base(GetOptions(), OptionsSize, FontSize)
+        public MapRightClickOptions(DrawableMap drawableMap) : base(GetOptions(drawableMap.Item), OptionsSize, FontSize)
         {
             DrawableMap = drawableMap;
             Map = DrawableMap.Item;
@@ -76,7 +79,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// <summary>
         /// </summary>
         /// <param name="drawableMapset"></param>
-        public MapRightClickOptions(DrawableMapset drawableMapset) : base(GetOptions(), OptionsSize, FontSize)
+        public MapRightClickOptions(DrawableMapset drawableMapset) : base(GetOptions(drawableMapset.Item.Maps.First()), OptionsSize, FontSize)
         {
             DrawableMapset = drawableMapset;
             Map = DrawableMapset.Item.Maps.First();
@@ -157,6 +160,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
                         selectScreen?.ActivateCheckboxContainer(new AddMapToPlaylistCheckboxContainer(Map));
                         break;
+                    case ApplyCurrentMods:
+                        var playlist = PlaylistManager.Selected.Value;
+
+                        if (!PlaylistManager.SetMapModifiers(playlist, Map, (long)ModManager.Mods))
+                        {
+                            NotificationManager.Show(NotificationLevel.Error, "Only the playlist owner can change tournament map modifiers.");
+                            return;
+                        }
+
+                        NotificationManager.Show(NotificationLevel.Success, $"Saved the current modifiers for {Map.DifficultyName}.");
+                        PlaylistManager.InvokePlaylistMapsManagedEvent(playlist);
+                        break;
                     case Export:
                         ThreadScheduler.Run(() =>
                         {
@@ -178,17 +193,30 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         ///     Returns the options to select
         /// </summary>
         /// <returns></returns>
-        private static Dictionary<string, Color> GetOptions() => new Dictionary<string, Color>()
+        private static Dictionary<string, Color> GetOptions(Map map)
         {
-            {Play, Color.White},
-            {Edit, ColorHelper.HexToColor("#F2994A")},
-            {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
-            {Delete, ColorHelper.HexToColor($"#FF6868")},
-            {DeleteMapset, ColorHelper.HexToColor($"#FF6868")},
-            {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
-            {Export, ColorHelper.HexToColor("#0787E3")},
-            {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
-            {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
-        };
+            var options = new Dictionary<string, Color>()
+            {
+                {Play, Color.White},
+                {Edit, ColorHelper.HexToColor("#F2994A")},
+                {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
+                {Delete, ColorHelper.HexToColor($"#FF6868")},
+                {DeleteMapset, ColorHelper.HexToColor($"#FF6868")},
+                {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
+                {Export, ColorHelper.HexToColor("#0787E3")},
+                {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
+                {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
+            };
+
+            var playlist = PlaylistManager.Selected.Value;
+            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists &&
+                playlist?.IsTournament() == true && playlist.IsOwnedByCurrentUser() &&
+                playlist.Maps.Any(x => x.Md5Checksum == map.Md5Checksum))
+            {
+                options.Add(ApplyCurrentMods, ColorHelper.HexToColor("#0FBAE5"));
+            }
+
+            return options;
+        }
     }
 }

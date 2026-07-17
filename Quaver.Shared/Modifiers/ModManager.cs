@@ -243,6 +243,52 @@ namespace Quaver.Shared.Modifiers
         }
 
         /// <summary>
+        ///     Replaces the active modifier combination and emits a single change event.
+        /// </summary>
+        /// <param name="mods"></param>
+        /// <param name="updateMultiplayerMods"></param>
+        public static void ReplaceMods(ModIdentifier mods, bool updateMultiplayerMods = false)
+        {
+            if ((long)mods < 0)
+                mods = 0;
+
+            var oldMods = Mods;
+            if (oldMods == mods)
+                return;
+
+            var replacements = IdentifierToModifier(mods) ?? new List<IGameplayModifier>();
+            CurrentModifiersList.Clear();
+
+            foreach (var replacement in replacements)
+            {
+                try
+                {
+                    var incompatibleMods = CurrentModifiersList.FindAll(x =>
+                        x.IncompatibleMods.Contains(replacement.ModIdentifier));
+                    incompatibleMods.ForEach(x => CurrentModifiersList.Remove(x));
+
+                    CurrentModifiersList.RemoveAll(x => x.ModIdentifier == replacement.ModIdentifier);
+                    CurrentModifiersList.Add(replacement);
+                    replacement.InitializeMod();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
+
+            CheckModInconsistencies();
+
+            if (updateMultiplayerMods)
+                UpdateMultiplayerMods();
+
+            var changedMods = (ModIdentifier)((long)oldMods ^ (long)Mods);
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Replace, Mods, changedMods));
+
+            Logger.Debug($"Replaced modifiers: {oldMods} -> {Mods}", LogType.Runtime, false);
+        }
+
+        /// <summary>
         ///     Adds speed mods from a given rate.
         /// </summary>
         /// <param name="rate"></param>
@@ -486,6 +532,11 @@ namespace Quaver.Shared.Modifiers
         ///     Invokes <see cref="ModsChanged"/>
         /// </summary>
         public static void FireModsChangedEvent() => ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Add, Mods, Mods));
+
+        /// <summary>
+        ///     Synchronizes the current modifiers to the multiplayer lobby without changing the local modifier state.
+        /// </summary>
+        public static void SyncMultiplayerMods() => UpdateMultiplayerMods();
 
         /// <summary>
         ///     Gets a texture for an individual mod

@@ -5,6 +5,7 @@ namespace Quaver.Shared.Modifiers
         Add,
         Removal,
         RemoveAll,
-        RemoveSpeed
+        RemoveSpeed,
+        Replace
     }
 }

@@ -109,6 +109,11 @@ namespace Quaver.Shared.Screens.Selection
         public Bindable<bool> IsPlayTestingInPreview { get; private set; }
 
         /// <summary>
+        ///     If the current modifiers came from the selected tournament playlist.
+        /// </summary>
+        private bool TournamentPlaylistModifiersApplied { get; set; }
+
+        /// <summary>
         /// </summary>
         public SelectionScreen(SelectScrollContainerType? activeScrollContainer = null,
             SelectContainerPanel activeLeftPanel = SelectContainerPanel.Leaderboard)
@@ -149,8 +154,11 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapUpdated += OnMapUpdated;
             MapManager.SongRequestPlayed += OnSongRequestPlayed;
             MapManager.Selected.ValueChanged += OnSelectedMapChangedForStreamerFiles;
+            PlaylistManager.Selected.ValueChanged += OnSelectedTournamentPlaylistChanged;
+            ConfigManager.SelectGroupMapsetsBy.ValueChanged += OnPlaylistGroupingChanged;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
 
+            ApplyTournamentPlaylistModifiers(MapManager.Selected.Value);
             MapLoadingScreen.QueueStreamerFilesWrite(MapManager.Selected.Value);
 
             View = new SelectionScreenView(this);
@@ -200,6 +208,8 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapUpdated -= OnMapUpdated;
             MapManager.SongRequestPlayed -= OnSongRequestPlayed;
             MapManager.Selected.ValueChanged -= OnSelectedMapChangedForStreamerFiles;
+            PlaylistManager.Selected.ValueChanged -= OnSelectedTournamentPlaylistChanged;
+            ConfigManager.SelectGroupMapsetsBy.ValueChanged -= OnPlaylistGroupingChanged;
             SkinManager.StopWatching();
 
             // ReSharper disable once DelegateSubtraction
@@ -451,13 +461,16 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             var shiftHeld = KeyboardManager.IsShiftDown();
+            var canEditTournamentModifiers = PlaylistManager.CanEditSelectedTournamentModifiers();
 
             // Increase rate.
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
+            if (canEditTournamentModifiers &&
+                KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
                 ModManager.AddSpeedMods(GetNextRate(true, shiftHeld));
 
             // Decrease Rate
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
+            if (canEditTournamentModifiers &&
+                KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
                 ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
 
             // Change from pitched to non-pitched
@@ -465,11 +478,13 @@ namespace Quaver.Shared.Screens.Selection
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
             
             // Remove all mods
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRemoveAllMods.Value))
+            if (canEditTournamentModifiers &&
+                KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRemoveAllMods.Value))
                 ModManager.RemoveAllMods();
 
             // Toggle Mirror
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
+            if (PlaylistManager.CanToggleSelectedTournamentModifier(ModIdentifier.Mirror) &&
+                KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
             {
                 if (ModManager.IsActivated(ModIdentifier.Mirror))
                     ModManager.RemoveMod(ModIdentifier.Mirror);
@@ -700,6 +715,8 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         public void ExitToMenu()
         {
+            ClearTournamentPlaylistModifiers();
+
             Exit(() =>
             {
                 if (IsMultiplayer)
@@ -779,8 +796,10 @@ namespace Quaver.Shared.Screens.Selection
 
             ThreadScheduler.Run(() =>
             {
+                SyncTournamentPlaylistMultiplayerMods();
+
                 OnlineManager.Client.ChangeMultiplayerGameMap(map.Md5Checksum, map.MapId,
-                    map.MapSetId, map.ToString(), (byte)map.Mode, map.DifficultyFromMods(ModManager.Mods),
+                    map.MapSetId, map.ToString(), (byte)map.Mode, PlaylistManager.GetDifficultyForMap(map),
                     map.GetDifficultyRatings(), map.GetJudgementCount(), MapManager.Selected.Value.GetAlternativeMd5());
 
                 OnlineManager.Client.SetGameCurrentlySelectingMap(false);
@@ -790,11 +809,24 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
+        ///     Syncs tournament playlist modifiers to the multiplayer lobby when the host confirms the selected map.
+        /// </summary>
+        private static void SyncTournamentPlaylistMultiplayerMods()
+        {
+            var game = OnlineManager.CurrentGame;
+
+            if (!PlaylistManager.IsTournamentPlaylistActive() || game?.HostId != OnlineManager.Self?.OnlineUser?.Id)
+                return;
+
+            ModManager.SyncMultiplayerMods();
+        }
+
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         private bool CheckMultiplayerDifficultyRange()
         {
-            var diff = MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
+            var diff = PlaylistManager.GetDifficultyForMap(MapManager.Selected.Value);
 
             // Prevent host from picking a map not within difficulty range
             if (diff < OnlineManager.CurrentGame.MinimumDifficultyRating || diff > OnlineManager.CurrentGame.MaximumDifficultyRating)
@@ -1002,7 +1034,61 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectedMapChangedForStreamerFiles(object sender, BindableValueChangedEventArgs<Map> e)
-            => MapLoadingScreen.QueueStreamerFilesWrite(e.Value, 250);
+        {
+            ApplyTournamentPlaylistModifiers(e.Value);
+            MapLoadingScreen.QueueStreamerFilesWrite(e.Value, 250);
+        }
+
+        /// <summary>
+        ///     Applies the selected tournament playlist's modifiers for a map.
+        /// </summary>
+        private void ApplyTournamentPlaylistModifiers(Map map)
+        {
+            var playlist = PlaylistManager.Selected.Value;
+            var isTournamentMap = ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists &&
+                                  playlist?.IsTournament() == true && map != null &&
+                                  playlist.Maps.Any(x => x.Md5Checksum == map.Md5Checksum);
+
+            if (!isTournamentMap)
+            {
+                ClearTournamentPlaylistModifiers();
+                return;
+            }
+
+            ModManager.ReplaceMods((ModIdentifier)playlist.GetMapModifiers(map) | GetPlayerControlledTournamentModifiers());
+            TournamentPlaylistModifiersApplied = true;
+        }
+
+        /// <summary>
+        ///     Clears modifiers that were automatically applied by a tournament playlist.
+        /// </summary>
+        private void ClearTournamentPlaylistModifiers()
+        {
+            if (!TournamentPlaylistModifiersApplied)
+                return;
+
+            ModManager.ReplaceMods(GetPlayerControlledTournamentModifiers());
+            TournamentPlaylistModifiersApplied = false;
+        }
+
+        /// <summary>
+        ///     Gets player-side modifiers that are allowed while browsing tournament playlists, but are not saved per-map.
+        /// </summary>
+        /// <returns></returns>
+        private static ModIdentifier GetPlayerControlledTournamentModifiers()
+            => ModManager.Mods & Playlist.PlayerControlledTournamentModifiers;
+
+        /// <summary>
+        ///     Re-evaluates tournament modifiers when the selected playlist changes.
+        /// </summary>
+        private void OnSelectedTournamentPlaylistChanged(object sender, BindableValueChangedEventArgs<Playlist> e)
+            => ApplyTournamentPlaylistModifiers(MapManager.Selected.Value);
+
+        /// <summary>
+        ///     Clears tournament modifiers when leaving playlist grouping and applies them when entering it.
+        /// </summary>
+        private void OnPlaylistGroupingChanged(object sender, BindableValueChangedEventArgs<GroupMapsetsBy> e)
+            => ApplyTournamentPlaylistModifiers(MapManager.Selected.Value);
 
         /// <summary>
         /// </summary>
