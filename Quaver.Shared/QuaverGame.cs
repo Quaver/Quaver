@@ -199,7 +199,7 @@ namespace Quaver.Shared
         /// <summary>
         ///     Used to detect when to switch between gameplay/menu music volume.
         /// </summary>
-        private bool WasPlayingGameplayMusicInPreviousFrame { get; set; }
+        private bool WasUsingGameplayMusicVolumeInPreviousFrame { get; set; }
 
         /// <summary>
         ///     The music volume that <see cref="HandleMusicVolumeFade"/> is currently fading
@@ -1020,15 +1020,15 @@ namespace Quaver.Shared
         }
 
         /// <summary>
-        ///     If true the music track being played is the gameplay track of an actively played map,
-        ///     rather than menu/song-select/editor background music.
+        ///     If true the current screen uses the gameplay music volume rather than the menu music volume.
         /// </summary>
-        private bool IsPlayingGameplayMusic => CurrentScreen?.Type == QuaverScreenType.Gameplay;
+        private bool UsesGameplayMusicVolume => CurrentScreen?.Type == QuaverScreenType.Gameplay
+                                               || CurrentScreen?.Type == QuaverScreenType.Editor;
 
         /// <summary>
         ///     Recalculates the global audio volume muting it if the window is inactive
         ///     and the user has enabled that option. Uses the gameplay music volume while
-        ///     a map is actively being played and the menu music volume everywhere else.
+        ///     a map is actively being played or edited and the menu music volume everywhere else.
         ///
         ///     The music volume is eased towards its new value by <see cref="HandleMusicVolumeFade"/>
         ///     every frame rather than being applied immediately so that switching between
@@ -1038,7 +1038,7 @@ namespace Quaver.Shared
         private void UpdateGlobalVolume(bool immediate = false)
         {
             var muted = ConfigManager.MuteAudioOnWindowInactive.Value && !IsActive;
-            var musicVolume = IsPlayingGameplayMusic ? ConfigManager.VolumeMusic.Value : ConfigManager.VolumeMenuMusic.Value;
+            var musicVolume = UsesGameplayMusicVolume ? ConfigManager.VolumeMusic.Value : ConfigManager.VolumeMenuMusic.Value;
             var target = muted ? 0 : ConfigManager.VolumeGlobal.Value * musicVolume / 100f;
 
             if (immediate)
@@ -1079,13 +1079,13 @@ namespace Quaver.Shared
         /// </summary>
         private void HandleMuteAudioOnWindowInactive()
         {
-            var isPlayingGameplayMusic = IsPlayingGameplayMusic;
+            var usesGameplayMusicVolume = UsesGameplayMusicVolume;
 
-            if (IsActive == WindowActiveInPreviousFrameForAudio && isPlayingGameplayMusic == WasPlayingGameplayMusicInPreviousFrame)
+            if (IsActive == WindowActiveInPreviousFrameForAudio && usesGameplayMusicVolume == WasUsingGameplayMusicVolumeInPreviousFrame)
                 return;
 
             WindowActiveInPreviousFrameForAudio = IsActive;
-            WasPlayingGameplayMusicInPreviousFrame = isPlayingGameplayMusic;
+            WasUsingGameplayMusicVolumeInPreviousFrame = usesGameplayMusicVolume;
             UpdateGlobalVolume();
         }
 

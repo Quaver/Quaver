@@ -144,7 +144,7 @@ namespace Quaver.Shared.Config
         internal static BindableInt VolumeMusic { get; private set; }
 
         /// <summary>
-        ///     The music volume used everywhere outside of gameplay (menus, song select, editor, etc).
+        ///     The music volume used in menus and song select.
         /// </summary>
         internal static BindableInt VolumeMenuMusic { get; private set; }
 
@@ -1085,7 +1085,7 @@ namespace Quaver.Shared.Config
             VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
-            VolumeMenuMusic = ReadInt(@"VolumeMenuMusic", 50, 0, 100, data);
+            VolumeMenuMusic = ReadInt(@"VolumeMenuMusic", VolumeMusic.Value, 0, 100, data);
             DevicePeriod = ReadInt(@"DevicePeriod", 2, 1, 100, data);
             DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", 4, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);

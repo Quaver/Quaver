@@ -111,7 +111,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Gradually fade out the line.
             for (var i = 0; i < LinePool.Length; i++)
-                LinePool[i].Alpha = MathHelper.Lerp(LinePool[i].Alpha, 0, (float)Math.Min(dt / ConfigManager.HitErrorFadeTime.Value, 1));
+            {
+                if (LinePool[i].Alpha <= 0)
+                    continue;
+
+                var alpha = MathHelper.Lerp(LinePool[i].Alpha, 0, (float)Math.Min(dt / ConfigManager.HitErrorFadeTime.Value, 1));
+                LinePool[i].Alpha = alpha <= 0.001f ? 0 : alpha;
+            }
 
             // Tween the chevron to the last hit
             if (CurrentLinePoolIndex != -1)

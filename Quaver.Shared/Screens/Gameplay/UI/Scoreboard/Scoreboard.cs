@@ -59,6 +59,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public Bindable<int> BattleRoyalePlayersLeft { get; }
 
+        /// <summary>
+        ///     Whether any user still needs to move to its current scoreboard position.
+        /// </summary>
+        private bool PositionUpdatePending { get; set; } = true;
+
+        /// <summary>
+        ///     The visibility state used for the last position update.
+        /// </summary>
+        private bool LastScoreboardVisibility { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -122,6 +132,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 if (Team == MultiplayerTeam.Blue)
                     x.X = WindowManager.Width;
             });
+
+            LastScoreboardVisibility = ConfigManager.ScoreboardVisible.Value;
         }
 
         /// <summary>
@@ -222,26 +234,34 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         public override void Update(GameTime gameTime)
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            var scoreboardVisible = ConfigManager.ScoreboardVisible.Value;
+
+            if (LastScoreboardVisibility != scoreboardVisible)
+            {
+                LastScoreboardVisibility = scoreboardVisible;
+                PositionUpdatePending = true;
+            }
 
             // Tween to target Y positions
-            Users.ForEach(user =>
+            if (PositionUpdatePending)
             {
-                user.Y = MathHelper.Lerp(user.Y, user.TargetYPosition, (float) Math.Min(dt / 120, 1));
+                PositionUpdatePending = false;
 
-                // Tween X Position based on if the scoreboard is hidden
-                if (ConfigManager.ScoreboardVisible.Value)
+                foreach (var user in Users)
                 {
-                    var target = Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - user.Width;
-                    user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 120, 1));
-                }
-                else
-                {
-                    var target = Team == MultiplayerTeam.Red ? -user.Width - 10 : WindowManager.Width + user.Width + 10;
-                    user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 90, 1));
-                }
+                    user.Y = LerpToTarget(user.Y, user.TargetYPosition, dt / 120, out var yMoving);
 
-                user.Visible = user.X >= -user.Width + 10;
-            });
+                    // Tween X Position based on if the scoreboard is hidden
+                    var target = scoreboardVisible
+                        ? Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - user.Width
+                        : Team == MultiplayerTeam.Red ? -user.Width - 10 : WindowManager.Width + user.Width + 10;
+
+                    user.X = LerpToTarget(user.X, target, dt / (scoreboardVisible ? 120 : 90), out var xMoving);
+                    user.Visible = user.X >= -user.Width + 10;
+
+                    PositionUpdatePending |= xMoving || yMoving;
+                }
+            }
 
             // Lerp team banner in and out
             if (TeamBanner != null)
@@ -251,6 +271,29 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             }
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Lerps a position until it is close enough to settle exactly at its target.
+        /// </summary>
+        private static float LerpToTarget(float value, float target, double duration, out bool isMoving)
+        {
+            if (Math.Abs(value - target) <= 0.01f)
+            {
+                isMoving = false;
+                return target;
+            }
+
+            var result = MathHelper.Lerp(value, target, (float)Math.Min(duration, 1));
+
+            if (Math.Abs(result - target) <= 0.01f)
+            {
+                isMoving = false;
+                return target;
+            }
+
+            isMoving = true;
+            return result;
         }
 
         /// <summary>
@@ -323,10 +366,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 {
                     try
                     {
-                        users[i].TargetYPosition = (Type == ScoreboardType.FreeForAll && Users.Count != 1)
-                                                   &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
+                        SetTargetYPosition(users[i], (Type == ScoreboardType.FreeForAll && Users.Count != 1)
+                                                   && OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
                             ? Math.Min(users.Count, 5) * -users[i].Height / 2f
-                            : 4 * -users[i].Height / 2f + 60;
+                            : 4 * -users[i].Height / 2f + 60);
 
                     }
                     catch (Exception e)
@@ -337,8 +380,19 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     continue;
                 }
 
-                users[i].TargetYPosition = users[i - 1].TargetYPosition + users[i].Height + 4;
+                SetTargetYPosition(users[i], users[i - 1].TargetYPosition + users[i].Height + 4);
             }
+        }
+
+        /// <summary>
+        ///     Updates a user's target position and schedules movement only when it changed.
+        /// </summary>
+        private void SetTargetYPosition(ScoreboardUser user, float target)
+        {
+            if (Math.Abs(user.TargetYPosition - target) > 0.01f)
+                PositionUpdatePending = true;
+
+            user.TargetYPosition = target;
         }
     }
 }

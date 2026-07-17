@@ -86,6 +86,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
     public class MultiValueDictionary<TKey, TValue>
     {
         /// <summary>
+        ///     Shared immutable-by-convention result for missing keys.
+        /// </summary>
+        private static readonly List<TValue> EmptyValues = new List<TValue>();
+
+        /// <summary>
         ///     Multiple values per key are supported through the use of a list as a value in the backing dictionary.
         /// </summary>
         public Dictionary<TKey, List<TValue>> Dictionary { get; private set; }
@@ -130,7 +135,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (Dictionary.TryGetValue(key, out values))
                 return values;
 
-            return new List<TValue>();
+            return EmptyValues;
         }
     }
 }
