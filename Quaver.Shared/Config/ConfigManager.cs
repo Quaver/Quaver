@@ -321,6 +321,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
         /// <summary>
+        ///     Dictates how to order the playlists during song select.
+        /// </summary>
+        internal static Bindable<OrderPlaylistsBy> SelectOrderPlaylistsBy { get; private set; }
+
+        /// <summary>
         ///     Dictates how to group mapsets in song select
         /// </summary>
         internal static Bindable<GroupMapsetsBy> SelectGroupMapsetsBy { get; private set; }
@@ -1109,6 +1114,7 @@ namespace Quaver.Shared.Config
             DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
             LeaderboardRankedAccuracy = ReadValue(@"LeaderboardRankedAccuracy", false, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
+            SelectOrderPlaylistsBy = ReadValue(@"SelectOrderPlaylistsBy", OrderPlaylistsBy.Title, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);

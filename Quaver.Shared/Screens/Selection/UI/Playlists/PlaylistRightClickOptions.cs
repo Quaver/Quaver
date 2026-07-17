@@ -27,6 +27,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private Playlist Playlist { get; }
 
+        private const int FontSize = 18;
+
         private const string Play = "Play";
 
         private const string Delete = "Delete";
@@ -47,7 +49,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// <summary>
         /// </summary>
         /// <param name="playlist"></param>
-        public PlaylistRightClickOptions(DrawablePlaylist playlist) : base(GetOptions(playlist.Item), new ScalableVector2(200, 40), 22)
+        public PlaylistRightClickOptions(DrawablePlaylist playlist) : base(GetOptions(playlist.Item), new ScalableVector2(200, 40), FontSize)
         {
             Drawable = playlist;
             Playlist = playlist.Item;
