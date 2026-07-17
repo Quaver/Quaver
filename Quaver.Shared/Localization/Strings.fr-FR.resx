@@ -379,13 +379,13 @@
     <value>Aléatoire</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
-    <value>Status Ranked</value>
+    <value>Status Classé</value>
   </data>
   <data name="Screen_Selection_Ranking" xml:space="preserve">
     <value>CLASSEMENT:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Rate</value>
+    <value>Vitesse</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
     <value>Jouées récemment</value>
@@ -412,7 +412,7 @@
     <value>Aucune map n'est sélectionnée!</value>
   </data>
   <data name="Screen_Selection_Thismapisnotranked" xml:space="preserve">
-    <value>Cette map n'est pas ranked!</value>
+    <value>Cette map n'est pas classée !</value>
   </data>
   <data name="Screen_Selection_Thismapisnotsubmittedonline" xml:space="preserve">
     <value>Cette map n'est pas soumise en ligne !</value>
@@ -639,8 +639,8 @@
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>Ecart-Type</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Précision</value>
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
+    <value>ACCURACY</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Vie</value>
@@ -654,8 +654,8 @@
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>Ecart. Type:</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Ratio:</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>RATIO</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistiques Non Disponibles</value>
@@ -718,8 +718,14 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Note</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Combo Max</value>
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
+    <value>MAX COMBO</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>PERFORMANCE RATING</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>RANKED ACCURACY</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -956,7 +962,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Ouvrir le Dossier du Jeu</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
-    <value>Mettre à Jour le Statut des Maps Ranked</value>
+    <value>Mettre à Jour le Statut des Maps Classées</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
     <value>Mettre à Jour le Décalage des Maps à l'aide du Site Web</value>
@@ -995,7 +1001,7 @@ Si la map n'a pas été terminée, le graphique affiche également la précision
     <value>Afficher les Spectateurs</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyWithCustomJudgements" xml:space="preserve">
-    <value>Afficher la Précision Ranked avec un Jugement Personnalisé</value>
+    <value>Afficher la Précision Classée avec un Jugement Personnalisé</value>
   </data>
   <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
     <value>Temps de Disparition des Barres de Jugement</value>
@@ -2009,13 +2015,13 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Etendue de difficulté</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
-    <value>Tout</value>
+    <value>N'importe</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
-    <value>Tout</value>
+    <value>N'importe</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
-    <value>Tout</value>
+    <value>N'importe</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
     <value>Etendue du % de Longue Note</value>
