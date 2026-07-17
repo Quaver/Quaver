@@ -144,7 +144,7 @@ namespace Quaver.Shared.Config
         internal static BindableInt VolumeMusic { get; private set; }
 
         /// <summary>
-        ///     The music volume used everywhere outside of gameplay (menus, song select, editor, etc).
+        ///     The music volume used in menus and song select.
         /// </summary>
         internal static BindableInt VolumeMenuMusic { get; private set; }
 
