@@ -160,10 +160,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         private bool RequiredAccuracyAlertShouldBeVisible { get; set; }
 
-        internal bool IsStaticVisualStable => Animations.Count == 0 && !HasAnimatedDescendant(this);
-
-        internal bool IsHighlightHovered => Button.IsHovered || CantBeatAlert.IsHovered || RequiredAccuracyAlert.IsHovered;
-
         /// <summary>
         /// </summary>
         /// <param name="score"></param>
@@ -219,7 +215,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             AddScheduledUpdate(() =>
             {
-                InvalidateRowsCache();
                 Tint = BackgroundColor;
 
                 // Empty scores don't need to update its state
@@ -273,38 +268,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             base.Destroy();
         }
-
-        internal void DrawBackground() => DrawToSpriteBatch();
-
-        internal void DrawStaticContent(GameTime gameTime)
-        {
-            if (!Visible || Score.Item.IsEmptyScore)
-                return;
-
-            DrawBackground();
-
-            foreach (var child in Children)
-            {
-                if (child == Button)
-                    continue;
-
-                child.Draw(gameTime);
-            }
-        }
-
-        private static bool HasAnimatedDescendant(Drawable drawable)
-        {
-            foreach (var child in drawable.Children)
-            {
-                if (child.Animations.Count != 0 || HasAnimatedDescendant(child))
-                    return true;
-            }
-
-            return false;
-        }
-
-        private void InvalidateRowsCache() =>
-            (Score.Container as LeaderboardScoresContainer)?.InvalidateRowsCache();
 
         /// <summary>
         ///     Creates <see cref="Button"/>
@@ -663,13 +626,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (Button == null)
                 return;
 
-            if (Score.Container is LeaderboardScoresContainer { IsRowsCacheActive: true })
-            {
-                Tint = BackgroundColor;
-                return;
-            }
-
-            var color = IsHighlightHovered ? ColorHelper.HexToColor("#575757"): BackgroundColor;
+            var color = Button.IsHovered || CantBeatAlert.IsHovered ? ColorHelper.HexToColor("#575757"): BackgroundColor;
             FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
         }
 
@@ -830,8 +787,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (e.SteamId != (ulong) Score.Item.SteamId)
                 return;
 
-            InvalidateRowsCache();
-
             lock (Avatar)
             lock (Avatar.Image)
             {
@@ -848,8 +803,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            UpdateRequiredAccuracyTooltip();
-            InvalidateRowsCache();
+            AddScheduledUpdate(() =>
+            {
+                if (Score.Item.IsEmptyScore)
+                    return;
+
+                UpdateCantBeatAlert();
+                UpdateRequiredAccuracyAlert();
+                UpdateRequiredAccuracyTooltip();
+            });
         }
 
         /// <summary>
@@ -857,11 +819,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnAccuracyDisplayChanged(object sender, BindableValueChangedEventArgs<bool> e) =>
-            AddScheduledUpdate(() =>
-            {
-                UpdateAccuracyMode(Score);
-                InvalidateRowsCache();
-            });
+            AddScheduledUpdate(() => UpdateAccuracyMode(Score));
 
         /// <summary>
         /// Called when <see cref="AccuracyMaxCombo"/> and <see cref="Grade"> might need to be updated

@@ -16,6 +16,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
+using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -46,6 +47,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         /// </summary>
         private Bindable<SelectContainerPanel> ActiveLeftPanel { get; }
+
+        /// <summary>
+        ///     The active song select scroll container.
+        /// </summary>
+        private Bindable<SelectScrollContainerType> ActiveScrollContainer { get; }
 
         /// <summary>
         ///     Underlying button that prevents mapsets from being clicked from inside the area
@@ -100,12 +106,14 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         /// </summary>
         public SelectFilterPanel(Bindable<List<Mapset>> availableMapsets, Bindable<string> currentSearchQuery,
-            Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel)
+            Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel,
+            Bindable<SelectScrollContainerType> activeScrollContainer = null)
         {
             AvailableMapsets = availableMapsets;
             CurrentSearchQuery = currentSearchQuery;
             IsPlayTesting = isPlayTesting;
             ActiveLeftPanel = activeLeftPanel;
+            ActiveScrollContainer = activeScrollContainer;
 
             Size = new ScalableVector2(WindowManager.Width, 88);
 
@@ -189,7 +197,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateSortDropdown()
         {
-            SortDropdown = new FilterDropdownSorting(AvailableMapsets) { Parent = this, };
+            SortDropdown = new FilterDropdownSorting(AvailableMapsets, ActiveScrollContainer) { Parent = this, };
             RightItems.Add(SortDropdown);
         }
 
@@ -332,7 +340,16 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSelectOrderMapsetsChanged(object sender, BindableValueChangedEventArgs<OrderMapsetsBy> e) => StartFilterMapsetsTask();
+        private void OnSelectOrderMapsetsChanged(object sender, BindableValueChangedEventArgs<OrderMapsetsBy> e)
+        {
+            if (ConfigManager.SelectGroupMapsetsBy?.Value == GroupMapsetsBy.Playlists &&
+                ActiveScrollContainer?.Value == SelectScrollContainerType.Playlists)
+            {
+                return;
+            }
+
+            StartFilterMapsetsTask();
+        }
 
         /// <summary>
         /// </summary>

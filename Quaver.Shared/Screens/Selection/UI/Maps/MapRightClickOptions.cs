@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
         /// <summary>
         /// </summary>
-        private const int FontSize = 22;
+        private const int FontSize = 18;
 
         private const string Play = "Play";
 
