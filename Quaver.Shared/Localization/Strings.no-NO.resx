@@ -304,7 +304,7 @@
     <value>Strålende/Perfekt Forhold</value>
   </data>
   <data name="Screen_Selection_MaxCombo" xml:space="preserve">
-    <value>Maks Combo</value>
+    <value>MAKS KOMBO</value>
   </data>
   <data name="Screen_Selection_Mode" xml:space="preserve">
     <value>MODUS:</value>
@@ -640,7 +640,7 @@
     <value>Avvik</value>
   </data>
   <data name="Screen_Results_ACCURACY" xml:space="preserve">
-    <value>ACCURACY</value>
+    <value>NØYAKTIGHET</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Helse</value>
@@ -655,7 +655,7 @@
     <value>Std. Avvik:</value>
   </data>
   <data name="Screen_Results_RATIO" xml:space="preserve">
-    <value>RATIO</value>
+    <value>FORHOLD</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistikk er ikke tilgjengelig</value>
@@ -719,13 +719,13 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Karakter</value>
   </data>
   <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
-    <value>MAX COMBO</value>
+    <value>MAKS COMBO</value>
   </data>
   <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
-    <value>PERFORMANCE RATING</value>
+    <value>YTELSES VURDERING</value>
   </data>
   <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
-    <value>RANKED ACCURACY</value>
+    <value>SAMLEY NØYAKTIGHET</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Strål</value>
