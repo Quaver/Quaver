@@ -930,6 +930,9 @@ namespace Quaver.Shared.Screens.Selection
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
+                if (TryShowPlaylistListOnEmptyPlaylist())
+                    return;
+
                 // Change the map
                 if (index >= 0 && index < AvailableMapsets.Value.Count)
                 {
@@ -958,13 +961,8 @@ namespace Quaver.Shared.Screens.Selection
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
-                if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists &&
-                    PlaylistManager.Selected.Value?.Maps.Count == 0)
-                {
-                    View.Container.AddScheduledUpdate(() =>
-                        ActiveScrollContainer.Value = SelectScrollContainerType.Playlists);
+                if (TryShowPlaylistListOnEmptyPlaylist())
                     return;
-                }
 
                 var mapsetIndex = AvailableMapsets.Value.FindIndex(x => x.Maps.Contains(e.Map));
 
@@ -981,6 +979,21 @@ namespace Quaver.Shared.Screens.Selection
                         AudioEngine.Track.Dispose();
                 }
             });
+        }
+
+        /// <summary>
+        ///     Returns to the playlist list when deletion emptied the selected playlist.
+        /// </summary>
+        /// <returns></returns>
+        private bool TryShowPlaylistListOnEmptyPlaylist()
+        {
+            if (ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists ||
+                PlaylistManager.Selected.Value?.Maps.Count != 0)
+                return false;
+
+            View.Container.AddScheduledUpdate(() =>
+                ActiveScrollContainer.Value = SelectScrollContainerType.Playlists);
+            return true;
         }
 
         /// <summary>
