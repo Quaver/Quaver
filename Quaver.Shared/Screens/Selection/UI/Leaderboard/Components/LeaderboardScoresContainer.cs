@@ -509,9 +509,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             var isVisible = row.ScreenRectangle.Intersects(ScreenRectangle);
             row.SetScrollVisibility(isVisible);
-
-            if (isVisible)
-                row.AddScheduledUpdate(() => row.ChildContainer.FadeIn());
+            row.AddScheduledUpdate(() => row.ChildContainer.FadeIn());
         }
 
         private void ApplyPoolVisibility()
