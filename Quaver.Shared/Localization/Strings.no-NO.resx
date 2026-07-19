@@ -1379,7 +1379,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>ANBEFAL VANSKELIGHET</value>
   </data>
   <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
-    <value>Ønsker du å finne anbefalte mapper rundt ferdighetsnivået ditt for den valgte spillmodusen?</value>
+    <value>Vil du finne anbefalte mapper rundt ditt ferdighetsnivået for den valgte spillmodusen?</value>
   </data>
   <data name="Screen_Download_Typetosearch" xml:space="preserve">
     <value>Skriv for å søke...</value>
