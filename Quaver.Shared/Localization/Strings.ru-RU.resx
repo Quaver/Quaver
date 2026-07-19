@@ -385,7 +385,7 @@
     <value>РЕЙТИНГ:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Скорость</value>
+    <value>Оценка</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
     <value>Недавно Сыгранные</value>
@@ -640,7 +640,7 @@
     <value>Отклонение</value>
   </data>
   <data name="Screen_Results_ACCURACY" xml:space="preserve">
-    <value>ACCURACY</value>
+    <value>ТОЧНОСТЬ</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Здоровье</value>
@@ -655,7 +655,7 @@
     <value>Стандартное Отклонение:</value>
   </data>
   <data name="Screen_Results_RATIO" xml:space="preserve">
-    <value>RATIO</value>
+    <value>СООТНОШЕНИЕ</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Статистика недоступна</value>
@@ -719,13 +719,13 @@
     <value>Оценка</value>
   </data>
   <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
-    <value>MAX COMBO</value>
+    <value>МАКС. КОМБО</value>
   </data>
   <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
-    <value>PERFORMANCE RATING</value>
+    <value>РЕЙТИНГ РЕЗУЛЬТАТИВНОСТИ</value>
   </data>
   <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
-    <value>RANKED ACCURACY</value>
+    <value>РЕЙТИНГОВАЯ ТОЧНОСТЬ</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -917,7 +917,8 @@
     <value>Увеличить Скорость Прокрутки</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
-    <value>Уменьшить Задержку Карты</value>
+    <value>Уменьшить Задержку Карты
+</value>
   </data>
   <data name="Screen_Options_IncreaseMapOffset" xml:space="preserve">
     <value>Увеличить Задержку Карты</value>
@@ -1115,7 +1116,7 @@
     <value>Приоритетная Сложность для 1К</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
-    <value>1К</value>
+    <value>1 Клавиша</value>
   </data>
   <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 2К</value>
@@ -1139,7 +1140,7 @@
     <value>Приоритетная Сложность для 2К</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
-    <value>2К</value>
+    <value>2 Клавиши</value>
   </data>
   <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 3К</value>
@@ -1163,7 +1164,7 @@
     <value>Приоритетная Сложность для 3К</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
-    <value>3К</value>
+    <value>3 Клавиши</value>
   </data>
   <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 4К</value>
@@ -1187,7 +1188,7 @@
     <value>Приоритетная Сложность для 4К</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
-    <value>4К</value>
+    <value>4 Клавиши</value>
   </data>
   <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 5К</value>
@@ -1211,7 +1212,7 @@
     <value>Приоритетная Сложность для 5К</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
-    <value>5К</value>
+    <value>5 Клавиши</value>
   </data>
   <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 6К</value>
@@ -1235,7 +1236,7 @@
     <value>Приоритетная Сложность для 6К</value>
   </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
-    <value>6К</value>
+    <value>6 Клавиш</value>
   </data>
   <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 7К</value>
@@ -1259,7 +1260,7 @@
     <value>Приоритетная Сложность для 7К</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
-    <value>7К</value>
+    <value>7 Клавиш</value>
   </data>
   <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 8К</value>
@@ -1283,7 +1284,7 @@
     <value>Приоритетная Сложность для 8К</value>
   </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
-    <value>8К</value>
+    <value>8 Клавиш</value>
   </data>
   <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 9К</value>
@@ -1307,7 +1308,7 @@
     <value>Приоритетная Сложность для 9К</value>
   </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
-    <value>9К</value>
+    <value>9 Клавиш</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
     <value>Раскладка для 10К</value>
@@ -1331,7 +1332,7 @@
     <value>Приоритетная Сложность для 10К</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
-    <value>10К</value>
+    <value>10 Клавиш</value>
   </data>
   <data name="Screen_Options_VideoSettings" xml:space="preserve">
     <value>Настройки Видео</value>
@@ -1652,7 +1653,7 @@
     <value>ИЗМЕНИТЬ ИМЯ ИГРЫ</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
-    <value>Введите новое имя для игры в мультиплеере...</value>
+    <value>Введите новое имя для многопользовательской игры..</value>
   </data>
   <data name="Screen_Multi_EnterNamePlaceholder" xml:space="preserve">
     <value>Введите имя...</value>
@@ -1661,7 +1662,7 @@
     <value>ИЗМЕНИТЬ ПАРОЛЬ ИГРЫ</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordMessage" xml:space="preserve">
-    <value>Введите новый пароль для игры в мультиплеере...</value>
+    <value>Введите новый пароль для многопользовательской игры...</value>
   </data>
   <data name="Screen_Multi_EnterPasswordPlaceholder" xml:space="preserve">
     <value>Введите пароль...</value>
@@ -1679,7 +1680,7 @@
     <value>Подождите, идёт загрузка набора карт...</value>
   </data>
   <data name="Screen_Multi_SuccessfullyUploadedUnsubmittedMapset" xml:space="preserve">
-    <value>Набор карт успешно загружен для мультиплеерной игры!</value>
+    <value>Набор карт успешно загружен для многопользовательской игры!</value>
   </data>
   <data name="Screen_Multi_UploadMapsetError" xml:space="preserve">
     <value>Произошла ошибка при загрузке набора карт.</value>
@@ -1694,7 +1695,7 @@
     <value>{0} П</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
-    <value>МУЛЬТИПЛЕЕР</value>
+    <value>МНОГОПОЛЬЗОВАТЕЛЬСКАЯ ИГРА</value>
   </data>
   <data name="Screen_Multiplayer_HeaderSubtitle" xml:space="preserve">
     <value>ИГРА</value>
@@ -1874,186 +1875,186 @@
     <value>У вас нет этой карты. Загрузка не доступна!</value>
   </data>
   <data name="Screen_Multiplayer_MapsetAlreadyDownloading" xml:space="preserve">
-    <value>The mapset is already downloading. Slow down!</value>
+    <value>Этот набор карт уже загружается. Подождите!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadingMap" xml:space="preserve">
-    <value>Downloading Map: {0}%</value>
+    <value>Загрузка Карты: {0}%</value>
   </data>
   <data name="Screen_Multiplayer_DownloadFailed" xml:space="preserve">
-    <value>Download Failed!</value>
+    <value>Ошибка Загрузки!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadComplete" xml:space="preserve">
-    <value>Download Complete!</value>
+    <value>Загрузка Завершена!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedMissingMap" xml:space="preserve">
-    <value>Match started, but we don't have the map!</value>
+    <value>Матч начался, но у нас нет этой карты!</value>
   </data>
   <data name="Screen_Multiplayer_MatchStartedReferee" xml:space="preserve">
-    <value>Match started. Click to watch the match live on the web as a referee. </value>
+    <value>Матч начался. Нажмите, чтобы посмотреть трансляцию матча в качестве судьи. </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
-    <value>MATCH DETAILS</value>
+    <value>ПОДРОБНОСТИ МАТЧА</value>
   </data>
   <data name="Screen_MultiplayerLobby_ViewInformationAboutMatch" xml:space="preserve">
-    <value>View information about a match</value>
+    <value>Показать информацию о матче</value>
   </data>
   <data name="Screen_MultiplayerLobby_RulesetLabel" xml:space="preserve">
-    <value>RULESET: </value>
+    <value>НАБОР ПРАВИЛ: </value>
   </data>
   <data name="Screen_MultiplayerLobby_All" xml:space="preserve">
-    <value>All</value>
+    <value>Все</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeForAll" xml:space="preserve">
-    <value>Free-For-All</value>
+    <value>Все против Всех</value>
   </data>
   <data name="Screen_MultiplayerLobby_Team" xml:space="preserve">
-    <value>Team</value>
+    <value>Команда</value>
   </data>
   <data name="Screen_MultiplayerLobby_ModeLabel" xml:space="preserve">
-    <value>MODE: </value>
+    <value>РЕЖИМ: </value>
   </data>
   <data name="Screen_MultiplayerLobby_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 Клавиши</value>
   </data>
   <data name="Screen_MultiplayerLobby_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 Клавиш</value>
   </data>
   <data name="Screen_MultiplayerLobby_MapStatusLabel" xml:space="preserve">
-    <value>MAP STATUS: </value>
+    <value>СТАТУС КАРТЫ: </value>
   </data>
   <data name="Screen_MultiplayerLobby_Imported" xml:space="preserve">
-    <value>Imported</value>
+    <value>Импортировано</value>
   </data>
   <data name="Screen_MultiplayerLobby_Uploaded" xml:space="preserve">
-    <value>Uploaded</value>
+    <value>Опубликовано</value>
   </data>
   <data name="Screen_MultiplayerLobby_Unsubmitted" xml:space="preserve">
-    <value>Unsubmitted</value>
+    <value>Не опубликовано</value>
   </data>
   <data name="Screen_MultiplayerLobby_RoomVisibilityLabel" xml:space="preserve">
-    <value>ROOM VISIBILITY: </value>
+    <value>ВИДИМОСТЬ КОМНАТЫ:</value>
   </data>
   <data name="Screen_MultiplayerLobby_Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Открыть</value>
   </data>
   <data name="Screen_MultiplayerLobby_Full" xml:space="preserve">
-    <value>Full</value>
+    <value>Заполнено</value>
   </data>
   <data name="Screen_MultiplayerLobby_Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Пароль</value>
   </data>
   <data name="Screen_MultiplayerLobby_GamesFound" xml:space="preserve">
-    <value>GAMES FOUND</value>
+    <value>: КОЛ-ВО НАЙДЕННЫХ ИГР</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameFound" xml:space="preserve">
-    <value>GAME FOUND</value>
+    <value>ИГРА НАЙДЕНА</value>
   </data>
   <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
-    <value>Search for games...</value>
+    <value>Поиск игр...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateGame" xml:space="preserve">
-    <value>CREATE GAME</value>
+    <value>СОЗДАТЬ ИГРУ</value>
   </data>
   <data name="Screen_MultiplayerLobby_QuickMatch" xml:space="preserve">
-    <value>Quick Match</value>
+    <value>Быстрый Матч</value>
   </data>
   <data name="Screen_MultiplayerLobby_NoAvailableOpenGames" xml:space="preserve">
-    <value>There are no available open games to join.</value>
+    <value>Нет доступных открытых игр.</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterGamePasswordTitle" xml:space="preserve">
-    <value>ENTER GAME PASSWORD</value>
+    <value>ВВЕДИТЕ ПАРОЛЬ ИГРЫ</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterGamePasswordMessage" xml:space="preserve">
-    <value>Enter the password to join the multiplayer game...</value>
+    <value>Введите пароль для подключения к многопользовательской игре</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnterPasswordPlaceholder" xml:space="preserve">
-    <value>Enter password...</value>
+    <value>Введите пароль...</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameTitle" xml:space="preserve">
-    <value>JOINING GAME</value>
+    <value>ПОДКЛЮЧЕНИЕ К ИГРЕ</value>
   </data>
   <data name="Screen_MultiplayerLobby_JoiningGameMessage" xml:space="preserve">
-    <value>Connecting to multiplayer game. Please wait...</value>
+    <value>Подключение к многопользовательской игре. Подождите...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameTitle" xml:space="preserve">
-    <value>CREATE MULTIPLAYER GAME</value>
+    <value>СОЗДАТЬ МНОГОПОЛЬЗОВАТЕЛЬСКУЮ ИГРУ</value>
   </data>
   <data name="Screen_MultiplayerLobby_CreateMultiplayerGameMessage" xml:space="preserve">
-    <value>Fill in the details to create a multiplayer game...</value>
+    <value>Заполните подробности для создания многопользовательской игры...</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameName" xml:space="preserve">
-    <value>Game Name</value>
+    <value>Название Игры</value>
   </data>
   <data name="Screen_MultiplayerLobby_ChooseGameNamePlaceholder" xml:space="preserve">
-    <value>Choose a name for the game...</value>
+    <value>Выберите имя для игры...</value>
   </data>
   <data name="Screen_MultiplayerLobby_CannotCreateGameWithoutMap" xml:space="preserve">
-    <value>You cannot create a game without having a map selected!</value>
+    <value>Вы не можете создать игру, не выбрав карту!</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayersLabel" xml:space="preserve">
-    <value>MAX PLAYERS: </value>
+    <value>МАКС. КОЛ-ВО ИГРОКОВ</value>
   </data>
   <data name="Screen_MultiplayerLobby_LoseALifeUponFailing" xml:space="preserve">
-    <value>Lose A Life Upon Failing</value>
+    <value>Терять Жизнь При Поражении</value>
   </data>
   <data name="Screen_MultiplayerLobby_Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Да</value>
   </data>
   <data name="Screen_MultiplayerLobby_No" xml:space="preserve">
-    <value>No</value>
+    <value>Не</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeMod" xml:space="preserve">
-    <value>Free Mod</value>
+    <value>Любые Моды</value>
   </data>
   <data name="Screen_MultiplayerLobby_FreeRate" xml:space="preserve">
-    <value>Free Rate</value>
+    <value>Любая Скорость Прокрутки</value>
   </data>
   <data name="Screen_MultiplayerLobby_DifficultyRange" xml:space="preserve">
-    <value>Difficulty Range</value>
+    <value>Диапазон Сложности</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyDifficultyRange" xml:space="preserve">
-    <value>Any</value>
+    <value>Любой</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyMaximumSongLength" xml:space="preserve">
-    <value>Any</value>
+    <value>Любая</value>
   </data>
   <data name="Screen_MultiplayerLobby_AnyLongNotePercentageRange" xml:space="preserve">
-    <value>Any</value>
+    <value>Любой</value>
   </data>
   <data name="Screen_MultiplayerLobby_LongNotePercentageRange" xml:space="preserve">
-    <value>Long Note % Range</value>
+    <value>Диапазон % длинных нот</value>
   </data>
   <data name="Screen_MultiplayerLobby_EnablePreview" xml:space="preserve">
-    <value>Enable Preview</value>
+    <value>Включить Предпросмотр</value>
   </data>
   <data name="Screen_MultiplayerLobby_AutoHost" xml:space="preserve">
-    <value>Auto Host</value>
+    <value>Авто Хост</value>
   </data>
   <data name="Screen_MultiplayerLobby_Ruleset" xml:space="preserve">
-    <value>Ruleset</value>
+    <value>Набор Правил</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>Макс. Кол-во Игроков</value>
   </data>
   <data name="Screen_MultiplayerLobby_Players" xml:space="preserve">
-    <value>Players</value>
+    <value>Игроки</value>
   </data>
   <data name="Screen_MultiplayerLobby_AllowedGameModes" xml:space="preserve">
-    <value>Allowed Game Modes</value>
+    <value>Разрешённые Режимы Игры</value>
   </data>
   <data name="Screen_MultiplayerLobby_None" xml:space="preserve">
-    <value>None</value>
+    <value>Любая</value>
   </data>
   <data name="Screen_MultiplayerLobby_InProgress" xml:space="preserve">
-    <value>In Progress</value>
+    <value>В процессе</value>
   </data>
   <data name="Screen_MultiplayerLobby_HostRotation" xml:space="preserve">
-    <value>Host Rotation</value>
+    <value>Автосмена Хоста</value>
   </data>
   <data name="Screen_MultiplayerLobby_LifeCount" xml:space="preserve">
-    <value>Life Count</value>
+    <value>Кол-во Жизней</value>
   </data>
   <data name="Screen_MultiplayerLobby_MaximumSongLength" xml:space="preserve">
-    <value>Maximum Song Length</value>
+    <value>Мак. Длительность Песни</value>
   </data>
 </root>
