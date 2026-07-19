@@ -332,6 +332,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     timingPointPlugin.Initialize();
             }
 
+            var bookmarkPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.BookmarkEditor];
+
+            if (ImGui.MenuItem("Edit Bookmarks", "", bookmarkPlugin.IsActive))
+                Screen.TogglePlugin(bookmarkPlugin);
+
             var scrollVelocityPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
 
             if (ImGui.MenuItem("Edit Scroll Velocities", "F6", scrollVelocityPlugin.IsActive))
