@@ -640,7 +640,7 @@
     <value>Afvigelse</value>
   </data>
   <data name="Screen_Results_ACCURACY" xml:space="preserve">
-    <value>ACCURACY</value>
+    <value>NØJAGTIGHED</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Liv</value>
@@ -719,13 +719,13 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
     <value>Karakter</value>
   </data>
   <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
-    <value>MAX COMBO</value>
+    <value>MAKS. COMBO</value>
   </data>
   <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
     <value>PERFORMANCE RATING</value>
   </data>
   <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
-    <value>RANKED ACCURACY</value>
+    <value>RANGERET NØJAGTIGHED</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
