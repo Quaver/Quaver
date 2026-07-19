@@ -53,9 +53,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
             switch (QuaverScreenManager.LastScreen)
             {
                 case QuaverScreenType.Select:
-                    return new SelectionScreen();
+                    return QuaverScreenFactory.CreateSelection();
                 default:
-                    return new MainMenuScreen();
+                    return QuaverScreenFactory.CreateMainMenu();
             }
         });
     }

@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Dialogs
                 if (Screen == null || Screen.Exiting)
                     return;
 
-                Screen.Exit(() => new MultiplayerLobbyScreen());
+                Screen.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
             };
         }
     }

@@ -18,7 +18,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public override void OnClick()
         {
             var game = (QuaverGame) GameBase.Game;
-            game.CurrentScreen.Exit(() => new MusicPlayerScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMusicPlayer());
         }
     }
 }

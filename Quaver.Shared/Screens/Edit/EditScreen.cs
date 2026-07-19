@@ -389,7 +389,7 @@ namespace Quaver.Shared.Screens.Edit
             }
             catch (Exception e)
             {
-                Exit(() => new SelectionScreen());
+                Exit(() => QuaverScreenFactory.CreateSelection());
 
                 Logger.Error(e, LogType.Runtime);
                 NotificationManager.Show(NotificationLevel.Error,
@@ -1567,7 +1567,7 @@ namespace Quaver.Shared.Screens.Edit
             ModManager.RemoveAllMods();
             RemoveCustomBeatSnaps();
 
-            Exit(() => new SelectionScreen());
+            Exit(() => QuaverScreenFactory.CreateSelection());
         }
 
         /// <summary>

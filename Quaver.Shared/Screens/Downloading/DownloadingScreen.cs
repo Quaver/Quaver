@@ -434,28 +434,28 @@ namespace Quaver.Shared.Screens.Downloading
             switch (PreviousScreen)
             {
                 case QuaverScreenType.Select:
-                    Exit(() => new SelectionScreen());
+                    Exit(() => QuaverScreenFactory.CreateSelection());
                     break;
                 case QuaverScreenType.Lobby:
                     if (OnlineManager.Connected)
-                        Exit(() => new MultiplayerLobbyScreen());
+                        Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
                     else
-                        Exit(() => new MainMenuScreen());
+                        Exit(() => QuaverScreenFactory.CreateMainMenu());
                     break;
                 case QuaverScreenType.Multiplayer:
                     if (OnlineManager.CurrentGame != null)
                         Exit(() => new MultiplayerGameScreen());
                     else
-                        Exit(() => new MainMenuScreen());
+                        Exit(() => QuaverScreenFactory.CreateMainMenu());
                     break;
                 case QuaverScreenType.Music:
-                    Exit(() => new MusicPlayerScreen());
+                    Exit(() => QuaverScreenFactory.CreateMusicPlayer());
                     break;
                 case QuaverScreenType.Theatre:
-                    Exit(() => new TheaterScreen());
+                    Exit(() => QuaverScreenFactory.CreateTheater());
                     break;
                 default:
-                    Exit(() => new MainMenuScreen());
+                    Exit(() => QuaverScreenFactory.CreateMainMenu());
                     break;
             }
         }

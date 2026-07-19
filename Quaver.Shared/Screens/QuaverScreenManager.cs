@@ -8,6 +8,7 @@
 using System;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Online;
@@ -34,6 +35,7 @@ namespace Quaver.Shared.Screens
 
         public static void Initialize()
         {
+            QuaverScreenFactory.Initialize(ConfigManager.UseScreensV2.Value);
             ScreenLoadTask = new TaskHandler<Func<QuaverScreen>, QuaverScreen>(LoadScreen);
             ScreenLoadTask.OnCompleted += OnCompleted;
         }

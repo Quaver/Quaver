@@ -206,7 +206,7 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             OnlineManager.LeaveGame();
             ThreadScheduler.RunAfter(Destroy, 1000);
-            return new MultiplayerLobbyScreen();
+            return QuaverScreenFactory.CreateMultiplayerLobby();
         });
 
         /// <summary>

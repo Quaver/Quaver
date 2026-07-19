@@ -333,7 +333,7 @@ namespace Quaver.Shared.Online
             {
                 case QuaverScreenType.Multiplayer:
                 case QuaverScreenType.Lobby:
-                    game.CurrentScreen?.Exit(() => new MainMenuScreen());
+                    game.CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMainMenu());
                     break;
             }
         }
@@ -960,7 +960,7 @@ namespace Quaver.Shared.Online
 
             var game = (QuaverGame)GameBase.Game;
             game.GlobalUserInterface.Cursor.Alpha = 1;
-            game.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
         }
 
         /// <summary>
@@ -1226,7 +1226,7 @@ namespace Quaver.Shared.Online
             if (CurrentGame.PlayerIds.Count == 0)
             {
                 if (currentScreen.Type == QuaverScreenType.Multiplayer)
-                    currentScreen.Exit(() => new MultiplayerLobbyScreen());
+                    currentScreen.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
             }
             else if (currentScreen is TournamentScreen tournamentScreen)
             {
@@ -1438,10 +1438,10 @@ namespace Quaver.Shared.Online
                 if (!game.CurrentScreen.Exiting)
                 {
                     if (game.CurrentScreen is TournamentScreen)
-                        game.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
+                        game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
                     else
                     {
-                        game.CurrentScreen.Exit(() => new MainMenuScreen());
+                        game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
                     }
                 }
             }
@@ -1520,7 +1520,7 @@ namespace Quaver.Shared.Online
             if (game.CurrentScreen.Type == QuaverScreenType.Music)
                 return;
 
-            game.CurrentScreen.Exit(() => new MusicPlayerScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMusicPlayer());
         }
 
         /// <summary>
@@ -1539,7 +1539,7 @@ namespace Quaver.Shared.Online
             if (game.CurrentScreen.Type != QuaverScreenType.Music)
                 return;
 
-            game.CurrentScreen.Exit(() => new MainMenuScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
         }
 
         /// <summary>

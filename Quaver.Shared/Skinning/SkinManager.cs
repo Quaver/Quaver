@@ -200,18 +200,18 @@ namespace Quaver.Shared.Skinning
                 switch (game.CurrentScreen.Type)
                 {
                     case QuaverScreenType.Menu:
-                        game.CurrentScreen.Exit(() => new MainMenuScreen());
+                        game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
                         break;
                     case QuaverScreenType.Select:
-                        if (game.CurrentScreen is SelectionScreen selectionScreen)
+                        if (game.CurrentScreen is ISelectionScreenState selectionScreen)
                         {
-                            var activeScrollContainer = selectionScreen.ActiveScrollContainer.Value;
-                            var activeLeftPanel = selectionScreen.ActiveLeftPanel.Value;
-                            game.CurrentScreen.Exit(() => new SelectionScreen(activeScrollContainer, activeLeftPanel));
+                            var activeScrollContainer = selectionScreen.ActiveScrollContainer;
+                            var activeLeftPanel = selectionScreen.ActiveLeftPanel;
+                            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection(activeScrollContainer, activeLeftPanel));
                         }
                         else
                         {
-                            game.CurrentScreen.Exit(() => new SelectionScreen());
+                            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection());
                         }
                         break;
                     case QuaverScreenType.Gameplay when

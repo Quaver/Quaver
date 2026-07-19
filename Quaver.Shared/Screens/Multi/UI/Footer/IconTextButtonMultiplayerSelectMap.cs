@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
                 var multi = (MultiplayerGameScreen) screen;
                 multi.DontLeaveGameUponScreenSwitch = true;
 
-                screen.Exit(() => new SelectionScreen());
+                screen.Exit(() => QuaverScreenFactory.CreateSelection());
             })
         {
         }

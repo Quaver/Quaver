@@ -341,7 +341,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                     var multi = (MultiplayerGameScreen) game.CurrentScreen;
                     multi.DontLeaveGameUponScreenSwitch = true;
 
-                    multi.Exit(() => new SelectionScreen());
+                    multi.Exit(() => QuaverScreenFactory.CreateSelection());
                 }
                 else if (SelectedGame.Value.MapId != -1)
                     BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{SelectedGame.Value.MapId}");

@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Main
                 // If they're online, send them to the download screen
                 if (OnlineManager.Status.Value == ConnectionStatus.Connected)
                 {
-                    Exit(() => new DownloadingScreen());
+                    Exit(() => QuaverScreenFactory.CreateDownloading());
                     return;
                 }
 
@@ -183,7 +183,7 @@ namespace Quaver.Shared.Screens.Main
                 return;
             }
 
-            Exit(() => new SelectionScreen());
+            Exit(() => QuaverScreenFactory.CreateSelection());
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Quaver.Shared.Screens.Main
             {
                 if (OnlineManager.Status.Value == ConnectionStatus.Connected)
                 {
-                    Exit(() => new DownloadingScreen());
+                    Exit(() => QuaverScreenFactory.CreateDownloading());
                     return;
                 }
 
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Main
                 return;
             }
 
-            Exit(() => new MultiplayerLobbyScreen());
+            Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
         }
 
         /// <summary>
@@ -245,14 +245,14 @@ namespace Quaver.Shared.Screens.Main
                 {
                     Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
-                    return new MainMenuScreen();
+                    return QuaverScreenFactory.CreateMainMenu();
                 }
             });
         }
 
         /// <summary>
         /// </summary>
-        public void ExitToDownload() => Exit(() => new DownloadingScreen(Type));
+        public void ExitToDownload() => Exit(() => QuaverScreenFactory.CreateDownloading(Type));
 
         /// <summary>
         /// </summary>

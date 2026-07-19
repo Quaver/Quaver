@@ -1185,16 +1185,16 @@ namespace Quaver.Shared
             switch (CurrentScreen?.Type)
             {
                 case QuaverScreenType.Menu:
-                    CurrentScreen?.Exit(() => new MainMenuScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMainMenu());
                     break;
                 case QuaverScreenType.Select:
-                    CurrentScreen?.Exit(() => new SelectionScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateSelection());
                     break;
                 case QuaverScreenType.Download:
-                    CurrentScreen?.Exit(() => new DownloadingScreen(CurrentScreen.Type));
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateDownloading(CurrentScreen.Type));
                     break;
                 case QuaverScreenType.Lobby:
-                    CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
                     break;
                 case QuaverScreenType.Multiplayer:
                     var screen = (MultiplayerGameScreen)CurrentScreen;
@@ -1202,10 +1202,10 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;
                 case QuaverScreenType.Music:
-                    CurrentScreen?.Exit(() => new MusicPlayerScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMusicPlayer());
                     break;
                 case QuaverScreenType.Theatre:
-                    CurrentScreen?.Exit(() => new TheaterScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateTheater());
                     break;
             }
 
