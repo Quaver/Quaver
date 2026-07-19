@@ -5,6 +5,7 @@ using System.Numerics;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
+using Quaver.Shared.Input;
 using Quaver.Shared.Screens.Edit.Input;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -37,7 +38,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     /// </summary>
     private EditScreen Screen { get; }
 
-    private KeybindActions? SelectedAction { get; set; }
+    private EditorKeybindActions? SelectedAction { get; set; }
 
     /// <summary>
     ///     If null, nothing happens.
@@ -67,12 +68,12 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     ///     If null, use Screen.InputManager.InputConfig.Keybinds
     ///     Otherwise use this
     /// </summary>
-    private List<KeyValuePair<KeybindActions, KeybindList>> ShownInputConfigKeybinds { get; set; }
+    private List<KeyValuePair<EditorKeybindActions, KeybindList>> ShownInputConfigKeybinds { get; set; }
 
     /// <summary>
     ///     When the input system get reset, we need to know this.
     /// </summary>
-    private Dictionary<KeybindActions, KeybindList> LastInputConfigReference { get; set; }
+    private ulong LastInputConfigVersion { get; set; }
 
     public void Initialize()
     {
@@ -101,7 +102,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
         ImGui.Dummy(new Vector2(10, 10));
 
-        if (!ReferenceEquals(LastInputConfigReference, Screen.InputManager.InputConfig.Keybinds))
+        if (LastInputConfigVersion != Screen.InputManager.InputConfig.Version)
         {
             SearchKeybind = null;
             _searchQuery = "";
@@ -115,7 +116,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         HandleInput();
 
         ImGui.End();
-        LastInputConfigReference = Screen.InputManager.InputConfig.Keybinds;
+        LastInputConfigVersion = Screen.InputManager.InputConfig.Version;
     }
 
     private void DrawDescription()
@@ -145,7 +146,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
             return;
         if (keys.Count > 0)
         {
-            var inputConfigKeybind = Screen.InputManager.InputConfig.Keybinds[SelectedAction.Value];
+            var inputConfigKeybind = Screen.InputManager.InputConfig.GetOrDefault(SelectedAction.Value);
             inputConfigKeybind.Remove(RebindingKeybind);
             inputConfigKeybind.Add(keys.First());
             FlushConfig();
@@ -159,10 +160,10 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         ImGui.TextWrapped($"Selected Keybind: {(selected ? SelectedAction.ToString() : "None")}");
         ImGui.BeginDisabled(!selected);
 
-        var keybindDictionary = Screen.InputManager.InputConfig.Keybinds;
+        var inputConfig = Screen.InputManager.InputConfig;
         if (ImGui.Button("Reset to Default"))
         {
-            keybindDictionary[SelectedAction!.Value] = EditorInputConfig.DefaultKeybinds[SelectedAction!.Value];
+            inputConfig.SetKeybindsForAction(SelectedAction!.Value, Screen.InputManager.InputConfig.DefaultKeybindsFor(SelectedAction!.Value));
             FlushConfig();
         }
 
@@ -172,7 +173,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
             {
                 ImGui.TableSetupColumn("Keys");
                 ImGui.TableHeadersRow();
-                var keybinds = keybindDictionary[SelectedAction.Value].ToList();
+                var keybinds = inputConfig.GetOrDefault(SelectedAction.Value).ToList();
                 if (Equals(RebindingKeybind, _emptyKeybind))
                     keybinds.Add(_emptyKeybind);
                 foreach (var keybind in keybinds)
@@ -204,7 +205,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                         ImGui.SameLine();
                         if (ImGui.Button($"Remove##{SelectedAction.Value}_{keybind}"))
                         {
-                            keybindDictionary[SelectedAction.Value].Remove(keybind);
+                            inputConfig.RemoveKeybindFromAction(SelectedAction.Value, keybind);
                             FlushConfig();
                         }
 
@@ -216,9 +217,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                             if (!newKeybind.Modifiers.Add(KeyModifiers.Free))
                                 newKeybind.Modifiers.Remove(KeyModifiers.Free);
 
-                            keybindDictionary[SelectedAction.Value].Remove(newKeybind);
-                            keybindDictionary[SelectedAction.Value].Remove(keybind);
-                            keybindDictionary[SelectedAction.Value].Add(newKeybind);
+                            inputConfig.RemoveKeybindFromAction(SelectedAction.Value, keybind);
+                            inputConfig.AddKeybindToAction(SelectedAction.Value, newKeybind);
                             FlushConfig();
                         }
 
@@ -262,7 +262,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
             return;
         }
 
-        ShownInputConfigKeybinds = Screen.InputManager.InputConfig.Keybinds.Where(
+        ShownInputConfigKeybinds = Screen.InputManager.InputConfig.ReadOnlyKeybinds.Where(
             entry =>
                 entry.Key.ToString().ToLower().Contains(_searchQuery.ToLower())
                 && (SearchKeybind == null || Equals(SearchKeybind, _emptyKeybind) ||
@@ -274,7 +274,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     {
         ConflictingKeybinds.Clear();
         var existingKeybinds = new HashSet<Keybind>();
-        foreach (var (_, keybinds) in Screen.InputManager.InputConfig.Keybinds)
+        foreach (var (_, keybinds) in Screen.InputManager.InputConfig.ReadOnlyKeybinds)
         {
             ConflictingKeybinds.UnionWith(existingKeybinds.Intersect(keybinds));
             existingKeybinds.UnionWith(keybinds);
@@ -298,7 +298,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         var clipperRaw = new ImGuiListClipper();
         var clipper = new ImGuiListClipperPtr(&clipperRaw);
 
-        var inputConfigKeybinds = ShownInputConfigKeybinds ?? Screen.InputManager.InputConfig.Keybinds.ToList();
+        var inputConfigKeybinds = ShownInputConfigKeybinds ?? Screen.InputManager.InputConfig.ReadOnlyKeybinds.ToList();
         clipper.Begin(inputConfigKeybinds.Count);
         while (clipper.Step())
         {

@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using Wobble.Input;
 
-namespace Quaver.Shared.Screens.Edit.Input
+namespace Quaver.Shared.Input
 {
     public class GenericKeyState
     {

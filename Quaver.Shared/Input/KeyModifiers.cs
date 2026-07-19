@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quaver.Shared.Screens.Edit.Input
+namespace Quaver.Shared.Input
 {
     [Serializable]
     public enum KeyModifiers

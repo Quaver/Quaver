@@ -6,7 +6,7 @@ using Wobble.Input;
 using Wobble.Logging;
 using YamlDotNet.Serialization;
 
-namespace Quaver.Shared.Screens.Edit.Input
+namespace Quaver.Shared.Input
 {
     [Serializable]
     public class Keybind
@@ -30,12 +30,14 @@ namespace Quaver.Shared.Screens.Edit.Input
                     if (GenericKey.TryParse(keyString, out parsed))
                         Key = parsed;
                     else
-                        Logger.Error($"Encountered unknown key name {keyString} during keybind parsing", LogType.Runtime);
+                        Logger.Error(
+                            $"Encountered unknown key name {keyString} during keybind parsing",
+                            LogType.Runtime);
                 }
             }
         }
 
-        private Keybind() {}
+        private Keybind() { }
 
         public static bool TryParse(string notation, out Keybind keybind)
         {
@@ -67,7 +69,8 @@ namespace Quaver.Shared.Screens.Edit.Input
             Modifiers.Add(mod);
         }
 
-        public Keybind(MouseButton mouseButton) => Key = new GenericKey { MouseButton = mouseButton };
+        public Keybind(MouseButton mouseButton) =>
+            Key = new GenericKey { MouseButton = mouseButton };
 
         public Keybind(KeyModifiers mod, MouseButton mouseButton)
         {
@@ -96,18 +99,30 @@ namespace Quaver.Shared.Screens.Edit.Input
             Modifiers = new HashSet<KeyModifiers>(mods);
         }
 
-        public HashSet<Keybind> MatchingKeybinds(bool invertScrolling)
+        public Keybind WithScrollingInverted()
+        {
+            if (!CanBeScrollingInverted)
+                return this;
+
+            var key = Clone();
+            if (key.Key.ScrollDirection != null)
+            {
+                key.Key = key.Key.Clone();
+                key.Key.ScrollDirection = key.Key.ScrollDirection == MouseScrollDirection.Up
+                    ? MouseScrollDirection.Down
+                    : MouseScrollDirection.Up;
+            }
+            return key;
+        }
+
+        public bool CanBeScrollingInverted => Key.ScrollDirection != null;
+
+        public HashSet<Keybind> MatchingKeybinds()
         {
             var set = new HashSet<Keybind>();
-            var key = Key.Clone();
-            if (key.ScrollDirection != null)
-                key.ScrollDirection = invertScrolling 
-                    ? key.ScrollDirection == MouseScrollDirection.Up 
-                        ? MouseScrollDirection.Down : MouseScrollDirection.Up 
-                    : key.ScrollDirection;
 
             if (!Modifiers.Contains(KeyModifiers.Free))
-                set.Add(new Keybind(Modifiers, key));
+                set.Add(new Keybind(Modifiers, Key));
             else
             {
                 var allModifiers = Enum.GetValues(typeof(KeyModifiers)).Cast<KeyModifiers>();
@@ -116,7 +131,7 @@ namespace Quaver.Shared.Screens.Edit.Input
                 {
                     modifiers.UnionWith(Modifiers);
                     modifiers.Remove(KeyModifiers.Free);
-                    set.Add(new Keybind(modifiers, key));
+                    set.Add(new Keybind(modifiers, Key));
                 }
             }
 
@@ -130,7 +145,8 @@ namespace Quaver.Shared.Screens.Edit.Input
 
             for (int bitMask = 0; bitMask < powerSetLength; bitMask++)
             {
-                var subSet = new HashSet<KeyModifiers>(modifiers.Where(x => ((1 << modifiers.IndexOf(x)) & bitMask) != 0));
+                var subSet = new HashSet<KeyModifiers>(modifiers.Where(x =>
+                    ((1 << modifiers.IndexOf(x)) & bitMask) != 0));
                 powerSet.Add(subSet);
             }
 
@@ -156,8 +172,11 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
         }
 
-        public bool IsUniquePress() => ModifiersAreCorrect() && GenericKeyManager.IsUniquePress(Key);
-        public bool IsUniqueRelease() => ModifiersAreCorrect() && GenericKeyManager.IsUniqueRelease(Key);
+        public bool IsUniquePress() =>
+            ModifiersAreCorrect() && GenericKeyManager.IsUniquePress(Key);
+
+        public bool IsUniqueRelease() =>
+            ModifiersAreCorrect() && GenericKeyManager.IsUniqueRelease(Key);
 
         public bool IsDown() => ModifiersAreCorrect() && GenericKeyManager.IsDown(Key);
 
@@ -181,5 +200,7 @@ namespace Quaver.Shared.Screens.Edit.Input
         }
 
         public override int GetHashCode() => ToString().GetHashCode();
+
+        public Keybind Clone() => new(Modifiers, Key);
     }
 }

@@ -4,7 +4,7 @@ namespace Quaver.Shared.Screens.Edit.Input
 {
     [Serializable]
     [Flags]
-    public enum KeybindActions
+    public enum EditorKeybindActions
     {
         ExitEditor,
         PlayPause,

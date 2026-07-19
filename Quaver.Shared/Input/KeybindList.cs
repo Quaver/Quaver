@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
 
-namespace Quaver.Shared.Screens.Edit.Input
+namespace Quaver.Shared.Input
 {
     [Serializable]
     public class KeybindList : HashSet<Keybind>
@@ -46,17 +46,22 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         public bool IsNotBound() => Count == 1 && Contains(Keybind.None);
 
-        public HashSet<Keybind> MatchingKeybinds(bool invertScrolling)
+        public HashSet<Keybind> MatchingKeybinds()
         {
             var binds = new HashSet<Keybind>();
-            foreach (var keybind in this) binds.UnionWith(keybind.MatchingKeybinds(invertScrolling));
+            foreach (var keybind in this) binds.UnionWith(keybind.MatchingKeybinds());
             return binds;
         }
+
+        public KeybindList WithScrollingInverted() =>
+            new(this.Select(x => x.WithScrollingInverted()));
 
         public bool IsUniquePress() => this.Any(k => k.IsUniquePress());
         public bool IsUniqueRelease() => this.Any(k => k.IsUniqueRelease());
         public bool IsDown() => this.Any(k => k.IsDown());
         public bool IsUp() => this.Any(k => k.IsUp());
-        public override string ToString() => String.Join(", ", this.Where(k => !k.Equals(Keybind.None)).Select(k => k.ToString()));
+
+        public override string ToString() => String.Join(", ",
+            this.Where(k => !k.Equals(Keybind.None)).Select(k => k.ToString()));
     }
 }
